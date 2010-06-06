@@ -188,6 +188,12 @@
             </summary>
             <param name="item">The removed item.</param>
         </member>
+        <member name="M:System.Windows.Interactivity.BehaviorCollection.CreateInstanceCore">
+            <summary>
+            Creates a new instance of the BehaviorCollection.
+            </summary>
+            <returns>The new instance.</returns>
+        </member>
         <member name="T:System.Windows.Interactivity.CustomPropertyValueEditor">
             <summary>
             Enumerates possible values for reusable property value editors.
@@ -358,6 +364,12 @@
             Called when the trigger is being detached from its AssociatedObject, but before it has actually occurred.
             </summary>
         </member>
+        <member name="M:System.Windows.Interactivity.TriggerBase.CreateInstanceCore">
+            <summary>
+            Creates a new instance of the TriggerBase derived class.
+            </summary>
+            <returns>The new instance.</returns>
+        </member>
         <member name="M:System.Windows.Interactivity.TriggerBase.Attach(System.Windows.DependencyObject)">
             <summary>
             Attaches to the specified object.
@@ -513,11 +525,19 @@
             <summary>
             This property is used as the internal backing store for the public Triggers attached property.
             </summary>
+            <remarks>
+            This property is not exposed publicly. This forces clients to use the GetTriggers and SetTriggers methods to access the
+            collection, ensuring the collection exists and is set before it is used.
+            </remarks>
         </member>
         <member name="F:System.Windows.Interactivity.Interaction.BehaviorsProperty">
             <summary>
             This property is used as the internal backing store for the public Behaviors attached property.
             </summary>
+            <remarks>
+            This property is not exposed publicly. This forces clients to use the GetBehaviors and SetBehaviors methods to access the
+            collection, ensuring the collection exists and is set before it is used.
+            </remarks>
         </member>
         <member name="M:System.Windows.Interactivity.Interaction.GetTriggers(System.Windows.DependencyObject)">
             <summary>
@@ -545,6 +565,15 @@
             </summary>
             <param name="element">The element of interest.</param>
             <returns>True if the element has been loaded; otherwise, False.</returns>
+        </member>
+        <member name="P:System.Windows.Interactivity.Interaction.ShouldRunInDesignMode">
+            <summary>
+            Gets or sets a value indicating whether to run as if in design mode.
+            </summary>
+            <value>
+            	<c>True</c> if [should run in design mode]; otherwise, <c>False</c>.
+            </value>
+            <remarks>Not to be used outside unit tests.</remarks>
         </member>
         <member name="T:System.Windows.Interactivity.InvokeCommandAction">
             <summary>
@@ -584,6 +613,12 @@
             <summary>
             Called when the action is being detached from its AssociatedObject, but before it has actually occurred.
             </summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.TriggerAction.CreateInstanceCore">
+            <summary>
+            When implemented in a derived class, creates a new instance of the <see cref="T:System.Windows.Freezable"/> derived class.
+            </summary>
+            <returns>The new instance.</returns>
         </member>
         <member name="M:System.Windows.Interactivity.TriggerAction.Attach(System.Windows.DependencyObject)">
             <summary>
@@ -854,6 +889,12 @@
             </summary>
             <param name="item">The removed item.</param>
         </member>
+        <member name="M:System.Windows.Interactivity.TriggerActionCollection.CreateInstanceCore">
+            <summary>
+            Creates a new instance of the TriggerActionCollection.
+            </summary>
+            <returns>The new instance.</returns>
+        </member>
         <member name="T:System.Windows.Interactivity.TriggerBase`1">
             <summary>
             Represents an object that can invoke actions conditionally.
@@ -923,6 +964,12 @@
             </summary>
             <param name="item">The removed item.</param>
         </member>
+        <member name="M:System.Windows.Interactivity.TriggerCollection.CreateInstanceCore">
+            <summary>
+            Creates a new instance of the <see cref="T:System.Windows.Interactivity.TriggerCollection"/>.
+            </summary>
+            <returns>The new instance.</returns>
+        </member>
         <member name="T:System.Windows.Interactivity.TypeConstraintAttribute">
             <summary>
             Specifies type constraints on the AssociatedObject of TargetedTriggerAction and EventTriggerBase.
@@ -940,83 +987,83 @@
             </summary>
             <value>The constraint type.</value>
         </member>
-        <member name="T:System.Windows.Interactivity.ExceptionStringTable">
+        <member name="T:ExceptionStringTable">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
             </summary>
         </member>
-        <member name="P:System.Windows.Interactivity.ExceptionStringTable.ResourceManager">
+        <member name="P:ExceptionStringTable.ResourceManager">
             <summary>
               Returns the cached ResourceManager instance used by this class.
             </summary>
         </member>
-        <member name="P:System.Windows.Interactivity.ExceptionStringTable.Culture">
+        <member name="P:ExceptionStringTable.Culture">
             <summary>
               Overrides the current thread's CurrentUICulture property for all
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
-        <member name="P:System.Windows.Interactivity.ExceptionStringTable.CannotHostBehaviorCollectionMultipleTimesExceptionMessage">
+        <member name="P:ExceptionStringTable.CannotHostBehaviorCollectionMultipleTimesExceptionMessage">
             <summary>
               Looks up a localized string similar to Cannot set the same BehaviorCollection on multiple objects..
             </summary>
         </member>
-        <member name="P:System.Windows.Interactivity.ExceptionStringTable.CannotHostBehaviorMultipleTimesExceptionMessage">
+        <member name="P:ExceptionStringTable.CannotHostBehaviorMultipleTimesExceptionMessage">
             <summary>
               Looks up a localized string similar to An instance of a Behavior cannot be attached to more than one object at a time..
             </summary>
         </member>
-        <member name="P:System.Windows.Interactivity.ExceptionStringTable.CannotHostTriggerActionMultipleTimesExceptionMessage">
+        <member name="P:ExceptionStringTable.CannotHostTriggerActionMultipleTimesExceptionMessage">
             <summary>
               Looks up a localized string similar to Cannot host an instance of a TriggerAction in multiple TriggerCollections simultaneously. Remove it from one TriggerCollection before adding it to another..
             </summary>
         </member>
-        <member name="P:System.Windows.Interactivity.ExceptionStringTable.CannotHostTriggerCollectionMultipleTimesExceptionMessage">
+        <member name="P:ExceptionStringTable.CannotHostTriggerCollectionMultipleTimesExceptionMessage">
             <summary>
               Looks up a localized string similar to Cannot set the same TriggerCollection on multiple objects..
             </summary>
         </member>
-        <member name="P:System.Windows.Interactivity.ExceptionStringTable.CannotHostTriggerMultipleTimesExceptionMessage">
+        <member name="P:ExceptionStringTable.CannotHostTriggerMultipleTimesExceptionMessage">
             <summary>
               Looks up a localized string similar to An instance of a trigger cannot be attached to more than one object at a time..
             </summary>
         </member>
-        <member name="P:System.Windows.Interactivity.ExceptionStringTable.CommandDoesNotExistOnBehaviorWarningMessage">
+        <member name="P:ExceptionStringTable.CommandDoesNotExistOnBehaviorWarningMessage">
             <summary>
               Looks up a localized string similar to The command &quot;{0}&quot; does not exist or is not publicly exposed on {1}..
             </summary>
         </member>
-        <member name="P:System.Windows.Interactivity.ExceptionStringTable.DefaultTriggerAttributeInvalidTriggerTypeSpecifiedExceptionMessage">
+        <member name="P:ExceptionStringTable.DefaultTriggerAttributeInvalidTriggerTypeSpecifiedExceptionMessage">
             <summary>
               Looks up a localized string similar to &quot;{0}&quot; is not a valid type for the TriggerType parameter. Make sure &quot;{0}&quot; derives from TriggerBase..
             </summary>
         </member>
-        <member name="P:System.Windows.Interactivity.ExceptionStringTable.DuplicateItemInCollectionExceptionMessage">
+        <member name="P:ExceptionStringTable.DuplicateItemInCollectionExceptionMessage">
             <summary>
               Looks up a localized string similar to Cannot add the same instance of &quot;{0}&quot; to a &quot;{1}&quot; more than once..
             </summary>
         </member>
-        <member name="P:System.Windows.Interactivity.ExceptionStringTable.EventTriggerBaseInvalidEventExceptionMessage">
+        <member name="P:ExceptionStringTable.EventTriggerBaseInvalidEventExceptionMessage">
             <summary>
               Looks up a localized string similar to The event &quot;{0}&quot; on type &quot;{1}&quot; has an incompatible signature. Make sure the event is public and satisfies the EventHandler delegate..
             </summary>
         </member>
-        <member name="P:System.Windows.Interactivity.ExceptionStringTable.EventTriggerCannotFindEventNameExceptionMessage">
+        <member name="P:ExceptionStringTable.EventTriggerCannotFindEventNameExceptionMessage">
             <summary>
               Looks up a localized string similar to Cannot find an event named &quot;{0}&quot; on type &quot;{1}&quot;..
             </summary>
         </member>
-        <member name="P:System.Windows.Interactivity.ExceptionStringTable.RetargetedTypeConstraintViolatedExceptionMessage">
+        <member name="P:ExceptionStringTable.RetargetedTypeConstraintViolatedExceptionMessage">
             <summary>
               Looks up a localized string similar to An object of type &quot;{0}&quot; cannot have a {3} property of type &quot;{1}&quot;. Instances of type &quot;{0}&quot; can have only a {3} property of type &quot;{2}&quot;..
             </summary>
         </member>
-        <member name="P:System.Windows.Interactivity.ExceptionStringTable.TypeConstraintViolatedExceptionMessage">
+        <member name="P:ExceptionStringTable.TypeConstraintViolatedExceptionMessage">
             <summary>
               Looks up a localized string similar to Cannot attach type &quot;{0}&quot; to type &quot;{1}&quot;. Instances of type &quot;{0}&quot; can only be attached to objects of type &quot;{2}&quot;..
             </summary>
         </member>
-        <member name="P:System.Windows.Interactivity.ExceptionStringTable.UnableToResolveTargetNameWarningMessage">
+        <member name="P:ExceptionStringTable.UnableToResolveTargetNameWarningMessage">
             <summary>
               Looks up a localized string similar to Unable to resolve TargetName &quot;{0}&quot;..
             </summary>

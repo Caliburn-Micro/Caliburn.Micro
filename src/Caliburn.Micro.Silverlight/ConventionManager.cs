@@ -29,9 +29,12 @@
         };
 
         public static Action<Binding, PropertyInfo> ApplyValidation = (binding, property) =>{
+#if SILVERLIGHT
             if(typeof(INotifyDataErrorInfo).IsAssignableFrom(property.DeclaringType))
                 binding.ValidatesOnNotifyDataErrors = true;
-            else if(typeof(IDataErrorInfo).IsAssignableFrom(property.DeclaringType))
+            else 
+#endif
+            if(typeof(IDataErrorInfo).IsAssignableFrom(property.DeclaringType))
                 binding.ValidatesOnDataErrors = true;
         };
 
