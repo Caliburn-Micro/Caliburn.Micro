@@ -82,6 +82,7 @@
     <Compile Include="IResult.cs" />
     <Compile Include="IScreen.cs" />
     <Compile Include="IViewAware.cs" />
+    <Compile Include="Logging.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageBinder.cs" />
     <Compile Include="Parameter.cs" />
