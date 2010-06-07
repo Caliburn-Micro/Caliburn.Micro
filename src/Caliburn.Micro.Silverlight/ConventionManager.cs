@@ -44,13 +44,14 @@
         };
 
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyValidation = (binding, convention, property) => {
-#if SILVERLIGHT
+#if SILVERLIGHT && !WP7
             if(typeof(INotifyDataErrorInfo).IsAssignableFrom(property.DeclaringType))
                 binding.ValidatesOnNotifyDataErrors = true;
-            else 
 #endif
+#if !WP7
             if(typeof(IDataErrorInfo).IsAssignableFrom(property.DeclaringType))
                 binding.ValidatesOnDataErrors = true;
+#endif
         };
 
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyValueConverter = (binding, convention, property) =>{

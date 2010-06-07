@@ -28,8 +28,12 @@
                 viewAware.AttachView(view, context);
             }
 
+#if WP7
+            var element = view as FrameworkElement;
+#else
             var element = WindowManager.GetSignificantView(view) as FrameworkElement;
-            if(element == null)
+#endif
+            if (element == null)
                 return;
 
             if (!ShouldApplyConventions(element))
