@@ -68,11 +68,11 @@
             if(element == null)
                 return convention.BindableProperty;
 #if SILVERLIGHT
-            return element.ContentTemplate == null
+            return element.ContentTemplate == null && !(element.Content is DependencyObject)
                 ? View.ModelProperty
                 : convention.BindableProperty;
 #else
-            return element.ContentTemplate == null && element.ContentTemplateSelector == null
+            return element.ContentTemplate == null && element.ContentTemplateSelector == null && !(element.Content is DependencyObject)
                 ? View.ModelProperty
                 : convention.BindableProperty;
 #endif
