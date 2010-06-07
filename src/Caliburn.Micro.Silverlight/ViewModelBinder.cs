@@ -85,7 +85,7 @@
 
                 var bindableProperty = ConventionManager.CheckBindablePropertyExceptions(convention, foundControl);
                 BindingOperations.SetBinding(foundControl, bindableProperty, binding);
-                Log.Info("Added convention binding for property {1}.", property.Name);
+                Log.Info("Added convention binding for property {0}.", property.Name);
                 ConventionManager.AddCustomBindingBehavior(convention, property, foundControl);
             }
         }
@@ -123,7 +123,7 @@
                     message += ")";
                 }
 
-                Log.Info("Added convention action for method {1}.", method.Name);
+                Log.Info("Added convention action for method {0}.", method.Name);
                 Message.SetAttach(found, message);
             }
         }

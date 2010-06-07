@@ -34,7 +34,7 @@
 
             if(providedValues.Length != requiredParameters.Length)
             {
-                var ex = new Exception("Parameter count mismatch for {0} " + message + ".");
+                var ex = new Exception(string.Format("Parameter count mismatch for {0}.", message));
                 Log.Error(ex);
                 throw ex;
             }

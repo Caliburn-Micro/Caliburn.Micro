@@ -128,7 +128,7 @@
         {
             if (canExecute != null && e.PropertyName == canExecute.Name)
             {
-                Log.Info("Execution changed for {0}", this);
+                Log.Info("Execution changed for {0}.", this);
                 ((Control)AssociatedObject).IsEnabled = (bool)canExecute.GetValue(target, null);
             }
         }

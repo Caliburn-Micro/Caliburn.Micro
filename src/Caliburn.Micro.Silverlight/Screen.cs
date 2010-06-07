@@ -122,7 +122,7 @@
                 Parent.CloseItem(this);
             else
             {
-                var view = GetView(null);
+                var view = GetView();
 
                 if (view == null)
                 {
