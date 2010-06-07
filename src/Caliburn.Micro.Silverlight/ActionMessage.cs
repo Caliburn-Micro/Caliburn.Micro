@@ -90,9 +90,6 @@
             execute = found.Item2;
             view = found.Item3;
 
-            if (string.IsNullOrEmpty(MethodName))
-                MethodName = execute.Name;
-
             var inpc = target as INotifyPropertyChanged;
             if (inpc != null)
             {
@@ -107,30 +104,26 @@
 
         protected override void Invoke(object eventArgs)
         {
-            var parameterValues = MessageBinder.DetermineParameters(this, execute.GetParameters(), AssociatedObject, eventArgs);
-            var returnValue = execute.Invoke(target, parameterValues);
+            var values = MessageBinder.DetermineParameters(this, execute.GetParameters(), AssociatedObject, eventArgs);
+            var outcome = execute.Invoke(target, values);
 
-            if (returnValue == null)
-                return;
-
-            var result = MessageBinder.CreateResult(returnValue);
+            var result = MessageBinder.CreateResult(outcome);
             if (result == null)
                 return;
 
             if (view == null && target is IViewAware)
                 view = ((IViewAware)target).GetView() as DependencyObject;
 
-            Log.Info("Invoking {0}.", this);
             result.Execute(new ResultExecutionContext(AssociatedObject, this, target, view));
         }
 
         void CanExecuteChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (canExecute != null && e.PropertyName == canExecute.Name)
-            {
-                Log.Info("Execution changed for {0}.", this);
-                ((Control)AssociatedObject).IsEnabled = (bool)canExecute.GetValue(target, null);
-            }
+            if(canExecute == null || e.PropertyName != canExecute.Name)
+                return;
+
+            Log.Info("Execution changed for {0}.", this);
+            ((Control)AssociatedObject).IsEnabled = (bool)canExecute.GetValue(target, null);
         }
 
         Tuple<object, MethodInfo, DependencyObject> GetMethodBinding()

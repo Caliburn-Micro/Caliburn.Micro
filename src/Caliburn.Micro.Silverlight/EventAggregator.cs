@@ -3,30 +3,36 @@
     using System;
     using System.Collections.Generic;
 
-    public static class EventAggregator
+    public interface IEventAggregator
+    {
+        void Subscribe(object instance);
+        void Publish<T>(T message);
+    }
+
+    public class EventAggregator : IEventAggregator
     {
         static readonly ILog Log = LogManager.GetLog(typeof(EventAggregator));
-        static readonly List<WeakReference> Subscribers = new List<WeakReference>();
-        static readonly object LockObject = new object();
+        readonly List<WeakReference> subscribers = new List<WeakReference>();
+        readonly object lockObject = new object();
 
-        public static void Subscribe(object instance)
+        public void Subscribe(object instance)
         {
-            lock (LockObject)
+            lock (lockObject)
             {
                 Log.Info("Subscribing {0}.", instance);
-                Subscribers.Add(new WeakReference(instance));
+                subscribers.Add(new WeakReference(instance));
             }
         }
 
-        public static void Publish<T>(T message)
+        public void Publish<T>(T message)
         {
             Execute.OnUIThread(() =>{
-                lock(LockObject)
+                lock(lockObject)
                 {
                     Log.Info("Publishing {0}.", message);
                     var dead = new List<WeakReference>();
 
-                    foreach(var reference in Subscribers)
+                    foreach(var reference in subscribers)
                     {
                         var target = reference.Target as IHandler<T>;
 
@@ -36,7 +42,7 @@
                             dead.Add(reference);
                     }
 
-                    dead.Apply(x => Subscribers.Remove(x));
+                    dead.Apply(x => subscribers.Remove(x));
                 }
             });
         }

@@ -78,8 +78,7 @@
 #endif
         };
 
-        public static Action<ElementConvention, PropertyInfo, DependencyObject> AddCustomBindingBehavior = (convention, property, foundControl) =>
-        {
+        public static Action<ElementConvention, PropertyInfo, DependencyObject> AddCustomBindingBehavior = (convention, property, foundControl) =>{
             var textBox = foundControl as TextBox;
             if(textBox != null && convention.BindableProperty == TextBox.TextProperty)
             {

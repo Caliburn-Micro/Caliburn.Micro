@@ -32,11 +32,6 @@
 
         public void ShowDialog(object rootModel, object context)
         {
-            CreateWindow(rootModel, context).Show();
-        }
-
-        ChildWindow CreateWindow(object rootModel, object context)
-        {
             var view = EnsureWindow(rootModel, ViewLocator.Locate(rootModel, context));
             ViewModelBinder.Bind(rootModel, view, context);
 
@@ -46,15 +41,16 @@
 
             var deactivatable = rootModel as IDeactivate;
             if (deactivatable != null)
-                view.Closed += delegate{
+                view.Closed += delegate
+                {
                     deactivatable.Deactivate(true);
                 };
 
             var guard = rootModel as IGuardClose;
-            if(guard != null)
+            if (guard != null)
                 view.Closing += (s, e) => OnShutdownAttempted(guard, view, e);
 
-            return view;
+            view.Show();
         }
 
         static ChildWindow EnsureWindow(object model, object view)

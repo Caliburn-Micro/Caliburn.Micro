@@ -7,7 +7,6 @@
         void Info(string message);
         void Warn(string message);
         void Error(Exception exception);
-        void Error(string message, Exception exception);
     }
 
     public static class LogManager
@@ -20,7 +19,6 @@
             public void Info(string message) { }
             public void Warn(string message) { }
             public void Error(Exception exception) { }
-            public void Error(string message, Exception exception) { }
         }
     }
 

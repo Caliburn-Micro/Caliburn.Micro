@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
 
     public static class TypeDescriptor
     {
@@ -14,21 +15,16 @@
 
             if(!Cache.TryGetValue(type, out converter))
             {
-                var customAttributes = type.GetCustomAttributes(typeof(TypeConverterAttribute), true);
+                var customAttributes = type.GetAttributes<TypeConverterAttribute>(true);
 
-                if(customAttributes.Length == 0)
+                if(!customAttributes.Any())
                     return new TypeConverter();
 
-                converter = CreateConverter(((TypeConverterAttribute)customAttributes[0]).ConverterTypeName);
+                converter = Activator.CreateInstance(Type.GetType(customAttributes.First().ConverterTypeName)) as TypeConverter;
                 Cache[type] = converter;
             }
 
             return converter;
-        }
-
-        static TypeConverter CreateConverter(string converterTypeName)
-        {
-            return (Activator.CreateInstance(Type.GetType(converterTypeName)) as TypeConverter);
         }
     }
 }

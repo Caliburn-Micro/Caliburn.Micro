@@ -72,10 +72,7 @@
             var containerKey = e.NewValue as string;
 
             if (containerKey != null)
-            {
-                Log.Info("Resolving action target {0}.", containerKey);
                 target = IoC.GetInstance(null, containerKey);
-            }
 
             if (setContext && d is FrameworkElement)
             {

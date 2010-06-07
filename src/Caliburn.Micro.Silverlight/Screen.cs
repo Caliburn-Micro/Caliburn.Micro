@@ -45,7 +45,7 @@
             private set
             {
                 isActive = value;
-                NotifyOfPropertyChange("IsActive");
+                NotifyOfPropertyChange(() => IsActive);
             }
         }
 
@@ -55,7 +55,7 @@
             private set
             {
                 isInitialized = value;
-                NotifyOfPropertyChange("IsInitialized");
+                NotifyOfPropertyChange(() => IsInitialized);
             }
         }
 

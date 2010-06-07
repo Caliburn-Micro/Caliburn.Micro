@@ -123,7 +123,7 @@
                     message += ")";
                 }
 
-                Log.Info("Added convention action for method {0}.", method.Name);
+                Log.Info("Added convention action for method {0} as {1}.", method.Name, message);
                 Message.SetAttach(found, message);
             }
         }
