@@ -36,7 +36,14 @@
             return original.TrimEnd('s');
         };
 
-        public static Action<Binding, PropertyInfo> ApplyValidation = (binding, property) =>{
+        public static Action<Binding, ElementConvention, PropertyInfo> ApplyBindingMode = (binding, convention, property) =>{
+            var setMethod = property.GetSetMethod();
+            var canWriteToProperty = property.CanWrite && setMethod != null && setMethod.IsPublic;
+
+            binding.Mode = canWriteToProperty ? BindingMode.TwoWay : BindingMode.OneWay;
+        };
+
+        public static Action<Binding, ElementConvention, PropertyInfo> ApplyValidation = (binding, convention, property) => {
 #if SILVERLIGHT
             if(typeof(INotifyDataErrorInfo).IsAssignableFrom(property.DeclaringType))
                 binding.ValidatesOnNotifyDataErrors = true;
@@ -118,14 +125,6 @@
             ElementConvention propertyConvention;
             ElementConventions.TryGetValue(elementType, out propertyConvention);
             return propertyConvention ?? GetElementConvention(elementType.BaseType);
-        }
-
-        public static BindingMode DetermineBindingMode(PropertyInfo property)
-        {
-            var setMethod = property.GetSetMethod();
-            var canWriteToProperty = property.CanWrite && setMethod != null && setMethod.IsPublic;
-
-            return canWriteToProperty ? BindingMode.TwoWay : BindingMode.OneWay;
         }
     }
 }

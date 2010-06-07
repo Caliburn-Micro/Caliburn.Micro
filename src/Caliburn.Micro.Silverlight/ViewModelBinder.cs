@@ -61,10 +61,12 @@
                 if (((FrameworkElement)foundControl).GetBindingExpression(convention.BindableProperty) != null)
                     continue;
 
-                var binding = new Binding(property.Name) { Mode = ConventionManager.DetermineBindingMode(property) };
+                var binding = new Binding(property.Name);
+
+                ConventionManager.ApplyBindingMode(binding, convention, property);
                 ConventionManager.ApplyValueConverter(binding, convention, property);
                 ConventionManager.ApplyStringFormat(binding, convention, property);
-                ConventionManager.ApplyValidation(binding, property);
+                ConventionManager.ApplyValidation(binding, convention, property);
 
                 BindingOperations.SetBinding(foundControl, convention.BindableProperty, binding);
 
