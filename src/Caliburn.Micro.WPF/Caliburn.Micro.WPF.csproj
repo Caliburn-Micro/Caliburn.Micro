@@ -54,6 +54,9 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\ActionMessage.cs">
       <Link>ActionMessage.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\AssemblySource.cs">
+      <Link>AssemblySource.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\Bind.cs">
       <Link>Bind.cs</Link>
     </Compile>

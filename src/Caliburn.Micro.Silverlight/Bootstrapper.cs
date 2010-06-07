@@ -7,7 +7,7 @@
         public static void Initialize(params Assembly[] assembliesToInspect)
         {
             Execute.InitializeWithDispatcher();
-            ViewLocator.Initialize(assembliesToInspect);
+            AssemblySource.Assemblies.AddRange(assembliesToInspect);
         }
     }
 }

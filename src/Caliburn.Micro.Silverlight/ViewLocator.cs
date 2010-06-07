@@ -2,21 +2,14 @@
 {
     using System;
     using System.Linq;
-    using System.Reflection;
     using System.Windows;
 
     public static class ViewLocator
     {
         static readonly ILog Log = LogManager.GetLog(typeof(ViewLocator));
         public static readonly object DefaultContext = new object();
-        static Assembly[] AssembliesToInspect = new[] { Assembly.GetExecutingAssembly() };
         const string View = "View";
         const string Model = "Model";
-
-        public static void Initialize(Assembly[] assembliesToInspect)
-        {
-            AssembliesToInspect = assembliesToInspect; 
-        }
 
         public static UIElement Locate(object viewModel, object context = null)
         {
@@ -36,7 +29,7 @@
                 viewTypeName = viewTypeName + "." + context;
             }
 
-            var viewType = (from assmebly in AssembliesToInspect
+            var viewType = (from assmebly in AssemblySource.Assemblies
                             from type in assmebly.GetExportedTypes()
                             where type.FullName == viewTypeName
                             select type).FirstOrDefault();
