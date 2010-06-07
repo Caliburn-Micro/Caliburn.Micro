@@ -10,11 +10,11 @@
         public Bootstrapper()
         {
             AssemblySource.Known.AddRange(SelectAssemblies());
-            ConfigureContainer();
+            Configure();
             IoC.Initialize(GetInstance, GetAllInstances);
         }
 
-        protected virtual void ConfigureContainer() { }
+        protected virtual void Configure() { }
 
         protected virtual IEnumerable<Assembly> SelectAssemblies()
         {
