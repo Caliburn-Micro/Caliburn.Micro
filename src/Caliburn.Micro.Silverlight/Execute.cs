@@ -9,8 +9,11 @@
 
         public static void InitializeWithDispatcher()
         {
+#if SILVERLIGHT
             var dispatcher = Deployment.Current.Dispatcher;
-
+#else
+            var dispatcher = Application.Current.Dispatcher;
+#endif
             executor = action =>{
                 if(dispatcher.CheckAccess())
                     action();
