@@ -10,6 +10,10 @@
     using System.Windows.Data;
     using System.Windows.Markup;
 
+#if !SILVERLIGHT
+    using System.Windows.Documents;
+#endif
+
     public static class ConventionManager
     {
         static readonly BooleanToVisibilityConverter BooleanToVisibilityConverter = new BooleanToVisibilityConverter();
@@ -56,8 +60,30 @@
         {
 #if SILVERLIGHT
             AddElementConvention<HyperlinkButton>(HyperlinkButton.ContentProperty, "DataContext", "Click");
-            AddElementConvention<UserControl>(UserControl.VisibilityProperty, "DataContext", "Loaded");
+#else
+            AddElementConvention<Hyperlink>(Hyperlink.DataContextProperty, "DataContext", "Click");
+            AddElementConvention<RichTextBox>(RichTextBox.DataContextProperty, "DataContext", "TextChanged");
+            AddElementConvention<Menu>(Menu.ItemsSourceProperty,"DataContext", "Click");
+            AddElementConvention<MenuItem>(MenuItem.ItemsSourceProperty, "DataContext", "Click");
+            AddElementConvention<Label>(Label.ContentProperty, "Content", "DataContextChanged");
+            AddElementConvention<DockPanel>(DockPanel.VisibilityProperty, "DataContext", "Loaded");
+            AddElementConvention<UniformGrid>(UniformGrid.VisibilityProperty, "DataContext", "Loaded");
+            AddElementConvention<WrapPanel>(WrapPanel.VisibilityProperty, "DataContext", "Loaded");
+            AddElementConvention<Viewbox>(Viewbox.VisibilityProperty, "DataContext", "Loaded");
+            AddElementConvention<BulletDecorator>(BulletDecorator.VisibilityProperty, "DataContext", "Loaded");
+            AddElementConvention<Slider>(Slider.ValueProperty, "Value", "ValueChanged");
+            AddElementConvention<Expander>(Expander.IsExpandedProperty, "IsExpanded", "Expanded");
+            AddElementConvention<Window>(Window.DataContextProperty, "DataContext", "Loaded");
+            AddElementConvention<StatusBar>(StatusBar.ItemsSourceProperty, "DataContext", "Loaded");
+            AddElementConvention<ToolBar>(ToolBar.ItemsSourceProperty, "DataContext", "Loaded");
+            AddElementConvention<ToolBarTray>(ToolBarTray.VisibilityProperty, "DataContext", "Loaded");
+            AddElementConvention<TreeView>(TreeView.ItemsSourceProperty, "SelectedItem", "SelectedItemChanged");
+            AddElementConvention<TabControl>(TabControl.ItemsSourceProperty, "ItemsSource", "SelectionChanged");
+            AddElementConvention<TabItem>(TabItem.ContentProperty, "DataContext", "DataContextChanged");
+            AddElementConvention<ListView>(ListView.ItemsSourceProperty, "SelectedItem", "SelectionChanged");
+#endif
             AddElementConvention<ListBox>(ListBox.ItemsSourceProperty, "SelectedItem", "SelectionChanged");
+            AddElementConvention<UserControl>(UserControl.VisibilityProperty, "DataContext", "Loaded");
             AddElementConvention<ComboBox>(ComboBox.ItemsSourceProperty, "SelectedItem", "SelectionChanged");
             AddElementConvention<Image>(Image.SourceProperty, "Source", "Loaded");
             AddElementConvention<ButtonBase>(ButtonBase.ContentProperty, "DataContext", "Click");
@@ -72,8 +98,6 @@
             AddElementConvention<Border>(Border.VisibilityProperty, "DataContext", "Loaded");
             AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", "Loaded");
             AddElementConvention<ContentControl>(View.ModelProperty, "DataContext", "Loaded"); 
-#else
-#endif
         }
 
         public static void AddElementConvention<T>(DependencyProperty bindableProperty, string parameterProperty, string eventName)
