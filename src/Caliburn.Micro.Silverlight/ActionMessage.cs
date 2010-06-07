@@ -16,6 +16,8 @@
     [TypeConstraint(typeof(FrameworkElement))]
     public class ActionMessage : TriggerAction<FrameworkElement>
     {
+        static readonly  ILog Log = LogManager.GetLog(typeof(ActionMessage));
+
         public static readonly DependencyProperty MethodNameProperty =
             DependencyProperty.Register(
                 "MethodName",
@@ -78,7 +80,11 @@
         {
             var found = GetMethodBinding();
             if(found.Item1 == null || found.Item2 == null)
-                throw new Exception(string.Format("No target found for method {0}.", MethodName));
+            {
+                var ex = new Exception(string.Format("No target found for method {0}.", MethodName));
+                Log.Error(ex);
+                throw ex;
+            }
 
             target = found.Item1;
             execute = found.Item2;
@@ -114,13 +120,17 @@
             if (view == null && target is IViewAware)
                 view = ((IViewAware)target).GetView() as DependencyObject;
 
+            Log.Info("Invoking {0}.", this);
             result.Execute(new ResultExecutionContext(AssociatedObject, this, target, view));
         }
 
         void CanExecuteChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(canExecute != null && e.PropertyName == canExecute.Name)
+            if (canExecute != null && e.PropertyName == canExecute.Name)
+            {
+                Log.Info("Execution changed for {0}", this);
                 ((Control)AssociatedObject).IsEnabled = (bool)canExecute.GetValue(target, null);
+            }
         }
 
         Tuple<object, MethodInfo, DependencyObject> GetMethodBinding()
@@ -140,6 +150,11 @@
             }
 
             return new Tuple<object, MethodInfo, DependencyObject>(currentTarget, actionMethod, currentElement);
+        }
+
+        public override string ToString()
+        {
+            return execute != null ? execute.Name : base.ToString();
         }
     }
 }

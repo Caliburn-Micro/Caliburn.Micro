@@ -6,6 +6,8 @@
 
     public class Screen : PropertyChangedBase, IScreen, IChild<IConductor>, IViewAware
     {
+        protected static readonly ILog Log = LogManager.GetLog(typeof(Screen));
+
         bool isActive;
         bool isInitialized;
         IConductor parent;
@@ -69,6 +71,7 @@
             }
 
             IsActive = true;
+            Log.Info("Activating {0}.", this);
             OnActivate();
         }
 
@@ -81,7 +84,11 @@
                 return;
 
             IsActive = false;
+            Log.Info("Deactivating {0}.", this);
             OnDeactivate(close);
+
+            if(close)
+                Log.Info("Closed {0}.", this);
         }
 
         protected virtual void OnDeactivate(bool close) {}
@@ -119,9 +126,11 @@
 
                 if (view == null)
                 {
-                    throw new NotSupportedException(
+                    var ex = new NotSupportedException(
                         "You cannot close an instance without a parent or a default view."
                         );
+                    Log.Error(ex);
+                    throw ex;
                 }
 
                 var method = view.GetType().GetMethod("Close");
@@ -138,9 +147,12 @@
                     return;
                 }
 
-                throw new NotSupportedException(
+                var ex2 = new NotSupportedException(
                     "The default view does not support the Close method or the IsOpen property."
                     );
+
+                Log.Error(ex2);
+                throw ex2;
             }
         }
     }

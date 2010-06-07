@@ -5,13 +5,15 @@
 
     public static class EventAggregator
     {
-        private static readonly List<WeakReference> Subscribers = new List<WeakReference>();
-        private static readonly object LockObject = new object();
+        static readonly ILog Log = LogManager.GetLog(typeof(EventAggregator));
+        static readonly List<WeakReference> Subscribers = new List<WeakReference>();
+        static readonly object LockObject = new object();
 
         public static void Subscribe(object instance)
         {
             lock (LockObject)
             {
+                Log.Info("Subscribing {0}.", instance);
                 Subscribers.Add(new WeakReference(instance));
             }
         }
@@ -21,6 +23,7 @@
             Execute.OnUIThread(() =>{
                 lock(LockObject)
                 {
+                    Log.Info("Publishing {0}.", message);
                     var dead = new List<WeakReference>();
 
                     foreach(var reference in Subscribers)

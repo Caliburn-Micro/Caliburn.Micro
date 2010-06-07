@@ -7,6 +7,7 @@
 
     public static class ViewLocator
     {
+        static readonly ILog Log = LogManager.GetLog(typeof(ViewLocator));
         public static readonly object DefaultContext = new object();
         static Assembly[] AssembliesToInspect = new[] { Assembly.GetExecutingAssembly() };
         const string View = "View";
@@ -40,7 +41,13 @@
                             where type.FullName == viewTypeName
                             select type).FirstOrDefault();
 
-            return viewType == null ? null : GetOrCreateViewFromType(viewType);
+            if(viewType == null)
+            {
+                Log.Warn("View not found: {0}", viewTypeName);
+                return null;
+            }
+
+            return GetOrCreateViewFromType(viewType);
         }
 
         static UIElement GetOrCreateViewFromType(Type type)
@@ -52,7 +59,11 @@
                 return view;
 
             if (type.IsInterface || type.IsAbstract || !typeof(UIElement).IsAssignableFrom(type))
-                throw new Exception(string.Format("Cannot instantiate {0}.", type.FullName));
+            {
+                var ex = new Exception(string.Format("Cannot instantiate {0}.", type.FullName));
+                Log.Error(ex);
+                throw ex;
+            }
 
             return (UIElement)Activator.CreateInstance(type);
         }

@@ -5,6 +5,8 @@
 
     public static class Action
     {
+        static readonly ILog Log = LogManager.GetLog(typeof(Action));
+
         public static readonly DependencyProperty TargetProperty =
             DependencyProperty.RegisterAttached(
                 "Target",
@@ -70,11 +72,18 @@
             var containerKey = e.NewValue as string;
 
             if (containerKey != null)
+            {
+                Log.Info("Resolving action target {0}.", containerKey);
                 target = IoC.GetInstance(null, containerKey);
+            }
 
             if (setContext && d is FrameworkElement)
+            {
+                Log.Info("Setting data context of {0} to {1}.", d, target);
                 ((FrameworkElement)d).DataContext = target;
+            }
 
+            Log.Info("Attaching message handler {0} to {1}.", target, d);
             d.SetValue(Message.HandlerProperty, target);
         }
     }

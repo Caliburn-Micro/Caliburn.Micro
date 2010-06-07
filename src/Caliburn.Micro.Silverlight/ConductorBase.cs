@@ -46,6 +46,7 @@
 
             activeItem = newItem;
 
+            Log.Info("Changed active item of {0} to {1}", this, newItem);
             NotifyOfPropertyChange(() => ActiveItem);
         }
 

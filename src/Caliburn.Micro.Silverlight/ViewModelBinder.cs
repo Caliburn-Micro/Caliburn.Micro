@@ -8,6 +8,7 @@
 
     public static class ViewModelBinder
     {
+        static readonly ILog Log = LogManager.GetLog(typeof(ViewModelBinder));
         public static bool ApplyConventionsByDefault { get; set; }
 
         static ViewModelBinder()
@@ -17,18 +18,25 @@
 
         public static void Bind(object viewModel, DependencyObject view, object context = null)
         {
+            Log.Info("Binding {0} to {1}.", view, viewModel);
             Action.SetTarget(view, viewModel);
 
             var viewAware = viewModel as IViewAware;
             if (viewAware != null)
+            {
+                Log.Info("Attaching view {0} to {1}.", view, viewAware);
                 viewAware.AttachView(view, context);
+            }
 
             var element = WindowManager.GetSignificantView(view) as FrameworkElement;
             if(element == null)
                 return;
 
             if (!ShouldApplyConventions(element))
+            {
+                Log.Info("Skipping conventions for {0} and {1}.", element, viewModel);
                 return;
+            }
 
             var viewType = viewModel.GetType();
             var properties = viewType.GetProperties();
@@ -49,15 +57,24 @@
             foreach (var property in properties)
             {
                 var foundControl = view.FindName(property.Name) as DependencyObject;
-                if(foundControl == null)
+                if (foundControl == null)
+                {
+                    Log.Info("No bindable control located for property {0}.", property.Name);
                     continue;
+                }
 
                 var convention = ConventionManager.GetElementConvention(foundControl.GetType());
                 if (convention == null)
+                {
+                    Log.Warn("No conventions located for type {0}.", foundControl.GetType());
                     continue;
+                }
 
                 if (((FrameworkElement)foundControl).GetBindingExpression(convention.BindableProperty) != null)
+                {
+                    Log.Warn("Binding already exists on {0}.", property.Name);
                     continue;
+                }
 
                 var binding = new Binding(property.Name);
 
@@ -67,9 +84,8 @@
                 ConventionManager.ApplyValidation(binding, convention, property);
 
                 var bindableProperty = ConventionManager.CheckBindablePropertyExceptions(convention, foundControl);
-
                 BindingOperations.SetBinding(foundControl, bindableProperty, binding);
-
+                Log.Info("Added convention binding for property {1}.", property.Name);
                 ConventionManager.AddCustomBindingBehavior(convention, property, foundControl);
             }
         }
@@ -80,7 +96,10 @@
             {
                 var found = view.FindName(method.Name) as DependencyObject;
                 if (found == null)
+                {
+                    Log.Info("No bindable control located for action {0}.", method.Name);
                     continue;
+                }
 
                 var message = method.Name;
                 var parameters = method.GetParameters();
@@ -104,6 +123,7 @@
                     message += ")";
                 }
 
+                Log.Info("Added convention action for method {1}.", method.Name);
                 Message.SetAttach(found, message);
             }
         }

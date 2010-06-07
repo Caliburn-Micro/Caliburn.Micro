@@ -2,14 +2,18 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using System.Windows;
 
+#if !SILVERLIGHT
+    using System.ComponentModel;
+#endif
+
     public static class MessageBinder
     {
+        static readonly ILog Log = LogManager.GetLog(typeof(MessageBinder));
         public static readonly string[] SpecialValues = new[] { "$eventargs", "$parameter", "$datacontext", "$context", "$source" };
 
         public static IResult CreateResult(object returnValue)
@@ -27,6 +31,13 @@
         {
             var providedValues = message.Parameters.Select(x => x.Value).ToArray();
             var values = new object[requiredParameters.Length];
+
+            if(providedValues.Length != requiredParameters.Length)
+            {
+                var ex = new Exception("Parameter count mismatch for {0} " + message + ".");
+                Log.Error(ex);
+                throw ex;
+            }
 
             for (int i = 0; i < providedValues.Length; i++)
             {
