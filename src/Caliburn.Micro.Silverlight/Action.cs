@@ -53,12 +53,17 @@
 
         private static void SetTargetCore(DependencyPropertyChangedEventArgs e, DependencyObject d, bool setContext)
         {
+#if SILVERLIGHT
             if (Application.Current != null 
                 && Application.Current.RootVisual != null
                     && (bool)Application.Current.RootVisual.GetValue(DesignerProperties.IsInDesignModeProperty))
                 return;
+#else
+            if ((bool)d.GetValue(DesignerProperties.IsInDesignModeProperty))
+                return;
+#endif
 
-            if(e.NewValue == e.OldValue || e.NewValue == null)
+            if (e.NewValue == e.OldValue || e.NewValue == null)
                 return;
 
             var target = e.NewValue;

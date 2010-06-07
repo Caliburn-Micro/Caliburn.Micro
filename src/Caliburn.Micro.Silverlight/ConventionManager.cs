@@ -14,7 +14,11 @@
     {
         static readonly BooleanToVisibilityConverter BooleanToVisibilityConverter = new BooleanToVisibilityConverter();
 
+#if SILVERLIGHT
         public static DataTemplate DefaultDataTemplate = (DataTemplate)XamlReader.Load(
+#else
+        public static DataTemplate DefaultDataTemplate = (DataTemplate)XamlReader.Parse(
+#endif
             "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' " +
                            "xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' " +
                            "xmlns:cal='http://www.caliburnproject.org'> " +
@@ -50,6 +54,7 @@
 
         static ConventionManager()
         {
+#if SILVERLIGHT
             AddElementConvention<HyperlinkButton>(HyperlinkButton.ContentProperty, "DataContext", "Click");
             AddElementConvention<UserControl>(UserControl.VisibilityProperty, "DataContext", "Loaded");
             AddElementConvention<ListBox>(ListBox.ItemsSourceProperty, "SelectedItem", "SelectionChanged");
@@ -67,6 +72,8 @@
             AddElementConvention<Border>(Border.VisibilityProperty, "DataContext", "Loaded");
             AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", "Loaded");
             AddElementConvention<ContentControl>(View.ModelProperty, "DataContext", "Loaded"); 
+#else
+#endif
         }
 
         public static void AddElementConvention<T>(DependencyProperty bindableProperty, string parameterProperty, string eventName)

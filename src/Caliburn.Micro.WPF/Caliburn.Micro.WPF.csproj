@@ -54,9 +54,6 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\ActionMessage.cs">
       <Link>ActionMessage.cs</Link>
     </Compile>
-    <Compile Include="..\Caliburn.Micro.Silverlight\AttachedCollection.cs">
-      <Link>AttachedCollection.cs</Link>
-    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\Bind.cs">
       <Link>Bind.cs</Link>
     </Compile>
@@ -126,9 +123,6 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\MessageBinder.cs">
       <Link>MessageBinder.cs</Link>
     </Compile>
-    <Compile Include="..\Caliburn.Micro.Silverlight\Parameter.cs">
-      <Link>Parameter.cs</Link>
-    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\Parser.cs">
       <Link>Parser.cs</Link>
     </Compile>
@@ -156,7 +150,10 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\ViewModelBinder.cs">
       <Link>ViewModelBinder.cs</Link>
     </Compile>
+    <Compile Include="AttachedCollection.cs" />
+    <Compile Include="Parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WindowManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
