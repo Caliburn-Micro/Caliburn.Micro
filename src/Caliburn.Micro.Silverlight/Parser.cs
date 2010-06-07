@@ -16,6 +16,7 @@
 
         public static IEnumerable<TriggerBase> Parse(DependencyObject target, string text)
         {
+            var triggers = new List<TriggerBase>();
             var items = text.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach(var messageText in items)
@@ -35,8 +36,10 @@
                 Log.Info("Created message: {0}.", message);
 
                 trigger.Actions.Add(message);
-                yield return trigger;
+                triggers.Add(trigger);
             }
+
+            return triggers;
         }
 
         static TriggerBase CreateTrigger(Type targetType, string[] triggerPlusMessage)

@@ -6,11 +6,8 @@
 
     public static class IoC
     {
-        static Func<Type, string, object> getInstanceImplementation = (service, key) => Activator.CreateInstance(service);
-
-        static Func<Type, IEnumerable<object>> getAllInstancesImplementation = service => new[] {
-            Activator.CreateInstance(service)
-        };
+        static Func<Type, string, object> getInstanceImplementation;
+        static Func<Type, IEnumerable<object>> getAllInstancesImplementation;
 
         public static void Initialize(Func<Type, string, object> getInstance, Func<Type, IEnumerable<object >> getAllInstances)
         {
