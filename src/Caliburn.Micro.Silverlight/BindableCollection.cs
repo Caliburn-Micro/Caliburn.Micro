@@ -5,7 +5,12 @@
     using System.Collections.Specialized;
     using System.ComponentModel;
 
-    public class BindableCollection<T> : ObservableCollection<T>
+    public interface IObservableCollection<T> : IList<T>, INotifyPropertyChanged, INotifyCollectionChanged
+    {
+        void AddRange(IEnumerable<T> items);
+    }
+
+    public class BindableCollection<T> : ObservableCollection<T>, IObservableCollection<T>
     {
         private bool raiseCollectionChanged = true;
 
