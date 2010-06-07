@@ -104,6 +104,8 @@
 
         protected override void Invoke(object eventArgs)
         {
+            Log.Info("Executing {0}.", this);
+
             var values = MessageBinder.DetermineParameters(this, execute.GetParameters(), AssociatedObject, eventArgs);
             var outcome = execute.Invoke(target, values);
 
