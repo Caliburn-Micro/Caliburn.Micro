@@ -210,12 +210,12 @@
         </member>
         <member name="F:System.Windows.Interactivity.CustomPropertyValueEditor.ElementBinding">
             <summary>
-            Use the element binding picker, if supported, to edit this property at design time.
+            Uses the element-binding picker, if supported, to edit this property at design time.
             </summary>
         </member>
         <member name="F:System.Windows.Interactivity.CustomPropertyValueEditor.PropertyBinding">
             <summary>
-            Use the property binding picker, if supported, to edit this property at design time.
+            Uses the property-binding picker, if supported, to edit this property at design time.
             </summary>
         </member>
         <member name="T:System.Windows.Interactivity.CustomPropertyValueEditorAttribute">
@@ -300,10 +300,10 @@
         </member>
         <member name="M:System.Windows.Interactivity.EventObserver.#ctor(System.Reflection.EventInfo,System.Object,System.Delegate)">
             <summary>
-            Creates an instance of EventObserver and attaches to supplied event on supplied target. Call dispose to detach.
+            Creates an instance of EventObserver and attaches to the supplied event on the supplied target. Call dispose to detach.
             </summary>
             <param name="eventInfo">The event to attach and detach from.</param>
-            <param name="target">The target object the event is defined on. null if the method is static.</param>
+            <param name="target">The target object the event is defined on. Null if the method is static.</param>
             <param name="handler">The delegate to attach to the event.</param>
         </member>
         <member name="M:System.Windows.Interactivity.EventObserver.Dispose">
@@ -344,7 +344,7 @@
         </member>
         <member name="M:System.Windows.Interactivity.TriggerBase.InvokeActions(System.Object)">
             <summary>
-            Invoke all Actions associated with this trigger.
+            Invoke all actions associated with this trigger.
             </summary>
             <remarks>Derived classes should call this to fire the trigger.</remarks>
         </member>
@@ -363,8 +363,8 @@
             Attaches to the specified object.
             </summary>
             <param name="dependencyObject">The object to attach to.</param>
-            <exception cref="T:System.InvalidOperationException">Cannot host the same Trigger on more than one object at a time.</exception>
-            <exception cref="T:System.InvalidOperationException">dependencyObject does not satisfy the Trigger type constraint.</exception>
+            <exception cref="T:System.InvalidOperationException">Cannot host the same trigger on more than one object at a time.</exception>
+            <exception cref="T:System.InvalidOperationException">dependencyObject does not satisfy the trigger type constraint.</exception>
         </member>
         <member name="M:System.Windows.Interactivity.TriggerBase.Detach">
             <summary>
@@ -391,7 +391,7 @@
         </member>
         <member name="E:System.Windows.Interactivity.TriggerBase.PreviewInvoke">
             <summary>
-            Event handler for registering to PreviewInvoke
+            Event handler for registering to PreviewInvoke.
             </summary>
         </member>
         <member name="P:System.Windows.Interactivity.TriggerBase.System#Windows#Interactivity#IAttachedObject#AssociatedObject">
@@ -449,19 +449,19 @@
         </member>
         <member name="P:System.Windows.Interactivity.EventTriggerBase.SourceObject">
             <summary>
-            Gets or sets the target object. If TargetObject is unset, the target will look for the object specified by TargetName. If an element referred to by TargetName cannot be found, the target will default to the AssociatedObject. This is a dependency property.
+            Gets or sets the target object. If TargetObject is not set, the target will look for the object specified by TargetName. If an element referred to by TargetName cannot be found, the target will default to the AssociatedObject. This is a dependency property.
             </summary>
             <value>The target object.</value>
         </member>
         <member name="P:System.Windows.Interactivity.EventTriggerBase.SourceName">
             <summary>
-            Gets or sets the name of the element this EventTriggerBase listens for as a source. If the name is unset or cannot be resolved, the AssociatedObject will be used.  This is a dependency property.
+            Gets or sets the name of the element this EventTriggerBase listens for as a source. If the name is not set or cannot be resolved, the AssociatedObject will be used.  This is a dependency property.
             </summary>
             <value>The name of the source element.</value>
         </member>
         <member name="P:System.Windows.Interactivity.EventTriggerBase.Source">
             <summary>
-            Gets the resolved source. If <c ref="SourceName"/> is unset or cannot be resolved, defaults to AssociatedObject.
+            Gets the resolved source. If <c ref="SourceName"/> is not set or cannot be resolved, defaults to AssociatedObject.
             </summary>
             <value>The resolved source object.</value>
             <remarks>In general, this property should be used in place of AssociatedObject in derived classes.</remarks>
@@ -476,7 +476,7 @@
             <summary>
             Called when the source property changes.
             </summary>
-            <remarks>Override this to hook functionality to and unhook functionality from the specified Source, rather than the AssociatedObject.</remarks>
+            <remarks>Override this to hook functionality to and unhook functionality from the specified source, rather than the AssociatedObject.</remarks>
             <param name="oldSource">The old source.</param>
             <param name="newSource">The new source.</param>
         </member>
@@ -541,10 +541,10 @@
         </member>
         <member name="M:System.Windows.Interactivity.Interaction.IsElementLoaded(System.Windows.FrameworkElement)">
             <summary>
-            A helper function to take the place of FrameworkElement.IsLoaded, as Silverlight doesn't have a property like that.
+            A helper function to take the place of FrameworkElement.IsLoaded, as this property is not available in Silverlight.
             </summary>
             <param name="element">The element of interest.</param>
-            <returns>True if the element has been loaded; otherwise, false</returns>
+            <returns>True if the element has been loaded; otherwise, False.</returns>
         </member>
         <member name="T:System.Windows.Interactivity.InvokeCommandAction">
             <summary>
@@ -567,13 +567,13 @@
             <summary>
             Attempts to invoke the action.
             </summary>
-            <param name="parameter">The parameter to the action. If the Action does not require a parameter, the parameter may be set to a null reference.</param>
+            <param name="parameter">The parameter to the action. If the action does not require a parameter, the parameter may be set to a null reference.</param>
         </member>
         <member name="M:System.Windows.Interactivity.TriggerAction.Invoke(System.Object)">
             <summary>
             Invokes the action.
             </summary>
-            <param name="parameter">The parameter to the action. If the Action does not require a parameter, the parameter may be set to a null reference.</param>
+            <param name="parameter">The parameter to the action. If the action does not require a parameter, the parameter may be set to a null reference.</param>
         </member>
         <member name="M:System.Windows.Interactivity.TriggerAction.OnAttached">
             <summary>
@@ -603,12 +603,12 @@
             Gets or sets a value indicating whether this action will run when invoked. This is a dependency property.
             </summary>
             <value>
-            	<c>true</c> if this action will be run when invoked; otherwise, <c>false</c>.
+            	<c>True</c> if this action will be run when invoked; otherwise, <c>False</c>.
             </value>
         </member>
         <member name="P:System.Windows.Interactivity.TriggerAction.AssociatedObject">
             <summary>
-            Gets the object to which this Action is attached.
+            Gets the object to which this action is attached.
             </summary>
             <value>The associated object.</value>
         </member>
@@ -622,7 +622,7 @@
             <summary>
             Gets or sets a value indicating whether this instance is attached.
             </summary>
-            <value><c>true</c> if this instance is attached; otherwise, <c>false</c>.</value>
+            <value><c>True</c> if this instance is attached; otherwise, <c>False</c>.</value>
         </member>
         <member name="P:System.Windows.Interactivity.TriggerAction.System#Windows#Interactivity#IAttachedObject#AssociatedObject">
             <summary>
@@ -651,7 +651,7 @@
             <summary>
             Invokes the action.
             </summary>
-            <param name="parameter">The parameter to the action. If the Action does not require a parameter, the parameter may be set to a null reference.</param>
+            <param name="parameter">The parameter to the action. If the action does not require a parameter, the parameter may be set to a null reference.</param>
         </member>
         <member name="P:System.Windows.Interactivity.InvokeCommandAction.CommandName">
             <summary>
@@ -692,7 +692,7 @@
             <param name="oldObject">The old resolved object.</param>
             <remarks>
             Resets the existing target and attempts to resolve the current TargetName from the
-            context of the current Host. If it cannot resolve from the context of Host, it will
+            context of the current Host. If it cannot resolve from the context of the Host, it will
             continue up the visual tree until it resolves. If it has not resolved it when it reaches
             the root, it will set the Target to null and write a warning message to Debug output.
             </remarks>
@@ -710,7 +710,7 @@
         </member>
         <member name="P:System.Windows.Interactivity.NameResolver.Object">
             <summary>
-            The resolved object. Will return the reference element is TargetName is null or empty, or if a resolve has not been attempted.
+            The resolved object. Will return the reference element if TargetName is null or empty, or if a resolve has not been attempted.
             </summary>
         </member>
         <member name="P:System.Windows.Interactivity.NameResolver.NameScopeReferenceElement">
@@ -724,7 +724,7 @@
             Gets or sets a value indicating whether the reference element load is pending.
             </summary>
             <value>
-            	<c>true</c> if [pending reference element load]; otherwise, <c>false</c>.
+            	<c>True</c> if [pending reference element load]; otherwise, <c>False</c>.
             </value>
             <remarks>
             If the Host has not been loaded, the name will not be resolved.
@@ -738,8 +738,8 @@
             <typeparam name="T">The type constraint on the target.</typeparam>
             <remarks>
             	TargetedTriggerAction extends TriggerAction to add knowledge of another element than the one it is attached to. 
-            	This allows a user to invoke the Action on an element other than the one it is attached to in response to a 
-            	Trigger firing. Override OnTargetChanged to hook or unhook handlers on the target element, and OnAttached/OnDetaching 
+            	This allows a user to invoke the action on an element other than the one it is attached to in response to a 
+            	trigger firing. Override OnTargetChanged to hook or unhook handlers on the target element, and OnAttached/OnDetaching 
             	for the associated element. The type of the Target element can be constrained by the generic type parameter. If 
             	you need control over the type of the AssociatedObject, set a TypeConstraintAttribute on your derived type.
             </remarks>
@@ -770,19 +770,19 @@
         </member>
         <member name="P:System.Windows.Interactivity.TargetedTriggerAction.TargetObject">
             <summary>
-            Gets or sets the target object. If TargetObject is unset, the target will look for the object specified by TargetName. If an element referred to by TargetName cannot be found, the target will default to the AssociatedObject. This is a dependency property.
+            Gets or sets the target object. If TargetObject is not set, the target will look for the object specified by TargetName. If an element referred to by TargetName cannot be found, the target will default to the AssociatedObject. This is a dependency property.
             </summary>
             <value>The target object.</value>
         </member>
         <member name="P:System.Windows.Interactivity.TargetedTriggerAction.TargetName">
             <summary>
-            Gets or sets the name of the object this action targets. If Target is set, this property is ignored. If Target is not set and TargetName is unset or cannot be resolved, the target will default to the AssociatedObject. This is a dependency property.
+            Gets or sets the name of the object this action targets. If Target is set, this property is ignored. If Target is not set and TargetName is not set or cannot be resolved, the target will default to the AssociatedObject. This is a dependency property.
             </summary>
             <value>The name of the target object.</value>
         </member>
         <member name="P:System.Windows.Interactivity.TargetedTriggerAction.Target">
             <summary>
-            Gets the target object. If TargetObject is set, returns TargetObject. Else, if TargetName is unset or cannot be resolved, defaults to the AssociatedObject.
+            Gets the target object. If TargetObject is set, returns TargetObject. Else, if TargetName is not set or cannot be resolved, defaults to the AssociatedObject.
             </summary>
             <value>The target object.</value>
             <remarks>In general, this property should be used in place of AssociatedObject in derived classes.</remarks>
@@ -816,7 +816,7 @@
         </member>
         <member name="P:System.Windows.Interactivity.TargetedTriggerAction`1.Target">
             <summary>
-            Gets the target object. If TargetName is unset or cannot be resolved, defaults to the AssociatedObject.
+            Gets the target object. If TargetName is not set or cannot be resolved, defaults to the AssociatedObject.
             </summary>
             <value>The target.</value>
             <remarks>In general, this property should be used in place of AssociatedObject in derived classes.</remarks>
@@ -856,11 +856,11 @@
         </member>
         <member name="T:System.Windows.Interactivity.TriggerBase`1">
             <summary>
-            Represents an object that can invoke Actions conditionally.
+            Represents an object that can invoke actions conditionally.
             </summary>
             <typeparam name="T">The type to which this trigger can be attached.</typeparam>
             <remarks>
-            	TriggerBase is the base class for controlling Actions. Override OnAttached() and 
+            	TriggerBase is the base class for controlling actions. Override OnAttached() and 
             	OnDetaching() to hook and unhook handlers on the AssociatedObject. You may 
             	constrain the types that a derived TriggerBase may be attached to by specifying 
             	the generic parameter. Call InvokeActions() to fire all Actions associated with 
@@ -886,9 +886,9 @@
         </member>
         <member name="T:System.Windows.Interactivity.PreviewInvokeEventArgs">
             <summary>
-            Argument pass to PreviewInvoke event. Assigning Cancelling to true, will cancel the invoke from the trigger.  
+            Argument passed to PreviewInvoke event. Assigning Cancelling to True will cancel the invoking of the trigger.
             </summary>
-            <remarks>This is an infrastructure class. Behavior attached to a trigger base object can add their behavior as a listener to TriggerBase.PreviewInvoke</remarks>
+            <remarks>This is an infrastructure class. Behavior attached to a trigger base object can add its behavior as a listener to TriggerBase.PreviewInvoke.</remarks>
         </member>
         <member name="T:System.Windows.Interactivity.TriggerCollection">
             <summary>
@@ -925,7 +925,7 @@
         </member>
         <member name="T:System.Windows.Interactivity.TypeConstraintAttribute">
             <summary>
-            Specify type constraints on the AssociatedObject of TargetedTriggerAction and EventTriggerBase.
+            Specifies type constraints on the AssociatedObject of TargetedTriggerAction and EventTriggerBase.
             </summary>
         </member>
         <member name="M:System.Windows.Interactivity.TypeConstraintAttribute.#ctor(System.Type)">
@@ -998,12 +998,12 @@
         </member>
         <member name="P:System.Windows.Interactivity.ExceptionStringTable.EventTriggerBaseInvalidEventExceptionMessage">
             <summary>
-              Looks up a localized string similar to The event &quot;{0}&quot; on type &quot;{1}&quot; has an incompatible signature. Ensure the event is public and satisfies the EventHandler delegate..
+              Looks up a localized string similar to The event &quot;{0}&quot; on type &quot;{1}&quot; has an incompatible signature. Make sure the event is public and satisfies the EventHandler delegate..
             </summary>
         </member>
         <member name="P:System.Windows.Interactivity.ExceptionStringTable.EventTriggerCannotFindEventNameExceptionMessage">
             <summary>
-              Looks up a localized string similar to Cannot find an event named &quot;{0}&quot; on type &quot;{1}.&quot;.
+              Looks up a localized string similar to Cannot find an event named &quot;{0}&quot; on type &quot;{1}&quot;..
             </summary>
         </member>
         <member name="P:System.Windows.Interactivity.ExceptionStringTable.RetargetedTypeConstraintViolatedExceptionMessage">
@@ -1018,7 +1018,7 @@
         </member>
         <member name="P:System.Windows.Interactivity.ExceptionStringTable.UnableToResolveTargetNameWarningMessage">
             <summary>
-              Looks up a localized string similar to Unable to resolve TargetName &quot;{0}.&quot;.
+              Looks up a localized string similar to Unable to resolve TargetName &quot;{0}&quot;..
             </summary>
         </member>
     </members>
