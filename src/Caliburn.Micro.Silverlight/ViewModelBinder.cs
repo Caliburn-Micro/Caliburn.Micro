@@ -4,8 +4,6 @@
     using System.Collections.Generic;
     using System.Reflection;
     using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Controls.Primitives;
     using System.Windows.Data;
 
     public static class ViewModelBinder
@@ -68,31 +66,11 @@
                 ConventionManager.ApplyStringFormat(binding, convention, property);
                 ConventionManager.ApplyValidation(binding, convention, property);
 
-                BindingOperations.SetBinding(foundControl, convention.BindableProperty, binding);
+                var bindableProperty = ConventionManager.CheckBindablePropertyExceptions(convention, foundControl);
 
-                var textBox = foundControl as TextBox;
-                if (textBox != null && convention.BindableProperty == TextBox.TextProperty)
-                {
-                    textBox.TextChanged += delegate { textBox.GetBindingExpression(TextBox.TextProperty).UpdateSource(); };
-                    continue;
-                }
+                BindingOperations.SetBinding(foundControl, bindableProperty, binding);
 
-                var itemsControl = foundControl as ItemsControl;
-                if(itemsControl != null)
-                {
-                    if (string.IsNullOrEmpty(itemsControl.DisplayMemberPath) && itemsControl.ItemTemplate == null)
-                        itemsControl.ItemTemplate = ConventionManager.DefaultDataTemplate;
-
-                    var selector = itemsControl as Selector;
-                    if(selector != null)
-                    {
-                        var selectionBinding = new Binding("Active" + ConventionManager.Singularize(property.Name)) {
-                            Mode = BindingMode.TwoWay
-                        };
-
-                        BindingOperations.SetBinding(foundControl, Selector.SelectedItemProperty, selectionBinding);
-                    }
-                }
+                ConventionManager.AddCustomBindingBehavior(convention, property, foundControl);
             }
         }
 

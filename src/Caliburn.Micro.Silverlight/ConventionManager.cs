@@ -63,6 +63,48 @@
                 binding.Source = "{0:MM/dd/yyyy}";
         };
 
+        public static Func<ElementConvention, DependencyObject, DependencyProperty> CheckBindablePropertyExceptions = (convention, foundControl) =>{
+            var element = foundControl as ContentControl;
+            if(element == null)
+                return convention.BindableProperty;
+#if SILVERLIGHT
+            return element.ContentTemplate == null
+                ? View.ModelProperty
+                : convention.BindableProperty;
+#else
+            return element.ContentTemplate == null && element.ContentTemplateSelector == null
+                ? View.ModelProperty
+                : convention.BindableProperty;
+#endif
+        };
+
+        public static Action<ElementConvention, PropertyInfo, DependencyObject> AddCustomBindingBehavior = (convention, property, foundControl) =>
+        {
+            var textBox = foundControl as TextBox;
+            if(textBox != null && convention.BindableProperty == TextBox.TextProperty)
+            {
+                textBox.TextChanged += delegate { textBox.GetBindingExpression(TextBox.TextProperty).UpdateSource(); };
+                return;
+            }
+
+            var itemsControl = foundControl as ItemsControl;
+            if(itemsControl != null)
+            {
+                if(string.IsNullOrEmpty(itemsControl.DisplayMemberPath) && itemsControl.ItemTemplate == null)
+                    itemsControl.ItemTemplate = DefaultDataTemplate;
+
+                var selector = itemsControl as Selector;
+                if(selector != null)
+                {
+                    var selectionBinding = new Binding("Active" + Singularize(property.Name)) {
+                        Mode = BindingMode.TwoWay
+                    };
+
+                    BindingOperations.SetBinding(foundControl, Selector.SelectedItemProperty, selectionBinding);
+                }
+            }
+        };
+
         static ConventionManager()
         {
 #if SILVERLIGHT
@@ -104,7 +146,7 @@
             AddElementConvention<Grid>(Grid.VisibilityProperty, "DataContext", "Loaded");
             AddElementConvention<Border>(Border.VisibilityProperty, "DataContext", "Loaded");
             AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", "Loaded");
-            AddElementConvention<ContentControl>(View.ModelProperty, "DataContext", "Loaded"); 
+            AddElementConvention<ContentControl>(ContentControl.ContentProperty, "DataContext", "Loaded"); 
         }
 
         public static void AddElementConvention<T>(DependencyProperty bindableProperty, string parameterProperty, string eventName)
