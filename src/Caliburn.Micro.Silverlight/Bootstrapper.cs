@@ -2,13 +2,22 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Reflection;
     using System.Windows;
+    using System.Windows.Controls;
 
     public class Bootstrapper
     {
+#if !SILVERLIGHT
+        public static readonly bool IsInDesignMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
+#else
+        public static readonly bool IsInDesignMode = DesignerProperties.GetIsInDesignMode(new UserControl());
+#endif
+
         public Bootstrapper()
         {
+            Execute.InitializeWithDispatcher();
             AssemblySource.Known.AddRange(SelectAssemblies());
             Configure();
             IoC.Initialize(GetInstance, GetAllInstances);

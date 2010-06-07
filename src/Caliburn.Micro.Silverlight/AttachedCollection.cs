@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Specialized;
-    using System.ComponentModel;
     using System.Linq;
     using System.Windows;
     using System.Windows.Interactivity;
@@ -30,8 +29,7 @@
             if(AssociatedObject != null)
                 throw new InvalidOperationException();
 
-            if((Application.Current == null || Application.Current.RootVisual == null)
-                || !(bool)Application.Current.RootVisual.GetValue(DesignerProperties.IsInDesignModeProperty))
+            if((Application.Current == null || Application.Current.RootVisual == null) || !Bootstrapper.IsInDesignMode)
                 associatedObject = dependencyObject;
 
             OnAttached();

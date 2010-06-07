@@ -15,12 +15,7 @@
             this.enumerator = enumerator;
         }
 
-        public void Execute()
-        {
-            RecursiveCallback(true);
-        }
-
-        void RecursiveCallback(bool result)
+        public void Execute(bool result = true)
         {
             finalResult = finalResult && result;
 
@@ -29,9 +24,9 @@
             else
             {
                 var guard = enumerator.Current as IGuardClose;
-                if(guard != null) 
-                    guard.CanClose(RecursiveCallback);
-                else RecursiveCallback(true);
+                if(guard != null)
+                    guard.CanClose(Execute);
+                else Execute();
             }
         }
     }

@@ -35,7 +35,7 @@ namespace Caliburn.Micro
             if (AssociatedObject != null)
                 throw new InvalidOperationException();
 
-            if (!(bool)GetValue(DesignerProperties.IsInDesignModeProperty))
+            if (!Bootstrapper.IsInDesignMode)
             {
                 WritePreamble();
                 associatedObject = dependencyObject;
