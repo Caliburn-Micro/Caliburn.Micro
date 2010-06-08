@@ -17,6 +17,12 @@
 
         public Bootstrapper()
         {
+            if(!IsInDesignMode)
+                Start();
+        }
+
+        internal virtual void Start() 
+        {
             Execute.InitializeWithDispatcher();
             AssemblySource.Known.AddRange(SelectAssemblies());
             Configure();
@@ -47,8 +53,9 @@
 
     public class Bootstrapper<TRootModel> : Bootstrapper
     {
-        public Bootstrapper()
+        internal override void Start()
         {
+            base.Start();
             Application.Current.Startup += OnStartup;
         }
 

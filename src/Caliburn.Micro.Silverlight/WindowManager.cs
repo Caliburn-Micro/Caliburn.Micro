@@ -7,7 +7,7 @@
 
     public interface IWindowManager
     {
-        void ShowDialog(object rootModel, object context);
+        void ShowDialog(object rootModel, object context = null);
     }
 
     public class WindowManager : IWindowManager
@@ -30,7 +30,7 @@
             return view;
         }
 
-        public void ShowDialog(object rootModel, object context)
+        public void ShowDialog(object rootModel, object context = null)
         {
             var view = EnsureWindow(rootModel, ViewLocator.Locate(rootModel, context));
             ViewModelBinder.Bind(rootModel, view, context);

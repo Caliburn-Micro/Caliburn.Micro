@@ -7,8 +7,8 @@
 
     public interface IWindowManager
     {
-        bool? ShowDialog(object rootModel, object context);
-        void Show(object rootModel, object context);
+        bool? ShowDialog(object rootModel, object context = null);
+        void Show(object rootModel, object context = null);
     }
 
     public class WindowManager : IWindowManager
@@ -31,13 +31,13 @@
             return view;
         }
 
-        public bool? ShowDialog(object rootModel, object context)
+        public bool? ShowDialog(object rootModel, object context = null)
         {
             var window = CreateWindow(rootModel, true, context);
             return window.ShowDialog();
         }
 
-        public void Show(object rootModel, object context)
+        public void Show(object rootModel, object context = null)
         {
             var window = CreateWindow(rootModel, false, context);
             window.Show();
