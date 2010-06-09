@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
@@ -79,27 +80,44 @@
 #endif
         };
 
-        public static Action<ElementConvention, PropertyInfo, DependencyObject> AddCustomBindingBehavior = (convention, property, foundControl) =>{
+        public static Action<ElementConvention, PropertyInfo, DependencyObject, Binding> AddCustomBindingBehavior = (convention, property, foundControl, binding) =>{
             var textBox = foundControl as TextBox;
             if(textBox != null && convention.BindableProperty == TextBox.TextProperty)
             {
+#if SILVERLIGHT
                 textBox.TextChanged += delegate { textBox.GetBindingExpression(TextBox.TextProperty).UpdateSource(); };
+#else
+                binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+#endif
                 return;
             }
+
+#if SILVERLIGHT
+            var passwordBox = foundControl as PasswordBox;
+            if (passwordBox != null && convention.BindableProperty == PasswordBox.PasswordProperty)
+            {
+                passwordBox.PasswordChanged += delegate { passwordBox.GetBindingExpression(PasswordBox.PasswordProperty).UpdateSource(); };
+                return;
+            }
+#endif
 
             var itemsControl = foundControl as ItemsControl;
             if(itemsControl != null)
             {
-                if(string.IsNullOrEmpty(itemsControl.DisplayMemberPath) && itemsControl.ItemTemplate == null)
-                    itemsControl.ItemTemplate = DefaultDataTemplate;
+                if (string.IsNullOrEmpty(itemsControl.DisplayMemberPath) && itemsControl.ItemTemplate == null)
+                {
+                    if (property.PropertyType.IsGenericType)
+                    {
+                        var itemType = property.PropertyType.GetGenericArguments().First();
+                        if(!itemType.IsValueType && !typeof(string).IsAssignableFrom(itemType))
+                            itemsControl.ItemTemplate = DefaultDataTemplate;
+                    }
+                }
 
                 var selector = itemsControl as Selector;
                 if(selector != null)
                 {
-                    var selectionBinding = new Binding("Active" + Singularize(property.Name)) {
-                        Mode = BindingMode.TwoWay
-                    };
-
+                    var selectionBinding = new Binding("Active" + Singularize(property.Name)) { Mode = BindingMode.TwoWay };
                     BindingOperations.SetBinding(foundControl, Selector.SelectedItemProperty, selectionBinding);
                 }
             }

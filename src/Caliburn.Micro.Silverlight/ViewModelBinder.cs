@@ -90,7 +90,7 @@
                 var bindableProperty = ConventionManager.CheckBindablePropertyExceptions(convention, foundControl);
                 BindingOperations.SetBinding(foundControl, bindableProperty, binding);
                 Log.Info("Added convention binding for property {0}.", property.Name);
-                ConventionManager.AddCustomBindingBehavior(convention, property, foundControl);
+                ConventionManager.AddCustomBindingBehavior(convention, property, foundControl, binding);
             }
         }
 
