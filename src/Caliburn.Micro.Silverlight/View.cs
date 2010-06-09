@@ -68,7 +68,7 @@
             if (args.NewValue != null)
             {
                 var context = GetContext(targetLocation);
-                var view = ViewLocator.Locate(args.NewValue, context);
+                var view = ViewLocator.LocateForModel(args.NewValue, context);
 
                 ViewModelBinder.Bind(args.NewValue, view, context);
                 SetContentProperty(targetLocation, view);
@@ -85,7 +85,7 @@
             if (model == null)
                 return;
 
-            var view = ViewLocator.Locate(model, e.NewValue);
+            var view = ViewLocator.LocateForModel(model, e.NewValue);
             ViewModelBinder.Bind(model, view, e.NewValue);
 
             SetContentProperty(targetLocation, view);
@@ -94,7 +94,7 @@
         public static UIElement GetWithViewModel<TViewModel>(string context = null)
         {
             var viewModel = IoC.GetInstance<TViewModel>();
-            var view = ViewLocator.Locate(viewModel, context);
+            var view = ViewLocator.LocateForModel(viewModel, context);
 
             ViewModelBinder.Bind(viewModel, view, context);
 

@@ -45,7 +45,7 @@
 
         Window CreateWindow(object rootModel, bool isDialog, object context)
         {
-            var view = EnsureWindow(rootModel, ViewLocator.Locate(rootModel, context), isDialog);
+            var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, context), isDialog);
             ViewModelBinder.Bind(rootModel, view, context);
 
             var activatable = rootModel as IActivate;

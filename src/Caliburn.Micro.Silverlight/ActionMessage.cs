@@ -91,15 +91,23 @@
             view = found.Item3;
 
             var inpc = target as INotifyPropertyChanged;
-            if (inpc != null)
-            {
-                canExecute = target.GetType().GetProperty("Can" + MethodName);
-                if (canExecute != null && target is Control)
-                {
-                    inpc.PropertyChanged += CanExecuteChanged;
-                    ((Control)AssociatedObject).IsEnabled = (bool)canExecute.GetValue(target, null);
-                }
-            }
+            if (inpc == null)
+                return;
+
+            canExecute = target.GetType().GetProperty("Can" + MethodName);
+#if SILVERLIGHT
+            if (canExecute == null || !(target is Control))
+                return;
+#else
+            if (canExecute == null)
+                return;
+#endif
+            inpc.PropertyChanged += CanExecuteChanged;
+#if SILVERLIGHT
+            ((Control)AssociatedObject).IsEnabled = (bool)canExecute.GetValue(target, null);
+#else
+            AssociatedObject.IsEnabled = (bool)canExecute.GetValue(target, null);
+#endif
         }
 
         protected override void Invoke(object eventArgs)
@@ -125,7 +133,12 @@
                 return;
 
             Log.Info("Execution changed for {0}.", this);
+
+#if SILVERLIGHT
             ((Control)AssociatedObject).IsEnabled = (bool)canExecute.GetValue(target, null);
+#else
+            AssociatedObject.IsEnabled = (bool)canExecute.GetValue(target, null);
+#endif
         }
 
         Tuple<object, MethodInfo, DependencyObject> GetMethodBinding()
@@ -141,7 +154,8 @@
                 if(currentTarget != null)
                     actionMethod = currentTarget.GetType().GetMethod(MethodName);
 
-                currentElement = VisualTreeHelper.GetParent(currentElement);
+                if(actionMethod == null)
+                    currentElement = VisualTreeHelper.GetParent(currentElement);
             }
 
             return new Tuple<object, MethodInfo, DependencyObject>(currentTarget, actionMethod, currentElement);

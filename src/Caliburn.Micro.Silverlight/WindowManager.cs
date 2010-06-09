@@ -32,7 +32,7 @@
 
         public void ShowDialog(object rootModel, object context = null)
         {
-            var view = EnsureWindow(rootModel, ViewLocator.Locate(rootModel, context));
+            var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, context));
             ViewModelBinder.Bind(rootModel, view, context);
 
             var activatable = rootModel as IActivate;

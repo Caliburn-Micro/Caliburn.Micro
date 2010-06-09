@@ -4,8 +4,6 @@
 
     public static class AssemblySource
     {
-        public static readonly IObservableCollection<Assembly> Known = new BindableCollection<Assembly> {
-            Assembly.GetExecutingAssembly()
-        };
+        public static readonly IObservableCollection<Assembly> Known = new BindableCollection<Assembly>();
     }
 }
