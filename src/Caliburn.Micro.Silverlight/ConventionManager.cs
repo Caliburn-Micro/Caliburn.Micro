@@ -112,8 +112,10 @@
 
             if (string.IsNullOrEmpty(itemsControl.DisplayMemberPath) && itemsControl.ItemTemplate == null && property.PropertyType.IsGenericType)
             {
+#if !WP7
                 var itemType = property.PropertyType.GetGenericArguments().First();
                 if(!itemType.IsValueType && !typeof(string).IsAssignableFrom(itemType))
+#endif
                     itemsControl.ItemTemplate = DefaultDataTemplate;
             }
 
