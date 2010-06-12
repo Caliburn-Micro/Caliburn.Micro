@@ -3,8 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Text.RegularExpressions;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Data;
     using EventTrigger = System.Windows.Interactivity.EventTrigger;
     using TriggerBase = System.Windows.Interactivity.TriggerBase;
@@ -95,59 +97,71 @@
         {
             var actualParameter = new Parameter();
 
-            if (parameter.StartsWith("'") && parameter.EndsWith("'"))
+            if(parameter.StartsWith("'") && parameter.EndsWith("'"))
                 actualParameter.Value = parameter.Substring(1, parameter.Length - 2);
-            else if (MessageBinder.SpecialValues.Contains(parameter.ToLower()) || char.IsNumber(parameter[0]))
+            else if(MessageBinder.SpecialValues.Contains(parameter.ToLower()) || char.IsNumber(parameter[0]))
                 actualParameter.Value = parameter;
-            else
+            else if(target is FrameworkElement)
             {
-                var nameAndBindingMode = parameter.Split(':')
-                    .Select(x => x.Trim()).ToArray();
-
+                var fe = (FrameworkElement)target;
+                var nameAndBindingMode = parameter.Split(':').Select(x => x.Trim()).ToArray();
                 var index = nameAndBindingMode[0].IndexOf('.');
 
-                if (index == -1)
-                {
-                    var fe = target as FrameworkElement;
-                    if (fe != null)
-                    {
-                        fe.Loaded += delegate{
-                            var element = fe.FindName(nameAndBindingMode[0]);
-                            if (element == null)
-                                return;
-
-                            var convention = ConventionManager.GetElementConvention(element.GetType());
-                            var binding = new Binding(convention.ParameterProperty) {
-                                ElementName = nameAndBindingMode[0]
-                            };
-
-                            BindingOperations.SetBinding(actualParameter, Parameter.ValueProperty, binding);
-                        };
-                    }
-                }
+                if(index == -1)
+                    fe.Loaded += (s, e) => BindParameter(fe, actualParameter, nameAndBindingMode[0], null, BindingMode.OneWay);
                 else
                 {
                     var elementName = nameAndBindingMode[0].Substring(0, index);
-                    var path = new PropertyPath(nameAndBindingMode[0].Substring(index + 1));
+                    var path = nameAndBindingMode[0].Substring(index + 1);
+                    var mode = nameAndBindingMode.Length == 2 ? (BindingMode)Enum.Parse(typeof(BindingMode), nameAndBindingMode[1], true) : BindingMode.OneWay;
 
-                    var binding = elementName == "$this"
-                        ? new Binding {
-                            Path = path,
-                            Source = target
-                        }
-                        : new Binding {
-                            Path = path,
-                            ElementName = elementName
-                        };
-
-                    if (nameAndBindingMode.Length == 2)
-                        binding.Mode = (BindingMode)Enum.Parse(typeof(BindingMode), nameAndBindingMode[1], true);
-
-                    BindingOperations.SetBinding(actualParameter, Parameter.ValueProperty, binding);
+                    fe.Loaded += (s, e) => BindParameter(fe, actualParameter, elementName, path, mode);
                 }
             }
 
             return actualParameter;
+        }
+
+        private static void BindParameter(FrameworkElement target, Parameter parameter, string elementName, string path, BindingMode bindingMode)
+        {
+            var element = elementName == "$this" ? target : (DependencyObject)target.FindName(elementName);
+            if (element == null)
+                return;
+
+            if(string.IsNullOrEmpty(path))
+                path = ConventionManager.GetElementConvention(element.GetType()).ParameterProperty;
+
+            var binding = new Binding(path) {
+                Source = element,
+                Mode = bindingMode
+            };
+
+#if !SILVERLIGHT
+            binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            BindingOperations.SetBinding(parameter, Parameter.ValueProperty, binding);
+#else
+            var expression = (BindingExpression)BindingOperations.SetBinding(parameter, Parameter.ValueProperty, binding);
+
+            var field = element.GetType().GetField(path + "Property", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            if(field == null)
+                return;
+
+            var bindableProperty = (DependencyProperty)field.GetValue(null);
+
+            var textBox = element as TextBox;
+            if(textBox != null && bindableProperty == TextBox.TextProperty)
+            {
+                textBox.TextChanged += delegate { expression.UpdateSource(); };
+                return;
+            }
+
+            var passwordBox = element as PasswordBox;
+            if(passwordBox != null && bindableProperty == PasswordBox.PasswordProperty)
+            {
+                passwordBox.PasswordChanged += delegate { expression.UpdateSource(); };
+                return;
+            }
+#endif
         }
     }
 }

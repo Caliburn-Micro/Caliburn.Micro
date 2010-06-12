@@ -11,7 +11,7 @@
                 "Value",
                 typeof(object),
                 typeof(Parameter),
-                null
+                new PropertyMetadata(OnValueChanged)
                 );
 
         DependencyObject associatedObject;
@@ -54,6 +54,10 @@
         protected override Freezable CreateInstanceCore()
         {
             return new Parameter();
+        }
+
+        static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
         }
     }
 }

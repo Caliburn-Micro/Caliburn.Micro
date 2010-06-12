@@ -88,6 +88,8 @@
                 ConventionManager.ApplyValidation(binding, convention, property);
 
                 var bindableProperty = ConventionManager.CheckBindablePropertyExceptions(convention, foundControl);
+                ConventionManager.ApplyUpdateSourceTrigger(bindableProperty, foundControl, binding);
+
                 BindingOperations.SetBinding(foundControl, bindableProperty, binding);
                 Log.Info("Added convention binding for property {0}.", property.Name);
                 ConventionManager.AddCustomBindingBehavior(convention, property, foundControl, binding);

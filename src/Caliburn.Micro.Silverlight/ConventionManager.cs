@@ -84,27 +84,28 @@
             return element.GetBindingExpression(property) != null;
         };
 
-        public static Action<ElementConvention, PropertyInfo, DependencyObject, Binding> AddCustomBindingBehavior = (convention, property, foundControl, binding) =>{
-            var textBox = foundControl as TextBox;
-            if(textBox != null && convention.BindableProperty == TextBox.TextProperty)
-            {
-#if SILVERLIGHT
-                textBox.TextChanged += delegate { textBox.GetBindingExpression(TextBox.TextProperty).UpdateSource(); };
+        public static Action<DependencyProperty, DependencyObject, Binding> ApplyUpdateSourceTrigger = (bindableProperty, foundControl, binding) =>{
+#if !SILVERLIGHT
+            binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            return;
 #else
-                binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-#endif
-                return;
-            }
-
-#if SILVERLIGHT
-            var passwordBox = foundControl as PasswordBox;
-            if(passwordBox != null && convention.BindableProperty == PasswordBox.PasswordProperty)
+            var textBox = foundControl as TextBox;
+            if (textBox != null && bindableProperty == TextBox.TextProperty)
             {
-                passwordBox.PasswordChanged += delegate { passwordBox.GetBindingExpression(PasswordBox.PasswordProperty).UpdateSource(); };
+                textBox.TextChanged += delegate { textBox.GetBindingExpression(bindableProperty).UpdateSource(); };
+                return;
+            }
+
+            var passwordBox = foundControl as PasswordBox;
+            if (passwordBox != null && bindableProperty == PasswordBox.PasswordProperty)
+            {
+                passwordBox.PasswordChanged += delegate { passwordBox.GetBindingExpression(bindableProperty).UpdateSource(); };
                 return;
             }
 #endif
+        };
 
+        public static Action<ElementConvention, PropertyInfo, DependencyObject, Binding> AddCustomBindingBehavior = (convention, property, foundControl, binding) =>{
             var itemsControl = foundControl as ItemsControl;
             if(itemsControl == null)
                 return;
@@ -143,7 +144,9 @@
         {
 #if SILVERLIGHT
             AddElementConvention<HyperlinkButton>(HyperlinkButton.ContentProperty, "DataContext", "Click");
+            AddElementConvention<PasswordBox>(PasswordBox.PasswordProperty, "Password", "PasswordChanged");
 #else
+            AddElementConvention<PasswordBox>(PasswordBox.DataContextProperty, "DataContext", "PasswordChanged");
             AddElementConvention<Hyperlink>(Hyperlink.DataContextProperty, "DataContext", "Click");
             AddElementConvention<RichTextBox>(RichTextBox.DataContextProperty, "DataContext", "TextChanged");
             AddElementConvention<Menu>(Menu.ItemsSourceProperty,"DataContext", "Click");

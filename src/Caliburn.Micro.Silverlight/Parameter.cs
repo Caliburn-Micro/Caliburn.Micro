@@ -10,7 +10,7 @@
                 "Value",
                 typeof(object),
                 typeof(Parameter),
-                null
+                new PropertyMetadata(OnValueChanged)
                 );
 
         DependencyObject associatedObject;
@@ -34,6 +34,10 @@
         void IAttachedObject.Detach()
         {
             associatedObject = null;
+        }
+
+        static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
         }
     }
 }
