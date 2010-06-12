@@ -31,7 +31,7 @@
             var providedValues = message.Parameters.Select(x => x.Value).ToArray();
             var values = new object[requiredParameters.Length];
 
-            for (int i = 0; i < providedValues.Length; i++)
+            for(int i = 0; i < requiredParameters.Length; i++)
             {
                 var value = providedValues[i];
                 var stringValue = value as string;
