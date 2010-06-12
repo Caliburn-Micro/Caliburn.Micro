@@ -74,7 +74,7 @@
                     continue;
                 }
 
-                if (((FrameworkElement)foundControl).GetBindingExpression(convention.BindableProperty) != null)
+                if (ConventionManager.HasBinding((FrameworkElement)foundControl, convention.BindableProperty))
                 {
                     Log.Warn("Binding already exists on {0}.", property.Name);
                     continue;

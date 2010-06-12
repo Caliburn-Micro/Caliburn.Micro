@@ -80,6 +80,10 @@
 #endif
         };
 
+        public static Func<FrameworkElement, DependencyProperty, bool> HasBinding = (element, property) =>{
+            return element.GetBindingExpression(property) != null;
+        };
+
         public static Action<ElementConvention, PropertyInfo, DependencyObject, Binding> AddCustomBindingBehavior = (convention, property, foundControl, binding) =>{
             var textBox = foundControl as TextBox;
             if(textBox != null && convention.BindableProperty == TextBox.TextProperty)
@@ -94,7 +98,7 @@
 
 #if SILVERLIGHT
             var passwordBox = foundControl as PasswordBox;
-            if (passwordBox != null && convention.BindableProperty == PasswordBox.PasswordProperty)
+            if(passwordBox != null && convention.BindableProperty == PasswordBox.PasswordProperty)
             {
                 passwordBox.PasswordChanged += delegate { passwordBox.GetBindingExpression(PasswordBox.PasswordProperty).UpdateSource(); };
                 return;
@@ -102,23 +106,35 @@
 #endif
 
             var itemsControl = foundControl as ItemsControl;
-            if(itemsControl != null)
-            {
-                if (string.IsNullOrEmpty(itemsControl.DisplayMemberPath) && itemsControl.ItemTemplate == null)
-                {
-                    if (property.PropertyType.IsGenericType)
-                    {
-                        var itemType = property.PropertyType.GetGenericArguments().First();
-                        if(!itemType.IsValueType && !typeof(string).IsAssignableFrom(itemType))
-                            itemsControl.ItemTemplate = DefaultDataTemplate;
-                    }
-                }
+            if(itemsControl == null)
+                return;
 
-                var selector = itemsControl as Selector;
-                if(selector != null)
+            if (string.IsNullOrEmpty(itemsControl.DisplayMemberPath) && itemsControl.ItemTemplate == null && property.PropertyType.IsGenericType)
+            {
+                var itemType = property.PropertyType.GetGenericArguments().First();
+                if(!itemType.IsValueType && !typeof(string).IsAssignableFrom(itemType))
+                    itemsControl.ItemTemplate = DefaultDataTemplate;
+            }
+
+            var selector = itemsControl as Selector;
+            if(selector == null)
+                return;
+
+            if(HasBinding(selector, Selector.SelectedItemProperty))
+                return;
+
+            var potentialNames = new[] {
+                "Active" + Singularize(property.Name),
+                "Selected" + Singularize(property.Name)
+            };
+
+            foreach(var potentialName in potentialNames)
+            {
+                if(property.DeclaringType.GetProperty(potentialName) != null)
                 {
-                    var selectionBinding = new Binding("Active" + Singularize(property.Name)) { Mode = BindingMode.TwoWay };
+                    var selectionBinding = new Binding(potentialName) { Mode = BindingMode.TwoWay };
                     BindingOperations.SetBinding(foundControl, Selector.SelectedItemProperty, selectionBinding);
+                    return;
                 }
             }
         };
