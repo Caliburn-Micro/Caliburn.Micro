@@ -1,6 +1,5 @@
 ﻿namespace Caliburn.Micro
 {
-    using System;
     using System.Collections.Specialized;
     using System.Linq;
     using System.Windows;
@@ -16,40 +15,27 @@
             CollectionChanged += OnCollectionChanged;
         }
 
-        protected DependencyObject AssociatedObject
-        {
-            get { return associatedObject; }
-        }
-
         public void Attach(DependencyObject dependencyObject)
         {
-            if(dependencyObject == AssociatedObject)
-                return;
-
-            if(AssociatedObject != null)
-                throw new InvalidOperationException();
-
-            if((Application.Current == null || Application.Current.RootVisual == null) || !Bootstrapper.IsInDesignMode)
-                associatedObject = dependencyObject;
-
-            OnAttached();
+            associatedObject = dependencyObject;
+            this.Apply(x => x.Attach(associatedObject));
         }
 
         public void Detach()
         {
-            OnDetaching();
+            this.Apply(x => x.Detach());
             associatedObject = null;
         }
 
         DependencyObject IAttachedObject.AssociatedObject
         {
-            get { return AssociatedObject; }
+            get { return associatedObject; }
         }
 
         protected void OnItemAdded(T item)
         {
-            if (AssociatedObject != null)
-                item.Attach(AssociatedObject);
+            if (associatedObject != null)
+                item.Attach(associatedObject);
         }
 
         protected void OnItemRemoved(T item)
@@ -58,14 +44,9 @@
                 item.Detach();
         }
 
-        protected void OnAttached()
-        {
-            this.Apply(x => x.Attach(AssociatedObject));
-        }
-
         void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            switch(e.Action)
+            switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                     e.NewItems.OfType<T>().Where(x => !Contains(x)).Apply(OnItemAdded);
@@ -84,11 +65,6 @@
                 default:
                     return;
             }
-        }
-
-        protected void OnDetaching()
-        {
-            this.Apply(x => x.Detach());
         }
     }
 }

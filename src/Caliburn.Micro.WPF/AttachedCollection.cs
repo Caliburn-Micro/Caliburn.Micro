@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
-
-namespace Caliburn.Micro
+﻿namespace Caliburn.Micro
 {
     using System.Collections.Specialized;
-    using System.ComponentModel;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Interactivity;
 
@@ -18,36 +15,18 @@ namespace Caliburn.Micro
             ((INotifyCollectionChanged)this).CollectionChanged += OnCollectionChanged;
         }
 
-        protected DependencyObject AssociatedObject
-        {
-            get
-            {
-                ReadPreamble();
-                return associatedObject;
-            }
-        }
-
         public void Attach(DependencyObject dependencyObject)
         {
-            if(dependencyObject == AssociatedObject)
-                return;
+            WritePreamble();
+            associatedObject = dependencyObject;
+            WritePostscript();
 
-            if (AssociatedObject != null)
-                throw new InvalidOperationException();
-
-            if (!Bootstrapper.IsInDesignMode)
-            {
-                WritePreamble();
-                associatedObject = dependencyObject;
-                WritePostscript();
-            }
-
-            OnAttached();
+            this.Apply(x => x.Attach(associatedObject));
         }
 
         public void Detach()
         {
-            OnDetaching();
+            this.Apply(x => x.Detach());
             WritePreamble();
             associatedObject = null;
             WritePostscript();
@@ -55,29 +34,24 @@ namespace Caliburn.Micro
 
         DependencyObject IAttachedObject.AssociatedObject
         {
-            get { return AssociatedObject; }
+            get { return associatedObject; }
         }
 
         protected void OnItemAdded(T item)
         {
-            if (AssociatedObject != null)
-                item.Attach(AssociatedObject);
+            if (associatedObject != null)
+                item.Attach(associatedObject);
         }
 
         protected void OnItemRemoved(T item)
         {
-            if (item.AssociatedObject != null)
+            if(item.AssociatedObject != null)
                 item.Detach();
-        }
-
-        protected void OnAttached()
-        {
-            this.Apply(x => x.Attach(AssociatedObject));
         }
 
         void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            switch (e.Action)
+            switch(e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                     e.NewItems.OfType<T>().Where(x => !Contains(x)).Apply(OnItemAdded);
@@ -96,11 +70,6 @@ namespace Caliburn.Micro
                 default:
                     return;
             }
-        }
-
-        protected void OnDetaching()
-        {
-            this.Apply(x => x.Detach());
         }
     }
 }
