@@ -41,8 +41,7 @@
 
         public ActionMessage()
         {
-            var parameters = new AttachedCollection<Parameter>();
-            SetValue(ParametersProperty, parameters);
+            SetValue(ParametersProperty, new AttachedCollection<Parameter>());
         }
 
         public string MethodName
@@ -125,9 +124,6 @@
             var result = MessageBinder.CreateResult(outcome);
             if (result == null)
                 return;
-
-            if (view == null && target is IViewAware)
-                view = ((IViewAware)target).GetView() as DependencyObject;
 
             result.Execute(new ResultExecutionContext(AssociatedObject, this, target, view));
         }
