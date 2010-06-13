@@ -9,7 +9,7 @@
         static Func<Type, string, object> getInstanceImplementation;
         static Func<Type, IEnumerable<object>> getAllInstancesImplementation;
 
-        public static void Initialize(Func<Type, string, object> getInstance, Func<Type, IEnumerable<object >> getAllInstances)
+        public static void Initialize(Func<Type, string, object> getInstance, Func<Type, IEnumerable<object>> getAllInstances)
         {
             getInstanceImplementation = getInstance;
             getAllInstancesImplementation = getAllInstances;
