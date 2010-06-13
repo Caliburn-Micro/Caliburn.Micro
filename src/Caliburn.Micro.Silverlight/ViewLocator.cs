@@ -23,7 +23,7 @@
                 viewTypeName = viewTypeName + "." + context;
             }
 
-            var viewType = (from assmebly in AssemblySource.Known
+            var viewType = (from assmebly in AssemblySource.Instance
                             from type in assmebly.GetExportedTypes()
                             where type.FullName == viewTypeName
                             select type).FirstOrDefault();

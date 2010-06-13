@@ -14,6 +14,22 @@
                 null
                 );
 
+        public static DependencyProperty ModelProperty =
+            DependencyProperty.RegisterAttached(
+                "Model",
+                typeof(object),
+                typeof(View),
+                new PropertyMetadata(OnModelChanged)
+                );
+
+        public static readonly DependencyProperty ContextProperty =
+            DependencyProperty.RegisterAttached(
+                "Context",
+                typeof(object),
+                typeof(View),
+                new PropertyMetadata(OnContextChanged)
+                );
+
         public static bool? GetApplyConventions(DependencyObject d)
         {
             return (bool?)d.GetValue(ApplyConventionsProperty);
@@ -24,14 +40,6 @@
             d.SetValue(ApplyConventionsProperty, value);
         }
 
-        public static DependencyProperty ModelProperty =
-            DependencyProperty.RegisterAttached(
-                "Model",
-                typeof(object),
-                typeof(View),
-                new PropertyMetadata(OnModelChanged)
-                );
-
         public static void SetModel(DependencyObject d, object value)
         {
             d.SetValue(ModelProperty, value);
@@ -41,14 +49,6 @@
         {
             return d.GetValue(ModelProperty);
         }
-
-        public static readonly DependencyProperty ContextProperty =
-            DependencyProperty.RegisterAttached(
-                "Context",
-                typeof(object),
-                typeof(View),
-                new PropertyMetadata(OnContextChanged)
-                );
 
         public static object GetContext(DependencyObject d)
         {
@@ -89,16 +89,6 @@
             ViewModelBinder.Bind(model, view, e.NewValue);
 
             SetContentProperty(targetLocation, view);
-        }
-
-        public static UIElement GetWithViewModel<TViewModel>(string context = null)
-        {
-            var viewModel = IoC.GetInstance<TViewModel>();
-            var view = ViewLocator.LocateForModel(viewModel, context);
-
-            ViewModelBinder.Bind(viewModel, view, context);
-
-            return view;
         }
 
         private static void SetContentProperty(object targetLocation, object view)

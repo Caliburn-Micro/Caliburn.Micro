@@ -4,6 +4,6 @@
 
     public static class AssemblySource
     {
-        public static readonly IObservableCollection<Assembly> Known = new BindableCollection<Assembly>();
+        public static readonly IObservableCollection<Assembly> Instance = new BindableCollection<Assembly>();
     }
 }

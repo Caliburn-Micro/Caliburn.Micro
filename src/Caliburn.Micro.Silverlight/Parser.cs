@@ -84,9 +84,7 @@
 
                 foreach (var parameter in parameters)
                 {
-                    message.Parameters.Add(
-                        CreateParameter(target, parameter.Trim())
-                        );
+                    message.Parameters.Add(CreateParameter(target, parameter.Trim()));
                 }
             }
 
@@ -136,31 +134,31 @@
                 Mode = bindingMode
             };
 
-#if !SILVERLIGHT
-            binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            BindingOperations.SetBinding(parameter, Parameter.ValueProperty, binding);
-#else
+#if SILVERLIGHT
             var expression = (BindingExpression)BindingOperations.SetBinding(parameter, Parameter.ValueProperty, binding);
 
             var field = element.GetType().GetField(path + "Property", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-            if(field == null)
+            if (field == null)
                 return;
 
             var bindableProperty = (DependencyProperty)field.GetValue(null);
 
             var textBox = element as TextBox;
-            if(textBox != null && bindableProperty == TextBox.TextProperty)
+            if (textBox != null && bindableProperty == TextBox.TextProperty)
             {
                 textBox.TextChanged += delegate { expression.UpdateSource(); };
                 return;
             }
 
             var passwordBox = element as PasswordBox;
-            if(passwordBox != null && bindableProperty == PasswordBox.PasswordProperty)
+            if (passwordBox != null && bindableProperty == PasswordBox.PasswordProperty)
             {
                 passwordBox.PasswordChanged += delegate { expression.UpdateSource(); };
                 return;
             }
+#else
+            binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            BindingOperations.SetBinding(parameter, Parameter.ValueProperty, binding);
 #endif
         }
     }

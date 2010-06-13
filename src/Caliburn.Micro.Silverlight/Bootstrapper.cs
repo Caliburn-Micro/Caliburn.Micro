@@ -24,7 +24,7 @@
         internal virtual void Start() 
         {
             Execute.InitializeWithDispatcher();
-            AssemblySource.Known.AddRange(SelectAssemblies());
+            AssemblySource.Instance.AddRange(SelectAssemblies());
             Configure();
             IoC.Initialize(GetInstance, GetAllInstances);
         }
@@ -61,11 +61,15 @@
 
         protected virtual void OnStartup(object sender, StartupEventArgs e)
         {
+            var viewModel = IoC.GetInstance<TRootModel>();
+            var view = ViewLocator.LocateForModel(viewModel, null);
+
+            ViewModelBinder.Bind(viewModel, view);
+
 #if SILVERLIGHT
-            Application.Current.RootVisual = View.GetWithViewModel<TRootModel>();
+            Application.Current.RootVisual = view;
 #else
-            var window = (Window)View.GetWithViewModel<TRootModel>();
-            window.Show();
+            ((Window)view).Show();
 #endif
         }
     }
