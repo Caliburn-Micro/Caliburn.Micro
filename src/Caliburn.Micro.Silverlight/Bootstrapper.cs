@@ -26,7 +26,9 @@
             Execute.InitializeWithDispatcher();
             AssemblySource.Instance.AddRange(SelectAssemblies());
             Configure();
-            IoC.Initialize(GetInstance, GetAllInstances);
+
+            IoC.GetInstance = GetInstance;
+            IoC.GetAllInstances = GetAllInstances;
         }
 
         protected virtual void Configure() { }
@@ -61,7 +63,7 @@
 
         protected virtual void OnStartup(object sender, StartupEventArgs e)
         {
-            var viewModel = IoC.GetInstance<TRootModel>();
+            var viewModel = IoC.GetInstance(typeof(TRootModel), null);
             var view = ViewLocator.LocateForModel(viewModel, null);
             ViewModelBinder.Bind(viewModel, view);
 
