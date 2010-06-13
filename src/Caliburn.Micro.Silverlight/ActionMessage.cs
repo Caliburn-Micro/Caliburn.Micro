@@ -125,7 +125,12 @@
             if (result == null)
                 return;
 
-            result.Execute(new ResultExecutionContext(AssociatedObject, this, target, view));
+            result.Execute(new ResultExecutionContext {
+                Source = AssociatedObject,
+                Message = this,
+                Target = target,
+                View = view
+            });
         }
 
         void CanExecuteChanged(object sender, PropertyChangedEventArgs e)

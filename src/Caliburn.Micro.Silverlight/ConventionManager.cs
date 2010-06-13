@@ -190,7 +190,12 @@
 
         public static void AddElementConvention<T>(DependencyProperty bindableProperty, string parameterProperty, string eventName)
         {
-            AddElementConvention(new ElementConvention(typeof(T), bindableProperty, parameterProperty, () => new System.Windows.Interactivity.EventTrigger{ EventName = eventName }));
+            AddElementConvention(new ElementConvention {
+                ElementType = typeof(T),
+                BindableProperty = bindableProperty,
+                ParameterProperty = parameterProperty,
+                CreateTrigger = () => new System.Windows.Interactivity.EventTrigger { EventName = eventName }
+            });
         }
 
         public static void AddElementConvention(ElementConvention convention)
