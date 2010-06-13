@@ -59,20 +59,27 @@
             }
         }
 
+        public event EventHandler<ActivationEventArgs> Activated = delegate { };
+        public event EventHandler<DeactivationEventArgs> Deactivated = delegate { };
+
         void IActivate.Activate()
         {
             if (IsActive)
                 return;
 
+            bool initialized = false;
+
             if(!IsInitialized)
             {
-                IsInitialized = true;
+                IsInitialized = initialized = true;
                 OnInitialize();
             }
 
             IsActive = true;
             Log.Info("Activating {0}.", this);
             OnActivate();
+
+            Activated(this, new ActivationEventArgs { WasInitialized = initialized });
         }
 
         protected virtual void OnInitialize() {}
@@ -89,6 +96,8 @@
 
             if(close)
                 Log.Info("Closed {0}.", this);
+
+            Deactivated(this, new DeactivationEventArgs { WasClosed = close });
         }
 
         protected virtual void OnDeactivate(bool close) {}

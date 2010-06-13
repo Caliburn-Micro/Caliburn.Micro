@@ -5,11 +5,13 @@
     public interface IActivate
     {
         void Activate();
+        event EventHandler<ActivationEventArgs> Activated;
     }
 
     public interface IDeactivate
     {
         void Deactivate(bool close);
+        event EventHandler<DeactivationEventArgs> Deactivated;
     }
 
     public interface IGuardClose
@@ -24,5 +26,15 @@
 
     public interface IScreen : IHaveDisplayName, IActivate, IDeactivate, IGuardClose, INotifyPropertyChangedEx
     {
+    }
+
+    public class ActivationEventArgs : EventArgs
+    {
+        public bool WasInitialized;
+    }
+
+    public class DeactivationEventArgs : EventArgs
+    {
+        public bool WasClosed;
     }
 }
