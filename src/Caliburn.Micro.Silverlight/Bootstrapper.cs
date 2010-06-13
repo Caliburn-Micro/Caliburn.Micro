@@ -63,8 +63,11 @@
         {
             var viewModel = IoC.GetInstance<TRootModel>();
             var view = ViewLocator.LocateForModel(viewModel, null);
-
             ViewModelBinder.Bind(viewModel, view);
+
+            var activator = viewModel as IActivate;
+            if (activator != null)
+                activator.Activate();
 
 #if SILVERLIGHT
             Application.Current.RootVisual = view;

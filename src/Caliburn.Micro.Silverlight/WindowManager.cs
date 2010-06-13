@@ -41,10 +41,7 @@
 
             var deactivatable = rootModel as IDeactivate;
             if (deactivatable != null)
-                view.Closed += delegate
-                {
-                    deactivatable.Deactivate(true);
-                };
+                view.Closed += (s, e) => deactivatable.Deactivate(true);
 
             var guard = rootModel as IGuardClose;
             if (guard != null)
@@ -81,8 +78,7 @@
                 return;
             }
 
-            bool runningAsync = false;
-            var shouldEnd = false;
+            bool runningAsync = false, shouldEnd = false;
 
             guard.CanClose(canClose =>{
                 if(runningAsync && canClose)

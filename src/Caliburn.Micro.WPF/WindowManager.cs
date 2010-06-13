@@ -33,14 +33,12 @@
 
         public bool? ShowDialog(object rootModel, object context = null)
         {
-            var window = CreateWindow(rootModel, true, context);
-            return window.ShowDialog();
+            return CreateWindow(rootModel, true, context).ShowDialog();
         }
 
         public void Show(object rootModel, object context = null)
         {
-            var window = CreateWindow(rootModel, false, context);
-            window.Show();
+            CreateWindow(rootModel, false, context).Show();
         }
 
         Window CreateWindow(object rootModel, bool isDialog, object context)
@@ -54,10 +52,7 @@
 
             var deactivatable = rootModel as IDeactivate;
             if (deactivatable != null)
-                view.Closed += delegate
-                {
-                    deactivatable.Deactivate(true);
-                };
+                view.Closed += (s, e) => deactivatable.Deactivate(true);
 
             var guard = rootModel as IGuardClose;
             if (guard != null)
@@ -113,8 +108,7 @@
                 return;
             }
 
-            bool runningAsync = false;
-            var shouldEnd = false;
+            bool runningAsync = false, shouldEnd = false;
 
             guard.CanClose(canClose => {
                 if (runningAsync && canClose)
