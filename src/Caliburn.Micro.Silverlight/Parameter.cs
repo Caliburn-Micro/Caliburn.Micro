@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.Micro
 {
+    using System;
     using System.Windows;
     using System.Windows.Interactivity;
 
@@ -14,6 +15,7 @@
                 );
 
         DependencyObject associatedObject;
+        ActionMessage owner;
 
         public object Value
         {
@@ -36,8 +38,14 @@
             associatedObject = null;
         }
 
+        internal void MakeAwareOf(ActionMessage owner)
+        {
+            this.owner = owner;
+        }
+
         static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            ((Parameter)d).owner.UpdateAvailability();
         }
     }
 }

@@ -15,6 +15,7 @@
                 );
 
         DependencyObject associatedObject;
+        ActionMessage owner;
 
         public object Value
         {
@@ -56,8 +57,14 @@
             return new Parameter();
         }
 
+        internal void MakeAwareOf(ActionMessage owner)
+        {
+            this.owner = owner;
+        }
+
         static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            ((Parameter)d).owner.UpdateAvailability();
         }
     }
 }

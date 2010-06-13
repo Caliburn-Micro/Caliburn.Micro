@@ -34,7 +34,7 @@
             null
             );
 
-        PropertyInfo canExecute;
+        MethodInfo canExecute;
         MethodInfo execute;
         object target;
         DependencyObject view;
@@ -60,6 +60,7 @@
         {
             AssociatedObject.Loaded += ElementLoaded;
             Parameters.Attach(AssociatedObject);
+            Parameters.Apply(x => x.MakeAwareOf(this));
             base.OnAttached();
         }
 
@@ -90,24 +91,28 @@
             execute = found.Item2;
             view = found.Item3;
 
-            var inpc = target as INotifyPropertyChanged;
-            if (inpc == null)
-                return;
+            var canName = "Can" + MethodName;
+            var targetType = target.GetType();
+            canExecute = targetType.GetMethod(canName);
 
-            canExecute = target.GetType().GetProperty("Can" + MethodName);
-#if SILVERLIGHT
-            if (canExecute == null || !(target is Control))
-                return;
-#else
             if (canExecute == null)
-                return;
-#endif
-            inpc.PropertyChanged += CanExecuteChanged;
+            {
+                var inpc = target as INotifyPropertyChanged;
+                if(inpc == null)
+                    return;
+
+                canExecute = targetType.GetMethod("get_" + canName);
 #if SILVERLIGHT
-            ((Control)AssociatedObject).IsEnabled = (bool)canExecute.GetValue(target, null);
+                if(canExecute == null || !(AssociatedObject is Control))
+                    return;
 #else
-            AssociatedObject.IsEnabled = (bool)canExecute.GetValue(target, null);
+                if (canExecute == null)
+                    return;
 #endif
+                inpc.PropertyChanged += CanExecuteChanged;
+            }
+
+            UpdateAvailability();
         }
 
         protected override void Invoke(object eventArgs)
@@ -129,15 +134,31 @@
 
         void CanExecuteChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(canExecute == null || e.PropertyName != canExecute.Name)
+            if(e.PropertyName == canExecute.Name.Substring(4))
+                UpdateAvailability();
+        }
+
+        public void UpdateAvailability()
+        {
+            if (canExecute == null)
                 return;
+
+#if SILVERLIGHT
+            if (!(AssociatedObject is Control))
+                return;
+#endif
 
             Log.Info("Execution changed for {0}.", this);
 
+            var result = (bool)canExecute.Invoke(
+                target,
+                MessageBinder.DetermineParameters(this, canExecute.GetParameters(), AssociatedObject, null)
+                );
+
 #if SILVERLIGHT
-            ((Control)AssociatedObject).IsEnabled = (bool)canExecute.GetValue(target, null);
+            ((Control)AssociatedObject).IsEnabled = result;
 #else
-            AssociatedObject.IsEnabled = (bool)canExecute.GetValue(target, null);
+            AssociatedObject.IsEnabled = result;
 #endif
         }
 
