@@ -13,7 +13,6 @@
 
     public static class Parser
     {
-        static readonly ILog Log = LogManager.GetLog(typeof(Parser));
         static readonly Regex Regex = new Regex(@",(?=(?:[^']*'[^']*')*(?![^']*'))");
 
         public static IEnumerable<TriggerBase> Parse(DependencyObject target, string text)
@@ -23,8 +22,6 @@
 
             foreach(var messageText in items)
             {
-                Log.Info("Parsing: {0}.", messageText);
-
                 var triggerPlusMessage = messageText.Split('=');
                 string messageDetail = triggerPlusMessage.Last()
                     .Replace("[", string.Empty)
@@ -32,10 +29,7 @@
                     .Trim();
 
                 var trigger = CreateTrigger(target.GetType(), triggerPlusMessage);
-                Log.Info("Created trigger: {0}.", trigger);
-
                 var message = CreateMessage(target, messageDetail);
-                Log.Info("Created message: {0}.", message);
 
                 trigger.Actions.Add(message);
                 triggers.Add(trigger);

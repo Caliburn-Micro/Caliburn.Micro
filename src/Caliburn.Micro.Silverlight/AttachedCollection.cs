@@ -62,8 +62,6 @@
                     this.Apply(OnItemRemoved);
                     this.Apply(OnItemAdded);
                     break;
-                default:
-                    return;
             }
         }
     }

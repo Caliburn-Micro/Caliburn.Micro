@@ -5,7 +5,6 @@
 
     public class SequentialResult : IResult
     {
-        static readonly ILog Log = LogManager.GetLog(typeof(SequentialResult));
         readonly IEnumerator<IResult> enumerator;
         ResultExecutionContext context;
 
@@ -27,14 +26,12 @@
             if(args.Error != null)
             {
                 OnComplete(args.Error, false);
-                Log.Error(args.Error);
                 return;
             }
 
             if(args.WasCancelled)
             {
                 OnComplete(null, true);
-                Log.Info("{0} was cancelled.", sender);
                 return;
             }
 
@@ -49,13 +46,11 @@
                 {
                     var next = enumerator.Current;
                     next.Completed += ChildCompleted;
-                    Log.Info("Executing {0}.", next);
                     next.Execute(context);
                 }
                 catch(Exception ex)
                 {
                     OnComplete(ex, false);
-                    Log.Error(ex);
                     return;
                 }
             }

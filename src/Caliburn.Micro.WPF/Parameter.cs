@@ -1,6 +1,5 @@
 ﻿namespace Caliburn.Micro
 {
-    using System;
     using System.Windows;
     using System.Windows.Interactivity;
 
@@ -34,12 +33,6 @@
 
         void IAttachedObject.Attach(DependencyObject dependencyObject)
         {
-            if(dependencyObject == associatedObject)
-                return;
-
-            if (associatedObject != null)
-                throw new InvalidOperationException("Cannot host parameter multiple times.");
-
             WritePreamble();
             associatedObject = dependencyObject;
             WritePostscript();

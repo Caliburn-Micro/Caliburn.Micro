@@ -67,7 +67,8 @@
 
         public static object CoerceValue(Type destinationType, object providedValue)
         {
-            if (providedValue == null) return GetDefaultValue(destinationType);
+            if (providedValue == null) 
+                return GetDefaultValue(destinationType);
 
             var providedType = providedValue.GetType();
 

@@ -32,12 +32,12 @@
                 Execute.OnUIThread(() => RaiseCollectionChangedEventImmediately(e));
         }
 
-        public void RaiseCollectionChangedEventImmediately(NotifyCollectionChangedEventArgs e)
+        private void RaiseCollectionChangedEventImmediately(NotifyCollectionChangedEventArgs e)
         {
             base.OnCollectionChanged(e);
         }
 
-        public void RaisePropertyChangedEventImmediately(PropertyChangedEventArgs e)
+        private void RaisePropertyChangedEventImmediately(PropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
         }

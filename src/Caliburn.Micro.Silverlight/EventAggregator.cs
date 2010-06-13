@@ -13,11 +13,10 @@
     {
         static readonly ILog Log = LogManager.GetLog(typeof(EventAggregator));
         readonly List<WeakReference> subscribers = new List<WeakReference>();
-        readonly object lockObject = new object();
 
         public void Subscribe(object instance)
         {
-            lock (lockObject)
+            lock (subscribers)
             {
                 Log.Info("Subscribing {0}.", instance);
                 subscribers.Add(new WeakReference(instance));
@@ -27,7 +26,7 @@
         public void Publish<T>(T message)
         {
             Execute.OnUIThread(() =>{
-                lock(lockObject)
+                lock(subscribers)
                 {
                     Log.Info("Publishing {0}.", message);
                     var dead = new List<WeakReference>();

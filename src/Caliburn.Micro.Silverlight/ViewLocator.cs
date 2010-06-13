@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Controls;
 
 #if !SILVERLIGHT
     using System.Windows.Interop;
@@ -28,13 +29,9 @@
                             where type.FullName == viewTypeName
                             select type).FirstOrDefault();
 
-            if(viewType == null)
-            {
-                Log.Warn("View not found: {0}", viewTypeName);
-                return null;
-            }
-
-            return GetOrCreateViewType(viewType);
+            return viewType == null
+                ? new TextBlock { Text = "View not found " + viewTypeName }
+                : GetOrCreateViewType(viewType);
         };
 
         public static Func<object, object, UIElement> LocateForModel = (model, context) =>{
