@@ -54,10 +54,7 @@
 
         private static void SetTargetCore(DependencyPropertyChangedEventArgs e, DependencyObject d, bool setContext)
         {
-            if (Bootstrapper.IsInDesignMode)
-                return;
-
-            if (e.NewValue == e.OldValue || e.NewValue == null)
+            if (Bootstrapper.IsInDesignMode || e.NewValue == e.OldValue || e.NewValue == null)
                 return;
 
             var target = e.NewValue;

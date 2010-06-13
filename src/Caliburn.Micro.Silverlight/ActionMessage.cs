@@ -140,11 +140,11 @@
 
         public void UpdateAvailability()
         {
-            if (canExecute == null)
-                return;
-
 #if SILVERLIGHT
-            if (!(AssociatedObject is Control))
+            if (canExecute == null || !(AssociatedObject is Control))
+                return;
+#else
+            if (canExecute == null)
                 return;
 #endif
 

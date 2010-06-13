@@ -39,9 +39,7 @@
 
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyBindingMode = (binding, convention, property) =>{
             var setMethod = property.GetSetMethod();
-            var canWriteToProperty = property.CanWrite && setMethod != null && setMethod.IsPublic;
-
-            binding.Mode = canWriteToProperty ? BindingMode.TwoWay : BindingMode.OneWay;
+            binding.Mode = (property.CanWrite && setMethod != null && setMethod.IsPublic) ? BindingMode.TwoWay : BindingMode.OneWay;
         };
 
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyValidation = (binding, convention, property) => {
@@ -61,8 +59,10 @@
         };
 
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyStringFormat = (binding, convention, property) =>{
-            if (typeof(DateTime).IsAssignableFrom(property.PropertyType))
-                binding.Source = "{0:MM/dd/yyyy}";
+#if !WP7
+            if(typeof(DateTime).IsAssignableFrom(property.PropertyType))
+                binding.StringFormat = "{0:MM/dd/yyyy}";
+#endif
         };
 
         public static Func<ElementConvention, DependencyObject, DependencyProperty> CheckBindablePropertyExceptions = (convention, foundControl) =>{
