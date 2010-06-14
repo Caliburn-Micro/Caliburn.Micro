@@ -26,7 +26,7 @@
             return null;
         }
 
-        public static object[] DetermineParameters(ActionMessage message, ParameterInfo[] requiredParameters, FrameworkElement source, object context)
+        public static object[] DetermineParameters(ActionMessage message, ParameterInfo[] requiredParameters, FrameworkElement source, object eventArgs)
         {
             var providedValues = message.Parameters.Select(x => x.Value).ToArray();
             var values = new object[requiredParameters.Length];
@@ -42,7 +42,7 @@
                     switch (stringValue.ToLower())
                     {
                         case "$eventargs":
-                            potentialValue = context;
+                            potentialValue = eventArgs;
                             break;
                         case "$datacontext":
                             potentialValue = source.DataContext;
