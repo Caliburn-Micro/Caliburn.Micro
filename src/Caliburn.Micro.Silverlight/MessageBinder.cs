@@ -13,7 +13,7 @@
 
     public static class MessageBinder
     {
-        public static readonly string[] SpecialValues = new[] { "$eventargs", "$parameter", "$datacontext", "$context", "$source" };
+        public static readonly string[] SpecialValues = new[] { "$eventargs", "$datacontext", "$source" };
 
         public static IResult CreateResult(object returnValue)
         {
@@ -42,11 +42,9 @@
                     switch (stringValue.ToLower())
                     {
                         case "$eventargs":
-                        case "$parameter":
                             potentialValue = context;
                             break;
                         case "$datacontext":
-                        case "$context":
                             potentialValue = source.DataContext;
                             break;
                         case "$source":

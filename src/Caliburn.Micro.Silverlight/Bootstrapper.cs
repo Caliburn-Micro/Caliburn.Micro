@@ -9,10 +9,10 @@
 
     public class Bootstrapper
     {
-#if !SILVERLIGHT
-        public static readonly bool IsInDesignMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
-#else
+#if SILVERLIGHT
         public static readonly bool IsInDesignMode = DesignerProperties.GetIsInDesignMode(new UserControl());
+#else
+        public static readonly bool IsInDesignMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
 #endif
 
         public Bootstrapper()
@@ -63,7 +63,7 @@
 
         protected virtual void OnStartup(object sender, StartupEventArgs e)
         {
-            var viewModel = IoC.GetInstance(typeof(TRootModel), null);
+            var viewModel = IoC.Get<TRootModel>();
             var view = ViewLocator.LocateForModel(viewModel, null);
             ViewModelBinder.Bind(viewModel, view);
 
