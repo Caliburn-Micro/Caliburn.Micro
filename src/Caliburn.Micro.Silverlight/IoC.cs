@@ -12,5 +12,10 @@
         {
             return (T)GetInstance(typeof(T), null);
         }
+
+        public static T Get<T>(string key)
+        {
+            return (T)GetInstance(typeof(T), key);
+        }
     }
 }
