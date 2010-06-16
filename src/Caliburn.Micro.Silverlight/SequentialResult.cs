@@ -23,15 +23,9 @@
 
         void ChildCompleted(object sender, ResultCompletionEventArgs args)
         {
-            if(args.Error != null)
+            if(args.Error != null || args.WasCancelled)
             {
-                OnComplete(args.Error, false);
-                return;
-            }
-
-            if(args.WasCancelled)
-            {
-                OnComplete(null, true);
+                OnComplete(args.Error, args.WasCancelled);
                 return;
             }
 
@@ -45,6 +39,7 @@
                 try
                 {
                     var next = enumerator.Current;
+                    IoC.BuildUp(next);
                     next.Completed += ChildCompleted;
                     next.Execute(context);
                 }

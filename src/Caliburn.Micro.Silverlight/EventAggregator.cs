@@ -33,7 +33,7 @@
 
                     foreach(var reference in subscribers)
                     {
-                        var target = reference.Target as IHandler<T>;
+                        var target = reference.Target as IHandle<T>;
 
                         if(target != null)
                             target.Handle(message);

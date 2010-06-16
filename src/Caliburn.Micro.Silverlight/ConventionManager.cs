@@ -126,9 +126,11 @@
             if(HasBinding(selector, Selector.SelectedItemProperty))
                 return;
 
+            var singular = Singularize(property.Name);
             var potentialNames = new[] {
-                "Active" + Singularize(property.Name),
-                "Selected" + Singularize(property.Name)
+                "Active" + singular,
+                "Selected" + singular,
+                "Current" + singular
             };
 
             foreach(var potentialName in potentialNames)

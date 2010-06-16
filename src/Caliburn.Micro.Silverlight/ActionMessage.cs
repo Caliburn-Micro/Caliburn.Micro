@@ -125,6 +125,8 @@
             if (result == null)
                 return;
 
+            IoC.BuildUp(result);
+
             result.Execute(new ResultExecutionContext {
                 Source = AssociatedObject,
                 Message = this,

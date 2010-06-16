@@ -78,7 +78,7 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="IChild.cs" />
     <Compile Include="IConductor.cs" />
-    <Compile Include="IHandler.cs" />
+    <Compile Include="IHandle.cs" />
     <Compile Include="IoC.cs" />
     <Compile Include="IResult.cs" />
     <Compile Include="IScreen.cs" />

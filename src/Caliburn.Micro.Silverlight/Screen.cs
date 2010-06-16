@@ -25,7 +25,7 @@
             set
             {
                 parent = value;
-                NotifyOfPropertyChange(() => Parent);
+                NotifyOfPropertyChange("Parent");
             }
         }
 
@@ -35,7 +35,7 @@
             set
             {
                 displayName = value;
-                NotifyOfPropertyChange(() => DisplayName);
+                NotifyOfPropertyChange("DisplayName");
             }
         }
 
@@ -45,7 +45,7 @@
             private set
             {
                 isActive = value;
-                NotifyOfPropertyChange(() => IsActive);
+                NotifyOfPropertyChange("IsActive");
             }
         }
 
@@ -55,7 +55,7 @@
             private set
             {
                 isInitialized = value;
-                NotifyOfPropertyChange(() => IsInitialized);
+                NotifyOfPropertyChange("IsInitialized");
             }
         }
 

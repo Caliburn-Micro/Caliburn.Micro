@@ -7,6 +7,7 @@
     {
         public static Func<Type, string, object> GetInstance;
         public static Func<Type, IEnumerable<object>> GetAllInstances;
+        public static Action<object> BuildUp;
 
         public static T Get<T>()
         {

@@ -29,6 +29,7 @@
 
             IoC.GetInstance = GetInstance;
             IoC.GetAllInstances = GetAllInstances;
+            IoC.BuildUp = BuildUp;
         }
 
         protected virtual void Configure() { }
@@ -51,6 +52,8 @@
         {
             return new[] { Activator.CreateInstance(service) };
         }
+
+        protected virtual void BuildUp(object instance) {}
     }
 
     public class Bootstrapper<TRootModel> : Bootstrapper

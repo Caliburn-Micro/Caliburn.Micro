@@ -46,7 +46,7 @@
 
             activeItem = newItem;
 
-            NotifyOfPropertyChange(() => ActiveItem);
+            NotifyOfPropertyChange("ActiveItem");
         }
 
         protected virtual T EnsureItem(T newItem)
