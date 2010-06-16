@@ -15,7 +15,7 @@
     {
         public static readonly string[] SpecialValues = new[] { "$eventargs", "$datacontext", "$source" };
 
-        public static IResult CreateResult(object returnValue)
+        public static SequentialResult CreateResult(object returnValue)
         {
             if(returnValue is IResult)
                 returnValue = new[] { returnValue as IResult };
