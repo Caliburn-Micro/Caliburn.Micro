@@ -110,7 +110,10 @@
             if(itemsControl == null)
                 return;
 
-            if (string.IsNullOrEmpty(itemsControl.DisplayMemberPath) && itemsControl.ItemTemplate == null && property.PropertyType.IsGenericType)
+            if (string.IsNullOrEmpty(itemsControl.DisplayMemberPath)
+                && !HasBinding(itemsControl, ItemsControl.DisplayMemberPathProperty)
+                && itemsControl.ItemTemplate == null 
+                && property.PropertyType.IsGenericType)
             {
 #if !WP7
                 var itemType = property.PropertyType.GetGenericArguments().First();
