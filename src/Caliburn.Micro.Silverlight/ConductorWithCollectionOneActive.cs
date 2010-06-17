@@ -100,11 +100,16 @@
 
                 protected override T EnsureItem(T item)
                 {
-                    var index = Items.IndexOf(item);
+                    if (item == null)
+                        item = DetermineNextItemToActivate(ActiveItem != null ? Items.IndexOf(ActiveItem) : 0);
+                    else
+                    {
+                        var index = Items.IndexOf(item);
 
-                    if(index == -1)
-                        Items.Add(item);
-                    else item = Items[index];
+                        if (index == -1)
+                            Items.Add(item);
+                        else item = Items[index];
+                    }
 
                     return base.EnsureItem(item);
                 }
