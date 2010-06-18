@@ -57,7 +57,10 @@
 
         static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((Parameter)d).owner.UpdateAvailability();
+            var parameter = (Parameter)d;
+
+            if (parameter.owner != null)
+                parameter.owner.UpdateAvailability();
         }
     }
 }
