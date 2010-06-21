@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Micro
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using System.Windows;
 
@@ -109,10 +110,11 @@
 
         public virtual void AttachView(object view, object context = null)
         {
+            var loadWired = views.Values.Contains(view);
             views[context ?? ViewLocator.DefaultContext] = view;
 
             var element = view as FrameworkElement;
-            if (element != null)
+            if (!loadWired && element != null)
                 element.Loaded += delegate { OnViewLoaded(view); };
         }
 
