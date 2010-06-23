@@ -18,6 +18,7 @@
         public void Execute(ResultExecutionContext context)
         {
             this.context = context;
+            IoC.BuildUp(this);
             ChildCompleted(null, new ResultCompletionEventArgs());
         }
 
