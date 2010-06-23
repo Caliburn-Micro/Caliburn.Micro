@@ -10,6 +10,9 @@
     using System.Windows.Markup;
     using System.Windows.Media;
 
+    /// <summary>
+    /// Used to send a message from the UI to a presentation model class, indicating that a particular Action should be invoked.
+    /// </summary>
     [DefaultTrigger(typeof(FrameworkElement), typeof(System.Windows.Interactivity.EventTrigger), "MouseLeftButtonDown")]
     [DefaultTrigger(typeof(ButtonBase), typeof(System.Windows.Interactivity.EventTrigger), "Click")] 
     [ContentProperty("Parameters")]
@@ -18,6 +21,9 @@
     {
         static readonly  ILog Log = LogManager.GetLog(typeof(ActionMessage));
 
+        /// <summary>
+        /// Represents the method name of an action message.
+        /// </summary>
         public static readonly DependencyProperty MethodNameProperty =
             DependencyProperty.Register(
                 "MethodName",
@@ -26,6 +32,9 @@
                 null
                 );
 
+        /// <summary>
+        /// Represents the parameters of an action message.
+        /// </summary>
         public static readonly DependencyProperty ParametersProperty = 
             DependencyProperty.Register(
             "Parameters",
@@ -44,12 +53,20 @@
             SetValue(ParametersProperty, new AttachedCollection<Parameter>());
         }
 
+        /// <summary>
+        /// Gets or sets the name of the method to be invoked on the presentation model class.
+        /// </summary>
+        /// <value>The name of the method.</value>
         public string MethodName
         {
             get { return (string)GetValue(MethodNameProperty); }
             set { SetValue(MethodNameProperty, value); }
         }
 
+        /// <summary>
+        /// Gets the parameters to pass as part of the method invocation.
+        /// </summary>
+        /// <value>The parameters.</value>
         public AttachedCollection<Parameter> Parameters
         {
             get { return (AttachedCollection<Parameter>)GetValue(ParametersProperty); }
@@ -139,6 +156,9 @@
                 UpdateAvailability();
         }
 
+        /// <summary>
+        /// Forces an update of the UI's Enabled/Disabled state based on the the preconditions associated with the method.
+        /// </summary>
         public void UpdateAvailability()
         {
 #if SILVERLIGHT
@@ -183,9 +203,15 @@
             return new Tuple<object, MethodInfo, DependencyObject>(currentTarget, actionMethod, currentElement);
         }
 
+        /// <summary>
+        /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        /// </returns>
         public override string ToString()
         {
-            return execute != null ? execute.Name : base.ToString();
+            return "Action: " + MethodName;
         }
     }
 }
