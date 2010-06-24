@@ -15,16 +15,25 @@
     using System.Windows.Documents;
 #endif
 
+    /// <summary>
+    /// Used to configure the conventions used by the framework to apply bindings and create actions.
+    /// </summary>
     public static class ConventionManager
     {
         static readonly BooleanToVisibilityConverter BooleanToVisibilityConverter = new BooleanToVisibilityConverter();
 
 #if SILVERLIGHT
+        /// <summary>
+        /// The default DataTemplate used for ItemsControls when required.
+        /// </summary>
         public static DataTemplate DefaultDataTemplate = (DataTemplate)XamlReader.Load(
 #else
+        /// <summary>
+        /// The default DataTemplate used for ItemsControls when required.
+        /// </summary>
         public static DataTemplate DefaultDataTemplate = (DataTemplate)XamlReader.Parse(
 #endif
-            "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' " +
+"<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' " +
                            "xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' " +
                            "xmlns:cal='http://www.caliburnproject.org'> " +
                 "<ContentControl cal:View.Model=\"{Binding}\" />" +
@@ -33,15 +42,24 @@
 
         static readonly Dictionary<Type, ElementConvention> ElementConventions = new Dictionary<Type, ElementConvention>();
 
+        /// <summary>
+        /// Changes the provided word from a plural form to a singular form.
+        /// </summary>
         public static Func<string, string> Singularize = original =>{
             return original.TrimEnd('s');
         };
 
+        /// <summary>
+        /// Applies the appropriate binding mode to the binding expression.
+        /// </summary>
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyBindingMode = (binding, convention, property) =>{
             var setMethod = property.GetSetMethod();
             binding.Mode = (property.CanWrite && setMethod != null && setMethod.IsPublic) ? BindingMode.TwoWay : BindingMode.OneWay;
         };
 
+        /// <summary>
+        /// Determines whether or not and what type of validation to enable on the binding expression.
+        /// </summary>
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyValidation = (binding, convention, property) => {
 #if SILVERLIGHT && !WP7
             if(typeof(INotifyDataErrorInfo).IsAssignableFrom(property.DeclaringType))
@@ -53,11 +71,17 @@
 #endif
         };
 
+        /// <summary>
+        /// Determine whether a value converter is is needed and applies one if available.
+        /// </summary>
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyValueConverter = (binding, convention, property) =>{
             if(convention.BindableProperty == UIElement.VisibilityProperty && typeof(bool).IsAssignableFrom(property.PropertyType))
                 binding.Converter = BooleanToVisibilityConverter;
         };
 
+        /// <summary>
+        /// Determines whether a custom string format is needed and applies one if so.
+        /// </summary>
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyStringFormat = (binding, convention, property) =>{
 #if !WP7
             if(typeof(DateTime).IsAssignableFrom(property.PropertyType))
@@ -65,6 +89,9 @@
 #endif
         };
 
+        /// <summary>
+        /// Inspect the dependency property which will be bound by default and alter it if necessary.
+        /// </summary>
         public static Func<ElementConvention, DependencyObject, DependencyProperty> CheckBindablePropertyExceptions = (convention, foundControl) =>{
             var element = foundControl as ContentControl;
             if(element == null)
@@ -80,10 +107,16 @@
 #endif
         };
 
+        /// <summary>
+        /// Determines whether an particular dependency property already had a binding on the provided element.
+        /// </summary>
         public static Func<FrameworkElement, DependencyProperty, bool> HasBinding = (element, property) =>{
             return element.GetBindingExpression(property) != null;
         };
 
+        /// <summary>
+        /// Determines whether a custom update source trigger should be applied to the binding expression.
+        /// </summary>
         public static Action<DependencyProperty, DependencyObject, Binding> ApplyUpdateSourceTrigger = (bindableProperty, foundControl, binding) =>{
 #if !SILVERLIGHT
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
@@ -105,6 +138,9 @@
 #endif
         };
 
+        /// <summary>
+        /// Adds any additional conventional behavior to the element.
+        /// </summary>
         public static Action<ElementConvention, PropertyInfo, DependencyObject, Binding> AddCustomBindingBehavior = (convention, property, foundControl, binding) =>{
             var itemsControl = foundControl as ItemsControl;
             if(itemsControl == null)
@@ -193,6 +229,13 @@
             AddElementConvention<ContentControl>(ContentControl.ContentProperty, "DataContext", "Loaded"); 
         }
 
+        /// <summary>
+        /// Adds an element convention.
+        /// </summary>
+        /// <typeparam name="T">The type of element.</typeparam>
+        /// <param name="bindableProperty">The default property for binding conventions.</param>
+        /// <param name="parameterProperty">The default property for action parameters.</param>
+        /// <param name="eventName">The default event to trigger actions.</param>
         public static void AddElementConvention<T>(DependencyProperty bindableProperty, string parameterProperty, string eventName)
         {
             AddElementConvention(new ElementConvention {
@@ -203,11 +246,21 @@
             });
         }
 
+        /// <summary>
+        /// Adds an element convention.
+        /// </summary>
+        /// <param name="convention"></param>
         public static void AddElementConvention(ElementConvention convention)
         {
             ElementConventions[convention.ElementType] = convention;
         }
 
+        /// <summary>
+        /// Gets an element convention for the provided element type.
+        /// </summary>
+        /// <param name="elementType">The type of element to locate the convention for.</param>
+        /// <returns>The convention if found, null otherwise.</returns>
+        /// <remarks>Searches the clas hierarchy for conventions.</remarks>
         public static ElementConvention GetElementConvention(Type elementType)
         {
             if (elementType == null)
