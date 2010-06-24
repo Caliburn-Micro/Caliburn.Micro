@@ -5,6 +5,9 @@
     using System.Collections.Generic;
     using System.Windows;
 
+    /// <summary>
+    /// A base implementation of <see cref="IScreen"/>.
+    /// </summary>
     public class Screen : PropertyChangedBase, IScreen, IChild<IConductor>, IViewAware
     {
         protected static readonly ILog Log = LogManager.GetLog(typeof(Screen));
@@ -15,11 +18,17 @@
         string displayName;
         readonly Dictionary<object, object> views = new Dictionary<object, object>();
 
+        /// <summary>
+        /// Creates an instance of the screen.
+        /// </summary>
         public Screen()
         {
             DisplayName = GetType().FullName;
         }
 
+        /// <summary>
+        /// Gets or Sets the Parent <see cref="IConductor"/>
+        /// </summary>
         public IConductor Parent
         {
             get { return parent; }
@@ -30,6 +39,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets or Sets the Display Name
+        /// </summary>
         public string DisplayName
         {
             get { return displayName; }
@@ -40,6 +52,9 @@
             }
         }
 
+        /// <summary>
+        /// Indicates whether or not this instance is currently active.
+        /// </summary>
         public bool IsActive
         {
             get { return isActive; }
@@ -50,6 +65,9 @@
             }
         }
 
+        /// <summary>
+        /// Indicates whether or not this instance is currently initialized.
+        /// </summary>
         public bool IsInitialized
         {
             get { return isInitialized; }
@@ -60,7 +78,14 @@
             }
         }
 
+        /// <summary>
+        /// Raised after activation occurs.
+        /// </summary>
         public event EventHandler<ActivationEventArgs> Activated = delegate { };
+
+        /// <summary>
+        /// Raised after deactivation.
+        /// </summary>
         public event EventHandler<DeactivationEventArgs> Deactivated = delegate { };
 
         void IActivate.Activate()
@@ -83,7 +108,14 @@
             Activated(this, new ActivationEventArgs { WasInitialized = initialized });
         }
 
+        /// <summary>
+        /// Called when initializing.
+        /// </summary>
         protected virtual void OnInitialize() {}
+
+        /// <summary>
+        /// Called when activating.
+        /// </summary>
         protected virtual void OnActivate() {}
 
         void IDeactivate.Deactivate(bool close)
@@ -101,13 +133,26 @@
             Deactivated(this, new DeactivationEventArgs { WasClosed = close });
         }
 
+        /// <summary>
+        /// Called when deactivating.
+        /// </summary>
+        /// <param name="close">Inidicates whether this instance will be closed.</param>
         protected virtual void OnDeactivate(bool close) {}
 
+        /// <summary>
+        /// Called to check whether or not this instance can close.
+        /// </summary>
+        /// <param name="callback">The implementor calls this action with the result of the close check.</param>
         public virtual void CanClose(Action<bool> callback)
         {
             callback(true);
         }
 
+        /// <summary>
+        /// Attaches a view to this instance.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <param name="context">The context in which the view appears.</param>
         public virtual void AttachView(object view, object context = null)
         {
             var loadWired = views.Values.Contains(view);
@@ -118,8 +163,17 @@
                 element.Loaded += delegate { OnViewLoaded(view); };
         }
 
+        /// <summary>
+        /// Called when an attached view's Loaded event fires.
+        /// </summary>
+        /// <param name="view"></param>
         protected virtual void OnViewLoaded(object view) { }
 
+        /// <summary>
+        /// Gets a view previously attached to this instance.
+        /// </summary>
+        /// <param name="context">The context denoting which view to retrieve.</param>
+        /// <returns>The view.</returns>
         public virtual object GetView(object context = null)
         {
             object view;
@@ -127,6 +181,9 @@
             return view;
         }
 
+        /// <summary>
+        /// Tries to close this instance by asking its Parent to initiate shutdown or by asking it's corresponding default view to close.
+        /// </summary>
         public void TryClose()
         {
             if (Parent != null)

@@ -5,17 +5,30 @@
 
     public partial class Conductor<T>
     {
+        /// <summary>
+        /// An implementation of <see cref="IConductor"/> that holds on many items.
+        /// </summary>
         public class Collection
         {
+            /// <summary>
+            /// An implementation of <see cref="IConductor"/> that holds on many items but only activates on at a time.
+            /// </summary>
             public class OneActive : ConductorBase<T>
             {
                 readonly BindableCollection<T> items = new BindableCollection<T>();
 
+                /// <summary>
+                /// Gets the items that are currently being conducted.
+                /// </summary>
                 public BindableCollection<T> Items
                 {
                     get { return items; }
                 }
 
+                /// <summary>
+                /// Activates the specified item.
+                /// </summary>
+                /// <param name="item">The item to activate.</param>
                 public override void ActivateItem(T item)
                 {
                     if(item != null && item.Equals(ActiveItem))
@@ -24,6 +37,10 @@
                     ChangeActiveItem(item, false);
                 }
 
+                /// <summary>
+                /// Closes the specified item.
+                /// </summary>
+                /// <param name="item">The item to close.</param>
                 public override void CloseItem(T item)
                 {
                     if(item == null)
@@ -61,6 +78,12 @@
                     Items.Remove(item);
                 }
 
+                /// <summary>
+                /// Determines the next item to activate based on the last active index.
+                /// </summary>
+                /// <param name="lastIndex">The index of the last active item.</param>
+                /// <returns>The next item to activate.</returns>
+                /// <remarks>Called after an active item is closed.</remarks>
                 protected virtual T DetermineNextItemToActivate(int lastIndex)
                 {
                     var toRemoveAt = lastIndex - 1;
@@ -72,11 +95,18 @@
                     return default(T);
                 }
 
+                /// <summary>
+                /// Called to check whether or not this instance can close.
+                /// </summary>
+                /// <param name="callback">The implementor calls this action with the result of the close check.</param>
                 public override void CanClose(Action<bool> callback)
                 {
                     new CompositeCloseStrategy<T>(Items.GetEnumerator(), callback).Execute();
                 }
 
+                /// <summary>
+                /// Called when activating.
+                /// </summary>
                 protected override void OnActivate()
                 {
                     var activator = ActiveItem as IActivate;
@@ -85,6 +115,10 @@
                         activator.Activate();
                 }
 
+                /// <summary>
+                /// Called when deactivating.
+                /// </summary>
+                /// <param name="close">Inidicates whether this instance will be closed.</param>
                 protected override void OnDeactivate(bool close)
                 {
                     if(close)
@@ -98,20 +132,25 @@
                     }
                 }
 
-                protected override T EnsureItem(T item)
+                /// <summary>
+                /// Ensures that an item is ready to be activated.
+                /// </summary>
+                /// <param name="newItem"></param>
+                /// <returns>The item to be activated.</returns>
+                protected override T EnsureItem(T newItem)
                 {
-                    if (item == null)
-                        item = DetermineNextItemToActivate(ActiveItem != null ? Items.IndexOf(ActiveItem) : 0);
+                    if (newItem == null)
+                        newItem = DetermineNextItemToActivate(ActiveItem != null ? Items.IndexOf(ActiveItem) : 0);
                     else
                     {
-                        var index = Items.IndexOf(item);
+                        var index = Items.IndexOf(newItem);
 
                         if (index == -1)
-                            Items.Add(item);
-                        else item = Items[index];
+                            Items.Add(newItem);
+                        else newItem = Items[index];
                     }
 
-                    return base.EnsureItem(item);
+                    return base.EnsureItem(newItem);
                 }
             }
         }
