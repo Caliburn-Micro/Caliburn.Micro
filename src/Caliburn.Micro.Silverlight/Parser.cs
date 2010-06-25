@@ -11,10 +11,19 @@
     using EventTrigger = System.Windows.Interactivity.EventTrigger;
     using TriggerBase = System.Windows.Interactivity.TriggerBase;
 
+    /// <summary>
+    /// Parses text into a fully functional set of <see cref="TriggerBase"/> instances with <see cref="ActionMessage"/>.
+    /// </summary>
     public static class Parser
     {
         static readonly Regex Regex = new Regex(@",(?=(?:[^']*'[^']*')*(?![^']*'))");
 
+        /// <summary>
+        /// Parses the specified message text.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="text">The message text.</param>
+        /// <returns>The triggers parsed from the text.</returns>
         public static IEnumerable<TriggerBase> Parse(DependencyObject target, string text)
         {
             var triggers = new List<TriggerBase>();
