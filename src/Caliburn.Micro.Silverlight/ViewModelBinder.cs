@@ -6,16 +6,31 @@
     using System.Windows;
     using System.Windows.Data;
 
+    /// <summary>
+    /// Binds a view to a view model.
+    /// </summary>
     public static class ViewModelBinder
     {
-        static readonly ILog Log = LogManager.GetLog(typeof(ViewModelBinder));
+        /// <summary>
+        /// Gets or sets a value indicating whether to apply conventions by default.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if conventions should be applied by default; otherwise, <c>false</c>.
+        /// </value>
         public static bool ApplyConventionsByDefault { get; set; }
+        static readonly ILog Log = LogManager.GetLog(typeof(ViewModelBinder));
 
         static ViewModelBinder()
         {
             ApplyConventionsByDefault = true;
         }
 
+        /// <summary>
+        /// Binds the specified viewModel to the view.
+        /// </summary>
+        /// <param name="viewModel">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="context">The context.</param>
         public static void Bind(object viewModel, DependencyObject view, object context = null)
         {
             Log.Info("Binding {0} to {1}.", view, viewModel);

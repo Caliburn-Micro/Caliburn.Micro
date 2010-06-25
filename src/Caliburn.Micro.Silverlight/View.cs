@@ -4,8 +4,14 @@
     using System.Windows;
     using System.Windows.Markup;
 
+    /// <summary>
+    /// Hosts attached properties related to view models.
+    /// </summary>
     public static class View
     {
+        /// <summary>
+        /// A dependency property which allows the override of convention application behavior.
+        /// </summary>
         public static readonly DependencyProperty ApplyConventionsProperty =
             DependencyProperty.RegisterAttached(
                 "ApplyConventions",
@@ -14,6 +20,9 @@
                 null
                 );
 
+        /// <summary>
+        /// A dependency property for attaching a model to the UI.
+        /// </summary>
         public static DependencyProperty ModelProperty =
             DependencyProperty.RegisterAttached(
                 "Model",
@@ -22,6 +31,9 @@
                 new PropertyMetadata(OnModelChanged)
                 );
 
+        /// <summary>
+        /// A dependency property for assigning a context to a particular portion of the UI.
+        /// </summary>
         public static readonly DependencyProperty ContextProperty =
             DependencyProperty.RegisterAttached(
                 "Context",
@@ -30,31 +42,61 @@
                 new PropertyMetadata(OnContextChanged)
                 );
 
+        /// <summary>
+        /// Gets the convention application behavior.
+        /// </summary>
+        /// <param name="d">The element the property is attached to.</param>
+        /// <returns>Whether or not to apply conventions.</returns>
         public static bool? GetApplyConventions(DependencyObject d)
         {
             return (bool?)d.GetValue(ApplyConventionsProperty);
         }
 
+        /// <summary>
+        /// Sets the convention application behavior.
+        /// </summary>
+        /// <param name="d">The element to attach the property to.</param>
+        /// <param name="value">Whether or not to apply conventions.</param>
         public static void SetApplyConventions(DependencyObject d, bool? value)
         {
             d.SetValue(ApplyConventionsProperty, value);
         }
 
+        /// <summary>
+        /// Sets the model.
+        /// </summary>
+        /// <param name="d">The element to attach the model to.</param>
+        /// <param name="value">The model.</param>
         public static void SetModel(DependencyObject d, object value)
         {
             d.SetValue(ModelProperty, value);
         }
 
+        /// <summary>
+        /// Gets the model.
+        /// </summary>
+        /// <param name="d">The element the model is attached to.</param>
+        /// <returns>The model.</returns>
         public static object GetModel(DependencyObject d)
         {
             return d.GetValue(ModelProperty);
         }
 
+        /// <summary>
+        /// Gets the context.
+        /// </summary>
+        /// <param name="d">The element the context is attached to.</param>
+        /// <returns>The context.</returns>
         public static object GetContext(DependencyObject d)
         {
             return d.GetValue(ContextProperty);
         }
 
+        /// <summary>
+        /// Sets the context.
+        /// </summary>
+        /// <param name="d">The element to attach the context to.</param>
+        /// <param name="value">The context.</param>
         public static void SetContext(DependencyObject d, object value)
         {
             d.SetValue(ContextProperty, value);

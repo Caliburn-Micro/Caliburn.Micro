@@ -3,18 +3,32 @@
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// An implementation of <see cref="IResult"/> that enables sequential execution of multiple results.
+    /// </summary>
     public class SequentialResult : IResult
     {
         readonly IEnumerator<IResult> enumerator;
         ResultExecutionContext context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SequentialResult"/> class.
+        /// </summary>
+        /// <param name="children">The children.</param>
         public SequentialResult(IEnumerable<IResult> children)
         {
             enumerator = children.GetEnumerator();
         }
 
+        /// <summary>
+        /// Occurs when execution has completed.
+        /// </summary>
         public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
 
+        /// <summary>
+        /// Executes the result using the specified context.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public void Execute(ResultExecutionContext context)
         {
             this.context = context;

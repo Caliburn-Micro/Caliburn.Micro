@@ -5,12 +5,30 @@
     using System.Windows.Controls;
     using System.Windows.Data;
 
+    /// <summary>
+    /// A service that manages windows.
+    /// </summary>
     public interface IWindowManager
     {
+        /// <summary>
+        /// Shows a modal dialog for the specified model.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>The dialog result.</returns>
         bool? ShowDialog(object rootModel, object context = null);
+
+        /// <summary>
+        /// Shows a window for the specified model.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="context">The context.</param>
         void Show(object rootModel, object context = null);
     }
 
+    /// <summary>
+    /// A service that manages windows.
+    /// </summary>
     public class WindowManager : IWindowManager
     {
         static readonly DependencyProperty IsElementGeneratedProperty =
@@ -31,11 +49,22 @@
             return view;
         }
 
+        /// <summary>
+        /// Shows a modal dialog for the specified model.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>The dialog result.</returns>
         public bool? ShowDialog(object rootModel, object context = null)
         {
             return CreateWindow(rootModel, true, context).ShowDialog();
         }
 
+        /// <summary>
+        /// Shows a window for the specified model.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="context">The context.</param>
         public void Show(object rootModel, object context = null)
         {
             CreateWindow(rootModel, false, context).Show();
