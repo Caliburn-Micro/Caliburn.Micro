@@ -11,10 +11,21 @@
     using System.ComponentModel;
 #endif
 
+    /// <summary>
+    /// A service that is capable of properly binding values to a methods parameters and creating instances of <see cref="IResult"/>.
+    /// </summary>
     public static class MessageBinder
     {
+        /// <summary>
+        /// The special parameter values recognized by the message binder.
+        /// </summary>
         public static readonly string[] SpecialValues = new[] { "$eventargs", "$datacontext", "$source" };
 
+        /// <summary>
+        /// Converts the return value of a method into an <see cref="IResult"/> if possible.
+        /// </summary>
+        /// <param name="returnValue">The return value of a method.</param>
+        /// <returns>An <see cref="IResult"/> if conversion is possible; null otherwise.</returns>
         public static SequentialResult CreateResult(object returnValue)
         {
             if(returnValue is IResult)
@@ -26,6 +37,14 @@
             return null;
         }
 
+        /// <summary>
+        /// Determines the parameters that a method should be invoked with.
+        /// </summary>
+        /// <param name="message">The message to determine the parameters for.</param>
+        /// <param name="requiredParameters">The requirements for method binding.</param>
+        /// <param name="source">The source that trigger the message.</param>
+        /// <param name="eventArgs">The event args, if any, related to the trigger.</param>
+        /// <returns>The actual parameter values.</returns>
         public static object[] DetermineParameters(ActionMessage message, ParameterInfo[] requiredParameters, FrameworkElement source, object eventArgs)
         {
             var providedValues = message.Parameters.Select(x => x.Value).ToArray();
@@ -63,6 +82,12 @@
             return values;
         }
 
+        /// <summary>
+        /// Coerces the provided value to the destination type.
+        /// </summary>
+        /// <param name="destinationType">The destination type.</param>
+        /// <param name="providedValue">The provided value.</param>
+        /// <returns>The coerced value.</returns>
         public static object CoerceValue(Type destinationType, object providedValue)
         {
             if (providedValue == null) 
@@ -100,6 +125,11 @@
             }
         }
 
+        /// <summary>
+        /// Gets the default value for a type.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The default value.</returns>
         public static object GetDefaultValue(Type type)
         {
             return type.IsClass || type.IsInterface ? null : Activator.CreateInstance(type);

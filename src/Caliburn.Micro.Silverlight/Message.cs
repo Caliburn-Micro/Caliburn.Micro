@@ -3,6 +3,9 @@
     using System.Windows;
     using System.Windows.Interactivity;
 
+    /// <summary>
+    /// Hosts attached properties related to routed UI messaging.
+    /// </summary>
     public static class Message
     {
         internal static readonly DependencyProperty HandlerProperty =
@@ -13,6 +16,9 @@
                 null
                 );
 
+        /// <summary>
+        /// A property definition representing attached triggers and messages.
+        /// </summary>
         public static readonly DependencyProperty AttachProperty =
             DependencyProperty.RegisterAttached(
                 "Attach",
@@ -21,11 +27,21 @@
                 new PropertyMetadata(OnAttachChanged)
                 );
 
+        /// <summary>
+        /// Sets the attached triggers and messages.
+        /// </summary>
+        /// <param name="d">The element to attach to.</param>
+        /// <param name="attachText">The parsable attachment text.</param>
         public static void SetAttach(DependencyObject d, string attachText)
         {
             d.SetValue(AttachProperty, attachText);
         }
 
+        /// <summary>
+        /// Gets the attached triggers and messages.
+        /// </summary>
+        /// <param name="d">The element that was attached to.</param>
+        /// <returns>The parsable attachment text.</returns>
         public static string GetAttach(DependencyObject d)
         {
             return d.GetValue(AttachProperty) as string;
