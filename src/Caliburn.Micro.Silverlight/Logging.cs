@@ -33,12 +33,12 @@
     /// </summary>
     public static class LogManager
     {
-        static readonly ILog nullLog = new NullLog();
+        static readonly ILog NullLogInstance = new NullLog();
 
         /// <summary>
         /// Creates an <see cref="ILog"/> for the provided type.
         /// </summary>
-        public static Func<Type, ILog> GetLog = type => nullLog;
+        public static Func<Type, ILog> GetLog = type => NullLogInstance;
 
         private class NullLog : ILog
         {

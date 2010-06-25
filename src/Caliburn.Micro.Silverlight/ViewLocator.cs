@@ -18,10 +18,7 @@
         /// The default view context.
         /// </summary>
         public static readonly object DefaultContext = new object();
-
         static readonly ILog Log = LogManager.GetLog(typeof(ViewLocator));
-        const string View = "View";
-        const string Model = "Model";
 
         /// <summary>
         /// Retrieves the view from the IoC container or tries to create it if not found.
@@ -34,12 +31,8 @@
             if(view != null)
                 return view;
 
-            if(viewType.IsInterface || viewType.IsAbstract || !typeof(UIElement).IsAssignableFrom(viewType))
-            {
-                var ex = new Exception(string.Format("Cannot instantiate {0}.", viewType.FullName));
-                Log.Error(ex);
-                throw ex;
-            }
+            if (viewType.IsInterface || viewType.IsAbstract || !typeof(UIElement).IsAssignableFrom(viewType))
+                return new TextBlock { Text = string.Format("Cannot create {0}.", viewType.FullName) };
 
             return (UIElement)Activator.CreateInstance(viewType);
         };
@@ -50,10 +43,10 @@
         /// <returns>The view.</returns>
         /// <remarks>Pass the model type and the context instance (or null) as parameters and recieve a view instance.</remarks>
         public static Func<Type, object, UIElement> LocateForModelType = (modelType, context) =>{
-            var viewTypeName = modelType.FullName.Replace(Model, string.Empty);
+            var viewTypeName = modelType.FullName.Replace("Model", string.Empty);
             if(context != null)
             {
-                viewTypeName = viewTypeName.Remove(viewTypeName.Length - View.Length, View.Length);
+                viewTypeName = viewTypeName.Remove(viewTypeName.Length - 4, 4);
                 viewTypeName = viewTypeName + "." + context;
             }
 
@@ -63,7 +56,7 @@
                             select type).FirstOrDefault();
 
             return viewType == null
-                ? new TextBlock { Text = "View not found " + viewTypeName }
+                ? new TextBlock { Text = string.Format("View not found {0}.", viewTypeName) }
                 : GetOrCreateViewType(viewType);
         };
 

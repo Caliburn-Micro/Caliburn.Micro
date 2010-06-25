@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Enables loosely-coupled publication of and subscription to events.
@@ -13,6 +14,12 @@
         /// </summary>
         /// <param name="instance">The instance to subscribe for event publication.</param>
         void Subscribe(object instance);
+
+        /// <summary>
+        /// Unsubscribes the instance from all events.
+        /// </summary>
+        /// <param name="instance">The instance to unsubscribe.</param>
+        void Unsubscribe(object instance);
 
         /// <summary>
         /// Publishes a message.
@@ -38,8 +45,27 @@
         {
             lock (subscribers)
             {
+                if (subscribers.FirstOrDefault(reference => reference.Target == instance) != null)
+                    return;
+
                 Log.Info("Subscribing {0}.", instance);
                 subscribers.Add(new WeakReference(instance));
+            }
+        }
+
+        /// <summary>
+        /// Unsubscribes the instance from all events.
+        /// </summary>
+        /// <param name="instance">The instance to unsubscribe.</param>
+        public void Unsubscribe(object instance)
+        {
+            lock (subscribers)
+            {
+                var found = subscribers
+                    .FirstOrDefault(reference => reference.Target == instance);
+
+                if(found != null)
+                    subscribers.Remove(found);
             }
         }
 

@@ -195,7 +195,7 @@
                 if (view == null)
                 {
                     var ex = new NotSupportedException(
-                        "You cannot close an instance without a parent or a default view."
+                        "You can't close a screen w/o a parent or default view."
                         );
                     Log.Error(ex);
                     throw ex;
@@ -216,7 +216,7 @@
                 }
 
                 var ex2 = new NotSupportedException(
-                    "The default view does not support the Close method or the IsOpen property."
+                    "The default view does not have a Close method or IsOpen property."
                     );
 
                 Log.Error(ex2);

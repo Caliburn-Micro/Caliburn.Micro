@@ -48,6 +48,9 @@
         object target;
         DependencyObject view;
 
+        /// <summary>
+        /// Creates an instance of <see cref="ActionMessage"/>.
+        /// </summary>
         public ActionMessage()
         {
             SetValue(ParametersProperty, new AttachedCollection<Parameter>());
@@ -169,7 +172,7 @@
                 return;
 #endif
 
-            Log.Info("Execution changed for {0}.", this);
+            Log.Info("Availability changed for {0}.", this);
 
             var result = (bool)canExecute.Invoke(
                 target,

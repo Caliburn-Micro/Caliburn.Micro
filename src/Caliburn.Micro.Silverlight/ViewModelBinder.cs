@@ -39,7 +39,7 @@
             var viewAware = viewModel as IViewAware;
             if (viewAware != null)
             {
-                Log.Info("Attaching view {0} to {1}.", view, viewAware);
+                Log.Info("Attaching {0} to {1}.", view, viewAware);
                 viewAware.AttachView(view, context);
             }
 
@@ -53,7 +53,7 @@
 
             if (!ShouldApplyConventions(element))
             {
-                Log.Info("Skipping conventions for {0} and {1}.", element, viewModel);
+                Log.Info("Skipping conventions {0}+{1}.", element, viewModel);
                 return;
             }
 
@@ -78,14 +78,14 @@
                 var foundControl = view.FindName(property.Name) as DependencyObject;
                 if (foundControl == null)
                 {
-                    Log.Info("No bindable control located for property {0}.", property.Name);
+                    Log.Info("No bindable control for property {0}.", property.Name);
                     continue;
                 }
 
                 var convention = ConventionManager.GetElementConvention(foundControl.GetType());
                 if (convention == null)
                 {
-                    Log.Warn("No conventions located for type {0}.", foundControl.GetType());
+                    Log.Warn("No conventions located for {0}.", foundControl.GetType());
                     continue;
                 }
 
@@ -106,7 +106,7 @@
                 ConventionManager.ApplyUpdateSourceTrigger(bindableProperty, foundControl, binding);
 
                 BindingOperations.SetBinding(foundControl, bindableProperty, binding);
-                Log.Info("Added convention binding for property {0}.", property.Name);
+                Log.Info("Added convention binding for {0}.", property.Name);
                 ConventionManager.AddCustomBindingBehavior(convention, property, foundControl, binding);
             }
         }
@@ -118,7 +118,7 @@
                 var found = view.FindName(method.Name) as DependencyObject;
                 if (found == null)
                 {
-                    Log.Info("No bindable control located for action {0}.", method.Name);
+                    Log.Info("No bindable control for action {0}.", method.Name);
                     continue;
                 }
 
@@ -144,7 +144,7 @@
                     message += ")";
                 }
 
-                Log.Info("Added convention action for method {0} as {1}.", method.Name, message);
+                Log.Info("Added convention action for {0} as {1}.", method.Name, message);
                 Message.SetAttach(found, message);
             }
         }

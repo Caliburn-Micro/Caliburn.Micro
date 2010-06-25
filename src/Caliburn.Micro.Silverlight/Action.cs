@@ -97,7 +97,7 @@
 
             if (setContext && d is FrameworkElement)
             {
-                Log.Info("Setting data context of {0} to {1}.", d, target);
+                Log.Info("Setting DC of {0} to {1}.", d, target);
                 ((FrameworkElement)d).DataContext = target;
             }
 

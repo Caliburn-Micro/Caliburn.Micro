@@ -1,4 +1,6 @@
-﻿namespace Caliburn.Micro
+﻿#if SILVERLIGHT
+
+namespace Caliburn.Micro
 {
     using System;
     using System.Globalization;
@@ -41,3 +43,5 @@
         }
     }
 }
+
+#endif

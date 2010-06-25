@@ -33,8 +33,7 @@
         /// </summary>
         public static DataTemplate DefaultDataTemplate = (DataTemplate)XamlReader.Parse(
 #endif
-"<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' " +
-                           "xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' " +
+            "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' " +
                            "xmlns:cal='http://www.caliburnproject.org'> " +
                 "<ContentControl cal:View.Model=\"{Binding}\" />" +
             "</DataTemplate>"

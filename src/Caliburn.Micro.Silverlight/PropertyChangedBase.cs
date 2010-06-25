@@ -37,7 +37,7 @@
         /// Notifies subscribers of the property change.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
-        public void NotifyOfPropertyChange(string propertyName)
+        public virtual void NotifyOfPropertyChange(string propertyName)
         {
             Execute.OnUIThread(() => PropertyChanged(this, new PropertyChangedEventArgs(propertyName)));
         }
@@ -47,7 +47,7 @@
         /// </summary>
         /// <typeparam name="TProperty">The type of the property.</typeparam>
         /// <param name="property">The property expression.</param>
-        public void NotifyOfPropertyChange<TProperty>(Expression<Func<TProperty>> property)
+        public virtual void NotifyOfPropertyChange<TProperty>(Expression<Func<TProperty>> property)
         {
             NotifyOfPropertyChange(property.GetMemberInfo().Name);
         }
