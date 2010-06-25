@@ -17,13 +17,8 @@
         /// <value>
         /// 	<c>true</c> if conventions should be applied by default; otherwise, <c>false</c>.
         /// </value>
-        public static bool ApplyConventionsByDefault;
+        public static bool ApplyConventionsByDefault = true;
         static readonly ILog Log = LogManager.GetLog(typeof(ViewModelBinder));
-
-        static ViewModelBinder()
-        {
-            ApplyConventionsByDefault = true;
-        }
 
         /// <summary>
         /// Binds the specified viewModel to the view.
