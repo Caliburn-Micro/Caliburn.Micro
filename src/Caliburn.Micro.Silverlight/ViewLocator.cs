@@ -56,7 +56,7 @@
                             select type).FirstOrDefault();
 
             return viewType == null
-                ? new TextBlock { Text = string.Format("View not found {0}.", viewTypeName) }
+                ? new TextBlock { Text = string.Format("{0} not found.", viewTypeName) }
                 : GetOrCreateViewType(viewType);
         };
 
@@ -76,11 +76,11 @@
                     var windowCheck = view as Window;
                     if (windowCheck == null || (!windowCheck.IsLoaded && !(new WindowInteropHelper(windowCheck).Handle == IntPtr.Zero)))
                     {
-                        Log.Info("Cached view returned for {0}.", model);
+                        Log.Info("Using cached view for {0}.", model);
                         return view;
                     }
 #else
-                    Log.Info("Cached view returned for {0}.", model);
+                    Log.Info("Using cached view for {0}.", model);
                     return view;
 #endif
                 }

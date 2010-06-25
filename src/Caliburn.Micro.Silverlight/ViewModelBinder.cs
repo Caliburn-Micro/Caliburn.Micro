@@ -17,7 +17,7 @@
         /// <value>
         /// 	<c>true</c> if conventions should be applied by default; otherwise, <c>false</c>.
         /// </value>
-        public static bool ApplyConventionsByDefault { get; set; }
+        public static bool ApplyConventionsByDefault;
         static readonly ILog Log = LogManager.GetLog(typeof(ViewModelBinder));
 
         static ViewModelBinder()
@@ -33,13 +33,13 @@
         /// <param name="context">The context.</param>
         public static void Bind(object viewModel, DependencyObject view, object context = null)
         {
-            Log.Info("Binding {0} to {1}.", view, viewModel);
+            Log.Info("Binding {0}+{1}.", view, viewModel);
             Action.SetTarget(view, viewModel);
 
             var viewAware = viewModel as IViewAware;
             if (viewAware != null)
             {
-                Log.Info("Attaching {0} to {1}.", view, viewAware);
+                Log.Info("Attaching {0}+{1}.", view, viewAware);
                 viewAware.AttachView(view, context);
             }
 
@@ -85,13 +85,13 @@
                 var convention = ConventionManager.GetElementConvention(foundControl.GetType());
                 if (convention == null)
                 {
-                    Log.Warn("No conventions located for {0}.", foundControl.GetType());
+                    Log.Warn("No conventions for {0}.", foundControl.GetType());
                     continue;
                 }
 
                 if (ConventionManager.HasBinding((FrameworkElement)foundControl, convention.BindableProperty))
                 {
-                    Log.Warn("Binding already exists on {0}.", property.Name);
+                    Log.Warn("Binding exists on {0}.", property.Name);
                     continue;
                 }
 

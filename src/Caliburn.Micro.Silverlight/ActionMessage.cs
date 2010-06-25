@@ -172,7 +172,7 @@
                 return;
 #endif
 
-            Log.Info("Availability changed for {0}.", this);
+            Log.Info("{0} availability changed.", this);
 
             var result = (bool)canExecute.Invoke(
                 target,
