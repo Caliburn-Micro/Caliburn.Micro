@@ -110,7 +110,7 @@
         {
             var viewModel = IoC.Get<TRootModel>();
             var view = ViewLocator.LocateForModel(viewModel, null);
-            ViewModelBinder.Bind(viewModel, view);
+            ViewModelBinder.Bind(viewModel, view, null);
 
             var activator = viewModel as IActivate;
             if (activator != null)

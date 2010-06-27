@@ -41,7 +41,7 @@
         static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue != null && e.NewValue != e.OldValue)
-                ViewModelBinder.Bind(e.NewValue, d);
+                ViewModelBinder.Bind(e.NewValue, d, null);
         }
     }
 }

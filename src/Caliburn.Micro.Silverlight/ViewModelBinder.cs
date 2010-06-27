@@ -23,16 +23,13 @@
         /// <summary>
         /// Binds the specified viewModel to the view.
         /// </summary>
-        /// <param name="viewModel">The model.</param>
-        /// <param name="view">The view.</param>
-        /// <param name="context">The context.</param>
-        public static void Bind(object viewModel, DependencyObject view, object context = null)
-        {
+        ///<remarks>Passes the the view model, view and creation context (or null for default) to use in applying binding.</remarks>
+        public static System.Action<object, DependencyObject, object> Bind = (viewModel, view, context) =>{
             Log.Info("Binding {0}+{1}.", view, viewModel);
             Action.SetTarget(view, viewModel);
 
             var viewAware = viewModel as IViewAware;
-            if (viewAware != null)
+            if(viewAware != null)
             {
                 Log.Info("Attaching {0}+{1}.", view, viewAware);
                 viewAware.AttachView(view, context);
@@ -43,10 +40,10 @@
 #else
             var element = WindowManager.GetSignificantView(view) as FrameworkElement;
 #endif
-            if (element == null)
+            if(element == null)
                 return;
 
-            if (!ShouldApplyConventions(element))
+            if(!ShouldApplyConventions(element))
             {
                 Log.Info("Skipping conventions {0}+{1}.", element, viewModel);
                 return;
@@ -58,15 +55,25 @@
 
             BindActions(element, methods);
             BindProperties(element, properties);
-        }
+        };
 
-        static bool ShouldApplyConventions(FrameworkElement view)
+        /// <summary>
+        /// Determines whether a view should have conventions applied to it.
+        /// </summary>
+        /// <param name="view">The view to check.</param>
+        /// <returns>Whether or not conventions should be applied to the view.</returns>
+        public static bool ShouldApplyConventions(FrameworkElement view)
         {
             var overriden = View.GetApplyConventions(view);
             return overriden.GetValueOrDefault(ApplyConventionsByDefault);
         }
 
-        static void BindProperties(FrameworkElement view, IEnumerable<PropertyInfo> properties)
+        /// <summary>
+        /// Creates data bindings on the view's controls based on the provided properties.
+        /// </summary>
+        /// <param name="view">The view to search for bindable controls.</param>
+        /// <param name="properties">The properties to create bindings for.</param>
+        public static void BindProperties(FrameworkElement view, IEnumerable<PropertyInfo> properties)
         {
             foreach (var property in properties)
             {
@@ -106,7 +113,12 @@
             }
         }
 
-        static void BindActions(FrameworkElement view, IEnumerable<MethodInfo> methods)
+        /// <summary>
+        /// Attaches instances of <see cref="ActionMessage"/> to the view's controls based on the provided methods.
+        /// </summary>
+        /// <param name="view">The view to search for actionable controls.</param>
+        /// <param name="methods">The methods to create instances of <see cref="ActionMessage"/> for.</param>
+        public static void BindActions(FrameworkElement view, IEnumerable<MethodInfo> methods)
         {
             foreach (var method in methods)
             {
