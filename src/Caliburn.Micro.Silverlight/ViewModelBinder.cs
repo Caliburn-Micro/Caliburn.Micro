@@ -91,7 +91,8 @@
                     continue;
                 }
 
-                if (ConventionManager.HasBinding((FrameworkElement)foundControl, convention.BindableProperty))
+                var bindableProperty = ConventionManager.CheckBindablePropertyExceptions(convention, foundControl);
+                if (ConventionManager.HasBinding((FrameworkElement)foundControl, bindableProperty))
                 {
                     Log.Warn("Binding exists on {0}.", property.Name);
                     continue;
@@ -103,8 +104,6 @@
                 ConventionManager.ApplyValueConverter(binding, convention, property);
                 ConventionManager.ApplyStringFormat(binding, convention, property);
                 ConventionManager.ApplyValidation(binding, convention, property);
-
-                var bindableProperty = ConventionManager.CheckBindablePropertyExceptions(convention, foundControl);
                 ConventionManager.ApplyUpdateSourceTrigger(bindableProperty, foundControl, binding);
 
                 BindingOperations.SetBinding(foundControl, bindableProperty, binding);
