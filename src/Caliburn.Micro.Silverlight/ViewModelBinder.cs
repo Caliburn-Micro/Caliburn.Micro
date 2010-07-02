@@ -21,10 +21,24 @@
         static readonly ILog Log = LogManager.GetLog(typeof(ViewModelBinder));
 
         /// <summary>
+        /// Indicates whether or not the conventions have alread been applied to the view.
+        /// </summary>
+        public static readonly DependencyProperty ConventionsAppliedProperty =
+            DependencyProperty.RegisterAttached(
+                "ConventionsApplied",
+                typeof(bool),
+                typeof(ViewModelBinder),
+                null
+                );
+
+        /// <summary>
         /// Binds the specified viewModel to the view.
         /// </summary>
         ///<remarks>Passes the the view model, view and creation context (or null for default) to use in applying binding.</remarks>
         public static System.Action<object, DependencyObject, object> Bind = (viewModel, view, context) =>{
+            if((bool)view.GetValue(ConventionsAppliedProperty))
+                return;
+
             Log.Info("Binding {0}+{1}.", view, viewModel);
             Action.SetTarget(view, viewModel);
 
@@ -55,6 +69,8 @@
 
             BindActions(element, methods);
             BindProperties(element, properties);
+
+            view.SetValue(ConventionsAppliedProperty, true);
         };
 
         /// <summary>
@@ -91,7 +107,7 @@
                     continue;
                 }
 
-                var bindableProperty = ConventionManager.CheckBindablePropertyExceptions(convention, foundControl);
+                var bindableProperty = ConventionManager.EnsureDependencyProperty(convention, foundControl);
                 if (ConventionManager.HasBinding((FrameworkElement)foundControl, bindableProperty))
                 {
                     Log.Warn("Binding exists on {0}.", property.Name);

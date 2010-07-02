@@ -20,7 +20,10 @@
     /// </summary>
     public static class ConventionManager
     {
-        static readonly BooleanToVisibilityConverter BooleanToVisibilityConverter = new BooleanToVisibilityConverter();
+        /// <summary>
+        /// Converters <see cref="bool"/> to/from <see cref="Visibility"/>.
+        /// </summary>
+        public static IValueConverter BooleanToVisibilityConverter = new BooleanToVisibilityConverter();
 
 #if SILVERLIGHT
         /// <summary>
@@ -91,7 +94,7 @@
         /// <summary>
         /// Inspect the dependency property which will be bound by default and alter it if necessary.
         /// </summary>
-        public static Func<ElementConvention, DependencyObject, DependencyProperty> CheckBindablePropertyExceptions = (convention, foundControl) =>{
+        public static Func<ElementConvention, DependencyObject, DependencyProperty> EnsureDependencyProperty = (convention, foundControl) =>{
             var element = foundControl as ContentControl;
             if(element == null)
                 return convention.BindableProperty;
@@ -117,23 +120,10 @@
         /// Determines whether a custom update source trigger should be applied to the binding expression.
         /// </summary>
         public static Action<DependencyProperty, DependencyObject, Binding> ApplyUpdateSourceTrigger = (bindableProperty, foundControl, binding) =>{
-#if !SILVERLIGHT
-            binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            return;
+#if SILVERLIGHT
+            ApplySilverlightTriggers(foundControl, bindableProperty, x => x.GetBindingExpression(bindableProperty));
 #else
-            var textBox = foundControl as TextBox;
-            if (textBox != null && bindableProperty == TextBox.TextProperty)
-            {
-                textBox.TextChanged += delegate { textBox.GetBindingExpression(bindableProperty).UpdateSource(); };
-                return;
-            }
-
-            var passwordBox = foundControl as PasswordBox;
-            if (passwordBox != null && bindableProperty == PasswordBox.PasswordProperty)
-            {
-                passwordBox.PasswordChanged += delegate { passwordBox.GetBindingExpression(bindableProperty).UpdateSource(); };
-                return;
-            }
+            binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
         };
 
@@ -269,5 +259,30 @@
             ElementConventions.TryGetValue(elementType, out propertyConvention);
             return propertyConvention ?? GetElementConvention(elementType.BaseType);
         }
+
+#if SILVERLIGHT
+        /// <summary>
+        /// Accounts for the lack of UpdateSourceTrigger in silverlight.
+        /// </summary>
+        /// <param name="element">The element to wire for change events on.</param>
+        /// <param name="dependencyProperty">The rproperty that is being bound.</param>
+        /// <param name="expressionSource">The source of the binding expression tht needs to be updated.</param>
+        public static void ApplySilverlightTriggers(DependencyObject element, DependencyProperty dependencyProperty, Func<FrameworkElement, BindingExpression> expressionSource)
+        {
+            var textBox = element as TextBox;
+            if (textBox != null && dependencyProperty == TextBox.TextProperty)
+            {
+                textBox.TextChanged += delegate { expressionSource(textBox).UpdateSource(); };
+                return;
+            }
+
+            var passwordBox = element as PasswordBox;
+            if (passwordBox != null && dependencyProperty == PasswordBox.PasswordProperty)
+            {
+                passwordBox.PasswordChanged += delegate { expressionSource(passwordBox).UpdateSource(); };
+                return;
+            }
+        }
+#endif
     }
 }

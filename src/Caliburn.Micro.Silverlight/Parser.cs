@@ -102,22 +102,24 @@
                 actualParameter.Value = parameter.Substring(1, parameter.Length - 2);
             else if(MessageBinder.SpecialValues.Contains(parameter.ToLower()) || char.IsNumber(parameter[0]))
                 actualParameter.Value = parameter;
-            else if(target is FrameworkElement)
+            else if (target is FrameworkElement)
             {
                 var fe = (FrameworkElement)target;
                 var nameAndBindingMode = parameter.Split(':').Select(x => x.Trim()).ToArray();
                 var index = nameAndBindingMode[0].IndexOf('.');
 
-                if(index == -1)
-                    fe.Loaded += (s, e) => BindParameter(fe, actualParameter, nameAndBindingMode[0], null, BindingMode.OneWay);
-                else
-                {
-                    var elementName = nameAndBindingMode[0].Substring(0, index);
-                    var path = nameAndBindingMode[0].Substring(index + 1);
-                    var mode = nameAndBindingMode.Length == 2 ? (BindingMode)Enum.Parse(typeof(BindingMode), nameAndBindingMode[1], true) : BindingMode.OneWay;
-
-                    fe.Loaded += (s, e) => BindParameter(fe, actualParameter, elementName, path, mode);
-                }
+                RoutedEventHandler handler = null;
+                handler = (s, e) =>{
+                    BindParameter(
+                        fe,
+                        actualParameter,
+                        index == -1 ? nameAndBindingMode[0] : nameAndBindingMode[0].Substring(0, index),
+                        index == -1 ? null : nameAndBindingMode[0].Substring(index + 1),
+                        nameAndBindingMode.Length == 2 ? (BindingMode)Enum.Parse(typeof(BindingMode), nameAndBindingMode[1], true) : BindingMode.OneWay
+                        );
+                    fe.Loaded -= handler;
+                };
+                fe.Loaded += handler;
             }
 
             return actualParameter;
@@ -144,21 +146,7 @@
             if (field == null)
                 return;
 
-            var bindableProperty = (DependencyProperty)field.GetValue(null);
-
-            var textBox = element as TextBox;
-            if (textBox != null && bindableProperty == TextBox.TextProperty)
-            {
-                textBox.TextChanged += delegate { expression.UpdateSource(); };
-                return;
-            }
-
-            var passwordBox = element as PasswordBox;
-            if (passwordBox != null && bindableProperty == PasswordBox.PasswordProperty)
-            {
-                passwordBox.PasswordChanged += delegate { expression.UpdateSource(); };
-                return;
-            }
+            ConventionManager.ApplySilverlightTriggers(element, (DependencyProperty)field.GetValue(null), x => expression);
 #else
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
             BindingOperations.SetBinding(parameter, Parameter.ValueProperty, binding);

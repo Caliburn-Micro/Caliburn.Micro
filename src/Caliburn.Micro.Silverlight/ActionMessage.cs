@@ -19,7 +19,7 @@
     [TypeConstraint(typeof(FrameworkElement))]
     public class ActionMessage : TriggerAction<FrameworkElement>
     {
-        static readonly  ILog Log = LogManager.GetLog(typeof(ActionMessage));
+        static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
 
         /// <summary>
         /// Represents the method name of an action message.
