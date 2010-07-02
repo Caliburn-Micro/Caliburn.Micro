@@ -82,7 +82,7 @@
                     Log.Info("Publishing {0}.", message);
                     var dead = new List<WeakReference>();
 
-                    foreach(var reference in subscribers)
+                    foreach(var reference in subscribers.ToArray())
                     {
                         var target = reference.Target as IHandle<T>;
 
