@@ -110,7 +110,7 @@
             if (args.NewValue != null)
             {
                 var context = GetContext(targetLocation);
-                var view = ViewLocator.LocateForModel(args.NewValue, context);
+                var view = ViewLocator.LocateForModel(args.NewValue, targetLocation, context);
 
                 ViewModelBinder.Bind(args.NewValue, view, context);
                 SetContentProperty(targetLocation, view);
@@ -127,7 +127,7 @@
             if (model == null)
                 return;
 
-            var view = ViewLocator.LocateForModel(model, e.NewValue);
+            var view = ViewLocator.LocateForModel(model, targetLocation, e.NewValue);
             ViewModelBinder.Bind(model, view, e.NewValue);
 
             SetContentProperty(targetLocation, view);

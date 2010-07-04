@@ -41,8 +41,8 @@
         /// Locates the view for the specified model type.
         /// </summary>
         /// <returns>The view.</returns>
-        /// <remarks>Pass the model type and the context instance (or null) as parameters and recieve a view instance.</remarks>
-        public static Func<Type, object, UIElement> LocateForModelType = (modelType, context) =>{
+        /// <remarks>Pass the model type, display location (or null) and the context instance (or null) as parameters and recieve a view instance.</remarks>
+        public static Func<Type, DependencyObject, object, UIElement> LocateForModelType = (modelType, displayLocation, context) =>{
             var viewTypeName = modelType.FullName.Replace("Model", string.Empty);
             if(context != null)
             {
@@ -64,8 +64,8 @@
         /// Locates the view for the specified model instance.
         /// </summary>
         /// <returns>The view.</returns>
-        /// <remarks>Pass the model instance and the context (or null) as parameters and receive a view instance.</remarks>
-        public static Func<object, object, UIElement> LocateForModel = (model, context) =>{
+        /// <remarks>Pass the model instance, display location (or null) and the context (or null) as parameters and receive a view instance.</remarks>
+        public static Func<object, DependencyObject, object, UIElement> LocateForModel = (model, displayLocation, context) =>{
             var viewAware = model as IViewAware;
             if(viewAware != null)
             {
@@ -86,7 +86,7 @@
                 }
             }
 
-            return LocateForModelType(model.GetType(), context);
+            return LocateForModelType(model.GetType(), displayLocation, context);
         };
     }
 }

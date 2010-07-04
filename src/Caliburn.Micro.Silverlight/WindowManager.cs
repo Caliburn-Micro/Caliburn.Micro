@@ -58,7 +58,7 @@
         /// <param name="context">The context.</param>
         public void ShowDialog(object rootModel, object context = null)
         {
-            var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, context));
+            var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context));
             ViewModelBinder.Bind(rootModel, view, context);
 
             var activatable = rootModel as IActivate;

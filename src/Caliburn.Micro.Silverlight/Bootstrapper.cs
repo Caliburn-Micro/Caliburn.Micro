@@ -109,7 +109,7 @@
         protected virtual void OnStartup(object sender, StartupEventArgs e)
         {
             var viewModel = IoC.Get<TRootModel>();
-            var view = ViewLocator.LocateForModel(viewModel, null);
+            var view = ViewLocator.LocateForModel(viewModel, null, null);
             ViewModelBinder.Bind(viewModel, view, null);
 
             var activator = viewModel as IActivate;
