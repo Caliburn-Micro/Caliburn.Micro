@@ -72,9 +72,9 @@
         /// <summary>
         /// Publishes a message.
         /// </summary>
-        /// <typeparam name="T">The type of message being published.</typeparam>
+        /// <typeparam name="TMessage">The type of message being published.</typeparam>
         /// <param name="message">The message instance.</param>
-        public void Publish<T>(T message)
+        public void Publish<TMessage>(TMessage message)
         {
             Execute.OnUIThread(() =>{
                 lock(subscribers)
@@ -84,7 +84,7 @@
 
                     foreach(var reference in subscribers.ToArray())
                     {
-                        var target = reference.Target as IHandle<T>;
+                        var target = reference.Target as IHandle<TMessage>;
 
                         if(target != null)
                             target.Handle(message);
