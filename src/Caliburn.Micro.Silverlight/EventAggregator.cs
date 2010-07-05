@@ -64,7 +64,7 @@
                 var found = subscribers
                     .FirstOrDefault(reference => reference.Target == instance);
 
-                if(found != null)
+                if (found != null)
                     subscribers.Remove(found);
             }
         }
@@ -76,23 +76,31 @@
         /// <param name="message">The message instance.</param>
         public void Publish<TMessage>(TMessage message)
         {
-            Execute.OnUIThread(() =>{
-                lock(subscribers)
+            WeakReference[] sbs;
+            lock (subscribers)
+            {
+                sbs = subscribers.ToArray();
+            }
+            Execute.OnUIThread(() =>
+            {
+                Log.Info("Publishing {0}.", message);
+                var dead = new List<WeakReference>();
+
+                foreach (var reference in sbs)
                 {
-                    Log.Info("Publishing {0}.", message);
-                    var dead = new List<WeakReference>();
+                    var target = reference.Target as IHandle<TMessage>;
 
-                    foreach(var reference in subscribers.ToArray())
+                    if (target != null)
+                        target.Handle(message);
+                    else if (!reference.IsAlive)
+                        dead.Add(reference);
+                }
+                if (dead.Count > 0)
+                {
+                    lock (subscribers)
                     {
-                        var target = reference.Target as IHandle<TMessage>;
-
-                        if(target != null)
-                            target.Handle(message);
-                        else if(!reference.IsAlive)
-                            dead.Add(reference);
+                        dead.Apply(x => subscribers.Remove(x));
                     }
-
-                    dead.Apply(x => subscribers.Remove(x));
                 }
             });
         }
