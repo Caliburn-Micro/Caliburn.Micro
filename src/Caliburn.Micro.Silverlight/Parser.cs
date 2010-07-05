@@ -6,7 +6,6 @@
     using System.Reflection;
     using System.Text.RegularExpressions;
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Data;
     using EventTrigger = System.Windows.Interactivity.EventTrigger;
     using TriggerBase = System.Windows.Interactivity.TriggerBase;
@@ -127,7 +126,9 @@
 
         private static void BindParameter(FrameworkElement target, Parameter parameter, string elementName, string path, BindingMode bindingMode)
         {
-            var element = elementName == "$this" ? target : (DependencyObject)target.FindName(elementName);
+            var element = elementName == "$this" 
+                ? target 
+                : target.GetNamedElementsInScope().FindName(elementName);
             if (element == null)
                 return;
 

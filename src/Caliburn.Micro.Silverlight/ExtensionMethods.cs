@@ -5,6 +5,10 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Media;
+    using Expression = System.Linq.Expressions.Expression;
 
     /// <summary>
     /// Generic extension methods used by the framework.
@@ -55,6 +59,82 @@
             else memberExpression = (MemberExpression)lambda.Body;
 
             return memberExpression.Member;
+        }
+
+        /// <summary>
+        /// Searches through the list of named elements looking for a case-insensitive match.
+        /// </summary>
+        /// <param name="elementsToSearch">The named elements to search through.</param>
+        /// <param name="name">The name to search for.</param>
+        /// <returns>The named element or null if not found.</returns>
+        public static FrameworkElement FindName(this IEnumerable<FrameworkElement> elementsToSearch, string name)
+        {
+            return elementsToSearch.FirstOrDefault(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Gets all the <see cref="FrameworkElement"/> instances with names in the scope.
+        /// </summary>
+        /// <param name="elementInScope">An element (does not have to be the root) that is in the searchable scope.</param>
+        /// <returns>Named <see cref="FrameworkElement"/> instances in the provided scope.</returns>
+        public static IEnumerable<FrameworkElement> GetNamedElementsInScope(this DependencyObject elementInScope)
+        {
+            var root = elementInScope;
+            var previous = elementInScope;
+
+            while(true)
+            {
+                if (root == null)
+                {
+                    root = previous;
+                    break;
+                }
+                if (root is UserControl)
+                    break;
+                
+                previous = root;
+                root = VisualTreeHelper.GetParent(previous);
+            }
+
+            var descendants = new List<FrameworkElement>();
+            var queue = new Queue<DependencyObject>();
+            queue.Enqueue(root);
+
+            while (queue.Count > 0)
+            {
+                var current = queue.Dequeue();
+                var currentElement = current as FrameworkElement;
+
+                if (currentElement != null && !string.IsNullOrEmpty(currentElement.Name))
+                    descendants.Add(currentElement);
+
+                var childCount = VisualTreeHelper.GetChildrenCount(current);
+                if (childCount > 0)
+                {
+                    for (var i = 0; i < childCount; i++)
+                    {
+                        var childDo = VisualTreeHelper.GetChild(current, i);
+
+                        if (childDo is UserControl)
+                            continue;
+
+                        queue.Enqueue(childDo);
+                    }
+                }
+                else
+                {
+                    var contentControl = current as ContentControl;
+                    if (contentControl != null)
+                    {
+                        if (contentControl.Content != null
+                            && contentControl.Content is DependencyObject
+                            && !(contentControl.Content is UserControl))
+                            queue.Enqueue(contentControl.Content as DependencyObject);
+                    }
+                }
+            }
+
+            return descendants;
         }
     }
 }

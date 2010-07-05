@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.Micro
 {
+    using System;
     using System.Linq;
     using System.Collections.Generic;
     using System.Reflection;
@@ -63,12 +64,11 @@
                 return;
             }
 
-            var viewType = viewModel.GetType();
-            var properties = viewType.GetProperties();
-            var methods = viewType.GetMethods();
+            var viewModelType = viewModel.GetType();
+            var namedElements = element.GetNamedElementsInScope();
 
-            BindActions(element, methods);
-            BindProperties(element, properties);
+            BindActions(namedElements, viewModelType.GetMethods());
+            BindProperties(namedElements, viewModelType.GetProperties());
 
             view.SetValue(ConventionsAppliedProperty, true);
         };
@@ -87,13 +87,13 @@
         /// <summary>
         /// Creates data bindings on the view's controls based on the provided properties.
         /// </summary>
-        /// <param name="view">The view to search for bindable controls.</param>
+        /// <param name="namedElements">The available named elements to search through.</param>
         /// <param name="properties">The properties to create bindings for.</param>
-        public static void BindProperties(FrameworkElement view, IEnumerable<PropertyInfo> properties)
+        public static void BindProperties(IEnumerable<FrameworkElement> namedElements, IEnumerable<PropertyInfo> properties)
         {
             foreach (var property in properties)
             {
-                var foundControl = view.FindName(property.Name) as DependencyObject;
+                var foundControl = namedElements.FindName(property.Name);
                 if (foundControl == null)
                 {
                     Log.Info("No bindable control for property {0}.", property.Name);
@@ -108,7 +108,7 @@
                 }
 
                 var bindableProperty = ConventionManager.EnsureDependencyProperty(convention, foundControl);
-                if (ConventionManager.HasBinding((FrameworkElement)foundControl, bindableProperty))
+                if (ConventionManager.HasBinding(foundControl, bindableProperty))
                 {
                     Log.Warn("Binding exists on {0}.", property.Name);
                     continue;
@@ -131,14 +131,14 @@
         /// <summary>
         /// Attaches instances of <see cref="ActionMessage"/> to the view's controls based on the provided methods.
         /// </summary>
-        /// <param name="view">The view to search for actionable controls.</param>
+        /// <param name="namedElements">The available named elements to search through.</param>
         /// <param name="methods">The methods to create instances of <see cref="ActionMessage"/> for.</param>
-        public static void BindActions(FrameworkElement view, IEnumerable<MethodInfo> methods)
+        public static void BindActions(IEnumerable<FrameworkElement> namedElements, IEnumerable<MethodInfo> methods)
         {
             foreach (var method in methods)
             {
-                var found = view.FindName(method.Name) as DependencyObject;
-                if (found == null)
+                var foundControl = namedElements.FindName(method.Name);
+                if (foundControl == null)
                 {
                     Log.Info("No bindable control for action {0}.", method.Name);
                     continue;
@@ -167,7 +167,7 @@
                 }
 
                 Log.Info("Added convention action for {0} as {1}.", method.Name, message);
-                Message.SetAttach(found, message);
+                Message.SetAttach(foundControl, message);
             }
         }
     }

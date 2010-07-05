@@ -58,7 +58,7 @@
 
                 if (stringValue != null)
                 {
-                    switch (stringValue.ToLower())
+                    switch (stringValue.ToLower(CultureInfo.InvariantCulture))
                     {
                         case "$eventargs":
                             potentialValue = eventArgs;

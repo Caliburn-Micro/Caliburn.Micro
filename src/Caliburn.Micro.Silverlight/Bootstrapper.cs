@@ -6,6 +6,7 @@
     using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Threading;
 
     /// <summary>
     /// Instantiate this class in order to configure the framework.
@@ -32,7 +33,7 @@
                 Start();
         }
 
-        internal virtual void Start() 
+        void Start() 
         {
             Execute.InitializeWithDispatcher();
             AssemblySource.Instance.AddRange(SelectAssemblies());
@@ -41,6 +42,15 @@
             IoC.GetInstance = GetInstance;
             IoC.GetAllInstances = GetAllInstances;
             IoC.BuildUp = BuildUp;
+
+
+            Application.Current.Startup += OnStartup;
+#if SILVERLIGHT
+            Application.Current.UnhandledException += OnUnhandledException;
+#else
+            Application.Current.DispatcherUnhandledException += OnUnhandledException;
+#endif
+            Application.Current.Exit += OnExit;
         }
 
         /// <summary>
@@ -87,6 +97,36 @@
         /// </summary>
         /// <param name="instance">The instance to perform injection on.</param>
         protected virtual void BuildUp(object instance) {}
+
+        /// <summary>
+        /// Override this to add custom behavior to execute after the application starts.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The args.</param>
+        protected virtual void OnStartup(object sender, StartupEventArgs e) {}
+
+        /// <summary>
+        /// Override this to add custom behavior on exit.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event args.</param>
+        protected virtual void OnExit(object sender, EventArgs e) { }
+
+#if SILVERLIGHT
+        /// <summary>
+        /// Override this to add custom behavior for unhandled exceptions.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event args.</param>
+        protected virtual void OnUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e) {}
+#else
+        /// <summary>
+        /// Override this to add custom behavior for unhandled exceptions.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event args.</param>
+        protected virtual void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) { }
+#endif
     }
 
     /// <summary>
@@ -95,18 +135,12 @@
     /// <typeparam name="TRootModel">The type of root model for the application.</typeparam>
     public class Bootstrapper<TRootModel> : Bootstrapper
     {
-        internal override void Start()
-        {
-            base.Start();
-            Application.Current.Startup += OnStartup;
-        }
-
         /// <summary>
         /// Override this to add custom behavior to execute after the application starts.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
-        protected virtual void OnStartup(object sender, StartupEventArgs e)
+        protected override void OnStartup(object sender, StartupEventArgs e)
         {
             var viewModel = IoC.Get<TRootModel>();
             var view = ViewLocator.LocateForModel(viewModel, null, null);
@@ -121,6 +155,8 @@
 #else
             ((Window)view).Show();
 #endif
+
+            base.OnStartup(sender, e);
         }
     }
 }

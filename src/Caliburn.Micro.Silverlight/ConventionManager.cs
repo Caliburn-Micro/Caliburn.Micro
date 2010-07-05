@@ -52,6 +52,14 @@
         };
 
         /// <summary>
+        /// Transforms a name into a guard name.
+        /// </summary>
+        /// <remarks>For example, the name "Save" would become "CanSave" by default.</remarks>
+        public static Func<string, string> DeriveGuardName = name =>{
+            return "Can" + name;
+        };
+
+        /// <summary>
         /// Applies the appropriate binding mode to the binding expression.
         /// </summary>
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyBindingMode = (binding, convention, property) =>{

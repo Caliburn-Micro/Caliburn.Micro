@@ -43,7 +43,7 @@
             null
             );
 
-        MethodInfo canExecute;
+        MethodInfo guard;
         MethodInfo execute;
         object target;
         DependencyObject view;
@@ -110,22 +110,22 @@
             execute = found.Item2;
             view = found.Item3;
 
-            var canName = "Can" + MethodName;
+            var guardName = ConventionManager.DeriveGuardName(MethodName);
             var targetType = target.GetType();
-            canExecute = targetType.GetMethod(canName);
+            guard = targetType.GetMethod(guardName);
 
-            if (canExecute == null)
+            if (guard == null)
             {
                 var inpc = target as INotifyPropertyChanged;
                 if(inpc == null)
                     return;
 
-                canExecute = targetType.GetMethod("get_" + canName);
+                guard = targetType.GetMethod("get_" + guardName);
 #if SILVERLIGHT
-                if(canExecute == null || !(AssociatedObject is Control))
+                if(guard == null || !(AssociatedObject is Control))
                     return;
 #else
-                if (canExecute == null)
+                if (guard == null)
                     return;
 #endif
                 inpc.PropertyChanged += CanExecuteChanged;
@@ -155,7 +155,7 @@
 
         void CanExecuteChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == canExecute.Name.Substring(4))
+            if(e.PropertyName == guard.Name.Substring(4))
                 UpdateAvailability();
         }
 
@@ -165,18 +165,18 @@
         public void UpdateAvailability()
         {
 #if SILVERLIGHT
-            if (canExecute == null || !(AssociatedObject is Control))
+            if (guard == null || !(AssociatedObject is Control))
                 return;
 #else
-            if (canExecute == null)
+            if (guard == null)
                 return;
 #endif
 
             Log.Info("{0} availability changed.", this);
 
-            var result = (bool)canExecute.Invoke(
+            var result = (bool)guard.Invoke(
                 target,
-                MessageBinder.DetermineParameters(this, canExecute.GetParameters(), AssociatedObject, null)
+                MessageBinder.DetermineParameters(this, guard.GetParameters(), AssociatedObject, null)
                 );
 
 #if SILVERLIGHT
