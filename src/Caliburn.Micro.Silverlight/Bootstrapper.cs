@@ -40,7 +40,6 @@
             IoC.GetAllInstances = GetAllInstances;
             IoC.BuildUp = BuildUp;
 
-
             Application.Current.Startup += OnStartup;
 #if SILVERLIGHT
             Application.Current.UnhandledException += OnUnhandledException;
@@ -127,7 +126,7 @@
     }
 
     /// <summary>
-    /// A strongly-typed version of <see cref="Bootstrapper"/> that specifies the type of rootmodel to create for the application.
+    /// A strongly-typed version of <see cref="Bootstrapper"/> that specifies the type of root model to create for the application.
     /// </summary>
     /// <typeparam name="TRootModel">The type of root model for the application.</typeparam>
     public class Bootstrapper<TRootModel> : Bootstrapper
