@@ -60,6 +60,18 @@
         };
 
         /// <summary>
+        /// Derives the SelectedItem property name.
+        /// </summary>
+        public static Func<string, IEnumerable<string>> DerivePotentialSelectionNames = name =>{
+            var singular = Singularize(name);
+            return new[] {
+                "Active" + singular,
+                "Selected" + singular,
+                "Current" + singular
+            };
+        };
+
+        /// <summary>
         /// Applies the appropriate binding mode to the binding expression.
         /// </summary>
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyBindingMode = (binding, convention, property) =>{
@@ -162,14 +174,7 @@
             if(HasBinding(selector, Selector.SelectedItemProperty))
                 return;
 
-            var singular = Singularize(property.Name);
-            var potentialNames = new[] {
-                "Active" + singular,
-                "Selected" + singular,
-                "Current" + singular
-            };
-
-            foreach(var potentialName in potentialNames)
+            foreach(var potentialName in DerivePotentialSelectionNames(property.Name))
             {
                 if(property.DeclaringType.GetProperty(potentialName) != null)
                 {

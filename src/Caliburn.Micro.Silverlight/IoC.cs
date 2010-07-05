@@ -33,7 +33,6 @@
             return (T)GetInstance(typeof(T), null);
         }
 
-
         /// <summary>
         /// Gets an instance from the container using type and key.
         /// </summary>

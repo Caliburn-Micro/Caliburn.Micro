@@ -194,7 +194,7 @@
 
                 if (view == null)
                 {
-                    var ex = new NotSupportedException("TryClose requires a parent or default view.");
+                    var ex = new NotSupportedException("A Parent or default view is required.");
                     Log.Error(ex);
                     throw ex;
                 }
@@ -213,7 +213,7 @@
                     return;
                 }
 
-                var ex2 = new NotSupportedException("The default view does not support Close or IsOpen.");
+                var ex2 = new NotSupportedException("The default view does not support Close/IsOpen.");
                 Log.Error(ex2);
                 throw ex2;
             }

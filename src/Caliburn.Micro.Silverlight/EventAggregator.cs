@@ -76,31 +76,27 @@
         /// <param name="message">The message instance.</param>
         public void Publish<TMessage>(TMessage message)
         {
-            WeakReference[] sbs;
+            WeakReference[] toNotify;
             lock (subscribers)
-            {
-                sbs = subscribers.ToArray();
-            }
-            Execute.OnUIThread(() =>
-            {
+                toNotify = subscribers.ToArray();
+
+            Execute.OnUIThread(() =>{
                 Log.Info("Publishing {0}.", message);
                 var dead = new List<WeakReference>();
 
-                foreach (var reference in sbs)
+                foreach(var reference in toNotify)
                 {
                     var target = reference.Target as IHandle<TMessage>;
 
-                    if (target != null)
+                    if(target != null)
                         target.Handle(message);
-                    else if (!reference.IsAlive)
+                    else if(!reference.IsAlive)
                         dead.Add(reference);
                 }
-                if (dead.Count > 0)
+                if(dead.Count > 0)
                 {
-                    lock (subscribers)
-                    {
+                    lock(subscribers)
                         dead.Apply(x => subscribers.Remove(x));
-                    }
                 }
             });
         }

@@ -29,12 +29,9 @@
         /// </summary>
         public Bootstrapper()
         {
-            if(!IsInDesignMode)
-                Start();
-        }
+            if(IsInDesignMode)
+                return;
 
-        void Start() 
-        {
             Execute.InitializeWithDispatcher();
             AssemblySource.Instance.AddRange(SelectAssemblies());
             Configure();
