@@ -203,6 +203,13 @@
                     currentElement = VisualTreeHelper.GetParent(currentElement);
             }
 
+            if(actionMethod == null && AssociatedObject.DataContext != null)
+            {
+                currentTarget = AssociatedObject.DataContext;
+                actionMethod = AssociatedObject.DataContext.GetType().GetMethod(MethodName);
+                currentElement = AssociatedObject;
+            }
+
             return new Tuple<object, MethodInfo, DependencyObject>(currentTarget, actionMethod, currentElement);
         }
 
