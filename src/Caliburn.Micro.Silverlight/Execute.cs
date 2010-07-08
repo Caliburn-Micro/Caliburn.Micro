@@ -2,6 +2,7 @@
 {
     using System;
     using System.Windows;
+    using System.Windows.Threading;
 
     /// <summary>
     /// Enables easy marshalling of code to the UI thread.
@@ -18,7 +19,7 @@
 #if SILVERLIGHT
             var dispatcher = Deployment.Current.Dispatcher;
 #else
-            var dispatcher = Application.Current.Dispatcher;
+            var dispatcher = Dispatcher.CurrentDispatcher;
 #endif
             executor = action =>{
                 if(dispatcher.CheckAccess())
