@@ -64,7 +64,7 @@
             }
 
             var viewModelType = viewModel.GetType();
-            var namedElements = element.GetNamedElementsInScope();
+            var namedElements = ExtensionMethods.GetNamedElementsInScope(element);
 
             BindActions(namedElements, viewModelType.GetMethods());
             BindProperties(namedElements, viewModelType.GetProperties());

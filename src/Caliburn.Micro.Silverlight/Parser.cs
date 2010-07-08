@@ -128,7 +128,7 @@
         {
             var element = elementName == "$this" 
                 ? target 
-                : target.GetNamedElementsInScope().FindName(elementName);
+                : ExtensionMethods.GetNamedElementsInScope(target).FindName(elementName);
             if (element == null)
                 return;
 

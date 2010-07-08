@@ -73,23 +73,22 @@
         /// <summary>
         /// Gets all the <see cref="FrameworkElement"/> instances with names in the scope.
         /// </summary>
-        /// <param name="elementInScope">An element (does not have to be the root) that is in the searchable scope.</param>
         /// <returns>Named <see cref="FrameworkElement"/> instances in the provided scope.</returns>
-        public static IEnumerable<FrameworkElement> GetNamedElementsInScope(this DependencyObject elementInScope)
-        {
+        /// <remarks>Pass in a <see cref="DependencyObject"/> and receive a list of named <see cref="FrameworkElement"/> instances in the same scope.</remarks>
+        public static Func<DependencyObject, IEnumerable<FrameworkElement>> GetNamedElementsInScope = elementInScope =>{
             var root = elementInScope;
             var previous = elementInScope;
 
             while(true)
             {
-                if (root == null)
+                if(root == null)
                 {
                     root = previous;
                     break;
                 }
-                if (root is UserControl)
+                if(root is UserControl)
                     break;
-                
+
                 previous = root;
                 root = VisualTreeHelper.GetParent(previous);
             }
@@ -98,22 +97,22 @@
             var queue = new Queue<DependencyObject>();
             queue.Enqueue(root);
 
-            while (queue.Count > 0)
+            while(queue.Count > 0)
             {
                 var current = queue.Dequeue();
                 var currentElement = current as FrameworkElement;
 
-                if (currentElement != null && !string.IsNullOrEmpty(currentElement.Name))
+                if(currentElement != null && !string.IsNullOrEmpty(currentElement.Name))
                     descendants.Add(currentElement);
 
                 var childCount = VisualTreeHelper.GetChildrenCount(current);
-                if (childCount > 0)
+                if(childCount > 0)
                 {
-                    for (var i = 0; i < childCount; i++)
+                    for(var i = 0; i < childCount; i++)
                     {
                         var childDo = VisualTreeHelper.GetChild(current, i);
 
-                        if (childDo is UserControl)
+                        if(childDo is UserControl)
                             continue;
 
                         queue.Enqueue(childDo);
@@ -122,17 +121,27 @@
                 else
                 {
                     var contentControl = current as ContentControl;
-                    if (contentControl != null)
+                    if(contentControl != null)
                     {
-                        if (contentControl.Content != null
+                        if(contentControl.Content != null
                             && contentControl.Content is DependencyObject
-                            && !(contentControl.Content is UserControl))
+                                && !(contentControl.Content is UserControl))
                             queue.Enqueue(contentControl.Content as DependencyObject);
+                    }
+                    else
+                    {
+                        var itemsControl = current as ItemsControl;
+                        if(itemsControl != null)
+                        {
+                            itemsControl.Items.OfType<DependencyObject>()
+                                .Where(item => !(item is UserControl))
+                                .Apply(queue.Enqueue);
+                        }
                     }
                 }
             }
 
             return descendants;
-        }
+        };
     }
 }
