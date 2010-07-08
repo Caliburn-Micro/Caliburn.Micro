@@ -99,7 +99,10 @@
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
-        protected virtual void OnStartup(object sender, StartupEventArgs e) {}
+        protected virtual void OnStartup(object sender, StartupEventArgs e)
+        {
+            DisplayRootView();
+        }
 
         /// <summary>
         /// Override this to add custom behavior on exit.
@@ -107,6 +110,11 @@
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event args.</param>
         protected virtual void OnExit(object sender, EventArgs e) { }
+
+        /// <summary>
+        /// Override to display your UI at startup.
+        /// </summary>
+        protected virtual void DisplayRootView() {}
 
 #if SILVERLIGHT
         /// <summary>
@@ -132,13 +140,12 @@
     public class Bootstrapper<TRootModel> : Bootstrapper
     {
         /// <summary>
-        /// Override this to add custom behavior to execute after the application starts.
+        /// Override to display your UI at startup.
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The args.</param>
-        protected override void OnStartup(object sender, StartupEventArgs e)
+        protected override void DisplayRootView() 
         {
             var viewModel = IoC.Get<TRootModel>();
+#if SILVERLIGHT
             var view = ViewLocator.LocateForModel(viewModel, null, null);
             ViewModelBinder.Bind(viewModel, view, null);
 
@@ -146,13 +153,10 @@
             if (activator != null)
                 activator.Activate();
 
-#if SILVERLIGHT
             Application.Current.RootVisual = view;
 #else
-            ((Window)view).Show();
+            new WindowManager().Show(viewModel);
 #endif
-
-            base.OnStartup(sender, e);
         }
     }
 }
