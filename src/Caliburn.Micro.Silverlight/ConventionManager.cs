@@ -37,8 +37,8 @@
         public static DataTemplate DefaultDataTemplate = (DataTemplate)XamlReader.Parse(
 #endif
             "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' " +
-                           "xmlns:cal='http://www.caliburnproject.org'> " +
-                "<ContentControl cal:View.Model=\"{Binding}\" />" +
+                          "xmlns:cal='http://www.caliburnproject.org'> " +
+                "<ContentControl cal:View.Model=\"{Binding}\" VerticalContentAlignment=\"Stretch\" HorizontalContentAlignment=\"Stretch\" />" +
             "</DataTemplate>"
             );
 
@@ -197,38 +197,26 @@
             AddElementConvention<Menu>(Menu.ItemsSourceProperty,"DataContext", "Click");
             AddElementConvention<MenuItem>(MenuItem.ItemsSourceProperty, "DataContext", "Click");
             AddElementConvention<Label>(Label.ContentProperty, "Content", "DataContextChanged");
-            AddElementConvention<DockPanel>(DockPanel.VisibilityProperty, "DataContext", "Loaded");
-            AddElementConvention<UniformGrid>(UniformGrid.VisibilityProperty, "DataContext", "Loaded");
-            AddElementConvention<WrapPanel>(WrapPanel.VisibilityProperty, "DataContext", "Loaded");
-            AddElementConvention<Viewbox>(Viewbox.VisibilityProperty, "DataContext", "Loaded");
-            AddElementConvention<BulletDecorator>(BulletDecorator.VisibilityProperty, "DataContext", "Loaded");
             AddElementConvention<Slider>(Slider.ValueProperty, "Value", "ValueChanged");
             AddElementConvention<Expander>(Expander.IsExpandedProperty, "IsExpanded", "Expanded");
-            AddElementConvention<Window>(Window.DataContextProperty, "DataContext", "Loaded");
             AddElementConvention<StatusBar>(StatusBar.ItemsSourceProperty, "DataContext", "Loaded");
             AddElementConvention<ToolBar>(ToolBar.ItemsSourceProperty, "DataContext", "Loaded");
             AddElementConvention<ToolBarTray>(ToolBarTray.VisibilityProperty, "DataContext", "Loaded");
             AddElementConvention<TreeView>(TreeView.ItemsSourceProperty, "SelectedItem", "SelectedItemChanged");
             AddElementConvention<TabControl>(TabControl.ItemsSourceProperty, "ItemsSource", "SelectionChanged");
             AddElementConvention<TabItem>(TabItem.ContentProperty, "DataContext", "DataContextChanged");
-            AddElementConvention<ListView>(ListView.ItemsSourceProperty, "SelectedItem", "SelectionChanged");
+            AddElementConvention<Window>(Window.DataContextProperty, "DataContext", "Loaded");
 #endif
-            AddElementConvention<ListBox>(ListBox.ItemsSourceProperty, "SelectedItem", "SelectionChanged");
             AddElementConvention<UserControl>(UserControl.VisibilityProperty, "DataContext", "Loaded");
-            AddElementConvention<ComboBox>(ComboBox.ItemsSourceProperty, "SelectedItem", "SelectionChanged");
+            AddElementConvention<Selector>(Selector.ItemsSourceProperty, "SelectedItem", "SelectionChanged");
+            AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", "Loaded");
+            AddElementConvention<ContentControl>(ContentControl.ContentProperty, "DataContext", "Loaded");
+            AddElementConvention<FrameworkElement>(FrameworkElement.VisibilityProperty, "DataContext", "Loaded");
             AddElementConvention<Image>(Image.SourceProperty, "Source", "Loaded");
             AddElementConvention<ButtonBase>(ButtonBase.ContentProperty, "DataContext", "Click");
-            AddElementConvention<Button>(Button.ContentProperty, "DataContext", "Click");
             AddElementConvention<ToggleButton>(ToggleButton.IsCheckedProperty, "IsChecked", "Click");
-            AddElementConvention<RadioButton>(RadioButton.IsCheckedProperty, "IsChecked", "Click");
-            AddElementConvention<CheckBox>(CheckBox.IsCheckedProperty, "IsChecked", "Click");
             AddElementConvention<TextBox>(TextBox.TextProperty, "Text", "TextChanged");
             AddElementConvention<TextBlock>(TextBlock.TextProperty, "Text", "DataContextChanged");
-            AddElementConvention<StackPanel>(StackPanel.VisibilityProperty, "DataContext", "Loaded");
-            AddElementConvention<Grid>(Grid.VisibilityProperty, "DataContext", "Loaded");
-            AddElementConvention<Border>(Border.VisibilityProperty, "DataContext", "Loaded");
-            AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", "Loaded");
-            AddElementConvention<ContentControl>(ContentControl.ContentProperty, "DataContext", "Loaded"); 
         }
 
         /// <summary>
