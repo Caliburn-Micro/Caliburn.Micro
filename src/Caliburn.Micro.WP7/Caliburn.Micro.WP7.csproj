@@ -165,6 +165,7 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\ViewModelBinder.cs">
       <Link>ViewModelBinder.cs</Link>
     </Compile>
+    <Compile Include="ActionDelegate.cs" />
     <Compile Include="AttachedCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tuple.cs" />

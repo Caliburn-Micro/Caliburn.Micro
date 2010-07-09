@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.Micro
 {
+    using System;
     using System.Linq;
     using System.Collections.Generic;
     using System.Reflection;
@@ -66,8 +67,8 @@
             var viewModelType = viewModel.GetType();
             var namedElements = ExtensionMethods.GetNamedElementsInScope(element);
 
-            BindActions(namedElements, viewModelType.GetMethods());
-            BindProperties(namedElements, viewModelType.GetProperties());
+            BindActions(namedElements, viewModelType);
+            BindProperties(namedElements, viewModelType);
 
             view.SetValue(ConventionsAppliedProperty, true);
         };
@@ -87,9 +88,10 @@
         /// Creates data bindings on the view's controls based on the provided properties.
         /// </summary>
         /// <param name="namedElements">The available named elements to search through.</param>
-        /// <param name="properties">The properties to create bindings for.</param>
-        public static void BindProperties(IEnumerable<FrameworkElement> namedElements, IEnumerable<PropertyInfo> properties)
+        /// <param name="viewModelType">The type of view model to determine conventions for.</param>
+        public static void BindProperties(IEnumerable<FrameworkElement> namedElements, Type viewModelType)
         {
+            var properties = viewModelType.GetProperties();
             foreach (var property in properties)
             {
                 var foundControl = namedElements.FindName(property.Name);
@@ -123,7 +125,7 @@
 
                 BindingOperations.SetBinding(foundControl, bindableProperty, binding);
                 Log.Info("Added convention binding for {0}.", property.Name);
-                ConventionManager.AddCustomBindingBehavior(convention, property, foundControl, binding);
+                ConventionManager.AddCustomBindingBehavior(binding, convention, viewModelType, property, foundControl);
             }
         }
 
@@ -131,9 +133,10 @@
         /// Attaches instances of <see cref="ActionMessage"/> to the view's controls based on the provided methods.
         /// </summary>
         /// <param name="namedElements">The available named elements to search through.</param>
-        /// <param name="methods">The methods to create instances of <see cref="ActionMessage"/> for.</param>
-        public static void BindActions(IEnumerable<FrameworkElement> namedElements, IEnumerable<MethodInfo> methods)
+        /// <param name="viewModelType">The type of view model to determine conventions for.</param>
+        public static void BindActions(IEnumerable<FrameworkElement> namedElements, Type viewModelType)
         {
+            var methods = viewModelType.GetMethods();
             foreach (var method in methods)
             {
                 var foundControl = namedElements.FindName(method.Name);

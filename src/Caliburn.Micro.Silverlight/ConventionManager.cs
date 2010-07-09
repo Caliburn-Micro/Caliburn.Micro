@@ -150,7 +150,7 @@
         /// <summary>
         /// Adds any additional conventional behavior to the element.
         /// </summary>
-        public static Action<ElementConvention, PropertyInfo, DependencyObject, Binding> AddCustomBindingBehavior = (convention, property, foundControl, binding) =>{
+        public static Action<Binding, ElementConvention, Type, PropertyInfo, DependencyObject> AddCustomBindingBehavior = (binding, convention, viewModelType, property, foundControl) =>{
             var itemsControl = foundControl as ItemsControl;
             if(itemsControl == null)
                 return;
@@ -176,7 +176,7 @@
 
             foreach(var potentialName in DerivePotentialSelectionNames(property.Name))
             {
-                if(property.DeclaringType.GetProperty(potentialName) != null)
+                if(viewModelType.GetProperty(potentialName) != null)
                 {
                     var selectionBinding = new Binding(potentialName) { Mode = BindingMode.TwoWay };
                     BindingOperations.SetBinding(foundControl, Selector.SelectedItemProperty, selectionBinding);
