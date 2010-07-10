@@ -155,7 +155,18 @@
 
             Application.Current.RootVisual = view;
 #else
-            new WindowManager().Show(viewModel);
+            IWindowManager windowManager;
+
+            try
+            {
+                windowManager = IoC.Get<IWindowManager>();
+            }
+            catch
+            {
+                windowManager = new WindowManager();
+            }
+
+            windowManager.Show(viewModel);
 #endif
         }
     }
