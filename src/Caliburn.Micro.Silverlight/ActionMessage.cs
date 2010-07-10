@@ -43,7 +43,7 @@
             null
             );
 
-        MethodInfo guard;
+        Func<bool> guard;
         MethodInfo execute;
         object target;
         DependencyObject view;
@@ -75,6 +75,11 @@
             get { return (AttachedCollection<Parameter>)GetValue(ParametersProperty); }
         }
 
+        /// <summary>
+        /// Occurs before the message detaches from the associated object.
+        /// </summary>
+        public EventHandler Detaching = delegate { };
+
         protected override void OnAttached()
         {
             AssociatedObject.Loaded += ElementLoaded;
@@ -86,13 +91,7 @@
         protected override void OnDetaching()
         {
             AssociatedObject.Loaded -= ElementLoaded;
-
-            var inpc = target as INotifyPropertyChanged;
-            if(inpc != null)
-                inpc.PropertyChanged -= CanExecuteChanged;
-
             Parameters.Detach();
-
             base.OnDetaching();
         }
 
@@ -109,27 +108,7 @@
             target = found.Item1;
             execute = found.Item2;
             view = found.Item3;
-
-            var guardName = ConventionManager.DeriveGuardName(MethodName);
-            var targetType = target.GetType();
-            guard = targetType.GetMethod(guardName);
-
-            if (guard == null)
-            {
-                var inpc = target as INotifyPropertyChanged;
-                if(inpc == null)
-                    return;
-
-                guard = targetType.GetMethod("get_" + guardName);
-#if SILVERLIGHT
-                if(guard == null || !(AssociatedObject is Control))
-                    return;
-#else
-                if (guard == null)
-                    return;
-#endif
-                inpc.PropertyChanged += CanExecuteChanged;
-            }
+            guard = ConventionManager.CreateActionGuard(this, AssociatedObject, target);
 
             UpdateAvailability();
         }
@@ -153,36 +132,24 @@
             });
         }
 
-        void CanExecuteChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if(e.PropertyName == guard.Name.Substring(4))
-                UpdateAvailability();
-        }
-
         /// <summary>
         /// Forces an update of the UI's Enabled/Disabled state based on the the preconditions associated with the method.
         /// </summary>
         public void UpdateAvailability()
         {
-#if SILVERLIGHT
-            if (guard == null || !(AssociatedObject is Control))
-                return;
-#else
             if (guard == null)
                 return;
-#endif
-
-            Log.Info("{0} availability changed.", this);
-
-            var result = (bool)guard.Invoke(
-                target,
-                MessageBinder.DetermineParameters(this, guard.GetParameters(), AssociatedObject, null)
-                );
 
 #if SILVERLIGHT
-            ((Control)AssociatedObject).IsEnabled = result;
+            if (!(AssociatedObject is Control))
+                return;
+#endif
+            Log.Info("{0} availability changed.", this);
+
+#if SILVERLIGHT
+            ((Control)AssociatedObject).IsEnabled = guard();
 #else
-            AssociatedObject.IsEnabled = result;
+            AssociatedObject.IsEnabled = guard();
 #endif
         }
 
