@@ -2,10 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Reflection;
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Threading;
 
     /// <summary>
@@ -13,17 +11,28 @@
     /// </summary>
     public class Bootstrapper
     {
-#if SILVERLIGHT
+        private static bool? isInDesignMode;
+
         /// <summary>
         /// Indicates whether or not the framework is in design-time mode.
         /// </summary>
-        public static readonly bool IsInDesignMode = DesignerProperties.GetIsInDesignMode(new UserControl());
-#else
-        /// <summary>
-        /// Indicates whether or not the framework is in design-time mode.
-        /// </summary>
-        public static readonly bool IsInDesignMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
-#endif
+        public static bool IsInDesignMode
+        {
+            get
+            {
+                if (isInDesignMode == null)
+                {
+                    var app = Application.Current.ToString();
+
+                    if (app == "System.Windows.Application" || app == "Microsoft.Expression.Blend.BlendApplication")
+                        isInDesignMode = true;
+                    else isInDesignMode = false;
+                }
+
+                return isInDesignMode.GetValueOrDefault(false);
+            }
+        }
+
         /// <summary>
         /// Creates an instance of the bootstrapper.
         /// </summary>
