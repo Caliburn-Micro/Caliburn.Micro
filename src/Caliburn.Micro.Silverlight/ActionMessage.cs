@@ -1,7 +1,6 @@
 ﻿namespace Caliburn.Micro
 {
     using System;
-    using System.ComponentModel;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
@@ -78,7 +77,7 @@
         /// <summary>
         /// Occurs before the message detaches from the associated object.
         /// </summary>
-        public EventHandler Detaching = delegate { };
+        public event EventHandler Detaching = delegate { };
 
         protected override void OnAttached()
         {
@@ -90,6 +89,7 @@
 
         protected override void OnDetaching()
         {
+            Detaching(this, EventArgs.Empty);
             AssociatedObject.Loaded -= ElementLoaded;
             Parameters.Detach();
             base.OnDetaching();
