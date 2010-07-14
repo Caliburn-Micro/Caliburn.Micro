@@ -37,7 +37,7 @@
         public static DataTemplate DefaultDataTemplate = (DataTemplate)XamlReader.Parse(
 #endif
             "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' " +
-                          "xmlns:cal='http://www.caliburnproject.org'> " +
+                          "xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro'> " +
                 "<ContentControl cal:View.Model=\"{Binding}\" VerticalContentAlignment=\"Stretch\" HorizontalContentAlignment=\"Stretch\" />" +
             "</DataTemplate>"
             );
