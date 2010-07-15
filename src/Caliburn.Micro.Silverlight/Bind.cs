@@ -1,8 +1,6 @@
 ﻿namespace Caliburn.Micro
 {
-    using System;
     using System.Windows;
-    using System.Windows.Controls;
 
     /// <summary>
     /// Hosts dependency properties for binding.
@@ -45,7 +43,7 @@
             if (Bootstrapper.IsInDesignMode || e.NewValue == null || e.NewValue == e.OldValue)
                 return;
 
-            var fe = d as UserControl;
+            var fe = d as FrameworkElement;
             if (fe == null)
                 return;
 
