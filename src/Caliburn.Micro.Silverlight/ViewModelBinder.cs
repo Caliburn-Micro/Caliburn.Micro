@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using System.Collections.Generic;
-    using System.Reflection;
     using System.Windows;
     using System.Windows.Data;
 
@@ -36,7 +35,7 @@
         /// Binds the specified viewModel to the view.
         /// </summary>
         ///<remarks>Passes the the view model, view and creation context (or null for default) to use in applying binding.</remarks>
-        public static System.Action<object, DependencyObject, object> Bind = (viewModel, view, context) =>{
+        public static Action<object, DependencyObject, object> Bind = (viewModel, view, context) =>{
             if((bool)view.GetValue(ConventionsAppliedProperty))
                 return;
 
@@ -66,6 +65,9 @@
 
             var viewModelType = viewModel.GetType();
             var namedElements = ExtensionMethods.GetNamedElementsInScope(element);
+            var isLoaded = element.GetValue(View.IsLoadedProperty);
+
+            namedElements.Apply(x => x.SetValue(View.IsLoadedProperty, isLoaded));
 
             BindActions(namedElements, viewModelType);
             BindProperties(namedElements, viewModelType);

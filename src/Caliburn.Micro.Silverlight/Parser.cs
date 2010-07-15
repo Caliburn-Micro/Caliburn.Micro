@@ -118,7 +118,10 @@
                         );
                     fe.Loaded -= handler;
                 };
-                fe.Loaded += handler;
+
+                if ((bool)fe.GetValue(View.IsLoadedProperty))
+                    handler(null, null);
+                else fe.Loaded += handler;
             }
 
             return actualParameter;

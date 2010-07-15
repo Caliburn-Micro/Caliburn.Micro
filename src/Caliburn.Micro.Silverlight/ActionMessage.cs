@@ -81,9 +81,13 @@
 
         protected override void OnAttached()
         {
-            AssociatedObject.Loaded += ElementLoaded;
             Parameters.Attach(AssociatedObject);
             Parameters.Apply(x => x.MakeAwareOf(this));
+
+            if((bool)AssociatedObject.GetValue(View.IsLoadedProperty))
+                ElementLoaded(null, null);
+            else AssociatedObject.Loaded += ElementLoaded;
+
             base.OnAttached();
         }
 

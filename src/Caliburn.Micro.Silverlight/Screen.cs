@@ -160,7 +160,11 @@
 
             var element = view as FrameworkElement;
             if (!loadWired && element != null)
-                element.Loaded += delegate { OnViewLoaded(view); };
+            {
+                if((bool)element.GetValue(View.IsLoadedProperty))
+                    OnViewLoaded(view);
+                else element.Loaded += delegate { OnViewLoaded(view); };
+            }
         }
 
         /// <summary>

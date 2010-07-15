@@ -1,6 +1,8 @@
 ﻿namespace Caliburn.Micro
 {
+    using System;
     using System.Windows;
+    using System.Windows.Controls;
 
     /// <summary>
     /// Hosts dependency properties for binding.
@@ -40,8 +42,27 @@
 
         static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue != null && e.NewValue != e.OldValue)
-                ViewModelBinder.Bind(e.NewValue, d, null);
+            if (Bootstrapper.IsInDesignMode || e.NewValue == null || e.NewValue == e.OldValue)
+                return;
+
+            var fe = d as UserControl;
+            if (fe == null)
+                return;
+
+            RoutedEventHandler handler = null;
+            handler = delegate{
+                var target = e.NewValue;
+                var containerKey = e.NewValue as string;
+
+                if (containerKey != null)
+                    target = IoC.GetInstance(null, containerKey);
+
+                d.SetValue(View.IsLoadedProperty, true);
+                ViewModelBinder.Bind(target, d, null);
+                fe.Loaded -= handler;
+            };
+
+            fe.Loaded += handler;
         }
     }
 }
