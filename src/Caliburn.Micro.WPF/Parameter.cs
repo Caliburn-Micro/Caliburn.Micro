@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.Micro
 {
+    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Interactivity;
 
@@ -26,6 +27,7 @@
         /// Gets or sets the value of the parameter.
         /// </summary>
         /// <value>The value.</value>
+        [Category("Common Properties")]
         public object Value
         {
             get { return GetValue(ValueProperty); }

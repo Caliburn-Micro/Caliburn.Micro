@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Micro
 {
     using System;
+    using System.ComponentModel;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
@@ -59,6 +60,7 @@
         /// Gets or sets the name of the method to be invoked on the presentation model class.
         /// </summary>
         /// <value>The name of the method.</value>
+        [Category("Common Properties")]
         public string MethodName
         {
             get { return (string)GetValue(MethodNameProperty); }
@@ -69,6 +71,7 @@
         /// Gets the parameters to pass as part of the method invocation.
         /// </summary>
         /// <value>The parameters.</value>
+        [Category("Common Properties")]
         public AttachedCollection<Parameter> Parameters
         {
             get { return (AttachedCollection<Parameter>)GetValue(ParametersProperty); }
