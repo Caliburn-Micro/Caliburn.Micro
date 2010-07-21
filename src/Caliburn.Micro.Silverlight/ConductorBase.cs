@@ -78,7 +78,7 @@
         protected virtual T EnsureItem(T newItem)
         {
             var node = newItem as IChild<IConductor>;
-            if (node != null)
+            if (node != null && node.Parent != this)
                 node.Parent = this;
 
             return newItem;

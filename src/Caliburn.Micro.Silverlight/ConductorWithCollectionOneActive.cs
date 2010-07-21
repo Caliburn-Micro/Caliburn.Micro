@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Micro
 {
     using System;
+    using System.Collections.Specialized;
     using System.Linq;
 
     public partial class Conductor<T>
@@ -16,6 +17,25 @@
             public class OneActive : ConductorBase<T>
             {
                 readonly BindableCollection<T> items = new BindableCollection<T>();
+
+                /// <summary>
+                /// Creates an instance of the class.
+                /// </summary>
+                public OneActive()
+                {
+                    items.CollectionChanged += (s, e) =>{
+                        switch(e.Action)
+                        {
+                            case NotifyCollectionChangedAction.Add:
+                            case NotifyCollectionChangedAction.Replace:
+                                e.NewItems.OfType<IChild<IConductor>>().Apply(x => x.Parent = this);
+                                break;
+                            case NotifyCollectionChangedAction.Reset:
+                                items.OfType<IChild<IConductor>>().Apply(x => x.Parent = this);
+                                break;
+                        }
+                    };
+                }
 
                 /// <summary>
                 /// Gets the items that are currently being conducted.
