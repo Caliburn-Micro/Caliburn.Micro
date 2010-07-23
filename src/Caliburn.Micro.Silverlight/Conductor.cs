@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Micro
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// An implementation of <see cref="IConductor"/> that holds on to and activates only one item at a time.
@@ -13,20 +14,18 @@
         /// <param name="item">The item to activate.</param>
         public override void ActivateItem(T item)
         {
-            if(item != null && item.Equals(ActiveItem))
-                return;
-
-            var guard = ActiveItem as IGuardClose;
-
-            if(guard == null)
-                ChangeActiveItem(item, true);
-            else
+            if (item != null && item.Equals(ActiveItem))
             {
-                guard.CanClose(canClose =>{
-                    if(canClose)
-                        ChangeActiveItem(item, true);
-                });
+                OnActivationProcessed(item, true);
+                return;
             }
+
+            CloseStrategy.Execute(new[] { ActiveItem }, (canClose, items) =>
+            {
+                if (canClose)
+                    ChangeActiveItem(item, true);
+                else OnActivationProcessed(item, false);
+            });
         }
 
         /// <summary>
@@ -35,20 +34,14 @@
         /// <param name="item">The item to close.</param>
         public override void CloseItem(T item)
         {
-            if(item == null || !item.Equals(ActiveItem))
+            if (item == null || !item.Equals(ActiveItem))
                 return;
 
-            var guard = ActiveItem as IGuardClose;
-
-            if(guard == null)
-                ChangeActiveItem(default(T), true);
-            else
+            CloseStrategy.Execute(new[] { ActiveItem }, (canClose, items) =>
             {
-                guard.CanClose(result =>{
-                    if(result)
-                        ChangeActiveItem(default(T), true);
-                });
-            }
+                if (canClose)
+                    ChangeActiveItem(default(T), true);
+            });
         }
 
         /// <summary>
@@ -57,11 +50,7 @@
         /// <param name="callback">The implementor calls this action with the result of the close check.</param>
         public override void CanClose(Action<bool> callback)
         {
-            var guard = ActiveItem as IGuardClose;
-
-            if(guard == null)
-                callback(true);
-            else guard.CanClose(callback);
+            CloseStrategy.Execute(new[] { ActiveItem }, (canClose, items) => callback(canClose));
         }
 
         /// <summary>
@@ -70,8 +59,7 @@
         protected override void OnActivate()
         {
             var activator = ActiveItem as IActivate;
-
-            if(activator != null)
+            if (activator != null)
                 activator.Activate();
         }
 
@@ -82,9 +70,17 @@
         protected override void OnDeactivate(bool close)
         {
             var deactivator = ActiveItem as IDeactivate;
-
-            if(deactivator != null)
+            if (deactivator != null)
                 deactivator.Deactivate(close);
+        }
+
+        /// <summary>
+        /// Gets all the items currently being conducted.
+        /// </summary>
+        /// <returns></returns>
+        protected override IEnumerable<T> GetConductedItems()
+        {
+            yield return ActiveItem;
         }
     }
 }

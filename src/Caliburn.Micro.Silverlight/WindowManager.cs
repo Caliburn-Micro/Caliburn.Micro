@@ -61,6 +61,13 @@
             var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context));
             ViewModelBinder.Bind(rootModel, view, context);
 
+            var haveDisplayName = rootModel as IHaveDisplayName;
+            if (haveDisplayName != null)
+            {
+                var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
+                view.SetBinding(ChildWindow.TitleProperty, binding);
+            }
+
             var activatable = rootModel as IActivate;
             if (activatable != null)
                 activatable.Activate();
@@ -84,13 +91,6 @@
             {
                 window = new ChildWindow { Content = view };
                 window.SetValue(IsElementGeneratedProperty, true);
-
-                var haveDisplayName = model as IHaveDisplayName;
-                if(haveDisplayName != null)
-                {
-                    var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
-                    window.SetBinding(ChildWindow.TitleProperty, binding);
-                }
             }
 
             return window;

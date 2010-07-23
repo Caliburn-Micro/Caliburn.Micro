@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Micro
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Linq;
 
@@ -9,7 +10,7 @@
         /// <summary>
         /// An implementation of <see cref="IConductor"/> that holds on many items.
         /// </summary>
-        public class Collection
+        public partial class Collection
         {
             /// <summary>
             /// An implementation of <see cref="IConductor"/> that holds on many items but only activates on at a time.
@@ -19,12 +20,13 @@
                 readonly BindableCollection<T> items = new BindableCollection<T>();
 
                 /// <summary>
-                /// Creates an instance of the class.
+                /// Initializes a new instance of the <see cref="Conductor&lt;T&gt;.Collection.OneActive"/> class.
                 /// </summary>
                 public OneActive()
                 {
-                    items.CollectionChanged += (s, e) =>{
-                        switch(e.Action)
+                    items.CollectionChanged += (s, e) =>
+                    {
+                        switch (e.Action)
                         {
                             case NotifyCollectionChangedAction.Add:
                             case NotifyCollectionChangedAction.Replace:
@@ -40,9 +42,18 @@
                 /// <summary>
                 /// Gets the items that are currently being conducted.
                 /// </summary>
-                public BindableCollection<T> Items
+                public IObservableCollection<T> Items
                 {
                     get { return items; }
+                }
+
+                /// <summary>
+                /// Gets all the items currently being conducted.
+                /// </summary>
+                /// <returns></returns>
+                protected override IEnumerable<T> GetConductedItems()
+                {
+                    return items;
                 }
 
                 /// <summary>
@@ -51,8 +62,11 @@
                 /// <param name="item">The item to activate.</param>
                 public override void ActivateItem(T item)
                 {
-                    if(item != null && item.Equals(ActiveItem))
+                    if (item != null && item.Equals(ActiveItem))
+                    {
+                        OnActivationProcessed(item, true);
                         return;
+                    }
 
                     ChangeActiveItem(item, false);
                 }
@@ -63,29 +77,23 @@
                 /// <param name="item">The item to close.</param>
                 public override void CloseItem(T item)
                 {
-                    if(item == null)
+                    if (item == null)
                         return;
 
-                    var guard = item as IGuardClose;
-
-                    if(guard == null)
-                        CloseItemCore(item);
-                    else
+                    CloseStrategy.Execute(new[] { item }, (canClose, closable) =>
                     {
-                        guard.CanClose(result =>{
-                            if(result)
-                                CloseItemCore(item);
-                        });
-                    }
+                        if (canClose)
+                            CloseItemCore(item);
+                    });
                 }
 
                 void CloseItemCore(T item)
                 {
-                    if(item.Equals(ActiveItem))
+                    if (item.Equals(ActiveItem))
                     {
-                        var index = Items.IndexOf(item);
+                        var index = items.IndexOf(item);
                         var next = DetermineNextItemToActivate(index);
-                        
+
                         ChangeActiveItem(next, true);
                     }
                     else
@@ -95,7 +103,7 @@
                             deactivator.Deactivate(true);
                     }
 
-                    Items.Remove(item);
+                    items.Remove(item);
                 }
 
                 /// <summary>
@@ -108,10 +116,10 @@
                 {
                     var toRemoveAt = lastIndex - 1;
 
-                    if(toRemoveAt == -1 && Items.Count > 1)
-                        return Items[1];
-                    if(toRemoveAt > -1 && toRemoveAt < Items.Count - 1)
-                        return Items[toRemoveAt];
+                    if (toRemoveAt == -1 && items.Count > 1)
+                        return items[1];
+                    if (toRemoveAt > -1 && toRemoveAt < items.Count - 1)
+                        return items[toRemoveAt];
                     return default(T);
                 }
 
@@ -121,7 +129,7 @@
                 /// <param name="callback">The implementor calls this action with the result of the close check.</param>
                 public override void CanClose(Action<bool> callback)
                 {
-                    new CompositeCloseStrategy<T>(Items.GetEnumerator(), callback).Execute();
+                    CloseStrategy.Execute(items, (canClose, closable) => callback(canClose));
                 }
 
                 /// <summary>
@@ -130,8 +138,7 @@
                 protected override void OnActivate()
                 {
                     var activator = ActiveItem as IActivate;
-
-                    if(activator != null)
+                    if (activator != null)
                         activator.Activate();
                 }
 
@@ -141,13 +148,12 @@
                 /// <param name="close">Inidicates whether this instance will be closed.</param>
                 protected override void OnDeactivate(bool close)
                 {
-                    if(close)
+                    if (close)
                         items.OfType<IDeactivate>().Apply(x => x.Deactivate(true));
                     else
                     {
                         var deactivator = ActiveItem as IDeactivate;
-
-                        if(deactivator != null)
+                        if (deactivator != null)
                             deactivator.Deactivate(false);
                     }
                 }
@@ -160,14 +166,14 @@
                 protected override T EnsureItem(T newItem)
                 {
                     if (newItem == null)
-                        newItem = DetermineNextItemToActivate(ActiveItem != null ? Items.IndexOf(ActiveItem) : 0);
+                        newItem = DetermineNextItemToActivate(ActiveItem != null ? items.IndexOf(ActiveItem) : 0);
                     else
                     {
-                        var index = Items.IndexOf(newItem);
+                        var index = items.IndexOf(newItem);
 
                         if (index == -1)
-                            Items.Add(newItem);
-                        else newItem = Items[index];
+                            items.Add(newItem);
+                        else newItem = items[index];
                     }
 
                     return base.EnsureItem(newItem);

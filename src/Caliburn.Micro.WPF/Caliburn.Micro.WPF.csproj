@@ -71,9 +71,6 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\Bootstrapper.cs">
       <Link>Bootstrapper.cs</Link>
     </Compile>
-    <Compile Include="..\Caliburn.Micro.Silverlight\CompositeCloseStrategy.cs">
-      <Link>CompositeCloseStrategy.cs</Link>
-    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\Conductor.cs">
       <Link>Conductor.cs</Link>
     </Compile>
@@ -85,6 +82,9 @@
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ConventionManager.cs">
       <Link>ConventionManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\DefaultCloseStrategy.cs">
+      <Link>DefaultCloseStrategy.cs</Link>
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ElementConvention.cs">
       <Link>ElementConvention.cs</Link>

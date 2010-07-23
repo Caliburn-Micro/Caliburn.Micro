@@ -85,6 +85,13 @@
             var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context), isDialog);
             ViewModelBinder.Bind(rootModel, view, context);
 
+            var haveDisplayName = rootModel as IHaveDisplayName;
+            if (haveDisplayName != null)
+            {
+                var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
+                view.SetBinding(Window.TitleProperty, binding);
+            }
+
             var activatable = rootModel as IActivate;
             if (activatable != null)
                 activatable.Activate();
@@ -121,13 +128,6 @@
                     window.Owner = Application.Current.MainWindow;
                 }
                 else window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-
-                var haveDisplayName = model as IHaveDisplayName;
-                if (haveDisplayName != null)
-                {
-                    var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
-                    window.SetBinding(Window.TitleProperty, binding);
-                }
             }
             else if (Application.Current != null
                    && Application.Current.MainWindow != null)

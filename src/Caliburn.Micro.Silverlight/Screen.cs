@@ -86,14 +86,19 @@
         /// <summary>
         /// Raised after deactivation.
         /// </summary>
+        public event EventHandler<DeactivationEventArgs> AttemptingDeactivation = delegate { };
+
+        /// <summary>
+        /// Raised after deactivation.
+        /// </summary>
         public event EventHandler<DeactivationEventArgs> Deactivated = delegate { };
 
         void IActivate.Activate()
         {
-            if (IsActive)
+            if(IsActive)
                 return;
 
-            bool initialized = false;
+            var initialized = false;
 
             if(!IsInitialized)
             {
@@ -105,7 +110,9 @@
             Log.Info("Activating {0}.", this);
             OnActivate();
 
-            Activated(this, new ActivationEventArgs { WasInitialized = initialized });
+            Activated(this, new ActivationEventArgs {
+                WasInitialized = initialized
+            });
         }
 
         /// <summary>
@@ -120,8 +127,12 @@
 
         void IDeactivate.Deactivate(bool close)
         {
-            if (!IsActive)
+            if(!IsActive && !IsInitialized)
                 return;
+
+            AttemptingDeactivation(this, new DeactivationEventArgs {
+                WasClosed = close
+            });
 
             IsActive = false;
             Log.Info("Deactivating {0}.", this);
@@ -130,7 +141,9 @@
             if(close)
                 Log.Info("Closed {0}.", this);
 
-            Deactivated(this, new DeactivationEventArgs { WasClosed = close });
+            Deactivated(this, new DeactivationEventArgs {
+                WasClosed = close
+            });
         }
 
         /// <summary>
@@ -153,32 +166,28 @@
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="context">The context in which the view appears.</param>
-        public virtual void AttachView(object view, object context = null)
+        public virtual void AttachView(object view, object context)
         {
             var loadWired = views.Values.Contains(view);
             views[context ?? ViewLocator.DefaultContext] = view;
 
             var element = view as FrameworkElement;
-            if (!loadWired && element != null)
-            {
-                if((bool)element.GetValue(View.IsLoadedProperty))
-                    OnViewLoaded(view);
-                else element.Loaded += delegate { OnViewLoaded(view); };
-            }
+            if(!loadWired && element != null)
+                element.Loaded += delegate { OnViewLoaded(view); };
         }
 
         /// <summary>
         /// Called when an attached view's Loaded event fires.
         /// </summary>
         /// <param name="view"></param>
-        protected virtual void OnViewLoaded(object view) { }
+        protected virtual void OnViewLoaded(object view) {}
 
         /// <summary>
         /// Gets a view previously attached to this instance.
         /// </summary>
         /// <param name="context">The context denoting which view to retrieve.</param>
         /// <returns>The view.</returns>
-        public virtual object GetView(object context = null)
+        public virtual object GetView(object context)
         {
             object view;
             views.TryGetValue(context ?? ViewLocator.DefaultContext, out view);
@@ -190,13 +199,13 @@
         /// </summary>
         public void TryClose()
         {
-            if (Parent != null)
+            if(Parent != null)
                 Parent.CloseItem(this);
             else
             {
-                var view = GetView();
+                var view = GetView(null);
 
-                if (view == null)
+                if(view == null)
                 {
                     var ex = new NotSupportedException("A Parent or default view is required.");
                     Log.Error(ex);
@@ -204,16 +213,16 @@
                 }
 
                 var method = view.GetType().GetMethod("Close");
-                if (method != null)
+                if(method != null)
                 {
                     method.Invoke(view, null);
                     return;
                 }
 
                 var property = view.GetType().GetProperty("IsOpen");
-                if (property != null)
+                if(property != null)
                 {
-                    property.SetValue(view, false, new object[] { });
+                    property.SetValue(view, false, new object[] {});
                     return;
                 }
 
@@ -222,5 +231,28 @@
                 throw ex2;
             }
         }
+
+#if !SILVERLIGHT
+
+        /// <summary>
+        /// Closes this instance by asking its Parent to initiate shutdown or by asking it's corresponding default view to close.
+        /// This overload also provides an opportunity to pass a dialog result to it's corresponding default view.
+        /// </summary>
+        /// <param name="dialogResult">The dialog result.</param>
+        public virtual void TryClose(bool? dialogResult)
+        {
+            var view = GetView(null);
+
+            if(view != null)
+            {
+                var property = view.GetType().GetProperty("DialogResult");
+                if(property != null)
+                    property.SetValue(view, dialogResult, null);
+            }
+
+            TryClose();
+        }
+
+#endif
     }
 }

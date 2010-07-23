@@ -24,6 +24,11 @@
     public interface IDeactivate
     {
         /// <summary>
+        /// Raised before deactivation.
+        /// </summary>
+        event EventHandler<DeactivationEventArgs> AttemptingDeactivation;
+
+        /// <summary>
         /// Deactivates this instance.
         /// </summary>
         /// <param name="close">Inidcates whether or not this instance is being closed.</param>
@@ -74,6 +79,23 @@
         /// Inidicates whether the sender was initialized in addition to being activated.
         /// </summary>
         public bool WasInitialized;
+    }
+
+    /// <summary>
+    /// Contains details about the success or failure of an items activation through an <see cref="IConductor"/>.
+    /// </summary>
+    public class ActivationProcessedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// The item whose activation was processed.
+        /// </summary>
+        public object Item;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the activation was a success.
+        /// </summary>
+        /// <value><c>true</c> if success; otherwise, <c>false</c>.</value>
+        public bool Success;
     }
 
     /// <summary>

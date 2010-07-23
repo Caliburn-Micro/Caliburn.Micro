@@ -1,5 +1,9 @@
 ﻿namespace Caliburn.Micro
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
     /// <summary>
     /// A base class for various implementations of <see cref="IConductor"/>.
     /// </summary>
@@ -7,6 +11,17 @@
     public abstract class ConductorBase<T> : Screen, IConductor
     {
         T activeItem;
+        ICloseStrategy<T> closeStrategy;
+
+        /// <summary>
+        /// Gets or sets the close strategy.
+        /// </summary>
+        /// <value>The close strategy.</value>
+        public ICloseStrategy<T> CloseStrategy
+        {
+            get { return closeStrategy ?? (closeStrategy = new DefaultCloseStrategy<T>()); }
+            set { closeStrategy = value; }
+        }
 
         /// <summary>
         /// The currently active item.
@@ -23,6 +38,11 @@
             set { ActiveItem = (T)value; }
         }
 
+        IEnumerable IConductor.GetConductedItems()
+        {
+            return GetConductedItems();
+        }
+
         void IConductor.ActivateItem(object item)
         {
             ActivateItem((T)item);
@@ -32,6 +52,17 @@
         {
             CloseItem((T)item);
         }
+
+        /// <summary>
+        /// Occurs when an activation request is processed.
+        /// </summary>
+        public event EventHandler<ActivationProcessedEventArgs> ActivationProcessed = delegate { };
+
+        /// <summary>
+        /// Gets all the items currently being conducted.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract IEnumerable<T> GetConductedItems();
 
         /// <summary>
         /// Activates the specified item.
@@ -44,6 +75,23 @@
         /// </summary>
         /// <param name="item">The item to close.</param>
         public abstract void CloseItem(T item);
+
+        /// <summary>
+        /// Called by a subclass when an activation needs processing.
+        /// </summary>
+        /// <param name="item">The item on which activation was attempted.</param>
+        /// <param name="success">if set to <c>true</c> activation was successful.</param>
+        protected virtual void OnActivationProcessed(T item, bool success)
+        {
+            if (item == null)
+                return;
+
+            ActivationProcessed(this, new ActivationProcessedEventArgs
+            {
+                Item = item,
+                Success = success
+            });
+        }
 
         /// <summary>
         /// Changes the active item.
@@ -66,8 +114,8 @@
             }
 
             activeItem = newItem;
-
             NotifyOfPropertyChange("ActiveItem");
+            OnActivationProcessed(activeItem, true);
         }
 
         /// <summary>
