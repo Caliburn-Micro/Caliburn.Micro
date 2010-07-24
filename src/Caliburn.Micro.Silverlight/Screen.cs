@@ -84,7 +84,7 @@
         public event EventHandler<ActivationEventArgs> Activated = delegate { };
 
         /// <summary>
-        /// Raised after deactivation.
+        /// Raised before deactivation.
         /// </summary>
         public event EventHandler<DeactivationEventArgs> AttemptingDeactivation = delegate { };
 

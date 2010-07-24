@@ -45,7 +45,7 @@
         {
             lock (subscribers)
             {
-                if (subscribers.FirstOrDefault(reference => reference.Target == instance) != null)
+                if (subscribers.Any(reference => reference.Target == instance))
                     return;
 
                 Log.Info("Subscribing {0}.", instance);

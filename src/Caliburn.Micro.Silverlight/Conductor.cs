@@ -37,7 +37,7 @@
             if (item == null || !item.Equals(ActiveItem))
                 return;
 
-            CloseStrategy.Execute(new[] { ActiveItem }, (canClose, items) =>
+            CloseStrategy.Execute(new[] { ActiveItem }, (canClose, items) => 
             {
                 if (canClose)
                     ChangeActiveItem(default(T), true);
@@ -80,7 +80,7 @@
         /// <returns></returns>
         protected override IEnumerable<T> GetConductedItems()
         {
-            yield return ActiveItem;
+            return new[] { ActiveItem };
         }
     }
 }
