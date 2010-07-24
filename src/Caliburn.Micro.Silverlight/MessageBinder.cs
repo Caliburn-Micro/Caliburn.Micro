@@ -40,14 +40,12 @@
         /// <summary>
         /// Determines the parameters that a method should be invoked with.
         /// </summary>
-        /// <param name="message">The message to determine the parameters for.</param>
-        /// <param name="requiredParameters">The requirements for method binding.</param>
-        /// <param name="source">The source that trigger the message.</param>
-        /// <param name="eventArgs">The event args, if any, related to the trigger.</param>
+        /// <param name="context">The action execution context.</param>
+        /// <param name="requiredParameters">The parameters required to complete the invocation.</param>
         /// <returns>The actual parameter values.</returns>
-        public static object[] DetermineParameters(ActionMessage message, ParameterInfo[] requiredParameters, FrameworkElement source, object eventArgs)
+        public static object[] DetermineParameters(ActionExecutionContext context, ParameterInfo[] requiredParameters)
         {
-            var providedValues = message.Parameters.Select(x => x.Value).ToArray();
+            var providedValues = context.Message.Parameters.Select(x => x.Value).ToArray();
             var values = new object[requiredParameters.Length];
 
             for(int i = 0; i < requiredParameters.Length; i++)
@@ -61,13 +59,13 @@
                     switch (stringValue.ToLower(CultureInfo.InvariantCulture))
                     {
                         case "$eventargs":
-                            potentialValue = eventArgs;
+                            potentialValue = context.EventArgs;
                             break;
                         case "$datacontext":
-                            potentialValue = source.DataContext;
+                            potentialValue = context.Source.DataContext;
                             break;
                         case "$source":
-                            potentialValue = source;
+                            potentialValue = context.Source;
                             break;
                         default:
                             potentialValue = stringValue;

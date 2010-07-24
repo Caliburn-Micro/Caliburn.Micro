@@ -9,7 +9,7 @@
     public class SequentialResult : IResult
     {
         readonly IEnumerator<IResult> enumerator;
-        ResultExecutionContext context;
+        ActionExecutionContext context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SequentialResult"/> class.
@@ -29,7 +29,7 @@
         /// Executes the result using the specified context.
         /// </summary>
         /// <param name="context">The context.</param>
-        public void Execute(ResultExecutionContext context)
+        public void Execute(ActionExecutionContext context)
         {
             this.context = context;
             IoC.BuildUp(this);

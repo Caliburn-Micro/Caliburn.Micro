@@ -11,7 +11,7 @@
         /// Executes the result using the specified context.
         /// </summary>
         /// <param name="context">The context.</param>
-        void Execute(ResultExecutionContext context);
+        void Execute(ActionExecutionContext context);
 
         /// <summary>
         /// Occurs when execution has completed.

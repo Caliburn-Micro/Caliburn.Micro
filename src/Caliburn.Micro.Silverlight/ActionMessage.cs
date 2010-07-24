@@ -43,10 +43,7 @@
             null
             );
 
-        Func<bool> guard;
-        MethodInfo execute;
-        object target;
-        DependencyObject view;
+        ActionExecutionContext context;
 
         /// <summary>
         /// Creates an instance of <see cref="ActionMessage"/>.
@@ -104,39 +101,20 @@
 
         void ElementLoaded(object sender, RoutedEventArgs e)
         {
-            var found = GetMethodBinding();
-            if(found.Item1 == null || found.Item2 == null)
-            {
-                var ex = new Exception(string.Format("No target found for method {0}.", MethodName));
-                Log.Error(ex);
-                throw ex;
-            }
+            context = new ActionExecutionContext {
+                Message = this, 
+                Source = AssociatedObject
+            };
 
-            target = found.Item1;
-            execute = found.Item2;
-            view = found.Item3;
-            guard = ConventionManager.CreateActionGuard(this, AssociatedObject, target);
-
+            PrepareContext(context);
             UpdateAvailability();
         }
 
         protected override void Invoke(object eventArgs)
         {
-            Log.Info("Executing {0}.", this);
-
-            var values = MessageBinder.DetermineParameters(this, execute.GetParameters(), AssociatedObject, eventArgs);
-            var outcome = execute.Invoke(target, values);
-
-            var result = MessageBinder.CreateResult(outcome);
-            if (result == null)
-                return;
-
-            result.Execute(new ResultExecutionContext {
-                Source = AssociatedObject,
-                Message = this,
-                Target = target,
-                View = view
-            });
+            Log.Info("Invoking {0}.", this);
+            context.EventArgs = eventArgs;
+            InvokeAction(context);
         }
 
         /// <summary>
@@ -144,47 +122,11 @@
         /// </summary>
         public void UpdateAvailability()
         {
-            if (guard == null)
+            if (context == null)
                 return;
 
-#if SILVERLIGHT
-            if (!(AssociatedObject is Control))
-                return;
-#endif
-            Log.Info("{0} availability changed.", this);
-
-#if SILVERLIGHT
-            ((Control)AssociatedObject).IsEnabled = guard();
-#else
-            AssociatedObject.IsEnabled = guard();
-#endif
-        }
-
-        Tuple<object, MethodInfo, DependencyObject> GetMethodBinding()
-        {
-            DependencyObject currentElement = AssociatedObject;
-            MethodInfo actionMethod = null;
-            object currentTarget = null;
-
-            while(currentElement != null && actionMethod == null)
-            {
-                currentTarget = currentElement.GetValue(Message.HandlerProperty);
-
-                if(currentTarget != null)
-                    actionMethod = currentTarget.GetType().GetMethod(MethodName);
-
-                if(actionMethod == null)
-                    currentElement = VisualTreeHelper.GetParent(currentElement);
-            }
-
-            if(actionMethod == null && AssociatedObject.DataContext != null)
-            {
-                currentTarget = AssociatedObject.DataContext;
-                actionMethod = AssociatedObject.DataContext.GetType().GetMethod(MethodName);
-                currentElement = AssociatedObject;
-            }
-
-            return new Tuple<object, MethodInfo, DependencyObject>(currentTarget, actionMethod, currentElement);
+            Log.Info("{0} availability update.", this);
+            ApplyAvailabilityEffect(context);
         }
 
         /// <summary>
@@ -196,6 +138,111 @@
         public override string ToString()
         {
             return "Action: " + MethodName;
+        }
+
+        /// <summary>
+        /// Invokes the action using the specified <see cref="ActionExecutionContext"/>
+        /// </summary>
+        public static Action<ActionExecutionContext> InvokeAction = (context) =>
+        {
+            var values = MessageBinder.DetermineParameters(context, context.Method.GetParameters());
+            var outcome = context.Method.Invoke(context.Target, values);
+
+            var result = MessageBinder.CreateResult(outcome);
+            if (result == null)
+                return;
+
+            result.Execute(context);
+        };
+
+        /// <summary>
+        /// Prepares the action execution context for use.
+        /// </summary>
+        public static Action<ActionExecutionContext> PrepareContext = (context) =>{
+            SetMethodBinding(context);
+            if (context.Target == null || context.Method == null)
+            {
+                var ex = new Exception(string.Format("No target found for method {0}.", context.Message.MethodName));
+                Log.Error(ex);
+                throw ex;
+            }
+
+            var guardName = "Can" + context.Method.Name;
+            var targetType = context.Target.GetType();
+            var guard = targetType.GetMethod(guardName);
+
+            if(guard == null)
+            {
+                var inpc = context.Target as INotifyPropertyChanged;
+                if(inpc == null)
+                    return;
+
+                guard = targetType.GetMethod("get_" + guardName);
+                if(guard == null)
+                    return;
+
+                PropertyChangedEventHandler handler = (s, e) =>{
+                    if(e.PropertyName == guardName)
+                        context.Message.UpdateAvailability();
+                };
+
+                inpc.PropertyChanged += handler;
+                context.Message.Detaching += delegate { inpc.PropertyChanged -= handler; };
+            }
+
+            context.CanExecute = () => (bool)guard.Invoke(
+                context.Target,
+                MessageBinder.DetermineParameters(context, guard.GetParameters())
+                );
+        };
+
+        /// <summary>
+        /// Applies an availability effect, such as IsEnabled, to an element.
+        /// </summary>
+        public static Action<ActionExecutionContext> ApplyAvailabilityEffect = (context) =>{
+#if SILVERLIGHT
+            if(!(context.Source is Control))
+                return;
+#endif
+
+#if SILVERLIGHT
+            ((Control)context.Source).IsEnabled = context.CanExecute();
+#else
+            context.Source.IsEnabled = context.CanExecute();
+#endif
+        };
+
+        /// <summary>
+        /// Sets the target, method and view on the context using a bubbling strategy.
+        /// </summary>
+        /// <param name="context">The action invocation context.</param>
+        public static void SetMethodBinding(ActionExecutionContext context)
+        {
+            DependencyObject currentElement = context.Source;
+            MethodInfo actionMethod = null;
+            object currentTarget = null;
+
+            while (currentElement != null && actionMethod == null)
+            {
+                currentTarget = currentElement.GetValue(Message.HandlerProperty);
+
+                if (currentTarget != null)
+                    actionMethod = currentTarget.GetType().GetMethod(context.Message.MethodName);
+
+                if (actionMethod == null)
+                    currentElement = VisualTreeHelper.GetParent(currentElement);
+            }
+
+            if (actionMethod == null && context.Source.DataContext != null)
+            {
+                currentTarget = context.Source.DataContext;
+                actionMethod = context.Source.DataContext.GetType().GetMethod(context.Message.MethodName);
+                currentElement = context.Source;
+            }
+
+            context.Target = currentTarget;
+            context.Method = actionMethod;
+            context.View = currentElement;
         }
     }
 }

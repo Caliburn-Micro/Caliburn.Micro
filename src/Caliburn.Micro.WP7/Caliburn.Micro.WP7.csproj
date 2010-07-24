@@ -57,6 +57,9 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\Action.cs">
       <Link>Action.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ActionExecutionContext.cs">
+      <Link>ActionExecutionContext.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ActionMessage.cs">
       <Link>ActionMessage.cs</Link>
     </Compile>
@@ -143,9 +146,6 @@
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ResultCompletionEventArgs.cs">
       <Link>ResultCompletionEventArgs.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.Silverlight\ResultExecutionContext.cs">
-      <Link>ResultExecutionContext.cs</Link>
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\Screen.cs">
       <Link>Screen.cs</Link>

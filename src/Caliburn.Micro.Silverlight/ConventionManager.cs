@@ -229,39 +229,6 @@
         }
 
         /// <summary>
-        /// Creates a function capable of determining whether an action can execute or not.
-        /// </summary>
-        public static Func<ActionMessage, FrameworkElement, object, Func<bool>> CreateActionGuard = (message, associatedObject, target) =>{
-            var guardName = "Can" + message.MethodName;
-            var targetType = target.GetType();
-            var guard = targetType.GetMethod(guardName);
-
-            if(guard == null)
-            {
-                var inpc = target as INotifyPropertyChanged;
-                if(inpc == null)
-                    return () => true;
-
-                guard = targetType.GetMethod("get_" + guardName);
-                if(guard == null)
-                    return () => true;
-
-                PropertyChangedEventHandler handler = (s, e) =>{
-                    if(e.PropertyName == guardName)
-                        message.UpdateAvailability();
-                };
-
-                inpc.PropertyChanged += handler;
-                message.Detaching += delegate { inpc.PropertyChanged -= handler; };
-            }
-
-            return () => (bool)guard.Invoke(
-                target,
-                MessageBinder.DetermineParameters(message, guard.GetParameters(), associatedObject, null)
-                );
-        };
-
-        /// <summary>
         /// Adds an element convention.
         /// </summary>
         /// <param name="convention"></param>
