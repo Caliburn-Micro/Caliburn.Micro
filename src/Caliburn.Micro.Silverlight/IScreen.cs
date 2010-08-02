@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>
-    /// Denotes an instance which requireds activation.
+    /// Denotes an instance which requires activation.
     /// </summary>
     public interface IActivate
     {
