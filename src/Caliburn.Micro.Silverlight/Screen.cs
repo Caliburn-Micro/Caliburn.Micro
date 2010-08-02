@@ -174,6 +174,9 @@
             var element = view as FrameworkElement;
             if(!loadWired && element != null)
                 element.Loaded += delegate { OnViewLoaded(view); };
+
+            if(!loadWired)
+                ViewAttached(this, new ViewAttachedEventArgs{ View = view, Context = context });
         }
 
         /// <summary>
@@ -193,6 +196,11 @@
             views.TryGetValue(context ?? ViewLocator.DefaultContext, out view);
             return view;
         }
+
+        /// <summary>
+        /// Raised when a view is attached.
+        /// </summary>
+        public event EventHandler<ViewAttachedEventArgs> ViewAttached = delegate { };
 
         /// <summary>
         /// Tries to close this instance by asking its Parent to initiate shutdown or by asking it's corresponding default view to close.

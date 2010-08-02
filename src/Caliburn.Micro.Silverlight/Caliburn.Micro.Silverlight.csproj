@@ -56,9 +56,6 @@
     <Reference Include="System.Windows.Interactivity">
       <HintPath>..\..\lib\Silverlight-4.0\System.Windows.Interactivity.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Action.cs" />
@@ -100,6 +97,7 @@
     <Compile Include="View.cs" />
     <Compile Include="ViewLocator.cs" />
     <Compile Include="ViewModelBinder.cs" />
+    <Compile Include="ViewModelLocator.cs" />
     <Compile Include="WindowManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />

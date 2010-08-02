@@ -81,21 +81,28 @@
 
         protected override void OnAttached()
         {
-            Parameters.Attach(AssociatedObject);
-            Parameters.Apply(x => x.MakeAwareOf(this));
+            if (!Bootstrapper.IsInDesignMode)
+            {
+                Parameters.Attach(AssociatedObject);
+                Parameters.Apply(x => x.MakeAwareOf(this));
 
-            if((bool)AssociatedObject.GetValue(View.IsLoadedProperty))
-                ElementLoaded(null, null);
-            else AssociatedObject.Loaded += ElementLoaded;
+                if((bool)AssociatedObject.GetValue(View.IsLoadedProperty))
+                    ElementLoaded(null, null);
+                else AssociatedObject.Loaded += ElementLoaded;
+            }
 
             base.OnAttached();
         }
 
         protected override void OnDetaching()
         {
-            Detaching(this, EventArgs.Empty);
-            AssociatedObject.Loaded -= ElementLoaded;
-            Parameters.Detach();
+            if (!Bootstrapper.IsInDesignMode)
+            {
+                Detaching(this, EventArgs.Empty);
+                AssociatedObject.Loaded -= ElementLoaded;
+                Parameters.Detach();
+            }
+
             base.OnDetaching();
         }
 
@@ -143,16 +150,12 @@
         /// <summary>
         /// Invokes the action using the specified <see cref="ActionExecutionContext"/>
         /// </summary>
-        public static Action<ActionExecutionContext> InvokeAction = (context) =>
-        {
+        public static Action<ActionExecutionContext> InvokeAction = (context) =>{
             var values = MessageBinder.DetermineParameters(context, context.Method.GetParameters());
             var outcome = context.Method.Invoke(context.Target, values);
-
             var result = MessageBinder.CreateResult(outcome);
-            if (result == null)
-                return;
-
-            result.Execute(context);
+            if(result != null)
+                result.Execute(context);
         };
 
         /// <summary>

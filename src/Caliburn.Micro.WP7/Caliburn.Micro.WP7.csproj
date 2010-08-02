@@ -43,6 +43,7 @@
     <DocumentationFile>Bin\Release\Caliburn.Micro.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Phone" />
     <Reference Include="mscorlib" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
@@ -50,8 +51,6 @@
     <Reference Include="System.Windows.Interactivity">
       <HintPath>..\..\lib\Silverlight-4.0-wp7\System.Windows.Interactivity.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Caliburn.Micro.Silverlight\Action.cs">
@@ -165,9 +164,24 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\ViewModelBinder.cs">
       <Link>ViewModelBinder.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ViewModelLocator.cs">
+      <Link>ViewModelLocator.cs</Link>
+    </Compile>
     <Compile Include="ActionDelegate.cs" />
     <Compile Include="AttachedCollection.cs" />
+    <Compile Include="IConfigureTask.cs" />
+    <Compile Include="ILaunchChooser.cs" />
+    <Compile Include="ILaunchTask.cs" />
+    <Compile Include="INavigationService.cs" />
+    <Compile Include="InstanceActivator.cs" />
+    <Compile Include="IPhoneService.cs" />
+    <Compile Include="ITombstone.cs" />
+    <Compile Include="PhoneBootstrapper.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SurviveTombstone.cs" />
+    <Compile Include="TaskLaunchEventArgs.cs" />
     <Compile Include="Tuple.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />

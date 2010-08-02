@@ -42,11 +42,6 @@
       <HintPath>..\..\lib\net-4.0\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +149,9 @@
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ViewModelBinder.cs">
       <Link>ViewModelBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ViewModelLocator.cs">
+      <Link>ViewModelLocator.cs</Link>
     </Compile>
     <Compile Include="AttachedCollection.cs" />
     <Compile Include="Parameter.cs" />

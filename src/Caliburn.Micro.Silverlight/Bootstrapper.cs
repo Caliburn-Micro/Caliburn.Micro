@@ -14,6 +14,11 @@
         private static bool? isInDesignMode;
 
         /// <summary>
+        /// The application.
+        /// </summary>
+        public Application Application { get; private set; }
+
+        /// <summary>
         /// Indicates whether or not the framework is in design-time mode.
         /// </summary>
         public static bool IsInDesignMode
@@ -43,25 +48,34 @@
 
             Execute.InitializeWithDispatcher();
             AssemblySource.Instance.AddRange(SelectAssemblies());
-            Configure();
 
+            Application = Application.Current;
+            PrepareApplication();
+
+            Configure();
             IoC.GetInstance = GetInstance;
             IoC.GetAllInstances = GetAllInstances;
             IoC.BuildUp = BuildUp;
-
-            Application.Current.Startup += OnStartup;
-#if SILVERLIGHT
-            Application.Current.UnhandledException += OnUnhandledException;
-#else
-            Application.Current.DispatcherUnhandledException += OnUnhandledException;
-#endif
-            Application.Current.Exit += OnExit;
         }
 
         /// <summary>
         /// Override to configure the framework and setup your IoC container.
         /// </summary>
         protected virtual void Configure() { }
+
+        /// <summary>
+        /// Provides an opportunity to hook into the application object.
+        /// </summary>
+        protected virtual void PrepareApplication()
+        {
+            Application.Startup += OnStartup;
+#if SILVERLIGHT
+            Application.UnhandledException += OnUnhandledException;
+#else
+            Application.DispatcherUnhandledException += OnUnhandledException;
+#endif
+            Application.Exit += OnExit;
+        }
 
         /// <summary>
         /// Override to tell the framework where to find assemblies to inspect for views, etc.
@@ -110,7 +124,9 @@
         /// <param name="e">The args.</param>
         protected virtual void OnStartup(object sender, StartupEventArgs e)
         {
+#if !WP7
             DisplayRootView();
+#endif
         }
 
         /// <summary>
@@ -120,10 +136,12 @@
         /// <param name="e">The event args.</param>
         protected virtual void OnExit(object sender, EventArgs e) { }
 
+#if !WP7
         /// <summary>
         /// Override to display your UI at startup.
         /// </summary>
         protected virtual void DisplayRootView() {}
+#endif
 
 #if SILVERLIGHT
         /// <summary>
@@ -142,6 +160,7 @@
 #endif
     }
 
+#if !WP7
     /// <summary>
     /// A strongly-typed version of <see cref="Bootstrapper"/> that specifies the type of root model to create for the application.
     /// </summary>
@@ -151,7 +170,7 @@
         /// <summary>
         /// Override to display your UI at startup.
         /// </summary>
-        protected override void DisplayRootView() 
+        protected override void DisplayRootView()
         {
             var viewModel = IoC.Get<TRootModel>();
 #if SILVERLIGHT
@@ -162,7 +181,7 @@
             if (activator != null)
                 activator.Activate();
 
-            Application.Current.RootVisual = view;
+            Application.RootVisual = view;
 #else
             IWindowManager windowManager;
 
@@ -179,4 +198,5 @@
 #endif
         }
     }
+#endif
 }
