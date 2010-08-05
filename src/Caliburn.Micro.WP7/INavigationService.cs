@@ -8,7 +8,7 @@
     /// <summary>
     /// Implemented by services that provide <see cref="Uri"/> based navigation.
     /// </summary>
-    public interface INavigationService
+    public interface INavigationService : INavigate
     {
         /// <summary>
         /// The <see cref="Uri"/> source.
@@ -44,13 +44,6 @@
         /// Navigates forward.
         /// </summary>
         void GoForward();
-
-        /// <summary>
-        /// Navigates to the specified <see cref="Uri"/>.
-        /// </summary>
-        /// <param name="source">The <see cref="Uri"/> to navigate to.</param>
-        /// <returns>Whether or not navigation succeeded.</returns>
-        bool Navigate(Uri source);
 
         /// <summary>
         /// Raised after navigation.
