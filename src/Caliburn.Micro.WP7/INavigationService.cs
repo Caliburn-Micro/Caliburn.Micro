@@ -138,6 +138,9 @@
                 return;
 
             var viewModel = ViewModelLocator.LocateForView(e.Content);
+            if (viewModel == null)
+                return;
+
             ViewModelBinder.Bind(viewModel, (DependencyObject)e.Content, null);
 
             TryInjectQueryString(viewModel, e.Content);

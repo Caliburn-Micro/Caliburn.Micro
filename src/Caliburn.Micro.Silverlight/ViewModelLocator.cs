@@ -13,8 +13,7 @@
         /// </summary>
         /// <returns>The view model.</returns>
         /// <remarks>Pass the view type as a parameter and recieve a view model instance.</remarks>
-        public static Func<Type, object> LocateForViewType = viewType =>
-        {
+        public static Func<Type, object> LocateForViewType = viewType =>{
             var typeName = viewType.FullName;
 
             if(!typeName.EndsWith("View"))
