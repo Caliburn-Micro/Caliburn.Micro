@@ -108,7 +108,7 @@
         /// </summary>
         public static Func<ElementConvention, DependencyObject, DependencyProperty> EnsureDependencyProperty = (convention, foundControl) =>{
             var element = foundControl as ContentControl;
-            if(element == null)
+            if(element == null || foundControl is ToggleButton)
                 return convention.BindableProperty;
 #if SILVERLIGHT
             return element.ContentTemplate == null && !(element.Content is DependencyObject)
@@ -200,15 +200,15 @@
             AddElementConvention<Window>(Window.DataContextProperty, "DataContext", "Loaded");
 #endif
             AddElementConvention<UserControl>(UserControl.VisibilityProperty, "DataContext", "Loaded");
+            AddElementConvention<Image>(Image.SourceProperty, "Source", "Loaded");
+            AddElementConvention<ToggleButton>(ToggleButton.IsCheckedProperty, "IsChecked", "Click");
+            AddElementConvention<ButtonBase>(ButtonBase.ContentProperty, "DataContext", "Click");
+            AddElementConvention<TextBox>(TextBox.TextProperty, "Text", "TextChanged");
+            AddElementConvention<TextBlock>(TextBlock.TextProperty, "Text", "DataContextChanged");
             AddElementConvention<Selector>(Selector.ItemsSourceProperty, "SelectedItem", "SelectionChanged");
             AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", "Loaded");
             AddElementConvention<ContentControl>(ContentControl.ContentProperty, "DataContext", "Loaded");
             AddElementConvention<FrameworkElement>(FrameworkElement.VisibilityProperty, "DataContext", "Loaded");
-            AddElementConvention<Image>(Image.SourceProperty, "Source", "Loaded");
-            AddElementConvention<ButtonBase>(ButtonBase.ContentProperty, "DataContext", "Click");
-            AddElementConvention<ToggleButton>(ToggleButton.IsCheckedProperty, "IsChecked", "Click");
-            AddElementConvention<TextBox>(TextBox.TextProperty, "Text", "TextChanged");
-            AddElementConvention<TextBlock>(TextBlock.TextProperty, "Text", "DataContextChanged");
         }
 
         /// <summary>
