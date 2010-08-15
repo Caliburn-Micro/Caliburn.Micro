@@ -65,7 +65,7 @@
         }
 
         /// <summary>
-        /// Gets the target for incstances of <see cref="ActionMessage"/>.
+        /// Gets the target for instances of <see cref="ActionMessage"/>.
         /// </summary>
         /// <param name="d">The element to which the target is attached.</param>
         /// <returns>The target for instances of <see cref="ActionMessage"/></returns>

@@ -41,7 +41,7 @@
         /// Locates the view for the specified model type.
         /// </summary>
         /// <returns>The view.</returns>
-        /// <remarks>Pass the model type, display location (or null) and the context instance (or null) as parameters and recieve a view instance.</remarks>
+        /// <remarks>Pass the model type, display location (or null) and the context instance (or null) as parameters and receive a view instance.</remarks>
         public static Func<Type, DependencyObject, object, UIElement> LocateForModelType = (modelType, displayLocation, context) =>{
             var viewTypeName = modelType.FullName.Replace("Model", string.Empty);
             if(context != null)

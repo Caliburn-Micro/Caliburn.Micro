@@ -8,7 +8,7 @@
     public interface IActivate
     {
         ///<summary>
-        /// Indicates whether or not this instace is active.
+        /// Indicates whether or not this instance is active.
         ///</summary>
         bool IsActive { get; }
 
@@ -36,7 +36,7 @@
         /// <summary>
         /// Deactivates this instance.
         /// </summary>
-        /// <param name="close">Inidcates whether or not this instance is being closed.</param>
+        /// <param name="close">Indicates whether or not this instance is being closed.</param>
         void Deactivate(bool close);
 
         /// <summary>
@@ -53,7 +53,7 @@
         /// <summary>
         /// Called to check whether or not this instance can close.
         /// </summary>
-        /// <param name="callback">The implementor calls this action with the result of the close check.</param>
+        /// <param name="callback">The implementer calls this action with the result of the close check.</param>
         void CanClose(Action<bool> callback);
     }
 
@@ -81,7 +81,7 @@
     public class ActivationEventArgs : EventArgs
     {
         /// <summary>
-        /// Inidicates whether the sender was initialized in addition to being activated.
+        /// Indicates whether the sender was initialized in addition to being activated.
         /// </summary>
         public bool WasInitialized;
     }

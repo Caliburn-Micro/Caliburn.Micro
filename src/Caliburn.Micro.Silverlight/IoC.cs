@@ -4,12 +4,12 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// Used by the framework to pull instances from an IoC container and to inject dependencies into certain existin classes.
+    /// Used by the framework to pull instances from an IoC container and to inject dependencies into certain existing classes.
     /// </summary>
     public static class IoC
     {
         /// <summary>
-        /// Gets an instace by type and key.
+        /// Gets an instance by type and key.
         /// </summary>
         public static Func<Type, string, object> GetInstance;
 

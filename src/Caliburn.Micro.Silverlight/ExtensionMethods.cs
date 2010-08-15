@@ -40,7 +40,7 @@
         }
 
         /// <summary>
-        /// Convertes an expression into a <see cref="MemberInfo"/>.
+        /// Converts an expression into a <see cref="MemberInfo"/>.
         /// </summary>
         /// <param name="expression">The expression to convert.</param>
         /// <returns>The member info.</returns>

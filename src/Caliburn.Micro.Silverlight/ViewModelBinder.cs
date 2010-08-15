@@ -21,7 +21,7 @@
         static readonly ILog Log = LogManager.GetLog(typeof(ViewModelBinder));
 
         /// <summary>
-        /// Indicates whether or not the conventions have alread been applied to the view.
+        /// Indicates whether or not the conventions have already been applied to the view.
         /// </summary>
         public static readonly DependencyProperty ConventionsAppliedProperty =
             DependencyProperty.RegisterAttached(

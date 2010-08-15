@@ -60,11 +60,11 @@
         }
 
         /// <summary>
-        /// Exposes the base implementation fo the <see cref="InsertItem"/> function.
+        /// Exposes the base implementation of the <see cref="InsertItem"/> function.
         /// </summary>
         /// <param name="index">The index.</param>
         /// <param name="item">The item.</param>
-        /// <remarks>Used to avoid compiler warning regarding unverificable code.</remarks>
+        /// <remarks>Used to avoid compiler warning regarding unverifiable code.</remarks>
         private void InsertItemBase(int index, T item)
         {
             base.InsertItem(index, item);
@@ -104,11 +104,11 @@
         }
 
         /// <summary>
-        /// Exposes the base implementation fo the <see cref="SetItem"/> function.
+        /// Exposes the base implementation of the <see cref="SetItem"/> function.
         /// </summary>
         /// <param name="index">The index.</param>
         /// <param name="item">The item.</param>
-        /// <remarks>Used to avoid compiler warning regarding unverificable code.</remarks>
+        /// <remarks>Used to avoid compiler warning regarding unverifiable code.</remarks>
         private void SetItemBase(int index, T item)
         {
             base.SetItem(index, item);
@@ -124,10 +124,10 @@
         }
 
         /// <summary>
-        /// Exposes the base implementation fo the <see cref="RemoveItem"/> function.
+        /// Exposes the base implementation of the <see cref="RemoveItem"/> function.
         /// </summary>
         /// <param name="index">The index.</param>
-        /// <remarks>Used to avoid compiler warning regarding unverificable code.</remarks>
+        /// <remarks>Used to avoid compiler warning regarding unverifiable code.</remarks>
         private void RemoveItemBase(int index)
         {
             base.RemoveItem(index);
@@ -144,7 +144,7 @@
         /// <summary>
         /// Exposes the base implementation of the <see cref="ClearItems"/> function.
         /// </summary>
-        /// <remarks>Used to avoid compiler warning regarding unverificable code.</remarks>
+        /// <remarks>Used to avoid compiler warning regarding unverifiable code.</remarks>
         private void ClearItemsBase()
         {
             base.ClearItems();
