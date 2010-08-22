@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>
-    /// Uses by to carry event specific information when task launch is requested.
+    /// Used by InstanceActivator to carry event specific information when task launch is requested.
     /// </summary>
     public class TaskLaunchEventArgs : EventArgs
     {

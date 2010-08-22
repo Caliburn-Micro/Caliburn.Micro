@@ -12,7 +12,7 @@
 #endif
 
     /// <summary>
-    /// A service that is capable of properly binding values to a methods parameters and creating instances of <see cref="IResult"/>.
+    /// A service that is capable of properly binding values to a method's parameters and creating instances of <see cref="IResult"/>.
     /// </summary>
     public static class MessageBinder
     {
