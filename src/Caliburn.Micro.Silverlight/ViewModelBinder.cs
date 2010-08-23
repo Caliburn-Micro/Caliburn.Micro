@@ -100,6 +100,16 @@
                     continue;
                 }
 
+                var triggers = System.Windows.Interactivity.Interaction.GetTriggers(foundControl);
+                var methodName = method.Name;
+                if (triggers.FirstOrDefault(t => t is System.Windows.Interactivity.EventTrigger &&
+                    t.Actions.FirstOrDefault(a => a is ActionMessage &&
+                        ((ActionMessage)a).MethodName == methodName) != null) != null)
+                {
+                    Log.Info("Interaction.Triggers already bound to control {0} and action {1}", foundControl.Name, methodName);
+                    continue;
+                }
+
                 var message = method.Name;
                 var parameters = method.GetParameters();
 

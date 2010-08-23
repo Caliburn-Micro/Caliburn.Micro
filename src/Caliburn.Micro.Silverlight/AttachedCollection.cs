@@ -59,7 +59,7 @@
         /// <summary>
         /// Called when an item is removed from the collection.
         /// </summary>
-        /// <param name="item">The itme that was removed.</param>
+        /// <param name="item">The item that was removed.</param>
         protected void OnItemRemoved(T item)
         {
             if (item.AssociatedObject != null)
