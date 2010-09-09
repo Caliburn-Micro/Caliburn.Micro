@@ -150,7 +150,7 @@
         /// <summary>
         /// Invokes the action using the specified <see cref="ActionExecutionContext"/>
         /// </summary>
-        public static Action<ActionExecutionContext> InvokeAction = (context) =>{
+        public static Action<ActionExecutionContext> InvokeAction = context =>{
             var values = MessageBinder.DetermineParameters(context, context.Method.GetParameters());
             var outcome = context.Method.Invoke(context.Target, values);
             var result = MessageBinder.CreateResult(outcome);
@@ -159,9 +159,54 @@
         };
 
         /// <summary>
+        /// Applies an availability effect, such as IsEnabled, to an element.
+        /// </summary>
+        public static Action<ActionExecutionContext> ApplyAvailabilityEffect = context =>{
+#if SILVERLIGHT
+            if(!(context.Source is Control))
+                return;
+#endif
+
+#if SILVERLIGHT
+            ((Control)context.Source).IsEnabled = context.CanExecute();
+#else
+            context.Source.IsEnabled = context.CanExecute();
+#endif
+        };
+
+        /// <summary>
+        /// Sets the target, method and view on the context. Uses a bubbling strategy by default.
+        /// </summary>
+        public static Action<ActionExecutionContext> SetMethodBinding = context => {
+            DependencyObject currentElement = context.Source;
+            MethodInfo actionMethod = null;
+            object currentTarget = null;
+
+            while(currentElement != null && actionMethod == null) {
+                currentTarget = currentElement.GetValue(Message.HandlerProperty);
+
+                if(currentTarget != null)
+                    actionMethod = currentTarget.GetType().GetMethod(context.Message.MethodName);
+
+                if(actionMethod == null)
+                    currentElement = VisualTreeHelper.GetParent(currentElement);
+            }
+
+            if(actionMethod == null && context.Source.DataContext != null) {
+                currentTarget = context.Source.DataContext;
+                actionMethod = context.Source.DataContext.GetType().GetMethod(context.Message.MethodName);
+                currentElement = context.Source;
+            }
+
+            context.Target = currentTarget;
+            context.Method = actionMethod;
+            context.View = currentElement;
+        };
+
+        /// <summary>
         /// Prepares the action execution context for use.
         /// </summary>
-        public static Action<ActionExecutionContext> PrepareContext = (context) =>{
+        public static Action<ActionExecutionContext> PrepareContext = context =>{
             SetMethodBinding(context);
             if (context.Target == null || context.Method == null)
             {
@@ -198,54 +243,5 @@
                 MessageBinder.DetermineParameters(context, guard.GetParameters())
                 );
         };
-
-        /// <summary>
-        /// Applies an availability effect, such as IsEnabled, to an element.
-        /// </summary>
-        public static Action<ActionExecutionContext> ApplyAvailabilityEffect = (context) =>{
-#if SILVERLIGHT
-            if(!(context.Source is Control))
-                return;
-#endif
-
-#if SILVERLIGHT
-            ((Control)context.Source).IsEnabled = context.CanExecute();
-#else
-            context.Source.IsEnabled = context.CanExecute();
-#endif
-        };
-
-        /// <summary>
-        /// Sets the target, method and view on the context using a bubbling strategy.
-        /// </summary>
-        /// <param name="context">The action invocation context.</param>
-        public static void SetMethodBinding(ActionExecutionContext context)
-        {
-            DependencyObject currentElement = context.Source;
-            MethodInfo actionMethod = null;
-            object currentTarget = null;
-
-            while (currentElement != null && actionMethod == null)
-            {
-                currentTarget = currentElement.GetValue(Message.HandlerProperty);
-
-                if (currentTarget != null)
-                    actionMethod = currentTarget.GetType().GetMethod(context.Message.MethodName);
-
-                if (actionMethod == null)
-                    currentElement = VisualTreeHelper.GetParent(currentElement);
-            }
-
-            if (actionMethod == null && context.Source.DataContext != null)
-            {
-                currentTarget = context.Source.DataContext;
-                actionMethod = context.Source.DataContext.GetType().GetMethod(context.Message.MethodName);
-                currentElement = context.Source;
-            }
-
-            context.Target = currentTarget;
-            context.Method = actionMethod;
-            context.View = currentElement;
-        }
     }
 }
