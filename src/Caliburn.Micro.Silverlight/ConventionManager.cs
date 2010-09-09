@@ -10,6 +10,7 @@
     using System.Windows.Controls.Primitives;
     using System.Windows.Data;
     using System.Windows.Markup;
+    using System.Windows.Shapes;
 
 #if !SILVERLIGHT
     using System.Windows.Documents;
@@ -208,6 +209,7 @@
             AddElementConvention<Selector>(Selector.ItemsSourceProperty, "SelectedItem", "SelectionChanged");
             AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", "Loaded");
             AddElementConvention<ContentControl>(ContentControl.ContentProperty, "DataContext", "Loaded");
+            AddElementConvention<Shape>(Shape.VisibilityProperty, "DataContext", "MouseLeftButtonUp");
             AddElementConvention<FrameworkElement>(FrameworkElement.VisibilityProperty, "DataContext", "Loaded");
         }
 
