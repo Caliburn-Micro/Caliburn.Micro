@@ -9,7 +9,7 @@
     public static class IoC
     {
         /// <summary>
-        /// Gets an instace by type and key.
+        /// Gets an instance by type and key.
         /// </summary>
         public static Func<Type, string, object> GetInstance;
 

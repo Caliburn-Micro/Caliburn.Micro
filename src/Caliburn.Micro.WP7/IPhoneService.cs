@@ -46,7 +46,7 @@ namespace Caliburn.Micro
     }
 
     /// <summary>
-    /// An implementation of <see cref="IPhoneService"/> that adapts <see cref="PhoneapplicationService"/>.
+    /// An implementation of <see cref="IPhoneService"/> that adapts <see cref="PhoneApplicationService"/>.
     /// </summary>
     public class PhoneApplicationServiceAdapter : IPhoneService
     {

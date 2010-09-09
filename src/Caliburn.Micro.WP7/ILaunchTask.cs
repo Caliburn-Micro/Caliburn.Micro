@@ -8,7 +8,7 @@ namespace Caliburn.Micro
     public interface ILaunchTask
     {
         /// <summary>
-        /// Rasied to signal the request for task execution.
+        /// Raised to signal the request for task execution.
         /// </summary>
         event EventHandler<TaskLaunchEventArgs> TaskLaunchRequested;
     }

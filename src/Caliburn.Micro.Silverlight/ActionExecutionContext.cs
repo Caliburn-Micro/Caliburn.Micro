@@ -6,7 +6,7 @@
     using System.Windows;
 
     /// <summary>
-    /// The context used during the execution of an Action or it's guard.
+    /// The context used during the execution of an Action or its guard.
     /// </summary>
     public class ActionExecutionContext
     {
