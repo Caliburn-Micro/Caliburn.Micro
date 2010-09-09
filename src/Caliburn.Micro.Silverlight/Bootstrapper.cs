@@ -102,7 +102,7 @@
         }
 
         /// <summary>
-        /// Override this to provide an IoC specific impelentation
+        /// Override this to provide an IoC specific implementation
         /// </summary>
         /// <param name="service">The service to locate.</param>
         /// <returns>The located services.</returns>

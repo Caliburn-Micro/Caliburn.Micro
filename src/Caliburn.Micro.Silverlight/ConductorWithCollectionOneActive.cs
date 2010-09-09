@@ -126,7 +126,7 @@
                 /// <summary>
                 /// Called to check whether or not this instance can close.
                 /// </summary>
-                /// <param name="callback">The implementor calls this action with the result of the close check.</param>
+                /// <param name="callback">The implementer calls this action with the result of the close check.</param>
                 public override void CanClose(Action<bool> callback)
                 {
                     CloseStrategy.Execute(items, (canClose, closable) => callback(canClose));

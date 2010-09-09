@@ -242,7 +242,7 @@
         /// </summary>
         /// <param name="elementType">The type of element to locate the convention for.</param>
         /// <returns>The convention if found, null otherwise.</returns>
-        /// <remarks>Searches the clas hierarchy for conventions.</remarks>
+        /// <remarks>Searches the class hierarchy for conventions.</remarks>
         public static ElementConvention GetElementConvention(Type elementType)
         {
             if (elementType == null)

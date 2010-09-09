@@ -4,7 +4,7 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// Used by the framework to pull instances from an IoC container and to inject dependencies into certain existin classes.
+    /// Used by the framework to pull instances from an IoC container and to inject dependencies into certain existing classes.
     /// </summary>
     public static class IoC
     {

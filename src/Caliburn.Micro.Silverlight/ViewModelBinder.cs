@@ -21,7 +21,7 @@
         static readonly ILog Log = LogManager.GetLog(typeof(ViewModelBinder));
 
         /// <summary>
-        /// Indicates whether or not the conventions have alread been applied to the view.
+        /// Indicates whether or not the conventions have already been applied to the view.
         /// </summary>
         public static readonly DependencyProperty ConventionsAppliedProperty =
             DependencyProperty.RegisterAttached(
@@ -97,6 +97,16 @@
                 if(foundControl == null)
                 {
                     Log.Info("No bindable control for action {0}.", method.Name);
+                    continue;
+                }
+
+                var triggers = System.Windows.Interactivity.Interaction.GetTriggers(foundControl);
+                var methodName = method.Name;
+                if (triggers.FirstOrDefault(t => t is System.Windows.Interactivity.EventTrigger &&
+                    t.Actions.FirstOrDefault(a => a is ActionMessage &&
+                        ((ActionMessage)a).MethodName == methodName) != null) != null)
+                {
+                    Log.Info("Interaction.Triggers already bound to control {0} and action {1}", foundControl.Name, methodName);
                     continue;
                 }
 
