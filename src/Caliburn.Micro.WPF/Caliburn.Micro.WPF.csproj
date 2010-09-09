@@ -81,6 +81,9 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\ConventionManager.cs">
       <Link>ConventionManager.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Coroutine.cs">
+      <Link>Coroutine.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\DefaultCloseStrategy.cs">
       <Link>DefaultCloseStrategy.cs</Link>
     </Compile>

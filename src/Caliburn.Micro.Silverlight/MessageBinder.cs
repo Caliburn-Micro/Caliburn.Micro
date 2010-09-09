@@ -1,11 +1,9 @@
 ﻿namespace Caliburn.Micro
 {
     using System;
-    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
-    using System.Windows;
 
 #if !SILVERLIGHT
     using System.ComponentModel;
@@ -20,22 +18,6 @@
         /// The special parameter values recognized by the message binder.
         /// </summary>
         public static readonly string[] SpecialValues = new[] { "$eventargs", "$datacontext", "$source" };
-
-        /// <summary>
-        /// Converts the return value of a method into an <see cref="IResult"/> if possible.
-        /// </summary>
-        /// <param name="returnValue">The return value of a method.</param>
-        /// <returns>An <see cref="IResult"/> if conversion is possible; null otherwise.</returns>
-        public static SequentialResult CreateResult(object returnValue)
-        {
-            if(returnValue is IResult)
-                returnValue = new[] { returnValue as IResult };
-
-            if(returnValue is IEnumerable<IResult>)
-                return new SequentialResult(returnValue as IEnumerable<IResult>);
-
-            return null;
-        }
 
         /// <summary>
         /// Determines the parameters that a method should be invoked with.

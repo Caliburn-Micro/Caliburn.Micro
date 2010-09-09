@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Micro
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Reflection;
     using System.Windows;
@@ -147,15 +148,22 @@
             return "Action: " + MethodName;
         }
 
+        
+
         /// <summary>
         /// Invokes the action using the specified <see cref="ActionExecutionContext"/>
         /// </summary>
         public static Action<ActionExecutionContext> InvokeAction = context =>{
             var values = MessageBinder.DetermineParameters(context, context.Method.GetParameters());
-            var outcome = context.Method.Invoke(context.Target, values);
-            var result = MessageBinder.CreateResult(outcome);
-            if(result != null)
-                result.Execute(context);
+            var returnValue = context.Method.Invoke(context.Target, values);
+
+            if (returnValue is IResult)
+                returnValue = new[] { returnValue as IResult };
+
+            if (returnValue is IEnumerable<IResult>)
+                Coroutine.Execute(((IEnumerable<IResult>)returnValue).GetEnumerator(), context);
+            else if (returnValue is IEnumerator<IResult>)
+                Coroutine.Execute(((IEnumerator<IResult>)returnValue), context);
         };
 
         /// <summary>

@@ -14,10 +14,10 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="SequentialResult"/> class.
         /// </summary>
-        /// <param name="children">The children.</param>
-        public SequentialResult(IEnumerable<IResult> children)
+        /// <param name="enumerator">The enumerator.</param>
+        public SequentialResult(IEnumerator<IResult> enumerator)
         {
-            enumerator = children.GetEnumerator();
+            this.enumerator = enumerator;
         }
 
         /// <summary>
@@ -32,7 +32,6 @@
         public void Execute(ActionExecutionContext context)
         {
             this.context = context;
-            IoC.BuildUp(this);
             ChildCompleted(null, new ResultCompletionEventArgs());
         }
 
