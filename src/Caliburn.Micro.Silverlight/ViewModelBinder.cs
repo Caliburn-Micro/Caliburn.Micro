@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Data;
+    using System.Windows.Interactivity;
 
     /// <summary>
     /// Binds a view to a view model.
@@ -100,13 +101,9 @@
                     continue;
                 }
 
-                var triggers = System.Windows.Interactivity.Interaction.GetTriggers(foundControl);
-                var methodName = method.Name;
-                if (triggers.FirstOrDefault(t => t is System.Windows.Interactivity.EventTrigger &&
-                    t.Actions.FirstOrDefault(a => a is ActionMessage &&
-                        ((ActionMessage)a).MethodName == methodName) != null) != null)
-                {
-                    Log.Info("Interaction.Triggers already bound to control {0} and action {1}", foundControl.Name, methodName);
+                var triggers = Interaction.GetTriggers(foundControl);
+                if (triggers != null && triggers.Count > 0) {
+                    Log.Info("Interaction.Triggers already set on control {0}.", foundControl.Name);
                     continue;
                 }
 
