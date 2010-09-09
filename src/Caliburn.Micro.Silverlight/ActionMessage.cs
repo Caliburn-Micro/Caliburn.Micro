@@ -238,7 +238,7 @@
                     return;
 
                 PropertyChangedEventHandler handler = (s, e) =>{
-                    if(e.PropertyName == guardName)
+                    if(string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == guardName)
                         context.Message.UpdateAvailability();
                 };
 
