@@ -28,13 +28,17 @@
             var view = IoC.GetAllInstances(viewType)
                 .FirstOrDefault() as UIElement;
 
-            if(view != null)
+            if (view != null) {
+                InitializeComponent(view);
                 return view;
+            }
 
             if (viewType.IsInterface || viewType.IsAbstract || !typeof(UIElement).IsAssignableFrom(viewType))
                 return new TextBlock { Text = string.Format("Cannot create {0}.", viewType.FullName) };
 
-            return (UIElement)Activator.CreateInstance(viewType);
+            view = (UIElement)Activator.CreateInstance(viewType);
+            InitializeComponent(view);
+            return view;
         };
 
         /// <summary>
@@ -88,5 +92,24 @@
 
             return LocateForModelType(model.GetType(), displayLocation, context);
         };
+
+        /// <summary>
+        /// When a view does not contain a code-behind file, we need to automatically call InitializeCompoent.
+        /// </summary>
+        /// <param name="element">The element to initialize</param>
+        public static void InitializeComponent(object element) {
+            var initializeComponentMethod = element.GetType()
+                .GetMethod("InitializeComponent", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+            if(initializeComponentMethod == null)
+                return;
+
+            try {
+                initializeComponentMethod.Invoke(element, null);
+            }
+            catch(Exception ex) {
+                Log.Error(ex);
+            }
+        }
     }
 }
