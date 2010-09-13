@@ -4,7 +4,6 @@
     using System.Linq;
     using System.Collections.Generic;
     using System.Windows;
-    using System.Windows.Data;
     using System.Windows.Interactivity;
 
     /// <summary>
@@ -65,24 +64,9 @@
                     continue;
                 }
 
-                var bindableProperty = ConventionManager.EnsureDependencyProperty(convention, foundControl);
-                if(ConventionManager.HasBinding(foundControl, bindableProperty))
-                {
-                    Log.Warn("Binding exists on {0}.", property.Name);
-                    continue;
-                }
+                convention.ApplyBinding(convention, viewModelType, property, foundControl);
 
-                var binding = new Binding(property.Name);
-
-                ConventionManager.ApplyBindingMode(binding, convention, property);
-                ConventionManager.ApplyValueConverter(binding, convention, property);
-                ConventionManager.ApplyStringFormat(binding, convention, property);
-                ConventionManager.ApplyValidation(binding, convention, property);
-                ConventionManager.ApplyUpdateSourceTrigger(bindableProperty, foundControl, binding);
-
-                BindingOperations.SetBinding(foundControl, bindableProperty, binding);
                 Log.Info("Added convention binding for {0}.", property.Name);
-                ConventionManager.AddCustomBindingBehavior(binding, convention, viewModelType, property, foundControl);
             }
         };
 
