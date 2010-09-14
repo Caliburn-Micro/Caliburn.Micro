@@ -133,13 +133,13 @@
         /// <summary>
         /// Creates a binding and sets it on the element.
         /// </summary>
-        public static Func<ElementConvention, Type, PropertyInfo, FrameworkElement, bool> SetBinding =
-            (convention, viewModelType, property, element) => {
+        public static Func<Type, string, PropertyInfo, FrameworkElement, ElementConvention, bool> SetBinding =
+            (viewModelType, path, property, element, convention) => {
                 var bindableProperty = convention.GetBindableProperty(element);
                 if(HasBinding(element, bindableProperty))
                     return false;
 
-                var binding = new Binding(property.Name);
+                var binding = new Binding(path);
 
                 ApplyBindingMode(binding, property);
                 ApplyValueConverter(binding, bindableProperty, property);
@@ -171,8 +171,8 @@
             AddElementConvention<ToolBarTray>(ToolBarTray.VisibilityProperty, "DataContext", "Loaded");
             AddElementConvention<TreeView>(TreeView.ItemsSourceProperty, "SelectedItem", "SelectedItemChanged");
             AddElementConvention<TabControl>(TabControl.ItemsSourceProperty, "ItemsSource", "SelectionChanged")
-                .ApplyBinding = (convention, viewModelType, property, element) => {
-                    if(!SetBinding(convention, viewModelType, property, element))
+                .ApplyBinding = (viewModelType, path, property, element, convention) => {
+                    if(!SetBinding(viewModelType, path, property, element, convention))
                         return;
 
                     var tabControl = (TabControl)element;
@@ -182,7 +182,7 @@
                             tabControl.ContentTemplate = DefaultDataTemplate;
                     }
 
-                    ConfigureSelector((Selector)element, viewModelType, property);
+                    ConfigureSelector((Selector)element, viewModelType, path, property);
                 };
             AddElementConvention<TabItem>(TabItem.ContentProperty, "DataContext", "DataContextChanged");
             AddElementConvention<Window>(Window.DataContextProperty, "DataContext", "Loaded");
@@ -194,16 +194,16 @@
             AddElementConvention<TextBox>(TextBox.TextProperty, "Text", "TextChanged");
             AddElementConvention<TextBlock>(TextBlock.TextProperty, "Text", "DataContextChanged");
             AddElementConvention<Selector>(Selector.ItemsSourceProperty, "SelectedItem", "SelectionChanged")
-                .ApplyBinding = (convention, viewModelType, property, element) => {
-                    if (!SetBinding(convention, viewModelType, property, element))
+                .ApplyBinding = (viewModelType, path, property, element, convention) => {
+                    if (!SetBinding(viewModelType, path, property, element, convention))
                         return;
 
-                    ConfigureSelector((Selector)element, viewModelType, property);
+                    ConfigureSelector((Selector)element, viewModelType, path, property);
                     ConfigureItemsControl((ItemsControl)element, property);
                 };
             AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", "Loaded")
-                .ApplyBinding = (convention, viewModelType, property, element) => {
-                    if (!SetBinding(convention, viewModelType, property, element))
+                .ApplyBinding = (viewModelType, path, property, element, convention) => {
+                    if (!SetBinding(viewModelType, path, property, element, convention))
                         return;
 
                     ConfigureItemsControl((ItemsControl)element, property);
@@ -279,13 +279,18 @@
             }
         }
 
-        private static void ConfigureSelector(Selector selector, Type viewModelType, PropertyInfo property) {
+        private static void ConfigureSelector(Selector selector, Type viewModelType, string path, PropertyInfo property) {
             if(HasBinding(selector, Selector.SelectedItemProperty))
                 return;
 
-            foreach(var potentialName in DerivePotentialSelectionNames(property.Name)) {
-                if(viewModelType.GetProperty(potentialName) != null) {
-                    BindingOperations.SetBinding(selector, Selector.SelectedItemProperty, new Binding(potentialName) { Mode = BindingMode.TwoWay });
+            var index = path.LastIndexOf('.');
+            index = index == -1 ? 0 : index + 1;
+            var baseName = path.Substring(index);
+
+            foreach (var potentialName in DerivePotentialSelectionNames(baseName)) {
+                if (viewModelType.GetProperty(potentialName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) != null) {
+                    var selectionPath = path.Replace(baseName, potentialName);
+                    BindingOperations.SetBinding(selector, Selector.SelectedItemProperty, new Binding(selectionPath) { Mode = BindingMode.TwoWay });
                     return;
                 }
             }
