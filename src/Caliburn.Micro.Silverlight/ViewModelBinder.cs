@@ -3,8 +3,9 @@
     using System;
     using System.Linq;
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Windows;
-    using System.Windows.Data;
+    using System.Windows.Interactivity;
 
     /// <summary>
     /// Binds a view to a view model.
@@ -21,7 +22,7 @@
         static readonly ILog Log = LogManager.GetLog(typeof(ViewModelBinder));
 
         /// <summary>
-        /// Indicates whether or not the conventions have alread been applied to the view.
+        /// Indicates whether or not the conventions have already been applied to the view.
         /// </summary>
         public static readonly DependencyProperty ConventionsAppliedProperty =
             DependencyProperty.RegisterAttached(
@@ -47,41 +48,38 @@
         /// </summary>
         /// <remarks>Parameters include named Elements to search through and the type of view model to determine conventions for.</remarks>
         public static Action<IEnumerable<FrameworkElement>, Type> BindProperties = (namedElements, viewModelType) =>{
-            var properties = viewModelType.GetProperties();
-            foreach(var property in properties)
-            {
-                var foundControl = namedElements.FindName(property.Name);
-                if(foundControl == null)
-                {
-                    Log.Info("No bindable control for property {0}.", property.Name);
+            foreach(var element in namedElements) {
+                var cleanName = element.Name.Trim('_');
+                var parts = cleanName.Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
+
+                var property = viewModelType
+                    .GetProperty(parts[0], BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+
+                for (int i = 1; i < parts.Length && property != null; i++) {
+                    property = property
+                        .PropertyType.GetProperty(parts[i], BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                }
+
+                if (property == null) {
+                    Log.Info("No convention applied to {0}.", element.Name);
                     continue;
                 }
 
-                var convention = ConventionManager.GetElementConvention(foundControl.GetType());
-                if(convention == null)
-                {
-                    Log.Warn("No conventions for {0}.", foundControl.GetType());
+                var convention = ConventionManager.GetElementConvention(element.GetType());
+                if (convention == null) {
+                    Log.Warn("No conventions configured for {0}.", element.GetType());
                     continue;
                 }
 
-                var bindableProperty = ConventionManager.EnsureDependencyProperty(convention, foundControl);
-                if(ConventionManager.HasBinding(foundControl, bindableProperty))
-                {
-                    Log.Warn("Binding exists on {0}.", property.Name);
-                    continue;
-                }
-
-                var binding = new Binding(property.Name);
-
-                ConventionManager.ApplyBindingMode(binding, convention, property);
-                ConventionManager.ApplyValueConverter(binding, convention, property);
-                ConventionManager.ApplyStringFormat(binding, convention, property);
-                ConventionManager.ApplyValidation(binding, convention, property);
-                ConventionManager.ApplyUpdateSourceTrigger(bindableProperty, foundControl, binding);
-
-                BindingOperations.SetBinding(foundControl, bindableProperty, binding);
-                Log.Info("Added convention binding for {0}.", property.Name);
-                ConventionManager.AddCustomBindingBehavior(binding, convention, viewModelType, property, foundControl);
+                convention.ApplyBinding(
+                    parts.Length == 1 ? viewModelType : property.PropertyType,
+                    cleanName.Replace('_', '.'),
+                    property,
+                    element,
+                    convention
+                    );
+                
+                Log.Info("Added convention binding for {0}.", element.Name);
             }
         };
 
@@ -97,6 +95,12 @@
                 if(foundControl == null)
                 {
                     Log.Info("No bindable control for action {0}.", method.Name);
+                    continue;
+                }
+
+                var triggers = Interaction.GetTriggers(foundControl);
+                if (triggers != null && triggers.Count > 0) {
+                    Log.Info("Interaction.Triggers already set on control {0}.", foundControl.Name);
                     continue;
                 }
 
@@ -132,13 +136,13 @@
         /// </summary>
         ///<remarks>Passes the the view model, view and creation context (or null for default) to use in applying binding.</remarks>
         public static Action<object, DependencyObject, object> Bind = (viewModel, view, context) =>{
-            Log.Info("Binding {0}+{1}.", view, viewModel);
+            Log.Info("Binding {0} and {1}.", view, viewModel);
             Action.SetTarget(view, viewModel);
 
             var viewAware = viewModel as IViewAware;
             if(viewAware != null)
             {
-                Log.Info("Attaching {0}+{1}.", view, viewAware);
+                Log.Info("Attaching {0} to {1}.", view, viewAware);
                 viewAware.AttachView(view, context);
             }
 
@@ -155,7 +159,7 @@
 
             if(!ShouldApplyConventions(element))
             {
-                Log.Info("Skipping conventions {0}+{1}.", element, viewModel);
+                Log.Info("Skipping conventions {0} and {1}.", element, viewModel);
                 return;
             }
 

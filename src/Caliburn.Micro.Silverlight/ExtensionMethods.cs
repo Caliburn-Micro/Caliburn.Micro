@@ -21,7 +21,7 @@
         /// <typeparam name="T">The type of attributes to get.</typeparam>
         /// <param name="member">The member to inspect for attributes.</param>
         /// <param name="inherit">Whether or not to search for inherited attributes.</param>
-        /// <returns>The list o attributes found.</returns>
+        /// <returns>The list of attributes found.</returns>
         public static IEnumerable<T> GetAttributes<T>(this MemberInfo member, bool inherit)
         {
             return Attribute.GetCustomAttributes(member, inherit).OfType<T>();
@@ -40,7 +40,7 @@
         }
 
         /// <summary>
-        /// Convertes an expression into a <see cref="MemberInfo"/>.
+        /// Converts an expression into a <see cref="MemberInfo"/>.
         /// </summary>
         /// <param name="expression">The expression to convert.</param>
         /// <returns>The member info.</returns>

@@ -10,10 +10,20 @@
     public interface INotifyPropertyChangedEx : INotifyPropertyChanged
     {
         /// <summary>
+        /// Enables/Disables property change notification.
+        /// </summary>
+        bool IsNotifying { get; set; }
+
+        /// <summary>
         /// Notifies subscribers of the property change.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         void NotifyOfPropertyChange(string propertyName);
+
+        /// <summary>
+        /// Raises a change notification indicating that all bindings should be refreshed.
+        /// </summary>
+        void Refresh();
     }
     
 #if !SILVERLIGHT
@@ -24,6 +34,12 @@
     /// </summary>
     public class PropertyChangedBase : INotifyPropertyChangedEx
     {
+        /// <summary>
+        /// Creates an instance of <see cref="PropertyChangedBase"/>.
+        /// </summary>
+        public PropertyChangedBase() {
+            IsNotifying = true;
+        }
 
 #if !SILVERLIGHT
         [field: NonSerialized]
@@ -34,12 +50,24 @@
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
         /// <summary>
+        /// Enables/Disables property change notification.
+        /// </summary>
+        public bool IsNotifying { get; set; }
+
+        /// <summary>
+        /// Raises a change notification indicating that all bindings should be refreshed.
+        /// </summary>
+        public void Refresh() {
+            NotifyOfPropertyChange(string.Empty);
+        }
+
+        /// <summary>
         /// Notifies subscribers of the property change.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
-        public virtual void NotifyOfPropertyChange(string propertyName)
-        {
-            Execute.OnUIThread(() => PropertyChanged(this, new PropertyChangedEventArgs(propertyName)));
+        public virtual void NotifyOfPropertyChange(string propertyName) {
+            if(IsNotifying)
+                Execute.OnUIThread(() => PropertyChanged(this, new PropertyChangedEventArgs(propertyName)));
         }
 
         /// <summary>
@@ -47,8 +75,7 @@
         /// </summary>
         /// <typeparam name="TProperty">The type of the property.</typeparam>
         /// <param name="property">The property expression.</param>
-        public virtual void NotifyOfPropertyChange<TProperty>(Expression<Func<TProperty>> property)
-        {
+        public virtual void NotifyOfPropertyChange<TProperty>(Expression<Func<TProperty>> property) {
             NotifyOfPropertyChange(property.GetMemberInfo().Name);
         }
 
@@ -56,9 +83,9 @@
         /// Raises the property changed event immediately.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
-        public virtual void RaisePropertyChangedEventImmediately(string propertyName)
-        {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        public virtual void RaisePropertyChangedEventImmediately(string propertyName) {
+            if(IsNotifying)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -27,7 +27,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Caliburn.Micro.XML</DocumentationFile>
@@ -80,6 +80,9 @@
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ConventionManager.cs">
       <Link>ConventionManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Coroutine.cs">
+      <Link>Coroutine.cs</Link>
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\DefaultCloseStrategy.cs">
       <Link>DefaultCloseStrategy.cs</Link>

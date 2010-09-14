@@ -130,6 +130,8 @@
             if (e.Uri.IsAbsoluteUri)
                 return;
 
+            ViewLocator.InitializeComponent(e.Content);
+
             var viewModel = ViewModelLocator.LocateForView(e.Content);
             if (viewModel == null)
                 return;

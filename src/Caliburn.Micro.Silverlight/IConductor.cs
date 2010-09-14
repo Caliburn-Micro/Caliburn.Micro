@@ -6,7 +6,7 @@
     /// <summary>
     /// Denotes an instance which conducts other objects by managing an ActiveItem and maintaining a strict lifecycle.
     /// </summary>
-    /// <remarks>Conducted instances can optin to the lifecycle by impelenting any of the follosing <see cref="IActivate"/>, <see cref="IDeactivate"/>, <see cref="IGuardClose."/></remarks>
+    /// <remarks>Conducted instances can opt-in to the lifecycle by implementing any of the following <see cref="IActivate"/>, <see cref="IDeactivate"/>, <see cref="IGuardClose"/></remarks>
     public interface IConductor : INotifyPropertyChangedEx
     {
         /// <summary>

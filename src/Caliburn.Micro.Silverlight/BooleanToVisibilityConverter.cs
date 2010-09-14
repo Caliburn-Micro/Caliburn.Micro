@@ -8,7 +8,7 @@ namespace Caliburn.Micro
     using System.Windows.Data;
 
     /// <summary>
-    /// An <see cref="IValueConverter"/> which converters <see cref="bool"/> to <see cref="Visibility"/>.
+    /// An <see cref="IValueConverter"/> which converts <see cref="bool"/> to <see cref="Visibility"/>.
     /// </summary>
     public class BooleanToVisibilityConverter : IValueConverter
     {

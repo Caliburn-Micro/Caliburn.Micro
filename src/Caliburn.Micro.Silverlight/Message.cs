@@ -4,7 +4,7 @@
     using System.Windows.Interactivity;
 
     /// <summary>
-    /// Hosts attached properties related to routed UI messaging.
+    /// Host's attached properties related to routed UI messaging.
     /// </summary>
     public static class Message
     {

@@ -203,7 +203,7 @@
         public event EventHandler<ViewAttachedEventArgs> ViewAttached = delegate { };
 
         /// <summary>
-        /// Tries to close this instance by asking its Parent to initiate shutdown or by asking it's corresponding default view to close.
+        /// Tries to close this instance by asking its Parent to initiate shutdown or by asking its corresponding default view to close.
         /// </summary>
         public void TryClose()
         {

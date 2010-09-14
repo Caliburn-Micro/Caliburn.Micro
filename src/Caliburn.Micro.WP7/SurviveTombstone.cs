@@ -103,7 +103,7 @@
         }
 
         /// <summary>
-        /// Determines if the type is a complext type.
+        /// Determines if the type is a complex type.
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
@@ -117,7 +117,7 @@
         /// </summary>
         /// <param name="items">The items to inspect.</param>
         /// <param name="key">The root persistence key.</param>
-        /// <returns>A list of tuples containing the item, it's persister and the key to use during persistenc.</returns>
+        /// <returns>A list of tuples containing the item, its persister and the key to use during persistence.</returns>
         protected virtual IEnumerable<Tuple<object, ITombstone, string>> GetPersistableItems(List<object> items, string key)
         {
             return items.Select((x, i) =>{
@@ -131,7 +131,7 @@
         /// </summary>
         /// <param name="instance">The instance to inspect for persistable properties.</param>
         /// <param name="key">The root persistence key.</param>
-        /// <returns>A list of tuples containing, the property, it's persister and the key to use during persistence.</returns>
+        /// <returns>A list of tuples containing, the property, its persister and the key to use during persistence.</returns>
         protected virtual IEnumerable<Tuple<PropertyInfo, ITombstone, string>> GetPersistableProperties(object instance, string key)
         {
             return from property in instance.GetType().GetProperties()

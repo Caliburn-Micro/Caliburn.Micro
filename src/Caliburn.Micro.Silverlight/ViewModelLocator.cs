@@ -12,7 +12,7 @@
         /// Locates the view model for the specified view type.
         /// </summary>
         /// <returns>The view model.</returns>
-        /// <remarks>Pass the view type as a parameter and recieve a view model instance.</remarks>
+        /// <remarks>Pass the view type as a parameter and receive a view model instance.</remarks>
         public static Func<Type, object> LocateForViewType = viewType =>{
             var typeName = viewType.FullName;
 

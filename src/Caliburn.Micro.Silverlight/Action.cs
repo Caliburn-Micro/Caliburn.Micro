@@ -10,7 +10,7 @@
         static readonly ILog Log = LogManager.GetLog(typeof(Action));
 
         /// <summary>
-        /// A property definition representing the target of as <see cref="ActionMessage"/>.  
+        /// A property definition representing the target of an <see cref="ActionMessage"/>.  
         /// The DataContext of the element will be set to this instance.
         /// </summary>
         public static readonly DependencyProperty TargetProperty =
@@ -65,7 +65,7 @@
         }
 
         /// <summary>
-        /// Gets the target for incstances of <see cref="ActionMessage"/>.
+        /// Gets the target for instances of <see cref="ActionMessage"/>.
         /// </summary>
         /// <param name="d">The element to which the target is attached.</param>
         /// <returns>The target for instances of <see cref="ActionMessage"/></returns>
