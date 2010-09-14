@@ -11,6 +11,8 @@
     public class ActionExecutionContext
     {
         Dictionary<string, object> values;
+        WeakReference target;
+        WeakReference view;
 
         /// <summary>
         /// The message being executed.
@@ -30,12 +32,18 @@
         /// <summary>
         /// The instance on which the action is invoked.
         /// </summary>
-        public object Target;
+        public object Target {
+            get { return target == null ? null : target.Target; }
+            set { target = new WeakReference(value); }
+        }
 
         /// <summary>
         /// The view associated with the target.
         /// </summary>
-        public DependencyObject View;
+        public DependencyObject View {
+            get { return view == null ? null : view.Target as DependencyObject; }
+            set { view = new WeakReference(value); }
+        }
 
         /// <summary>
         /// The actual method info to be invoked.

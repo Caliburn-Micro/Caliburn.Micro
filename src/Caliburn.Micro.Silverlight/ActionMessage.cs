@@ -115,12 +115,18 @@
             };
 
             PrepareContext(context);
-            UpdateAvailability();
+            UpdateAvailablilityCore();
         }
 
-        protected override void Invoke(object eventArgs)
-        {
+        protected override void Invoke(object eventArgs) {
             Log.Info("Invoking {0}.", this);
+
+            if(context.Target == null || context.View == null) {
+                PrepareContext(context);
+                if(!UpdateAvailablilityCore())
+                    return;
+            }
+
             context.EventArgs = eventArgs;
             InvokeAction(context);
         }
@@ -133,8 +139,15 @@
             if (context == null)
                 return;
 
+            if (context.Target == null || context.View == null)
+                PrepareContext(context);
+
+            UpdateAvailablilityCore();
+        }
+
+        bool UpdateAvailablilityCore() {
             Log.Info("{0} availability update.", this);
-            ApplyAvailabilityEffect(context);
+            return ApplyAvailabilityEffect(context);
         }
 
         /// <summary>
@@ -147,8 +160,6 @@
         {
             return "Action: " + MethodName;
         }
-
-        
 
         /// <summary>
         /// Invokes the action using the specified <see cref="ActionExecutionContext"/>
@@ -169,16 +180,17 @@
         /// <summary>
         /// Applies an availability effect, such as IsEnabled, to an element.
         /// </summary>
-        public static Action<ActionExecutionContext> ApplyAvailabilityEffect = context =>{
+        /// <remarks>Returns a value indicating whether or not the action is available.</remarks>
+        public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context =>{
 #if SILVERLIGHT
             if(!(context.Source is Control))
-                return;
+                return true;
 #endif
 
 #if SILVERLIGHT
-            ((Control)context.Source).IsEnabled = context.CanExecute();
+            return ((Control)context.Source).IsEnabled = context.CanExecute();
 #else
-            context.Source.IsEnabled = context.CanExecute();
+            return context.Source.IsEnabled = context.CanExecute();
 #endif
         };
 
