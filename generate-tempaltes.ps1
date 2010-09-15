@@ -4,14 +4,14 @@ function open( $assembly )
 {
     if ( $null -eq ([AppDomain]::CurrentDomain.GetAssemblies() |? { $_.FullName -eq $assembly }) )
     {
-        [System.Reflection.Assembly]::Load($assembly) | ignore
+        [Reflection.Assembly]::Load($assembly) | ignore
     }
 }
 
 function combine([string]$path1,[string]$path2){
     $root = get-location
-    $part1 = [System.IO.Path]::Combine($root,$path1)
-    $part2 = [System.IO.Path]::Combine($part1,$path2)
+    $part1 = [IO.Path]::Combine($root,$path1)
+    $part2 = [IO.Path]::Combine($part1,$path2)
     $part2
 }
 
@@ -58,71 +58,15 @@ function copy-template ( $source, $destination, $exclude, $template_name)
         } else {        
             $content = get-content -path $source_path
 
-            if($child.Name -eq "MyTemplate.vstemplate") 
-            { 
-                $content | Set-Content (combine $destination $child.Name)
+            $replace_list = "*.cs","*.xaml"
 
-            } else {
+            if( match $child.Name $replace_list)
+            {    
                 $content | foreach {$_ -replace "Caliburn.Micro", '$safeprojectname$.Framework' -replace $template_name, '$safeprojectname$' } | Set-Content (combine $destination $child.Name)
+            } else {
+                copy $child.FullName $destination
             }
         }      
-    }
-}
-
-function copy-stream($source, $dest)
-{
-    $maxBufferSize = 4096
-    $bufferSize  = 0
-    if($source.Length -le $maxBufferSize) 
-    {
-        $bufferSize = $source.Length 
-    } else {
-        $bufferSize = $maxBufferSize
-    }
-
-    $buffer = New-Object byte[] $bufferSize
-    $bytesRead = 0
-    $bytesWritten = 0
-
-    while( ($bytesRead = $source.Read($buffer, 0, $buffer.Length)) -ne 0 )
-    {
-        $dest.Write($buffer, 0, $bytesRead);
-        $bytesWritten += $bufferSize;
-    }
-}
-
-function create-zip-part( $zip, $fileName )
-{
-    $uri = New-Object Uri($fileName, [System.UriKind]::Relative)
-    $helper = [System.IO.Packaging.PackUriHelper]::CreatePartUri( $uri )
-
-    if($fileName.EndsWith(".ico") -ne $true) 
-    {
-        $zip.CreatePart($helper, "", [System.IO.Packaging.CompressionOption]::Normal)
-    } else {
-        $zip.CreatePart($helper, "image/jpeg")
-    }    
-}
-
-function add-to-zip( $zip, $root, $item )
-{
-    if($item.GetType().Name -ne "DirectoryInfo")
-    {
-        $relativeFileName = $item.FullName.Replace($root + "\","")
-            write ($relativeFileName)
-        $part = create-zip-part $zip $relativeFileName
-
-        $stream = New-Object System.IO.FileStream( $item.FullName, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read )
-        $dest = $part.GetStream()
-        copy-stream $stream $dest
-
-        $stream.Close()
-        $dest.Close()
-    } else {
-        foreach($child in $item.GetFileSystemInfos())
-        {
-            add-to-zip $zip $folder $child
-        }
     }
 }
 
@@ -135,7 +79,7 @@ function build-template-xml($doc, $root, $folder)
         if($child.Name -eq "__TemplateIcon.ico") { continue }
         if($child.Name -eq "MyTemplate.vstemplate") { continue }
 
-        if($child -is [System.IO.DirectoryInfo])
+        if($child -is [IO.DirectoryInfo])
         {
             $folder =  $doc.CreateElement("Folder", $ns)            
             $folder.SetAttribute("Name", $child.Name)            
@@ -155,6 +99,8 @@ function build-template-xml($doc, $root, $folder)
 }
 
 open("WindowsBase, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35")
+$zip_assm = combine "Templates" "Ionic.Zip.dll"
+[Reflection.Assembly]::LoadFrom($zip_assm)
 
 clear-host
 
@@ -217,15 +163,14 @@ foreach ($template in $templates) # | where {$_.Name -eq "SilverlightTemplate"}
     $vstemplate.Save($vstemplate_path)
 
     write "... zipping template directory"
-    $zipPath = combine $output_folder ("Caliburn Mirco for " + $template_name + ".zip")
-    $zip = [System.IO.Packaging.Package]::Open($zipPath,[System.IO.FileMode]::Create)
+    $zip = New-Object Ionic.Zip.ZipFile
+    $zip_output = combine $output_folder ("Caliburn_Mirco_" + $template_name + ".zip")
+    $zip.UseUnicodeAsNecessary = $true
+    $zip.AddDirectory($folder)
+    $zip.Comment = ("This zip was created at " + [System.DateTime]::Now.ToString("G"))
+    $zip.Save( $zip_output );
 
-    foreach($child in $folder | dir)
-    {      
-        add-to-zip $zip $folder $child
-    }
-
-    $zip.Close()
+    $zip.Dispose()
 
     write "__________"
 }
