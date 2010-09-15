@@ -64,7 +64,6 @@
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="Framework\PhoneContainer.cs" />
     <Compile Include="MainPageViewModel.cs" />
-	<Compile Include="MainPage.xaml" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Framework\SimpleContainer.cs" />
   </ItemGroup>

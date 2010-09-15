@@ -1,3 +1,5 @@
+$replace_list = "*.cs","*.xaml"
+
 function ignore( $stuff ){ $stuff | Out-Null }
 
 function open( $assembly )
@@ -58,9 +60,7 @@ function copy-template ( $source, $destination, $exclude, $template_name)
         } else {        
             $content = get-content -path $source_path
 
-            $replace_list = "*.cs","*.xaml"
-
-            if( match $child.Name $replace_list)
+            if( match $child.Name $replace_list )
             {    
                 $content | foreach {$_ -replace "Caliburn.Micro", '$safeprojectname$.Framework' -replace $template_name, '$safeprojectname$' } | Set-Content (combine $destination $child.Name)
             } else {
@@ -88,8 +88,10 @@ function build-template-xml($doc, $root, $folder)
             $root.AppendChild( $folder ) | ignore
 
         } else {
+            $shouldReplace = "false"
+            if( match $child.Name $replace_list ) { $shouldReplace = "true" }
             $projectitem = $doc.CreateElement("ProjectItem", $ns)
-            $projectitem.SetAttribute("ReplaceParameters","true")
+            $projectitem.SetAttribute("ReplaceParameters",$shouldReplace)
             $projectitem.SetAttribute("TargetFileName", $child.Name)
             $projectitem.InnerText =  $child.Name
 
@@ -115,7 +117,7 @@ del -force -recurse $output_folder
 $templates = dir $template_root | where {$_.psIsContainer -eq $true}
 md $output_folder | ignore
 
-foreach ($template in $templates) # | where {$_.Name -eq "SilverlightTemplate"}
+foreach ($template in $templates | where {$_.Name -eq "WP7Template"}) # | where {$_.Name -eq "SilverlightTemplate"}
 {
     $template_name = $template.Name.Replace("Template","")
     write ("Creating Template for " + $template_name)
@@ -144,6 +146,15 @@ foreach ($template in $templates) # | where {$_.Name -eq "SilverlightTemplate"}
 
     foreach($child in $framework_folder | dir)
     {
+        $xpath = ("//*[local-name() = 'Compile' and @Include='Framework\" + $child.Name + "']")
+        $d = $proj.SelectNodes($xpath)
+
+        if($d.Count -eq 1) 
+        { 
+            write ("      " + $child.Name + " already in csproj, skipping... ")
+            continue 
+        }
+
         $compile = $proj.CreateElement("Compile", $ns)
         $compile.SetAttribute("Include",("Framework\" + $child.Name))
         $itemgroup.AppendChild($compile) | ignore
