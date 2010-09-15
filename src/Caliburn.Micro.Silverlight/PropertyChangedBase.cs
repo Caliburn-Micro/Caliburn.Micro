@@ -67,7 +67,7 @@
         /// <param name="propertyName">Name of the property.</param>
         public virtual void NotifyOfPropertyChange(string propertyName) {
             if(IsNotifying)
-                Execute.OnUIThread(() => PropertyChanged(this, new PropertyChangedEventArgs(propertyName)));
+                Execute.OnUIThread(() => RaisePropertyChangedEventCore(propertyName));
         }
 
         /// <summary>
@@ -85,7 +85,14 @@
         /// <param name="propertyName">Name of the property.</param>
         public virtual void RaisePropertyChangedEventImmediately(string propertyName) {
             if(IsNotifying)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                RaisePropertyChangedEventCore(propertyName);
+        }
+
+        void RaisePropertyChangedEventCore(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+                handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
