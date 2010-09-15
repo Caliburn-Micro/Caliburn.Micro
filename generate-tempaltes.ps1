@@ -115,7 +115,7 @@ del -force -recurse $output_folder
 $templates = dir $template_root | where {$_.psIsContainer -eq $true}
 md $output_folder | ignore
 
-foreach ($template in $templates | where {$_.Name -eq "WP7Template"}) # | where {$_.Name -eq "SilverlightTemplate"}
+foreach ($template in $templates) # | where {$_.Name -eq "SilverlightTemplate"}
 {
     $template_name = $template.Name.Replace("Template","")
     write ("Creating Template for " + $template_name)
