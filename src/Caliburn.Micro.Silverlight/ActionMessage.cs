@@ -115,7 +115,7 @@
             };
 
             PrepareContext(context);
-            UpdateAvailablilityCore();
+            UpdateAvailabilityCore();
         }
 
         protected override void Invoke(object eventArgs) {
@@ -123,7 +123,7 @@
 
             if(context.Target == null || context.View == null) {
                 PrepareContext(context);
-                if(!UpdateAvailablilityCore())
+                if (!UpdateAvailabilityCore())
                     return;
             }
 
@@ -142,10 +142,10 @@
             if (context.Target == null || context.View == null)
                 PrepareContext(context);
 
-            UpdateAvailablilityCore();
+            UpdateAvailabilityCore();
         }
 
-        bool UpdateAvailablilityCore() {
+        bool UpdateAvailabilityCore() {
             Log.Info("{0} availability update.", this);
             return ApplyAvailabilityEffect(context);
         }
