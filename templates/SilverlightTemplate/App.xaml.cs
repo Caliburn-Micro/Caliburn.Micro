@@ -1,12 +1,9 @@
-﻿namespace SilverlightTemplate
-{
-	using System.Windows;
+﻿namespace SilverlightTemplate {
+    using System.Windows;
 
-	public partial class App : Application
-	{
-		public App()
-		{
-			InitializeComponent();
-		}
-	}
+    public partial class App : Application {
+        public App() {
+            InitializeComponent();
+        }
+    }
 }

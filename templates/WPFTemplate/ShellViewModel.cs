@@ -1,4 +1,4 @@
-﻿namespace SilverlightTemplate {
+﻿namespace WPFTemplate {
     using System.ComponentModel.Composition;
 
     [Export(typeof(IShell))]

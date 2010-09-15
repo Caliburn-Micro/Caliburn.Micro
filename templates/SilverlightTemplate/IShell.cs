@@ -1,7 +1,3 @@
-﻿namespace SilverlightTemplate
-{
-	public interface IShell
-	{
-		
-	}
+﻿namespace SilverlightTemplate {
+    public interface IShell {}
 }

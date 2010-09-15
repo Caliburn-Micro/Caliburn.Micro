@@ -1,4 +1,4 @@
-﻿namespace SilverlightTemplate
+﻿namespace WPFTemplate
 {
 	using System;
 	using System.Collections.Generic;
@@ -20,7 +20,7 @@
 		        AssemblySource.Instance.Select(x => new AssemblyCatalog(x)).OfType<ComposablePartCatalog>()
 		        );
 
-			container = CompositionHost.Initialize(catalog);
+			container = new CompositionContainer(catalog);
 
 			var batch = new CompositionBatch();
 

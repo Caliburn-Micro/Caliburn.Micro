@@ -1,7 +1,7 @@
 ﻿<Application xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			 xmlns:local="clr-namespace:SilverlightTemplate"
-			 x:Class="SilverlightTemplate.App">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:SilverlightTemplate"
+             x:Class="SilverlightTemplate.App">
 
 	<Application.Resources>
 		<local:AppBootstrapper x:Key="bootstrapper" />
