@@ -14,7 +14,7 @@
     <Icon>__TemplateIcon.ico</Icon>
   </TemplateData>
   <TemplateContent>
-    <Project TargetFileName="$safeprojectname$.csproj" File="SilverlightTemplate.csproj" ReplaceParameters="true">
+    <Project TargetFileName="$safeprojectname$.csproj" File="WP7Template.csproj" ReplaceParameters="true">
     </Project>
   </TemplateContent>
 </VSTemplate>
