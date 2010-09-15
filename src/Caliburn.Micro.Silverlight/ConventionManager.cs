@@ -120,11 +120,10 @@
         /// <summary>
         /// Determines whether a particular dependency property already has a binding on the provided element.
         /// </summary>
-        public static Func<FrameworkElement, DependencyProperty, bool> HasBinding = (element, property) =>
-        {
+        public static Func<FrameworkElement, DependencyProperty, bool> HasBinding = (element, property) => {
             var exists = element.GetBindingExpression(property) != null;
 
-            if (exists)
+            if(exists)
                 Log.Info("Binding exists on {0}.", element.Name);
 
             return exists;
@@ -182,7 +181,7 @@
                             tabControl.ContentTemplate = DefaultDataTemplate;
                     }
 
-                    ConfigureSelector((Selector)element, viewModelType, path, property);
+                    ConfigureSelector((Selector)element, viewModelType, path);
                 };
             AddElementConvention<TabItem>(TabItem.ContentProperty, "DataContext", "DataContextChanged");
             AddElementConvention<Window>(Window.DataContextProperty, "DataContext", "Loaded");
@@ -198,7 +197,7 @@
                     if (!SetBinding(viewModelType, path, property, element, convention))
                         return;
 
-                    ConfigureSelector((Selector)element, viewModelType, path, property);
+                    ConfigureSelector((Selector)element, viewModelType, path);
                     ConfigureItemsControl((ItemsControl)element, property);
                 };
             AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", "Loaded")
@@ -266,7 +265,7 @@
             return propertyConvention ?? GetElementConvention(elementType.BaseType);
         }
 
-        private static void ConfigureItemsControl(ItemsControl itemsControl, PropertyInfo property) {
+        static void ConfigureItemsControl(ItemsControl itemsControl, PropertyInfo property) {
             if(string.IsNullOrEmpty(itemsControl.DisplayMemberPath)
                 && !HasBinding(itemsControl, ItemsControl.DisplayMemberPathProperty)
                     && itemsControl.ItemTemplate == null
@@ -279,7 +278,7 @@
             }
         }
 
-        private static void ConfigureSelector(Selector selector, Type viewModelType, string path, PropertyInfo property) {
+        static void ConfigureSelector(Selector selector, Type viewModelType, string path) {
             if(HasBinding(selector, Selector.SelectedItemProperty))
                 return;
 
