@@ -34,7 +34,7 @@ function match($candidate, $patterns)
 
 function copy-template ( $source, $destination, $exclude, $template_name)
 {
-    $ignore = "*.user","bin","obj"
+    $ignore = "*.user","bin","obj","_ReSharper.*"
     if($exclude -eq $true) { $ignore += ,"*.csproj" }
 
     write ("copy from " + $source.Name +  " >> "), ("    " + $destination)
@@ -117,7 +117,7 @@ del -force -recurse $output_folder
 $templates = dir $template_root | where {$_.psIsContainer -eq $true}
 md $output_folder | ignore
 
-foreach ($template in $templates | where {$_.Name -eq "WP7Template"}) # | where {$_.Name -eq "SilverlightTemplate"}
+foreach ($template in $templates) # | where {$_.Name -eq "SilverlightTemplate"}
 {
     $template_name = $template.Name.Replace("Template","")
     write ("Creating Template for " + $template_name)
