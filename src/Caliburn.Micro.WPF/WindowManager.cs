@@ -98,7 +98,29 @@
 
             var deactivatable = rootModel as IDeactivate;
             if (deactivatable != null)
-                view.Closed += (s, e) => deactivatable.Deactivate(true);
+            {
+                bool deactivatingFromView = false;
+                bool deactivateFromVM = false;
+
+                view.Closed += (s, e) => {
+                    if(deactivateFromVM)
+                        return;
+
+                    deactivatingFromView = true;
+                    deactivatable.Deactivate(true);
+                    deactivatingFromView = false;
+                };
+
+                deactivatable.Deactivated += (s, e) => {
+                    if(e.WasClosed && !deactivatingFromView) {
+                        deactivateFromVM = true;
+                        actuallyClosing = true;
+                        view.Close();
+                        actuallyClosing = false;
+                        deactivateFromVM = false;
+                    }
+                };
+            }
 
             var guard = rootModel as IGuardClose;
             if (guard != null)
