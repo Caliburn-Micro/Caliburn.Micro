@@ -95,6 +95,11 @@ function build-template-xml($doc, $root, $folder)
             $projectitem.SetAttribute("TargetFileName", $child.Name)
             $projectitem.InnerText =  $child.Name
 
+            if($child.Name -eq "readme.txt")
+            {
+                $projectitem.SetAttribute("OpenInEditor","true")
+            }
+
             $root.AppendChild( $projectitem ) | ignore
         }
     }
