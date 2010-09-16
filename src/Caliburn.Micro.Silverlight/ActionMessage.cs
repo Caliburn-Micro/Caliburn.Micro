@@ -7,6 +7,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
+    using System.Windows.Data;
     using System.Windows.Interactivity;
     using System.Windows.Markup;
     using System.Windows.Media;
@@ -21,6 +22,12 @@
     public class ActionMessage : TriggerAction<FrameworkElement>
     {
         static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
+
+        internal static readonly DependencyProperty HandlerProperty = DependencyProperty.RegisterAttached(
+                    "Handler",
+                    typeof(object),
+                    typeof(ActionMessage),
+                    new PropertyMetadata(HandlerPropertyChanged));
 
         /// <summary>
         /// Represents the method name of an action message.
@@ -90,9 +97,17 @@
                 if((bool)AssociatedObject.GetValue(View.IsLoadedProperty))
                     ElementLoaded(null, null);
                 else AssociatedObject.Loaded += ElementLoaded;
+
+                BindingOperations.SetBinding(this, HandlerProperty,
+                    new Binding {Path = new PropertyPath(Message.HandlerProperty), Source = AssociatedObject});
             }
 
             base.OnAttached();
+        }
+
+        static void HandlerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((ActionMessage)d).UpdateContext();
         }
 
         protected override void OnDetaching()
@@ -108,6 +123,11 @@
         }
 
         void ElementLoaded(object sender, RoutedEventArgs e)
+        {
+            UpdateContext();
+        }
+
+        void UpdateContext()
         {
             context = new ActionExecutionContext {
                 Message = this, 
