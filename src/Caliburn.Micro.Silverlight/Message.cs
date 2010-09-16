@@ -13,7 +13,15 @@
                 "Handler",
                 typeof(object),
                 typeof(Message),
-                null
+                new PropertyMetadata(OnHandlerChanged)
+                );
+
+        internal static readonly DependencyProperty HasHandlerProperty =
+            DependencyProperty.RegisterAttached(
+                "HasHandler",
+                typeof(bool),
+                typeof(Message),
+                new PropertyMetadata(false, OnHandlerChanged)
                 );
 
         /// <summary>
@@ -26,6 +34,11 @@
                 typeof(Message),
                 new PropertyMetadata(OnAttachChanged)
                 );
+
+        private static void OnHandlerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            d.SetValue(HasHandlerProperty, true);
+        }
 
         /// <summary>
         /// Sets the attached triggers and messages.

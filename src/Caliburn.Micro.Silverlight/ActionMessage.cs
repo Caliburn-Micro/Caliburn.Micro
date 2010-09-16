@@ -97,9 +97,6 @@
                 if((bool)AssociatedObject.GetValue(View.IsLoadedProperty))
                     ElementLoaded(null, null);
                 else AssociatedObject.Loaded += ElementLoaded;
-
-                BindingOperations.SetBinding(this, HandlerProperty,
-                    new Binding {Path = new PropertyPath(Message.HandlerProperty), Source = AssociatedObject});
             }
 
             base.OnAttached();
@@ -124,6 +121,17 @@
 
         void ElementLoaded(object sender, RoutedEventArgs e)
         {
+            DependencyObject currentElement = AssociatedObject;
+            while (currentElement != null)
+            {
+                if ((bool)currentElement.GetValue(Message.HasHandlerProperty))
+                {
+                    BindingOperations.SetBinding(this, HandlerProperty,
+                        new Binding { Path = new PropertyPath(Message.HandlerProperty), Source = currentElement });
+                    break;
+                }
+                currentElement = VisualTreeHelper.GetParent(currentElement);
+            }
             UpdateContext();
         }
 
