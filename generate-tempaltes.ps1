@@ -1,129 +1,30 @@
-$replace_list = "*.cs","*.xaml"
-
-function ignore( $stuff ){ $stuff | Out-Null }
-
-function open( $assembly )
-{
-    if ( $null -eq ([AppDomain]::CurrentDomain.GetAssemblies() |? { $_.FullName -eq $assembly }) )
-    {
-        [Reflection.Assembly]::Load($assembly) | ignore
-    }
-}
-
-function combine([string]$path1,[string]$path2){
-    $root = get-location
-    $part1 = [IO.Path]::Combine($root,$path1)
-    $part2 = [IO.Path]::Combine($part1,$path2)
-    $part2
-}
-
-function match($candidate, $patterns)
-{
-    $result = $false
-    foreach($pattern in $patterns)
-    {
-        if($candidate -like $pattern) 
-        {
-            $result = $true
-            break
-        }
-    }
-    
-    $result
-}
-
-function copy-template ( $source, $destination, $exclude, $template_name)
-{
-    $ignore = "*.user","bin","obj","_ReSharper.*"
-    if($exclude -eq $true) { $ignore += ,"*.csproj" }
-
-    write ("copy from " + $source.Name +  " >> "), ("    " + $destination)
-    
-    foreach($child in $source | dir)
-    {      
-        if( match $child.Name $ignore)
-        {
-            continue
-        }
-        
-        $source_path = combine $source.FullName $child.Name
-        
-        if($child.GetType().Name -eq "DirectoryInfo")
-        {
-            if($exclude -eq $false)
-            {
-                $sub = combine $destination $child.Name
-                if( (test-path $sub -pathType container) -eq $false) { md $sub | ignore }
-                
-                copy-template $child $sub $exclude $template_name
-            }
-        } else {        
-            $content = get-content -path $source_path
-
-            if( match $child.Name $replace_list )
-            {    
-                $content | foreach {$_ -replace "Caliburn.Micro", '$safeprojectname$.Framework' -replace $template_name, '$safeprojectname$' -replace "00000000-0000-0000-0000-000000000001",'$guid1$' } | Set-Content (combine $destination $child.Name)
-            } else {
-                copy $child.FullName $destination
-            }
-        }      
-    }
-}
-
-function build-template-xml($doc, $root, $folder)
-{
-    $ns = $vstemplate.VSTemplate.NamespaceURI
-
-    foreach($child in $folder | dir)
-    {      
-        if($child.Name -eq "__TemplateIcon.ico") { continue }
-        if($child.Name -eq "MyTemplate.vstemplate") { continue }
-
-        if($child -is [IO.DirectoryInfo])
-        {
-            $folder =  $doc.CreateElement("Folder", $ns)            
-            $folder.SetAttribute("Name", $child.Name)            
-            $folder.SetAttribute("TargetFolderName", $child.Name)
-            build-template-xml $doc $folder $child.FullName
-            $root.AppendChild( $folder ) | ignore
-
-        } else {
-            $shouldReplace = "false"
-            if( match $child.Name $replace_list ) { $shouldReplace = "true" }
-            $projectitem = $doc.CreateElement("ProjectItem", $ns)
-            $projectitem.SetAttribute("ReplaceParameters",$shouldReplace)
-            $projectitem.SetAttribute("TargetFileName", $child.Name)
-            $projectitem.InnerText =  $child.Name
-
-            if($child.Name -eq "readme.txt")
-            {
-                $projectitem.SetAttribute("OpenInEditor","true")
-            }
-
-            $root.AppendChild( $projectitem ) | ignore
-        }
-    }
-}
-
-open("WindowsBase, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35")
-$zip_assm = combine "Templates" "Ionic.Zip.dll"
-[Reflection.Assembly]::LoadFrom($zip_assm)
-
+. .\templates\template-functions.ps1
 clear-host
 
+open( "WindowsBase, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" )
+[Reflection.Assembly]::LoadFrom( (combine "Templates" "Ionic.Zip.dll") ) | ignore
+
+# files to replace text in
+$replace_list = "*.cs","*.xaml"
+
+# files to ignore per template
+$ignore_for = @{"WP7Template" = @("WindowManager.cs")}
+
+# relevant folder
 $template_root = "templates"
 $output_folder = "generated-templates"
 $source_folder = "src"
 $base_framework_template = combine $source_folder "Caliburn.Micro.Silverlight"
 
 write "Cleaning old artifacts",""
-
-del -force -recurse $output_folder
-$templates = dir $template_root | where {$_.psIsContainer -eq $true}
+del -force -recurse $output_folder -ErrorAction SilentlyContinue
 md $output_folder | ignore
-
-foreach ($template in $templates) # | where {$_.Name -eq "SilverlightTemplate"}
-{
+ 
+# | where {$_.Name -eq "SilverlightTemplate"}
+dir $template_root `
+  | where {$_.psIsContainer -eq $true} `
+  | foreach {
+    $template = $_
     $template_name = $template.Name.Replace("Template","")
     write ("Creating Template for " + $template_name)
     
