@@ -1,2 +1,2 @@
-Caliburn Micro for Silverlight
+Caliburn Micro for WP7
 http://caliburnmicro.codeplex.com/

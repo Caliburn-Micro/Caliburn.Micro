@@ -1,2 +1,2 @@
-Caliburn Micro for Silverlight
+Caliburn Micro for WPF
 http://caliburnmicro.codeplex.com/
