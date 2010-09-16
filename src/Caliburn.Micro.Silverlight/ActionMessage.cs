@@ -248,9 +248,16 @@
         /// </summary>
         public static Action<ActionExecutionContext> PrepareContext = context =>{
             SetMethodBinding(context);
-            if (context.Target == null || context.Method == null)
+            if (context.Target == null)
             {
                 var ex = new Exception(string.Format("No target found for method {0}.", context.Message.MethodName));
+                Log.Error(ex);
+                throw ex;
+            }
+            if (context.Method == null)
+            {
+                var ex = new Exception(string.Format("Method {0} not found on target of type {1}.", 
+                    context.Message.MethodName, context.Target.GetType().ToString()));
                 Log.Error(ex);
                 throw ex;
             }
