@@ -125,8 +125,7 @@
             {
                 if (Action.HasTargetSet(currentElement))
                 {
-                    BindingOperations.SetBinding(this, HandlerProperty,
-                        new Binding { Path = new PropertyPath(Message.HandlerProperty), Source = currentElement });
+                    BindingOperations.SetBinding(this, HandlerProperty, new Binding { Path = new PropertyPath(Message.HandlerProperty), Source = currentElement });
                     break;
                 }
                 currentElement = VisualTreeHelper.GetParent(currentElement);
@@ -266,9 +265,7 @@
         public static Action<ActionExecutionContext> PrepareContext = context =>{
             SetMethodBinding(context);
             if (context.Target == null || context.Method == null)
-            {
                 return;
-            }
 
             var guardName = "Can" + context.Method.Name;
             var targetType = context.Target.GetType();
