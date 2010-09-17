@@ -122,7 +122,7 @@
         void ElementLoaded(object sender, RoutedEventArgs e)
         {
             UpdateContext();
-
+#if !WP7
             DependencyObject currentElement;
             if(context.View == null) {
                 currentElement = AssociatedObject;
@@ -149,6 +149,7 @@
 #endif
 
             BindingOperations.SetBinding(this, HandlerProperty, binding);
+#endif
         }
 
         void UpdateContext()
