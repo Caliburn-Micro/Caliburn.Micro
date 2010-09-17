@@ -5,7 +5,7 @@ open( "WindowsBase, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad3
 [Reflection.Assembly]::LoadFrom( (combine "Templates" "Ionic.Zip.dll") ) | ignore
 
 # files to replace text in
-$replace_list = "*.cs","*.xaml"
+$replace_list = "*.cs","*.xaml","*.xml"
 
 # files to ignore per template
 $ignore_for = @{"WP7Template" = @("WindowManager.cs")}
