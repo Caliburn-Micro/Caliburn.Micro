@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
@@ -241,28 +240,26 @@
         /// </summary>
         public static Action<ActionExecutionContext> SetMethodBinding = context => {
             DependencyObject currentElement = context.Source;
-            MethodInfo actionMethod = null;
-            object currentTarget = null;
 
-            while(currentElement != null && actionMethod == null) {
-                currentTarget = currentElement.GetValue(Message.HandlerProperty);
+            while(currentElement != null) {
+                var hasExplicitTarget = (currentElement.ReadLocalValue(Action.TargetProperty) != DependencyProperty.UnsetValue)
+                    || (currentElement.ReadLocalValue(Action.TargetWithoutContextProperty) != DependencyProperty.UnsetValue);
+                if (hasExplicitTarget) {
+                    context.View = currentElement;
+                    context.Target = currentElement.GetValue(Message.HandlerProperty);
+                    if (context.Target != null)
+                        context.Method = context.Target.GetType().GetMethod(context.Message.MethodName);
+                    return;
+                }
 
-                if(currentTarget != null)
-                    actionMethod = currentTarget.GetType().GetMethod(context.Message.MethodName);
-
-                if(actionMethod == null)
-                    currentElement = VisualTreeHelper.GetParent(currentElement);
+                currentElement = VisualTreeHelper.GetParent(currentElement);
             }
 
-            if(actionMethod == null && context.Source.DataContext != null) {
-                currentTarget = context.Source.DataContext;
-                actionMethod = context.Source.DataContext.GetType().GetMethod(context.Message.MethodName);
-                currentElement = context.Source;
+            if(context.Source.DataContext != null) {
+                context.Target = context.Source.DataContext;
+                context.Method = context.Source.DataContext.GetType().GetMethod(context.Message.MethodName);
+                context.View = context.Source;
             }
-
-            context.Target = currentTarget;
-            context.Method = actionMethod;
-            context.View = currentElement;
         };
 
         /// <summary>
