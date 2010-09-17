@@ -123,7 +123,7 @@
             DependencyObject currentElement = AssociatedObject;
             while (currentElement != null)
             {
-                if ((bool)currentElement.GetValue(Message.HasHandlerProperty))
+                if (Action.HasTargetSet(currentElement))
                 {
                     BindingOperations.SetBinding(this, HandlerProperty,
                         new Binding { Path = new PropertyPath(Message.HandlerProperty), Source = currentElement });
@@ -242,9 +242,7 @@
             DependencyObject currentElement = context.Source;
 
             while(currentElement != null) {
-                var hasExplicitTarget = (currentElement.ReadLocalValue(Action.TargetProperty) != DependencyProperty.UnsetValue)
-                    || (currentElement.ReadLocalValue(Action.TargetWithoutContextProperty) != DependencyProperty.UnsetValue);
-                if (hasExplicitTarget) {
+                if (Action.HasTargetSet(currentElement)) {
                     context.View = currentElement;
                     context.Target = currentElement.GetValue(Message.HandlerProperty);
                     if (context.Target != null)

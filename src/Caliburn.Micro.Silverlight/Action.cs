@@ -74,6 +74,17 @@
             return d.GetValue(TargetWithoutContextProperty);
         }
 
+        ///<summary>
+        /// Checks if the <see cref="ActionMessage"/>-Target was set.
+        ///</summary>
+        ///<param name="element">DependencyObject to check</param>
+        ///<returns>True if Target or TargetWithoutContext was set on <paramref name="element"/></returns>
+        public static bool HasTargetSet(DependencyObject element)
+        {
+            return (element.ReadLocalValue(TargetProperty) != DependencyProperty.UnsetValue)
+              || (element.ReadLocalValue(TargetWithoutContextProperty) != DependencyProperty.UnsetValue);
+        }
+
         private static void OnTargetWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             SetTargetCore(e, d, false);
