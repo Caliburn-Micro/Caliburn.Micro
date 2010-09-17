@@ -113,7 +113,7 @@
             }
 
             Log.Info("Attaching message handler {0} to {1}.", target, d);
-            d.SetValue(Message.HandlerProperty, target);
+            Message.SetHandler(d, target);
         }
     }
 }

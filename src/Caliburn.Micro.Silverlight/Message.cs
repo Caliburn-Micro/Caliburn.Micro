@@ -6,8 +6,7 @@
     /// <summary>
     /// Host's attached properties related to routed UI messaging.
     /// </summary>
-    public static class Message
-    {
+    public static class Message {
         internal static readonly DependencyProperty HandlerProperty =
             DependencyProperty.RegisterAttached(
                 "Handler",
@@ -15,6 +14,26 @@
                 typeof(Message),
                 null
                 );
+
+        /// <summary>
+        /// Places a message handler on this element.
+        /// </summary>
+        /// <param name="d">The element.</param>
+        /// <param name="value">The message handler.</param>
+        public static void SetHandler(DependencyObject d, object value)
+        {
+            d.SetValue(HandlerProperty, value);
+        }
+
+        /// <summary>
+        /// Gets the message handler for this element.
+        /// </summary>
+        /// <param name="d">The element.</param>
+        /// <returns>The message handler.</returns>
+        public static object GetHandler(DependencyObject d)
+        {
+            return d.GetValue(HandlerProperty);
+        }
 
         /// <summary>
         /// A property definition representing attached triggers and messages.

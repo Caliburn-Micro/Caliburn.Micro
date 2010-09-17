@@ -23,10 +23,11 @@
         static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
 
         internal static readonly DependencyProperty HandlerProperty = DependencyProperty.RegisterAttached(
-                    "Handler",
-                    typeof(object),
-                    typeof(ActionMessage),
-                    new PropertyMetadata(HandlerPropertyChanged));
+            "Handler",
+            typeof(object),
+            typeof(ActionMessage),
+            new PropertyMetadata(HandlerPropertyChanged)
+            );
 
         /// <summary>
         /// Represents the method name of an action message.
@@ -120,17 +121,34 @@
 
         void ElementLoaded(object sender, RoutedEventArgs e)
         {
-            DependencyObject currentElement = AssociatedObject;
-            while (currentElement != null)
-            {
-                if (Action.HasTargetSet(currentElement))
-                {
-                    BindingOperations.SetBinding(this, HandlerProperty, new Binding { Path = new PropertyPath(Message.HandlerProperty), Source = currentElement });
-                    break;
-                }
-                currentElement = VisualTreeHelper.GetParent(currentElement);
-            }
             UpdateContext();
+
+            DependencyObject currentElement;
+            if(context.View == null) {
+                currentElement = AssociatedObject;
+                while (currentElement != null)
+                {
+                    if (Action.HasTargetSet(currentElement))
+                        break;
+
+                    currentElement = VisualTreeHelper.GetParent(currentElement);
+                }
+            }
+            else currentElement = context.View;
+
+#if NET
+            var binding = new Binding {
+                Path = new PropertyPath(Message.HandlerProperty), 
+                Source = currentElement
+            };
+#else
+            const string bindingText = "<Binding xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation\' xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro' Path='(cal:Message.Handler)' />";
+
+            var binding = (Binding)XamlReader.Load(bindingText);
+            binding.Source = currentElement;
+#endif
+
+            BindingOperations.SetBinding(this, HandlerProperty, binding);
         }
 
         void UpdateContext()
@@ -242,20 +260,35 @@
 
             while(currentElement != null) {
                 if (Action.HasTargetSet(currentElement)) {
-                    context.View = currentElement;
-                    context.Target = currentElement.GetValue(Message.HandlerProperty);
-                    if (context.Target != null)
-                        context.Method = context.Target.GetType().GetMethod(context.Message.MethodName);
-                    return;
+                    var target = Message.GetHandler(currentElement);
+                    if(target != null) {
+                        var method = target.GetType().GetMethod(context.Message.MethodName);
+                        if (method != null)
+                        {
+                            context.Method = method;
+                            context.Target = target;
+                            context.View = currentElement;
+                            return;
+                        }
+                    }
+                    else {
+                        context.View = currentElement;
+                        return;
+                    }
                 }
 
                 currentElement = VisualTreeHelper.GetParent(currentElement);
             }
 
             if(context.Source.DataContext != null) {
-                context.Target = context.Source.DataContext;
-                context.Method = context.Source.DataContext.GetType().GetMethod(context.Message.MethodName);
-                context.View = context.Source;
+                var target = context.Source.DataContext;
+                var method = target.GetType().GetMethod(context.Message.MethodName);
+
+                if(method != null) {
+                    context.Target = target;
+                    context.Method = method;
+                    context.View = context.Source;
+                }
             }
         };
 
