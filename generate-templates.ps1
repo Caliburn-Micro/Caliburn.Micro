@@ -81,7 +81,7 @@ dir $template_root `
 
     write "... zipping template directory"
     $zip = New-Object Ionic.Zip.ZipFile
-    $zip_output = combine $output_folder ("Caliburn_Mirco_" + $template_name + ".zip")
+    $zip_output = combine $output_folder ("Caliburn_Micro_" + $template_name + ".zip")
     $zip.UseUnicodeAsNecessary = $true
     $zip.AddDirectory($folder)
     $zip.Comment = ("This zip was created at " + [System.DateTime]::Now.ToString("G"))
