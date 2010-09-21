@@ -7,14 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.WPF", "Calib
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.WP7", "Caliburn.Micro.WP7\Caliburn.Micro.WP7.csproj", "{1AA45CEC-DF5D-49F7-B4E9-8CC32BCBD49C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{A69452A3-4A3F-4A84-BB54-A9D345C92053}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SilverlightTemplate", "..\templates\SilverlightTemplate\SilverlightTemplate.csproj", "{00000000-0000-0000-0000-000000000001}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WP7Template", "..\templates\WP7Template\WP7Template.csproj", "{79BB145E-AAD5-486C-A10B-8FFDAD788BC6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFTemplate", "..\templates\WPFTemplate\WPFTemplate.csproj", "{874E4BA1-F162-4CBC-A6DA-36A31991E31A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,47 +47,8 @@ Global
 		{1AA45CEC-DF5D-49F7-B4E9-8CC32BCBD49C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{1AA45CEC-DF5D-49F7-B4E9-8CC32BCBD49C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{1AA45CEC-DF5D-49F7-B4E9-8CC32BCBD49C}.Release|x86.ActiveCfg = Release|Any CPU
-		{00000000-0000-0000-0000-000000000001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{00000000-0000-0000-0000-000000000001}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{00000000-0000-0000-0000-000000000001}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{00000000-0000-0000-0000-000000000001}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{00000000-0000-0000-0000-000000000001}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{00000000-0000-0000-0000-000000000001}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{00000000-0000-0000-0000-000000000001}.Release|Any CPU.Build.0 = Release|Any CPU
-		{00000000-0000-0000-0000-000000000001}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{00000000-0000-0000-0000-000000000001}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{00000000-0000-0000-0000-000000000001}.Release|x86.ActiveCfg = Release|Any CPU
-		{79BB145E-AAD5-486C-A10B-8FFDAD788BC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{79BB145E-AAD5-486C-A10B-8FFDAD788BC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{79BB145E-AAD5-486C-A10B-8FFDAD788BC6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{79BB145E-AAD5-486C-A10B-8FFDAD788BC6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{79BB145E-AAD5-486C-A10B-8FFDAD788BC6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{79BB145E-AAD5-486C-A10B-8FFDAD788BC6}.Debug|Mixed Platforms.Deploy.0 = Debug|Any CPU
-		{79BB145E-AAD5-486C-A10B-8FFDAD788BC6}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{79BB145E-AAD5-486C-A10B-8FFDAD788BC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{79BB145E-AAD5-486C-A10B-8FFDAD788BC6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{79BB145E-AAD5-486C-A10B-8FFDAD788BC6}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{79BB145E-AAD5-486C-A10B-8FFDAD788BC6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{79BB145E-AAD5-486C-A10B-8FFDAD788BC6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{79BB145E-AAD5-486C-A10B-8FFDAD788BC6}.Release|Mixed Platforms.Deploy.0 = Release|Any CPU
-		{79BB145E-AAD5-486C-A10B-8FFDAD788BC6}.Release|x86.ActiveCfg = Release|Any CPU
-		{874E4BA1-F162-4CBC-A6DA-36A31991E31A}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{874E4BA1-F162-4CBC-A6DA-36A31991E31A}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{874E4BA1-F162-4CBC-A6DA-36A31991E31A}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{874E4BA1-F162-4CBC-A6DA-36A31991E31A}.Debug|x86.ActiveCfg = Debug|x86
-		{874E4BA1-F162-4CBC-A6DA-36A31991E31A}.Debug|x86.Build.0 = Debug|x86
-		{874E4BA1-F162-4CBC-A6DA-36A31991E31A}.Release|Any CPU.ActiveCfg = Release|x86
-		{874E4BA1-F162-4CBC-A6DA-36A31991E31A}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{874E4BA1-F162-4CBC-A6DA-36A31991E31A}.Release|Mixed Platforms.Build.0 = Release|x86
-		{874E4BA1-F162-4CBC-A6DA-36A31991E31A}.Release|x86.ActiveCfg = Release|x86
-		{874E4BA1-F162-4CBC-A6DA-36A31991E31A}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{00000000-0000-0000-0000-000000000001} = {A69452A3-4A3F-4A84-BB54-A9D345C92053}
-		{79BB145E-AAD5-486C-A10B-8FFDAD788BC6} = {A69452A3-4A3F-4A84-BB54-A9D345C92053}
-		{874E4BA1-F162-4CBC-A6DA-36A31991E31A} = {A69452A3-4A3F-4A84-BB54-A9D345C92053}
 	EndGlobalSection
 EndGlobal
