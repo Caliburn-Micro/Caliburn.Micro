@@ -287,7 +287,7 @@
             var baseName = path.Substring(index);
 
             foreach (var potentialName in DerivePotentialSelectionNames(baseName)) {
-                if (viewModelType.GetProperty(potentialName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) != null) {
+                if (viewModelType.GetPropertyCaseInsensitive(potentialName) != null) {
                     var selectionPath = path.Replace(baseName, potentialName);
                     BindingOperations.SetBinding(selector, Selector.SelectedItemProperty, new Binding(selectionPath) { Mode = BindingMode.TwoWay });
                     return;

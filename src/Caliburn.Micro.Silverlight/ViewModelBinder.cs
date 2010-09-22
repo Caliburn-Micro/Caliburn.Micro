@@ -52,12 +52,10 @@
                 var cleanName = element.Name.Trim('_');
                 var parts = cleanName.Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
 
-                var property = viewModelType
-                    .GetProperty(parts[0], BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                var property = viewModelType.GetPropertyCaseInsensitive(parts[0]);
 
                 for (int i = 1; i < parts.Length && property != null; i++) {
-                    property = property
-                        .PropertyType.GetProperty(parts[i], BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                    property = property.PropertyType.GetPropertyCaseInsensitive(parts[i]);
                 }
 
                 if (property == null) {
