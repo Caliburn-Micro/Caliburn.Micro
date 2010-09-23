@@ -1,13 +1,13 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
   <TemplateData>
-    <Name>Caliburn Mirco for Windows Phone</Name>
+    <Name>Caliburn Micro for Windows Phone</Name>
     <Description>A basic Caliburn Micro project for Windows Phone 7 using MEF</Description>
     <ProjectType>CSharp</ProjectType>
     <ProjectSubType>
     </ProjectSubType>
     <SortOrder>1000</SortOrder>
     <CreateNewFolder>true</CreateNewFolder>
-    <DefaultName>CaliburnMircoWindowsPhone</DefaultName>
+    <DefaultName>CaliburnMicroWindowsPhone</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
     <LocationField>Enabled</LocationField>
     <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
