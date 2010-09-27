@@ -1,4 +1,6 @@
-﻿namespace Caliburn.Micro
+﻿using System.Reflection;
+
+namespace Caliburn.Micro
 {
     using System;
     using System.Collections.Generic;
@@ -254,6 +256,48 @@
         };
 
         /// <summary>
+        /// Finds the method on the target matching the specified message.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="message">The message.</param>
+        /// <returns>The matching method, if available.</returns>
+        public static Func<ActionMessage, object, MethodInfo> GetTargetMethod = (message, target) =>
+        {
+            var methods = target.GetType().GetMethods();
+            foreach (var method in methods)
+            {
+                if (method.Name != message.MethodName) continue;
+
+                var methodParameters = method.GetParameters();
+                if (message.Parameters.Count != methodParameters.Length) continue;
+
+                bool isMatch = true;
+                for (int i = 0; i < message.Parameters.Count; i++)
+                {
+                    var expectedType = methodParameters[i].ParameterType;
+                    var value = message.Parameters[i].Value;
+
+                    if (value == null)
+                    {
+                        if (expectedType.IsClass || expectedType.IsInterface) continue;
+
+                        isMatch = false;
+                        break;
+                    }
+
+                    if (expectedType.IsAssignableFrom(value.GetType())) continue;
+
+                    isMatch = false;
+                    break;
+                }
+
+                if (isMatch) return method;
+            }
+
+            return null;
+        };
+
+        /// <summary>
         /// Sets the target, method and view on the context. Uses a bubbling strategy by default.
         /// </summary>
         public static Action<ActionExecutionContext> SetMethodBinding = context => {
@@ -263,7 +307,7 @@
                 if (Action.HasTargetSet(currentElement)) {
                     var target = Message.GetHandler(currentElement);
                     if(target != null) {
-                        var method = target.GetType().GetMethod(context.Message.MethodName);
+                        var method = GetTargetMethod(context.Message, target);
                         if (method != null)
                         {
                             context.Method = method;
@@ -283,7 +327,7 @@
 
             if(context.Source.DataContext != null) {
                 var target = context.Source.DataContext;
-                var method = target.GetType().GetMethod(context.Message.MethodName);
+                var method = GetTargetMethod(context.Message, target);
 
                 if(method != null) {
                     context.Target = target;
