@@ -26,7 +26,7 @@
 
             var type = value.GetType();
 
-            if((type.IsClass || type.IsInterface) && !typeof(string).IsAssignableFrom(type))
+            if(IsComplexType(type))
             {
                 var key = GetStateKey(value, rootKey);
                 var conductor = value as IConductor;
@@ -149,7 +149,7 @@
         protected virtual string GetStateKey(object instance, string rootKey)
         {
             var key = string.IsNullOrEmpty(rootKey) ? string.Empty : rootKey + "|";
-            return key += instance.GetType().Name;
+            return key + instance.GetType().Name;
         }
     }
 }
