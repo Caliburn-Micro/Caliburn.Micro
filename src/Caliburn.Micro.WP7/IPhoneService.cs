@@ -25,6 +25,11 @@ namespace Caliburn.Micro
         IdleDetectionMode UserIdleDetectionMode { get; set; }
 
         /// <summary>
+        /// Gets the mode in which the application was started.
+        /// </summary>
+        StartupMode StartupMode { get; }
+
+        /// <summary>
         /// Occurs when a fresh instance of the application is launching.
         /// </summary>
         event EventHandler<LaunchingEventArgs> Launching;
@@ -67,6 +72,14 @@ namespace Caliburn.Micro
         public IDictionary<string, object> State
         {
             get { return phoneService.State; }
+        }
+
+        /// <summary>
+        /// Gets the mode in which the application was started.
+        /// </summary>
+        public StartupMode StartupMode
+        {
+            get { return phoneService.StartupMode; }
         }
 
         /// <summary>
