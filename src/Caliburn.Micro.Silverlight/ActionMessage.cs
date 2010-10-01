@@ -243,17 +243,21 @@ namespace Caliburn.Micro
         /// Applies an availability effect, such as IsEnabled, to an element.
         /// </summary>
         /// <remarks>Returns a value indicating whether or not the action is available.</remarks>
-        public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context =>{
+        public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context =>
+        {
 #if SILVERLIGHT
-            if(!(context.Source is Control))
+            if (!(context.Source is Control))
                 return true;
 #endif
 
 #if SILVERLIGHT
-            return ((Control)context.Source).IsEnabled = context.CanExecute();
+            var source = (Control)context.Source;
 #else
-            return context.Source.IsEnabled = context.CanExecute();
+            var source = context.Source;
 #endif
+            if (context.CanExecute != null) 
+                source.IsEnabled = context.CanExecute();
+            return source.IsEnabled;
         };
 
         /// <summary>

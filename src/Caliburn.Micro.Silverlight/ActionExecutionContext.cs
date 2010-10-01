@@ -54,7 +54,7 @@
         /// Determines whether the action can execute.
         /// </summary>
         /// <remarks>Returns true if the action can execute, false otherwise.</remarks>
-        public Func<bool> CanExecute = () => true;
+        public Func<bool> CanExecute;
 
         /// <summary>
         /// Gets or sets additional data needed to invoke the action.
