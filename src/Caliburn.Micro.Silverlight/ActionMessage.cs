@@ -5,6 +5,7 @@ namespace Caliburn.Micro
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
@@ -261,40 +262,12 @@ namespace Caliburn.Micro
         /// <param name="target">The target.</param>
         /// <param name="message">The message.</param>
         /// <returns>The matching method, if available.</returns>
-        public static Func<ActionMessage, object, MethodInfo> GetTargetMethod = (message, target) =>
-        {
-            var methods = target.GetType().GetMethods();
-            foreach (var method in methods)
-            {
-                if (method.Name != message.MethodName) continue;
-
-                var methodParameters = method.GetParameters();
-                if (message.Parameters.Count != methodParameters.Length) continue;
-
-                bool isMatch = true;
-                for (int i = 0; i < message.Parameters.Count; i++)
-                {
-                    var expectedType = methodParameters[i].ParameterType;
-                    var value = message.Parameters[i].Value;
-
-                    if (value == null)
-                    {
-                        if (expectedType.IsClass || expectedType.IsInterface) continue;
-
-                        isMatch = false;
-                        break;
-                    }
-
-                    if (expectedType.IsAssignableFrom(value.GetType())) continue;
-
-                    isMatch = false;
-                    break;
-                }
-
-                if (isMatch) return method;
-            }
-
-            return null;
+        public static Func<ActionMessage, object, MethodInfo> GetTargetMethod = (message, target) => {
+            return (from method in target.GetType().GetMethods()
+                    where method.Name == message.MethodName
+                    let methodParameters = method.GetParameters()
+                    where message.Parameters.Count == methodParameters.Length
+                    select method).FirstOrDefault();
         };
 
         /// <summary>
