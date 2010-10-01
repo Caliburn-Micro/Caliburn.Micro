@@ -2,9 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Navigation;
+    using Microsoft.Phone.Shell;
     using Microsoft.Phone.Tasks;
 
     /// <summary>
@@ -96,6 +98,12 @@
             return key;
         }
 
+        interface ITaskManager
+        {
+            void TryLaunchTask(ILaunchTask launcher, TaskLaunchEventArgs args);
+            void CheckForTaskCompletion(object potentialHandler);
+        }
+
         class ChooserManager<TChooser, TResult> : ITaskManager
             where TChooser : ChooserBase<TResult>, new()
             where TResult : TaskEventArgs
@@ -129,7 +137,8 @@
                     configurator.ConfigureTask(chooser);
 
                 phoneService.State[StateKey] = activator.GetKey(launcher, string.Empty);
-
+                toCheck.Clear();
+                toCheck.Add(new WeakReference(launcher));
                 chooser.Show();
             }
 
@@ -160,6 +169,13 @@
 
             void OnChooserCompleted(object sender, TResult e)
             {
+                if (phoneService.StartupMode == StartupMode.Launch) {
+                    toCheck.Select(weakReference => weakReference.Target)
+                        .OfType<ILaunchChooser<TResult>>()
+                        .First().Handle(e);
+                    return;
+                }
+
                 lastResult = e;
                 eventRaised = true;
 
@@ -251,12 +267,6 @@
                     });
                 }
             }
-        }
-
-        interface ITaskManager
-        {
-            void TryLaunchTask(ILaunchTask launcher, TaskLaunchEventArgs args);
-            void CheckForTaskCompletion(object potentialHandler);
         }
 
         class LauncherManager<TTask> : ITaskManager

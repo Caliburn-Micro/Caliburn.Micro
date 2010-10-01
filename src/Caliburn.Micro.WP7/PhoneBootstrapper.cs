@@ -42,7 +42,7 @@
             if (PhoneApplicationInitialized)
                 return;
 
-            RootFrame = new PhoneApplicationFrame();
+            RootFrame = CreatePhoneApplicationFrame();
             RootFrame.Navigated += OnNavigated;
 
             PhoneApplicationInitialized = true;
@@ -52,6 +52,14 @@
         {
             if (Application.RootVisual != RootFrame)
                 Application.RootVisual = RootFrame;
+        }
+
+        /// <summary>
+        /// Creates the root frame used by the application.
+        /// </summary>
+        /// <returns>The frame.</returns>
+        protected virtual PhoneApplicationFrame CreatePhoneApplicationFrame() {
+            return new PhoneApplicationFrame();
         }
 
         /// <summary>

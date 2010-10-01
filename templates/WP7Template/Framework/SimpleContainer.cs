@@ -101,7 +101,7 @@
                 : entries.Where(x => x.Service == service && x.Key == key).FirstOrDefault();
         }
 
-        object BuildInstance(Type type)
+        protected object BuildInstance(Type type)
         {
             var args = DetermineConstructorArgs(type);
             return ActivateInstance(type, args);
