@@ -62,8 +62,8 @@ function copy-template ( $source, $destination, $exclude, $template_name)
             $content = get-content -path $source_path
 
             if( match $child.Name $replace_list )
-            {    
-                $content | foreach {$_ -replace "Caliburn.Micro", '$safeprojectname$.Framework' -replace $template_name, '$safeprojectname$' -replace "00000000-0000-0000-0000-000000000001",'$guid1$' } | Set-Content (combine $destination $child.Name)
+            {                	
+                $content | foreach {$_ -replace "assembly=Caliburn.Micro", 'assembly=$safeprojectname$' -replace "Caliburn.Micro", '$safeprojectname$.Framework' -replace $template_name, '$safeprojectname$' -replace "00000000-0000-0000-0000-000000000001",'$guid1$' } | Set-Content (combine $destination $child.Name)
             } else {
                 copy $child.FullName $destination
             }
