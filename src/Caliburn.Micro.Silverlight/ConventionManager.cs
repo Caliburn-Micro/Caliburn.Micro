@@ -274,7 +274,15 @@
                 var itemType = property.PropertyType.GetGenericArguments().First();
                 if(!itemType.IsValueType && !typeof(string).IsAssignableFrom(itemType))
 #endif
+#if !SILVERLIGHT && !WP7
+                    if (itemsControl.ItemTemplateSelector == null)
+                    {
+                        itemsControl.ItemTemplate = DefaultDataTemplate;
+                    }
+#else
                     itemsControl.ItemTemplate = DefaultDataTemplate;
+#endif
+
             }
         }
 
