@@ -115,6 +115,7 @@
             bool eventHandled;
             bool eventRaised;
             TResult lastResult;
+            bool handledActivate;
 
             public ChooserManager(InstanceActivator activator, IPhoneService phoneService)
             {
@@ -127,8 +128,8 @@
                 get { return typeof(TChooser).AssemblyQualifiedName; }
             }
 
-            public void TryLaunchTask(ILaunchTask launcher, TaskLaunchEventArgs args)
-            {
+            public void TryLaunchTask(ILaunchTask launcher, TaskLaunchEventArgs args) {
+                eventHandled = false;
                 if(!typeof(TChooser).IsAssignableFrom(args.TaskType))
                     return;
 
@@ -169,13 +170,16 @@
 
             void OnChooserCompleted(object sender, TResult e)
             {
-                if (phoneService.StartupMode == StartupMode.Launch) {
+                if (phoneService.StartupMode == StartupMode.Launch || handledActivate) {
                     toCheck.Select(weakReference => weakReference.Target)
                         .OfType<ILaunchChooser<TResult>>()
                         .First().Handle(e);
+                    eventHandled = true;
+                    toCheck.Clear();
                     return;
                 }
 
+                handledActivate = true;
                 lastResult = e;
                 eventRaised = true;
 
