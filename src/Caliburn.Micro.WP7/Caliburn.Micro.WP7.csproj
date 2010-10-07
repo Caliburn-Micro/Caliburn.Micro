@@ -172,6 +172,7 @@
     </Compile>
     <Compile Include="ActionDelegate.cs" />
     <Compile Include="AttachedCollection.cs" />
+    <Compile Include="CustomAppBar.cs" />
     <Compile Include="IConfigureTask.cs" />
     <Compile Include="ILaunchChooser.cs" />
     <Compile Include="ILaunchTask.cs" />

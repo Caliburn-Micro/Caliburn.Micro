@@ -6,6 +6,9 @@
     using System.Reflection;
     using System.Windows;
     using System.Windows.Interactivity;
+#if WP7
+    using Microsoft.Phone.Controls;
+#endif
 
     /// <summary>
     /// Binds a view to a view model.
@@ -169,8 +172,55 @@
 
             BindActions(namedElements, viewModelType);
             BindProperties(namedElements, viewModelType);
+#if WP7
+            BindAppBar(view);
+#endif
 
             view.SetValue(ConventionsAppliedProperty, true);
         };
+
+#if WP7
+        static void BindAppBar(DependencyObject view) {
+            var page = view as PhoneApplicationPage;
+            if (page == null || page.ApplicationBar == null)
+                return;
+
+            var triggers = Interaction.GetTriggers(view);
+
+            foreach(var item in page.ApplicationBar.Buttons) {
+                var button = item as AppBarButton;
+                if (button == null)
+                    return;
+
+                var parsedTrigger = Parser.Parse(view, button.Message).First();
+                var trigger = new AppBarButtonTrigger(button);
+                var actionMessages = parsedTrigger.Actions.OfType<ActionMessage>().ToList();
+                actionMessages.Apply(x => {
+                    x.buttonSource = button;
+                    parsedTrigger.Actions.Remove(x);
+                    trigger.Actions.Add(x);
+                });
+                
+                triggers.Add(trigger);
+            }
+
+            foreach (var item in page.ApplicationBar.MenuItems) {
+                var menuItem = item as AppBarMenuItem;
+                if (menuItem == null)
+                    return;
+
+                var parsedTrigger = Parser.Parse(view, menuItem.Message).First();
+                var trigger = new AppBarMenuItemTrigger(menuItem);
+                var actionMessages = parsedTrigger.Actions.OfType<ActionMessage>().ToList();
+                actionMessages.Apply(x => {
+                    x.menuItemSource = menuItem;
+                    parsedTrigger.Actions.Remove(x);
+                    trigger.Actions.Add(x);
+                });
+
+                triggers.Add(trigger);
+            }
+        }
+#endif
     }
 }
