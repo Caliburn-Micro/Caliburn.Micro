@@ -66,7 +66,7 @@
         static ActionMessage CreateMessage(DependencyObject target, string messageText)
         {
             var message = new ActionMessage();
-            messageText = messageText.Replace("Action", string.Empty);
+            messageText = Regex.Replace(messageText, "^Action", string.Empty);
 
             var openingParenthesisIndex = messageText.IndexOf('(');
             if (openingParenthesisIndex < 0) openingParenthesisIndex = messageText.Length;
