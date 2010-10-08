@@ -175,7 +175,7 @@
                         return;
 
                     var tabControl = (TabControl)element;
-                    if(tabControl.ContentTemplate == null && property.PropertyType.IsGenericType) {
+                    if(tabControl.ContentTemplate == null && tabControl.ContentTemplateSelector == null && property.PropertyType.IsGenericType) {
                         var itemType = property.PropertyType.GetGenericArguments().First();
                         if(!itemType.IsValueType && !typeof(string).IsAssignableFrom(itemType))
                             tabControl.ContentTemplate = DefaultDataTemplate;
