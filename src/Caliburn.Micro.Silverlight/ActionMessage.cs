@@ -56,6 +56,11 @@ namespace Caliburn.Micro
 
         ActionExecutionContext context;
 
+#if WP7
+        internal AppBarButton buttonSource;
+        internal AppBarMenuItem menuItemSource;
+#endif
+
         /// <summary>
         /// Creates an instance of <see cref="ActionMessage"/>.
         /// </summary>
@@ -245,6 +250,19 @@ namespace Caliburn.Micro
         /// <remarks>Returns a value indicating whether or not the action is available.</remarks>
         public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context =>
         {
+#if WP7
+            if (context.Message.buttonSource != null) {
+                if(context.CanExecute != null)
+                    context.Message.buttonSource.IsEnabled = context.CanExecute();
+                return context.Message.buttonSource.IsEnabled;
+            }
+            if (context.Message.menuItemSource != null) {
+                if(context.CanExecute != null)
+                    context.Message.menuItemSource.IsEnabled = context.CanExecute();
+                return context.Message.menuItemSource.IsEnabled;
+            }
+#endif
+
 #if SILVERLIGHT
             if (!(context.Source is Control))
                 return true;

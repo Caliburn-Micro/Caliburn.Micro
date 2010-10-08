@@ -101,7 +101,7 @@
         {
             var fe = RootFrame.Content as FrameworkElement;
             if (fe != null && fe.DataContext != null)
-                return new object[] { fe.DataContext };
+                return new [] { fe.DataContext };
             return new object[0];
         }
 
@@ -113,7 +113,7 @@
         {
             var fe = RootFrame.Content as FrameworkElement;
             if (fe != null && fe.DataContext != null)
-                return new object[] { fe.DataContext };
+                return new [] { fe.DataContext };
             return new object[0];
         }
 
