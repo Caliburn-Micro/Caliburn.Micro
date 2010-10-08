@@ -28,6 +28,15 @@
         IEnumerator<T> enumerator;
         bool finalResult;
         Action<bool, IEnumerable<T>> callback;
+        bool closeConductedItemsWhenConductorCannotClose;
+
+        /// <summary>
+        /// Creates an instance of the class.
+        /// </summary>
+        /// <param name="closeConductedItemsWhenConductorCannotClose">Indicates that even if all conducted items are not closable, those that are should be closed. The default is true.</param>
+        public DefaultCloseStrategy(bool closeConductedItemsWhenConductorCannotClose = true) {
+            this.closeConductedItemsWhenConductorCannotClose = closeConductedItemsWhenConductorCannotClose;
+        }
 
         /// <summary>
         /// Executes the strategy.
@@ -51,7 +60,7 @@
 
             if (!enumerator.MoveNext())
             {
-                callback(finalResult, closable);
+                callback(finalResult, closeConductedItemsWhenConductorCannotClose ? closable : new List<T>());
                 closable = null;
             }
             else

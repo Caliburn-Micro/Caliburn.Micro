@@ -129,7 +129,10 @@
                 /// <param name="callback">The implementer calls this action with the result of the close check.</param>
                 public override void CanClose(Action<bool> callback)
                 {
-                    CloseStrategy.Execute(items, (canClose, closable) => callback(canClose));
+                    CloseStrategy.Execute(items, (canClose, closable) => {
+                        closable.Apply(CloseItemCore);
+                        callback(canClose);
+                    });
                 }
 
                 /// <summary>
