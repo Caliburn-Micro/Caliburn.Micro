@@ -28,7 +28,7 @@
         IEnumerator<T> enumerator;
         bool finalResult;
         Action<bool, IEnumerable<T>> callback;
-        bool closeConductedItemsWhenConductorCannotClose;
+        readonly bool closeConductedItemsWhenConductorCannotClose;
 
         /// <summary>
         /// Creates an instance of the class.
