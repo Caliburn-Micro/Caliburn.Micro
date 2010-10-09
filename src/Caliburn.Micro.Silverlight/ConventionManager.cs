@@ -28,22 +28,32 @@
         /// </summary>
         public static IValueConverter BooleanToVisibilityConverter = new BooleanToVisibilityConverter();
 
+        /// <summary>
+        /// The default DataTemplate used for ItemsControls when required.
+        /// </summary>
+        public static DataTemplate DefaultItemTemplate = (DataTemplate)
 #if SILVERLIGHT
-        /// <summary>
-        /// The default DataTemplate used for ItemsControls when required.
-        /// </summary>
-        public static DataTemplate DefaultDataTemplate = (DataTemplate)XamlReader.Load(
+        XamlReader.Load(
 #else
-        /// <summary>
-        /// The default DataTemplate used for ItemsControls when required.
-        /// </summary>
-        public static DataTemplate DefaultDataTemplate = (DataTemplate)XamlReader.Parse(
+        XamlReader.Parse(
 #endif
             "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' " +
                           "xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro'> " +
                 "<ContentControl cal:View.Model=\"{Binding}\" VerticalContentAlignment=\"Stretch\" HorizontalContentAlignment=\"Stretch\" />" +
             "</DataTemplate>"
             );
+
+        /// <summary>
+        /// The default DataTemplate used for Headered controls when required.
+        /// </summary>
+        public static DataTemplate DefaultHeaderTemplate = (DataTemplate)
+#if SILVERLIGHT
+        XamlReader.Load(
+#else
+        XamlReader.Parse(
+#endif
+            "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'><TextBlock Text=\"{Binding DisplayName, Mode=TwoWay}\" /></DataTemplate>"
+        );
 
         static readonly Dictionary<Type, ElementConvention> ElementConventions = new Dictionary<Type, ElementConvention>();
 
@@ -178,10 +188,13 @@
                     if(tabControl.ContentTemplate == null && tabControl.ContentTemplateSelector == null && property.PropertyType.IsGenericType) {
                         var itemType = property.PropertyType.GetGenericArguments().First();
                         if(!itemType.IsValueType && !typeof(string).IsAssignableFrom(itemType))
-                            tabControl.ContentTemplate = DefaultDataTemplate;
+                            tabControl.ContentTemplate = DefaultItemTemplate;
                     }
 
-                    ConfigureSelector((Selector)element, viewModelType, path);
+                    ConfigureSelectedItem(element, Selector.SelectedItemProperty, viewModelType, path);
+
+                    if(string.IsNullOrEmpty(tabControl.DisplayMemberPath))
+                        ApplyHeaderTemplate(tabControl, TabControl.ItemTemplateProperty, viewModelType);
                 };
             AddElementConvention<TabItem>(TabItem.ContentProperty, "DataContext", "DataContextChanged");
             AddElementConvention<Window>(Window.DataContextProperty, "DataContext", "Loaded");
@@ -197,7 +210,7 @@
                     if (!SetBinding(viewModelType, path, property, element, convention))
                         return;
 
-                    ConfigureSelector((Selector)element, viewModelType, path);
+                    ConfigureSelectedItem(element, Selector.SelectedItemProperty,viewModelType, path);
                     ConfigureItemsControl((ItemsControl)element, property);
                 };
             AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", "Loaded")
@@ -276,18 +289,23 @@
 #endif
 #if !SILVERLIGHT && !WP7
                     if (itemsControl.ItemTemplateSelector == null)
-                    {
-                        itemsControl.ItemTemplate = DefaultDataTemplate;
-                    }
+                        itemsControl.ItemTemplate = DefaultItemTemplate;
 #else
-                    itemsControl.ItemTemplate = DefaultDataTemplate;
+                    itemsControl.ItemTemplate = DefaultItemTemplate;
 #endif
 
             }
         }
 
-        static void ConfigureSelector(Selector selector, Type viewModelType, string path) {
-            if(HasBinding(selector, Selector.SelectedItemProperty))
+        /// <summary>
+        /// Configures the selected item convention.
+        /// </summary>
+        /// <param name="selector">The element that has a SelectedItem property.</param>
+        /// <param name="selectedItemProperty">The SelectedItem property.</param>
+        /// <param name="viewModelType">The view model type.</param>
+        /// <param name="path">The property path.</param>
+        public static void ConfigureSelectedItem(FrameworkElement selector, DependencyProperty selectedItemProperty, Type viewModelType, string path) {
+            if(HasBinding(selector, selectedItemProperty))
                 return;
 
             var index = path.LastIndexOf('.');
@@ -297,10 +315,26 @@
             foreach (var potentialName in DerivePotentialSelectionNames(baseName)) {
                 if (viewModelType.GetPropertyCaseInsensitive(potentialName) != null) {
                     var selectionPath = path.Replace(baseName, potentialName);
-                    BindingOperations.SetBinding(selector, Selector.SelectedItemProperty, new Binding(selectionPath) { Mode = BindingMode.TwoWay });
+                    BindingOperations.SetBinding(selector, selectedItemProperty, new Binding(selectionPath) { Mode = BindingMode.TwoWay });
                     return;
                 }
             }
+        }
+
+        /// <summary>
+        /// Applies a header template based on <see cref="IHaveDisplayName"/>
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="headerTemplateProperty"></param>
+        /// <param name="viewModelType"></param>
+        public static void ApplyHeaderTemplate(FrameworkElement element, DependencyProperty headerTemplateProperty, Type viewModelType) {
+            var template = element.GetValue(headerTemplateProperty);
+
+            if (template != null
+                || !typeof(IHaveDisplayName).IsAssignableFrom(viewModelType))
+                return;
+
+            element.SetValue(headerTemplateProperty, DefaultHeaderTemplate);
         }
 
 #if SILVERLIGHT
