@@ -15,11 +15,6 @@ namespace Caliburn.Micro
         IDictionary<string, object> State { get; }
 
         /// <summary>
-        /// The application idle detection mode.
-        /// </summary>
-        IdleDetectionMode ApplicationIdleDetectionMode { get; set; }
-
-        /// <summary>
         /// The user idle detedction mode.
         /// </summary>
         IdleDetectionMode UserIdleDetectionMode { get; set; }
@@ -80,15 +75,6 @@ namespace Caliburn.Micro
         public StartupMode StartupMode
         {
             get { return phoneService.StartupMode; }
-        }
-
-        /// <summary>
-        /// The application idle detection mode.
-        /// </summary>
-        public IdleDetectionMode ApplicationIdleDetectionMode
-        {
-            get { return phoneService.ApplicationIdleDetectionMode; }
-            set { phoneService.ApplicationIdleDetectionMode = value; }
         }
 
         /// <summary>
