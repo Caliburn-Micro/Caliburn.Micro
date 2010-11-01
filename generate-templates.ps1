@@ -91,3 +91,26 @@ dir $template_root `
 
     write "__________"
 }
+
+"Copying Templates to Visual Studio's project template directory"
+
+$my_docs = [Environment]::GetFolderPath( [Environment+SpecialFolder]::MyDocuments )
+$vs_template_path = combine $my_docs "Visual Studio 2010\Templates\ProjectTemplates\Visual C#"
+$caliburn_template_path = combine $vs_template_path "Caliburn"
+
+if( [IO.Directory]::Exists($vs_template_path) -eq $false ) {
+    "The expected path for Visual Studio 2010 templates was not found:"
+    $vs_template_path
+    "Please copy the generated templates manually."
+} else {
+    
+    if( [IO.Directory]::Exists($caliburn_template_path) -eq $false ) {
+        md $caliburn_template_path | ignore
+    }
+
+    foreach($child in (dir $output_folder "*.zip" ))
+    {  
+        copy $child.FullName $caliburn_template_path
+    }
+    $caliburn_template_path
+}
