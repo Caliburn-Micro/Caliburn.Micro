@@ -205,39 +205,36 @@
         /// <summary>
         /// Tries to close this instance by asking its Parent to initiate shutdown or by asking its corresponding default view to close.
         /// </summary>
-        public void TryClose()
-        {
-            if(Parent != null)
-                Parent.CloseItem(this);
-            else
-            {
-                var view = GetView(null);
+        public void TryClose() {
+            Execute.OnUIThread(() => {
+                if(Parent != null)
+                    Parent.CloseItem(this);
+                else {
+                    var view = GetView(null);
 
-                if(view == null)
-                {
-                    var ex = new NotSupportedException("A Parent or default view is required.");
-                    Log.Error(ex);
-                    throw ex;
+                    if(view == null) {
+                        var ex = new NotSupportedException("A Parent or default view is required.");
+                        Log.Error(ex);
+                        throw ex;
+                    }
+
+                    var method = view.GetType().GetMethod("Close");
+                    if(method != null) {
+                        method.Invoke(view, null);
+                        return;
+                    }
+
+                    var property = view.GetType().GetProperty("IsOpen");
+                    if(property != null) {
+                        property.SetValue(view, false, new object[] {});
+                        return;
+                    }
+
+                    var ex2 = new NotSupportedException("The default view does not support Close/IsOpen.");
+                    Log.Error(ex2);
+                    throw ex2;
                 }
-
-                var method = view.GetType().GetMethod("Close");
-                if(method != null)
-                {
-                    method.Invoke(view, null);
-                    return;
-                }
-
-                var property = view.GetType().GetProperty("IsOpen");
-                if(property != null)
-                {
-                    property.SetValue(view, false, new object[] {});
-                    return;
-                }
-
-                var ex2 = new NotSupportedException("The default view does not support Close/IsOpen.");
-                Log.Error(ex2);
-                throw ex2;
-            }
+            });
         }
 
 #if !SILVERLIGHT
@@ -249,16 +246,18 @@
         /// <param name="dialogResult">The dialog result.</param>
         public virtual void TryClose(bool? dialogResult)
         {
-            var view = GetView(null);
+            Execute.OnUIThread(() => {
+                var view = GetView(null);
 
-            if(view != null)
-            {
-                var property = view.GetType().GetProperty("DialogResult");
-                if(property != null)
-                    property.SetValue(view, dialogResult, null);
-            }
+                if(view != null)
+                {
+                    var property = view.GetType().GetProperty("DialogResult");
+                    if(property != null)
+                        property.SetValue(view, dialogResult, null);
+                }
 
-            TryClose();
+                TryClose();
+            });
         }
 
 #endif
