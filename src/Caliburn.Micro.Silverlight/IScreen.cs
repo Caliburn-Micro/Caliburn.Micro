@@ -46,9 +46,20 @@
     }
 
     /// <summary>
+    /// Denotes an object that can be closed.
+    /// </summary>
+    public interface IClose {
+        /// <summary>
+        /// Tries to close this instance.
+        /// </summary>
+        /// <returns><c>True</c> if the close operation was successfull, otherwise <c>false</c>.</returns>
+        void TryClose();
+    }
+
+    /// <summary>
     /// Denotes an instance which may prevent closing.
     /// </summary>
-    public interface IGuardClose
+    public interface IGuardClose : IClose
     {
         /// <summary>
         /// Called to check whether or not this instance can close.
