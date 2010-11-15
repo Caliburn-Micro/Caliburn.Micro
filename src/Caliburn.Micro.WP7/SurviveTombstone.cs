@@ -11,6 +11,11 @@
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property)]
     public class SurviveTombstone : Attribute, ITombstone
     {
+        ///<summary>
+        /// Indicates that the entire value of the attributed property should be stored in the phone state.
+        ///</summary>
+        public bool SerializeComplexType { get; set; }
+
         /// <summary>
         /// Tombstones the class/property.
         /// </summary>
@@ -109,7 +114,7 @@
         /// <returns></returns>
         protected virtual bool IsComplexType(Type type)
         {
-            return (type.IsClass || type.IsInterface) && !typeof(string).IsAssignableFrom(type);
+            return !SerializeComplexType && (type.IsClass || type.IsInterface) && !typeof(string).IsAssignableFrom(type);
         }
 
         /// <summary>
