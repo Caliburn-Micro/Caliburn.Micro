@@ -74,7 +74,7 @@
                     {
                         var index = Convert.ToInt32(phoneService.State[conductorId]);
 
-                        if(index < items.Count)
+                        if (index > 0 && index < items.Count)
                             conductor.ActivateItem(items[index]);
                     }
                     else
