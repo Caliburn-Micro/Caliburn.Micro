@@ -2,8 +2,8 @@
     using System;
 
     public class PhoneContainer : SimpleContainer {
-        public PhoneContainer() {
-            Activator = new InstanceActivator(type => GetInstance(type, null));
+        public PhoneContainer(PhoneBootstrapper bootstrapper) {
+            Activator = new InstanceActivator(bootstrapper, type => GetInstance(type, null));
         }
 
         public InstanceActivator Activator { get; private set; }

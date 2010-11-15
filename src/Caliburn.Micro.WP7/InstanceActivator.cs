@@ -16,14 +16,34 @@
     {
         readonly Func<Type, object> getInstance;
         readonly List<ITaskManager> taskManagers = new List<ITaskManager>();
+        readonly List<WeakReference> createdInstances = new List<WeakReference>();
+        bool needsResurrection = true;
 
         /// <summary>
         /// Creates an instance of the <see cref="InstanceActivator"/>
         /// </summary>
         /// <param name="getInstance">A factory method which should take a <see cref="Type"/> and return an instance of that type from the IoC container.</param>
-        public InstanceActivator(Func<Type, object> getInstance)
+        /// <param name="bootstrapper">The bootstrapper.</param>
+        public InstanceActivator(PhoneBootstrapper bootstrapper, Func<Type, object> getInstance)
         {
             this.getInstance = getInstance;
+
+            bootstrapper.PhoneService.Launching += delegate {
+                needsResurrection = false;
+                createdInstances.Clear();
+            };
+
+            bootstrapper.ResurrectionComplete += delegate {
+                foreach (var reference in createdInstances) {
+                    var instance = reference.Target;
+
+                    if (instance != null)
+                        taskManagers.Apply(x => x.CheckForTaskCompletion(instance));
+                }
+
+                needsResurrection = false;
+                createdInstances.Clear();
+            };
         }
 
         /// <summary>
@@ -66,7 +86,10 @@
         public object ActivateInstance(object instance)
         {
             TestForTaskLauncher(instance);
-            taskManagers.Apply(x => x.CheckForTaskCompletion(instance));
+
+            if (needsResurrection)
+                createdInstances.Add(new WeakReference(instance));
+
             return instance;
         }
 
@@ -102,6 +125,33 @@
         {
             void TryLaunchTask(ILaunchTask launcher, TaskLaunchEventArgs args);
             void CheckForTaskCompletion(object potentialHandler);
+        }
+
+        class LauncherManager<TTask> : ITaskManager
+            where TTask : new()
+        {
+            readonly MethodInfo showMethod;
+            readonly TTask task;
+
+            public LauncherManager()
+            {
+                task = new TTask();
+                showMethod = typeof(TTask).GetMethod("Show", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            }
+
+            public void TryLaunchTask(ILaunchTask launcher, TaskLaunchEventArgs args)
+            {
+                if (!typeof(TTask).IsAssignableFrom(args.TaskType))
+                    return;
+
+                var configurator = launcher as IConfigureTask<TTask>;
+                if (configurator != null)
+                    configurator.ConfigureTask(task);
+
+                showMethod.Invoke(task, null);
+            }
+
+            public void CheckForTaskCompletion(object potentialHandler) { }
         }
 
         class ChooserManager<TChooser, TResult> : ITaskManager
@@ -158,8 +208,7 @@
 
                 if(eventRaised)
                     TryHandleAtLatestTime(handler, storedClientId);
-                else
-                    toCheck.Add(new WeakReference(handler));
+                else toCheck.Add(new WeakReference(handler));
             }
 
             public void PrepareToReceiveCallbacks()
@@ -271,33 +320,6 @@
                     });
                 }
             }
-        }
-
-        class LauncherManager<TTask> : ITaskManager
-            where TTask : new()
-        {
-            readonly MethodInfo showMethod;
-            readonly TTask task;
-
-            public LauncherManager()
-            {
-                task = new TTask();
-                showMethod = typeof(TTask).GetMethod("Show", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-            }
-
-            public void TryLaunchTask(ILaunchTask launcher, TaskLaunchEventArgs args)
-            {
-                if(!typeof(TTask).IsAssignableFrom(args.TaskType))
-                    return;
-
-                var configurator = launcher as IConfigureTask<TTask>;
-                if(configurator != null)
-                    configurator.ConfigureTask(task);
-
-                showMethod.Invoke(task, null);
-            }
-
-            public void CheckForTaskCompletion(object potentialHandler) {}
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.Micro
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
@@ -13,6 +14,7 @@
     public class PhoneBootstrapper : Bootstrapper
     {
         protected bool PhoneApplicationInitialized;
+        bool isResurrecting = true;
 
         /// <summary>
         /// The phone application services.
@@ -65,7 +67,9 @@
         /// <summary>
         /// Occurs when a fresh instance of the application is launching.
         /// </summary>
-        protected virtual void OnLaunch(object sender, LaunchingEventArgs e) { }
+        protected virtual void OnLaunch(object sender, LaunchingEventArgs e) {
+            isResurrecting = false;
+        }
 
         /// <summary>
         /// Occurs when the application is closing.
@@ -85,12 +89,16 @@
         /// </summary>
         protected virtual void OnActivate(object sender, ActivatedEventArgs e)
         {
-            NavigatedEventHandler onNavigated = null;
-            onNavigated = (s2, e2) =>{
-                Resurrect(SelectInstancesToResurrect());
-                RootFrame.Navigated -= onNavigated;
-            };
-            RootFrame.Navigated += onNavigated;
+            if (isResurrecting) {
+                NavigatedEventHandler onNavigated = null;
+                onNavigated = (s2, e2) => {
+                    Resurrect(SelectInstancesToResurrect());
+                    RootFrame.Navigated -= onNavigated;
+                };
+                RootFrame.Navigated += onNavigated;
+            }
+
+            isResurrecting = false;
         }
 
         /// <summary>
@@ -139,6 +147,11 @@
         }
 
         /// <summary>
+        /// Occurs after resurrection has completed.
+        /// </summary>
+        public event EventHandler ResurrectionComplete = delegate { }; 
+
+        /// <summary>
         /// Resurrects the instances after activation.
         /// </summary>
         /// <param name="instances">The instances to resurrect.</param>
@@ -157,6 +170,8 @@
 
                 persister.Resurrect(phoneService, null, null, instance, null);
             }
+
+            ResurrectionComplete(this, EventArgs.Empty);
         }
     }
 }

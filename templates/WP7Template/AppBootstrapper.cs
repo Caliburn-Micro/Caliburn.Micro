@@ -11,9 +11,9 @@
 
         protected override void Configure()
         {
-            container = new PhoneContainer();
+            container = new PhoneContainer(this);
 
-            container.RegisterSingleton(typeof(MainPageViewModel), "MainPageViewModel", typeof(MainPageViewModel));
+            container.RegisterPerRequest(typeof(MainPageViewModel), "MainPageViewModel", typeof(MainPageViewModel));
 
             container.RegisterInstance(typeof(INavigationService), null, new FrameAdapter(RootFrame));
             container.RegisterInstance(typeof(IPhoneService), null, new PhoneApplicationServiceAdapter(PhoneService));
