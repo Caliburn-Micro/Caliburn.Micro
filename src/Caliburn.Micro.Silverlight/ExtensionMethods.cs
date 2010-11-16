@@ -144,6 +144,13 @@
                             && contentControl.Content is DependencyObject
                                 && !(contentControl.Content is UserControl))
                             queue.Enqueue(contentControl.Content as DependencyObject);
+
+#if !SILVERLIGHT
+                        var headeredControl = contentControl as HeaderedContentControl;
+                        if (headeredControl != null && headeredControl.Header is DependencyObject && !(headeredControl.Header is UserControl)) {
+                            queue.Enqueue(headeredControl.Header as DependencyObject);
+                        }
+#endif
                     }
                     else
                     {
@@ -153,6 +160,13 @@
                             itemsControl.Items.OfType<DependencyObject>()
                                 .Where(item => !(item is UserControl))
                                 .Apply(queue.Enqueue);
+
+#if !SILVERLIGHT
+                            var headeredControl = itemsControl as HeaderedItemsControl;
+                            if (headeredControl != null && headeredControl.Header is DependencyObject && !(headeredControl.Header is UserControl)) {
+                                queue.Enqueue(headeredControl.Header as DependencyObject);
+                            }
+#endif
                         }
                     }
                 }
