@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.Micro
 {
+    using System;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Interactivity;
@@ -21,7 +22,7 @@
                 );
 
         DependencyObject associatedObject;
-        ActionMessage owner;
+        WeakReference owner;
 
         /// <summary>
         /// Gets or sets the value of the parameter.
@@ -41,6 +42,12 @@
                 ReadPreamble();
                 return associatedObject;
             }
+        }
+
+        ActionMessage Owner
+        {
+            get { return owner == null ? null : owner.Target as ActionMessage; }
+            set { owner = new WeakReference(value); }
         }
 
         void IAttachedObject.Attach(DependencyObject dependencyObject)
@@ -72,15 +79,15 @@
         /// <param name="owner">The action message.</param>
         internal void MakeAwareOf(ActionMessage owner)
         {
-            this.owner = owner;
+            Owner = owner;
         }
 
         static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var parameter = (Parameter)d;
 
-            if (parameter.owner != null)
-                parameter.owner.UpdateAvailability();
+            if (parameter.Owner != null)
+                parameter.Owner.UpdateAvailability();
         }
     }
 }

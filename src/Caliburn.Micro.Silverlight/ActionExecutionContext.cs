@@ -13,16 +13,26 @@
         Dictionary<string, object> values;
         WeakReference target;
         WeakReference view;
+        WeakReference source;
+        WeakReference message;
 
         /// <summary>
         /// The message being executed.
         /// </summary>
-        public ActionMessage Message;
+        public ActionMessage Message
+        {
+            get { return message == null ? null : message.Target as ActionMessage; }
+            set { message = new WeakReference(value); }
+        }
 
         /// <summary>
         /// The source from which the message originates.
         /// </summary>
-        public FrameworkElement Source;
+        public FrameworkElement Source
+        {
+            get { return source == null ? null : source.Target as FrameworkElement; }
+            set { source = new WeakReference(value); }
+        }
 
         /// <summary>
         /// Any event arguments associated with the action's invocation.
