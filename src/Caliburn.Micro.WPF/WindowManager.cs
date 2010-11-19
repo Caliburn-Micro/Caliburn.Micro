@@ -198,16 +198,16 @@
 
                 bool runningAsync = false, shouldEnd = false;
 
-                guard.CanClose(canClose =>
-                {
-                    if (runningAsync && canClose)
-                    {
-                        actuallyClosing = true;
-                        view.Close();
-                    }
-                    else e.Cancel = !canClose;
+                guard.CanClose(canClose => {
+                    Execute.OnUIThread(() => {
+                        if(runningAsync && canClose) {
+                            actuallyClosing = true;
+                            view.Close();
+                        }
+                        else e.Cancel = !canClose;
 
-                    shouldEnd = true;
+                        shouldEnd = true;
+                    });
                 });
 
                 if (shouldEnd)
