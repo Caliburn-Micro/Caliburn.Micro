@@ -38,6 +38,16 @@ namespace Caliburn.Micro
         /// Occurs when the application is closing.
         /// </summary>
         event EventHandler<ClosingEventArgs> Closing;
+
+        /// <summary>
+        /// Gets or sets whether user idle detection is enabled.
+        /// </summary>
+        IdleDetectionMode UserIdleDetectionMode { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether application idle detection is enabled.
+        /// </summary>
+        IdleDetectionMode ApplicationIdleDetectionMode { get; set; }
     }
 
     /// <summary>
@@ -106,6 +116,22 @@ namespace Caliburn.Micro
         {
             add { phoneService.Closing += value; }
             remove { phoneService.Closing -= value; }
+        }
+
+        /// <summary>
+        /// Gets or sets whether user idle detection is enabled.
+        /// </summary>
+        public IdleDetectionMode UserIdleDetectionMode {
+            get { return phoneService.UserIdleDetectionMode; }
+            set { phoneService.UserIdleDetectionMode = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets whether application idle detection is enabled.
+        /// </summary>
+        public IdleDetectionMode ApplicationIdleDetectionMode {
+            get { return phoneService.ApplicationIdleDetectionMode; }
+            set { phoneService.ApplicationIdleDetectionMode = value; }
         }
     }
 }
