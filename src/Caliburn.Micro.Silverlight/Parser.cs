@@ -63,7 +63,13 @@
             return new EventTrigger { EventName = triggerDetail };
         }
 
-        static ActionMessage CreateMessage(DependencyObject target, string messageText)
+        /// <summary>
+        /// Creates an instance of <see cref="ActionMessage"/> by parsing out the textual dsl.
+        /// </summary>
+        /// <param name="target">The target of the message.</param>
+        /// <param name="messageText">The textual message dsl.</param>
+        /// <returns>The created message.</returns>
+        public static ActionMessage CreateMessage(DependencyObject target, string messageText)
         {
             var message = new ActionMessage();
             messageText = Regex.Replace(messageText, "^Action", string.Empty);
