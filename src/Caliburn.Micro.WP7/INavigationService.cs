@@ -77,14 +77,17 @@
     public class FrameAdapter : INavigationService
     {
         readonly Frame frame;
+        readonly bool treatViewAsLoaded;
 
         /// <summary>
         /// Creates an instance of <see cref="FrameAdapter"/>
         /// </summary>
         /// <param name="frame">The frame to represent as a <see cref="INavigationService"/>.</param>
-        public FrameAdapter(Frame frame)
+        /// <param name="treatViewAsLoaded">Tells the frame adapter to assume that the view has already been loaded by the time OnNavigated is called. This is necessary when using the TransitionFrame.</param>
+        public FrameAdapter(Frame frame, bool treatViewAsLoaded = false)
         {
             this.frame = frame;
+            this.treatViewAsLoaded = treatViewAsLoaded;
             this.frame.Navigated += OnNavigated;
             this.frame.Navigating += OnNavigating;
         }
@@ -136,7 +139,12 @@
             if (viewModel == null)
                 return;
 
-            ViewModelBinder.Bind(viewModel, (DependencyObject)e.Content, null);
+            var element = (DependencyObject)e.Content;
+
+            if(treatViewAsLoaded)
+                element.SetValue(View.IsLoadedProperty, true);
+
+            ViewModelBinder.Bind(viewModel, element, null);
 
             TryInjectQueryString(viewModel, e.Content);
 
