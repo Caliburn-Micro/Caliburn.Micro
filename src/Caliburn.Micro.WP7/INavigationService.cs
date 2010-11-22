@@ -4,6 +4,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Navigation;
+    using Microsoft.Phone.Controls;
 
     /// <summary>
     /// Implemented by services that provide <see cref="Uri"/> based navigation.
@@ -139,12 +140,14 @@
             if (viewModel == null)
                 return;
 
-            var element = (DependencyObject)e.Content;
+            var page = e.Content as PhoneApplicationPage;
+            if (page == null)
+                throw new ArgumentException("View '" + e.Content.GetType().FullName + "' should inherit from PhoneApplicationPage or one of its descendents.");
 
             if(treatViewAsLoaded)
-                element.SetValue(View.IsLoadedProperty, true);
+                page.SetValue(View.IsLoadedProperty, true);
 
-            ViewModelBinder.Bind(viewModel, element, null);
+            ViewModelBinder.Bind(viewModel, page, null);
 
             TryInjectQueryString(viewModel, e.Content);
 
