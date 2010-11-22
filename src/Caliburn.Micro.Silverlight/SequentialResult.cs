@@ -48,7 +48,18 @@
             if(previous != null)
                 previous.Completed -= ChildCompleted;
 
-            if(enumerator.MoveNext())
+            bool moveNextSucceeded = false;
+            try
+            {
+                moveNextSucceeded = enumerator.MoveNext();
+            }
+            catch (Exception ex)
+            {
+                OnComplete(ex, false);
+                return;
+            }
+
+            if (moveNextSucceeded)
             {
                 try
                 {
@@ -57,7 +68,7 @@
                     next.Completed += ChildCompleted;
                     next.Execute(context);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     OnComplete(ex, false);
                     return;
