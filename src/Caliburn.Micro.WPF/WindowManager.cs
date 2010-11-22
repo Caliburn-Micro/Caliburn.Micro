@@ -5,6 +5,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
+    using System.Linq;
 
     /// <summary>
     /// A service that manages windows.
@@ -100,8 +101,7 @@
         {
             var window = view as Window;
 
-            if (window == null)
-            {
+            if (window == null) {
                 window = new Window {
                     Content = view,
                     SizeToContent = SizeToContent.WidthAndHeight
@@ -109,23 +109,36 @@
 
                 window.SetValue(IsElementGeneratedProperty, true);
 
-                if (Application.Current != null
-                   && Application.Current.MainWindow != null
-                    && Application.Current.MainWindow != window)
+                var owner = InferOwnerOf(window);
+                if (owner != null)
                 {
                     window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                    window.Owner = Application.Current.MainWindow;
+                    window.Owner = owner;
                 }
-                else window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                else
+                {
+                    window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                }
             }
-            else if (Application.Current != null
-                   && Application.Current.MainWindow != null)
+            else
             {
-                if (Application.Current.MainWindow != window && isDialog)
-                    window.Owner = Application.Current.MainWindow;
+                var owner = InferOwnerOf(window);
+                if (owner != null && isDialog)
+                    window.Owner = owner;
             }
 
             return window;
+        }
+
+        static Window InferOwnerOf(Window window) {
+            if(Application.Current == null)
+                return null;
+
+            var active = Application.Current.Windows.OfType<Window>()
+                .Where(x => x.IsActive)
+                .FirstOrDefault();
+            active = active ?? Application.Current.MainWindow;
+            return active == window ? null : active;
         }
 
         class WindowConductor
