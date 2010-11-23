@@ -36,3 +36,4 @@ obj/
 [Bb]uild[Ll]og.*
 *.[Pp]ublish.xml
 glob:desktop.ini 
+generated-templates
