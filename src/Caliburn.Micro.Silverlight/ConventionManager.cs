@@ -29,6 +29,11 @@
         public static IValueConverter BooleanToVisibilityConverter = new BooleanToVisibilityConverter();
 
         /// <summary>
+        /// Indicates whether or not static properties should be included during convention name matching.
+        /// </summary>
+        public static bool IncludeStaticProperties = false;
+
+        /// <summary>
         /// The default DataTemplate used for ItemsControls when required.
         /// </summary>
         public static DataTemplate DefaultItemTemplate = (DataTemplate)

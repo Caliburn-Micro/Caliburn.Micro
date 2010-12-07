@@ -39,8 +39,13 @@
             if (type.IsInterface)
                 typeList.AddRange(type.GetInterfaces());
 
+            var flags = BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance;
+
+            if (ConventionManager.IncludeStaticProperties)
+                flags = flags | BindingFlags.Static;
+
             return typeList
-                .Select(interfaceType => interfaceType.GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance))
+                .Select(interfaceType => interfaceType.GetProperty(propertyName, flags))
                 .FirstOrDefault(property => property != null);
         }
 
