@@ -97,7 +97,7 @@
             return view;
         }
 
-        static Window EnsureWindow(object model, object view, bool isDialog)
+        protected virtual Window EnsureWindow(object model, object view, bool isDialog)
         {
             var window = view as Window;
 
@@ -130,7 +130,8 @@
             return window;
         }
 
-        static Window InferOwnerOf(Window window) {
+        protected virtual Window InferOwnerOf(Window window)
+        {
             if(Application.Current == null)
                 return null;
 
