@@ -55,7 +55,7 @@
         /// </summary>
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
-        public void ShowDialog(object rootModel, object context = null)
+        public virtual void ShowDialog(object rootModel, object context = null)
         {
             var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context));
             ViewModelBinder.Bind(rootModel, view, context);

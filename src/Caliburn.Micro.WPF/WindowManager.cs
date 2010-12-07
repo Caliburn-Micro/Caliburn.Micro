@@ -65,7 +65,7 @@
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
         /// <returns>The dialog result.</returns>
-        public bool? ShowDialog(object rootModel, object context = null)
+        public virtual bool? ShowDialog(object rootModel, object context = null)
         {
             return CreateWindow(rootModel, true, context).ShowDialog();
         }
@@ -75,12 +75,12 @@
         /// </summary>
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
-        public void Show(object rootModel, object context = null)
+        public virtual void Show(object rootModel, object context = null)
         {
             CreateWindow(rootModel, false, context).Show();
         }
 
-        Window CreateWindow(object rootModel, bool isDialog, object context)
+        protected virtual Window CreateWindow(object rootModel, bool isDialog, object context)
         {
             var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context), isDialog);
             ViewModelBinder.Bind(rootModel, view, context);
