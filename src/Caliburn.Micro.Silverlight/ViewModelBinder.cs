@@ -56,9 +56,11 @@
                 var parts = cleanName.Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
 
                 var property = viewModelType.GetPropertyCaseInsensitive(parts[0]);
+                var interpretedViewModelType = viewModelType;
 
                 for (int i = 1; i < parts.Length && property != null; i++) {
-                    property = property.PropertyType.GetPropertyCaseInsensitive(parts[i]);
+                    interpretedViewModelType = property.PropertyType;
+                    property = interpretedViewModelType.GetPropertyCaseInsensitive(parts[i]);
                 }
 
                 if (property == null) {
@@ -73,7 +75,7 @@
                 }
 
                 convention.ApplyBinding(
-                    parts.Length == 1 ? viewModelType : property.PropertyType,
+                    interpretedViewModelType,
                     cleanName.Replace('_', '.'),
                     property,
                     element,
