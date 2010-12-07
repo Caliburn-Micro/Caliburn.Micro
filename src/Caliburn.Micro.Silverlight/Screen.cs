@@ -40,6 +40,14 @@
         }
 
         /// <summary>
+        /// Gets or Sets the Parent
+        /// </summary>
+        object IChild.Parent {
+            get { return Parent; }
+            set { Parent = (IConductor)value; }
+        }
+
+        /// <summary>
         /// Gets or Sets the Display Name
         /// </summary>
         public string DisplayName
