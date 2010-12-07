@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Threading;
@@ -27,11 +29,15 @@
             {
                 if (isInDesignMode == null)
                 {
-                    var app = Application.Current.ToString();
+#if SILVERLIGHT
+                    isInDesignMode = DesignerProperties.IsInDesignTool;
+#else
+                    var prop = DesignerProperties.IsInDesignModeProperty;
+                    isInDesignMode = (bool)DependencyPropertyDescriptor.FromProperty(prop, typeof(FrameworkElement)).Metadata.DefaultValue;
 
-                    if (app == "System.Windows.Application" || app == "Microsoft.Expression.Blend.BlendApplication")
+                    if (!isInDesignMode.GetValueOrDefault(false) && Process.GetCurrentProcess().ProcessName.StartsWith("devenv", StringComparison.Ordinal))
                         isInDesignMode = true;
-                    else isInDesignMode = false;
+#endif
                 }
 
                 return isInDesignMode.GetValueOrDefault(false);
