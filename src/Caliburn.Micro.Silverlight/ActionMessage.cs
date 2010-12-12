@@ -342,7 +342,7 @@ namespace Caliburn.Micro
 
             var guardName = "Can" + context.Method.Name;
             var targetType = context.Target.GetType();
-            var guard = targetType.GetMethod(guardName);
+            var guard = TryFindGuardMethod(context);
 
             if(guard == null)
             {
@@ -368,5 +368,37 @@ namespace Caliburn.Micro
                 MessageBinder.DetermineParameters(context, guard.GetParameters())
                 );
         };
+
+		/// <summary>
+		/// Try to find a candidate for guard function, having:
+		///		- a name in the form "CanXXX"
+		///		- no generic parameters
+		///		- a bool return type
+		///		- no parameters or a set of parameters corresponding to the action method
+		/// </summary>
+		/// <param name="context">The execution context</param>
+		/// <returns>A MethodInfo, if found; null otherwise</returns>
+		private static MethodInfo TryFindGuardMethod(ActionExecutionContext context) {
+			var guardName = "Can" + context.Method.Name;
+            var targetType = context.Target.GetType();
+            var guard = targetType.GetMethod(guardName);
+
+			if (guard ==null) return null;
+			if (guard.ContainsGenericParameters) return null;
+			if (!typeof(bool).Equals(guard.ReturnType)) return null;
+
+			var guardPars = guard.GetParameters();
+			var actionPars = context.Method.GetParameters();
+			if (guardPars.Length == 0) return guard;
+			if (guardPars.Length != actionPars.Length) return null;
+
+			var comparisons = guardPars.Zip(
+					context.Method.GetParameters(),
+					(x, y) => x.ParameterType.Equals(y.ParameterType)
+				);
+			if (comparisons.Any(x => !x)) return null;
+
+			return guard;
+		}
     }
 }
