@@ -170,5 +170,49 @@
 
             return descendants;
         };
+
+
+
+#if WP7
+		//Method missing in WP7 Linq
+
+		/// <summary>
+		/// Merges two sequences by using the specified predicate function.
+		/// </summary>
+		/// <typeparam name="TFirst">The type of the elements of the first input sequence.</typeparam>
+		/// <typeparam name="TSecond">The type of the elements of the second input sequence.</typeparam>
+		/// <typeparam name="TResult">The type of the elements of the result sequence.</typeparam>
+		/// <param name="first">The first sequence to merge.</param>
+		/// <param name="second">The second sequence to merge.</param>
+		/// <param name="resultSelector"> A function that specifies how to merge the elements from the two sequences.</param>
+		/// <returns> An System.Collections.Generic.IEnumerable<T> that contains merged elements of two input sequences.</returns>
+		public static IEnumerable<TResult> Zip<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> resultSelector)
+		{
+			if (first == null)
+			{
+				throw new ArgumentNullException("first");
+			}
+			if (second == null)
+			{
+				throw new ArgumentNullException("second");
+			}
+			if (resultSelector == null)
+			{
+				throw new ArgumentNullException("resultSelector");
+			}
+
+			var enumFirst = first.GetEnumerator();
+			var enumSecond = second.GetEnumerator();
+
+			if (enumFirst == null || enumSecond == null) yield break;
+
+			while (enumFirst.MoveNext() && enumSecond.MoveNext()) {
+				yield return resultSelector(enumFirst.Current, enumSecond.Current);
+			}
+		}
+
+#endif
+
+
     }
 }
