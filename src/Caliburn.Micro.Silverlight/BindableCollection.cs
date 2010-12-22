@@ -17,6 +17,12 @@
         /// </summary>
         /// <param name="items">The items.</param>
         void AddRange(IEnumerable<T> items);
+
+        /// <summary>
+        /// Removes the range.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        void RemoveRange(IEnumerable<T> items);
     }
 
     /// <summary>
@@ -188,11 +194,34 @@
         /// </summary>
         /// <param name="items">The items.</param>
         public void AddRange(IEnumerable<T> items) {
-            IsNotifying = false;
-            items.Apply(Add);
-            IsNotifying = true;
+            Execute.OnUIThread(() => {
+                IsNotifying = false;
+                var index = Count;
+                foreach(var item in items) {
+                    InsertItemBase(index, item);
+                    index++;
+                }
+                IsNotifying = true;
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                OnPropertyChanged(new PropertyChangedEventArgs(string.Empty));
+            });
+        }
 
-            Refresh();
+        /// <summary>
+        /// Removes the range.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        public void RemoveRange(IEnumerable<T> items) {
+            Execute.OnUIThread(() => {
+                IsNotifying = false;
+                foreach (var item in items) {
+                    var index = IndexOf(item);
+                    RemoveItemBase(index);
+                }
+                IsNotifying = true;
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                OnPropertyChanged(new PropertyChangedEventArgs(string.Empty));
+            });
         }
     }
 }
