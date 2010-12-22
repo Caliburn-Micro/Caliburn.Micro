@@ -155,7 +155,7 @@
 #if WP7
             var element = view as FrameworkElement;
 #else
-            var element = WindowManager.GetSignificantView(view) as FrameworkElement;
+            var element = View.GetFirstNonGeneratedView(view) as FrameworkElement;
 #endif
             if(element == null)
                 return;
