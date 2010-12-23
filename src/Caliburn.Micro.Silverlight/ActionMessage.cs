@@ -162,6 +162,9 @@ namespace Caliburn.Micro
 
         void UpdateContext()
         {
+            if (context != null)
+                context.Dispose();
+
             context = new ActionExecutionContext {
                 Message = this, 
                 Source = AssociatedObject
@@ -360,6 +363,7 @@ namespace Caliburn.Micro
                 };
 
                 inpc.PropertyChanged += handler;
+                context.Disposing += delegate { inpc.PropertyChanged -= handler; };
                 context.Message.Detaching += delegate { inpc.PropertyChanged -= handler; };
             }
 
