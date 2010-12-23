@@ -3,7 +3,6 @@
     using System;
     using System.ComponentModel;
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Data;
     using System.Linq;
 
@@ -33,32 +32,6 @@
     /// </summary>
     public class WindowManager : IWindowManager
     {
-        static readonly DependencyProperty IsElementGeneratedProperty =
-            DependencyProperty.RegisterAttached(
-                "IsElementGenerated",
-                typeof(bool),
-                typeof(WindowManager),
-                new PropertyMetadata(false, null)
-                );
-
-        /// <summary>
-        /// Used to retrieve the root, non-framework-created view.
-        /// </summary>
-        /// <param name="view">The view to search.</param>
-        /// <returns>The root element that was not created by the framework.</returns>
-        /// <remarks>In certain instances the WindowManager creates UI elements in order to display windows.
-        /// For example, if you ask the window manager to show a UserControl as a dialog, it creates a window to host the UserControl in.
-        /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
-        /// Calling GetSignificantView allows the framework to discover what the original element was. 
-        /// </remarks>
-        public static DependencyObject GetSignificantView(DependencyObject view)
-        {
-            if ((bool)view.GetValue(IsElementGeneratedProperty))
-                return (DependencyObject)((ContentControl)view).Content;
-
-            return view;
-        }
-
         /// <summary>
         /// Shows a modal dialog for the specified model.
         /// </summary>
@@ -107,7 +80,7 @@
                     SizeToContent = SizeToContent.WidthAndHeight
                 };
 
-                window.SetValue(IsElementGeneratedProperty, true);
+                window.SetValue(View.IsGeneratedProperty, true);
 
                 var owner = InferOwnerOf(window);
                 if (owner != null)
