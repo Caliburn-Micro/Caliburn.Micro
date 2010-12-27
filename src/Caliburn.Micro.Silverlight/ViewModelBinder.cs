@@ -192,7 +192,7 @@
             foreach(var item in page.ApplicationBar.Buttons) {
                 var button = item as AppBarButton;
                 if (button == null)
-                    return;
+                    continue;
 
                 var parsedTrigger = Parser.Parse(view, button.Message).First();
                 var trigger = new AppBarButtonTrigger(button);
@@ -209,7 +209,7 @@
             foreach (var item in page.ApplicationBar.MenuItems) {
                 var menuItem = item as AppBarMenuItem;
                 if (menuItem == null)
-                    return;
+					continue;
 
                 var parsedTrigger = Parser.Parse(view, menuItem.Message).First();
                 var trigger = new AppBarMenuItemTrigger(menuItem);
