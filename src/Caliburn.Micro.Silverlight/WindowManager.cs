@@ -112,6 +112,9 @@
             }
 
             void Closing(object sender, CancelEventArgs e) {
+                if (e.Cancel)
+                    return;
+
                 var guard = (IGuardClose)model;
 
                 if (actuallyClosing)
