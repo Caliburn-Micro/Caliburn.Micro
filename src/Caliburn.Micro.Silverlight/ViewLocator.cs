@@ -14,10 +14,6 @@
     /// </summary>
     public static class ViewLocator
     {
-        /// <summary>
-        /// The default view context.
-        /// </summary>
-        public static readonly object DefaultContext = new object();
         static readonly ILog Log = LogManager.GetLog(typeof(ViewLocator));
 
         /// <summary>

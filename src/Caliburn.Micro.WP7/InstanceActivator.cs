@@ -253,7 +253,7 @@
                 var viewAware = handler as IViewAware;
                 if(viewAware != null)
                 {
-                    var defaultView = viewAware.GetView(ViewLocator.DefaultContext);
+                    var defaultView = viewAware.GetView(View.DefaultContext);
 
                     if(defaultView == null)
                         HandleViewAware(handler, viewAware, storedClientId);
