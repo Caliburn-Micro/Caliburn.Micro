@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
 
@@ -16,6 +17,14 @@
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
         void ShowDialog(object rootModel, object context = null);
+
+        /// <summary>
+        /// Shows a toast notification for the specified model.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="durationInMilliseconds">How long the notification should appear for.</param>
+        /// <param name="context">The context.</param>
+        void ShowNotification(object rootModel, int durationInMilliseconds, object context = null);
     }
 
     /// <summary>
@@ -43,6 +52,37 @@
             new WindowConductor(rootModel, view);
 
             view.Show();
+        }
+
+        /// <summary>
+        /// Shows a toast notification for the specified model.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="durationInMilliseconds">How long the notification should appear for.</param>
+        /// <param name="context">The context.</param>
+        public virtual void ShowNotification(object rootModel, int durationInMilliseconds, object context = null)
+        {
+            var window = new NotificationWindow();
+            var view = ViewLocator.LocateForModel(rootModel, window, null);
+
+            ViewModelBinder.Bind(rootModel, view, null);
+            window.Content = (FrameworkElement)view;
+
+            var activator = rootModel as IActivate;
+            if (activator != null)
+                activator.Activate();
+
+            var deactivator = rootModel as IDeactivate;
+            if(deactivator != null) {
+                EventHandler handler = null;
+                handler = delegate {
+                    window.Closed -= handler;
+                    deactivator.Deactivate(true);
+                };
+                window.Closed += handler;
+            }
+
+            window.Show(durationInMilliseconds);
         }
 
         protected virtual ChildWindow EnsureWindow(object model, object view)
