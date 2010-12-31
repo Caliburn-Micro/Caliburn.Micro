@@ -40,7 +40,7 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>Bin\Release\Caliburn.Micro.XML</DocumentationFile>
+    <DocumentationFile>Bin\Release\Caliburn.Micro.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Phone" />

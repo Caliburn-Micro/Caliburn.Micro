@@ -30,7 +30,7 @@
     <DefineConstants>TRACE;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Caliburn.Micro.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Caliburn.Micro.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
