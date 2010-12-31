@@ -3,8 +3,10 @@
     using System;
     using System.ComponentModel;
     using System.Windows;
+    using System.Windows.Controls.Primitives;
     using System.Windows.Data;
     using System.Linq;
+    using System.Windows.Input;
 
     /// <summary>
     /// A service that manages windows.
@@ -25,6 +27,13 @@
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
         void Show(object rootModel, object context = null);
+
+        /// <summary>
+        /// Shows a popup at the current mouse position.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="context">The context.</param>
+        void ShowPopup(object rootModel, object context = null);
     }
 
     /// <summary>
@@ -51,6 +60,35 @@
         public virtual void Show(object rootModel, object context = null)
         {
             CreateWindow(rootModel, false, context).Show();
+        }
+
+        /// <summary>
+        /// Shows a popup at the current mouse position.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="context">The context.</param>
+        public virtual void ShowPopup(object rootModel, object context = null) {
+            var position = Mouse.GetPosition(null);
+            var popup = new Popup {
+                HorizontalOffset = position.X,
+                VerticalOffset = position.Y
+            };
+
+            var view = ViewLocator.LocateForModel(rootModel, popup, context);
+            popup.Child = view;
+            popup.SetValue(View.IsGeneratedProperty, true);
+
+            ViewModelBinder.Bind(rootModel, popup, null);
+
+            var activatable = rootModel as IActivate;
+            if (activatable != null)
+                activatable.Activate();
+
+            var deactivator = rootModel as IDeactivate;
+            if (deactivator != null)
+                popup.Closed += delegate { deactivator.Deactivate(true); };
+
+            popup.IsOpen = true;
         }
 
         protected virtual Window CreateWindow(object rootModel, bool isDialog, object context)

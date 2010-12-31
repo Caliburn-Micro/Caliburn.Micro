@@ -4,6 +4,7 @@
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Controls.Primitives;
     using System.Windows.Data;
 
     /// <summary>
@@ -25,6 +26,13 @@
         /// <param name="durationInMilliseconds">How long the notification should appear for.</param>
         /// <param name="context">The context.</param>
         void ShowNotification(object rootModel, int durationInMilliseconds, object context = null);
+
+        /// <summary>
+        /// Shows a popup at the current mouse position.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="context">The context.</param>
+        void ShowPopup(object rootModel, object context = null);
     }
 
     /// <summary>
@@ -63,7 +71,7 @@
         public virtual void ShowNotification(object rootModel, int durationInMilliseconds, object context = null)
         {
             var window = new NotificationWindow();
-            var view = ViewLocator.LocateForModel(rootModel, window, null);
+            var view = ViewLocator.LocateForModel(rootModel, window, context);
 
             ViewModelBinder.Bind(rootModel, view, null);
             window.Content = (FrameworkElement)view;
@@ -73,16 +81,38 @@
                 activator.Activate();
 
             var deactivator = rootModel as IDeactivate;
-            if(deactivator != null) {
-                EventHandler handler = null;
-                handler = delegate {
-                    window.Closed -= handler;
-                    deactivator.Deactivate(true);
-                };
-                window.Closed += handler;
-            }
+            if(deactivator != null)
+                window.Closed += delegate { deactivator.Deactivate(true); };
 
             window.Show(durationInMilliseconds);
+        }
+
+        /// <summary>
+        /// Shows a popup at the current mouse position.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="context">The context.</param>
+        public virtual void ShowPopup(object rootModel, object context = null) {
+            var popup = new Popup {
+                HorizontalOffset = Mouse.Position.X,
+                VerticalOffset = Mouse.Position.Y
+            };
+
+            var view = ViewLocator.LocateForModel(rootModel, popup, context);
+            popup.Child = view;
+            popup.SetValue(View.IsGeneratedProperty, true);
+
+            ViewModelBinder.Bind(rootModel, popup, null);
+
+            var activatable = rootModel as IActivate;
+            if (activatable != null)
+                activatable.Activate();
+
+            var deactivator = rootModel as IDeactivate;
+            if (deactivator != null)
+                popup.Closed += delegate { deactivator.Deactivate(true); };
+
+            popup.IsOpen = true;
         }
 
         protected virtual ChildWindow EnsureWindow(object model, object view)

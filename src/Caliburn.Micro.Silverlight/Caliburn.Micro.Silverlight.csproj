@@ -87,6 +87,7 @@
     <Compile Include="Logging.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageBinder.cs" />
+    <Compile Include="Mouse.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

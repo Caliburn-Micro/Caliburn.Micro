@@ -187,6 +187,7 @@
             if (activator != null)
                 activator.Activate();
 
+            Mouse.Initialize(view);
             Application.RootVisual = view;
 #else
             IWindowManager windowManager;
