@@ -110,6 +110,7 @@
                 popup.Closed += delegate { deactivator.Deactivate(true); };
 
             popup.IsOpen = true;
+            view.CaptureMouse();
         }
 
         /// <summary>
