@@ -201,7 +201,7 @@
                 windowManager = new WindowManager();
             }
 
-            windowManager.Show(viewModel);
+            windowManager.ShowWindow(viewModel);
 #endif
         }
     }

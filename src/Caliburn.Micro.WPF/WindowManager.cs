@@ -22,11 +22,11 @@
         bool? ShowDialog(object rootModel, object context = null);
 
         /// <summary>
-        /// Shows a window for the specified model.
+        /// Shows a non-modal window for the specified model.
         /// </summary>
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
-        void Show(object rootModel, object context = null);
+        void ShowWindow(object rootModel, object context = null);
 
         /// <summary>
         /// Shows a popup at the current mouse position.
@@ -57,7 +57,7 @@
         /// </summary>
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
-        public virtual void Show(object rootModel, object context = null)
+        public virtual void ShowWindow(object rootModel, object context = null)
         {
             CreateWindow(rootModel, false, context).Show();
         }
@@ -66,15 +66,11 @@
         /// Shows a popup at the current mouse position.
         /// </summary>
         /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The context.</param>
+        /// <param name="context">The view context or optional popup target.</param>
         public virtual void ShowPopup(object rootModel, object context = null) {
-            var position = Mouse.GetPosition(null);
-            var popup = new Popup {
-                HorizontalOffset = position.X,
-                VerticalOffset = position.Y
-            };
+            var popup = CreatePopup(rootModel, (context is UIElement) ? (UIElement)context : null);
+            var view = ViewLocator.LocateForModel(rootModel, popup, (context is UIElement) ? null : context);
 
-            var view = ViewLocator.LocateForModel(rootModel, popup, context);
             popup.Child = view;
             popup.SetValue(View.IsGeneratedProperty, true);
 
@@ -89,6 +85,27 @@
                 popup.Closed += delegate { deactivator.Deactivate(true); };
 
             popup.IsOpen = true;
+        }
+
+        /// <summary>
+        /// Creates a popup for hosting a popup window.
+        /// </summary>
+        /// <param name="rootModel">The model.</param>
+        /// <param name="popupTarget">The optional popup target.</param>
+        /// <returns>The popup.</returns>
+        protected Popup CreatePopup(object rootModel, UIElement popupTarget)
+        {
+            if (popupTarget == null) {
+                var position = Mouse.GetPosition(null);
+                return new Popup {
+                    HorizontalOffset = position.X,
+                    VerticalOffset = position.Y
+                };
+            }
+
+            return new Popup {
+                PlacementTarget = popupTarget
+            };
         }
 
         protected virtual Window CreateWindow(object rootModel, bool isDialog, object context)

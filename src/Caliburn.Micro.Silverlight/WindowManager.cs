@@ -91,14 +91,11 @@
         /// Shows a popup at the current mouse position.
         /// </summary>
         /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The context.</param>
+        /// <param name="context">The view context or optional popup target.</param>
         public virtual void ShowPopup(object rootModel, object context = null) {
-            var popup = new Popup {
-                HorizontalOffset = Mouse.Position.X,
-                VerticalOffset = Mouse.Position.Y
-            };
+            var popup = CreatePopup(rootModel, (context is UIElement) ? (UIElement)context : null);
+            var view = ViewLocator.LocateForModel(rootModel, popup, (context is UIElement) ? null : context);
 
-            var view = ViewLocator.LocateForModel(rootModel, popup, context);
             popup.Child = view;
             popup.SetValue(View.IsGeneratedProperty, true);
 
@@ -113,6 +110,19 @@
                 popup.Closed += delegate { deactivator.Deactivate(true); };
 
             popup.IsOpen = true;
+        }
+
+        /// <summary>
+        /// Creates a popup for hosting a popup window.
+        /// </summary>
+        /// <param name="rootModel">The model.</param>
+        /// <param name="popupTarget">The optional popup target.</param>
+        /// <returns>The popup.</returns>
+        protected Popup CreatePopup(object rootModel, UIElement popupTarget) {
+            return new Popup {
+                HorizontalOffset = Mouse.Position.X,
+                VerticalOffset = Mouse.Position.Y
+            };
         }
 
         protected virtual ChildWindow EnsureWindow(object model, object view)
