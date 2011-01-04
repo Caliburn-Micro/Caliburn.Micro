@@ -13,12 +13,14 @@ namespace Caliburn.Micro
     using System.Windows.Interactivity;
     using System.Windows.Markup;
     using System.Windows.Media;
+    using EventTrigger = System.Windows.Interactivity.EventTrigger;
+    using TriggerBase = System.Windows.Interactivity.TriggerBase;
 
     /// <summary>
     /// Used to send a message from the UI to a presentation model class, indicating that a particular Action should be invoked.
     /// </summary>
-    [DefaultTrigger(typeof(FrameworkElement), typeof(System.Windows.Interactivity.EventTrigger), "MouseLeftButtonDown")]
-    [DefaultTrigger(typeof(ButtonBase), typeof(System.Windows.Interactivity.EventTrigger), "Click")] 
+    [DefaultTrigger(typeof(FrameworkElement), typeof(EventTrigger), "MouseLeftButtonDown")]
+    [DefaultTrigger(typeof(ButtonBase), typeof(EventTrigger), "Click")] 
     [ContentProperty("Parameters")]
     [TypeConstraint(typeof(FrameworkElement))]
     public class ActionMessage : TriggerAction<FrameworkElement>
@@ -102,8 +104,14 @@ namespace Caliburn.Micro
                 Parameters.Attach(AssociatedObject);
                 Parameters.Apply(x => x.MakeAwareOf(this));
 
-                if((bool)AssociatedObject.GetValue(View.IsLoadedProperty))
+                if ((bool)AssociatedObject.GetValue(View.IsLoadedProperty)) {
                     ElementLoaded(null, null);
+
+                    var trigger = Interaction.GetTriggers(AssociatedObject)
+                        .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
+                    if (trigger != null && trigger.EventName == "Loaded")
+                        Invoke(new RoutedEventArgs());
+                }
                 else AssociatedObject.Loaded += ElementLoaded;
             }
 
