@@ -82,8 +82,17 @@
         /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was. 
         /// </remarks>
         public static Func<DependencyObject, DependencyObject> GetFirstNonGeneratedView = view => {
-            if((bool)view.GetValue(IsGeneratedProperty))
-                return (DependencyObject)((ContentControl)view).Content;
+            if((bool)view.GetValue(IsGeneratedProperty)) {
+                if(view is ContentControl)
+                    return (DependencyObject)((ContentControl)view).Content;
+
+                var type = view.GetType();
+                var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
+                    .FirstOrDefault() ?? new ContentPropertyAttribute("Content");
+
+                return (DependencyObject)type.GetProperty(contentProperty.Name)
+                    .GetValue(view, null);
+            }
 
             return view;
         };
