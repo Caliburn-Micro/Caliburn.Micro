@@ -68,6 +68,7 @@
     <Compile Include="BooleanToVisibilityConverter.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="ConductorBaseWithActiveItem.cs" />
+    <Compile Include="ConductorWithCollectionAllActive.cs" />
     <Compile Include="Coroutine.cs" />
     <Compile Include="DefaultCloseStrategy.cs" />
     <Compile Include="Conductor.cs" />

@@ -78,6 +78,9 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\ConductorBaseWithActiveItem.cs">
       <Link>ConductorBaseWithActiveItem.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConductorWithCollectionAllActive.cs">
+      <Link>ConductorWithCollectionAllActive.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ConductorWithCollectionOneActive.cs">
       <Link>ConductorWithCollectionOneActive.cs</Link>
     </Compile>
