@@ -34,10 +34,10 @@
             if(IsComplexType(type))
             {
                 var key = GetStateKey(value, rootKey);
-                var conductor = value as IConductor;
+                var conductor = value as IConductActiveItem;
                 if(conductor != null)
                 {
-                    var items = conductor.GetConductedItems().OfType<object>().ToList();
+                    var items = conductor.GetChildren().OfType<object>().ToList();
                     phoneService.State[key + "|ActiveItemIndex"] = items.IndexOf(conductor.ActiveItem);
 
                     GetPersistableItems(items, key)
@@ -69,10 +69,10 @@
 
                 var key = GetStateKey(value, rootKey);
 
-                var conductor = value as IConductor;
+                var conductor = value as IConductActiveItem;
                 if(conductor != null)
                 {
-                    var items = conductor.GetConductedItems().OfType<object>().ToList();
+                    var items = conductor.GetChildren().OfType<object>().ToList();
                     var conductorId = key + "|ActiveItemIndex";
 
                     if(phoneService.State.ContainsKey(conductorId))

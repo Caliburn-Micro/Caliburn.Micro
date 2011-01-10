@@ -75,6 +75,9 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\ConductorBase.cs">
       <Link>ConductorBase.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConductorBaseWithActiveItem.cs">
+      <Link>ConductorBaseWithActiveItem.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ConductorWithCollectionOneActive.cs">
       <Link>ConductorWithCollectionOneActive.cs</Link>
     </Compile>
@@ -140,6 +143,9 @@
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\Screen.cs">
       <Link>Screen.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ScreenExtensions.cs">
+      <Link>ScreenExtensions.cs</Link>
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\SequentialResult.cs">
       <Link>SequentialResult.cs</Link>
