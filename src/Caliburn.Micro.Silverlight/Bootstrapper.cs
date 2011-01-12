@@ -18,7 +18,7 @@
         /// <summary>
         /// The application.
         /// </summary>
-        public Application Application { get; private set; }
+        public Application Application { get; protected set; }
 
         /// <summary>
         /// Indicates whether or not the framework is in design-time mode.
@@ -47,11 +47,21 @@
         /// <summary>
         /// Creates an instance of the bootstrapper.
         /// </summary>
-        public Bootstrapper()
-        {
-            if(IsInDesignMode)
-                return;
+        public Bootstrapper() {
+            if (IsInDesignMode)
+                StartDesignTime();
+            else StartRuntime();
+        }
 
+        /// <summary>
+        /// Called by the bootstrapper's constructor at design time to start the framework.
+        /// </summary>
+        protected virtual void StartDesignTime() {}
+
+        /// <summary>
+        /// Called by the bootstrapper's constructor at runtime to start the framework.
+        /// </summary>
+        protected virtual void StartRuntime() {
             Execute.InitializeWithDispatcher();
             AssemblySource.Instance.AddRange(SelectAssemblies());
 
