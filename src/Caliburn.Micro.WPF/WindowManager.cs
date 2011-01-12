@@ -32,7 +32,7 @@
         /// Shows a popup at the current mouse position.
         /// </summary>
         /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The view context or optional popup target.</param>
+        /// <param name="context">The view context.</param>
         /// <param name="settings">The optional popup settings.</param>
         void ShowPopup(object rootModel, object context = null, IDictionary<string, object> settings = null);
     }
@@ -67,7 +67,7 @@
         /// Shows a popup at the current mouse position.
         /// </summary>
         /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The view context or optional popup target.</param>
+        /// <param name="context">The view context.</param>
         /// <param name="settings">The optional popup settings.</param>
         public virtual void ShowPopup(object rootModel, object context = null, IDictionary<string, object> settings = null) {
             var popup = CreatePopup(rootModel, settings);
@@ -96,7 +96,7 @@
         /// <param name="rootModel">The model.</param>
         /// <param name="settings">The optional popup settings.</param>
         /// <returns>The popup.</returns>
-        protected Popup CreatePopup(object rootModel, IDictionary<string, object> settings) {
+        protected virtual Popup CreatePopup(object rootModel, IDictionary<string, object> settings) {
             var popup = new Popup();
 
             if(settings != null) {
