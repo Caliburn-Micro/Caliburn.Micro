@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Micro
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
@@ -32,7 +33,8 @@
         /// </summary>
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The view context or optional popup target.</param>
-        void ShowPopup(object rootModel, object context = null);
+        /// <param name="settings">The optional popup settings.</param>
+        void ShowPopup(object rootModel, object context = null, IDictionary<string, object> settings = null);
     }
 
     /// <summary>
@@ -92,9 +94,11 @@
         /// </summary>
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The view context or optional popup target.</param>
-        public virtual void ShowPopup(object rootModel, object context = null) {
-            var popup = CreatePopup(rootModel, (context is UIElement) ? (UIElement)context : null);
-            var view = ViewLocator.LocateForModel(rootModel, popup, (context is UIElement) ? null : context);
+        /// <param name="settings">The optional popup settings.</param>
+        public virtual void ShowPopup(object rootModel, object context = null, IDictionary<string, object> settings = null)
+        {
+            var popup = CreatePopup(rootModel, settings);
+            var view = ViewLocator.LocateForModel(rootModel, popup, context);
 
             popup.Child = view;
             popup.SetValue(View.IsGeneratedProperty, true);
@@ -117,13 +121,28 @@
         /// Creates a popup for hosting a popup window.
         /// </summary>
         /// <param name="rootModel">The model.</param>
-        /// <param name="popupTarget">The optional popup target.</param>
+        /// <param name="settings">The optional popup settings.</param>
         /// <returns>The popup.</returns>
-        protected Popup CreatePopup(object rootModel, UIElement popupTarget) {
-            return new Popup {
+        protected Popup CreatePopup(object rootModel, IDictionary<string, object> settings)
+        {
+            var popup = new Popup {
                 HorizontalOffset = Mouse.Position.X,
                 VerticalOffset = Mouse.Position.Y
             };
+
+            if (settings != null) {
+                var type = popup.GetType();
+
+                foreach (var pair in settings)
+                {
+                    var propertyInfo = type.GetProperty(pair.Key);
+
+                    if(propertyInfo != null)
+                        propertyInfo.SetValue(popup, pair.Value, null);
+                }
+            }
+
+            return popup;
         }
 
         protected virtual ChildWindow EnsureWindow(object model, object view)
