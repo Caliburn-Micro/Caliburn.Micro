@@ -28,6 +28,17 @@
                 );
 
         /// <summary>
+        /// A dependency property which marks an element as a name scope root.
+        /// </summary>
+        public static readonly DependencyProperty IsScopeRootProperty =
+            DependencyProperty.RegisterAttached(
+                "IsScopeRoot",
+                typeof(bool),
+                typeof(View),
+                new PropertyMetadata(false)
+                );
+
+        /// <summary>
         /// A dependency property which allows the override of convention application behavior.
         /// </summary>
         public static readonly DependencyProperty ApplyConventionsProperty =

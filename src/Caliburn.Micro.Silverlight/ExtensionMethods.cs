@@ -110,6 +110,8 @@
                 }
                 if(root is UserControl)
                     break;
+                if ((bool)root.GetValue(View.IsScopeRootProperty))
+                    break;
 
                 previous = root;
                 root = VisualTreeHelper.GetParent(previous);

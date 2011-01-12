@@ -56,7 +56,10 @@
                     target = IoC.GetInstance(null, containerKey);
 
                 d.SetValue(View.IsLoadedProperty, true);
+                d.SetValue(View.IsScopeRootProperty, true);
+
                 ViewModelBinder.Bind(target, d, null);
+
                 fe.Loaded -= handler;
             };
 
