@@ -1,0 +1,75 @@
+﻿<UserControl x:Class="Caliburn.Micro.HelloScreens.Customers.CustomersWorkspaceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
+             xmlns:clt="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
+             xmlns:ct="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit">
+	<Border CornerRadius="0 0 8 8"
+	        BorderBrush="#FF2C5403"
+	        BorderThickness="2">
+		<Border.Background>
+			<RadialGradientBrush>
+				<RadialGradientBrush.RelativeTransform>
+					<TransformGroup>
+						<ScaleTransform CenterX="0.5"
+						                CenterY="0.5"
+						                ScaleX="1.587"
+						                ScaleY="1.587" />
+						<SkewTransform AngleX="0"
+						               AngleY="0"
+						               CenterX="0.5"
+						               CenterY="0.5" />
+						<RotateTransform Angle="0"
+						                 CenterX="0.5"
+						                 CenterY="0.5" />
+						<TranslateTransform X="0"
+						                    Y="0" />
+					</TransformGroup>
+				</RadialGradientBrush.RelativeTransform>
+				<GradientStop Color="#FF2C5403"
+				              Offset="1" />
+				<GradientStop Color="#FF33FD69"
+				              Offset="0" />
+			</RadialGradientBrush>
+		</Border.Background>
+		<ct:DockPanel>
+			<Border BorderBrush="#FF2C5403"
+			        BorderThickness="0 0 0 2"
+			        Padding="4"
+			        ct:DockPanel.Dock="Top">
+				<Border.Background>
+					<LinearGradientBrush>
+						<LinearGradientBrush.RelativeTransform>
+							<TransformGroup>
+								<ScaleTransform CenterX="0.5"
+								                CenterY="0.5"
+								                ScaleX="1.587"
+								                ScaleY="1.587" />
+								<SkewTransform AngleX="0"
+								               AngleY="0"
+								               CenterX="0.5"
+								               CenterY="0.5" />
+								<RotateTransform Angle="0"
+								                 CenterX="0.5"
+								                 CenterY="0.5" />
+								<TranslateTransform X="0"
+								                    Y="0" />
+							</TransformGroup>
+						</LinearGradientBrush.RelativeTransform>
+						<GradientStop Color="#FF2C5403"
+						              Offset="-.75" />
+						<GradientStop Color="#FF33FD69"
+						              Offset="2.5" />
+					</LinearGradientBrush>
+				</Border.Background>
+				<TextBlock Text="{Binding DisplayName, Mode=TwoWay}"
+				           Foreground="White"
+				           FontWeight="Bold"
+				           FontSize="20" />
+			</Border>
+			<clt:TransitioningContentControl cal:View.Context="{Binding State, Mode=TwoWay}"
+			                                 cal:View.Model="{Binding}" 
+                                             Style="{StaticResource specialTransition}"/>
+		</ct:DockPanel>
+	</Border>
+</UserControl>

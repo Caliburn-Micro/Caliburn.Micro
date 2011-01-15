@@ -1,0 +1,9 @@
+﻿<UserControl x:Class="Caliburn.Micro.SimpleMDI.TabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel Orientation="Horizontal">
+        <TextBlock Text="This is the view for "/>
+        <TextBlock x:Name="DisplayName" />
+        <TextBlock Text="." />
+    </StackPanel>
+</UserControl>

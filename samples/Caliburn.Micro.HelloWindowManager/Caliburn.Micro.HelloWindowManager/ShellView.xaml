@@ -1,0 +1,14 @@
+﻿<Window x:Class="Caliburn.Micro.HelloWindowManager.ShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Width="640"
+        Height="480">
+	<StackPanel>
+		<Button x:Name="OpenModeless"
+		        Content="Open Modeless" />
+		<Button x:Name="OpenModal"
+		        Content="Open Modal" />
+        <Button x:Name="OpenPopup"
+                Content="Open Popup" />
+	</StackPanel>
+</Window>

@@ -1,0 +1,11 @@
+﻿<UserControl x:Class="Caliburn.Micro.Coroutines.External.ExternalScreenView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro">
+    <StackPanel>
+        <TextBlock Text="External Screen"
+                   FontSize="24" />
+        <Button Content="Back"
+                cal:Message.Attach="GoBack" />
+    </StackPanel>
+</UserControl>

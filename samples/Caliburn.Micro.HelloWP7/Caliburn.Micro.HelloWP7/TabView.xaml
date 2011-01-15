@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="Caliburn.Micro.HelloWP7.TabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<StackPanel Background="{StaticResource PhoneChromeBrush}">
+		<TextBlock x:Name="DisplayName"
+                   Margin="8 0 0 0"
+		           FontFamily="{StaticResource PhoneFontFamilyNormal}"
+		           FontSize="{StaticResource PhoneFontSizeNormal}"
+		           Foreground="{StaticResource PhoneForegroundBrush}" />
+        <TextBox x:Name="Text" />
+        <Button Content="Choose"
+                x:Name="Choose" />
+	</StackPanel>
+</UserControl>

@@ -1,0 +1,23 @@
+﻿<Window x:Class="Caliburn.Micro.SimpleMDI.ShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:cal="http://www.caliburnproject.org"
+        Width="640"
+        Height="480">
+    <DockPanel>
+        <Button x:Name="OpenTab"
+                Content="Open Tab" 
+                DockPanel.Dock="Top" />
+        <TabControl x:Name="Items">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding DisplayName}" />
+                        <Button Content="X"
+                                cal:Message.Attach="DeactivateItem($dataContext, 'true')" />
+                    </StackPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+        </TabControl>
+    </DockPanel>
+</Window>

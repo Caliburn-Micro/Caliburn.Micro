@@ -1,0 +1,5 @@
+﻿<UserControl x:Class="Caliburn.Micro.SimpleNavigation.PageTwoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <TextBlock FontSize="32">Page Two</TextBlock>
+</UserControl>

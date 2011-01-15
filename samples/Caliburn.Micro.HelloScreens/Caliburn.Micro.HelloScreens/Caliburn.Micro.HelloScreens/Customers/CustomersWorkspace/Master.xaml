@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="Caliburn.Micro.HelloScreens.Customers.CustomersWorkspace.Master"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
+             xmlns:ct="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit">
+	<Grid Margin="12">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+
+		<StackPanel Orientation="Horizontal">
+			<TextBlock Text="Search"
+			           Margin="0 0 4 0"
+			           Foreground="White"
+			           VerticalAlignment="Center" />
+			<TextBox Width="175" />
+			<Button Content="Go" />
+		</StackPanel>
+
+		<TextBlock Grid.Row="1"
+		           Foreground="White"
+		           Margin="4"
+		           Text="No matches found for search." />
+
+		<ct:DockPanel Grid.Row="1"
+		              Grid.Column="1">
+			<TextBlock Text="Open Customers"
+			           Foreground="White"
+			           FontSize="16"
+			           FontWeight="Bold"
+			           ct:DockPanel.Dock="Top"
+			           Margin="4" />
+			<ItemsControl x:Name="Items"
+                          Margin="4 0 0 0">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Horizontal"
+						            Margin="4">
+							<Button Content="+"
+							        cal:Message.Attach="Edit($dataContext)" />
+							<TextBlock Text="{Binding DisplayName, Mode=TwoWay}"
+							           VerticalAlignment="Center"
+							           Foreground="White"
+							           Margin="4 0 0 0" />
+						</StackPanel>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</ct:DockPanel>
+
+		<Button Content="New"
+		        Grid.Row="2"
+		        Grid.Column="1"
+		        HorizontalAlignment="Right"
+		        x:Name="New" />
+	</Grid>
+</UserControl>

@@ -1,0 +1,11 @@
+﻿<UserControl x:Class="Caliburn.Micro.ViewFirst.ShellView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cal="http://www.caliburnproject.org"
+             cal:Bind.Model="Shell">
+    <StackPanel>
+        <TextBox x:Name="Name" />
+        <Button x:Name="SayHello"
+                Content="Click Me" />
+    </StackPanel>
+</UserControl>

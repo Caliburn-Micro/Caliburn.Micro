@@ -1,0 +1,10 @@
+﻿<UserControl x:Class="Caliburn.Micro.HelloScreens.Customers.AddressView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<StackPanel>
+        <TextBlock FontSize="20"
+                   Text="This is where the address details would go..." />
+		<Button Content="Close"
+		        x:Name="TryClose" />
+	</StackPanel>
+</UserControl>

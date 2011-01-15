@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="Caliburn.Micro.SimpleNavigation.ShellView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:tc="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit">
+	<tc:DockPanel>
+		<StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+		            tc:DockPanel.Dock="Top">
+			<Button x:Name="ShowPageOne"
+			        Content="Show Page One" />
+			<Button x:Name="ShowPageTwo"
+			        Content="Show Page Two" />
+		</StackPanel>
+
+		<ContentControl x:Name="ActiveItem" />
+	</tc:DockPanel>
+</UserControl>

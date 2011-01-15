@@ -1,0 +1,6 @@
+﻿<UserControl x:Class="Caliburn.Micro.HelloWindowManager.Dialog.Modeless"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Height="240">
+    <TextBlock FontSize="20">This is a custom WINDOW view.</TextBlock>
+</UserControl>
