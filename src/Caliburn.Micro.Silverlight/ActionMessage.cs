@@ -365,9 +365,15 @@ namespace Caliburn.Micro
                 if(guard == null)
                     return;
 
-                PropertyChangedEventHandler handler = (s, e) =>{
-                    if(string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == guardName)
+                PropertyChangedEventHandler handler = null;
+                handler = (s, e) => {
+                    if(string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == guardName) {
+                        if(context.Message == null) {
+                            inpc.PropertyChanged -= handler;
+                            return;
+                        }
                         context.Message.UpdateAvailability();
+                    }
                 };
 
                 inpc.PropertyChanged += handler;
