@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="GameLibrary.Views.ResultsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:tk="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit">
+    <Border Style="{StaticResource panel}"
+            VerticalAlignment="Top">
+        <tk:DockPanel>
+            <TextBlock x:Name="Message"
+                       tk:DockPanel.Dock="Top"
+                       Style="{StaticResource smallEmphasis}"
+                       HorizontalAlignment="Center"
+                       Margin="0 0 0 20" />
+            
+            <ItemsControl x:Name="Results" />
+        </tk:DockPanel>
+    </Border>
+</UserControl>

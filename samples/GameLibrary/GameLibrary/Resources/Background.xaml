@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="GameLibrary.Resources.Background"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.OpacityMask>
+            <RadialGradientBrush RadiusX="1.147"
+                                 RadiusY="1.147"
+                                 GradientOrigin="0.638,0.403"
+                                 Center="0.664,0.33">
+                <RadialGradientBrush.RelativeTransform>
+                    <TransformGroup>
+                        <ScaleTransform CenterX="0.4830000102519989"
+                                        CenterY="0.460999995470047" />
+                        <SkewTransform AngleX="0"
+                                       AngleY="0"
+                                       CenterX="0.4830000102519989"
+                                       CenterY="0.460999995470047" />
+                        <RotateTransform Angle="36.693"
+                                         CenterX="0.4830000102519989"
+                                         CenterY="0.460999995470047" />
+                        <TranslateTransform />
+                    </TransformGroup>
+                </RadialGradientBrush.RelativeTransform>
+                <GradientStop Color="Black" />
+                <GradientStop Color="Transparent"
+                              Offset="0.904" />
+            </RadialGradientBrush>
+        </Grid.OpacityMask>
+        <Grid x:Name="baseBrush">
+            <Grid.Background>
+                <RadialGradientBrush Center="-0.044,1.083"
+                                     GradientOrigin="-0.634,1.596"
+                                     RadiusX="1.192"
+                                     RadiusY="1.192">
+                    <RadialGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform CenterX="0.22599999606609345"
+                                            CenterY="0.71200001239776611" />
+                            <SkewTransform AngleX="0"
+                                           AngleY="0"
+                                           CenterX="0.22599999606609345"
+                                           CenterY="0.71200001239776611" />
+                            <RotateTransform Angle="183.969"
+                                             CenterX="0.22599999606609345"
+                                             CenterY="0.71200001239776611" />
+                            <TranslateTransform Y="0" />
+                        </TransformGroup>
+                    </RadialGradientBrush.RelativeTransform>
+                    <GradientStop Color="Black" />
+                    <GradientStop Color="#FF021B2C"
+                                  Offset="0.682" />
+                    <GradientStop Color="#FF000105"
+                                  Offset="0.079" />
+                </RadialGradientBrush>
+            </Grid.Background>
+        </Grid>
+        <Grid x:Name="overlayBrush">
+            <Grid.Background>
+                <RadialGradientBrush Center="1.482,0.243"
+                                     GradientOrigin="1.482,0.243"
+                                     RadiusX="1.239"
+                                     RadiusY="1.239">
+                    <GradientStop Color="#FFA1501A" />
+                    <GradientStop Offset="1" />
+                </RadialGradientBrush>
+            </Grid.Background>
+        </Grid>
+    </Grid>
+</UserControl>

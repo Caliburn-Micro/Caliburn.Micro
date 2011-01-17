@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="BusyIndicator.xaml" />
+        <ResourceDictionary Source="HyperlinkButton.xaml" />
+        <ResourceDictionary Source="TextBox.xaml" />
+        <ResourceDictionary Source="Button.xaml" />
+        <ResourceDictionary Source="Rating.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    
+</ResourceDictionary>

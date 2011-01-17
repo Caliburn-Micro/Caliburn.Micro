@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="caretBrush" 
+                     Color="Gray" />
+
+    <LinearGradientBrush x:Key="panelBrush"
+                         Opacity=".5"
+                         EndPoint="0.907,0.791"
+                         StartPoint="0.093,0.209">
+        <GradientStop Color="#FF766C5E"
+                      Offset="1" />
+        <GradientStop Color="#FF2F3441" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Name="specialBrush"
+                         EndPoint="0.504,0.869"
+                         StartPoint="0.504,0">
+        <GradientStop Color="#FF09D1EE"
+                      Offset="0" />
+        <GradientStop Color="#FF094974"
+                      Offset="1" />
+    </LinearGradientBrush>
+
+</ResourceDictionary>
