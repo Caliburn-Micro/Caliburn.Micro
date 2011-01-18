@@ -9,8 +9,9 @@
     /// <summary>
     /// Hosts attached properties related to view models.
     /// </summary>
-    public static class View
-    {
+    public static class View {
+        static ILog log = LogManager.GetLog(typeof(View));
+
         /// <summary>
         /// The default view context.
         /// </summary>
@@ -210,12 +211,17 @@
 
         private static void SetContentPropertyCore(object targetLocation, object view)
         {
-            var type = targetLocation.GetType();
-            var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
-                .FirstOrDefault() ?? new ContentPropertyAttribute("Content");
+            try {
+                var type = targetLocation.GetType();
+                var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
+                    .FirstOrDefault() ?? new ContentPropertyAttribute("Content");
 
-            type.GetProperty(contentProperty.Name)
-                .SetValue(targetLocation, view, null);
+                type.GetProperty(contentProperty.Name)
+                    .SetValue(targetLocation, view, null);
+            }
+            catch(Exception e) {
+                log.Error(e);
+            }
         }
     }
 }
