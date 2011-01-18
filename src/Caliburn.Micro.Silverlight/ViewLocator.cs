@@ -38,13 +38,14 @@
         };
 
         /// <summary>
-        /// Locates the view for the specified model type.
+        /// Locates the view type based on the specified model type.
         /// </summary>
         /// <returns>The view.</returns>
-        /// <remarks>Pass the model type, display location (or null) and the context instance (or null) as parameters and receive a view instance.</remarks>
-        public static Func<Type, DependencyObject, object, UIElement> LocateForModelType = (modelType, displayLocation, context) =>{
+        /// <remarks>Pass the model type, display location (or null) and the context instance (or null) as parameters and receive a view type.</remarks>
+        public static Func<Type, DependencyObject, object, Type> LocateTypeForModelType = (modelType, displayLocation, context) =>
+        {
             var viewTypeName = modelType.FullName.Replace("Model", string.Empty);
-            if(context != null)
+            if (context != null)
             {
                 viewTypeName = viewTypeName.Remove(viewTypeName.Length - 4, 4);
                 viewTypeName = viewTypeName + "." + context;
@@ -55,8 +56,19 @@
                             where type.FullName == viewTypeName
                             select type).FirstOrDefault();
 
+            return viewType;
+        };
+
+        /// <summary>
+        /// Locates the view for the specified model type.
+        /// </summary>
+        /// <returns>The view.</returns>
+        /// <remarks>Pass the model type, display location (or null) and the context instance (or null) as parameters and receive a view instance.</remarks>
+        public static Func<Type, DependencyObject, object, UIElement> LocateForModelType = (modelType, displayLocation, context) =>{
+            var viewType = LocateTypeForModelType(modelType, displayLocation, context);
+
             return viewType == null
-                ? new TextBlock { Text = string.Format("{0} not found.", viewTypeName) }
+                ? new TextBlock { Text = string.Format("Cannot find view for {0}.", modelType) }
                 : GetOrCreateViewType(viewType);
         };
 
