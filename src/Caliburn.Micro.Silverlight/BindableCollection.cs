@@ -81,7 +81,7 @@
         /// </summary>
         /// <param name="index">The index to insert at.</param>
         /// <param name="item">The item to be inserted.</param>
-        protected override void InsertItem(int index, T item) {
+        protected sealed override void InsertItem(int index, T item) {
             Execute.OnUIThread(() => InsertItemBase(index, item));
         }
 
@@ -91,7 +91,7 @@
         /// <param name="index">The index.</param>
         /// <param name="item">The item.</param>
         /// <remarks>Used to avoid compiler warning regarding unverifiable code.</remarks>
-        void InsertItemBase(int index, T item) {
+        protected virtual void InsertItemBase(int index, T item) {
             base.InsertItem(index, item);
         }
 
@@ -101,7 +101,7 @@
         /// </summary>
         /// <param name="oldIndex">The old position of the item.</param>
         /// <param name="newIndex">The new position of the item.</param>
-        protected override void MoveItem(int oldIndex, int newIndex) {
+        protected sealed override void MoveItem(int oldIndex, int newIndex) {
             Execute.OnUIThread(() => MoveItemBase(oldIndex, newIndex));
         }
 
@@ -111,7 +111,7 @@
         /// <param name="oldIndex">The old index.</param>
         /// <param name="newIndex">The new index.</param>
         /// <remarks>Used to avoid compiler warning regarding unverificable code.</remarks>
-        private void MoveItemBase(int oldIndex, int newIndex) {
+        protected virtual void MoveItemBase(int oldIndex, int newIndex) {
             base.MoveItem(oldIndex, newIndex);
         }
 #endif
@@ -121,7 +121,7 @@
         /// </summary>
         /// <param name="index">The index to set the item at.</param>
         /// <param name="item">The item to set.</param>
-        protected override void SetItem(int index, T item) {
+        protected sealed override void SetItem(int index, T item) {
             Execute.OnUIThread(() => SetItemBase(index, item));
         }
 
@@ -131,7 +131,7 @@
         /// <param name="index">The index.</param>
         /// <param name="item">The item.</param>
         /// <remarks>Used to avoid compiler warning regarding unverifiable code.</remarks>
-        void SetItemBase(int index, T item) {
+        protected virtual void SetItemBase(int index, T item) {
             base.SetItem(index, item);
         }
 
@@ -139,7 +139,7 @@
         /// Removes the item at the specified position.
         /// </summary>
         /// <param name="index">The position used to identify the item to remove.</param>
-        protected override void RemoveItem(int index) {
+        protected sealed override void RemoveItem(int index) {
             Execute.OnUIThread(() => RemoveItemBase(index));
         }
 
@@ -148,14 +148,14 @@
         /// </summary>
         /// <param name="index">The index.</param>
         /// <remarks>Used to avoid compiler warning regarding unverifiable code.</remarks>
-        void RemoveItemBase(int index) {
+        protected virtual void RemoveItemBase(int index) {
             base.RemoveItem(index);
         }
 
         /// <summary>
         /// Clears the items contained by the collection.
         /// </summary>
-        protected override void ClearItems() {
+        protected sealed override void ClearItems() {
             Execute.OnUIThread(ClearItemsBase);
         }
 
@@ -163,7 +163,7 @@
         /// Exposes the base implementation of the <see cref="ClearItems"/> function.
         /// </summary>
         /// <remarks>Used to avoid compiler warning regarding unverifiable code.</remarks>
-        void ClearItemsBase() {
+        protected virtual void ClearItemsBase() {
             base.ClearItems();
         }
 
@@ -193,7 +193,7 @@
         /// Adds the range.
         /// </summary>
         /// <param name="items">The items.</param>
-        public void AddRange(IEnumerable<T> items) {
+        public virtual void AddRange(IEnumerable<T> items) {
             Execute.OnUIThread(() => {
                 var previousNotificationSetting = IsNotifying;
                 IsNotifying = false;
@@ -212,7 +212,7 @@
         /// Removes the range.
         /// </summary>
         /// <param name="items">The items.</param>
-        public void RemoveRange(IEnumerable<T> items) {
+        public virtual void RemoveRange(IEnumerable<T> items) {
             Execute.OnUIThread(() => {
                 var previousNotificationSetting = IsNotifying;
                 IsNotifying = false;
