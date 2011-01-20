@@ -42,9 +42,12 @@
         /// </summary>
         /// <returns>The view.</returns>
         /// <remarks>Pass the model type, display location (or null) and the context instance (or null) as parameters and receive a view type.</remarks>
-        public static Func<Type, DependencyObject, object, Type> LocateTypeForModelType = (modelType, displayLocation, context) =>
-        {
-            var viewTypeName = modelType.FullName.Replace("Model", string.Empty);
+        public static Func<Type, DependencyObject, object, Type> LocateTypeForModelType = (modelType, displayLocation, context) => {
+            var viewTypeName = modelType.FullName.Substring(0, modelType.FullName.IndexOf("`") < 0
+                ? modelType.FullName.Length
+                : modelType.FullName.IndexOf("`")
+                ).Replace("Model", string.Empty);
+
             if (context != null)
             {
                 viewTypeName = viewTypeName.Remove(viewTypeName.Length - 4, 4);
