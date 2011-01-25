@@ -23,7 +23,7 @@ namespace Caliburn.Micro
     [DefaultTrigger(typeof(ButtonBase), typeof(EventTrigger), "Click")] 
     [ContentProperty("Parameters")]
     [TypeConstraint(typeof(FrameworkElement))]
-    public class ActionMessage : TriggerAction<FrameworkElement>
+    public class ActionMessage : TriggerAction<FrameworkElement>, IHaveParameters
     {
         static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
 

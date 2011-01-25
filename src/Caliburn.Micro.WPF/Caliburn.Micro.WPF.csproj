@@ -114,6 +114,9 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\IHandle.cs">
       <Link>IHandle.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IHaveParameters.cs">
+      <Link>IHaveParameters.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\IoC.cs">
       <Link>IoC.cs</Link>
     </Compile>

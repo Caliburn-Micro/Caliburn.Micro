@@ -16,8 +16,6 @@
     /// </summary>
     public static class Parser
     {
-        static readonly Regex Regex = new Regex(@",(?=(?:[^']*'[^']*')*(?![^']*'))");
-
         /// <summary>
         /// Parses the specified message text.
         /// </summary>
@@ -29,14 +27,15 @@
             var triggers = new List<TriggerBase>();
             var messageTexts = Split(text, ';');
 
-            foreach(var messageText in messageTexts) {
+            foreach (var messageText in messageTexts)
+            {
                 var triggerPlusMessage = Split(messageText, '=');
                 string messageDetail = triggerPlusMessage.Last()
                     .Replace("[", string.Empty)
                     .Replace("]", string.Empty)
                     .Trim();
 
-                var trigger = CreateTrigger(target.GetType(), triggerPlusMessage);
+                var trigger = CreateTrigger(target, triggerPlusMessage.Length == 1 ? null : triggerPlusMessage[0]);
                 var message = CreateMessage(target, messageDetail);
 
                 trigger.Actions.Add(message);
@@ -46,22 +45,24 @@
             return triggers;
         }
 
-        static TriggerBase CreateTrigger(Type targetType, string[] triggerPlusMessage)
-        {
-            if(triggerPlusMessage.Length == 1)
-            {
-                var defaults = ConventionManager.GetElementConvention(targetType);
+        /// <summary>
+        /// The function used to generate a trigger.
+        /// </summary>
+        /// <remarks>The parameters passed to the method are the the target of the trigger and string representing the trigger.</remarks>
+        public static Func<DependencyObject, string, TriggerBase> CreateTrigger = (target, triggerText) => {
+            if(triggerText == null) {
+                var defaults = ConventionManager.GetElementConvention(target.GetType());
                 return defaults.CreateTrigger();
             }
 
-            var triggerDetail = triggerPlusMessage[0]
+            var triggerDetail = triggerText
                 .Replace("[", string.Empty)
                 .Replace("]", string.Empty)
                 .Replace("Event", string.Empty)
                 .Trim();
 
             return new EventTrigger { EventName = triggerDetail };
-        }
+        };
 
         /// <summary>
         /// Creates an instance of <see cref="ActionMessage"/> by parsing out the textual dsl.
@@ -69,90 +70,55 @@
         /// <param name="target">The target of the message.</param>
         /// <param name="messageText">The textual message dsl.</param>
         /// <returns>The created message.</returns>
-        public static ActionMessage CreateMessage(DependencyObject target, string messageText)
+        public static System.Windows.Interactivity.TriggerAction CreateMessage(DependencyObject target, string messageText)
         {
-            var message = new ActionMessage();
-            messageText = Regex.Replace(messageText, "^Action", string.Empty);
-
             var openingParenthesisIndex = messageText.IndexOf('(');
-            if (openingParenthesisIndex < 0) openingParenthesisIndex = messageText.Length;
+            if (openingParenthesisIndex < 0)
+                openingParenthesisIndex = messageText.Length;
             var closingParenthesisIndex = messageText.LastIndexOf(')');
-            if (closingParenthesisIndex < 0) closingParenthesisIndex = messageText.Length;
+            if (closingParenthesisIndex < 0)
+                closingParenthesisIndex = messageText.Length;
 
             var core = messageText.Substring(0, openingParenthesisIndex).Trim();
+            var message = InterpretMessageText(target, core);
+            var withParameters = message as IHaveParameters;
+            if(withParameters != null) {
+                if(closingParenthesisIndex - openingParenthesisIndex > 1) {
+                    var paramString = messageText.Substring(openingParenthesisIndex + 1, closingParenthesisIndex - openingParenthesisIndex - 1);
+                    var parameters = SplitParameters(paramString);
 
-            message.MethodName = core;
-
-            if (closingParenthesisIndex - openingParenthesisIndex > 1)
-            {
-                var paramString = messageText.Substring(openingParenthesisIndex + 1,
-                    closingParenthesisIndex - openingParenthesisIndex - 1);
-
-                var parameters = Regex.Split(paramString);
-
-                foreach (var parameter in parameters)
-                {
-                    message.Parameters.Add(CreateParameter(target, parameter.Trim()));
+                    foreach(var parameter in parameters)
+                        withParameters.Parameters.Add(CreateParameter(target, parameter.Trim()));
                 }
             }
 
             return message;
         }
 
-        static string[] Split(string message, char separator) {
-            //Splits a string using the specified separator, if it is found outside of relevant places
-            //delimited by [ and ]
-            string str;
-            var list = new List<string>();
-            var builder = new StringBuilder();
-
-            int squareBrackets = 0;
-            foreach(var current in message) {
-                //Square brackets are used as delimiters, so only separators outside them count...
-                if(current == '[')
-                    squareBrackets++;
-                else if(current == ']')
-                    squareBrackets--;
-                else if(current == separator) {
-                    if(squareBrackets == 0) {
-                        str = builder.ToString();
-                        if(!string.IsNullOrEmpty(str))
-                            list.Add(builder.ToString());
-#if WP7
-                        builder = new StringBuilder();
-#else
-                        builder.Clear();
-#endif
-                        continue;
-                    }
-                }
-
-                builder.Append(current);
-            }
-
-            str = builder.ToString();
-            if(!string.IsNullOrEmpty(str))
-                list.Add(builder.ToString());
-
-            return list.ToArray();
-        }
-
-        static Parameter CreateParameter(DependencyObject target, string parameter)
-        {
+        /// <summary>
+        /// Function used to parse a string identified as a message.
+        /// </summary>
+        public static Func<DependencyObject, string, System.Windows.Interactivity.TriggerAction> InterpretMessageText = (target, text) => {
+            return new ActionMessage { MethodName = Regex.Replace(text, "^Action", string.Empty) };
+        };
+        
+        /// <summary>
+        /// Function used to parse a string identified as a message parameter.
+        /// </summary>
+        public static Func<DependencyObject, string, Parameter> CreateParameter = (target, parameterText) => {
             var actualParameter = new Parameter();
 
-            if(parameter.StartsWith("'") && parameter.EndsWith("'"))
-                actualParameter.Value = parameter.Substring(1, parameter.Length - 2);
-            else if(MessageBinder.SpecialValues.ContainsKey(parameter.ToLower()) || char.IsNumber(parameter[0]))
-                actualParameter.Value = parameter;
-            else if (target is FrameworkElement)
-            {
+            if(parameterText.StartsWith("'") && parameterText.EndsWith("'"))
+                actualParameter.Value = parameterText.Substring(1, parameterText.Length - 2);
+            else if(MessageBinder.SpecialValues.ContainsKey(parameterText.ToLower()) || char.IsNumber(parameterText[0]))
+                actualParameter.Value = parameterText;
+            else if(target is FrameworkElement) {
                 var fe = (FrameworkElement)target;
-                var nameAndBindingMode = parameter.Split(':').Select(x => x.Trim()).ToArray();
+                var nameAndBindingMode = parameterText.Split(':').Select(x => x.Trim()).ToArray();
                 var index = nameAndBindingMode[0].IndexOf('.');
 
                 RoutedEventHandler handler = null;
-                handler = (s, e) =>{
+                handler = (s, e) => {
                     BindParameter(
                         fe,
                         actualParameter,
@@ -163,26 +129,35 @@
                     fe.Loaded -= handler;
                 };
 
-                if ((bool)fe.GetValue(View.IsLoadedProperty))
+                if((bool)fe.GetValue(View.IsLoadedProperty))
                     handler(null, null);
                 else fe.Loaded += handler;
             }
 
             return actualParameter;
-        }
+        };
 
-        static void BindParameter(FrameworkElement target, Parameter parameter, string elementName, string path, BindingMode bindingMode)
+        /// <summary>
+        /// Creates a binding on a <see cref="Parameter"/>.
+        /// </summary>
+        /// <param name="target">The target to which the message is applied.</param>
+        /// <param name="parameter">The parameter object.</param>
+        /// <param name="elementName">The name of the element to bind to.</param>
+        /// <param name="path">The path of the element to bind to.</param>
+        /// <param name="bindingMode">The binding mode to use.</param>
+        public static void BindParameter(FrameworkElement target, Parameter parameter, string elementName, string path, BindingMode bindingMode)
         {
-            var element = elementName == "$this" 
-                ? target 
+            var element = elementName == "$this"
+                ? target
                 : ExtensionMethods.GetNamedElementsInScope(target).FindName(elementName);
             if (element == null)
                 return;
 
-            if(string.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(path))
                 path = ConventionManager.GetElementConvention(element.GetType()).ParameterProperty;
 
-            var binding = new Binding(path) {
+            var binding = new Binding(path)
+            {
                 Source = element,
                 Mode = bindingMode
             };
@@ -199,6 +174,120 @@
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
             BindingOperations.SetBinding(parameter, Parameter.ValueProperty, binding);
 #endif
+        }
+
+        static string[] Split(string message, char separator)
+        {
+            //Splits a string using the specified separator, if it is found outside of relevant places
+            //delimited by [ and ]
+            string str;
+            var list = new List<string>();
+            var builder = new StringBuilder();
+
+            int squareBrackets = 0;
+            foreach (var current in message)
+            {
+                //Square brackets are used as delimiters, so only separators outside them count...
+                if (current == '[')
+                    squareBrackets++;
+                else if (current == ']')
+                    squareBrackets--;
+                else if (current == separator)
+                {
+                    if (squareBrackets == 0)
+                    {
+                        str = builder.ToString();
+                        if (!string.IsNullOrEmpty(str))
+                            list.Add(builder.ToString());
+#if WP7
+                        builder = new StringBuilder();
+#else
+                        builder.Clear();
+#endif
+                        continue;
+                    }
+                }
+
+                builder.Append(current);
+            }
+
+            str = builder.ToString();
+            if (!string.IsNullOrEmpty(str))
+                list.Add(builder.ToString());
+
+            return list.ToArray();
+        }
+
+        static string[] SplitParameters(string parameters)
+        {
+            //Splits parameter string taking into account brackets...
+            List<string> list = new List<string>();
+            var builder = new StringBuilder();
+
+            bool isInString = false;
+
+            int curlyBrackets = 0;
+            int squareBrackets = 0;
+            int roundBrackets = 0;
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                var current = parameters[i];
+
+                if (current == '"')
+                {
+                    if (i == 0 || parameters[i - 1] != '\\')
+                        isInString = !isInString;
+                }
+
+                if (!isInString)
+                {
+                    switch (current)
+                    {
+                        case '{':
+                            curlyBrackets++;
+                            break;
+                        case '}':
+                            curlyBrackets--;
+                            break;
+                        case '[':
+                            squareBrackets++;
+                            break;
+                        case ']':
+                            squareBrackets--;
+                            break;
+                        case '(':
+                            roundBrackets++;
+                            break;
+                        case ')':
+                            roundBrackets--;
+                            break;
+                        default:
+                            if (current == ',' && roundBrackets == 0 && squareBrackets == 0 && curlyBrackets == 0)
+                            {
+                                //The only commas to be considered as parameter separators are outside:
+                                //- Strings
+                                //- Square brackets (to ignore indexers)
+                                //- Parantheses (to ignore method invocations)
+                                //- Curly brackets (to ignore initializers and Bindings)
+
+                                list.Add(builder.ToString());
+#if WP7
+                                builder = new StringBuilder();
+#else
+                                builder.Clear();
+#endif
+                                continue;
+                            }
+                            break;
+                    }
+                }
+
+                builder.Append(current);
+            }
+
+            list.Add(builder.ToString());
+
+            return list.ToArray();
         }
     }
 }
