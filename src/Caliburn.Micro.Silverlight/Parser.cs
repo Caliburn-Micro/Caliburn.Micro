@@ -9,6 +9,7 @@
     using System.Windows.Data;
     using EventTrigger = System.Windows.Interactivity.EventTrigger;
     using TriggerBase = System.Windows.Interactivity.TriggerBase;
+    using System.Text;
 
     /// <summary>
     /// Parses text into a fully functional set of <see cref="TriggerBase"/> instances with <see cref="ActionMessage"/>.
@@ -26,11 +27,10 @@
         public static IEnumerable<TriggerBase> Parse(DependencyObject target, string text)
         {
             var triggers = new List<TriggerBase>();
-            var items = text.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            var messageTexts = Split(text, ';');
 
-            foreach(var messageText in items)
-            {
-                var triggerPlusMessage = messageText.Split('=');
+            foreach(var messageText in messageTexts) {
+                var triggerPlusMessage = Split(messageText, '=');
                 string messageDetail = triggerPlusMessage.Last()
                     .Replace("[", string.Empty)
                     .Replace("]", string.Empty)
@@ -99,6 +99,44 @@
             return message;
         }
 
+        static string[] Split(string message, char separator) {
+            //Splits a string using the specified separator, if it is found outside of relevant places
+            //delimited by [ and ]
+            string str;
+            var list = new List<string>();
+            var builder = new StringBuilder();
+
+            int squareBrackets = 0;
+            foreach(var current in message) {
+                //Square brackets are used as delimiters, so only separators outside them count...
+                if(current == '[')
+                    squareBrackets++;
+                else if(current == ']')
+                    squareBrackets--;
+                else if(current == separator) {
+                    if(squareBrackets == 0) {
+                        str = builder.ToString();
+                        if(!string.IsNullOrEmpty(str))
+                            list.Add(builder.ToString());
+#if WP7
+                        builder = new StringBuilder();
+#else
+                        builder.Clear();
+#endif
+                        continue;
+                    }
+                }
+
+                builder.Append(current);
+            }
+
+            str = builder.ToString();
+            if(!string.IsNullOrEmpty(str))
+                list.Add(builder.ToString());
+
+            return list.ToArray();
+        }
+
         static Parameter CreateParameter(DependencyObject target, string parameter)
         {
             var actualParameter = new Parameter();
@@ -133,7 +171,7 @@
             return actualParameter;
         }
 
-        private static void BindParameter(FrameworkElement target, Parameter parameter, string elementName, string path, BindingMode bindingMode)
+        static void BindParameter(FrameworkElement target, Parameter parameter, string elementName, string path, BindingMode bindingMode)
         {
             var element = elementName == "$this" 
                 ? target 
