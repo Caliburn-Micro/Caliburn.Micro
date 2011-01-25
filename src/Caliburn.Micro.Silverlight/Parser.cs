@@ -105,7 +105,7 @@
 
             if(parameter.StartsWith("'") && parameter.EndsWith("'"))
                 actualParameter.Value = parameter.Substring(1, parameter.Length - 2);
-            else if(MessageBinder.SpecialValues.Contains(parameter.ToLower()) || char.IsNumber(parameter[0]))
+            else if(MessageBinder.SpecialValues.ContainsKey(parameter.ToLower()) || char.IsNumber(parameter[0]))
                 actualParameter.Value = parameter;
             else if (target is FrameworkElement)
             {

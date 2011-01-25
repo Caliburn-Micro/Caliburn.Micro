@@ -119,7 +119,7 @@
                         var paramName = parameter.Name;
                         var specialValue = "$" + paramName.ToLower();
 
-                        if(MessageBinder.SpecialValues.Contains(specialValue))
+                        if(MessageBinder.SpecialValues.ContainsKey(specialValue))
                             paramName = specialValue;
 
                         message += paramName + ",";
