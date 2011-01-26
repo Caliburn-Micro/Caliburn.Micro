@@ -99,7 +99,7 @@
         /// Function used to parse a string identified as a message.
         /// </summary>
         public static Func<DependencyObject, string, System.Windows.Interactivity.TriggerAction> InterpretMessageText = (target, text) => {
-            return new ActionMessage { MethodName = Regex.Replace(text, "^Action", string.Empty) };
+            return new ActionMessage { MethodName = Regex.Replace(text, "^Action", string.Empty).Trim() };
         };
         
         /// <summary>
