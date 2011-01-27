@@ -17,23 +17,19 @@
         /// Executes a coroutine.
         /// </summary>
         /// <param name="coroutine">The coroutine to execute.</param>
-        public static void Execute(IEnumerator<IResult> coroutine) {
-            Execute(coroutine, new ActionExecutionContext());
-        }
-
-        /// <summary>
-        /// Executes a coroutine.
-        /// </summary>
-        /// <param name="coroutine">The coroutine to execute.</param>
         /// <param name="context">The context to execute the coroutine within.</param>
-        public static void Execute(IEnumerator<IResult> coroutine, ActionExecutionContext context) {
+        /// /// <param name="callback">The completion callback for the coroutine.</param>
+        public static void BeginExecute(IEnumerator<IResult> coroutine, ActionExecutionContext context = null, EventHandler<ResultCompletionEventArgs> callback = null) {
             Log.Info("Executing coroutine.");
 
             var enumerator = CreateParentEnumerator(coroutine);
             IoC.BuildUp(enumerator);
 
+            if(callback != null)
+                enumerator.Completed += callback;
             enumerator.Completed += Completed;
-            enumerator.Execute(context);
+
+            enumerator.Execute(context ?? new ActionExecutionContext());
         }
 
         /// <summary>

@@ -250,9 +250,9 @@ namespace Caliburn.Micro
                 returnValue = new[] { returnValue as IResult };
 
             if (returnValue is IEnumerable<IResult>)
-                Coroutine.Execute(((IEnumerable<IResult>)returnValue).GetEnumerator(), context);
+                Coroutine.BeginExecute(((IEnumerable<IResult>)returnValue).GetEnumerator(), context);
             else if (returnValue is IEnumerator<IResult>)
-                Coroutine.Execute(((IEnumerator<IResult>)returnValue), context);
+                Coroutine.BeginExecute(((IEnumerator<IResult>)returnValue), context);
         };
 
         /// <summary>
