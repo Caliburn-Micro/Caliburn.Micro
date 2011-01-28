@@ -167,7 +167,7 @@
             }
 
             var viewModelType = viewModel.GetType();
-            var namedElements = ExtensionMethods.GetNamedElementsInScope(element);
+            var namedElements = BindingScope.GetNamedElements(element);
             var isLoaded = element.GetValue(View.IsLoadedProperty);
 
             namedElements.Apply(x => x.SetValue(View.IsLoadedProperty, isLoaded));

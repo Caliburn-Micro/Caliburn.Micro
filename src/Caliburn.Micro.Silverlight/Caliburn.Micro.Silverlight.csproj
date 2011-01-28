@@ -65,6 +65,7 @@
     <Compile Include="AttachedCollection.cs" />
     <Compile Include="Bind.cs" />
     <Compile Include="BindableCollection.cs" />
+    <Compile Include="BindingScope.cs" />
     <Compile Include="BooleanToVisibilityConverter.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="ConductorBaseWithActiveItem.cs" />

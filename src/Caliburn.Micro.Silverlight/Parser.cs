@@ -145,7 +145,7 @@
         public static void BindParameter(FrameworkElement target, Parameter parameter, string elementName, string path, BindingMode bindingMode) {
             var element = elementName == "$this"
                 ? target
-                : ExtensionMethods.GetNamedElementsInScope(target).FindName(elementName);
+                : BindingScope.GetNamedElements(target).FindName(elementName);
             if(element == null)
                 return;
 

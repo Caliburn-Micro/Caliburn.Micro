@@ -63,6 +63,9 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\BindableCollection.cs">
       <Link>BindableCollection.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\BindingScope.cs">
+      <Link>BindingScope.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\BooleanToVisibilityConverter.cs">
       <Link>BooleanToVisibilityConverter.cs</Link>
     </Compile>
