@@ -27,6 +27,7 @@ syntax: glob
 *.sbr
 *.scc
 *.sig
+*.xap
 _ReSharper*\*
 [Bb]in
 [Dd]ebug*/
