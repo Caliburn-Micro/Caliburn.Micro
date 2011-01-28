@@ -54,11 +54,17 @@
         }
 
         /// <summary>
+        /// Resets the executor to use a non-dispatcher-based action executor.
+        /// </summary>
+        public static void ResetWithoutDispatcher() {
+            executor = action => action();
+        }
+
+        /// <summary>
         /// Executes the action on the UI thread.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        public static void OnUIThread(this System.Action action)
-        {
+        public static void OnUIThread(this System.Action action) {
             executor(action);
         }
     }

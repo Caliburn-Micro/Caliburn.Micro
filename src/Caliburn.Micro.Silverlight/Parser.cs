@@ -22,18 +22,16 @@
         /// <param name="target">The target.</param>
         /// <param name="text">The message text.</param>
         /// <returns>The triggers parsed from the text.</returns>
-        public static IEnumerable<TriggerBase> Parse(DependencyObject target, string text)
-        {
+        public static IEnumerable<TriggerBase> Parse(DependencyObject target, string text) {
             var triggers = new List<TriggerBase>();
             var messageTexts = Split(text, ';');
 
-            foreach (var messageText in messageTexts)
-            {
+            foreach (var messageText in messageTexts) {
                 var triggerPlusMessage = Split(messageText, '=');
-                string messageDetail = triggerPlusMessage.Last()
-                    .Replace("[", string.Empty)
-                    .Replace("]", string.Empty)
-                    .Trim();
+                var messageDetail = triggerPlusMessage.Last()
+                .Replace("[", string.Empty)
+                .Replace("]", string.Empty)
+                .Trim();
 
                 var trigger = CreateTrigger(target, triggerPlusMessage.Length == 1 ? null : triggerPlusMessage[0]);
                 var message = CreateMessage(target, messageDetail);
@@ -70,13 +68,12 @@
         /// <param name="target">The target of the message.</param>
         /// <param name="messageText">The textual message dsl.</param>
         /// <returns>The created message.</returns>
-        public static System.Windows.Interactivity.TriggerAction CreateMessage(DependencyObject target, string messageText)
-        {
+        public static System.Windows.Interactivity.TriggerAction CreateMessage(DependencyObject target, string messageText) {
             var openingParenthesisIndex = messageText.IndexOf('(');
-            if (openingParenthesisIndex < 0)
+            if(openingParenthesisIndex < 0)
                 openingParenthesisIndex = messageText.Length;
             var closingParenthesisIndex = messageText.LastIndexOf(')');
-            if (closingParenthesisIndex < 0)
+            if(closingParenthesisIndex < 0)
                 closingParenthesisIndex = messageText.Length;
 
             var core = messageText.Substring(0, openingParenthesisIndex).Trim();
@@ -145,19 +142,17 @@
         /// <param name="elementName">The name of the element to bind to.</param>
         /// <param name="path">The path of the element to bind to.</param>
         /// <param name="bindingMode">The binding mode to use.</param>
-        public static void BindParameter(FrameworkElement target, Parameter parameter, string elementName, string path, BindingMode bindingMode)
-        {
+        public static void BindParameter(FrameworkElement target, Parameter parameter, string elementName, string path, BindingMode bindingMode) {
             var element = elementName == "$this"
                 ? target
                 : ExtensionMethods.GetNamedElementsInScope(target).FindName(elementName);
-            if (element == null)
+            if(element == null)
                 return;
 
-            if (string.IsNullOrEmpty(path))
+            if(string.IsNullOrEmpty(path))
                 path = ConventionManager.GetElementConvention(element.GetType()).ParameterProperty;
 
-            var binding = new Binding(path)
-            {
+            var binding = new Binding(path) {
                 Source = element,
                 Mode = bindingMode
             };
@@ -166,7 +161,7 @@
             var expression = (BindingExpression)BindingOperations.SetBinding(parameter, Parameter.ValueProperty, binding);
 
             var field = element.GetType().GetField(path + "Property", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-            if (field == null)
+            if(field == null)
                 return;
 
             ConventionManager.ApplySilverlightTriggers(element, (DependencyProperty)field.GetValue(null), x => expression);
@@ -176,8 +171,7 @@
 #endif
         }
 
-        static string[] Split(string message, char separator)
-        {
+        static string[] Split(string message, char separator) {
             //Splits a string using the specified separator, if it is found outside of relevant places
             //delimited by [ and ]
             string str;
@@ -185,25 +179,18 @@
             var builder = new StringBuilder();
 
             int squareBrackets = 0;
-            foreach (var current in message)
-            {
+            foreach(var current in message) {
                 //Square brackets are used as delimiters, so only separators outside them count...
-                if (current == '[')
+                if(current == '[')
                     squareBrackets++;
-                else if (current == ']')
+                else if(current == ']')
                     squareBrackets--;
-                else if (current == separator)
-                {
-                    if (squareBrackets == 0)
-                    {
+                else if(current == separator) {
+                    if(squareBrackets == 0) {
                         str = builder.ToString();
-                        if (!string.IsNullOrEmpty(str))
+                        if(!string.IsNullOrEmpty(str))
                             list.Add(builder.ToString());
-#if WP7
-                        builder = new StringBuilder();
-#else
-                        builder.Clear();
-#endif
+                        builder.Length = 0;
                         continue;
                     }
                 }
@@ -212,16 +199,15 @@
             }
 
             str = builder.ToString();
-            if (!string.IsNullOrEmpty(str))
+            if(!string.IsNullOrEmpty(str))
                 list.Add(builder.ToString());
 
             return list.ToArray();
         }
 
-        static string[] SplitParameters(string parameters)
-        {
+        static string[] SplitParameters(string parameters) {
             //Splits parameter string taking into account brackets...
-            List<string> list = new List<string>();
+            var list = new List<string>();
             var builder = new StringBuilder();
 
             bool isInString = false;
@@ -229,20 +215,16 @@
             int curlyBrackets = 0;
             int squareBrackets = 0;
             int roundBrackets = 0;
-            for (int i = 0; i < parameters.Length; i++)
-            {
+            for(int i = 0; i < parameters.Length; i++) {
                 var current = parameters[i];
 
-                if (current == '"')
-                {
-                    if (i == 0 || parameters[i - 1] != '\\')
+                if(current == '"') {
+                    if(i == 0 || parameters[i - 1] != '\\')
                         isInString = !isInString;
                 }
 
-                if (!isInString)
-                {
-                    switch (current)
-                    {
+                if(!isInString) {
+                    switch(current) {
                         case '{':
                             curlyBrackets++;
                             break;
@@ -262,20 +244,14 @@
                             roundBrackets--;
                             break;
                         default:
-                            if (current == ',' && roundBrackets == 0 && squareBrackets == 0 && curlyBrackets == 0)
-                            {
+                            if(current == ',' && roundBrackets == 0 && squareBrackets == 0 && curlyBrackets == 0) {
                                 //The only commas to be considered as parameter separators are outside:
                                 //- Strings
                                 //- Square brackets (to ignore indexers)
                                 //- Parantheses (to ignore method invocations)
                                 //- Curly brackets (to ignore initializers and Bindings)
-
                                 list.Add(builder.ToString());
-#if WP7
-                                builder = new StringBuilder();
-#else
-                                builder.Clear();
-#endif
+                                builder.Length = 0;
                                 continue;
                             }
                             break;
