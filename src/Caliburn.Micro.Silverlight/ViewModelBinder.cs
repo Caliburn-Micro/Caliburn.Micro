@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using System.Collections.Generic;
-    using System.Reflection;
     using System.Windows;
     using System.Windows.Interactivity;
 #if WP7
@@ -40,8 +39,7 @@
         /// </summary>
         /// <param name="view">The view to check.</param>
         /// <returns>Whether or not conventions should be applied to the view.</returns>
-        public static bool ShouldApplyConventions(FrameworkElement view)
-        {
+        public static bool ShouldApplyConventions(FrameworkElement view) {
             var overriden = View.GetApplyConventions(view);
             return overriden.GetValueOrDefault(ApplyConventionsByDefault);
         }
@@ -49,8 +47,10 @@
         /// <summary>
         /// Creates data bindings on the view's controls based on the provided properties.
         /// </summary>
-        /// <remarks>Parameters include named Elements to search through and the type of view model to determine conventions for.</remarks>
-        public static Action<IEnumerable<FrameworkElement>, Type> BindProperties = (namedElements, viewModelType) =>{
+        /// <remarks>Parameters include named Elements to search through and the type of view model to determine conventions for. Returns unmatched elements.</remarks>
+        public static Func<IEnumerable<FrameworkElement>, Type, IEnumerable<FrameworkElement>> BindProperties = (namedElements, viewModelType) => {
+            var unmatchedElements = new List<FrameworkElement>();
+
             foreach(var element in namedElements) {
                 var cleanName = element.Name.Trim('_');
                 var parts = cleanName.Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
@@ -58,18 +58,20 @@
                 var property = viewModelType.GetPropertyCaseInsensitive(parts[0]);
                 var interpretedViewModelType = viewModelType;
 
-                for (int i = 1; i < parts.Length && property != null; i++) {
+                for(int i = 1; i < parts.Length && property != null; i++) {
                     interpretedViewModelType = property.PropertyType;
                     property = interpretedViewModelType.GetPropertyCaseInsensitive(parts[i]);
                 }
 
-                if (property == null) {
+                if(property == null) {
+                    unmatchedElements.Add(element);
                     Log.Info("No convention applied to {0}.", element.Name);
                     continue;
                 }
 
                 var convention = ConventionManager.GetElementConvention(element.GetType());
-                if (convention == null) {
+                if(convention == null) {
+                    unmatchedElements.Add(element);
                     Log.Warn("No conventions configured for {0}.", element.GetType());
                     continue;
                 }
@@ -81,28 +83,31 @@
                     element,
                     convention
                     );
-                
+
                 Log.Info("Added convention binding for {0}.", element.Name);
             }
+
+            return unmatchedElements;
         };
 
         /// <summary>
         /// Attaches instances of <see cref="ActionMessage"/> to the view's controls based on the provided methods.
         /// </summary>
-        /// <remarks>Parameters include the named elements to search through and the type of view model to determine conventions for.</remarks>
-        public static Action<IEnumerable<FrameworkElement>, Type> BindActions = (namedElements, viewModelType) =>{
+        /// <remarks>Parameters include the named elements to search through and the type of view model to determine conventions for. Returns unmatched elements.</remarks>
+        public static Func<IEnumerable<FrameworkElement>, Type, IEnumerable<FrameworkElement>> BindActions = (namedElements, viewModelType) => {
             var methods = viewModelType.GetMethods();
-            foreach(var method in methods)
-            {
-                var foundControl = namedElements.FindName(method.Name);
-                if(foundControl == null)
-                {
+            var unmatchedElements = namedElements.ToList();
+
+            foreach(var method in methods) {
+                var foundControl = unmatchedElements.FindName(method.Name);
+                if(foundControl == null) {
                     Log.Info("No bindable control for action {0}.", method.Name);
                     continue;
                 }
+                else unmatchedElements.Remove(foundControl);
 
                 var triggers = Interaction.GetTriggers(foundControl);
-                if (triggers != null && triggers.Count > 0) {
+                if(triggers != null && triggers.Count > 0) {
                     Log.Info("Interaction.Triggers already set on control {0}.", foundControl.Name);
                     continue;
                 }
@@ -110,12 +115,10 @@
                 var message = method.Name;
                 var parameters = method.GetParameters();
 
-                if(parameters.Length > 0)
-                {
+                if(parameters.Length > 0) {
                     message += "(";
 
-                    foreach(var parameter in parameters)
-                    {
+                    foreach(var parameter in parameters) {
                         var paramName = parameter.Name;
                         var specialValue = "$" + paramName.ToLower();
 
@@ -132,7 +135,11 @@
                 Log.Info("Added convention action for {0} as {1}.", method.Name, message);
                 Message.SetAttach(foundControl, message);
             }
+
+            return unmatchedElements;
         };
+
+        public static Action<IEnumerable<FrameworkElement>, Type> HandleUnmatchedElements = (elements, viewModelType) => {};
 
         /// <summary>
         /// Binds the specified viewModel to the view.
@@ -167,13 +174,14 @@
             }
 
             var viewModelType = viewModel.GetType();
-            var namedElements = BindingScope.GetNamedElements(element);
             var isLoaded = element.GetValue(View.IsLoadedProperty);
 
+            var namedElements = BindingScope.GetNamedElements(element);
             namedElements.Apply(x => x.SetValue(View.IsLoadedProperty, isLoaded));
 
-            BindActions(namedElements, viewModelType);
-            BindProperties(namedElements, viewModelType);
+            namedElements = BindActions(namedElements, viewModelType);
+            namedElements = BindProperties(namedElements, viewModelType);
+            HandleUnmatchedElements(namedElements, viewModelType);
 #if WP7
             BindAppBar(view);
 #endif
