@@ -63,7 +63,13 @@
                 fe.Loaded -= handler;
             };
 
+#if NET
+            if(fe.IsLoaded)
+                handler(fe, new RoutedEventArgs());
+            else fe.Loaded += handler;
+#else
             fe.Loaded += handler;
+#endif
         }
     }
 }
