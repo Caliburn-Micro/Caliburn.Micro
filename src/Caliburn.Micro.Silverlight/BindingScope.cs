@@ -69,7 +69,11 @@ namespace Caliburn.Micro {
                     continue;
                 }
 
+#if NET
+                var childCount = (current is UIElement || current is UIElement3D ? VisualTreeHelper.GetChildrenCount(current) : 0);
+#else
                 var childCount = VisualTreeHelper.GetChildrenCount(current);
+#endif
                 if(childCount > 0) {
                     for(var i = 0; i < childCount; i++) {
                         var childDo = VisualTreeHelper.GetChild(current, i);
