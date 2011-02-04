@@ -23,6 +23,9 @@
         /// <param name="text">The message text.</param>
         /// <returns>The triggers parsed from the text.</returns>
         public static IEnumerable<TriggerBase> Parse(DependencyObject target, string text) {
+            if(string.IsNullOrEmpty(text))
+                return new TriggerBase[0];
+
             var triggers = new List<TriggerBase>();
             var messageTexts = Split(text, ';');
 

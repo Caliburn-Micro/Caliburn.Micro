@@ -1,5 +1,8 @@
 ﻿namespace Caliburn.Micro
 {
+    using Caliburn.Micro;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Interactivity;
 
@@ -11,6 +14,14 @@
             DependencyProperty.RegisterAttached(
                 "Handler",
                 typeof(object),
+                typeof(Message),
+                null
+                );
+
+        static readonly DependencyProperty MessageTriggersProperty =
+            DependencyProperty.RegisterAttached(
+                "MessageTriggers",
+                typeof(System.Windows.Interactivity.TriggerBase[]),
                 typeof(Message),
                 null
                 );
@@ -71,12 +82,18 @@
             if(e.NewValue == e.OldValue)
                 return;
 
-            var text = e.NewValue as string;
-            if(string.IsNullOrEmpty(text))
-                return;
+            var messageTriggers = (System.Windows.Interactivity.TriggerBase[])d.GetValue(MessageTriggersProperty);
+            var allTriggers = Interaction.GetTriggers(d);
 
-            var triggers = Interaction.GetTriggers(d);
-            Parser.Parse(d, text).Apply(triggers.Add);
+            if(messageTriggers != null)
+                messageTriggers.Apply(x => allTriggers.Remove(x));
+
+            var newTriggers = Parser.Parse(d, e.NewValue as string).ToArray();
+            newTriggers.Apply(allTriggers.Add);
+
+            if(newTriggers.Length > 0)
+                d.SetValue(MessageTriggersProperty, newTriggers);
+            else d.ClearValue(MessageTriggersProperty);
         }
     }
 }
