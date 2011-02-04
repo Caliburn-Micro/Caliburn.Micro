@@ -14,7 +14,6 @@ namespace Caliburn.Micro
     using System.Windows.Markup;
     using System.Windows.Media;
     using EventTrigger = System.Windows.Interactivity.EventTrigger;
-    using TriggerBase = System.Windows.Interactivity.TriggerBase;
 
     /// <summary>
     /// Used to send a message from the UI to a presentation model class, indicating that a particular Action should be invoked.
@@ -184,6 +183,9 @@ namespace Caliburn.Micro
 
         protected override void Invoke(object eventArgs) {
             Log.Info("Invoking {0}.", this);
+
+            if(context == null)
+                UpdateContext();
 
             if(context.Target == null || context.View == null) {
                 PrepareContext(context);
