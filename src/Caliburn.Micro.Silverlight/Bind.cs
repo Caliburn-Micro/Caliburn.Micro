@@ -58,7 +58,11 @@
                 d.SetValue(View.IsLoadedProperty, true);
                 d.SetValue(View.IsScopeRootProperty, true);
 
-                ViewModelBinder.Bind(target, d, null);
+                string context = string.IsNullOrEmpty(fe.Name) 
+                    ? fe.GetHashCode().ToString()
+                    : fe.Name;
+
+                ViewModelBinder.Bind(target, d, context);
 
                 fe.Loaded -= handler;
             };
