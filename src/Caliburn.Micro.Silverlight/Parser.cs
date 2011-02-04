@@ -126,7 +126,11 @@
                     fe.Loaded -= handler;
                 };
 
+#if NET
+                if(fe.IsLoaded || (bool)fe.GetValue(View.IsLoadedProperty))
+#else
                 if((bool)fe.GetValue(View.IsLoadedProperty))
+#endif
                     handler(null, null);
                 else fe.Loaded += handler;
             }

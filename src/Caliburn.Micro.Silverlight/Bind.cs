@@ -64,12 +64,12 @@
             };
 
 #if NET
-            if(fe.IsLoaded)
-                handler(fe, new RoutedEventArgs());
-            else fe.Loaded += handler;
+            if(fe.IsLoaded || (bool)fe.GetValue(View.IsLoadedProperty))
 #else
-            fe.Loaded += handler;
+            if((bool)fe.GetValue(View.IsLoadedProperty))
 #endif
+                handler(null, null);
+            else fe.Loaded += handler;
         }
     }
 }
