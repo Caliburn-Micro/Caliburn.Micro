@@ -84,6 +84,37 @@
                 );
 
         /// <summary>
+        /// Executes the handler immediately if the element is loaded, otherwise wires it to the Loaded event.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="handler">The handler.</param>
+        /// <returns>true if the handler was executed immediately; false otherwise</returns>
+        public static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler) {
+#if SILVERLIGHT
+            if((bool)element.GetValue(IsLoadedProperty))
+#else
+            if(element.IsLoaded)
+#endif
+            {
+                handler(element, new RoutedEventArgs());
+                return true;
+            }
+            else {
+                RoutedEventHandler loaded = null;
+                loaded = (s, e) => {
+#if SILVERLIGHT
+                    element.SetValue(IsLoadedProperty, true);
+#endif
+                    handler(s, e);
+                    element.Loaded -= loaded;
+                };
+
+                element.Loaded += loaded;
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Used to retrieve the root, non-framework-created view.
         /// </summary>
         /// <param name="view">The view to search.</param>

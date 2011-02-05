@@ -117,8 +117,7 @@
                 var nameAndBindingMode = parameterText.Split(':').Select(x => x.Trim()).ToArray();
                 var index = nameAndBindingMode[0].IndexOf('.');
 
-                RoutedEventHandler handler = null;
-                handler = (s, e) => {
+                View.ExecuteOnLoad(fe, delegate {
                     BindParameter(
                         fe,
                         actualParameter,
@@ -126,16 +125,7 @@
                         index == -1 ? null : nameAndBindingMode[0].Substring(index + 1),
                         nameAndBindingMode.Length == 2 ? (BindingMode)Enum.Parse(typeof(BindingMode), nameAndBindingMode[1], true) : BindingMode.OneWay
                         );
-                    fe.Loaded -= handler;
-                };
-
-#if NET
-                if(fe.IsLoaded || (bool)fe.GetValue(View.IsLoadedProperty))
-#else
-                if((bool)fe.GetValue(View.IsLoadedProperty))
-#endif
-                    handler(null, null);
-                else fe.Loaded += handler;
+                });
             }
 
             return actualParameter;

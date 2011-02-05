@@ -175,15 +175,14 @@
 
             var viewModelType = viewModel.GetType();
 
-#if NET
-            var isLoaded = element.IsLoaded || (bool)element.GetValue(View.IsLoadedProperty);
-#else
-            var isLoaded = element.GetValue(View.IsLoadedProperty);
-#endif
-
             var namedElements = BindingScope.GetNamedElements(element);
-            namedElements.Apply(x => x.SetValue(View.IsLoadedProperty, isLoaded));
 
+#if SILVERLIGHT
+            namedElements.Apply(x => x.SetValue(
+                View.IsLoadedProperty,
+                element.GetValue(View.IsLoadedProperty))
+                );
+#endif
             namedElements = BindActions(namedElements, viewModelType);
             namedElements = BindProperties(namedElements, viewModelType);
             HandleUnmatchedElements(namedElements, viewModelType);

@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Expression = System.Linq.Expressions.Expression;
 
     /// <summary>
     /// Generic extension methods used by the framework.

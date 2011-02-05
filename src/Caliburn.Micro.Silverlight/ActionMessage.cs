@@ -103,20 +103,12 @@ namespace Caliburn.Micro
                 Parameters.Attach(AssociatedObject);
                 Parameters.Apply(x => x.MakeAwareOf(this));
 
-#if NET
-                if(AssociatedObject.IsLoaded || (bool)AssociatedObject.GetValue(View.IsLoadedProperty)) 
-#else
-                if((bool)AssociatedObject.GetValue(View.IsLoadedProperty)) 
-#endif
-                {
-                    ElementLoaded(null, null);
-
+                if(View.ExecuteOnLoad(AssociatedObject, ElementLoaded)) {
                     var trigger = Interaction.GetTriggers(AssociatedObject)
                         .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
-                    if (trigger != null && trigger.EventName == "Loaded")
+                    if(trigger != null && trigger.EventName == "Loaded")
                         Invoke(new RoutedEventArgs());
                 }
-                else AssociatedObject.Loaded += ElementLoaded;
             }
 
             base.OnAttached();
