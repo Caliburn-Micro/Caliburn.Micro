@@ -10,7 +10,8 @@
     /// Hosts attached properties related to view models.
     /// </summary>
     public static class View {
-        static ILog log = LogManager.GetLog(typeof(View));
+        static readonly ILog Log = LogManager.GetLog(typeof(View));
+        static readonly ContentPropertyAttribute DefaultContentProperty = new ContentPropertyAttribute("Content");
 
         /// <summary>
         /// The default view context.
@@ -51,17 +52,6 @@
                 );
 
         /// <summary>
-        /// A dependency property for attaching a model to the UI.
-        /// </summary>
-        public static DependencyProperty ModelProperty =
-            DependencyProperty.RegisterAttached(
-                "Model",
-                typeof(object),
-                typeof(View),
-                new PropertyMetadata(OnModelChanged)
-                );
-
-        /// <summary>
         /// A dependency property for assigning a context to a particular portion of the UI.
         /// </summary>
         public static readonly DependencyProperty ContextProperty =
@@ -70,6 +60,17 @@
                 typeof(object),
                 typeof(View),
                 new PropertyMetadata(OnContextChanged)
+                );
+
+        /// <summary>
+        /// A dependency property for attaching a model to the UI.
+        /// </summary>
+        public static DependencyProperty ModelProperty =
+            DependencyProperty.RegisterAttached(
+                "Model",
+                typeof(object),
+                typeof(View),
+                new PropertyMetadata(OnModelChanged)
                 );
 
         /// <summary>
@@ -131,7 +132,7 @@
 
                 var type = view.GetType();
                 var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
-                    .FirstOrDefault() ?? new ContentPropertyAttribute("Content");
+                    .FirstOrDefault() ?? DefaultContentProperty;
 
                 return (DependencyObject)type.GetProperty(contentProperty.Name)
                     .GetValue(view, null);
@@ -245,13 +246,13 @@
             try {
                 var type = targetLocation.GetType();
                 var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
-                    .FirstOrDefault() ?? new ContentPropertyAttribute("Content");
+                    .FirstOrDefault() ?? DefaultContentProperty;
 
                 type.GetProperty(contentProperty.Name)
                     .SetValue(targetLocation, view, null);
             }
             catch(Exception e) {
-                log.Error(e);
+                Log.Error(e);
             }
         }
     }
