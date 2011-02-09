@@ -131,7 +131,7 @@
         /// <param name="e">The event args.</param>
         protected virtual void OnNavigated(object sender, NavigationEventArgs e)
         {
-            if (e.Uri.IsAbsoluteUri)
+            if (e.Uri.IsAbsoluteUri || e.Content == null)
                 return;
 
             ViewLocator.InitializeComponent(e.Content);
@@ -149,7 +149,7 @@
 
             ViewModelBinder.Bind(viewModel, page, null);
 
-            TryInjectQueryString(viewModel, e.Content);
+            TryInjectQueryString(viewModel, page);
 
             var activator = viewModel as IActivate;
             if (activator != null)
@@ -160,13 +160,9 @@
         /// Attempts to inject query string parameters from the view into the view model.
         /// </summary>
         /// <param name="viewModel">The view model.</param>
-        /// <param name="view">The view.</param>
-        protected virtual void TryInjectQueryString(object viewModel, object view) 
+        /// <param name="page">The page.</param>
+        protected virtual void TryInjectQueryString(object viewModel, Page page) 
         {
-            var page = view as Page;
-            if (page == null)
-                return;
-
             var viewModelType = viewModel.GetType();
 
             foreach(var pair in page.NavigationContext.QueryString)
