@@ -66,7 +66,9 @@
         /// Changes the provided word from a plural form to a singular form.
         /// </summary>
         public static Func<string, string> Singularize = original =>{
-            return original.TrimEnd('s');
+            return original.EndsWith("ies") 
+                ? original.TrimEnd('s').TrimEnd('e').TrimEnd('i') + "y" 
+                : original.TrimEnd('s');
         };
 
         /// <summary>
