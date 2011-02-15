@@ -126,9 +126,15 @@
         /// <summary>
         /// Determines whether a custom update source trigger should be applied to the binding.
         /// </summary>
-        public static Action<DependencyProperty, DependencyObject, Binding> ApplyUpdateSourceTrigger = (bindableProperty, element, binding) =>{
+        public static Action<DependencyProperty, DependencyObject, Binding, PropertyInfo> ApplyUpdateSourceTrigger = (bindableProperty, element, binding, info) =>{
 #if SILVERLIGHT
-            ApplySilverlightTriggers(element, bindableProperty, x => x.GetBindingExpression(bindableProperty));
+            ApplySilverlightTriggers(
+                element, 
+                bindableProperty, 
+                x => x.GetBindingExpression(bindableProperty),
+                info,
+                binding
+                );
 #else
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
@@ -161,7 +167,7 @@
                 ApplyValueConverter(binding, bindableProperty, property);
                 ApplyStringFormat(binding, convention, property);
                 ApplyValidation(binding, viewModelType, property);
-                ApplyUpdateSourceTrigger(bindableProperty, element, binding);
+                ApplyUpdateSourceTrigger(bindableProperty, element, binding, property);
 
                 BindingOperations.SetBinding(element, bindableProperty, binding);
 
@@ -349,13 +355,34 @@
         /// Accounts for the lack of UpdateSourceTrigger in silverlight.
         /// </summary>
         /// <param name="element">The element to wire for change events on.</param>
-        /// <param name="dependencyProperty">The rproperty that is being bound.</param>
-        /// <param name="expressionSource">The source of the binding expression tht needs to be updated.</param>
-        public static void ApplySilverlightTriggers(DependencyObject element, DependencyProperty dependencyProperty, Func<FrameworkElement, BindingExpression> expressionSource)
-        {
+        /// <param name="dependencyProperty">The property that is being bound.</param>
+        /// <param name="expressionSource">Gets the the binding expression that needs to be updated.</param>
+        /// <param name="property">The property being bound to if available.</param>
+        /// <param name="binding">The binding if available.</param>
+        public static void ApplySilverlightTriggers(DependencyObject element, DependencyProperty dependencyProperty, Func<FrameworkElement, BindingExpression> expressionSource, PropertyInfo property, Binding binding){
             var textBox = element as TextBox;
             if (textBox != null && dependencyProperty == TextBox.TextProperty)
             {
+                if (property != null)
+                {
+                    var typeCode = Type.GetTypeCode(property.PropertyType);
+                    if (typeCode == TypeCode.Single || typeCode == TypeCode.Double || typeCode == TypeCode.Decimal)
+                    {
+                        binding.UpdateSourceTrigger = UpdateSourceTrigger.Explicit;
+                        textBox.KeyUp += delegate
+                        {
+                            var start = textBox.SelectionStart;
+                            var text = textBox.Text;
+
+                            expressionSource(textBox).UpdateSource();
+
+                            textBox.Text = text;
+                            textBox.SelectionStart = start;
+                        };
+                        return;
+                    }
+                }
+
                 textBox.TextChanged += delegate { expressionSource(textBox).UpdateSource(); };
                 return;
             }
