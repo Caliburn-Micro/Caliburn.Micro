@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="GameLibrary.Views.GameDTO"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ti="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit">
+    <StackPanel HorizontalAlignment="Stretch">
+        <StackPanel HorizontalAlignment="Right">
+            <TextBlock x:Name="Title"
+                       Style="{StaticResource subheader}"/>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <TextBlock Text="Added on "
+                           Style="{StaticResource smallEmphasis}"/>
+                <TextBlock x:Name="AddedOn"
+                           Style="{StaticResource smallEmphasis}"/>
+            </StackPanel>
+        </StackPanel>
+        
+        <TextBlock Style="{StaticResource label}"
+                   Text="Rating:" />
+        <ti:Rating x:Name="Rating"
+                   IsReadOnly="True" />
+
+        <TextBlock Style="{StaticResource label}"
+                   Text="Notes:" />
+        <Border Style="{StaticResource panel}"
+                Margin="0 2 0 0">
+            <TextBlock x:Name="Notes" />
+        </Border>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="GameLibrary.Views.AddGameView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ti="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit">
+
+    <StackPanel>
+        <TextBlock Style="{StaticResource label}"
+                   Text="Title:" />
+        <TextBox x:Name="Title">
+            <TextBox.CaretBrush>
+                <SolidColorBrush Color="Gray" />
+            </TextBox.CaretBrush>
+        </TextBox>
+
+        <TextBlock Style="{StaticResource label}"
+                   Text="Rating:" />
+        <ti:Rating x:Name="Rating"/>
+
+        <TextBlock Style="{StaticResource label}"
+                   Text="Notes:"/>
+        <TextBox x:Name="Notes"
+                 Height="120">
+            <TextBox.CaretBrush>
+                <SolidColorBrush Color="Gray" />
+            </TextBox.CaretBrush>
+        </TextBox>
+
+        <Button x:Name="AddGame"
+                Content="Add"
+                HorizontalAlignment="Right"
+                Margin="0 12 0 0" />
+    </StackPanel>
+    
+</UserControl>

@@ -1,0 +1,121 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ti="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+                    xmlns:tc="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+                    xmlns:tl="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ColorsAndBrushes.xaml" />
+        <ResourceDictionary Source="ControlTemplates/Manifest.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground"
+                Value="White" />
+        <Setter Property="FontSize"
+                Value="20" />
+        <Setter Property="FontFamily"
+                Value="Trebuchet MS" />
+        <Setter Property="TextWrapping"
+                Value="Wrap" />
+    </Style>
+
+    <Style TargetType="tl:TransitioningContentControl">
+        <Setter Property="HorizontalContentAlignment"
+                Value="Stretch" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Stretch" />
+    </Style>
+
+    <Style TargetType="tc:BusyIndicator">
+        <Setter Property="IsTabStop"
+                Value="False" />
+        <Setter Property="DisplayAfter"
+                Value="00:00:00.1" />
+        <Setter Property="HorizontalAlignment"
+                Value="Stretch" />
+        <Setter Property="VerticalAlignment"
+                Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Stretch" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Stretch" />
+        <Setter Property="Template"
+                Value="{StaticResource busyIndicator}" />
+    </Style>
+    
+    <Style TargetType="HyperlinkButton">
+        <Setter Property="Cursor"
+                Value="Hand" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Left" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Top" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Template"
+                Value="{StaticResource hyperlinkButton}" />
+    </Style>
+    
+    <Style TargetType="TextBox">
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="Background"
+                Value="Black" />
+        <Setter Property="Foreground"
+                Value="White" />
+        <Setter Property="Padding"
+                Value="2" />
+        <Setter Property="BorderBrush"
+                Value="Gray" />
+        <Setter Property="FontSize"
+                Value="20" />
+        <Setter Property="FontFamily"
+                Value="Trebuchet MS" />
+        <Setter Property="TextWrapping"
+                Value="Wrap" />
+        <Setter Property="Template"
+                Value="{StaticResource textBox}" />
+    </Style>
+
+    <Style TargetType="Button">
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Foreground"
+                Value="Gray" />
+        <Setter Property="Padding"
+                Value="8 3 8 3" />
+        <Setter Property="Margin"
+                Value="8 0 0 0" />
+        <Setter Property="BorderThickness"
+                Value="2" />
+        <Setter Property="BorderBrush"
+                Value="Gray" />
+        <Setter Property="FontSize"
+                Value="20" />
+        <Setter Property="FontFamily"
+                Value="Trebuchet MS" />
+        <Setter Property="Template"
+                Value="{StaticResource button}" />
+    </Style>
+
+    <Style TargetType="ti:Rating">
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Foreground"
+                Value="{StaticResource specialBrush}" />
+        <Setter Property="ItemCount"
+                Value="5" />
+        <Setter Property="SelectionMode"
+                Value="Continuous" />
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template" 
+                Value="{StaticResource rating}" />
+    </Style>
+
+</ResourceDictionary>

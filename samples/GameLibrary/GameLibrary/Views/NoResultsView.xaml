@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="GameLibrary.Views.NoResultsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border Margin="8 20 8 8"
+            HorizontalAlignment="Center">
+        <StackPanel>
+            <TextBlock Text="No results were found for that search text." />
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                <TextBlock Text=" Would you like to " />
+                <HyperlinkButton x:Name="AddGame">
+                    <TextBlock Text="Create a New Game"
+                               TextDecorations="Underline" />
+                </HyperlinkButton>
+                <TextBlock Text="?" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>
