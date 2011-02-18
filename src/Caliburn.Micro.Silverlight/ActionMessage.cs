@@ -280,8 +280,12 @@ namespace Caliburn.Micro
 
 #if SILVERLIGHT
             var source = (Control)context.Source;
+            if (ConventionManager.HasBinding(source, Control.IsEnabledProperty))
+                return source.IsEnabled;
 #else
             var source = context.Source;
+            if (ConventionManager.HasBinding(source, UIElement.IsEnabledProperty))
+                return source.IsEnabled;
 #endif
             if (context.CanExecute != null) 
                 source.IsEnabled = context.CanExecute();
