@@ -39,6 +39,12 @@ namespace Caliburn.Micro
         /// <remarks>This is disabled by default. If multiple actions are attached to the same element, you may want to enable this so that each individaul action checks its guard regardless of how the UI state appears.</remarks>
         public static bool EnforceGuardsDuringInvocation = false;
 
+        ///<summary>
+        /// Causes the action to throw if it cannot locate the target or the method at invocation time.
+        ///</summary>
+        /// <remarks>True by default.</remarks>
+        public static bool ThrowsExceptions = true;
+
         /// <summary>
         /// Represents the method name of an action message.
         /// </summary>
@@ -196,6 +202,9 @@ namespace Caliburn.Micro
                 {
                     var ex = new Exception(string.Format("No target found for method {0}.", context.Message.MethodName));
                     Log.Error(ex);
+
+                    if (!ThrowsExceptions)
+                        return;
                     throw ex;
                 }
                 if (!UpdateAvailabilityCore())
@@ -204,9 +213,11 @@ namespace Caliburn.Micro
 
             if (context.Method == null)
             {
-                var ex = new Exception(string.Format("Method {0} not found on target of type {1}.",
-                    context.Message.MethodName, context.Target.GetType()));
+                var ex = new Exception(string.Format("Method {0} not found on target of type {1}.", context.Message.MethodName, context.Target.GetType()));
                 Log.Error(ex);
+
+                if (!ThrowsExceptions)
+                    return;
                 throw ex;
             }
 
