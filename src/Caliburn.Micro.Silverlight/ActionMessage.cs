@@ -33,6 +33,12 @@ namespace Caliburn.Micro
             new PropertyMetadata(HandlerPropertyChanged)
             );
 
+        ///<summary>
+        /// Causes the action invocation to "double check" if the action should be invoked by executing the guard immediately before hand.
+        ///</summary>
+        /// <remarks>This is disabled by default. If multiple actions are attached to the same element, you may want to enable this so that each individaul action checks its guard regardless of how the UI state appears.</remarks>
+        public static bool EnforceGuardsDuringInvocation = false;
+
         /// <summary>
         /// Represents the method name of an action message.
         /// </summary>
@@ -205,6 +211,10 @@ namespace Caliburn.Micro
             }
 
             context.EventArgs = eventArgs;
+
+            if (EnforceGuardsDuringInvocation && context.CanExecute != null && !context.CanExecute())
+                return;
+
             InvokeAction(context);
         }
 
