@@ -61,7 +61,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Caliburn.Micro">
-      <HintPath>..\..\..\src\Caliburn.Micro.Silverlight\Bin\Release\Caliburn.Micro.dll</HintPath>
+      <HintPath>..\..\..\bin\Silverlight\Debug\Caliburn.Micro.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System.Windows" />

@@ -37,14 +37,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Caliburn.Micro">
-      <HintPath>..\..\..\src\Caliburn.Micro.WPF\bin\Release\Caliburn.Micro.dll</HintPath>
+      <HintPath>..\..\..\bin\WPF\Debug\Caliburn.Micro.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Projects\BlueSpire\Caliburn Micro\src\Caliburn.Micro.WPF\bin\Release\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\..\..\bin\WPF\Debug\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
