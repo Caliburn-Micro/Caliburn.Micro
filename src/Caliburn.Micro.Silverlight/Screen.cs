@@ -138,12 +138,14 @@
             Log.Info("Deactivating {0}.", this);
             OnDeactivate(close);
 
-            if(close)
-                Log.Info("Closed {0}.", this);
-
             Deactivated(this, new DeactivationEventArgs {
                 WasClosed = close
             });
+
+            if (close) {
+                views.Clear();
+                Log.Info("Closed {0}.", this);
+            }
         }
 
         /// <summary>
@@ -202,62 +204,61 @@
         /// </summary>
         public event EventHandler<ViewAttachedEventArgs> ViewAttached = delegate { };
 
+        System.Action GetViewCloseAction(bool? dialogResult) {
+            var conductor = Parent as IConductor;
+            if (conductor != null)
+                return () => conductor.CloseItem(this);
+
+            foreach (var contextualView in views.Values) {
+                var viewType = contextualView.GetType();
+
+                var closeMethod = viewType.GetMethod("Close");
+                if (closeMethod != null)
+                    return () => {
+#if !SILVERLIGHT
+                        if(dialogResult != null) {
+                            var resultProperty = contextualView.GetType().GetProperty("DialogResult");
+                            if (resultProperty != null)
+                                resultProperty.SetValue(contextualView, dialogResult, null);
+                        }
+#endif
+
+                        closeMethod.Invoke(contextualView, null);
+                    };
+
+                var isOpenProperty = viewType.GetProperty("IsOpen");
+                if (isOpenProperty != null)
+                    return () => isOpenProperty.SetValue(contextualView, false, null);
+            }
+
+            return () => {
+                var ex = new NotSupportedException("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
+                Log.Error(ex);
+                throw ex;
+            };
+        }
+
         /// <summary>
-        /// Tries to close this instance by asking its Parent to initiate shutdown or by asking its corresponding default view to close.
+        /// Tries to close this instance by asking its Parent to initiate shutdown or by asking its corresponding view to close.
         /// </summary>
         public void TryClose() {
             Execute.OnUIThread(() => {
-                var conductor = Parent as IConductor;
-                if (conductor != null)
-                    conductor.CloseItem(this);
-                else {
-                    var view = GetView(null);
-
-                    if(view == null) {
-                        var ex = new NotSupportedException("A Parent or default view is required.");
-                        Log.Error(ex);
-                        throw ex;
-                    }
-
-                    var method = view.GetType().GetMethod("Close");
-                    if(method != null) {
-                        method.Invoke(view, null);
-                        return;
-                    }
-
-                    var property = view.GetType().GetProperty("IsOpen");
-                    if(property != null) {
-                        property.SetValue(view, false, new object[] {});
-                        return;
-                    }
-
-                    var ex2 = new NotSupportedException("The default view does not support Close/IsOpen.");
-                    Log.Error(ex2);
-                    throw ex2;
-                }
+                var closeAction = GetViewCloseAction(null);
+                closeAction();
             });
         }
 
 #if !SILVERLIGHT
 
         /// <summary>
-        /// Closes this instance by asking its Parent to initiate shutdown or by asking it's corresponding default view to close.
-        /// This overload also provides an opportunity to pass a dialog result to it's corresponding default view.
+        /// Closes this instance by asking its Parent to initiate shutdown or by asking it's corresponding view to close.
+        /// This overload also provides an opportunity to pass a dialog result to it's corresponding view.
         /// </summary>
         /// <param name="dialogResult">The dialog result.</param>
-        public virtual void TryClose(bool? dialogResult)
-        {
+        public virtual void TryClose(bool? dialogResult) {
             Execute.OnUIThread(() => {
-                var view = GetView(null);
-
-                if(view != null)
-                {
-                    var property = view.GetType().GetProperty("DialogResult");
-                    if(property != null)
-                        property.SetValue(view, dialogResult, null);
-                }
-
-                TryClose();
+                var closeAction = GetViewCloseAction(dialogResult);
+                closeAction();
             });
         }
 
