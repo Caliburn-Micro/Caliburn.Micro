@@ -38,3 +38,4 @@ obj/
 *.[Pp]ublish.xml
 glob:desktop.ini 
 generated-templates
+nuget\lib
