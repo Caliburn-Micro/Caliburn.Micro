@@ -220,6 +220,7 @@
             AddElementConvention<ButtonBase>(ButtonBase.ContentProperty, "DataContext", "Click");
             AddElementConvention<TextBox>(TextBox.TextProperty, "Text", "TextChanged");
             AddElementConvention<TextBlock>(TextBlock.TextProperty, "Text", "DataContextChanged");
+            AddElementConvention<ProgressBar>(ProgressBar.ValueProperty, "Value", "ValueChanged");
             AddElementConvention<Selector>(Selector.ItemsSourceProperty, "SelectedItem", "SelectionChanged")
                 .ApplyBinding = (viewModelType, path, property, element, convention) => {
                     if (!SetBinding(viewModelType, path, property, element, convention))
