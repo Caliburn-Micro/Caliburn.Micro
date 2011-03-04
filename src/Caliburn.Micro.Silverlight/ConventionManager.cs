@@ -158,7 +158,7 @@
         public static Func<Type, string, PropertyInfo, FrameworkElement, ElementConvention, bool> SetBinding =
             (viewModelType, path, property, element, convention) => {
                 var bindableProperty = convention.GetBindableProperty(element);
-                if(HasBinding(element, bindableProperty))
+                if(bindableProperty == null || HasBinding(element, bindableProperty))
                     return false;
 
                 var binding = new Binding(path);
@@ -180,7 +180,7 @@
             AddElementConvention<HyperlinkButton>(HyperlinkButton.ContentProperty, "DataContext", "Click");
             AddElementConvention<PasswordBox>(PasswordBox.PasswordProperty, "Password", "PasswordChanged");
 #else
-            AddElementConvention<PasswordBox>(PasswordBox.DataContextProperty, "DataContext", "PasswordChanged");
+            AddElementConvention<PasswordBox>(null, "Password", "PasswordChanged");
             AddElementConvention<Hyperlink>(Hyperlink.DataContextProperty, "DataContext", "Click");
             AddElementConvention<RichTextBox>(RichTextBox.DataContextProperty, "DataContext", "TextChanged");
             AddElementConvention<Menu>(Menu.ItemsSourceProperty,"DataContext", "Click");
@@ -195,7 +195,7 @@
             AddElementConvention<TabControl>(TabControl.ItemsSourceProperty, "ItemsSource", "SelectionChanged")
                 .ApplyBinding = (viewModelType, path, property, element, convention) => {
                     if(!SetBinding(viewModelType, path, property, element, convention))
-                        return;
+                        return false;
 
                     var tabControl = (TabControl)element;
                     if(tabControl.ContentTemplate == null && tabControl.ContentTemplateSelector == null && property.PropertyType.IsGenericType) {
@@ -208,6 +208,8 @@
 
                     if(string.IsNullOrEmpty(tabControl.DisplayMemberPath))
                         ApplyHeaderTemplate(tabControl, TabControl.ItemTemplateProperty, viewModelType);
+
+                    return true;
                 };
             AddElementConvention<TabItem>(TabItem.ContentProperty, "DataContext", "DataContextChanged");
             AddElementConvention<Window>(Window.DataContextProperty, "DataContext", "Loaded");
@@ -221,17 +223,21 @@
             AddElementConvention<Selector>(Selector.ItemsSourceProperty, "SelectedItem", "SelectionChanged")
                 .ApplyBinding = (viewModelType, path, property, element, convention) => {
                     if (!SetBinding(viewModelType, path, property, element, convention))
-                        return;
+                        return false;
 
                     ConfigureSelectedItem(element, Selector.SelectedItemProperty,viewModelType, path);
                     ConfigureItemsControl((ItemsControl)element, property);
+
+                    return true;
                 };
             AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", "Loaded")
                 .ApplyBinding = (viewModelType, path, property, element, convention) => {
                     if (!SetBinding(viewModelType, path, property, element, convention))
-                        return;
+                        return false;
 
                     ConfigureItemsControl((ItemsControl)element, property);
+
+                    return true;
                 };
             AddElementConvention<ContentControl>(ContentControl.ContentProperty, "DataContext", "Loaded").GetBindableProperty =
                 delegate(DependencyObject foundControl) {

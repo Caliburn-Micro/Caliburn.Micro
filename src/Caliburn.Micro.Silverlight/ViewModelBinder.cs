@@ -76,7 +76,7 @@
                     continue;
                 }
 
-                convention.ApplyBinding(
+                var applied = convention.ApplyBinding(
                     interpretedViewModelType,
                     cleanName.Replace('_', '.'),
                     property,
@@ -84,7 +84,9 @@
                     convention
                     );
 
-                Log.Info("Added convention binding for {0}.", element.Name);
+                if(applied)
+                    Log.Info("Added convention binding for {0}.", element.Name);
+                else unmatchedElements.Add(element);
             }
 
             return unmatchedElements;
@@ -104,7 +106,8 @@
                     Log.Info("No bindable control for action {0}.", method.Name);
                     continue;
                 }
-                else unmatchedElements.Remove(foundControl);
+
+                unmatchedElements.Remove(foundControl);
 
                 var triggers = Interaction.GetTriggers(foundControl);
                 if(triggers != null && triggers.Count > 0) {

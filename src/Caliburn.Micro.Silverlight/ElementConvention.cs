@@ -33,7 +33,7 @@
         /// Applies custom conventions for elements of this type.
         /// </summary>
         /// <remarks>Pass the view model type, property path, property instance, framework element and its convention.</remarks>
-        public Action<Type, string, PropertyInfo, FrameworkElement, ElementConvention> ApplyBinding =
+        public Func<Type, string, PropertyInfo, FrameworkElement, ElementConvention, bool> ApplyBinding =
             (viewModelType, path, property, element, convention) => ConventionManager.SetBinding(viewModelType, path, property, element, convention);
     }
 }
