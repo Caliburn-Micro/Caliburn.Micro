@@ -39,3 +39,5 @@ obj/
 glob:desktop.ini 
 generated-templates
 nuget\lib
+caliburn.micro.1.0.0.nupkg
+
