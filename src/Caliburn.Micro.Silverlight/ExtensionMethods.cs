@@ -90,22 +90,14 @@
 		public static IEnumerable<TResult> Zip<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> resultSelector)
 		{
 			if (first == null)
-			{
 				throw new ArgumentNullException("first");
-			}
 			if (second == null)
-			{
 				throw new ArgumentNullException("second");
-			}
 			if (resultSelector == null)
-			{
 				throw new ArgumentNullException("resultSelector");
-			}
 
 			var enumFirst = first.GetEnumerator();
 			var enumSecond = second.GetEnumerator();
-
-			if (enumFirst == null || enumSecond == null) yield break;
 
 			while (enumFirst.MoveNext() && enumSecond.MoveNext()) {
 				yield return resultSelector(enumFirst.Current, enumSecond.Current);
