@@ -65,14 +65,14 @@
 
                 if(property == null) {
                     unmatchedElements.Add(element);
-                    Log.Info("No convention applied to {0}.", element.Name);
+                    Log.Info("Binding Convention Not Applied: Element {0} did not match a property.", element.Name);
                     continue;
                 }
 
                 var convention = ConventionManager.GetElementConvention(element.GetType());
                 if(convention == null) {
                     unmatchedElements.Add(element);
-                    Log.Warn("No conventions configured for {0}.", element.GetType());
+                    Log.Warn("Binding Convention Not Applied: No conventions configured for {0}.", element.GetType());
                     continue;
                 }
 
@@ -85,8 +85,11 @@
                     );
 
                 if(applied)
-                    Log.Info("Added convention binding for {0}.", element.Name);
-                else unmatchedElements.Add(element);
+                    Log.Info("Binding Convention Applied: Element {0}.", element.Name);
+                else {
+                    Log.Info("Binding Convention Not Applied: Element {0} has existing binding.", element.Name);
+                    unmatchedElements.Add(element);
+                }
             }
 
             return unmatchedElements;
@@ -103,7 +106,7 @@
             foreach(var method in methods) {
                 var foundControl = unmatchedElements.FindName(method.Name);
                 if(foundControl == null) {
-                    Log.Info("No bindable control for action {0}.", method.Name);
+                    Log.Info("Action Convention Not Applied: No actionable element for {0}.", method.Name);
                     continue;
                 }
 
@@ -111,7 +114,7 @@
 
                 var triggers = Interaction.GetTriggers(foundControl);
                 if(triggers != null && triggers.Count > 0) {
-                    Log.Info("Interaction.Triggers already set on control {0}.", foundControl.Name);
+                    Log.Info("Action Convention Not Applied: Interaction.Triggers already set on {0}.", foundControl.Name);
                     continue;
                 }
 
@@ -135,7 +138,7 @@
                     message += ")";
                 }
 
-                Log.Info("Added convention action for {0} as {1}.", method.Name, message);
+                Log.Info("Action Convention Applied: Action {0} on element {1}.", method.Name, message);
                 Message.SetAttach(foundControl, message);
             }
 
@@ -172,7 +175,7 @@
 
             if(!ShouldApplyConventions(element))
             {
-                Log.Info("Skipping conventions {0} and {1}.", element, viewModel);
+                Log.Info("Skipping conventions for {0} and {1}.", element, viewModel);
                 return;
             }
 

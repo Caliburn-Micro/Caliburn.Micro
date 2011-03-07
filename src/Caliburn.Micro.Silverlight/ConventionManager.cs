@@ -30,8 +30,15 @@
 
         /// <summary>
         /// Indicates whether or not static properties should be included during convention name matching.
+        /// <remarks>False by default.</remarks>
         /// </summary>
         public static bool IncludeStaticProperties = false;
+
+        /// <summary>
+        /// Indicates whether or not the Content of ContentControls should be overwritten by conventional bindings.
+        /// <remarks>False by default.</remarks>
+        /// </summary>
+        public static bool OverwriteContent = false;
 
         /// <summary>
         /// The default DataTemplate used for ItemsControls when required.
@@ -144,12 +151,7 @@
         /// Determines whether a particular dependency property already has a binding on the provided element.
         /// </summary>
         public static Func<FrameworkElement, DependencyProperty, bool> HasBinding = (element, property) => {
-            var exists = element.GetBindingExpression(property) != null;
-
-            if(exists)
-                Log.Info("Binding exists on {0}.", element.Name);
-
-            return exists;
+            return element.GetBindingExpression(property) != null;
         };
 
         /// <summary>
@@ -198,10 +200,14 @@
                         return false;
 
                     var tabControl = (TabControl)element;
-                    if(tabControl.ContentTemplate == null && tabControl.ContentTemplateSelector == null && property.PropertyType.IsGenericType) {
+                    if(tabControl.ContentTemplate == null 
+                        && tabControl.ContentTemplateSelector == null 
+                        && property.PropertyType.IsGenericType) {
                         var itemType = property.PropertyType.GetGenericArguments().First();
-                        if(!itemType.IsValueType && !typeof(string).IsAssignableFrom(itemType))
+                        if(!itemType.IsValueType && !typeof(string).IsAssignableFrom(itemType)){
                             tabControl.ContentTemplate = DefaultItemTemplate;
+                            Log.Info("ContentTemplate applied to {0}.", element.Name);
+                        }
                     }
 
                     ConfigureSelectedItem(element, Selector.SelectedItemProperty, viewModelType, path);
@@ -227,7 +233,7 @@
                         return false;
 
                     ConfigureSelectedItem(element, Selector.SelectedItemProperty,viewModelType, path);
-                    ConfigureItemsControl((ItemsControl)element, property);
+                    ApplyItemTemplate((ItemsControl)element, property);
 
                     return true;
                 };
@@ -236,22 +242,28 @@
                     if (!SetBinding(viewModelType, path, property, element, convention))
                         return false;
 
-                    ConfigureItemsControl((ItemsControl)element, property);
+                    ApplyItemTemplate((ItemsControl)element, property);
 
                     return true;
                 };
             AddElementConvention<ContentControl>(ContentControl.ContentProperty, "DataContext", "Loaded").GetBindableProperty =
                 delegate(DependencyObject foundControl) {
                     var element = (ContentControl)foundControl;
+
+                    if (element.Content is DependencyObject && !OverwriteContent)
+                        return null;
 #if SILVERLIGHT
-                    return element.ContentTemplate == null && !(element.Content is DependencyObject)
-                        ? View.ModelProperty
-                        : ContentControl.ContentProperty;
+                    var useViewModel = element.ContentTemplate == null;
 #else
-                    return element.ContentTemplate == null && element.ContentTemplateSelector == null && !(element.Content is DependencyObject)
-                        ? View.ModelProperty
-                        : ContentControl.ContentProperty;
+                    var useViewModel = element.ContentTemplate == null && element.ContentTemplateSelector == null;
 #endif
+                    if (useViewModel) {
+                        Log.Info("ViewModel bound on {0}.", element.Name);
+                        return View.ModelProperty;
+                    }
+
+                    Log.Info("Content bound on {0}. Template or content was present.", element.Name);
+                    return ContentControl.ContentProperty;
                 };
             AddElementConvention<Shape>(Shape.VisibilityProperty, "DataContext", "MouseLeftButtonUp");
             AddElementConvention<FrameworkElement>(FrameworkElement.VisibilityProperty, "DataContext", "Loaded");
@@ -298,23 +310,33 @@
             return propertyConvention ?? GetElementConvention(elementType.BaseType);
         }
 
-        static void ConfigureItemsControl(ItemsControl itemsControl, PropertyInfo property) {
-            if(string.IsNullOrEmpty(itemsControl.DisplayMemberPath)
-                && !HasBinding(itemsControl, ItemsControl.DisplayMemberPathProperty)
-                    && itemsControl.ItemTemplate == null
-                        && property.PropertyType.IsGenericType) {
+        /// <summary>
+        /// Attempts to apply the default item template to the items control.
+        /// </summary>
+        /// <param name="itemsControl">The items control.</param>
+        /// <param name="property">The collection property.</param>
+        public static void ApplyItemTemplate(ItemsControl itemsControl, PropertyInfo property) {
+            if (!string.IsNullOrEmpty(itemsControl.DisplayMemberPath)
+                || HasBinding(itemsControl, ItemsControl.DisplayMemberPathProperty)
+                    || itemsControl.ItemTemplate != null
+                        || !property.PropertyType.IsGenericType)
+                return;
+
 #if !WP7
-                var itemType = property.PropertyType.GetGenericArguments().First();
-                if(!itemType.IsValueType && !typeof(string).IsAssignableFrom(itemType))
-#endif
-#if !SILVERLIGHT && !WP7
-                    if (itemsControl.ItemTemplateSelector == null)
-                        itemsControl.ItemTemplate = DefaultItemTemplate;
-#else
-                    itemsControl.ItemTemplate = DefaultItemTemplate;
+            var itemType = property.PropertyType.GetGenericArguments().First();
+            if (itemType.IsValueType || typeof(string).IsAssignableFrom(itemType))
+                return;
 #endif
 
+#if !SILVERLIGHT && !WP7
+            if (itemsControl.ItemTemplateSelector == null){
+                itemsControl.ItemTemplate = DefaultItemTemplate;
+                Log.Info("ItemTemplate applied to {0}.", itemsControl.Name);
             }
+#else
+            itemsControl.ItemTemplate = DefaultItemTemplate;
+            Log.Info("ItemTemplate applied to {0}.", itemsControl.Name);
+#endif
         }
 
         /// <summary>
@@ -336,6 +358,7 @@
                 if (viewModelType.GetPropertyCaseInsensitive(potentialName) != null) {
                     var selectionPath = path.Replace(baseName, potentialName);
                     BindingOperations.SetBinding(selector, selectedItemProperty, new Binding(selectionPath) { Mode = BindingMode.TwoWay });
+                    Log.Info("SelectedItem binding applied to {0}.", selector.Name);
                     return;
                 }
             }
@@ -350,11 +373,11 @@
         public static void ApplyHeaderTemplate(FrameworkElement element, DependencyProperty headerTemplateProperty, Type viewModelType) {
             var template = element.GetValue(headerTemplateProperty);
 
-            if (template != null
-                || !typeof(IHaveDisplayName).IsAssignableFrom(viewModelType))
+            if (template != null || !typeof(IHaveDisplayName).IsAssignableFrom(viewModelType))
                 return;
 
             element.SetValue(headerTemplateProperty, DefaultHeaderTemplate);
+            Log.Info("Header template applied to {0}.", element.Name);
         }
 
 #if SILVERLIGHT
