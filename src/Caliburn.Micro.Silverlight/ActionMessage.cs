@@ -266,13 +266,15 @@ namespace Caliburn.Micro
             var values = MessageBinder.DetermineParameters(context, context.Method.GetParameters());
             var returnValue = context.Method.Invoke(context.Target, values);
 
-            if (returnValue is IResult)
-                returnValue = new[] { returnValue as IResult };
+            var result = returnValue as IResult;
+            if (result != null)
+                returnValue = new[] { result };
 
-            if (returnValue is IEnumerable<IResult>)
-                Coroutine.BeginExecute(((IEnumerable<IResult>)returnValue).GetEnumerator(), context);
+            var enumerable = returnValue as IEnumerable<IResult>;
+            if(enumerable != null)
+                Coroutine.BeginExecute(enumerable.GetEnumerator(), context);
             else if (returnValue is IEnumerator<IResult>)
-                Coroutine.BeginExecute(((IEnumerator<IResult>)returnValue), context);
+                Coroutine.BeginExecute((IEnumerator<IResult>)returnValue, context);
         };
 
         /// <summary>
