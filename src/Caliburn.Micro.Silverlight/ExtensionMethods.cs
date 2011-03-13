@@ -86,7 +86,7 @@
 		/// <param name="first">The first sequence to merge.</param>
 		/// <param name="second">The second sequence to merge.</param>
 		/// <param name="resultSelector"> A function that specifies how to merge the elements from the two sequences.</param>
-		/// <returns>An System.Collections.Generic.IEnumerable;ltT&gt; that contains merged elements of two input sequences.</returns>
+		/// <returns>An System.Collections.Generic.IEnumerable&lt;T&gt; that contains merged elements of two input sequences.</returns>
 		public static IEnumerable<TResult> Zip<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> resultSelector)
 		{
 			if (first == null)
