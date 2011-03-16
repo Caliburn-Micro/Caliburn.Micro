@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>caliburn.micro</id>
+    <version>1.0.0</version>
+    <authors>Rob Eisenberg</authors>
+    <description>A small, yet powerful implementation of Caliburn designed for WPF, Silverlight and WP7. The framework implements a variety of UI patterns for solving real-world problems. Patterns that are enabled include MVC, MVP, Presentation Model (MVVM), and Application Controller.</description>
+    <language>en-US</language>
+    <licenseUrl>http://caliburnmicro.codeplex.com/license</licenseUrl>
+    <projectUrl>http://caliburnmicro.codeplex.com</projectUrl>
+  </metadata>
+</package>
