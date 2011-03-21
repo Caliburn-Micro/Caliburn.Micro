@@ -72,7 +72,10 @@
                 if(values == null)
                     values = new Dictionary<string, object>();
 
-                return values[key];
+                object result;
+                values.TryGetValue(key, out result);
+
+                return result;
             }
             set {
                 if(values == null)
