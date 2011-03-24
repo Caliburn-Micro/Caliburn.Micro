@@ -1,6 +1,10 @@
 ﻿namespace Caliburn.Micro
 {
-	using System.Windows;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Windows;
+    using System.Reflection;
 
 	/// <summary>
 	/// A host for action related attached properties.
@@ -85,7 +89,35 @@
 			  || (GetTargetWithoutContext(element) != null);
 		}
 
-		private static void OnTargetWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        ///<summary>
+        /// Uses the action pipeline to invoke the method.
+        ///</summary>
+        ///<param name="target">The object instance to invoke the method on.</param>
+        ///<param name="methodName">The name of the method to invoke.</param>
+        ///<param name="view">The view.</param>
+        ///<param name="source">The source of the invocation.</param>
+        ///<param name="eventArgs">The event args.</param>
+        ///<param name="parameters">The method parameters.</param>
+        public static void Invoke(object target, string methodName, DependencyObject view = null, FrameworkElement source = null, object eventArgs = null, object[] parameters = null) {
+            var context = new ActionExecutionContext {
+                Target = target,
+                Method = target.GetType().GetMethod(methodName),
+                Message = new ActionMessage {
+                    MethodName = methodName
+                },
+                View = view,
+                Source = source,
+                EventArgs = eventArgs
+            };
+
+            if(parameters != null) {
+                parameters.Apply(x => context.Message.Parameters.Add(x as Parameter ?? new Parameter { Value = x }));
+            }
+
+            ActionMessage.InvokeAction(context);
+        }
+
+	    private static void OnTargetWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			SetTargetCore(e, d, false);
 		}
