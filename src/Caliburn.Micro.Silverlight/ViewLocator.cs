@@ -109,18 +109,13 @@
         /// </summary>
         /// <param name="element">The element to initialize</param>
         public static void InitializeComponent(object element) {
-            var initializeComponentMethod = element.GetType()
+            var method = element.GetType()
                 .GetMethod("InitializeComponent", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
 
-            if(initializeComponentMethod == null)
+            if(method == null)
                 return;
 
-            try {
-                initializeComponentMethod.Invoke(element, null);
-            }
-            catch(Exception ex) {
-                Log.Error(ex);
-            }
+            method.Invoke(element, null);
         }
     }
 }
