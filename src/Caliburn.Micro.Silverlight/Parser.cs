@@ -16,6 +16,8 @@
     /// </summary>
     public static class Parser
     {
+        static readonly Regex LongFormatRegularExpression = new Regex(@"^[\s]*\[[^\]]*\][\s]*=[\s]*\[[^\]]*\][\s]*$");
+
         /// <summary>
         /// Parses the specified message text.
         /// </summary>
@@ -30,7 +32,10 @@
             var messageTexts = Split(text, ';');
 
             foreach (var messageText in messageTexts) {
-                var triggerPlusMessage = Split(messageText, '=');
+                var triggerPlusMessage = LongFormatRegularExpression.IsMatch(messageText) 
+                    ? Split(messageText, '=') 
+                    : new[] { null, messageText };
+
                 var messageDetail = triggerPlusMessage.Last()
                 .Replace("[", string.Empty)
                 .Replace("]", string.Empty)
