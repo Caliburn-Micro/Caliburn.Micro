@@ -11,6 +11,7 @@
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
     using System.Linq;
+    using System.Windows.Media.Animation;
 
     /// <summary>
     /// A service that manages windows.
@@ -166,7 +167,7 @@
                 border = new Border
                 {
                     Child = container,
-                    Background = new SolidColorBrush(Color.FromArgb(128, 0, 0, 0))
+                    Background = new SolidColorBrush(Color.FromArgb(170, 0, 0, 0))
                 };
 
                 popup = new Popup { Child = border };
