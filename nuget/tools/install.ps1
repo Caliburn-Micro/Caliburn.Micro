@@ -5,7 +5,10 @@ function Get-ScriptDirectory {
   Split-Path $Invoc.MyCommand.Path
 }
 
-function get-content-source-from-frameworkname($frameworkname) {
+function get-content-path() {
+  $moniker = $project.Properties.Item("TargetFrameworkMoniker").Value
+  $frameworkname = new-object System.Runtime.Versioning.FrameworkName($moniker)
+
   $id = $frameworkname.Identifier
 
   if($id -eq ".NETFramework") { $relative = "NET40" }
@@ -15,11 +18,7 @@ function get-content-source-from-frameworkname($frameworkname) {
   [System.IO.Path]::Combine($root, $relative)
 }
  
-  $moniker = $project.Properties.Item("TargetFrameworkMoniker").Value
- 
-  $frameworkname = new-object System.Runtime.Versioning.FrameworkName($moniker)
- 
-  $contentSource = get-content-source-from-frameworkname $frameworkname
+  $contentSource = get-content-path
 
   ls $contentSource | foreach-object { $project.ProjectItems.AddFromFileCopy($_.FullName) }
 
