@@ -22,7 +22,7 @@ function get-content-path() {
 
   ls $contentSource | foreach-object { $project.ProjectItems.AddFromFileCopy($_.FullName) }
 
-  write-host "Added Bootstrapper.cs.  You'll want to update the namespace and add this to your App.xaml as described here http://caliburnmicro.codeplex.com/wikipage?title=Basic%20Configuration%2c%20Actions%20and%20Conventions&referringTitle=Documentation"
+  write-host "Added Bootstrapper.cs.  You'll want to update the namespace and add this to your App.xaml as described here: http://caliburnmicro.codeplex.com/wikipage?title=Basic%20Configuration%2c%20Actions%20and%20Conventions&referringTitle=Documentation"
 
  
 # WPF4 will be NETFramework,Version=v4.0,Profile=Client 
