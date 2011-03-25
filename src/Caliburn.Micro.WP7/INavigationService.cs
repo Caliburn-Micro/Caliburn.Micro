@@ -31,6 +31,11 @@
         /// </summary>
         Uri CurrentSource { get; }
 
+		/// <summary>
+		/// The current content.
+		/// </summary>
+		object CurrentContent { get; }
+
         /// <summary>
         /// Stops the loading process.
         /// </summary>
@@ -207,6 +212,15 @@
         {
             get { return frame.CurrentSource; }
         }
+
+		/// <summary>
+		/// The current content.
+		/// </summary>
+		public object CurrentContent
+		{
+			get { return frame.Content; }
+		}
+
 
         /// <summary>
         /// Stops the loading process.
