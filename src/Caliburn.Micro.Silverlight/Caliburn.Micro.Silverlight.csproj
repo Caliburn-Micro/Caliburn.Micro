@@ -102,6 +102,7 @@
     <Compile Include="SequentialResult.cs" />
     <Compile Include="TypeDescriptor.cs" />
     <Compile Include="View.cs" />
+    <Compile Include="ViewAware.cs" />
     <Compile Include="ViewLocator.cs" />
     <Compile Include="ViewModelBinder.cs" />
     <Compile Include="ViewModelLocator.cs" />

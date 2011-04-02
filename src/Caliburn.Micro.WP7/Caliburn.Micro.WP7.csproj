@@ -176,6 +176,9 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\View.cs">
       <Link>View.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ViewAware.cs">
+      <Link>ViewAware.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ViewLocator.cs">
       <Link>ViewLocator.cs</Link>
     </Compile>
