@@ -26,6 +26,12 @@
             };
 
         /// <summary>
+        /// Custom converters used by the framework registered by detination type for which the will be selected.
+        /// The converter is passed the existing value to convert and a "context" object.
+        /// </summary>
+        public static readonly Dictionary<Type, Func<object, object, object>> CustomConverters = new Dictionary<Type, Func<object, object, object>>();
+
+        /// <summary>
         /// Determines the parameters that a method should be invoked with.
         /// </summary>
         /// <param name="context">The action execution context.</param>
@@ -41,8 +47,8 @@
                 var parameterAsString = parameterValue as string;
 
                 if(parameterAsString != null)
-                    finalValues[i] = CoerceValue(parameterType, EvaluateParameter(parameterAsString, parameterType, context));
-                else finalValues[i] = CoerceValue(parameterType, parameterValue);
+                    finalValues[i] = CoerceValue(parameterType, EvaluateParameter(parameterAsString, parameterType, context), context);
+                else finalValues[i] = CoerceValue(parameterType, parameterValue, context);
             }
 
             return finalValues;
@@ -54,10 +60,7 @@
         public static Func<string, Type, ActionExecutionContext, object> EvaluateParameter = (text, parameterType, context) => {
             var lookup = text.ToLower(CultureInfo.InvariantCulture);
             Func<ActionExecutionContext, object> resolver;
-
-            if(SpecialValues.TryGetValue(lookup, out resolver))
-                return resolver(context);
-            return text;
+            return SpecialValues.TryGetValue(lookup, out resolver) ? resolver(context) : text;
         };
 
         /// <summary>
@@ -65,10 +68,14 @@
         /// </summary>
         /// <param name="destinationType">The destination type.</param>
         /// <param name="providedValue">The provided value.</param>
+        /// <param name="context">An optional context value which can be used during conversion.</param>
         /// <returns>The coerced value.</returns>
-        public static object CoerceValue(Type destinationType, object providedValue) {
+        public static object CoerceValue(Type destinationType, object providedValue, object context) {
             if(providedValue == null)
                 return GetDefaultValue(destinationType);
+
+            if (CustomConverters.ContainsKey(destinationType))
+                return CustomConverters[destinationType](providedValue, context);
 
             var providedType = providedValue.GetType();
 

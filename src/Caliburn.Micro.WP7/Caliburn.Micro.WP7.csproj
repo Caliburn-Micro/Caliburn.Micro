@@ -176,6 +176,9 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\View.cs">
       <Link>View.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ViewAware.cs">
+      <Link>ViewAware.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ViewLocator.cs">
       <Link>ViewLocator.cs</Link>
     </Compile>
@@ -202,6 +205,7 @@
     <Compile Include="SurviveTombstone.cs" />
     <Compile Include="TaskLaunchEventArgs.cs" />
     <Compile Include="Tuple.cs" />
+    <Compile Include="WindowManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

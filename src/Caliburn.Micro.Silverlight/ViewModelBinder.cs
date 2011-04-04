@@ -165,11 +165,7 @@
             if ((bool)view.GetValue(ConventionsAppliedProperty))
                 return;
 
-#if WP7
-            var element = view as FrameworkElement;
-#else
-            var element = View.GetFirstNonGeneratedView(view) as FrameworkElement;
-#endif
+			var element = View.GetFirstNonGeneratedView(view) as FrameworkElement;
             if(element == null)
                 return;
 

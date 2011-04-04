@@ -41,6 +41,11 @@
         public static bool OverwriteContent = false;
 
         /// <summary>
+        /// Indicates whether or not implementors of <see cref="IViewAware"/> should cache their views by default.
+        /// </summary>
+        public static bool CacheViewsByDefault = true;
+
+        /// <summary>
         /// The default DataTemplate used for ItemsControls when required.
         /// </summary>
         public static DataTemplate DefaultItemTemplate = (DataTemplate)
