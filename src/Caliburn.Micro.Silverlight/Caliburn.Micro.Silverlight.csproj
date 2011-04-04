@@ -47,6 +47,12 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\..\bin\Silverlight\Release\Caliburn.Micro.xml</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Caliburn.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="System.Windows" />
@@ -107,6 +113,9 @@
     <Compile Include="ViewModelBinder.cs" />
     <Compile Include="ViewModelLocator.cs" />
     <Compile Include="WindowManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Caliburn.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>

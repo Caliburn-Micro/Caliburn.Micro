@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Markup;
 
 [assembly: AssemblyTitle("Caliburn Micro")]
-[assembly: AssemblyDescription("A small, yet extremely powerful implementation of Caliburn.")]
+[assembly: AssemblyDescription("A small, yet powerful framework designed for WPF, Silverlight and WP7. It implements a variety of UI patterns for solving real-world problems. Patterns that are highlighted include MVVM (Presentation Model), MVP and MVC.")]
 [assembly: AssemblyProduct("Caliburn.Micro")]
 [assembly: AssemblyCompany("Blue Spire Consulting, Inc.")]
 [assembly: AssemblyCopyright("Copyright © 2010")]
