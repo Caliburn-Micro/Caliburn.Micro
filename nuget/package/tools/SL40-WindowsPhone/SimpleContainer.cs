@@ -1,4 +1,4 @@
-﻿namespace safeprojectname
+﻿namespace $safeprojectname$
 {
     using System;
     using System.Collections;
