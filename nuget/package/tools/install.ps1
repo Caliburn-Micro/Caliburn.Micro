@@ -23,4 +23,6 @@ ls $contentSource | foreach-object {
 	$project.ProjectItems.AddFromFileCopy($_.FullName)
 }
 
+$project.DTE.ItemOperations.Navigate([System.IO.Path]::Combine($contentSource, 'CaliburnMicro.html'))
+
 write-host "Added Bootstrapper and Shell.  You will want to update the your App.xaml as described here: http://caliburnmicro.codeplex.com/wikipage?title=Basic%20Configuration%2c%20Actions%20and%20Conventions&referringTitle=Documentation"
