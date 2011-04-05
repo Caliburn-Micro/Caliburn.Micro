@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using Caliburn.Micro
+    using Caliburn.Micro;
 
     public class SimpleContainer
     {

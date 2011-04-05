@@ -1,5 +1,6 @@
 ﻿namespace safeprojectname {
     using System;
+    using Caliburn.Micro;
 
     public class PhoneContainer : SimpleContainer {
         public PhoneContainer(PhoneBootstrapper bootstrapper) {

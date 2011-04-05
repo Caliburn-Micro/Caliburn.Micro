@@ -10,6 +10,7 @@
     <projectUrl>http://caliburnmicro.codeplex.com</projectUrl>
     <iconUrl>http://www.caliburnproject.org/CaliburnIcon.png</iconUrl>
     <frameworkAssemblies>
+      <frameworkAssembly assemblyName="Microsoft.Phone.Controls" targetFramework="sl40-WP" />
 	  <frameworkAssembly assemblyName="System.ComponentModel.Composition" targetFramework="net40, sl40" />
 	  <frameworkAssembly assemblyName="System.ComponentModel.Composition.Initialization" targetFramework="sl40" />
 	</frameworkAssemblies>

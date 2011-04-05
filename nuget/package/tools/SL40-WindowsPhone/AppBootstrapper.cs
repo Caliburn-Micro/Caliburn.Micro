@@ -2,7 +2,6 @@
     using System;
     using System.Collections.Generic;
     using System.Windows.Controls;
-    using Framework;
     using Microsoft.Phone.Controls;
     using Caliburn.Micro;
 
