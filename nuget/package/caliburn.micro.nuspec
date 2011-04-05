@@ -9,6 +9,7 @@
     <licenseUrl>http://caliburnmicro.codeplex.com/license</licenseUrl>
     <projectUrl>http://caliburnmicro.codeplex.com</projectUrl>
     <iconUrl>http://www.caliburnproject.org/CaliburnIcon.png</iconUrl>
+    <tags>MVVM Silverlight WPF WP7 SL4 SL MVC CoC Convention MVP PM Screen Coroutine Behavior Model-View-ViewModel Presentation UI ViewModel Phone</tags>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="Microsoft.Phone.Controls" targetFramework="sl40-WP" />
 	  <frameworkAssembly assemblyName="System.ComponentModel.Composition" targetFramework="net40, sl40" />
