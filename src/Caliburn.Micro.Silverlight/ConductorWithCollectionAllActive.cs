@@ -62,6 +62,8 @@
                 /// <param name="close">Inidicates whether this instance will be closed.</param>
                 protected override void OnDeactivate(bool close) {
                     items.OfType<IDeactivate>().Apply(x => x.Deactivate(close));
+                    if(close)
+                        items.Clear();
                 }
 
                 /// <summary>
@@ -70,7 +72,11 @@
                 /// <param name="callback">The implementor calls this action with the result of the close check.</param>
                 public override void CanClose(Action<bool> callback) {
                     CloseStrategy.Execute(items, (canClose, closable) => {
-                        closable.Apply(CloseItemCore);
+                        if (!canClose && closable.Any()) {
+                            closable.OfType<IDeactivate>().Apply(x => x.Deactivate(true));
+                            items.RemoveRange(closable);
+                        }
+
                         callback(canClose);
                     });
                 }
