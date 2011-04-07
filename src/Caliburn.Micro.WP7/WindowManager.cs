@@ -1,63 +1,53 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Markup;
     using System.Windows.Media;
+    using System.Windows.Media.Animation;
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
-    using System.Linq;
-    using System.Windows.Media.Animation;
-    using System.Linq.Expressions;
-    using System.Diagnostics;
 
     /// <summary>
-    /// A service that manages windows.
+    ///   A service that manages windows.
     /// </summary>
-    public interface IWindowManager
-    {
-
+    public interface IWindowManager {
         /// <summary>
-        /// Shows a modal dialog for the specified model.
+        ///   Shows a modal dialog for the specified model.
         /// </summary>
-        /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The context.</param>
+        /// <param name = "rootModel">The root model.</param>
+        /// <param name = "context">The context.</param>
         void ShowDialog(object rootModel, object context = null);
 
         /// <summary>
-        /// Shows a popup at the current mouse position.
+        ///   Shows a popup at the current mouse position.
         /// </summary>
-        /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The view context.</param>
-        /// <param name="settings">The optional popup settings.</param>
+        /// <param name = "rootModel">The root model.</param>
+        /// <param name = "context">The view context.</param>
+        /// <param name = "settings">The optional popup settings.</param>
         void ShowPopup(object rootModel, object context = null, IDictionary<string, object> settings = null);
     }
 
     /// <summary>
-    /// A service that manages windows.
+    ///   A service that manages windows.
     /// </summary>
-    public class WindowManager : IWindowManager
-    {
-
+    public class WindowManager : IWindowManager {
         /// <summary>
-        /// Shows a modal dialog for the specified model.
+        ///   Shows a modal dialog for the specified model.
         /// </summary>
-        /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The context.</param>
-        public virtual void ShowDialog(object rootModel, object context = null)
-        {
-
+        /// <param name = "rootModel">The root model.</param>
+        /// <param name = "context">The context.</param>
+        public virtual void ShowDialog(object rootModel, object context = null) {
             var navigationSvc = IoC.Get<INavigationService>();
             var page = navigationSvc.CurrentContent as PhoneApplicationPage;
-            if (page == null) throw new InvalidOperationException(
-                string.Format("In order to use ShowDialog the view currently loaded in the application frame ({0})"
-                + " should inherit from PhoneApplicationPage or one of its descendents.", navigationSvc.CurrentContent.GetType()));
-
-
+            if(page == null)
+                throw new InvalidOperationException(
+                    string.Format("In order to use ShowDialog the view currently loaded in the application frame ({0})"
+                                  + " should inherit from PhoneApplicationPage or one of its descendents.", navigationSvc.CurrentContent.GetType()));
 
             var host = new DialogHost(page);
             var view = ViewLocator.LocateForModel(rootModel, host, context);
@@ -68,24 +58,23 @@
             host.SetActionTarget(rootModel);
 
             var activatable = rootModel as IActivate;
-            if (activatable != null)
+            if(activatable != null)
                 activatable.Activate();
 
             var deactivator = rootModel as IDeactivate;
-            if (deactivator != null)
+            if(deactivator != null)
                 host.Closed += delegate { deactivator.Deactivate(true); };
 
             host.Open();
         }
 
         /// <summary>
-        /// Shows a popup at the current mouse position.
+        ///   Shows a popup at the current mouse position.
         /// </summary>
-        /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The view context.</param>
-        /// <param name="settings">The optional popup settings.</param>
-        public virtual void ShowPopup(object rootModel, object context = null, IDictionary<string, object> settings = null)
-        {
+        /// <param name = "rootModel">The root model.</param>
+        /// <param name = "context">The view context.</param>
+        /// <param name = "settings">The optional popup settings.</param>
+        public virtual void ShowPopup(object rootModel, object context = null, IDictionary<string, object> settings = null) {
             var popup = CreatePopup(rootModel, settings);
             var view = ViewLocator.LocateForModel(rootModel, popup, context);
 
@@ -95,36 +84,32 @@
             ViewModelBinder.Bind(rootModel, popup, null);
 
             var activatable = rootModel as IActivate;
-            if (activatable != null)
+            if(activatable != null)
                 activatable.Activate();
 
             var deactivator = rootModel as IDeactivate;
-            if (deactivator != null)
+            if(deactivator != null)
                 popup.Closed += delegate { deactivator.Deactivate(true); };
 
             popup.IsOpen = true;
-            //popup.CaptureMouse();
         }
 
         /// <summary>
-        /// Creates a popup for hosting a popup window.
+        ///   Creates a popup for hosting a popup window.
         /// </summary>
-        /// <param name="rootModel">The model.</param>
-        /// <param name="settings">The optional popup settings.</param>
+        /// <param name = "rootModel">The model.</param>
+        /// <param name = "settings">The optional popup settings.</param>
         /// <returns>The popup.</returns>
-        protected virtual Popup CreatePopup(object rootModel, IDictionary<string, object> settings)
-        {
+        protected virtual Popup CreatePopup(object rootModel, IDictionary<string, object> settings) {
             var popup = new Popup();
 
-            if (settings != null)
-            {
+            if(settings != null) {
                 var type = popup.GetType();
 
-                foreach (var pair in settings)
-                {
+                foreach(var pair in settings) {
                     var propertyInfo = type.GetProperty(pair.Key);
 
-                    if (propertyInfo != null)
+                    if(propertyInfo != null)
                         propertyInfo.SetValue(popup, pair.Value, null);
                 }
             }
@@ -132,99 +117,74 @@
             return popup;
         }
 
-
-
-
         [ContentProperty("Content")]
-        internal class DialogHost : FrameworkElement
-        {
+        internal class DialogHost : FrameworkElement {
             PhoneApplicationPage currentPage;
-
             Popup hostPopup;
             bool isOpen = false;
             ContentControl viewContainer;
             Border pageFreezingLayer;
             Border maskingLayer;
-
             IElementPlacementAnimator elementPlacementAnimator;
-            
             Dictionary<IApplicationBarIconButton, bool> appBarButtonsStatus = new Dictionary<IApplicationBarIconButton, bool>();
             bool appBarMenuEnabled;
 
-
-            public DialogHost(PhoneApplicationPage currentPage)
-            {
+            public DialogHost(PhoneApplicationPage currentPage) {
                 this.currentPage = currentPage;
                 CreateUIElements();
                 elementPlacementAnimator = CreateElementsAnimator();
             }
 
             public EventHandler Closed = delegate { };
-             
 
-            public void SetActionTarget(object target)
-            {
+
+            public void SetActionTarget(object target) {
                 Action.SetTarget(viewContainer, target);
-
             }
 
-            public  virtual UIElement Content
-            {
+            public virtual UIElement Content {
                 get { return (UIElement)viewContainer.Content; }
                 set { viewContainer.Content = value; }
             }
 
-
-            public void Open()
-            {
-                if (isOpen) return;
+            public void Open() {
+                if(isOpen)
+                    return;
                 isOpen = true;
 
-                if (currentPage.ApplicationBar != null)
-                {
+                if(currentPage.ApplicationBar != null) {
                     DisableAppBar();
                 }
 
                 ArrangePlacement();
 
-                currentPage.BackKeyPress += currentPage_BackKeyPress;
-                currentPage.OrientationChanged += currentPage_OrientationChanged;
+                currentPage.BackKeyPress += CurrentPageBackKeyPress;
+                currentPage.OrientationChanged += CurrentPageOrientationChanged;
 
                 hostPopup.IsOpen = true;
             }
 
-          
-            public void Close()
-            {
-                if (!isOpen) return;
+            public void Close() {
+                if(!isOpen)
+                    return;
                 isOpen = false;
 
-                elementPlacementAnimator.Exit(() =>
-                {
-                    hostPopup.IsOpen = false;
-                });
+                elementPlacementAnimator.Exit(() => { hostPopup.IsOpen = false; });
 
-                if (currentPage.ApplicationBar != null)
-                {
+                if(currentPage.ApplicationBar != null) {
                     RestoreAppBar();
                 }
-                currentPage.BackKeyPress -= currentPage_BackKeyPress;
-                currentPage.OrientationChanged -= currentPage_OrientationChanged;
+                currentPage.BackKeyPress -= CurrentPageBackKeyPress;
+                currentPage.OrientationChanged -= CurrentPageOrientationChanged;
 
                 Closed(this, EventArgs.Empty);
             }
 
-
-            
-
-            protected virtual IElementPlacementAnimator CreateElementsAnimator()
-            {
+            protected virtual IElementPlacementAnimator CreateElementsAnimator() {
                 return new DefaultElementPlacementAnimator(maskingLayer, viewContainer);
             }
 
-
-            protected virtual void CreateUIElements()
-            {
+            protected virtual void CreateUIElements() {
                 viewContainer = new ContentControl
                 {
                     HorizontalContentAlignment = HorizontalAlignment.Stretch,
@@ -234,15 +194,14 @@
                 {
                     Child = viewContainer,
                     Background = new SolidColorBrush(Color.FromArgb(170, 0, 0, 0)),
-                    VerticalAlignment = System.Windows.VerticalAlignment.Top,
-                    HorizontalAlignment = System.Windows.HorizontalAlignment.Left
+                    VerticalAlignment = VerticalAlignment.Top,
+                    HorizontalAlignment = HorizontalAlignment.Left
                 };
                 pageFreezingLayer = new Border
                 {
                     Background = new SolidColorBrush(Colors.Transparent),
                     Width = Application.Current.Host.Content.ActualWidth,
                     Height = Application.Current.Host.Content.ActualHeight
-
                 };
 
                 var panel = new Canvas();
@@ -252,15 +211,11 @@
                 hostPopup = new Popup { Child = panel };
             }
 
-            private void DisableAppBar()
-            {
-
+            void DisableAppBar() {
                 appBarMenuEnabled = currentPage.ApplicationBar.IsMenuEnabled;
-
                 appBarButtonsStatus.Clear();
                 currentPage.ApplicationBar.Buttons.Cast<IApplicationBarIconButton>()
-                    .Apply(b =>
-                    {
+                    .Apply(b => {
                         appBarButtonsStatus.Add(b, b.IsEnabled);
                         b.IsEnabled = false;
                     });
@@ -268,25 +223,18 @@
                 currentPage.ApplicationBar.IsMenuEnabled = false;
             }
 
-
-            private void RestoreAppBar()
-            {
+            void RestoreAppBar() {
                 currentPage.ApplicationBar.IsMenuEnabled = appBarMenuEnabled;
                 currentPage.ApplicationBar.Buttons.Cast<IApplicationBarIconButton>()
-                    .Apply(b =>
-                    {
+                    .Apply(b => {
                         bool status;
-                        if (appBarButtonsStatus.TryGetValue(b, out status))
+                        if(appBarButtonsStatus.TryGetValue(b, out status))
                             b.IsEnabled = status;
                     });
             }
 
-
-            private void ArrangePlacement()
-            {
-                maskingLayer.Dispatcher.BeginInvoke(() =>
-                {
-
+            void ArrangePlacement() {
+                maskingLayer.Dispatcher.BeginInvoke(() => {
                     var placement = new ElementPlacement
                     {
                         Transform = (Transform)currentPage.TransformToVisual(null),
@@ -298,67 +246,47 @@
                 });
             }
 
-
-            void currentPage_BackKeyPress(object sender, CancelEventArgs e)
-            {
+            void CurrentPageBackKeyPress(object sender, CancelEventArgs e) {
                 e.Cancel = true;
-                this.Close();
+                Close();
             }
 
-            void currentPage_OrientationChanged(object sender, OrientationChangedEventArgs e)
-            {
+            void CurrentPageOrientationChanged(object sender, OrientationChangedEventArgs e) {
                 ArrangePlacement();
             }
 
-            
-
-
-
-
-
-
-            public class ElementPlacement
-            {
+            public class ElementPlacement {
                 public Transform Transform;
                 public PageOrientation Orientation;
                 public Size Size;
 
-                public double AngleFromDefault
-                {
-                    get
-                    {
-                        if ((Orientation & PageOrientation.Landscape) == 0)
+                public double AngleFromDefault {
+                    get {
+                        if((Orientation & PageOrientation.Landscape) == 0)
                             return 0;
-                        else
-                            return Orientation == PageOrientation.LandscapeRight ? 90 : -90;
+                        return Orientation == PageOrientation.LandscapeRight ? 90 : -90;
                     }
                 }
             }
 
-            public interface IElementPlacementAnimator
-            {
+            public interface IElementPlacementAnimator {
                 void Enter(ElementPlacement initialPlacement);
                 void AnimateTo(ElementPlacement newPlacement);
                 void Exit(System.Action onCompleted);
             }
 
-            public class DefaultElementPlacementAnimator : IElementPlacementAnimator
-            {
-
+            public class DefaultElementPlacementAnimator : IElementPlacementAnimator {
                 FrameworkElement maskingLayer;
                 FrameworkElement viewContainer;
                 Storyboard storyboard = new Storyboard();
                 ElementPlacement currentPlacement;
 
-
-                public DefaultElementPlacementAnimator(FrameworkElement maskingLayer, FrameworkElement viewContainer)
-                {
+                public DefaultElementPlacementAnimator(FrameworkElement maskingLayer, FrameworkElement viewContainer) {
                     this.maskingLayer = maskingLayer;
                     this.viewContainer = viewContainer;
                 }
 
-                public void Enter(ElementPlacement initialPlacement)
-                {
+                public void Enter(ElementPlacement initialPlacement) {
                     currentPlacement = initialPlacement;
 
                     //size
@@ -371,16 +299,14 @@
                     //enter animation
                     var projection = new PlaneProjection { CenterOfRotationY = 0.1 };
                     viewContainer.Projection = projection;
-                    AddDoubleAnimation(projection, "RotationX", from: -90, to: 0, ms: 400);
-
-                    AddDoubleAnimation(maskingLayer, "Opacity", from: 0, to: 1, ms: 400);
+                    AddDoubleAnimation(projection, "RotationX", from:-90, to:0, ms:400);
+                    AddDoubleAnimation(maskingLayer, "Opacity", from:0, to:1, ms:400);
 
                     storyboard.Begin();
                 }
-                public void AnimateTo(ElementPlacement newPlacement)
-                {
-                    if (currentPlacement == null)
-                    {
+
+                public void AnimateTo(ElementPlacement newPlacement) {
+                    if(currentPlacement == null) {
                         Enter(newPlacement);
                         return;
                     }
@@ -389,8 +315,8 @@
                     storyboard.Children.Clear();
 
                     //size
-                    AddDoubleAnimation(maskingLayer, "Width", from: currentPlacement.Size.Width, to: newPlacement.Size.Width, ms: 200);
-                    AddDoubleAnimation(maskingLayer, "Height", from: currentPlacement.Size.Height, to: newPlacement.Size.Height, ms: 200);
+                    AddDoubleAnimation(maskingLayer, "Width", from:currentPlacement.Size.Width, to:newPlacement.Size.Width, ms:200);
+                    AddDoubleAnimation(maskingLayer, "Height", from:currentPlacement.Size.Height, to:newPlacement.Size.Height, ms:200);
 
                     //rotation at orientation change
                     var transformGroup = new TransformGroup();
@@ -402,46 +328,35 @@
                     transformGroup.Children.Add(newPlacement.Transform);
                     transformGroup.Children.Add(rotation);
                     maskingLayer.RenderTransform = transformGroup;
-                    AddDoubleAnimation(rotation, "Angle", from: newPlacement.AngleFromDefault - currentPlacement.AngleFromDefault, to: 0.0);
+                    AddDoubleAnimation(rotation, "Angle", from:newPlacement.AngleFromDefault - currentPlacement.AngleFromDefault, to:0.0);
 
                     //slight fading at orientation change
                     AddFading(maskingLayer);
-
 
                     currentPlacement = newPlacement;
                     storyboard.Begin();
                 }
 
-
-
-                public void Exit(System.Action onCompleted)
-                {
+                public void Exit(System.Action onCompleted) {
                     storyboard.Stop();
                     storyboard.Children.Clear();
 
                     //exit animation
                     var projection = new PlaneProjection { CenterOfRotationY = 0.1 };
                     viewContainer.Projection = projection;
-                    AddDoubleAnimation(projection, "RotationX", from: 0, to: 90, ms: 250);
+                    AddDoubleAnimation(projection, "RotationX", from:0, to:90, ms:250);
+                    AddDoubleAnimation(maskingLayer, "Opacity", from:1, to:0, ms:350);
 
-                    AddDoubleAnimation(maskingLayer, "Opacity", from: 1, to: 0, ms: 350);
-
-
-                    storyboard.Completed += (o, e) =>
-                    {
-                        onCompleted();
-                    };
-
+                    storyboard.Completed += (o, e) => { onCompleted(); };
                     storyboard.Begin();
                 }
 
-                void AddDoubleAnimation(DependencyObject target, string property, double from, double to, int ms = 500)
-                {
+                void AddDoubleAnimation(DependencyObject target, string property, double from, double to, int ms = 500) {
                     var timeline = new DoubleAnimation
                     {
                         From = from,
                         To = to,
-                        EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseOut, Exponent = 4 },
+                        EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseOut, Exponent = 4 },
                         Duration = new Duration(TimeSpan.FromMilliseconds(ms))
                     };
 
@@ -450,8 +365,7 @@
                     storyboard.Children.Add(timeline);
                 }
 
-                void AddFading(FrameworkElement target)
-                {
+                void AddFading(FrameworkElement target) {
                     var timeline = new DoubleAnimationUsingKeyFrames
                     {
                         Duration = new Duration(TimeSpan.FromMilliseconds(500))
@@ -464,13 +378,7 @@
                     Storyboard.SetTargetProperty(timeline, new PropertyPath("Opacity"));
                     storyboard.Children.Add(timeline);
                 }
-
-
             }
-            
         }
-
-
-     
     }
 }
