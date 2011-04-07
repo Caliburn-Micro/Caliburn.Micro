@@ -145,6 +145,9 @@
             return unmatchedElements;
         };
 
+        /// <summary>
+        /// Allows the developer to add custom handling of named elements which were not matched by any default conventions.
+        /// </summary>
         public static Action<IEnumerable<FrameworkElement>, Type> HandleUnmatchedElements = (elements, viewModelType) => {};
 
         /// <summary>

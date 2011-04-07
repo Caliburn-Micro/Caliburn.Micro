@@ -107,6 +107,12 @@
             };
         }
 
+        /// <summary>
+        /// Determines the key to store the give instance with in the phone's state.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <param name="qualifier">A qualifier which when provided is appended to the key's end.</param>
+        /// <returns></returns>
         protected virtual string GetKey(object instance, string qualifier)
         {
             var key = instance.GetType().AssemblyQualifiedName;

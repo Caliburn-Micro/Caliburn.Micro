@@ -5,7 +5,7 @@
     ///   A base implementation of <see cref = "IScreen" />.
     /// </summary>
     public class Screen : ViewAware, IScreen, IChild {
-        protected static readonly ILog Log = LogManager.GetLog(typeof(Screen));
+        static readonly ILog Log = LogManager.GetLog(typeof(Screen));
 
         bool isActive;
         bool isInitialized;

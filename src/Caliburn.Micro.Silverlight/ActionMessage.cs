@@ -108,6 +108,9 @@ namespace Caliburn.Micro
         /// </summary>
         public event EventHandler Detaching = delegate { };
 
+        /// <summary>
+        /// Called after the action is attached to an AssociatedObject.
+        /// </summary>
         protected override void OnAttached()
         {
             if (!Bootstrapper.IsInDesignMode)
@@ -131,6 +134,9 @@ namespace Caliburn.Micro
             ((ActionMessage)d).UpdateContext();
         }
 
+        /// <summary>
+        /// Called when the action is being detached from its AssociatedObject, but before it has actually occurred.
+        /// </summary>
         protected override void OnDetaching()
         {
             if (!Bootstrapper.IsInDesignMode)
@@ -190,6 +196,10 @@ namespace Caliburn.Micro
             UpdateAvailabilityCore();
         }
 
+        /// <summary>
+        /// Invokes the action.
+        /// </summary>
+        /// <param name="eventArgs">The parameter to the action. If the action does not require a parameter, the parameter may be set to a null reference.</param>
         protected override void Invoke(object eventArgs) {
             Log.Info("Invoking {0}.", this);
 

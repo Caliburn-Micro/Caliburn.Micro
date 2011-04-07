@@ -13,6 +13,9 @@
     /// </summary>
     public class PhoneBootstrapper : Bootstrapper
     {
+        /// <summary>
+        /// Indicates whether or not the phone application has initialized.
+        /// </summary>
         protected bool PhoneApplicationInitialized;
         bool isResurrecting = true;
 

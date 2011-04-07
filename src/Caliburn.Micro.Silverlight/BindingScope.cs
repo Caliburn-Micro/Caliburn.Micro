@@ -6,6 +6,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Caliburn.Micro {
+    /// <summary>
+    /// Provides methods for searching a given scope for named elements.
+    /// </summary>
     public static class BindingScope {
         /// <summary>
         /// Searches through the list of named elements looking for a case-insensitive match.
@@ -36,6 +39,12 @@ namespace Caliburn.Micro {
 
                 if(root is UserControl)
                     break;
+#if !SILVERLIGHT
+                if(root is Page) {
+                    root = ((Page)root).Content as DependencyObject ?? root;
+                    break;
+                }
+#endif
                 if((bool)root.GetValue(View.IsScopeRootProperty))
                     break;
 
