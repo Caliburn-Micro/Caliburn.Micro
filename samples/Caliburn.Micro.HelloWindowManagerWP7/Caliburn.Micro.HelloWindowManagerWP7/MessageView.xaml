@@ -12,9 +12,13 @@
              d:DesignWidth="480">
 
     <StackPanel Background="{StaticResource PhoneChromeBrush}">
-        <TextBlock Name="Message" />
+        <TextBlock Style="{StaticResource PhoneTextLargeStyle}" >A message dialog</TextBlock>
+        <TextBlock  Style="{StaticResource PhoneTextNormalStyle}" Name="Message" />
         <Button Name="TryClose"
-                Content="OK" />
+                Content="ok" 
+                Width="240"
+                HorizontalAlignment="Left"
+                />
     </StackPanel>
 
 </UserControl>

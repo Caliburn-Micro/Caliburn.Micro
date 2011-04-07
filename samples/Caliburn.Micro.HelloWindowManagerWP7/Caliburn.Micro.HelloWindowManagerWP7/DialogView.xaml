@@ -13,7 +13,8 @@
 
     
         <StackPanel Background="{StaticResource PhoneChromeBrush}">
-            <TextBlock>Some text</TextBlock>
+        <TextBlock Style="{StaticResource PhoneTextLargeStyle}">An input dialog</TextBlock>
+        <TextBlock Style="{StaticResource PhoneTextNormalStyle}">Some text</TextBlock>
             <TextBox Name="SomeTextInput" />
 
         <Grid>
@@ -22,9 +23,9 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Button Name="Confirm"
-                        Content="Confirm" />
+                        Content="confirm" />
                 <Button Name="TryClose"
-                        Content="Cancel"
+                        Content="cancel"
                         Grid.Column="1" />
             
         </Grid>

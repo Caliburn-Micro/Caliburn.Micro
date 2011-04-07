@@ -12,6 +12,8 @@
     using Microsoft.Phone.Shell;
     using System.Linq;
     using System.Windows.Media.Animation;
+    using System.Linq.Expressions;
+    using System.Diagnostics;
 
     /// <summary>
     /// A service that manages windows.
@@ -63,7 +65,7 @@
             host.SetValue(View.IsGeneratedProperty, true);
 
             ViewModelBinder.Bind(rootModel, host, null);
-            host.SetTarget(rootModel);
+            host.SetActionTarget(rootModel);
 
             var activatable = rootModel as IActivate;
             if (activatable != null)
@@ -133,102 +135,78 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
         [ContentProperty("Content")]
         internal class DialogHost : FrameworkElement
         {
-            Popup popup;
-            ContentControl container;
-            Border border;
+            PhoneApplicationPage currentPage;
 
+            Popup hostPopup;
+            bool isOpen = false;
+            ContentControl viewContainer;
+            Border pageFreezingLayer;
+            Border maskingLayer;
+
+            IElementPlacementAnimator elementPlacementAnimator;
+            
             Dictionary<IApplicationBarIconButton, bool> appBarButtonsStatus = new Dictionary<IApplicationBarIconButton, bool>();
             bool appBarMenuEnabled;
-            PhoneApplicationPage currentPage;
+
 
             public DialogHost(PhoneApplicationPage currentPage)
             {
                 this.currentPage = currentPage;
-
-                container = new ContentControl
-                {
-                    HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                    VerticalContentAlignment = VerticalAlignment.Top,
-                };
-                border = new Border
-                {
-                    Child = container,
-                    Background = new SolidColorBrush(Color.FromArgb(170, 0, 0, 0))
-                };
-
-                popup = new Popup { Child = border };
+                CreateUIElements();
+                elementPlacementAnimator = CreateElementsAnimator();
             }
 
+            public EventHandler Closed = delegate { };
+             
 
-            public void SetTarget(object target)
+            public void SetActionTarget(object target)
             {
-                Action.SetTarget(container, target);
+                Action.SetTarget(viewContainer, target);
 
             }
 
-            UIElement content;
-            public UIElement Content
+            public  virtual UIElement Content
             {
-                get { return content; }
-                set { content = value; container.Content = content; }
+                get { return (UIElement)viewContainer.Content; }
+                set { viewContainer.Content = value; }
             }
 
 
             public void Open()
             {
-                if (popup.IsOpen) return;
-                popup.IsOpen = true;
+                if (isOpen) return;
+                isOpen = true;
 
                 if (currentPage.ApplicationBar != null)
                 {
-
-                    appBarMenuEnabled = currentPage.ApplicationBar.IsMenuEnabled;
-
-                    appBarButtonsStatus.Clear();
-                    currentPage.ApplicationBar.Buttons.Cast<IApplicationBarIconButton>()
-                        .Apply(b =>
-                        {
-                            appBarButtonsStatus.Add(b, b.IsEnabled);
-                            b.IsEnabled = false;
-                        });
-
-                    currentPage.ApplicationBar.IsMenuEnabled = false;
+                    DisableAppBar();
                 }
 
-                ArrangePopup();
+                ArrangePlacement();
 
                 currentPage.BackKeyPress += currentPage_BackKeyPress;
                 currentPage.OrientationChanged += currentPage_OrientationChanged;
+
+                hostPopup.IsOpen = true;
             }
+
+          
             public void Close()
             {
-                if (!popup.IsOpen) return;
-                popup.IsOpen = false;
+                if (!isOpen) return;
+                isOpen = false;
+
+                elementPlacementAnimator.Exit(() =>
+                {
+                    hostPopup.IsOpen = false;
+                });
 
                 if (currentPage.ApplicationBar != null)
                 {
-                    currentPage.ApplicationBar.IsMenuEnabled = appBarMenuEnabled;
-                    currentPage.ApplicationBar.Buttons.Cast<IApplicationBarIconButton>()
-                        .Apply(b =>
-                        {
-                            bool status;
-                            if (appBarButtonsStatus.TryGetValue(b, out status))
-                                b.IsEnabled = status;
-                        });
+                    RestoreAppBar();
                 }
                 currentPage.BackKeyPress -= currentPage_BackKeyPress;
                 currentPage.OrientationChanged -= currentPage_OrientationChanged;
@@ -237,7 +215,89 @@
             }
 
 
-            public EventHandler Closed = delegate { };
+            
+
+            protected virtual IElementPlacementAnimator CreateElementsAnimator()
+            {
+                return new DefaultElementPlacementAnimator(maskingLayer, viewContainer);
+            }
+
+
+            protected virtual void CreateUIElements()
+            {
+                viewContainer = new ContentControl
+                {
+                    HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                    VerticalContentAlignment = VerticalAlignment.Top,
+                };
+                maskingLayer = new Border
+                {
+                    Child = viewContainer,
+                    Background = new SolidColorBrush(Color.FromArgb(170, 0, 0, 0)),
+                    VerticalAlignment = System.Windows.VerticalAlignment.Top,
+                    HorizontalAlignment = System.Windows.HorizontalAlignment.Left
+                };
+                pageFreezingLayer = new Border
+                {
+                    Background = new SolidColorBrush(Colors.Transparent),
+                    Width = Application.Current.Host.Content.ActualWidth,
+                    Height = Application.Current.Host.Content.ActualHeight
+
+                };
+
+                var panel = new Canvas();
+                panel.Children.Add(pageFreezingLayer);
+                panel.Children.Add(maskingLayer);
+
+                hostPopup = new Popup { Child = panel };
+            }
+
+            private void DisableAppBar()
+            {
+
+                appBarMenuEnabled = currentPage.ApplicationBar.IsMenuEnabled;
+
+                appBarButtonsStatus.Clear();
+                currentPage.ApplicationBar.Buttons.Cast<IApplicationBarIconButton>()
+                    .Apply(b =>
+                    {
+                        appBarButtonsStatus.Add(b, b.IsEnabled);
+                        b.IsEnabled = false;
+                    });
+
+                currentPage.ApplicationBar.IsMenuEnabled = false;
+            }
+
+
+            private void RestoreAppBar()
+            {
+                currentPage.ApplicationBar.IsMenuEnabled = appBarMenuEnabled;
+                currentPage.ApplicationBar.Buttons.Cast<IApplicationBarIconButton>()
+                    .Apply(b =>
+                    {
+                        bool status;
+                        if (appBarButtonsStatus.TryGetValue(b, out status))
+                            b.IsEnabled = status;
+                    });
+            }
+
+
+            private void ArrangePlacement()
+            {
+                maskingLayer.Dispatcher.BeginInvoke(() =>
+                {
+
+                    var placement = new ElementPlacement
+                    {
+                        Transform = (Transform)currentPage.TransformToVisual(null),
+                        Orientation = currentPage.Orientation,
+                        Size = new Size(currentPage.ActualWidth, currentPage.ActualHeight)
+                    };
+
+                    elementPlacementAnimator.AnimateTo(placement);
+                });
+            }
+
 
             void currentPage_BackKeyPress(object sender, CancelEventArgs e)
             {
@@ -247,73 +307,170 @@
 
             void currentPage_OrientationChanged(object sender, OrientationChangedEventArgs e)
             {
-                ArrangePopup();
+                ArrangePlacement();
             }
 
-            void ArrangePopup()
+            
+
+
+
+
+
+
+            public class ElementPlacement
             {
-                border.Dispatcher.BeginInvoke(() =>
+                public Transform Transform;
+                public PageOrientation Orientation;
+                public Size Size;
+
+                public double AngleFromDefault
                 {
-                    border.RenderTransform = GetPopupRenderTransform(currentPage);
-                    border.Width = border.Width = currentPage.ActualWidth;
-                    border.Height = border.Height = currentPage.ActualHeight;
-                });
-            }
-
-
-            void ExecuteDelayed(System.Action action)
-            {
-
-                System.Threading.Timer timer = null;
-                timer = new System.Threading.Timer(
-                     state =>
-                     {
-                         try
-                         {
-                             Execute.OnUIThread(action);
-                         }
-                         finally
-                         {
-                             timer.Dispose();
-                         }
-                     },
-                     null, 100, System.Threading.Timeout.Infinite
-                 );
-            }
-
-            Transform GetPopupRenderTransform(PhoneApplicationPage relativeTo)
-            {
-                var translation = relativeTo.TransformToVisual(null);
-                var offset = translation.Transform(new Point(0, 0));
-                switch (relativeTo.Orientation)
-                {
-                    case PageOrientation.Landscape:
-                    case PageOrientation.LandscapeLeft:
-                        return new CompositeTransform
-                        {
-                            Rotation = 90,
-                            TranslateX = offset.X,
-                            TranslateY = offset.Y
-                        };
-                    case PageOrientation.LandscapeRight:
-                        return new CompositeTransform
-                        {
-                            Rotation = -90,
-                            TranslateX = offset.X,
-                            TranslateY = offset.Y
-                        };
-                    case PageOrientation.None:
-                    case PageOrientation.Portrait:
-                    case PageOrientation.PortraitDown:
-                    case PageOrientation.PortraitUp:
-                    default:
-                        return new TranslateTransform
-                        {
-                            X = offset.X,
-                            Y = offset.Y
-                        };
+                    get
+                    {
+                        if ((Orientation & PageOrientation.Landscape) == 0)
+                            return 0;
+                        else
+                            return Orientation == PageOrientation.LandscapeRight ? 90 : -90;
+                    }
                 }
             }
+
+            public interface IElementPlacementAnimator
+            {
+                void Enter(ElementPlacement initialPlacement);
+                void AnimateTo(ElementPlacement newPlacement);
+                void Exit(System.Action onCompleted);
+            }
+
+            public class DefaultElementPlacementAnimator : IElementPlacementAnimator
+            {
+
+                FrameworkElement maskingLayer;
+                FrameworkElement viewContainer;
+                Storyboard storyboard = new Storyboard();
+                ElementPlacement currentPlacement;
+
+
+                public DefaultElementPlacementAnimator(FrameworkElement maskingLayer, FrameworkElement viewContainer)
+                {
+                    this.maskingLayer = maskingLayer;
+                    this.viewContainer = viewContainer;
+                }
+
+                public void Enter(ElementPlacement initialPlacement)
+                {
+                    currentPlacement = initialPlacement;
+
+                    //size
+                    maskingLayer.Width = currentPlacement.Size.Width;
+                    maskingLayer.Height = currentPlacement.Size.Height;
+
+                    //position and orientation
+                    maskingLayer.RenderTransform = currentPlacement.Transform;
+
+                    //enter animation
+                    var projection = new PlaneProjection { CenterOfRotationY = 0.1 };
+                    viewContainer.Projection = projection;
+                    AddDoubleAnimation(projection, "RotationX", from: -90, to: 0, ms: 400);
+
+                    AddDoubleAnimation(maskingLayer, "Opacity", from: 0, to: 1, ms: 400);
+
+                    storyboard.Begin();
+                }
+                public void AnimateTo(ElementPlacement newPlacement)
+                {
+                    if (currentPlacement == null)
+                    {
+                        Enter(newPlacement);
+                        return;
+                    }
+
+                    storyboard.Stop();
+                    storyboard.Children.Clear();
+
+                    //size
+                    AddDoubleAnimation(maskingLayer, "Width", from: currentPlacement.Size.Width, to: newPlacement.Size.Width, ms: 200);
+                    AddDoubleAnimation(maskingLayer, "Height", from: currentPlacement.Size.Height, to: newPlacement.Size.Height, ms: 200);
+
+                    //rotation at orientation change
+                    var transformGroup = new TransformGroup();
+                    var rotation = new RotateTransform
+                    {
+                        CenterX = Application.Current.Host.Content.ActualWidth / 2,
+                        CenterY = Application.Current.Host.Content.ActualHeight / 2
+                    };
+                    transformGroup.Children.Add(newPlacement.Transform);
+                    transformGroup.Children.Add(rotation);
+                    maskingLayer.RenderTransform = transformGroup;
+                    AddDoubleAnimation(rotation, "Angle", from: newPlacement.AngleFromDefault - currentPlacement.AngleFromDefault, to: 0.0);
+
+                    //slight fading at orientation change
+                    AddFading(maskingLayer);
+
+
+                    currentPlacement = newPlacement;
+                    storyboard.Begin();
+                }
+
+
+
+                public void Exit(System.Action onCompleted)
+                {
+                    storyboard.Stop();
+                    storyboard.Children.Clear();
+
+                    //exit animation
+                    var projection = new PlaneProjection { CenterOfRotationY = 0.1 };
+                    viewContainer.Projection = projection;
+                    AddDoubleAnimation(projection, "RotationX", from: 0, to: 90, ms: 250);
+
+                    AddDoubleAnimation(maskingLayer, "Opacity", from: 1, to: 0, ms: 350);
+
+
+                    storyboard.Completed += (o, e) =>
+                    {
+                        onCompleted();
+                    };
+
+                    storyboard.Begin();
+                }
+
+                void AddDoubleAnimation(DependencyObject target, string property, double from, double to, int ms = 500)
+                {
+                    var timeline = new DoubleAnimation
+                    {
+                        From = from,
+                        To = to,
+                        EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseOut, Exponent = 4 },
+                        Duration = new Duration(TimeSpan.FromMilliseconds(ms))
+                    };
+
+                    Storyboard.SetTarget(timeline, target);
+                    Storyboard.SetTargetProperty(timeline, new PropertyPath(property));
+                    storyboard.Children.Add(timeline);
+                }
+
+                void AddFading(FrameworkElement target)
+                {
+                    var timeline = new DoubleAnimationUsingKeyFrames
+                    {
+                        Duration = new Duration(TimeSpan.FromMilliseconds(500))
+                    };
+                    timeline.KeyFrames.Add(new LinearDoubleKeyFrame { Value = 1, KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(0)) });
+                    timeline.KeyFrames.Add(new LinearDoubleKeyFrame { Value = 0.5, KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(150)) });
+                    timeline.KeyFrames.Add(new LinearDoubleKeyFrame { Value = 1, KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(300)) });
+
+                    Storyboard.SetTarget(timeline, target);
+                    Storyboard.SetTargetProperty(timeline, new PropertyPath("Opacity"));
+                    storyboard.Children.Add(timeline);
+                }
+
+
+            }
+            
         }
+
+
+     
     }
 }
