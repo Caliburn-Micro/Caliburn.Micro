@@ -145,6 +145,12 @@
             return popup;
         }
 
+        /// <summary>
+        /// Ensures that the view is a <see cref="ChildWindow"/> or is wrapped by one.
+        /// </summary>
+        /// <param name="model">The view model.</param>
+        /// <param name="view">The view.</param>
+        /// <returns>The window.</returns>
         protected virtual ChildWindow EnsureWindow(object model, object view)
         {
             var window = view as ChildWindow;

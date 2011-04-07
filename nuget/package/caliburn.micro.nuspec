@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Caliburn.Micro</id>
+    <version>1.0.0</version>
+    <authors>Rob Eisenberg, Marco Amendola, Ryan Cromwell</authors>
+    <description>A small, yet powerful framework designed for WPF, Silverlight and WP7, Caliburn.Micro implements a variety of UI patterns for solving real-world problems. Patterns that are highlighted include MVVM (Presentation Model), MVP and MVC.</description>
+    <language>en-US</language>
+    <licenseUrl>http://caliburnmicro.codeplex.com/license</licenseUrl>
+    <projectUrl>http://caliburnmicro.codeplex.com</projectUrl>
+    <iconUrl>http://www.caliburnproject.org/CaliburnIcon.png</iconUrl>
+    <tags>MVVM Silverlight WPF WP7 SL4 SL MVC CoC Convention MVP PM Screen Coroutine Behavior Model-View-ViewModel Presentation UI ViewModel Phone Caliburn</tags>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="Microsoft.Phone.Controls" targetFramework="sl40-WP" />
+	  <frameworkAssembly assemblyName="System.ComponentModel.Composition" targetFramework="net40, sl40" />
+	  <frameworkAssembly assemblyName="System.ComponentModel.Composition.Initialization" targetFramework="sl40" />
+	</frameworkAssemblies>
+  </metadata>
+</package>

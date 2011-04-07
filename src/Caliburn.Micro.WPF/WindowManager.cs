@@ -4,9 +4,11 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Data;
     using System.Linq;
+    using System.Windows.Navigation;
 
     /// <summary>
     /// A service that manages windows.
@@ -60,7 +62,17 @@
         /// <param name="context">The context.</param>
         public virtual void ShowWindow(object rootModel, object context = null)
         {
-            CreateWindow(rootModel, false, context).Show();
+            var navWindow = Application.Current.MainWindow as NavigationWindow;
+
+            if (navWindow != null)
+            {
+                var window = CreatePage(rootModel, context);
+                navWindow.Navigate(window);
+            }
+            else
+            {
+                CreateWindow(rootModel, false, context).Show();
+            }
         }
 
         /// <summary>
@@ -122,6 +134,13 @@
             return popup;
         }
 
+        /// <summary>
+        /// Creates a window.
+        /// </summary>
+        /// <param name="rootModel">The view model.</param>
+        /// <param name="isDialog">Whethor or not the window is being shown as a dialog.</param>
+        /// <param name="context">The view context.</param>
+        /// <returns>The window.</returns>
         protected virtual Window CreateWindow(object rootModel, bool isDialog, object context)
         {
             var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context), isDialog);
@@ -139,6 +158,13 @@
             return view;
         }
 
+        /// <summary>
+        /// Makes sure the view is a window is is wrapped by one.
+        /// </summary>
+        /// <param name="model">The view model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="isDialog">Whethor or not the window is being shown as a dialog.</param>
+        /// <returns>The window.</returns>
         protected virtual Window EnsureWindow(object model, object view, bool isDialog)
         {
             var window = view as Window;
@@ -172,6 +198,11 @@
             return window;
         }
 
+        /// <summary>
+        /// Infers the owner of the window.
+        /// </summary>
+        /// <param name="window">The window to whose owner needs to be determined.</param>
+        /// <returns>The owner.</returns>
         protected virtual Window InferOwnerOf(Window window)
         {
             if(Application.Current == null)
@@ -182,6 +213,50 @@
                 .FirstOrDefault();
             active = active ?? Application.Current.MainWindow;
             return active == window ? null : active;
+        }
+
+        /// <summary>
+        /// Creates the page.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        public virtual Page CreatePage(object rootModel, object context) {
+            var view = EnsurePage(rootModel, ViewLocator.LocateForModel(rootModel, null, context));
+            ViewModelBinder.Bind(rootModel, view, context);
+
+            var haveDisplayName = rootModel as IHaveDisplayName;
+            if (haveDisplayName != null && !ConventionManager.HasBinding(view, Page.TitleProperty)) {
+                var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
+                view.SetBinding(Page.TitleProperty, binding);
+            }
+
+            var activatable = rootModel as IActivate;
+            if(activatable != null)
+                activatable.Activate();
+
+            var deactivatable = rootModel as IDeactivate;
+            if(deactivatable != null)
+                view.Unloaded += (s, e) => deactivatable.Deactivate(true);
+
+            return view;
+        }
+
+        /// <summary>
+        /// Ensures the view is a page or provides one.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <returns></returns>
+        protected virtual Page EnsurePage(object model, object view) {
+            var page = view as Page;
+
+            if(page == null) {
+                page = new Page { Content = view };
+                page.SetValue(View.IsGeneratedProperty, true);
+            }
+
+            return page;
         }
 
         class WindowConductor

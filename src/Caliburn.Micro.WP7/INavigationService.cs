@@ -172,11 +172,15 @@
 
             foreach(var pair in page.NavigationContext.QueryString)
             {
-                var property = viewModelType.GetProperty(pair.Key);
+                var property = viewModelType.GetPropertyCaseInsensitive(pair.Key);
                 if(property == null)
                     continue;
 
-                property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, pair.Value), null);
+                property.SetValue(
+                    viewModel, 
+                    MessageBinder.CoerceValue(property.PropertyType, pair.Value, page.NavigationContext), 
+                    null
+                    );
             }
         }
 
