@@ -83,13 +83,19 @@
 		///</summary>
 		///<param name="element">DependencyObject to check</param>
 		///<returns>True if Target or TargetWithoutContext was set on <paramref name="element"/></returns>
-		public static bool HasTargetSet(DependencyObject element)
-		{
-			return (GetTarget(element) != null)
-			  || (GetTargetWithoutContext(element) != null);
+        public static bool HasTargetSet(DependencyObject element) {
+		    if(GetTarget(element) != null || GetTargetWithoutContext(element) != null)
+		        return true;
+
+		    var frameworkElement = element as FrameworkElement;
+		    if(frameworkElement == null)
+		        return false;
+
+		    return ConventionManager.HasBinding(frameworkElement, TargetProperty)
+		           || ConventionManager.HasBinding(frameworkElement, TargetWithoutContextProperty);
 		}
 
-        ///<summary>
+	    ///<summary>
         /// Uses the action pipeline to invoke the method.
         ///</summary>
         ///<param name="target">The object instance to invoke the method on.</param>
