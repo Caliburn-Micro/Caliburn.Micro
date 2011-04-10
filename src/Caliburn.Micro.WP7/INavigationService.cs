@@ -126,7 +126,7 @@
 
             var deactivator = fe.DataContext as IDeactivate;
             if (deactivator != null)
-                deactivator.Deactivate(e.Uri.IsAbsoluteUri);
+                deactivator.Deactivate(false);
         }
 
         /// <summary>

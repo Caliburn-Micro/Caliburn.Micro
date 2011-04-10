@@ -14,15 +14,13 @@
         {
             container = new PhoneContainer(this);
 
-            container.RegisterPerRequest(typeof(MainPageViewModel), "MainPageViewModel", typeof(MainPageViewModel));
-            container.RegisterPerRequest(typeof(PageTwoViewModel), "PageTwoViewModel", typeof(PageTwoViewModel));
-            container.RegisterPerRequest(typeof(TabViewModel), null, typeof(TabViewModel));
+            container.RegisterPhoneServices();
+            container.RegisterAllViewModelsForPages();
 
-            container.RegisterInstance(typeof(INavigationService), null, new FrameAdapter(RootFrame));
-            container.RegisterInstance(typeof(IPhoneService), null, new PhoneApplicationServiceAdapter(PhoneService));
+            container.RegisterPerRequest<TabViewModel, TabViewModel>();
 
-            container.Activator.InstallChooser<PhoneNumberChooserTask, PhoneNumberResult>();
-            container.Activator.InstallLauncher<EmailComposeTask>();
+            container.InstallChooser<PhoneNumberChooserTask, PhoneNumberResult>();
+            container.InstallLauncher<EmailComposeTask>();
 
             AddCustomConventions();
         }

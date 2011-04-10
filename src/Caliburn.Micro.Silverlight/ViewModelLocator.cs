@@ -6,22 +6,29 @@
     /// <summary>
     /// A strategy for determining which view model to use for a given view.
     /// </summary>
-    public static class ViewModelLocator
-    {
+    public static class ViewModelLocator {
         /// <summary>
-        /// Locates the view model for the specified view type.
+        /// Locates the view model key based on the specified view type.
         /// </summary>
-        /// <returns>The view model.</returns>
-        /// <remarks>Pass the view type as a parameter and receive a view model instance.</remarks>
-        public static Func<Type, object> LocateForViewType = viewType =>{
+        /// <returns>The view model type.</returns>
+        /// <remarks>Pass the view type and receive a view model key.</remarks>
+        public static Func<Type, string> LocateKeyForViewType = viewType => {
             var typeName = viewType.FullName;
 
             if(!typeName.EndsWith("View"))
                 typeName += "View";
 
             var viewModelName = typeName.Replace("View", "ViewModel");
-            var key = viewModelName.Substring(viewModelName.LastIndexOf(".") + 1);
+            return viewModelName.Substring(viewModelName.LastIndexOf(".") + 1);
+        };
 
+        /// <summary>
+        /// Locates the view model for the specified view type.
+        /// </summary>
+        /// <returns>The view model.</returns>
+        /// <remarks>Pass the view type as a parameter and receive a view model instance.</remarks>
+        public static Func<Type, object> LocateForViewType = viewType => {
+            var key = LocateKeyForViewType(viewType);
             return IoC.GetInstance(null, key);
         };
 
