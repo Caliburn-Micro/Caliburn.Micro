@@ -12,7 +12,6 @@
 
         public PivotFix(Conductor<T>.Collection.OneActive conductor) {
             this.conductor = conductor;
-            this.conductor.CloseStrategy = new DefaultCloseStrategy<T>(false);
         }
 
         public void OnViewLoaded(object view, Action<object> onViewLoadedBase) {

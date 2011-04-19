@@ -31,8 +31,8 @@
         /// <summary>
         /// Creates an instance of the class.
         /// </summary>
-        /// <param name="closeConductedItemsWhenConductorCannotClose">Indicates that even if all conducted items are not closable, those that are should be closed. The default is true.</param>
-        public DefaultCloseStrategy(bool closeConductedItemsWhenConductorCannotClose = true) {
+        /// <param name="closeConductedItemsWhenConductorCannotClose">Indicates that even if all conducted items are not closable, those that are should be closed. The default is FALSE.</param>
+        public DefaultCloseStrategy(bool closeConductedItemsWhenConductorCannotClose = false) {
             this.closeConductedItemsWhenConductorCannotClose = closeConductedItemsWhenConductorCannotClose;
         }
 
