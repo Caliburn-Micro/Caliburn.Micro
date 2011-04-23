@@ -14,6 +14,11 @@
             null
             );
 
+        /// <summary>
+        /// Indicates whether or not implementors of <see cref="IViewAware"/> should cache their views by default.
+        /// </summary>
+        public static bool CacheViewsByDefault = true;
+
         bool cacheViews;
 
         /// <summary>
@@ -25,7 +30,7 @@
         /// Creates an instance of <see cref="ViewAware"/>.
         ///</summary>
         public ViewAware()
-            : this(ConventionManager.CacheViewsByDefault) {}
+            : this(CacheViewsByDefault) {}
 
         ///<summary>
         /// Creates an instance of <see cref="ViewAware"/>.
