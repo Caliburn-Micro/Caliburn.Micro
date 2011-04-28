@@ -5,38 +5,52 @@
 
     public class StorageCoordinator {
         readonly List<IStorageHandler> handlers = new List<IStorageHandler>();
+        readonly List<IStorageMechanism> storageMechanisms = new List<IStorageMechanism>();
         readonly List<WeakReference> tracked = new List<WeakReference>();
 
-        public void TryAddTrackedInstance(object instance) {
-            if(FindHandler(instance) != null) {
+        public void TrackInstance(object instance) {
+            if(GetStorageHandlerFor(instance) != null) {
                 tracked.Add(new WeakReference(instance));
             }
         }
 
-        public void AddStorageMechanism(IStorageHandler handler) {
+        public T GetStorageMechanism<T>() {
+            return storageMechanisms.OfType<T>().First();
+        }
+
+        public void AddStorageMechanism(IStorageMechanism storageMechanism) {
+            storageMechanisms.Add(storageMechanism);
+        }
+
+        public void AddStorageHandler(IStorageHandler handler) {
             handlers.Add(handler);
         }
 
-        public void Save(StorageMode mode) {
-            var alive = tracked.Select(x => x.Target).Where(x => x != null);
-
-            foreach(var instance in alive) {
-                var mechanism = FindHandler(instance);
-                mechanism.Save(instance, mode);
-            }
+        public IStorageHandler GetStorageHandlerFor(object instance) {
+            return handlers.FirstOrDefault(x => x.Handles(instance));
         }
 
-        public void TryRestore(object instance) {
-            var handler = FindHandler(instance);
-            if (handler == null)
+        public void Save(StorageMode mode) {
+            var toSave = tracked.Select(x => x.Target).Where(x => x != null);
+            var mechanisms = storageMechanisms.Where(x => x.Supports(mode));
+
+            mechanisms.Apply(x => x.Begin());
+
+            foreach(var item in toSave) {
+                var handler = GetStorageHandlerFor(item);
+                handler.Save(item, mode);
+            }
+
+            mechanisms.Apply(x => x.End());
+        }
+
+        public void Restore(object instance) {
+            var handler = GetStorageHandlerFor(instance);
+            if(handler == null)
                 return;
 
             tracked.Add(new WeakReference(instance));
             handler.Restore(instance);
-        }
-
-        IStorageHandler FindHandler(object instance) {
-            return handlers.FirstOrDefault(x => x.Handles(instance));
         }
     }
 }

@@ -5,6 +5,6 @@
         public string Key;
         public Func<T, object> Get;
         public Action<T, object> Set;
-        public IStorage Storage;
+        public IStorageMechanism StorageMechanism;
     }
 }
