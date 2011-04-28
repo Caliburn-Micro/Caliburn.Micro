@@ -13,7 +13,7 @@
             getId = getter;
         }
 
-        StorageCoordinator IStorageHandler.Coordinator { get; set; }
+        public StorageCoordinator Coordinator { get; set; }
 
         public StorageInstructionBuilder<T> Property(Expression<Func<T, object>> property) {
             var info = (PropertyInfo)property.GetMemberInfo();
