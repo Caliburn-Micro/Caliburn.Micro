@@ -191,19 +191,12 @@
     <Compile Include="ActionDelegate.cs" />
     <Compile Include="AttachedCollection.cs" />
     <Compile Include="CustomAppBar.cs" />
-    <Compile Include="IConfigureTask.cs" />
-    <Compile Include="ILaunchChooser.cs" />
-    <Compile Include="ILaunchTask.cs" />
     <Compile Include="INavigationService.cs" />
-    <Compile Include="InstanceActivator.cs" />
     <Compile Include="IPhoneService.cs" />
-    <Compile Include="ITombstone.cs" />
     <Compile Include="PhoneBootstrapper.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SurviveTombstone.cs" />
-    <Compile Include="TaskLaunchEventArgs.cs" />
     <Compile Include="Tuple.cs" />
     <Compile Include="WindowManager.cs" />
   </ItemGroup>

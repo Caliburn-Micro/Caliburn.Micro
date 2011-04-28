@@ -1,9 +1,5 @@
 ﻿namespace Caliburn.Micro
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Windows;
     using System.Windows.Navigation;
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
@@ -32,8 +28,7 @@
         /// <summary>
         /// Provides an opportunity to hook into the application object.
         /// </summary>
-        protected override void PrepareApplication()
-        {
+        protected override void PrepareApplication() {
             base.PrepareApplication();
 
             PhoneService = new PhoneApplicationService();
@@ -53,8 +48,7 @@
             PhoneApplicationInitialized = true;
         }
 
-        void OnNavigated(object sender, NavigationEventArgs e)
-        {
+        void OnNavigated(object sender, NavigationEventArgs e) {
             if (Application.RootVisual != RootFrame)
                 Application.RootVisual = RootFrame;
         }
@@ -82,9 +76,8 @@
         /// <summary>
         /// Occurs when the application is being tombstoned.
         /// </summary>
-        protected virtual void OnDeactivate(object sender, DeactivatedEventArgs e)
-        {
-            Tombstone(SelectInstancesToTombstone());
+        protected virtual void OnDeactivate(object sender, DeactivatedEventArgs e) {
+            Tombstone();
         }
 
         /// <summary>
@@ -95,7 +88,7 @@
             if (isResurrecting) {
                 NavigatedEventHandler onNavigated = null;
                 onNavigated = (s2, e2) => {
-                    Resurrect(SelectInstancesToResurrect());
+                    Resurrect();
                     RootFrame.Navigated -= onNavigated;
                 };
                 RootFrame.Navigated += onNavigated;
@@ -105,76 +98,13 @@
         }
 
         /// <summary>
-        /// Selects all instance which require some sort of persistence before tombstoning.
+        /// Called when tombstoning is required.
         /// </summary>
-        /// <returns>The list of instances to be persisted.</returns>
-        protected virtual IEnumerable<object> SelectInstancesToTombstone()
-        {
-            var fe = RootFrame.Content as FrameworkElement;
-            if (fe != null && fe.DataContext != null)
-                return new [] { fe.DataContext };
-            return new object[0];
-        }
-
-        /// <summary>
-        /// Selects all instance which require some sort of re-hydration after tombstoning.
-        /// </summary>
-        /// <returns>The list of instances to be re-hydrated.</returns>
-        protected virtual IEnumerable<object> SelectInstancesToResurrect()
-        {
-            var fe = RootFrame.Content as FrameworkElement;
-            if (fe != null && fe.DataContext != null)
-                return new [] { fe.DataContext };
-            return new object[0];
-        }
-
-        /// <summary>
-        /// Persists the specified instances before tombstoning.
-        /// </summary>
-        /// <param name="instances">The instances to persist.</param>
-        protected virtual void Tombstone(IEnumerable<object> instances)
-        {
-            var phoneService = (IPhoneService)IoC.GetAllInstances(typeof(IPhoneService))
-                .FirstOrDefault() ?? new PhoneApplicationServiceAdapter(PhoneService);
-
-            foreach(var instance in instances)
-            {
-                var persister = instance.GetType().GetAttributes<ITombstone>(true)
-                    .FirstOrDefault();
-
-                if (persister == null)
-                    continue;
-
-                persister.Tombstone(phoneService, null, null, instance, null);
-            }
-        }
-
-        /// <summary>
-        /// Occurs after resurrection has completed.
-        /// </summary>
-        public event EventHandler ResurrectionComplete = delegate { }; 
+        protected virtual void Tombstone() { }
 
         /// <summary>
         /// Resurrects the instances after activation.
         /// </summary>
-        /// <param name="instances">The instances to resurrect.</param>
-        protected virtual void Resurrect(IEnumerable<object> instances)
-        {
-            var phoneService = (IPhoneService)IoC.GetAllInstances(typeof(IPhoneService))
-                .FirstOrDefault() ?? new PhoneApplicationServiceAdapter(PhoneService);
-
-            foreach(var instance in instances)
-            {
-                var persister = instance.GetType().GetAttributes<ITombstone>(true)
-                    .FirstOrDefault();
-
-                if (persister == null)
-                    continue;
-
-                persister.Resurrect(phoneService, null, null, instance, null);
-            }
-
-            ResurrectionComplete(this, EventArgs.Empty);
-        }
+        protected virtual void Resurrect() { }
     }
 }
