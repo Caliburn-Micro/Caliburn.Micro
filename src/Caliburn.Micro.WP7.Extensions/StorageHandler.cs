@@ -6,31 +6,29 @@
     using System.Reflection;
 
     public class StorageHandler<T> : IStorageHandler {
-        readonly List<Instruction<T>> instructions = new List<Instruction<T>>();
+        readonly List<StorageInstruction<T>> instructions = new List<StorageInstruction<T>>();
         Func<T, object> getId = instance => null;
 
         public void Id(Func<T, object> getter) {
             getId = getter;
         }
 
-        public InstructionBuilder<T> Property(Expression<Func<T, object>> property) {
+        StorageCoordinator IStorageHandler.Coordinator { get; set; }
+
+        public StorageInstructionBuilder<T> Property(Expression<Func<T, object>> property) {
             var info = (PropertyInfo)property.GetMemberInfo();
-            Func<T, object> getter = instance => info.GetValue(instance, null);
-            Action<T, object> setter = (instance, value) => info.SetValue(instance, value, null);
-            var instruction = AddInstruction(info.Name, getter, setter);
-            return new InstructionBuilder<T>(instruction);
+
+            return AddInstruction().Configure(x => {
+                x.Key = info.Name;
+                x.Get = instance => info.GetValue(instance, null);
+                x.Set = (instance, value) => info.SetValue(instance, value, null);
+            });
         }
 
-        public Instruction<T> AddInstruction(string key = null, Func<T, object> getter = null, Action<T, object> setter = null, IStorageMechanism storageMechanism = null) {
-            var instruction = new Instruction<T>
-            {
-                Key = key,
-                Get = getter,
-                Set = setter,
-                StorageMechanism = storageMechanism
-            };
+        public StorageInstructionBuilder<T> AddInstruction() {
+            var instruction = new StorageInstruction<T> { Owner = this };
             instructions.Add(instruction);
-            return instruction;
+            return new StorageInstructionBuilder<T>(instruction);
         }
 
         public virtual void Save(T instance, StorageMode mode) {
@@ -41,7 +39,7 @@
                 var key = baseKey + "_" + instruction.Key;
                 var value = instruction.Get(instance);
 
-                instruction.StorageMechanism.Put(key, value);
+                instruction.StorageMechanism.Store(key, value);
             }
         }
 

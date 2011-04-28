@@ -6,13 +6,13 @@
             return mode == StorageMode.Tombstone;
         }
 
-        public void Begin() { }
+        public void BeginStore() {}
 
-        public void Put(string key, object data) {
+        public void Store(string key, object data) {
             PhoneApplicationService.Current.State[key] = data;
         }
 
-        public void End() { }
+        public void EndStore() {}
 
         public object Get(string key) {
             return PhoneApplicationService.Current.State[key];
