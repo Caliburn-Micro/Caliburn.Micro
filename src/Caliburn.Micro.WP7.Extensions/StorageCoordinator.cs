@@ -8,12 +8,6 @@
         readonly List<IStorageMechanism> storageMechanisms = new List<IStorageMechanism>();
         readonly List<WeakReference> tracked = new List<WeakReference>();
 
-        public void TrackInstance(object instance) {
-            if(GetStorageHandlerFor(instance) != null) {
-                tracked.Add(new WeakReference(instance));
-            }
-        }
-
         public T GetStorageMechanism<T>() where T : IStorageMechanism {
             var mechanism = storageMechanisms.OfType<T>().FirstOrDefault();
 
