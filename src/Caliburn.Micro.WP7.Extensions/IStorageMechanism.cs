@@ -1,4 +1,6 @@
 ﻿namespace Caliburn.Micro {
+    using System;
+
     public interface IStorageMechanism {
         bool Supports(StorageMode mode);
 
@@ -8,5 +10,7 @@
 
         object Get(string key);
         void Delete(string key);
+
+        void RegisterWithContainer(Type service, string key, Type implementation);
     }
 }

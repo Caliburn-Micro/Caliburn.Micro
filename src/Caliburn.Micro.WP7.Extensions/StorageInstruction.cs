@@ -1,11 +1,51 @@
 ﻿namespace Caliburn.Micro {
     using System;
 
-    public class StorageInstruction<T> {
-        public IStorageHandler Owner;
-        public IStorageMechanism StorageMechanism;
-        public string Key;
-        public Func<T, object> Get;
-        public Action<T, object> Set;
+    public class StorageInstruction<T> : PropertyChangedBase {
+        IStorageHandler owner;
+        IStorageMechanism storageMechanism;
+        string key;
+        Func<T, object> get;
+        Action<T, object> set;
+
+        public IStorageHandler Owner {
+            get { return owner; }
+            set {
+                owner = value;
+                NotifyOfPropertyChange("Owner");
+            }
+        }
+
+        public IStorageMechanism StorageMechanism {
+            get { return storageMechanism; }
+            set {
+                storageMechanism = value;
+                NotifyOfPropertyChange("StorageMechanism");
+            }
+        }
+
+        public string Key {
+            get { return key; }
+            set {
+                key = value;
+                NotifyOfPropertyChange("Key");
+            }
+        }
+
+        public Func<T, object> Get {
+            get { return get; }
+            set {
+                get = value;
+                NotifyOfPropertyChange("Get");
+            }
+        }
+
+        public Action<T, object> Set {
+            get { return set; }
+            set {
+                set = value;
+                NotifyOfPropertyChange("Set");
+            }
+        }
     }
 }

@@ -16,12 +16,18 @@
         public StorageCoordinator Coordinator { get; set; }
 
         public StorageInstructionBuilder<T> EntireGraph() {
-            //do something with the IoC container...
+            return EntireGraph<T>();
+        }
 
+        public StorageInstructionBuilder<T> EntireGraph<TService>() {
             return AddInstruction().Configure(x => {
                 x.Key = "ObjectGraph";
                 x.Get = instance => instance;
                 x.Set = (instance, value) => { };
+                x.PropertyChanged += (s, e) => {
+                    if(e.PropertyName == "StorageMechanism" && x.StorageMechanism != null)
+                        x.StorageMechanism.RegisterWithContainer(typeof(TService), GetKey(typeof(T).FullName, x.Key), typeof(T));
+                };
             });
         }
 
@@ -42,11 +48,10 @@
         }
 
         public virtual void Save(T instance, StorageMode mode) {
-            var id = getId(instance);
-            var baseKey = typeof(T).FullName + (id == null ? "" : "_" + id);
+            var baseKey = GetBaseKey(instance);
 
             foreach(var instruction in instructions.Where(x => x.StorageMechanism.Supports(mode))) {
-                var key = baseKey + "_" + instruction.Key;
+                var key = GetKey(baseKey, instruction.Key);
                 var value = instruction.Get(instance);
 
                 instruction.StorageMechanism.Store(key, value);
@@ -54,16 +59,24 @@
         }
 
         public virtual void Restore(T instance) {
-            var id = getId(instance);
-            var baseKey = typeof(T).FullName + (id == null ? "" : "_" + id);
+            var baseKey = GetBaseKey(instance);
 
             foreach(var instruction in instructions) {
-                var key = baseKey + "_" + instruction.Key;
+                string key = GetKey(baseKey, instruction.Key);
                 var value = instruction.StorageMechanism.Get(key);
 
                 instruction.Set(instance, value);
                 instruction.StorageMechanism.Delete(key);
             }
+        }
+
+        string GetKey(string baseKey, string detailKey) {
+            return baseKey + "_" + detailKey;
+        }
+
+        string GetBaseKey(T instance) {
+            var id = getId(instance);
+            return typeof(T).FullName + (id == null ? "" : "_" + id);
         }
 
         bool IStorageHandler.Handles(object instance) {

@@ -25,5 +25,9 @@
         public void Delete(string key) {
             throw new NotImplementedException();
         }
+
+        public void RegisterWithContainer(Type service, string key, Type implementation) {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,4 +1,6 @@
 ﻿namespace Caliburn.Micro {
+    using System;
+
     public class PhoneContainer : SimpleContainer {
         readonly PhoneBootstrapper bootstrapper;
 
@@ -6,21 +8,20 @@
             this.bootstrapper = bootstrapper;
         }
 
-        public void RegisterWithPhoneService<TService, TImplementation>() where TImplementation : TService {
-            RegisterHandler(typeof(TService), null, () => {
+        public void RegisterWithPhoneService(Type service, string phoneStateKey, Type implementation) {
+            RegisterHandler(service, null, () => {
                 var phoneService = (IPhoneService)GetInstance(typeof(IPhoneService), null);
 
-                if(phoneService.State.ContainsKey(typeof(TService).FullName))
-                    return phoneService.State[typeof(TService).FullName];
+                if(phoneService.State.ContainsKey(phoneStateKey ?? service.FullName))
+                    return phoneService.State[phoneStateKey ?? service.FullName];
 
-                var instance = BuildInstance(typeof(TImplementation));
-                phoneService.State[typeof(TService).FullName] = instance;
-
-                return instance;
+                return BuildInstance(implementation);
             });
         }
 
         public void RegisterPhoneServices(bool treatViewAsLoaded = false) {
+            RegisterInstance(typeof(SimpleContainer), null, this);
+            RegisterInstance(typeof(PhoneContainer), null, this);
             RegisterInstance(typeof(INavigationService), null, new FrameAdapter(bootstrapper.RootFrame, treatViewAsLoaded));
             RegisterInstance(typeof(IPhoneService), null, new PhoneApplicationServiceAdapter(bootstrapper.PhoneService));
             RegisterSingleton(typeof(IWindowManager), null, typeof(WindowManager));

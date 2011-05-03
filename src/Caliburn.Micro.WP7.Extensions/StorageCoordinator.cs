@@ -5,22 +5,15 @@
 
     public class StorageCoordinator {
         readonly List<IStorageHandler> handlers = new List<IStorageHandler>();
-        readonly List<IStorageMechanism> storageMechanisms = new List<IStorageMechanism>();
+        readonly IEnumerable<IStorageMechanism> storageMechanisms;
         readonly List<WeakReference> tracked = new List<WeakReference>();
 
-        public T GetStorageMechanism<T>() where T : IStorageMechanism {
-            var mechanism = storageMechanisms.OfType<T>().FirstOrDefault();
-
-            if(mechanism == null) {
-                mechanism = Activator.CreateInstance<T>();
-                storageMechanisms.Add(mechanism);
-            }
-
-            return mechanism;
+        public StorageCoordinator(IEnumerable<IStorageMechanism> storageMechanisms) {
+            this.storageMechanisms = storageMechanisms;
         }
 
-        public void AddStorageMechanism(IStorageMechanism storageMechanism) {
-            storageMechanisms.Add(storageMechanism);
+        public T GetStorageMechanism<T>() where T : IStorageMechanism {
+            return storageMechanisms.OfType<T>().FirstOrDefault();
         }
 
         public StorageCoordinator AddStorageHandler(IStorageHandler handler) {
