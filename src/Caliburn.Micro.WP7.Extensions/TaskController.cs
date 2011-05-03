@@ -4,7 +4,7 @@
     using Microsoft.Phone.Shell;
     using Microsoft.Phone.Tasks;
 
-    public class TaskManager : IHandle<TaskExecutionRequested> {
+    public class TaskController : IHandle<TaskExecutionRequested> {
         const string TaskTypeKey = "Caliburn.Micro.TaskType";
         const string TaskIdKey = "Caliburn.Micro.TaskId";
         readonly IEventAggregator events;
@@ -12,7 +12,7 @@
         bool resurrecting;
         object tombstonedMessage;
 
-        public TaskManager(PhoneBootstrapper bootstrapper, IEventAggregator events) {
+        public TaskController(PhoneBootstrapper bootstrapper, IEventAggregator events) {
             bootstrapper.Tombstoning += OnTombstone;
             bootstrapper.Resurrecting += OnResurrect;
             bootstrapper.ResurrectionCompleted += OnResurrectionComplete;
