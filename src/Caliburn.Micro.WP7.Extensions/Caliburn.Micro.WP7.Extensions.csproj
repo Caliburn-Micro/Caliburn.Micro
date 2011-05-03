@@ -65,6 +65,10 @@
     <Compile Include="StorageInstructionExtensions.cs" />
     <Compile Include="StorageMode.cs" />
     <Compile Include="StorageCoordinator.cs" />
+    <Compile Include="TaskCompleted.cs" />
+    <Compile Include="TaskExecutionRequested.cs" />
+    <Compile Include="TaskExtensionMethods.cs" />
+    <Compile Include="TaskManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro.WP7\Caliburn.Micro.WP7.csproj">
