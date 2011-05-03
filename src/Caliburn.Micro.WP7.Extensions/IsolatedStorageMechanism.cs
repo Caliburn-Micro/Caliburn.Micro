@@ -3,7 +3,7 @@
 
     public class IsolatedStorageMechanism : IStorageMechanism {
         public bool Supports(StorageMode mode) {
-            return mode == StorageMode.Shutdown;
+            return mode == StorageMode.Permanent;
         }
 
         public void BeginStore() {

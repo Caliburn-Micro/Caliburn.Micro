@@ -3,7 +3,7 @@
 
     public class PhoneStateStorageMechanism : IStorageMechanism {
         public bool Supports(StorageMode mode) {
-            return mode == StorageMode.Tombstone;
+            return mode == StorageMode.Temporary;
         }
 
         public void BeginStore() {}

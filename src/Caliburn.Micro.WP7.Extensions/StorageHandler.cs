@@ -15,6 +15,16 @@
 
         public StorageCoordinator Coordinator { get; set; }
 
+        public StorageInstructionBuilder<T> EntireGraph() {
+            //do something with the IoC container...
+
+            return AddInstruction().Configure(x => {
+                x.Key = "ObjectGraph";
+                x.Get = instance => instance;
+                x.Set = (instance, value) => { };
+            });
+        }
+
         public StorageInstructionBuilder<T> Property(Expression<Func<T, object>> property) {
             var info = (PropertyInfo)property.GetMemberInfo();
 

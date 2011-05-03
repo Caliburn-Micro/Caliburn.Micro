@@ -94,8 +94,8 @@
         {
             this.frame = frame;
             this.treatViewAsLoaded = treatViewAsLoaded;
-            this.frame.Navigated += OnNavigated;
             this.frame.Navigating += OnNavigating;
+            this.frame.Navigated += OnNavigated;
         }
 
         /// <summary>

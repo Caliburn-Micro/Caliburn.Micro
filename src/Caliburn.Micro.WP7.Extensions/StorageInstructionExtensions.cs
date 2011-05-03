@@ -1,13 +1,14 @@
 ﻿namespace Caliburn.Micro {
     using System;
+    using System.Linq;
     using System.Windows;
 
     public static class StorageInstructionExtensions {
-        public static StorageInstructionBuilder<T> StoredInPhoneState<T>(this StorageInstructionBuilder<T> builder) {
+        public static StorageInstructionBuilder<T> InPhoneState<T>(this StorageInstructionBuilder<T> builder) {
             return builder.Configure(x => { x.StorageMechanism = x.Owner.Coordinator.GetStorageMechanism<PhoneStateStorageMechanism>(); });
         }
 
-        public static StorageInstructionBuilder<T> StoredInIsolatedStorage<T>(this StorageInstructionBuilder<T> builder) {
+        public static StorageInstructionBuilder<T> InIsolatedStorage<T>(this StorageInstructionBuilder<T> builder) {
             return builder.Configure(x => { x.StorageMechanism = x.Owner.Coordinator.GetStorageMechanism<IsolatedStorageMechanism>(); });
         }
 
@@ -46,6 +47,25 @@
                     instance.ViewAttached += onViewAttached;
                 };
             });
+        }
+
+        public static StorageInstructionBuilder<T> ActiveItem<T>(this StorageHandler<T> handler) 
+            where T : IParent, IHaveActiveItem, IActivate {
+            var builder = handler.AddInstruction().Configure(x => {
+                x.Key = "ActiveItemIndex";
+                x.StorageMechanism = handler.Coordinator.GetStorageMechanism<PhoneStateStorageMechanism>();
+                x.Get = conductor => {
+                    var children = conductor.GetChildren().OfType<object>().ToList();
+                    return children.IndexOf(conductor.ActiveItem);
+                };
+                x.Set = (conductor, activeIndex) => {
+                    var children = conductor.GetChildren().OfType<object>().ToList();
+                    var index = Convert.ToInt32(activeIndex);
+                    conductor.ActiveItem = children[index];
+                };
+            });
+
+            return builder.RestoreAfterActivation();
         }
     }
 }
