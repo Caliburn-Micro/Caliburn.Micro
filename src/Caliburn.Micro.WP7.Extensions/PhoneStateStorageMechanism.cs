@@ -22,8 +22,8 @@
 
         public void EndStore() {}
 
-        public object Get(string key) {
-            return phoneService.State[key];
+        public bool TryGet(string key, out object value) {
+            return phoneService.State.TryGetValue(key, out value);
         }
 
         public void Delete(string key) {

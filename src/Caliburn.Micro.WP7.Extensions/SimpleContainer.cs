@@ -92,8 +92,12 @@
         }
 
         protected virtual object ActivateInstance(Type type, object[] args) {
-            return args.Length > 0 ? Activator.CreateInstance(type, args) : Activator.CreateInstance(type);
+            var instance = args.Length > 0 ? Activator.CreateInstance(type, args) : Activator.CreateInstance(type);
+            Activated(instance);
+            return instance;
         }
+
+        public event Action<object> Activated = delegate { };
 
         object[] DetermineConstructorArgs(Type implementation) {
             var args = new List<object>();

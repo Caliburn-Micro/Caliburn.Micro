@@ -6,7 +6,7 @@
         IStorageMechanism storageMechanism;
         string key;
         Func<T, object> get;
-        Action<T, object> set;
+        Action<T, IStorageMechanism, Func<string>> set;
 
         public IStorageHandler Owner {
             get { return owner; }
@@ -40,7 +40,7 @@
             }
         }
 
-        public Action<T, object> Set {
+        public Action<T, IStorageMechanism, Func<string>> Set {
             get { return set; }
             set {
                 set = value;

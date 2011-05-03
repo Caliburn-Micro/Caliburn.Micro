@@ -5,7 +5,7 @@
     using System.Linq.Expressions;
     using System.Reflection;
 
-    public class StorageHandler<T> : IStorageHandler {
+    public abstract class StorageHandler<T> : IStorageHandler {
         readonly List<StorageInstruction<T>> instructions = new List<StorageInstruction<T>>();
         Func<T, object> getId = instance => null;
 
@@ -19,14 +19,16 @@
             return EntireGraph<T>();
         }
 
+        public abstract void Configure();
+
         public StorageInstructionBuilder<T> EntireGraph<TService>() {
             return AddInstruction().Configure(x => {
                 x.Key = "ObjectGraph";
                 x.Get = instance => instance;
-                x.Set = (instance, value) => { };
+                x.Set = (instance, storage, getKey) => { };
                 x.PropertyChanged += (s, e) => {
                     if(e.PropertyName == "StorageMechanism" && x.StorageMechanism != null)
-                        x.StorageMechanism.RegisterWithContainer(typeof(TService), GetKey(typeof(T).FullName, x.Key), typeof(T));
+                        x.StorageMechanism.RegisterWithContainer(typeof(TService), GetKey(default(T), x.Key), typeof(T));
                 };
             });
         }
@@ -37,7 +39,11 @@
             return AddInstruction().Configure(x => {
                 x.Key = info.Name;
                 x.Get = instance => info.GetValue(instance, null);
-                x.Set = (instance, value) => info.SetValue(instance, value, null);
+                x.Set = (instance, storage, getKey) => {
+                    object value;
+                    if(storage.TryGet(getKey(), out value))
+                        info.SetValue(instance, value, null);
+                };
             });
         }
 
@@ -48,10 +54,8 @@
         }
 
         public virtual void Save(T instance, StorageMode mode) {
-            var baseKey = GetBaseKey(instance);
-
             foreach(var instruction in instructions.Where(x => x.StorageMechanism.Supports(mode))) {
-                var key = GetKey(baseKey, instruction.Key);
+                var key = GetKey(instance, instruction.Key);
                 var value = instruction.Get(instance);
 
                 instruction.StorageMechanism.Store(key, value);
@@ -59,24 +63,15 @@
         }
 
         public virtual void Restore(T instance) {
-            var baseKey = GetBaseKey(instance);
-
             foreach(var instruction in instructions) {
-                string key = GetKey(baseKey, instruction.Key);
-                var value = instruction.StorageMechanism.Get(key);
-
-                instruction.Set(instance, value);
-                instruction.StorageMechanism.Delete(key);
+                var current = instruction;
+                current.Set(instance, current.StorageMechanism, () => GetKey(instance, current.Key));
             }
         }
 
-        string GetKey(string baseKey, string detailKey) {
-            return baseKey + "_" + detailKey;
-        }
-
-        string GetBaseKey(T instance) {
+        string GetKey(T instance, string detailKey) {
             var id = getId(instance);
-            return typeof(T).FullName + (id == null ? "" : "_" + id);
+            return typeof(T).FullName + (id == null ? "" : "_" + id) + "_" + detailKey;
         }
 
         bool IStorageHandler.Handles(object instance) {

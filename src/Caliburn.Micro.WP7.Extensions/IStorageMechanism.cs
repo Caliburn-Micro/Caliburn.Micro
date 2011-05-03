@@ -8,7 +8,7 @@
         void Store(string key, object data);
         void EndStore();
 
-        object Get(string key);
+        bool TryGet(string key, out object value);
         void Delete(string key);
 
         void RegisterWithContainer(Type service, string key, Type implementation);

@@ -25,7 +25,14 @@
             RegisterInstance(typeof(INavigationService), null, new FrameAdapter(bootstrapper.RootFrame, treatViewAsLoaded));
             RegisterInstance(typeof(IPhoneService), null, new PhoneApplicationServiceAdapter(bootstrapper.PhoneService));
             RegisterSingleton(typeof(IWindowManager), null, typeof(WindowManager));
-            RegisterSingleton(typeof(IEventAggregator), null, typeof(EventAggregator));
+
+            var events = new EventAggregator();
+            RegisterInstance(typeof(IEventAggregator), null, events);
+            RegisterInstance(typeof(TaskController), null, new TaskController(bootstrapper, events));
+            RegisterSingleton(typeof(StorageCoordinator), null, typeof(StorageCoordinator));
+
+            var storageCoordinator = (StorageCoordinator)GetInstance(typeof(StorageCoordinator), null);
+            Activated += storageCoordinator.Restore;
         }
     }
 }

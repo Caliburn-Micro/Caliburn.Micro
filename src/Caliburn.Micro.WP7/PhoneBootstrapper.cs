@@ -90,7 +90,6 @@
                 onNavigated = (s2, e2) => {
                     Resurrecting();
                     RootFrame.Navigated -= onNavigated;
-                    ResurrectionCompleted();
                 };
                 RootFrame.Navigated += onNavigated;
             }
@@ -107,10 +106,5 @@
         /// Raised during resurrection.
         /// </summary>
         public event System.Action Resurrecting = delegate { };
-
-        /// <summary>
-        /// Raised after resurrection.
-        /// </summary>
-        public event System.Action ResurrectionCompleted = delegate { };
     }
 }

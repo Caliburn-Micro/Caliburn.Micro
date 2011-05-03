@@ -18,7 +18,7 @@
             throw new NotImplementedException();
         }
 
-        public object Get(string key) {
+        public bool TryGet(string key, out object value) {
             throw new NotImplementedException();
         }
 

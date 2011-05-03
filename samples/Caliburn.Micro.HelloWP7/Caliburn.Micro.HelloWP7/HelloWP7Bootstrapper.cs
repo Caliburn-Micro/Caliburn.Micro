@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Windows.Controls;
     using Microsoft.Phone.Controls;
-    using Microsoft.Phone.Tasks;
 
     public class HelloWP7Bootstrapper : PhoneBootstrapper {
         PhoneContainer container;
@@ -11,13 +10,13 @@
         protected override void Configure() {
             container = new PhoneContainer(this);
 
+            container.AllTypesOf<IStorageMechanism>(typeof(IStorageMechanism).Assembly);
+            container.AllTypesOf<IStorageHandler>(typeof(TabViewModel).Assembly);
+
             container.RegisterPhoneServices();
+
             container.RegisterAllViewModelsForPages();
-
-            container.RegisterPerRequest<TabViewModel, TabViewModel>();
-
-            container.InstallChooser<PhoneNumberChooserTask, PhoneNumberResult>();
-            container.InstallLauncher<EmailComposeTask>();
+            container.PerRequest<TabViewModel, TabViewModel>();
 
             AddCustomConventions();
         }

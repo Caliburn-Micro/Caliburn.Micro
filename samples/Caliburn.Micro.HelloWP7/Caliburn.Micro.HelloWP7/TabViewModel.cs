@@ -1,13 +1,16 @@
 ﻿namespace Caliburn.Micro.HelloWP7 {
-    using System;
     using System.Windows;
     using Microsoft.Phone.Tasks;
 
-    [SurviveTombstone]
-    public class TabViewModel : Screen, ILaunchChooser<PhoneNumberResult> {
+    public class TabViewModel : Screen, IHandle<TaskCompleted<PhoneNumberResult>> {
         string text;
+        readonly IEventAggregator events;
 
-        [SurviveTombstone]
+        public TabViewModel(IEventAggregator events) {
+            this.events = events;
+            this.events.Subscribe(this);
+        }
+
         public string Text {
             get { return text; }
             set {
@@ -16,14 +19,13 @@
             }
         }
 
-        public event EventHandler<TaskLaunchEventArgs> TaskLaunchRequested = delegate { };
-
-        public void Handle(PhoneNumberResult message) {
-            MessageBox.Show("The result was " + message.TaskResult, DisplayName, MessageBoxButton.OK);
+        public void Choose() {
+            events.RequestTask<PhoneNumberChooserTask>(id:DisplayName);
         }
 
-        public void Choose() {
-            TaskLaunchRequested(this, TaskLaunchEventArgs.For<PhoneNumberChooserTask>());
+        public void Handle(TaskCompleted<PhoneNumberResult> message) {
+            if(message.Id.Equals(DisplayName))
+                MessageBox.Show("The result was " + message.Result.TaskResult, DisplayName, MessageBoxButton.OK);
         }
     }
 }

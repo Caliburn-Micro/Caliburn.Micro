@@ -2,7 +2,6 @@
     using System;
     using System.Linq;
 
-    [SurviveTombstone]
     public class PageTwoViewModel : Conductor<IScreen>.Collection.OneActive {
         readonly Func<TabViewModel> createTab;
         readonly PivotFix<IScreen> pivotFix;

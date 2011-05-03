@@ -9,13 +9,10 @@
         const string TaskIdKey = "Caliburn.Micro.TaskId";
         readonly IEventAggregator events;
         TaskExecutionRequested request;
-        bool resurrecting;
-        object tombstonedMessage;
 
         public TaskController(PhoneBootstrapper bootstrapper, IEventAggregator events) {
             bootstrapper.Tombstoning += OnTombstone;
             bootstrapper.Resurrecting += OnResurrect;
-            bootstrapper.ResurrectionCompleted += OnResurrectionComplete;
 
             this.events = events;
             this.events.Subscribe(this);
@@ -27,8 +24,8 @@
 
             if(@event != null) {
                 request = message;
-                @event.AddEventHandler(this, Delegate.CreateDelegate(typeof(EventHandler), this, "OnTaskComplete"));
-            };
+                @event.AddEventHandler(message.Task, Delegate.CreateDelegate(@event.EventHandlerType, this, "OnTaskComplete"));
+            }
 
             var showMethod = taskType.GetMethod("Show");
             showMethod.Invoke(message.Task, null);
@@ -43,8 +40,6 @@
         }
 
         void OnResurrect() {
-            resurrecting = true;
-
             if (!PhoneApplicationService.Current.State.ContainsKey(TaskTypeKey))
                 return;
 
@@ -66,20 +61,10 @@
             };
 
             var @event = taskType.GetEvent("Completed");
-            @event.AddEventHandler(this, Delegate.CreateDelegate(typeof(EventHandler), this, "OnTaskComplete"));
+            @event.AddEventHandler(taskInstance, Delegate.CreateDelegate(@event.EventHandlerType, this, "OnTaskComplete"));
         }
 
-        void OnResurrectionComplete() {
-            resurrecting = false;
-
-            if (tombstonedMessage == null)
-                return;
-
-            events.Publish(tombstonedMessage);
-            tombstonedMessage = null;
-        }
-
-        public void OnTaskComplete(object sender, TaskEventArgs e) {
+        void OnTaskComplete(object sender, EventArgs e) {
             var genericMessageType = typeof(TaskCompleted<>);
             var argsType = e.GetType();
             var messageType = genericMessageType.MakeGenericType(argsType);
@@ -91,10 +76,7 @@
             messageType.GetField("Result").SetValue(message, e);
 
             request = null;
-
-            if (!resurrecting)
-                events.Publish(message);
-            else tombstonedMessage = message;
+            events.Publish(message);
         }
     }
 }

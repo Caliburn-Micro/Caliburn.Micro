@@ -17,13 +17,13 @@
             return builder.Configure(x => {
                 var original = x.Set;
 
-                x.Set = (instance, value) => {
+                x.Set = (instance, storage, getKey) => {
                     if(instance.IsActive)
-                        original(instance, value);
+                        original(instance, storage, getKey);
                     else {
                         EventHandler<ActivationEventArgs> onActivate = null;
                         onActivate = (s, e) => {
-                            original(instance, value);
+                            original(instance, storage, getKey);
                             instance.Activated -= onActivate;
                         };
                         instance.Activated += onActivate;
@@ -37,11 +37,11 @@
             return builder.Configure(x => {
                 var original = x.Set;
 
-                x.Set = (instance, value) => {
+                x.Set = (instance, storage, getKey) => {
                     EventHandler<ViewAttachedEventArgs> onViewAttached = null;
                     onViewAttached = (s, e) => {
                         var fe = (FrameworkElement)e.View;
-                        View.ExecuteOnLoad(fe, (s2, e2) => { original(instance, value); });
+                        View.ExecuteOnLoad(fe, (s2, e2) => { original(instance, storage, getKey); });
                         instance.ViewAttached -= onViewAttached;
                     };
                     instance.ViewAttached += onViewAttached;
@@ -53,15 +53,17 @@
             where T : IParent, IHaveActiveItem, IActivate {
             var builder = handler.AddInstruction().Configure(x => {
                 x.Key = "ActiveItemIndex";
-                x.StorageMechanism = handler.Coordinator.GetStorageMechanism<PhoneStateStorageMechanism>();
                 x.Get = conductor => {
                     var children = conductor.GetChildren().OfType<object>().ToList();
                     return children.IndexOf(conductor.ActiveItem);
                 };
-                x.Set = (conductor, activeIndex) => {
-                    var children = conductor.GetChildren().OfType<object>().ToList();
-                    var index = Convert.ToInt32(activeIndex);
-                    conductor.ActiveItem = children[index];
+                x.Set = (instance, storage, getKey) => {
+                    object value;
+                    if(storage.TryGet(getKey(), out value)) {
+                        var children = instance.GetChildren().OfType<object>().ToList();
+                        var index = Convert.ToInt32(value);
+                        instance.ActiveItem = children[index];
+                    }
                 };
             });
 

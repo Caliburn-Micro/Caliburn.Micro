@@ -8,8 +8,17 @@
         readonly IEnumerable<IStorageMechanism> storageMechanisms;
         readonly List<WeakReference> tracked = new List<WeakReference>();
 
-        public StorageCoordinator(IEnumerable<IStorageMechanism> storageMechanisms) {
+        public StorageCoordinator(IPhoneService phoneService, IEnumerable<IStorageMechanism> storageMechanisms, IEnumerable<IStorageHandler> handlers) {
             this.storageMechanisms = storageMechanisms;
+            handlers.Apply(x => AddStorageHandler(x));
+
+            phoneService.Closing += delegate {
+                Save(StorageMode.Permanent);
+            };
+
+            phoneService.Deactivated += delegate {
+                Save(StorageMode.Temporary);
+            };
         }
 
         public T GetStorageMechanism<T>() where T : IStorageMechanism {
@@ -18,15 +27,8 @@
 
         public StorageCoordinator AddStorageHandler(IStorageHandler handler) {
             handler.Coordinator = this;
+            handler.Configure();
             handlers.Add(handler);
-            return this;
-        }
-
-        public StorageCoordinator AddStorageHandler<T>(Action<StorageHandler<T>> configure) {
-            var handler = new StorageHandler<T>();
-            AddStorageHandler(handler);
-
-            configure(handler);
             return this;
         }
 
