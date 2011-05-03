@@ -77,7 +77,7 @@
         /// Occurs when the application is being tombstoned.
         /// </summary>
         protected virtual void OnDeactivate(object sender, DeactivatedEventArgs e) {
-            Tombstone();
+            Tombstoning();
         }
 
         /// <summary>
@@ -88,8 +88,9 @@
             if (isResurrecting) {
                 NavigatedEventHandler onNavigated = null;
                 onNavigated = (s2, e2) => {
-                    Resurrect();
+                    Resurrecting();
                     RootFrame.Navigated -= onNavigated;
+                    ResurrectionCompleted();
                 };
                 RootFrame.Navigated += onNavigated;
             }
@@ -98,13 +99,18 @@
         }
 
         /// <summary>
-        /// Called when tombstoning is required.
+        /// Called when tombstoning occurs.
         /// </summary>
-        protected virtual void Tombstone() { }
+        public event System.Action Tombstoning = delegate { };
 
         /// <summary>
-        /// Resurrects the instances after activation.
+        /// Raised during resurrection.
         /// </summary>
-        protected virtual void Resurrect() { }
+        public event System.Action Resurrecting = delegate { };
+
+        /// <summary>
+        /// Raised after resurrection.
+        /// </summary>
+        public event System.Action ResurrectionCompleted = delegate { };
     }
 }

@@ -9,8 +9,14 @@
         const string TaskIdKey = "Caliburn.Micro.TaskId";
         readonly IEventAggregator events;
         TaskExecutionRequested request;
+        bool resurrecting;
+        object tombstonedMessage;
 
-        public TaskManager(IEventAggregator events) {
+        public TaskManager(PhoneBootstrapper bootstrapper, IEventAggregator events) {
+            bootstrapper.Tombstoning += OnTombstone;
+            bootstrapper.Resurrecting += OnResurrect;
+            bootstrapper.ResurrectionCompleted += OnResurrectionComplete;
+
             this.events = events;
             this.events.Subscribe(this);
         }
@@ -28,7 +34,7 @@
             showMethod.Invoke(message.Task, null);
         }
 
-        public void Tombstone() {
+        void OnTombstone() {
             if (request == null)
                 return;
 
@@ -36,7 +42,9 @@
             PhoneApplicationService.Current.State[TaskIdKey] = request.Id ?? string.Empty;
         }
 
-        public void Resurrect() {
+        void OnResurrect() {
+            resurrecting = true;
+
             if (!PhoneApplicationService.Current.State.ContainsKey(TaskTypeKey))
                 return;
 
@@ -61,6 +69,16 @@
             @event.AddEventHandler(this, Delegate.CreateDelegate(typeof(EventHandler), this, "OnTaskComplete"));
         }
 
+        void OnResurrectionComplete() {
+            resurrecting = false;
+
+            if (tombstonedMessage == null)
+                return;
+
+            events.Publish(tombstonedMessage);
+            tombstonedMessage = null;
+        }
+
         public void OnTaskComplete(object sender, TaskEventArgs e) {
             var genericMessageType = typeof(TaskCompleted<>);
             var argsType = e.GetType();
@@ -73,7 +91,10 @@
             messageType.GetField("Result").SetValue(message, e);
 
             request = null;
-            events.Publish(message); //if resurrecting, this will happen too soon...should wait until all resurrection is complete
+
+            if (!resurrecting)
+                events.Publish(message);
+            else tombstonedMessage = message;
         }
     }
 }
