@@ -51,6 +51,9 @@
     <Reference Include="Caliburn.Micro">
       <HintPath>..\..\..\bin\WP7\Debug\Caliburn.Micro.dll</HintPath>
     </Reference>
+    <Reference Include="Caliburn.Micro.Extensions">
+      <HintPath>..\..\..\bin\WP7\Debug\Caliburn.Micro.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Controls, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone.Interop" />
@@ -63,18 +66,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Caliburn.Micro.HelloWP7\Caliburn.Micro.HelloWP7\ContainerExtensions.cs">
-      <Link>ContainerExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Caliburn.Micro.HelloWP7\Caliburn.Micro.HelloWP7\PhoneContainer.cs">
-      <Link>PhoneContainer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Caliburn.Micro.HelloWP7\Caliburn.Micro.HelloWP7\PivotFix.cs">
-      <Link>PivotFix.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Caliburn.Micro.HelloWP7\Caliburn.Micro.HelloWP7\SimpleContainer.cs">
-      <Link>SimpleContainer.cs</Link>
-    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>

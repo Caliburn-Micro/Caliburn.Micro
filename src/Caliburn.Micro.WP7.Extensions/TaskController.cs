@@ -1,6 +1,6 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
+    using System.Threading;
     using Microsoft.Phone.Shell;
     using Microsoft.Phone.Tasks;
 
@@ -9,6 +9,7 @@
         const string TaskIdKey = "Caliburn.Micro.TaskId";
         readonly IEventAggregator events;
         TaskExecutionRequested request;
+        bool isResurrecting;
 
         public TaskController(PhoneBootstrapper bootstrapper, IEventAggregator events) {
             bootstrapper.Tombstoning += OnTombstone;
@@ -32,7 +33,7 @@
         }
 
         void OnTombstone() {
-            if (request == null)
+            if(request == null)
                 return;
 
             PhoneApplicationService.Current.State[TaskTypeKey] = request.Task.GetType().FullName;
@@ -40,16 +41,19 @@
         }
 
         void OnResurrect() {
-            if (!PhoneApplicationService.Current.State.ContainsKey(TaskTypeKey))
+            if(!PhoneApplicationService.Current.State.ContainsKey(TaskTypeKey))
                 return;
+
+            isResurrecting = true;
 
             var taskTypeName = (string)PhoneApplicationService.Current.State[TaskTypeKey];
             PhoneApplicationService.Current.State.Remove(TaskTypeKey);
 
             object sourceId;
-            if (!PhoneApplicationService.Current.State.TryGetValue(TaskIdKey, out sourceId))
+            if(!PhoneApplicationService.Current.State.TryGetValue(TaskIdKey, out sourceId))
                 sourceId = string.Empty;
-            else PhoneApplicationService.Current.State.Remove(TaskIdKey);
+            else
+                PhoneApplicationService.Current.State.Remove(TaskIdKey);
 
             var taskType = typeof(TaskEventArgs).Assembly.GetType(taskTypeName);
             var taskInstance = Activator.CreateInstance(taskType);
@@ -74,9 +78,18 @@
                 messageType.GetField("Id").SetValue(message, request.Id);
 
             messageType.GetField("Result").SetValue(message, e);
-
             request = null;
-            events.Publish(message);
+
+            if(isResurrecting) {
+                ThreadPool.QueueUserWorkItem(state => {
+                    Thread.Sleep(500);
+                    Execute.OnUIThread(() => {
+                        events.Publish(message);
+                        isResurrecting = false;
+                    });
+                });
+            }
+            else events.Publish(message);
         }
     }
 }

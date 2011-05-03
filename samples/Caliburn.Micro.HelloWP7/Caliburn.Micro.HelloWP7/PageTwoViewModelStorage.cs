@@ -2,7 +2,8 @@
     public class PageTwoViewModelStorage : StorageHandler<PageTwoViewModel> {
         public override void Configure() {
             this.ActiveItem()
-                .InPhoneState();
+                .InPhoneState()
+                .RestoreAfterViewLoad();
         }
     }
 }

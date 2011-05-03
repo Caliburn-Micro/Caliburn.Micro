@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Windows.Controls;
     using Microsoft.Phone.Controls;
-    using Microsoft.Phone.Tasks;
 
     public class WP7AppBootstrapper : PhoneBootstrapper {
         PhoneContainer container;
@@ -13,11 +12,8 @@
             container.RegisterPhoneServices();
             container.RegisterAllViewModelsForPages();
 
-            container.RegisterPerRequest<MessageViewModel, MessageViewModel>();
-            container.RegisterPerRequest<DialogViewModel, DialogViewModel>();
-
-            container.InstallChooser<PhoneNumberChooserTask, PhoneNumberResult>();
-            container.InstallLauncher<EmailComposeTask>();
+            container.PerRequest<MessageViewModel, MessageViewModel>();
+            container.PerRequest<DialogViewModel, DialogViewModel>();
 
             AddCustomConventions();
         }

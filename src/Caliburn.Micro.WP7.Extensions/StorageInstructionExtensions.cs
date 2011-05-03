@@ -51,7 +51,7 @@
 
         public static StorageInstructionBuilder<T> ActiveItem<T>(this StorageHandler<T> handler) 
             where T : IParent, IHaveActiveItem, IActivate {
-            var builder = handler.AddInstruction().Configure(x => {
+            return handler.AddInstruction().Configure(x => {
                 x.Key = "ActiveItemIndex";
                 x.Get = conductor => {
                     var children = conductor.GetChildren().OfType<object>().ToList();
@@ -66,8 +66,6 @@
                     }
                 };
             });
-
-            return builder.RestoreAfterActivation();
         }
     }
 }
