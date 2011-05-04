@@ -20,6 +20,8 @@
         }
 
         public void Choose() {
+            //specifying an id is only necessary if multiple instances could handle the same task
+            //in this case, we have 5 instances of TabViewModel, so the id needs to be passed back in order to determine the original sender
             events.RequestTask<PhoneNumberChooserTask>(id:DisplayName);
         }
 

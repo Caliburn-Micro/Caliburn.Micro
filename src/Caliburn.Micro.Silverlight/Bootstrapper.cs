@@ -14,6 +14,7 @@
     public class Bootstrapper
     {
         private static bool? isInDesignMode;
+        readonly bool useApplication;
 
         /// <summary>
         /// The application.
@@ -47,7 +48,9 @@
         /// <summary>
         /// Creates an instance of the bootstrapper.
         /// </summary>
-        public Bootstrapper() {
+        public Bootstrapper(bool useApplication = true) {
+            this.useApplication = useApplication;
+
             if (IsInDesignMode)
                 StartDesignTime();
             else StartRuntime();
@@ -65,8 +68,10 @@
             Execute.InitializeWithDispatcher();
             AssemblySource.Instance.AddRange(SelectAssemblies());
 
-            Application = Application.Current;
-            PrepareApplication();
+            if (useApplication) {
+                Application = Application.Current;
+                PrepareApplication();
+            }
 
             Configure();
             IoC.GetInstance = GetInstance;
