@@ -24,8 +24,8 @@
         public StorageInstructionBuilder<T> EntireGraph<TService>() {
             return AddInstruction().Configure(x => {
                 x.Key = "ObjectGraph";
-                x.Get = instance => instance;
-                x.Set = (instance, storage, getKey) => { };
+                x.Save = (instance, getKey) => x.StorageMechanism.Store(getKey(), instance);
+                x.Restore = (instance, getKey) => { };
                 x.PropertyChanged += (s, e) => {
                     if(e.PropertyName == "StorageMechanism" && x.StorageMechanism != null)
                         x.StorageMechanism.RegisterWithContainer(typeof(TService), GetKey(default(T), x.Key), typeof(T));
@@ -38,10 +38,10 @@
 
             return AddInstruction().Configure(x => {
                 x.Key = info.Name;
-                x.Get = instance => info.GetValue(instance, null);
-                x.Set = (instance, storage, getKey) => {
+                x.Save = (instance, getKey) => x.StorageMechanism.Store(getKey(), info.GetValue(instance, null));
+                x.Restore = (instance, getKey) => {
                     object value;
-                    if(storage.TryGet(getKey(), out value))
+                    if(x.StorageMechanism.TryGet(getKey(), out value))
                         info.SetValue(instance, value, null);
                 };
             });
@@ -54,18 +54,16 @@
         }
 
         public virtual void Save(T instance, StorageMode mode) {
-            foreach(var instruction in instructions.Where(x => x.StorageMechanism.Supports(mode))) {
-                var key = GetKey(instance, instruction.Key);
-                var value = instruction.Get(instance);
-
-                instruction.StorageMechanism.Store(key, value);
+            foreach(var instruction in instructions) {
+                var key = instruction.Key;
+                instruction.Save(instance, () => GetKey(instance, key));
             }
         }
 
         public virtual void Restore(T instance) {
             foreach(var instruction in instructions) {
-                var current = instruction;
-                current.Set(instance, current.StorageMechanism, () => GetKey(instance, current.Key));
+                var key = instruction.Key;
+                instruction.Restore(instance, () => GetKey(instance, key));
             }
         }
 

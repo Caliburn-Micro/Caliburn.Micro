@@ -5,8 +5,8 @@
         IStorageHandler owner;
         IStorageMechanism storageMechanism;
         string key;
-        Func<T, object> get;
-        Action<T, IStorageMechanism, Func<string>> set;
+        Action<T, Func<string>> save;
+        Action<T, Func<string>> restore;
 
         public IStorageHandler Owner {
             get { return owner; }
@@ -32,19 +32,19 @@
             }
         }
 
-        public Func<T, object> Get {
-            get { return get; }
+        public Action<T, Func<string>> Save {
+            get { return save; }
             set {
-                get = value;
-                NotifyOfPropertyChange("Get");
+                save = value;
+                NotifyOfPropertyChange("Save");
             }
         }
 
-        public Action<T, IStorageMechanism, Func<string>> Set {
-            get { return set; }
+        public Action<T, Func<string>> Restore {
+            get { return restore; }
             set {
-                set = value;
-                NotifyOfPropertyChange("Set");
+                restore = value;
+                NotifyOfPropertyChange("Restore");
             }
         }
     }

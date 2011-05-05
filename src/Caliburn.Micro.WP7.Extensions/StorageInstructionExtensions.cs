@@ -15,15 +15,15 @@
         public static StorageInstructionBuilder<T> RestoreAfterActivation<T>(this StorageInstructionBuilder<T> builder)
             where T : IActivate {
             return builder.Configure(x => {
-                var original = x.Set;
+                var original = x.Restore;
 
-                x.Set = (instance, storage, getKey) => {
+                x.Restore = (instance, getKey) => {
                     if(instance.IsActive)
-                        original(instance, storage, getKey);
+                        original(instance, getKey);
                     else {
                         EventHandler<ActivationEventArgs> onActivate = null;
                         onActivate = (s, e) => {
-                            original(instance, storage, getKey);
+                            original(instance, getKey);
                             instance.Activated -= onActivate;
                         };
                         instance.Activated += onActivate;
@@ -35,13 +35,13 @@
         public static StorageInstructionBuilder<T> RestoreAfterViewLoad<T>(this StorageInstructionBuilder<T> builder)
             where T : IViewAware {
             return builder.Configure(x => {
-                var original = x.Set;
+                var original = x.Restore;
 
-                x.Set = (instance, storage, getKey) => {
+                x.Restore = (instance, getKey) => {
                     EventHandler<ViewAttachedEventArgs> onViewAttached = null;
                     onViewAttached = (s, e) => {
                         var fe = (FrameworkElement)e.View;
-                        View.ExecuteOnLoad(fe, (s2, e2) => { original(instance, storage, getKey); });
+                        View.ExecuteOnLoad(fe, (s2, e2) => { original(instance, getKey); });
                         instance.ViewAttached -= onViewAttached;
                     };
                     instance.ViewAttached += onViewAttached;
@@ -53,13 +53,13 @@
             where T : IParent, IHaveActiveItem, IActivate {
             return handler.AddInstruction().Configure(x => {
                 x.Key = "ActiveItemIndex";
-                x.Get = conductor => {
-                    var children = conductor.GetChildren().OfType<object>().ToList();
-                    return children.IndexOf(conductor.ActiveItem);
+                x.Save = (instance, getKey) => {
+                    var children = instance.GetChildren().OfType<object>().ToList();
+                    x.StorageMechanism.Store(getKey(), children.IndexOf(instance.ActiveItem));
                 };
-                x.Set = (instance, storage, getKey) => {
+                x.Restore = (instance, getKey) => {
                     object value;
-                    if(storage.TryGet(getKey(), out value)) {
+                    if(x.StorageMechanism.TryGet(getKey(), out value)) {
                         var children = instance.GetChildren().OfType<object>().ToList();
                         var index = Convert.ToInt32(value);
                         instance.ActiveItem = children[index];
