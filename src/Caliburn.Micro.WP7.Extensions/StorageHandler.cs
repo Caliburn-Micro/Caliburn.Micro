@@ -41,8 +41,11 @@
                 x.Save = (instance, getKey) => x.StorageMechanism.Store(getKey(), info.GetValue(instance, null));
                 x.Restore = (instance, getKey) => {
                     object value;
-                    if(x.StorageMechanism.TryGet(getKey(), out value))
+                    var key = getKey();
+                    if (x.StorageMechanism.TryGet(key, out value)) {
                         info.SetValue(instance, value, null);
+                        x.StorageMechanism.Delete(key);
+                    }
                 };
             });
         }

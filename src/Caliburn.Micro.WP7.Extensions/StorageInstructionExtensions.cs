@@ -49,7 +49,7 @@
             });
         }
 
-        public static StorageInstructionBuilder<T> ActiveItem<T>(this StorageHandler<T> handler) 
+        public static StorageInstructionBuilder<T> ActiveItem<T>(this StorageHandler<T> handler)
             where T : IParent, IHaveActiveItem, IActivate {
             return handler.AddInstruction().Configure(x => {
                 x.Key = "ActiveItemIndex";
@@ -59,10 +59,12 @@
                 };
                 x.Restore = (instance, getKey) => {
                     object value;
-                    if(x.StorageMechanism.TryGet(getKey(), out value)) {
+                    var key = getKey();
+                    if(x.StorageMechanism.TryGet(key, out value)) {
                         var children = instance.GetChildren().OfType<object>().ToList();
                         var index = Convert.ToInt32(value);
                         instance.ActiveItem = children[index];
+                        x.StorageMechanism.Delete(key);
                     }
                 };
             });
