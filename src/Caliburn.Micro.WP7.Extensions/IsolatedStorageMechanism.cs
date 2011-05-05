@@ -2,11 +2,17 @@
     using System;
 
     public class IsolatedStorageMechanism : IStorageMechanism {
+        readonly IPhoneContainer container;
+
+        public IsolatedStorageMechanism(IPhoneContainer container) {
+            this.container = container;
+        }
+
         public bool Supports(StorageMode mode) {
             return mode == StorageMode.Permanent;
         }
 
-        public void BeginStore() {
+        public void BeginStoring() {
             throw new NotImplementedException();
         }
 
@@ -14,7 +20,7 @@
             throw new NotImplementedException();
         }
 
-        public void EndStore() {
+        public void EndStoring() {
             throw new NotImplementedException();
         }
 
@@ -26,8 +32,8 @@
             throw new NotImplementedException();
         }
 
-        public void RegisterWithContainer(Type service, string key, Type implementation) {
-            throw new NotImplementedException();
+        public void RegisterSingleton(Type service, string key, Type implementation) {
+            container.RegisterWithIsolatedStorage(service, key, implementation);
         }
     }
 }

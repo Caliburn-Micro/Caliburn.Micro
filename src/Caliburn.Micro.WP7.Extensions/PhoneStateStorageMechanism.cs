@@ -2,10 +2,10 @@
     using System;
 
     public class PhoneStateStorageMechanism : IStorageMechanism {
-        readonly PhoneContainer container;
+        readonly IPhoneContainer container;
         readonly IPhoneService phoneService;
 
-        public PhoneStateStorageMechanism(PhoneContainer container, IPhoneService phoneService) {
+        public PhoneStateStorageMechanism(IPhoneContainer container, IPhoneService phoneService) {
             this.container = container;
             this.phoneService = phoneService;
         }
@@ -14,13 +14,13 @@
             return mode == StorageMode.Temporary;
         }
 
-        public void BeginStore() {}
+        public void BeginStoring() {}
 
         public void Store(string key, object data) {
             phoneService.State[key] = data;
         }
 
-        public void EndStore() {}
+        public void EndStoring() {}
 
         public bool TryGet(string key, out object value) {
             return phoneService.State.TryGetValue(key, out value);
@@ -30,7 +30,7 @@
             phoneService.State.Remove(key);
         }
 
-        public void RegisterWithContainer(Type service, string key, Type implementation) {
+        public void RegisterSingleton(Type service, string key, Type implementation) {
             container.RegisterWithPhoneService(service, key, implementation);
         }
     }

@@ -7,16 +7,26 @@
     public class TaskController : IHandle<TaskExecutionRequested> {
         const string TaskTypeKey = "Caliburn.Micro.TaskType";
         const string TaskIdKey = "Caliburn.Micro.TaskId";
+        readonly PhoneBootstrapper bootstrapper;
         readonly IEventAggregator events;
         TaskExecutionRequested request;
         bool isResurrecting;
 
         public TaskController(PhoneBootstrapper bootstrapper, IEventAggregator events) {
+            this.bootstrapper = bootstrapper;
+            this.events = events;
+        }
+
+        public void Start() {
             bootstrapper.Tombstoning += OnTombstone;
             bootstrapper.Resurrecting += OnResurrect;
+            events.Subscribe(this);
+        }
 
-            this.events = events;
-            this.events.Subscribe(this);
+        public void Stop() {
+            bootstrapper.Tombstoning -= OnTombstone;
+            bootstrapper.Resurrecting -= OnResurrect;
+            events.Unsubscribe(this);
         }
 
         public void Handle(TaskExecutionRequested message) {

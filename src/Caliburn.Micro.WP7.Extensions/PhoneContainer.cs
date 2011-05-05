@@ -1,7 +1,7 @@
 ﻿namespace Caliburn.Micro {
     using System;
 
-    public class PhoneContainer : SimpleContainer {
+    public class PhoneContainer : SimpleContainer, IPhoneContainer {
         readonly PhoneBootstrapper bootstrapper;
 
         public PhoneContainer(PhoneBootstrapper bootstrapper) {
@@ -19,21 +19,28 @@
             });
         }
 
+        public void RegisterWithIsolatedStorage(Type service, string fileName, Type implementation) {
+            throw new NotImplementedException();
+        }
+
         public void RegisterPhoneServices(bool treatViewAsLoaded = false) {
             var events = new EventAggregator();
 
             RegisterInstance(typeof(SimpleContainer), null, this);
             RegisterInstance(typeof(PhoneContainer), null, this);
+            RegisterInstance(typeof(IPhoneContainer), null, this);
             RegisterInstance(typeof(INavigationService), null, new FrameAdapter(bootstrapper.RootFrame, treatViewAsLoaded));
             RegisterInstance(typeof(IPhoneService), null, new PhoneApplicationServiceAdapter(bootstrapper.PhoneService));
             RegisterInstance(typeof(IEventAggregator), null, events);
-            RegisterInstance(typeof(TaskController), null, new TaskController(bootstrapper, events));
-
             RegisterSingleton(typeof(IWindowManager), null, typeof(WindowManager));
-            RegisterSingleton(typeof(StorageCoordinator), null, typeof(StorageCoordinator));
 
-            var storageCoordinator = (StorageCoordinator)GetInstance(typeof(StorageCoordinator), null);
-            Activated += storageCoordinator.Restore;
+            RegisterSingleton(typeof(StorageCoordinator), null, typeof(StorageCoordinator));
+            var coordinator = (StorageCoordinator)GetInstance(typeof(StorageCoordinator), null);
+            coordinator.Start();
+
+            var taskController = new TaskController(bootstrapper, events);
+            RegisterInstance(typeof(TaskController), null, taskController);
+            taskController.Start();
         }
     }
 }

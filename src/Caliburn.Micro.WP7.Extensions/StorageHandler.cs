@@ -28,7 +28,7 @@
                 x.Restore = (instance, getKey) => { };
                 x.PropertyChanged += (s, e) => {
                     if(e.PropertyName == "StorageMechanism" && x.StorageMechanism != null)
-                        x.StorageMechanism.RegisterWithContainer(typeof(TService), GetKey(default(T), x.Key), typeof(T));
+                        x.StorageMechanism.RegisterSingleton(typeof(TService), GetKey(default(T), x.Key), typeof(T));
                 };
             });
         }

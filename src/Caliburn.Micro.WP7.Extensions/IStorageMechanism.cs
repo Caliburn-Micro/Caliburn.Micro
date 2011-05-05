@@ -4,13 +4,13 @@
     public interface IStorageMechanism {
         bool Supports(StorageMode mode);
 
-        void BeginStore();
+        void BeginStoring();
         void Store(string key, object data);
-        void EndStore();
+        void EndStoring();
 
         bool TryGet(string key, out object value);
         void Delete(string key);
 
-        void RegisterWithContainer(Type service, string key, Type implementation);
+        void RegisterSingleton(Type service, string key, Type implementation);
     }
 }

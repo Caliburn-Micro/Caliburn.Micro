@@ -2,23 +2,33 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.Phone.Shell;
 
     public class StorageCoordinator {
         readonly List<IStorageHandler> handlers = new List<IStorageHandler>();
+        readonly IPhoneContainer container;
+        readonly IPhoneService phoneService;
         readonly IEnumerable<IStorageMechanism> storageMechanisms;
         readonly List<WeakReference> tracked = new List<WeakReference>();
 
-        public StorageCoordinator(IPhoneService phoneService, IEnumerable<IStorageMechanism> storageMechanisms, IEnumerable<IStorageHandler> handlers) {
+        public StorageCoordinator(IPhoneContainer container, IPhoneService phoneService, IEnumerable<IStorageMechanism> storageMechanisms, IEnumerable<IStorageHandler> handlers) {
+            this.container = container;
+            this.phoneService = phoneService;
             this.storageMechanisms = storageMechanisms;
+
             handlers.Apply(x => AddStorageHandler(x));
+        }
 
-            phoneService.Closing += delegate {
-                Save(StorageMode.Permanent);
-            };
+        public void Start() {
+            phoneService.Closing += OnClosing;
+            phoneService.Deactivated += OnDeactivated;
+            container.Activated += Restore;
+        }
 
-            phoneService.Deactivated += delegate {
-                Save(StorageMode.Temporary);
-            };
+        public void Stop() {
+            phoneService.Closing -= OnClosing;
+            phoneService.Deactivated -= OnDeactivated;
+            container.Activated -= Restore;
         }
 
         public T GetStorageMechanism<T>() where T : IStorageMechanism {
@@ -40,14 +50,14 @@
             var toSave = tracked.Select(x => x.Target).Where(x => x != null);
             var mechanisms = storageMechanisms.Where(x => x.Supports(mode));
 
-            mechanisms.Apply(x => x.BeginStore());
+            mechanisms.Apply(x => x.BeginStoring());
 
             foreach(var item in toSave) {
                 var handler = GetStorageHandlerFor(item);
                 handler.Save(item, mode);
             }
 
-            mechanisms.Apply(x => x.EndStore());
+            mechanisms.Apply(x => x.EndStoring());
         }
 
         public void Restore(object instance) {
@@ -57,6 +67,15 @@
 
             tracked.Add(new WeakReference(instance));
             handler.Restore(instance);
+        }
+
+
+        void OnDeactivated(object sender, DeactivatedEventArgs e) {
+            Save(StorageMode.Temporary);
+        }
+
+        void OnClosing(object sender, ClosingEventArgs e) {
+            Save(StorageMode.Permanent);
         }
     }
 }
