@@ -19,7 +19,7 @@
             });
         }
 
-        public void RegisterWithIsolatedStorage(Type service, string fileName, Type implementation) {
+        public void RegisterWithIsolatedStorage(Type service, string isoStorageKey, Type implementation) {
             throw new NotImplementedException();
         }
 

@@ -1,7 +1,6 @@
 ﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
 
@@ -24,7 +23,7 @@
         public StorageInstructionBuilder<T> EntireGraph<TService>() {
             return AddInstruction().Configure(x => {
                 x.Key = "ObjectGraph";
-                x.Save = (instance, getKey) => x.StorageMechanism.Store(getKey(), instance);
+                x.Save = (instance, getKey, mode) => x.StorageMechanism.Store(getKey(), instance);
                 x.Restore = (instance, getKey) => { };
                 x.PropertyChanged += (s, e) => {
                     if(e.PropertyName == "StorageMechanism" && x.StorageMechanism != null)
@@ -38,7 +37,7 @@
 
             return AddInstruction().Configure(x => {
                 x.Key = info.Name;
-                x.Save = (instance, getKey) => x.StorageMechanism.Store(getKey(), info.GetValue(instance, null));
+                x.Save = (instance, getKey, mode) => x.StorageMechanism.Store(getKey(), info.GetValue(instance, null));
                 x.Restore = (instance, getKey) => {
                     object value;
                     var key = getKey();
@@ -46,6 +45,30 @@
                         info.SetValue(instance, value, null);
                         x.StorageMechanism.Delete(key);
                     }
+                };
+            });
+        }
+
+        public StorageInstructionBuilder<T> Child(Expression<Func<T, object>> property) {
+            var info = (PropertyInfo)property.GetMemberInfo();
+
+            return AddInstruction().Configure(x => {
+                x.Key = info.Name;
+                x.Save = (instance, getKey, mode) => {
+                    var child = info.GetValue(instance, null);
+                    if (child == null)
+                        return;
+
+                    var handler = Coordinator.GetStorageHandlerFor(child);
+                    handler.Save(child, mode);
+                };
+                x.Restore = (instance, getKey) => {
+                    var child = info.GetValue(instance, null);
+                    if (child == null)
+                        return;
+
+                    var handler = Coordinator.GetStorageHandlerFor(instance);
+                    handler.Restore(child);
                 };
             });
         }
@@ -59,7 +82,8 @@
         public virtual void Save(T instance, StorageMode mode) {
             foreach(var instruction in instructions) {
                 var key = instruction.Key;
-                instruction.Save(instance, () => GetKey(instance, key));
+                if(instruction.StorageMechanism.Supports(mode))
+                    instruction.Save(instance, () => GetKey(instance, key), mode);
             }
         }
 

@@ -53,7 +53,7 @@
             where T : IParent, IHaveActiveItem, IActivate {
             return handler.AddInstruction().Configure(x => {
                 x.Key = "ActiveItemIndex";
-                x.Save = (instance, getKey) => {
+                x.Save = (instance, getKey, mode) => {
                     var children = instance.GetChildren().OfType<object>().ToList();
                     x.StorageMechanism.Store(getKey(), children.IndexOf(instance.ActiveItem));
                 };

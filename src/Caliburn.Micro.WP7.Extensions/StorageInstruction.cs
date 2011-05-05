@@ -5,7 +5,7 @@
         IStorageHandler owner;
         IStorageMechanism storageMechanism;
         string key;
-        Action<T, Func<string>> save;
+        Action<T, Func<string>, StorageMode> save;
         Action<T, Func<string>> restore;
 
         public IStorageHandler Owner {
@@ -32,7 +32,7 @@
             }
         }
 
-        public Action<T, Func<string>> Save {
+        public Action<T, Func<string>, StorageMode> Save {
             get { return save; }
             set {
                 save = value;
