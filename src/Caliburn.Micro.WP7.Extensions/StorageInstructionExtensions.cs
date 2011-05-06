@@ -17,13 +17,13 @@
             return builder.Configure(x => {
                 var original = x.Restore;
 
-                x.Restore = (instance, getKey) => {
+                x.Restore = (instance, getKey, mode) => {
                     if(instance.IsActive)
-                        original(instance, getKey);
+                        original(instance, getKey, mode);
                     else {
                         EventHandler<ActivationEventArgs> onActivate = null;
                         onActivate = (s, e) => {
-                            original(instance, getKey);
+                            original(instance, getKey, mode);
                             instance.Activated -= onActivate;
                         };
                         instance.Activated += onActivate;
@@ -37,11 +37,11 @@
             return builder.Configure(x => {
                 var original = x.Restore;
 
-                x.Restore = (instance, getKey) => {
+                x.Restore = (instance, getKey, mode) => {
                     EventHandler<ViewAttachedEventArgs> onViewAttached = null;
                     onViewAttached = (s, e) => {
                         var fe = (FrameworkElement)e.View;
-                        View.ExecuteOnLoad(fe, (s2, e2) => { original(instance, getKey); });
+                        View.ExecuteOnLoad(fe, (s2, e2) => { original(instance, getKey, mode); });
                         instance.ViewAttached -= onViewAttached;
                     };
                     instance.ViewAttached += onViewAttached;
@@ -57,7 +57,7 @@
                     var children = instance.GetChildren().OfType<object>().ToList();
                     x.StorageMechanism.Store(getKey(), children.IndexOf(instance.ActiveItem));
                 };
-                x.Restore = (instance, getKey) => {
+                x.Restore = (instance, getKey, mode) => {
                     object value;
                     var key = getKey();
                     if(x.StorageMechanism.TryGet(key, out value)) {

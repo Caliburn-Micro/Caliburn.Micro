@@ -12,17 +12,13 @@
             return mode == StorageMode.Permanent;
         }
 
-        public void BeginStoring() {
-            throw new NotImplementedException();
-        }
+        public void BeginStoring() { }
 
         public void Store(string key, object data) {
             throw new NotImplementedException();
         }
 
-        public void EndStoring() {
-            throw new NotImplementedException();
-        }
+        public void EndStoring() { }
 
         public bool TryGet(string key, out object value) {
             throw new NotImplementedException();

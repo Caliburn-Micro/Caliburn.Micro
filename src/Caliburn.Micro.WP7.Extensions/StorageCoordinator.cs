@@ -66,7 +66,9 @@
                 return;
 
             tracked.Add(new WeakReference(instance));
-            handler.Restore(instance);
+
+            //this isn't quite right...
+            handler.Restore(instance, phoneService.StartupMode == StartupMode.Activate ? StorageMode.Temporary : StorageMode.Permanent);
         }
 
 

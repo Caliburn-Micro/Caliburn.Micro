@@ -74,7 +74,9 @@
                 Log.Info("Publishing {0}.", message);
                 var messageType = message.GetType();
 
-                var dead = toNotify.Where(handler => !handler.Handle(messageType, message));
+                var dead = toNotify
+                    .Where(handler => !handler.Handle(messageType, message))
+                    .ToList();
 
                 if(dead.Any()) {
                     lock(handlers)

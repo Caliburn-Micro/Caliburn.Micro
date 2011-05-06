@@ -5,6 +5,7 @@
     using System.Windows.Controls;
     using System.Windows.Navigation;
     using Microsoft.Phone.Controls;
+    using Microsoft.Phone.Shell;
 
     /// <summary>
     /// Implemented by services that provide <see cref="Uri"/> based navigation.
@@ -103,29 +104,26 @@
         /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event args.</param>
-        protected virtual void OnNavigating(object sender, NavigatingCancelEventArgs e)
-        {
+        protected virtual void OnNavigating(object sender, NavigatingCancelEventArgs e) {
             var fe = frame.Content as FrameworkElement;
-            if (fe == null)
+            if(fe == null)
                 return;
 
             var guard = fe.DataContext as IGuardClose;
-            if(guard != null && !e.Uri.IsAbsoluteUri)
-            {
+            if(guard != null && !e.Uri.IsAbsoluteUri) {
                 bool shouldCancel = false;
-                guard.CanClose(result =>{
+                guard.CanClose(result => {
                     shouldCancel = !result;
                 });
 
-                if(shouldCancel)
-                {
+                if(shouldCancel) {
                     e.Cancel = true;
                     return;
                 }
             }
 
             var deactivator = fe.DataContext as IDeactivate;
-            if (deactivator != null)
+            if(deactivator != null)
                 deactivator.Deactivate(false);
         }
 
@@ -134,19 +132,18 @@
         /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event args.</param>
-        protected virtual void OnNavigated(object sender, NavigationEventArgs e)
-        {
-            if (e.Uri.IsAbsoluteUri || e.Content == null)
+        protected virtual void OnNavigated(object sender, NavigationEventArgs e) {
+            if(e.Uri.IsAbsoluteUri || e.Content == null)
                 return;
 
             ViewLocator.InitializeComponent(e.Content);
 
             var viewModel = ViewModelLocator.LocateForView(e.Content);
-            if (viewModel == null)
+            if(viewModel == null)
                 return;
 
             var page = e.Content as PhoneApplicationPage;
-            if (page == null)
+            if(page == null)
                 throw new ArgumentException("View '" + e.Content.GetType().FullName + "' should inherit from PhoneApplicationPage or one of its descendents.");
 
             if(treatViewAsLoaded)
@@ -157,8 +154,10 @@
             TryInjectQueryString(viewModel, page);
 
             var activator = viewModel as IActivate;
-            if (activator != null)
+            if(activator != null)
                 activator.Activate();
+
+            GC.Collect();
         }
 
         /// <summary>

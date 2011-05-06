@@ -25,12 +25,14 @@
 
         public void RegisterPhoneServices(bool treatViewAsLoaded = false) {
             var events = new EventAggregator();
+            var phoneService = new PhoneApplicationServiceAdapter(bootstrapper.PhoneService);
+            var navigationService = new FrameAdapter(bootstrapper.RootFrame, treatViewAsLoaded);
 
             RegisterInstance(typeof(SimpleContainer), null, this);
             RegisterInstance(typeof(PhoneContainer), null, this);
             RegisterInstance(typeof(IPhoneContainer), null, this);
-            RegisterInstance(typeof(INavigationService), null, new FrameAdapter(bootstrapper.RootFrame, treatViewAsLoaded));
-            RegisterInstance(typeof(IPhoneService), null, new PhoneApplicationServiceAdapter(bootstrapper.PhoneService));
+            RegisterInstance(typeof(INavigationService), null, navigationService);
+            RegisterInstance(typeof(IPhoneService), null, phoneService);
             RegisterInstance(typeof(IEventAggregator), null, events);
             RegisterSingleton(typeof(IWindowManager), null, typeof(WindowManager));
 

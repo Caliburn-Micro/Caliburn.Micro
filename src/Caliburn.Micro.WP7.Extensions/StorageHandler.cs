@@ -24,7 +24,7 @@
             return AddInstruction().Configure(x => {
                 x.Key = "ObjectGraph";
                 x.Save = (instance, getKey, mode) => x.StorageMechanism.Store(getKey(), instance);
-                x.Restore = (instance, getKey) => { };
+                x.Restore = (instance, getKey, mode) => { };
                 x.PropertyChanged += (s, e) => {
                     if(e.PropertyName == "StorageMechanism" && x.StorageMechanism != null)
                         x.StorageMechanism.RegisterSingleton(typeof(TService), GetKey(default(T), x.Key), typeof(T));
@@ -38,10 +38,10 @@
             return AddInstruction().Configure(x => {
                 x.Key = info.Name;
                 x.Save = (instance, getKey, mode) => x.StorageMechanism.Store(getKey(), info.GetValue(instance, null));
-                x.Restore = (instance, getKey) => {
+                x.Restore = (instance, getKey, mode) => {
                     object value;
                     var key = getKey();
-                    if (x.StorageMechanism.TryGet(key, out value)) {
+                    if(x.StorageMechanism.TryGet(key, out value)) {
                         info.SetValue(instance, value, null);
                         x.StorageMechanism.Delete(key);
                     }
@@ -56,19 +56,19 @@
                 x.Key = info.Name;
                 x.Save = (instance, getKey, mode) => {
                     var child = info.GetValue(instance, null);
-                    if (child == null)
+                    if(child == null)
                         return;
 
                     var handler = Coordinator.GetStorageHandlerFor(child);
                     handler.Save(child, mode);
                 };
-                x.Restore = (instance, getKey) => {
+                x.Restore = (instance, getKey, mode) => {
                     var child = info.GetValue(instance, null);
-                    if (child == null)
+                    if(child == null)
                         return;
 
                     var handler = Coordinator.GetStorageHandlerFor(instance);
-                    handler.Restore(child);
+                    handler.Restore(child, mode);
                 };
             });
         }
@@ -87,10 +87,11 @@
             }
         }
 
-        public virtual void Restore(T instance) {
+        public virtual void Restore(T instance, StorageMode mode) {
             foreach(var instruction in instructions) {
                 var key = instruction.Key;
-                instruction.Restore(instance, () => GetKey(instance, key));
+                if(instruction.StorageMechanism.Supports(mode))
+                    instruction.Restore(instance, () => GetKey(instance, key), mode);
             }
         }
 
@@ -107,8 +108,8 @@
             Save((T)instance, mode);
         }
 
-        void IStorageHandler.Restore(object instance) {
-            Restore((T)instance);
+        void IStorageHandler.Restore(object instance, StorageMode mode) {
+            Restore((T)instance, mode);
         }
     }
 }

@@ -237,6 +237,7 @@ namespace Caliburn.Micro
                 return;
 
             InvokeAction(context);
+            context.EventArgs = null;
         }
 
         /// <summary>

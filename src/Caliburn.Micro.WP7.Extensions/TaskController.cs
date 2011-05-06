@@ -62,8 +62,7 @@
             object sourceId;
             if(!PhoneApplicationService.Current.State.TryGetValue(TaskIdKey, out sourceId))
                 sourceId = string.Empty;
-            else
-                PhoneApplicationService.Current.State.Remove(TaskIdKey);
+            else PhoneApplicationService.Current.State.Remove(TaskIdKey);
 
             var taskType = typeof(TaskEventArgs).Assembly.GetType(taskTypeName);
             var taskInstance = Activator.CreateInstance(taskType);
