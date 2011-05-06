@@ -60,17 +60,17 @@
         /// </summary>
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
-        public virtual void ShowWindow(object rootModel, object context = null)
-        {
-            var navWindow = Application.Current.MainWindow as NavigationWindow;
+        public virtual void ShowWindow(object rootModel, object context = null) {
+            NavigationWindow navWindow = null;
 
-            if (navWindow != null)
-            {
+            if(Application.Current != null && Application.Current.MainWindow != null)
+                navWindow = Application.Current.MainWindow as NavigationWindow;
+
+            if(navWindow != null) {
                 var window = CreatePage(rootModel, context);
                 navWindow.Navigate(window);
             }
-            else
-            {
+            else {
                 CreateWindow(rootModel, false, context).Show();
             }
         }
