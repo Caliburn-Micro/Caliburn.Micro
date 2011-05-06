@@ -30,14 +30,14 @@
 
         /// <summary>
         /// Indicates whether or not static properties should be included during convention name matching.
-        /// <remarks>False by default.</remarks>
         /// </summary>
+        /// <remarks>False by default.</remarks>
         public static bool IncludeStaticProperties = false;
 
         /// <summary>
         /// Indicates whether or not the Content of ContentControls should be overwritten by conventional bindings.
-        /// <remarks>False by default.</remarks>
         /// </summary>
+        /// <remarks>False by default.</remarks>
         public static bool OverwriteContent = false;
 
         /// <summary>
