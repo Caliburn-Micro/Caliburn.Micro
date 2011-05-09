@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.Micro
 {
+    using System.Windows;
     using System.Windows.Navigation;
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
@@ -77,7 +78,7 @@
         /// Occurs when the application is being tombstoned.
         /// </summary>
         protected virtual void OnDeactivate(object sender, DeactivatedEventArgs e) {
-            Tombstoning();
+            Deactivating();
         }
 
         /// <summary>
@@ -88,23 +89,35 @@
             if (isResurrecting) {
                 NavigatedEventHandler onNavigated = null;
                 onNavigated = (s2, e2) => {
-                    Resurrecting();
+                    Resurrected();
+                    RootFrame.Navigated -= onNavigated;
+                };
+                RootFrame.Navigated += onNavigated;
+                isResurrecting = false;
+            }
+            else {
+                NavigatedEventHandler onNavigated = null;
+                onNavigated = (s2, e2) => {
+                    Continued();
                     RootFrame.Navigated -= onNavigated;
                 };
                 RootFrame.Navigated += onNavigated;
             }
-
-            isResurrecting = false;
         }
 
         /// <summary>
-        /// Called when tombstoning occurs.
+        /// Occurs when the app has been temporarily paused or tombstoned.
         /// </summary>
-        public event System.Action Tombstoning = delegate { };
+        public event System.Action Deactivating = delegate { };
 
         /// <summary>
-        /// Raised during resurrection.
+        /// Occurs after the app has continued execution from a temporarily paused state.
         /// </summary>
-        public event System.Action Resurrecting = delegate { };
+        public event System.Action Continued = delegate { };
+
+        /// <summary>
+        /// Occurs after the app has "resurrected" from a tombsted state.
+        /// </summary>
+        public event System.Action Resurrected = delegate { };
     }
 }

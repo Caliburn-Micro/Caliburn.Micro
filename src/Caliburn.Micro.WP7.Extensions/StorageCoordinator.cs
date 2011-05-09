@@ -67,10 +67,11 @@
 
             tracked.Add(new WeakReference(instance));
 
-            //this isn't quite right...
+            //while the resurrection is occurring, this should be marked as temporary
+            //afterwards it should be Permanent
+            //how to do that?
             handler.Restore(instance, phoneService.StartupMode == StartupMode.Activate ? StorageMode.Temporary : StorageMode.Permanent);
         }
-
 
         void OnDeactivated(object sender, DeactivatedEventArgs e) {
             Save(StorageMode.Temporary);

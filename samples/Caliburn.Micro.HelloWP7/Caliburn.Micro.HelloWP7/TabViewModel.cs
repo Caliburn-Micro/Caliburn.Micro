@@ -8,7 +8,6 @@
 
         public TabViewModel(IEventAggregator events) {
             this.events = events;
-            this.events.Subscribe(this);
         }
 
         public string Text {
@@ -20,14 +19,21 @@
         }
 
         public void Choose() {
-            //specifying an id is only necessary if multiple instances could handle the same task
-            //in this case, we have 5 instances of TabViewModel, so the id needs to be passed back in order to determine the original sender
-            events.RequestTask<PhoneNumberChooserTask>(id:DisplayName);
+            events.RequestTask<PhoneNumberChooserTask>();
         }
 
         public void Handle(TaskCompleted<PhoneNumberResult> message) {
-            if(message.Id.Equals(DisplayName))
-                MessageBox.Show("The result was " + message.Result.TaskResult, DisplayName, MessageBoxButton.OK);
+            MessageBox.Show("The result was " + message.Result.TaskResult, DisplayName, MessageBoxButton.OK);
+        }
+
+        protected override void OnActivate() {
+            events.Subscribe(this);
+            base.OnActivate();
+        }
+
+        protected override void OnDeactivate(bool close) {
+            events.Unsubscribe(this);
+            base.OnDeactivate(close);
         }
     }
 }

@@ -6,11 +6,12 @@
 
     public class TaskController : IHandle<TaskExecutionRequested> {
         const string TaskTypeKey = "Caliburn.Micro.TaskType";
-        const string TaskIdKey = "Caliburn.Micro.TaskId";
+        const string TaskSateKey = "Caliburn.Micro.TaskState";
         readonly PhoneBootstrapper bootstrapper;
         readonly IEventAggregator events;
         TaskExecutionRequested request;
         bool isResurrecting;
+        object continueWithMessage;
 
         public TaskController(PhoneBootstrapper bootstrapper, IEventAggregator events) {
             this.bootstrapper = bootstrapper;
@@ -18,14 +19,16 @@
         }
 
         public void Start() {
-            bootstrapper.Tombstoning += OnTombstone;
-            bootstrapper.Resurrecting += OnResurrect;
+            bootstrapper.Deactivating += OnTombstone;
+            bootstrapper.Resurrected += OnResurrected;
+            bootstrapper.Continued += OnContinued;
             events.Subscribe(this);
         }
 
         public void Stop() {
-            bootstrapper.Tombstoning -= OnTombstone;
-            bootstrapper.Resurrecting -= OnResurrect;
+            bootstrapper.Deactivating -= OnTombstone;
+            bootstrapper.Resurrected -= OnResurrected;
+            bootstrapper.Continued -= OnContinued;
             events.Unsubscribe(this);
         }
 
@@ -47,10 +50,19 @@
                 return;
 
             PhoneApplicationService.Current.State[TaskTypeKey] = request.Task.GetType().FullName;
-            PhoneApplicationService.Current.State[TaskIdKey] = request.Id ?? string.Empty;
+            PhoneApplicationService.Current.State[TaskSateKey] = request.State ?? string.Empty;
         }
 
-        void OnResurrect() {
+        void OnContinued() {
+            if(continueWithMessage == null) {
+                return;
+            }
+
+            events.Publish(continueWithMessage);
+            continueWithMessage = null;
+        }
+
+        void OnResurrected() {
             if(!PhoneApplicationService.Current.State.ContainsKey(TaskTypeKey))
                 return;
 
@@ -59,17 +71,17 @@
             var taskTypeName = (string)PhoneApplicationService.Current.State[TaskTypeKey];
             PhoneApplicationService.Current.State.Remove(TaskTypeKey);
 
-            object sourceId;
-            if(!PhoneApplicationService.Current.State.TryGetValue(TaskIdKey, out sourceId))
-                sourceId = string.Empty;
-            else PhoneApplicationService.Current.State.Remove(TaskIdKey);
+            object taskState;
+            if(!PhoneApplicationService.Current.State.TryGetValue(TaskSateKey, out taskState))
+                taskState = null;
+            else PhoneApplicationService.Current.State.Remove(TaskSateKey);
 
             var taskType = typeof(TaskEventArgs).Assembly.GetType(taskTypeName);
             var taskInstance = Activator.CreateInstance(taskType);
 
             request = new TaskExecutionRequested
             {
-                Id = (string)sourceId,
+                State = taskState,
                 Task = taskInstance
             };
 
@@ -83,8 +95,8 @@
             var messageType = genericMessageType.MakeGenericType(argsType);
             var message = Activator.CreateInstance(messageType);
 
-            if(!string.IsNullOrEmpty(request.Id))
-                messageType.GetField("Id").SetValue(message, request.Id);
+            if (request.State != null)
+                messageType.GetField("State").SetValue(message, request.State);
 
             messageType.GetField("Result").SetValue(message, e);
             request = null;
@@ -98,7 +110,9 @@
                     });
                 });
             }
-            else events.Publish(message);
+            else {
+                continueWithMessage = message;
+            }
         }
     }
 }

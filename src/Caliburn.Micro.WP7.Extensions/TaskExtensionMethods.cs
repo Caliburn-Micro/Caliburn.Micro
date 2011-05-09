@@ -2,9 +2,8 @@
     using System;
 
     public static class TaskExtensionMethods {
-        public static void RequestTask<TTask>(this IEventAggregator events, Action<TTask> configure = null, string id = null) 
-            where TTask : new() 
-        {
+        public static void RequestTask<TTask>(this IEventAggregator events, Action<TTask> configure = null, object state = null)
+            where TTask : new() {
             var task = new TTask();
 
             if(configure != null)
@@ -12,7 +11,7 @@
 
             events.Publish(new TaskExecutionRequested
             {
-                Id = id,
+                State = state,
                 Task = task
             });
         }
