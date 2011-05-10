@@ -7,28 +7,28 @@
     public class TaskController : IHandle<TaskExecutionRequested> {
         const string TaskTypeKey = "Caliburn.Micro.TaskType";
         const string TaskSateKey = "Caliburn.Micro.TaskState";
-        readonly PhoneBootstrapper bootstrapper;
+        readonly IPhoneService phoneService;
         readonly IEventAggregator events;
         TaskExecutionRequested request;
         bool isResurrecting;
         object continueWithMessage;
 
-        public TaskController(PhoneBootstrapper bootstrapper, IEventAggregator events) {
-            this.bootstrapper = bootstrapper;
+        public TaskController(IPhoneService phoneService, IEventAggregator events) {
+            this.phoneService = phoneService;
             this.events = events;
         }
 
         public void Start() {
-            bootstrapper.Deactivating += OnTombstone;
-            bootstrapper.Resurrected += OnResurrected;
-            bootstrapper.Continued += OnContinued;
+            phoneService.Deactivated += OnDeactivated;
+            phoneService.Resurrected += OnResurrected;
+            phoneService.Continued += OnContinued;
             events.Subscribe(this);
         }
 
         public void Stop() {
-            bootstrapper.Deactivating -= OnTombstone;
-            bootstrapper.Resurrected -= OnResurrected;
-            bootstrapper.Continued -= OnContinued;
+            phoneService.Deactivated -= OnDeactivated;
+            phoneService.Resurrected -= OnResurrected;
+            phoneService.Continued -= OnContinued;
             events.Unsubscribe(this);
         }
 
@@ -45,7 +45,7 @@
             showMethod.Invoke(message.Task, null);
         }
 
-        void OnTombstone() {
+        void OnDeactivated(object sender, DeactivatedEventArgs e) {
             if(request == null)
                 return;
 
@@ -95,7 +95,7 @@
             var messageType = genericMessageType.MakeGenericType(argsType);
             var message = Activator.CreateInstance(messageType);
 
-            if (request.State != null)
+            if(request.State != null)
                 messageType.GetField("State").SetValue(message, request.State);
 
             messageType.GetField("Result").SetValue(message, e);

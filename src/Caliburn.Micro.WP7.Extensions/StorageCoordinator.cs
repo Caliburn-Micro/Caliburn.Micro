@@ -12,15 +12,15 @@
         readonly List<WeakReference> tracked = new List<WeakReference>();
         StorageMode currentRestoreMode = StorageMode.Permanent;
 
-        public StorageCoordinator(PhoneBootstrapper bootstrapper, IPhoneContainer container, IPhoneService phoneService, IEnumerable<IStorageMechanism> storageMechanisms, IEnumerable<IStorageHandler> handlers) {
+        public StorageCoordinator(IPhoneContainer container, IPhoneService phoneService, IEnumerable<IStorageMechanism> storageMechanisms, IEnumerable<IStorageHandler> handlers) {
             this.container = container;
             this.phoneService = phoneService;
             this.storageMechanisms = storageMechanisms;
 
             handlers.Apply(x => AddStorageHandler(x));
 
-            bootstrapper.Resurrecting += delegate { currentRestoreMode = StorageMode.Temporary; };
-            bootstrapper.Resurrected += delegate { currentRestoreMode = StorageMode.Permanent; };
+            phoneService.Resurrecting += delegate { currentRestoreMode = StorageMode.Temporary; };
+            phoneService.Resurrected += delegate { currentRestoreMode = StorageMode.Permanent; };
         }
 
         public void Start() {

@@ -8,14 +8,9 @@
         PhoneContainer container;
 
         protected override void Configure() {
-            container = new PhoneContainer(this);
-
-            //if using tombstoning, you must register storage mechanisms and storage handlers *before* calling RegisterPhoneServices.
-            container.AllTypesOf<IStorageMechanism>(typeof(IStorageMechanism).Assembly);
-            container.AllTypesOf<IStorageHandler>(typeof(TabViewModel).Assembly);
+            container = new PhoneContainer(RootFrame);
 
             container.RegisterPhoneServices();
-
             container.RegisterAllViewModelsForPages();
             container.PerRequest<TabViewModel, TabViewModel>();
 

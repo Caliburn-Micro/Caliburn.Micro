@@ -1,6 +1,5 @@
 ﻿namespace Caliburn.Micro
 {
-    using System.Windows;
     using System.Windows.Navigation;
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
@@ -10,16 +9,8 @@
     /// </summary>
     public class PhoneBootstrapper : Bootstrapper
     {
-        /// <summary>
-        /// Indicates whether or not the phone application has initialized.
-        /// </summary>
-        protected bool PhoneApplicationInitialized;
-        bool isResurrecting = true;
-
-        /// <summary>
-        /// The phone application services.
-        /// </summary>
-        public PhoneApplicationService PhoneService { get; private set; }
+        bool phoneApplicationInitialized;
+        PhoneApplicationService phoneService;
 
         /// <summary>
         /// The root frame used for navigation.
@@ -32,21 +23,21 @@
         protected override void PrepareApplication() {
             base.PrepareApplication();
 
-            PhoneService = new PhoneApplicationService();
-            PhoneService.Activated += OnActivate;
-            PhoneService.Deactivated += OnDeactivate;
-            PhoneService.Launching += OnLaunch;
-            PhoneService.Closing += OnClose;
+            phoneService = new PhoneApplicationService();
+            phoneService.Activated += OnActivate;
+            phoneService.Deactivated += OnDeactivate;
+            phoneService.Launching += OnLaunch;
+            phoneService.Closing += OnClose;
 
-            Application.ApplicationLifetimeObjects.Add(PhoneService);
+            Application.ApplicationLifetimeObjects.Add(phoneService);
 
-            if (PhoneApplicationInitialized)
+            if (phoneApplicationInitialized)
                 return;
 
             RootFrame = CreatePhoneApplicationFrame();
             RootFrame.Navigated += OnNavigated;
 
-            PhoneApplicationInitialized = true;
+            phoneApplicationInitialized = true;
         }
 
         void OnNavigated(object sender, NavigationEventArgs e) {
@@ -65,71 +56,21 @@
         /// <summary>
         /// Occurs when a fresh instance of the application is launching.
         /// </summary>
-        protected virtual void OnLaunch(object sender, LaunchingEventArgs e) {
-            isResurrecting = false;
-        }
+        protected virtual void OnLaunch(object sender, LaunchingEventArgs e) { }
+
+        /// <summary>
+        /// Occurs when a previously tombstoned or paused application is resurrected/resumed.
+        /// </summary>
+        protected virtual void OnActivate(object sender, ActivatedEventArgs e) { }
+
+        /// <summary>
+        /// Occurs when the application is being tombstoned or paused.
+        /// </summary>
+        protected virtual void OnDeactivate(object sender, DeactivatedEventArgs e) { }
 
         /// <summary>
         /// Occurs when the application is closing.
         /// </summary>
         protected virtual void OnClose(object sender, ClosingEventArgs e) { }
-
-        /// <summary>
-        /// Occurs when the application is being tombstoned.
-        /// </summary>
-        protected virtual void OnDeactivate(object sender, DeactivatedEventArgs e) {
-            Deactivating();
-        }
-
-        /// <summary>
-        /// Occurs when a previously tombstoned application instance is resurrected.
-        /// </summary>
-        protected virtual void OnActivate(object sender, ActivatedEventArgs e)
-        {
-            if (isResurrecting) {
-                Resurrecting();
-                NavigatedEventHandler onNavigated = null;
-                onNavigated = (s2, e2) => {
-                    Resurrected();
-                    RootFrame.Navigated -= onNavigated;
-                };
-                RootFrame.Navigated += onNavigated;
-                isResurrecting = false;
-            }
-            else {
-                Continuing();
-                NavigatedEventHandler onNavigated = null;
-                onNavigated = (s2, e2) => {
-                    Continued();
-                    RootFrame.Navigated -= onNavigated;
-                };
-                RootFrame.Navigated += onNavigated;
-            }
-        }
-
-        /// <summary>
-        /// Occurs when the app has been temporarily paused or tombstoned.
-        /// </summary>
-        public event System.Action Deactivating = delegate { };
-
-        /// <summary>
-        /// Occurs when the app has continuing from a temporarily paused state.
-        /// </summary>
-        public event System.Action Continuing = delegate { };
-
-        /// <summary>
-        /// Occurs after the app has continued from a temporarily paused state.
-        /// </summary>
-        public event System.Action Continued = delegate { };
-
-        /// <summary>
-        /// Occurs when the app is "resurrecting" from a tombstoned state.
-        /// </summary>
-        public event System.Action Resurrecting = delegate { };
-
-        /// <summary>
-        /// Occurs after the app has "resurrected" from a tombstoned state.
-        /// </summary>
-        public event System.Action Resurrected = delegate { };
     }
 }

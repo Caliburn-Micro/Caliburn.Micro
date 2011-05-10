@@ -1,137 +1,192 @@
-namespace Caliburn.Micro
-{
+namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
+    using System.Windows.Controls;
+    using System.Windows.Navigation;
+    using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
 
     /// <summary>
-    /// Implemented by services that provide access to the basic phone capabilities.
+    ///   Implemented by services that provide access to the basic phone capabilities.
     /// </summary>
-    public interface IPhoneService
-    {
+    public interface IPhoneService {
         /// <summary>
-        /// The state that is persisted during the tombstoning process.
+        ///   The state that is persisted during the tombstoning process.
         /// </summary>
         IDictionary<string, object> State { get; }
 
         /// <summary>
-        /// Gets the mode in which the application was started.
+        ///   Gets the mode in which the application was started.
         /// </summary>
         StartupMode StartupMode { get; }
 
         /// <summary>
-        /// Occurs when a fresh instance of the application is launching.
+        ///   Occurs when a fresh instance of the application is launching.
         /// </summary>
         event EventHandler<LaunchingEventArgs> Launching;
 
         /// <summary>
-        /// Occurs when a previously tombstoned instance is resurrected.
+        ///   Occurs when a previously paused/tombstoned app is resumed/resurrected.
         /// </summary>
         event EventHandler<ActivatedEventArgs> Activated;
 
         /// <summary>
-        /// Occurs when the application is being tombstoned.
+        ///   Occurs when the application is being paused or tombstoned.
         /// </summary>
         event EventHandler<DeactivatedEventArgs> Deactivated;
 
         /// <summary>
-        /// Occurs when the application is closing.
+        ///   Occurs when the application is closing.
         /// </summary>
         event EventHandler<ClosingEventArgs> Closing;
 
         /// <summary>
-        /// Gets or sets whether user idle detection is enabled.
+        ///   Occurs when the app is continuing from a temporarily paused state.
+        /// </summary>
+        event System.Action Continuing;
+
+        /// <summary>
+        ///   Occurs after the app has continued from a temporarily paused state.
+        /// </summary>
+        event System.Action Continued;
+
+        /// <summary>
+        ///   Occurs when the app is "resurrecting" from a tombstoned state.
+        /// </summary>
+        event System.Action Resurrecting;
+
+        /// <summary>
+        ///   Occurs after the app has "resurrected" from a tombstoned state.
+        /// </summary>
+        event System.Action Resurrected;
+
+        /// <summary>
+        ///   Gets or sets whether user idle detection is enabled.
         /// </summary>
         IdleDetectionMode UserIdleDetectionMode { get; set; }
 
         /// <summary>
-        /// Gets or sets whether application idle detection is enabled.
+        ///   Gets or sets whether application idle detection is enabled.
         /// </summary>
         IdleDetectionMode ApplicationIdleDetectionMode { get; set; }
     }
 
     /// <summary>
-    /// An implementation of <see cref="IPhoneService"/> that adapts <see cref="PhoneApplicationService"/>.
+    ///   An implementation of <see cref = "IPhoneService" /> that adapts <see cref = "PhoneApplicationService" />.
     /// </summary>
-    public class PhoneApplicationServiceAdapter : IPhoneService
-    {
-        readonly PhoneApplicationService phoneService;
+    public class PhoneApplicationServiceAdapter : IPhoneService {
+        readonly PhoneApplicationService service;
+        bool isResurrecting = true;
 
         /// <summary>
-        /// Creates an instance of <see cref="PhoneApplicationServiceAdapter"/>.
+        ///   Creates an instance of <see cref = "PhoneApplicationServiceAdapter" />.
         /// </summary>
-        /// <param name="phoneService">The <see cref="PhoneApplicationService"/> to adapt.</param>
-        public PhoneApplicationServiceAdapter(PhoneApplicationService phoneService)
-        {
-            this.phoneService = phoneService;
+        public PhoneApplicationServiceAdapter(Frame rootFrame) {
+            service = PhoneApplicationService.Current;
+            service.Launching += delegate { isResurrecting = false; };
+            service.Activated += delegate {
+                if(isResurrecting) {
+                    Resurrecting();
+                    NavigatedEventHandler onNavigated = null;
+                    onNavigated = (s2, e2) => {
+                        Resurrected();
+                        rootFrame.Navigated -= onNavigated;
+                    };
+                    rootFrame.Navigated += onNavigated;
+                    isResurrecting = false;
+                }
+                else {
+                    Continuing();
+                    NavigatedEventHandler onNavigated = null;
+                    onNavigated = (s2, e2) => {
+                        Continued();
+                        rootFrame.Navigated -= onNavigated;
+                    };
+                    rootFrame.Navigated += onNavigated;
+                }
+            };
         }
 
         /// <summary>
-        /// The state that is persisted during the tombstoning process.
+        ///   The state that is persisted during the tombstoning process.
         /// </summary>
-        public IDictionary<string, object> State
-        {
-            get { return phoneService.State; }
+        public IDictionary<string, object> State {
+            get { return service.State; }
         }
 
         /// <summary>
-        /// Gets the mode in which the application was started.
+        ///   Gets the mode in which the application was started.
         /// </summary>
-        public StartupMode StartupMode
-        {
-            get { return phoneService.StartupMode; }
+        public StartupMode StartupMode {
+            get { return service.StartupMode; }
         }
 
         /// <summary>
-        /// Occurs when a fresh instance of the application is launching.
+        ///   Occurs when a fresh instance of the application is launching.
         /// </summary>
-        public event EventHandler<LaunchingEventArgs> Launching
-        {
-            add { phoneService.Launching += value; }
-            remove { phoneService.Launching -= value; }
+        public event EventHandler<LaunchingEventArgs> Launching {
+            add { service.Launching += value; }
+            remove { service.Launching -= value; }
         }
 
         /// <summary>
-        /// Occurs when a previously tombstoned application instance is resurrected.
+        ///   Occurs when a previously paused/tombstoned application instance is resumed/resurrected.
         /// </summary>
-        public event EventHandler<ActivatedEventArgs> Activated
-        {
-            add { phoneService.Activated += value; }
-            remove { phoneService.Activated -= value; }
+        public event EventHandler<ActivatedEventArgs> Activated {
+            add { service.Activated += value; }
+            remove { service.Activated -= value; }
         }
 
         /// <summary>
-        /// Occurs when the application is being tombstoned.
+        ///   Occurs when the application is being paused or tombstoned.
         /// </summary>
-        public event EventHandler<DeactivatedEventArgs> Deactivated
-        {
-            add { phoneService.Deactivated += value; }
-            remove { phoneService.Deactivated -= value; }
+        public event EventHandler<DeactivatedEventArgs> Deactivated {
+            add { service.Deactivated += value; }
+            remove { service.Deactivated -= value; }
         }
 
         /// <summary>
-        /// Occurs when the application is closing.
+        ///   Occurs when the application is closing.
         /// </summary>
-        public event EventHandler<ClosingEventArgs> Closing
-        {
-            add { phoneService.Closing += value; }
-            remove { phoneService.Closing -= value; }
+        public event EventHandler<ClosingEventArgs> Closing {
+            add { service.Closing += value; }
+            remove { service.Closing -= value; }
         }
 
         /// <summary>
-        /// Gets or sets whether user idle detection is enabled.
+        ///   Occurs when the app is continuing from a temporarily paused state.
+        /// </summary>
+        public event System.Action Continuing = delegate { };
+
+        /// <summary>
+        ///   Occurs after the app has continued from a temporarily paused state.
+        /// </summary>
+        public event System.Action Continued = delegate { };
+
+        /// <summary>
+        ///   Occurs when the app is "resurrecting" from a tombstoned state.
+        /// </summary>
+        public event System.Action Resurrecting = delegate { };
+
+        /// <summary>
+        ///   Occurs after the app has "resurrected" from a tombstoned state.
+        /// </summary>
+        public event System.Action Resurrected = delegate { };
+
+        /// <summary>
+        ///   Gets or sets whether user idle detection is enabled.
         /// </summary>
         public IdleDetectionMode UserIdleDetectionMode {
-            get { return phoneService.UserIdleDetectionMode; }
-            set { phoneService.UserIdleDetectionMode = value; }
+            get { return service.UserIdleDetectionMode; }
+            set { service.UserIdleDetectionMode = value; }
         }
 
         /// <summary>
-        /// Gets or sets whether application idle detection is enabled.
+        ///   Gets or sets whether application idle detection is enabled.
         /// </summary>
         public IdleDetectionMode ApplicationIdleDetectionMode {
-            get { return phoneService.ApplicationIdleDetectionMode; }
-            set { phoneService.ApplicationIdleDetectionMode = value; }
+            get { return service.ApplicationIdleDetectionMode; }
+            set { service.ApplicationIdleDetectionMode = value; }
         }
     }
 }
