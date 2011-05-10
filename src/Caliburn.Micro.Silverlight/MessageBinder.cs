@@ -92,6 +92,13 @@
 
                 if(converter.CanConvertTo(destinationType))
                     return converter.ConvertTo(providedValue, destinationType);
+
+                if (destinationType.IsEnum) {
+                    var stringValue = providedValue as string;
+                    if(stringValue != null)
+                        return Enum.Parse(destinationType, stringValue, true);
+                    return Enum.ToObject(destinationType, providedValue);
+                }
             }
             catch {
                 return GetDefaultValue(destinationType);
