@@ -8,7 +8,8 @@
         PhoneContainer container;
 
         protected override void Configure() {
-            container = new PhoneContainer(this);
+            container = new PhoneContainer(RootFrame);
+
             container.RegisterPhoneServices();
             container.RegisterAllViewModelsForPages();
 
