@@ -28,6 +28,7 @@
             var phoneService = new PhoneApplicationServiceAdapter(bootstrapper.PhoneService);
             var navigationService = new FrameAdapter(bootstrapper.RootFrame, treatViewAsLoaded);
 
+            RegisterInstance(typeof(PhoneBootstrapper), null, bootstrapper);
             RegisterInstance(typeof(SimpleContainer), null, this);
             RegisterInstance(typeof(PhoneContainer), null, this);
             RegisterInstance(typeof(IPhoneContainer), null, this);

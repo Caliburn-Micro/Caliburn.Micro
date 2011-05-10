@@ -10,25 +10,29 @@
         readonly IPhoneService phoneService;
         readonly IEnumerable<IStorageMechanism> storageMechanisms;
         readonly List<WeakReference> tracked = new List<WeakReference>();
+        StorageMode currentRestoreMode = StorageMode.Permanent;
 
-        public StorageCoordinator(IPhoneContainer container, IPhoneService phoneService, IEnumerable<IStorageMechanism> storageMechanisms, IEnumerable<IStorageHandler> handlers) {
+        public StorageCoordinator(PhoneBootstrapper bootstrapper, IPhoneContainer container, IPhoneService phoneService, IEnumerable<IStorageMechanism> storageMechanisms, IEnumerable<IStorageHandler> handlers) {
             this.container = container;
             this.phoneService = phoneService;
             this.storageMechanisms = storageMechanisms;
 
             handlers.Apply(x => AddStorageHandler(x));
+
+            bootstrapper.Resurrecting += delegate { currentRestoreMode = StorageMode.Temporary; };
+            bootstrapper.Resurrected += delegate { currentRestoreMode = StorageMode.Permanent; };
         }
 
         public void Start() {
             phoneService.Closing += OnClosing;
             phoneService.Deactivated += OnDeactivated;
-            container.Activated += Restore;
+            container.Activated += OnContainerActivated;
         }
 
         public void Stop() {
             phoneService.Closing -= OnClosing;
             phoneService.Deactivated -= OnDeactivated;
-            container.Activated -= Restore;
+            container.Activated -= OnContainerActivated;
         }
 
         public T GetStorageMechanism<T>() where T : IStorageMechanism {
@@ -46,31 +50,28 @@
             return handlers.FirstOrDefault(x => x.Handles(instance));
         }
 
-        public void Save(StorageMode mode) {
+        public void Save(StorageMode saveMode) {
             var toSave = tracked.Select(x => x.Target).Where(x => x != null);
-            var mechanisms = storageMechanisms.Where(x => x.Supports(mode));
+            var mechanisms = storageMechanisms.Where(x => x.Supports(saveMode));
 
             mechanisms.Apply(x => x.BeginStoring());
 
             foreach(var item in toSave) {
                 var handler = GetStorageHandlerFor(item);
-                handler.Save(item, mode);
+                handler.Save(item, saveMode);
             }
 
             mechanisms.Apply(x => x.EndStoring());
         }
 
-        public void Restore(object instance) {
+        public void Restore(object instance, StorageMode restoreMode = StorageMode.Automatic) {
             var handler = GetStorageHandlerFor(instance);
             if(handler == null)
                 return;
 
             tracked.Add(new WeakReference(instance));
 
-            //while the resurrection is occurring, this should be marked as temporary
-            //afterwards it should be Permanent
-            //how to do that?
-            handler.Restore(instance, phoneService.StartupMode == StartupMode.Activate ? StorageMode.Temporary : StorageMode.Permanent);
+            handler.Restore(instance, restoreMode == StorageMode.Automatic ? currentRestoreMode : restoreMode);
         }
 
         void OnDeactivated(object sender, DeactivatedEventArgs e) {
@@ -79,6 +80,10 @@
 
         void OnClosing(object sender, ClosingEventArgs e) {
             Save(StorageMode.Permanent);
+        }
+
+        void OnContainerActivated(object instance) {
+            Restore(instance);
         }
     }
 }

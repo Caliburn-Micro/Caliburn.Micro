@@ -87,6 +87,7 @@
         protected virtual void OnActivate(object sender, ActivatedEventArgs e)
         {
             if (isResurrecting) {
+                Resurrecting();
                 NavigatedEventHandler onNavigated = null;
                 onNavigated = (s2, e2) => {
                     Resurrected();
@@ -96,6 +97,7 @@
                 isResurrecting = false;
             }
             else {
+                Continuing();
                 NavigatedEventHandler onNavigated = null;
                 onNavigated = (s2, e2) => {
                     Continued();
@@ -111,12 +113,22 @@
         public event System.Action Deactivating = delegate { };
 
         /// <summary>
-        /// Occurs after the app has continued execution from a temporarily paused state.
+        /// Occurs when the app has continuing from a temporarily paused state.
+        /// </summary>
+        public event System.Action Continuing = delegate { };
+
+        /// <summary>
+        /// Occurs after the app has continued from a temporarily paused state.
         /// </summary>
         public event System.Action Continued = delegate { };
 
         /// <summary>
-        /// Occurs after the app has "resurrected" from a tombsted state.
+        /// Occurs when the app is "resurrecting" from a tombstoned state.
+        /// </summary>
+        public event System.Action Resurrecting = delegate { };
+
+        /// <summary>
+        /// Occurs after the app has "resurrected" from a tombstoned state.
         /// </summary>
         public event System.Action Resurrected = delegate { };
     }
