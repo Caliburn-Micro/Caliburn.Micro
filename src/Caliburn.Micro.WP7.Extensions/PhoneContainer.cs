@@ -1,7 +1,6 @@
 ﻿namespace Caliburn.Micro {
     using System;
     using System.Linq;
-    using System.Reflection;
     using System.Windows.Controls;
 
     public class PhoneContainer : SimpleContainer, IPhoneContainer {
