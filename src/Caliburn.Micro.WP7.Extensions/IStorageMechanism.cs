@@ -10,6 +10,7 @@
 
         bool TryGet(string key, out object value);
         void Delete(string key);
+        void ClearLastSession();
 
         void RegisterSingleton(Type service, string key, Type implementation);
     }

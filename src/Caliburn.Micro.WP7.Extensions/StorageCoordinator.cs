@@ -19,8 +19,8 @@
 
             handlers.Apply(x => AddStorageHandler(x));
 
-            phoneService.Resurrecting += delegate { currentRestoreMode = StorageMode.Temporary; };
-            phoneService.Resurrected += delegate { currentRestoreMode = StorageMode.Permanent; };
+            phoneService.Resurrecting += () => currentRestoreMode = StorageMode.Any;
+            phoneService.Continuing += () => storageMechanisms.Apply(x => x.ClearLastSession());
         }
 
         public void Start() {
@@ -75,7 +75,7 @@
         }
 
         void OnDeactivated(object sender, DeactivatedEventArgs e) {
-            Save(StorageMode.Temporary);
+            Save(StorageMode.Any);
         }
 
         void OnClosing(object sender, ClosingEventArgs e) {

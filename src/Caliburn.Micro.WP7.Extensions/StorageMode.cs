@@ -1,7 +1,11 @@
 ﻿namespace Caliburn.Micro {
+    using System;
+
+    [Flags]
     public enum StorageMode {
-        Automatic,
-        Temporary,
-        Permanent
+        Automatic = 0,
+        Temporary = 2,
+        Permanent = 4,
+        Any = Temporary | Permanent
     }
 }

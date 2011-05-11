@@ -9,7 +9,7 @@
         }
 
         public bool Supports(StorageMode mode) {
-            return mode == StorageMode.Permanent;
+            return (mode & StorageMode.Permanent) == StorageMode.Permanent;
         }
 
         public void BeginStoring() { }
@@ -27,6 +27,8 @@
         public void Delete(string key) {
             throw new NotImplementedException();
         }
+
+        public void ClearLastSession() { }
 
         public void RegisterSingleton(Type service, string key, Type implementation) {
             container.RegisterWithIsolatedStorage(service, key, implementation);
