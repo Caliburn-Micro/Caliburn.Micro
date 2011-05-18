@@ -143,12 +143,7 @@
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
-        protected virtual void OnStartup(object sender, StartupEventArgs e)
-        {
-#if !WP7
-            DisplayRootView();
-#endif
-        }
+        protected virtual void OnStartup(object sender, StartupEventArgs e) {}
 
         /// <summary>
         /// Override this to add custom behavior on exit.
@@ -156,13 +151,6 @@
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event args.</param>
         protected virtual void OnExit(object sender, EventArgs e) { }
-
-#if !WP7
-        /// <summary>
-        /// Override to display your UI at startup.
-        /// </summary>
-        protected virtual void DisplayRootView() {}
-#endif
 
 #if SILVERLIGHT
         /// <summary>
@@ -179,32 +167,32 @@
         /// <param name="e">The event args.</param>
         protected virtual void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) { }
 #endif
-    }
-
-#if !WP7
-    /// <summary>
-    /// A strongly-typed version of <see cref="Bootstrapper"/> that specifies the type of root model to create for the application.
-    /// </summary>
-    /// <typeparam name="TRootModel">The type of root model for the application.</typeparam>
-    public class Bootstrapper<TRootModel> : Bootstrapper
-    {
+            
+#if SILVERLIGHT && !WP7
         /// <summary>
-        /// Override to display your UI at startup.
+        /// Locates the view model, locates the associate view, binds them and shows it as the root view.
         /// </summary>
-        protected override void DisplayRootView()
-        {
-            var viewModel = IoC.Get<TRootModel>();
-#if SILVERLIGHT
+        /// <param name="application">The application.</param>
+        /// <param name="viewModelType">The view model type.</param>
+        protected static void DisplayRootViewFor(Application application, Type viewModelType) {
+            var viewModel = IoC.GetInstance(viewModelType, null);
             var view = ViewLocator.LocateForModel(viewModel, null, null);
+
             ViewModelBinder.Bind(viewModel, view, null);
 
             var activator = viewModel as IActivate;
-            if (activator != null)
+            if(activator != null)
                 activator.Activate();
 
             Mouse.Initialize(view);
-            Application.RootVisual = view;
-#else
+            application.RootVisual = view;
+        }
+#elif NET
+        /// <summary>
+        /// Locates the view model, locates the associate view, binds them and shows it as the root view.
+        /// </summary>
+        /// <param name="viewModelType">The view model type.</param>
+        protected static void DisplayRootViewFor(Type viewModelType) {
             IWindowManager windowManager;
 
             try
@@ -216,7 +204,28 @@
                 windowManager = new WindowManager();
             }
 
-            windowManager.ShowWindow(viewModel);
+            windowManager.ShowWindow(IoC.GetInstance(viewModelType, null));
+        }
+#endif
+    }
+
+#if !WP7
+    /// <summary>
+    /// A strongly-typed version of <see cref="Bootstrapper"/> that specifies the type of root model to create for the application.
+    /// </summary>
+    /// <typeparam name="TRootModel">The type of root model for the application.</typeparam>
+    public class Bootstrapper<TRootModel> : Bootstrapper {
+        /// <summary>
+        /// Override this to add custom behavior to execute after the application starts.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The args.</param>
+        protected override void OnStartup(object sender, StartupEventArgs e)
+        {
+#if SILVERLIGHT
+            DisplayRootViewFor(Application, typeof(TRootModel));
+#else
+            DisplayRootViewFor(typeof(TRootModel));
 #endif
         }
     }

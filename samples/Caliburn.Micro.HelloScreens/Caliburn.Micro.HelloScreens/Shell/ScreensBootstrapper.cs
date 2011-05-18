@@ -55,11 +55,10 @@
             container.SatisfyImportsOnce(instance);
         }
 
-        protected override void DisplayRootView()
-        {
-            base.DisplayRootView();
+        protected override void OnStartup(object sender, StartupEventArgs e) {
+            base.OnStartup(sender, e);
 
-            if (Application.IsRunningOutOfBrowser) {
+            if(Application.IsRunningOutOfBrowser) {
                 mainWindow = Application.MainWindow;
                 mainWindow.Closing += MainWindowClosing;
             }
