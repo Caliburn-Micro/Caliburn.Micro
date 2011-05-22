@@ -23,10 +23,17 @@ namespace Caliburn.Micro.HelloWP7
 			set { someTextInput = value; NotifyOfPropertyChange(() => SomeTextInput); }
 		}
 
+        DateTime? someDateInput;
+        public DateTime? SomeDateInput
+        {
+            get { return someDateInput; }
+            set { someDateInput = value; NotifyOfPropertyChange(() => SomeDateInput); }
+        }
+
 		public string Result { get; set; }
 
 		public void Confirm() {
-			Result = someTextInput;
+			Result = SomeTextInput + "\n" + SomeDateInput.ToString();
 			TryClose();
 		}
 		public void Cancel()
