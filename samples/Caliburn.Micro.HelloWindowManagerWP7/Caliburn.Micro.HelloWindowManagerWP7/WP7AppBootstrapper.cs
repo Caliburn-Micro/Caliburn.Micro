@@ -11,8 +11,8 @@
             container = new PhoneContainer(RootFrame);
 
             container.RegisterPhoneServices();
-            container.RegisterAllViewModelsForPages();
 
+            container.PerRequest<MainPageViewModel>();
             container.PerRequest<MessageViewModel, MessageViewModel>();
             container.PerRequest<DialogViewModel, DialogViewModel>();
 
