@@ -11,7 +11,10 @@
 		{
 			this.windowManager = windowManager;
 			this.messageViewModelFactory = messageViewModelFactory;
+       
 		}
+
+         
 
 		public void ShowMessageAsPopup() {
  			var msgVM = messageViewModelFactory();
