@@ -53,7 +53,7 @@
   <ItemGroup>
     <Compile Include="ContainerExtensions.cs" />
     <Compile Include="IPhoneContainer.cs" />
-    <Compile Include="IsolatedStorageMechanism.cs" />
+    <Compile Include="AppSettingsStorageMechanism.cs" />
     <Compile Include="StorageInstruction.cs" />
     <Compile Include="StorageInstructionBuilder.cs" />
     <Compile Include="IStorageMechanism.cs" />

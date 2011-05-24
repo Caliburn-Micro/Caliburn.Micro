@@ -20,14 +20,15 @@
 
         public abstract void Configure();
 
-        public StorageInstructionBuilder<T> EntireGraph<TService>() {
+        public StorageInstructionBuilder<T> EntireGraph<TService>(string storageKey = "ObjectGraph") {
             return AddInstruction().Configure(x => {
-                x.Key = "ObjectGraph";
+                x.Key = storageKey;
                 x.Save = (instance, getKey, mode) => x.StorageMechanism.Store(getKey(), instance);
                 x.Restore = (instance, getKey, mode) => { };
                 x.PropertyChanged += (s, e) => {
-                    if(e.PropertyName == "StorageMechanism" && x.StorageMechanism != null)
+                    if(e.PropertyName == "StorageMechanism" && x.StorageMechanism != null) {
                         x.StorageMechanism.RegisterSingleton(typeof(TService), GetKey(default(T), x.Key), typeof(T));
+                    }
                 };
             });
         }

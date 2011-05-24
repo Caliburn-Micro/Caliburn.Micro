@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.Micro {
     using System;
+    using System.IO.IsolatedStorage;
     using System.Linq;
     using System.Windows.Controls;
 
@@ -14,15 +15,22 @@
             RegisterHandler(service, null, () => {
                 var phoneService = (IPhoneService)GetInstance(typeof(IPhoneService), null);
 
-                if(phoneService.State.ContainsKey(phoneStateKey ?? service.FullName))
+                if(phoneService.State.ContainsKey(phoneStateKey ?? service.FullName)) {
                     return phoneService.State[phoneStateKey ?? service.FullName];
+                }
 
                 return BuildInstance(implementation);
             });
         }
 
-        public void RegisterWithIsolatedStorage(Type service, string isoStorageKey, Type implementation) {
-            throw new NotImplementedException();
+        public void RegisterWithAppSettings(Type service, string appSettingsKey, Type implementation) {
+            RegisterHandler(service, null, () => {
+                if(IsolatedStorageSettings.ApplicationSettings.Contains(appSettingsKey ?? service.FullName)) {
+                    return IsolatedStorageSettings.ApplicationSettings[appSettingsKey ?? service.FullName];
+                }
+
+                return BuildInstance(implementation);
+            });
         }
 
         public void RegisterPhoneServices(bool treatViewAsLoaded = false) {

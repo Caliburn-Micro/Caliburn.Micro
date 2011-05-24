@@ -8,8 +8,8 @@
             return builder.Configure(x => { x.StorageMechanism = x.Owner.Coordinator.GetStorageMechanism<PhoneStateStorageMechanism>(); });
         }
 
-        public static StorageInstructionBuilder<T> InIsolatedStorage<T>(this StorageInstructionBuilder<T> builder) {
-            return builder.Configure(x => { x.StorageMechanism = x.Owner.Coordinator.GetStorageMechanism<IsolatedStorageMechanism>(); });
+        public static StorageInstructionBuilder<T> InAppSettings<T>(this StorageInstructionBuilder<T> builder) {
+            return builder.Configure(x => { x.StorageMechanism = x.Owner.Coordinator.GetStorageMechanism<AppSettingsStorageMechanism>(); });
         }
 
         public static StorageInstructionBuilder<T> RestoreAfterActivation<T>(this StorageInstructionBuilder<T> builder)
