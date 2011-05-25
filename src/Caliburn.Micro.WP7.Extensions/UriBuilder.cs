@@ -8,12 +8,11 @@
 
     public class UriBuilder<TViewModel> {
         readonly Dictionary<string, string> queryString = new Dictionary<string, string>();
-        readonly INavigationService navigationService;
         readonly string entryAssemblyName;
+        INavigationService navigationService;
 
-        public UriBuilder(INavigationService navigationService) {
+        public UriBuilder() {
             entryAssemblyName = GetAssemblyName(Application.Current.GetType().Assembly);
-            this.navigationService = navigationService;
         }
 
         public UriBuilder<TViewModel> WithParam<TValue>(Expression<Func<TViewModel, TValue>> property, TValue value) {
@@ -21,10 +20,19 @@
             return this;
         }
 
+        public UriBuilder<TViewModel> AttachTo(INavigationService navigationService) {
+            this.navigationService = navigationService;
+            return this;
+        }
+
         public void Navigate() {
             var pageName = DeterminePageName();
             var qs = BuildQueryString();
             var uri = new Uri(pageName + qs, UriKind.Relative);
+
+            if(navigationService == null) {
+                throw new Exception("Cannot navigate without attaching an INavigationService. Call AttachTo first.");
+            }
 
             navigationService.Navigate(uri);
         }
