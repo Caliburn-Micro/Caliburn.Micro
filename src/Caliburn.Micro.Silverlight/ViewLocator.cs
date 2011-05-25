@@ -48,6 +48,10 @@
                 : modelType.FullName.IndexOf("`")
                 ).Replace("Model", string.Empty);
 
+            if(viewTypeName.Contains("Page") && viewTypeName.EndsWith("View")) {
+                viewTypeName = viewTypeName.Remove(viewTypeName.Length - 4);
+            }
+
             if (context != null)
             {
                 viewTypeName = viewTypeName.Remove(viewTypeName.Length - 4, 4);
