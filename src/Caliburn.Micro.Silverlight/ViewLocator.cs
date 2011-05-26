@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Collections.Generic;
 
 #if !SILVERLIGHT
     using System.Windows.Interop;
@@ -15,6 +16,30 @@
     public static class ViewLocator
     {
         static readonly ILog Log = LogManager.GetLog(typeof(ViewLocator));
+
+        //Use KeyValuePair<string, string> to avoid defining a special class for pattern string / replace string pair
+        private static List<KeyValuePair<string, string>> _TransformPairList = new List<KeyValuePair<string, string>>();
+
+        static ViewLocator()
+        {
+            //Add pattern string / replace string pairs. Pattern string = Key, Replace string = Value.
+            //Add to list by increasing order of specificity (i.e. less specific pattern to more specific pattern)
+        
+            AddTransformPair("ViewModel$", "View");         //less specific pattern
+            AddTransformPair("PageViewModel$", "Page");     //more specific pattern
+            //Add more default transforms here. Can also be called from the bootstrapper for project-specific transforms.
+            //AddTransformPair("FormViewModel$", "Form");
+        }
+
+        /// <summary>
+        /// Add more pattern string / replace string pairs
+        /// </summary>
+        /// <param name="patternStr">The regular expression pattern to match in the ViewModel name.</param>
+        /// <param name="replaceStr">The string that replaces the matched string.</param>
+        public static void AddTransformPair(string patternStr, string replaceStr)
+        {
+            _TransformPairList.Add(new KeyValuePair<string, string>(patternStr, replaceStr));
+        }
 
         /// <summary>
         /// Retrieves the view from the IoC container or tries to create it if not found.
@@ -46,20 +71,33 @@
             var viewTypeName = modelType.FullName.Substring(0, modelType.FullName.IndexOf("`") < 0
                 ? modelType.FullName.Length
                 : modelType.FullName.IndexOf("`")
-                ).Replace("Model", string.Empty);
+                );
 
-            if(viewTypeName.Contains("Page") && viewTypeName.EndsWith("View")) {
-                viewTypeName = viewTypeName.Remove(viewTypeName.Length - 4);
-            }
-
-            if (context != null)
+            Func<KeyValuePair<string,string>,string> funcGetReplaceStr;
+            if (context == null)
             {
-                viewTypeName = viewTypeName.Remove(viewTypeName.Length - 4, 4);
-                viewTypeName = viewTypeName + "." + context;
+                funcGetReplaceStr = (k) => { return k.Value; };
+            }
+            else
+            {
+                funcGetReplaceStr = (k) => { return "." + context; };
             }
 
-            var viewType = (from assmebly in AssemblySource.Instance
-                            from type in assmebly.GetExportedTypes()
+            //Get a reversed copy of the list so that the least specific transform is done last, if it ever falls through to it
+            var reversedList = _TransformPairList.Reverse<KeyValuePair<string, string>>();
+
+            foreach (var kvp in reversedList)
+            {
+                var replaceStr = funcGetReplaceStr(kvp);
+                if (System.Text.RegularExpressions.Regex.IsMatch(viewTypeName, kvp.Key))
+                {
+                    viewTypeName = System.Text.RegularExpressions.Regex.Replace(viewTypeName, kvp.Key, replaceStr);
+                    break;
+                }
+            }
+
+            var viewType = (from assembly in AssemblySource.Instance
+                            from type in assembly.GetExportedTypes()
                             where type.FullName == viewTypeName
                             select type).FirstOrDefault();
 
