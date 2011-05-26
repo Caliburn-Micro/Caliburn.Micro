@@ -4,22 +4,41 @@
     using System.Linq.Expressions;
     using System.Reflection;
 
+    /// <summary>
+    /// Handles the storage of a pariticular class.
+    /// </summary>
+    /// <typeparam name="T">The type that this class handles.</typeparam>
     public abstract class StorageHandler<T> : IStorageHandler {
         readonly List<StorageInstruction<T>> instructions = new List<StorageInstruction<T>>();
         Func<T, object> getId = instance => null;
 
+        /// <summary>
+        /// Provides a mechanism for obtaining an instance's unique id.
+        /// </summary>
+        /// <param name="getter">The getter.</param>
         public void Id(Func<T, object> getter) {
             getId = getter;
         }
 
+        /// <summary>
+        /// Gets or sets the coordinator.
+        /// </summary>
+        /// <value>
+        /// The coordinator.
+        /// </value>
         public StorageCoordinator Coordinator { get; set; }
 
-        public StorageInstructionBuilder<T> EntireGraph() {
-            return EntireGraph<T>();
-        }
-
+        /// <summary>
+        /// Overrided by inheritors to configure the handler for use.
+        /// </summary>
         public abstract void Configure();
 
+        /// <summary>
+        /// Instructs the handler to store the entire object graph, rather than individual properties.
+        /// </summary>
+        /// <typeparam name="TService">The type of the service.</typeparam>
+        /// <param name="storageKey">The optional storage key.</param>
+        /// <returns>The builder.</returns>
         public StorageInstructionBuilder<T> EntireGraph<TService>(string storageKey = "ObjectGraph") {
             return AddInstruction().Configure(x => {
                 x.Key = storageKey;
@@ -33,6 +52,11 @@
             });
         }
 
+        /// <summary>
+        /// Instructs the handler to store a property.
+        /// </summary>
+        /// <param name="property">The property.</param>
+        /// <returns>The builder.</returns>
         public StorageInstructionBuilder<T> Property(Expression<Func<T, object>> property) {
             var info = (PropertyInfo)property.GetMemberInfo();
 
@@ -50,6 +74,12 @@
             });
         }
 
+        /// <summary>
+        /// Instructs the handler to store a child object's properties.
+        /// </summary>
+        /// <param name="property">The property.</param>
+        /// <returns>The builder.</returns>
+        /// <remarks>This assumes that the parent instance provides the child instance, but that the child instance's properties are handled by a unique handler.</remarks>
         public StorageInstructionBuilder<T> Child(Expression<Func<T, object>> property) {
             var info = (PropertyInfo)property.GetMemberInfo();
 
@@ -68,31 +98,47 @@
                     if(child == null)
                         return;
 
-                    var handler = Coordinator.GetStorageHandlerFor(instance);
+                    var handler = Coordinator.GetStorageHandlerFor(child);
                     handler.Restore(child, mode);
                 };
             });
         }
 
+        /// <summary>
+        /// Adds a new storage instruction.
+        /// </summary>
+        /// <returns>The builder.</returns>
         public StorageInstructionBuilder<T> AddInstruction() {
             var instruction = new StorageInstruction<T> { Owner = this };
             instructions.Add(instruction);
             return new StorageInstructionBuilder<T>(instruction);
         }
 
+        /// <summary>
+        /// Uses this handler to save a particular instance using instructions that support the provided mode.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <param name="mode">The storage mode.</param>
         public virtual void Save(T instance, StorageMode mode) {
             foreach(var instruction in instructions) {
                 var key = instruction.Key;
-                if(instruction.StorageMechanism.Supports(mode))
+                if (instruction.StorageMechanism.Supports(mode)) {
                     instruction.Save(instance, () => GetKey(instance, key), mode);
+                }
             }
         }
 
+        /// <summary>
+        /// Uses this handler to restore a particular instance using instructions that support the provided mode.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <param name="mode">The mode.</param>
         public virtual void Restore(T instance, StorageMode mode) {
             foreach(var instruction in instructions) {
                 var key = instruction.Key;
-                if(instruction.StorageMechanism.Supports(mode))
+                if (instruction.StorageMechanism.Supports(mode)) {
                     instruction.Restore(instance, () => GetKey(instance, key), mode);
+                }
             }
         }
 

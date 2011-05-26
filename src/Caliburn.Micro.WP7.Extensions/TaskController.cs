@@ -4,6 +4,9 @@
     using Microsoft.Phone.Shell;
     using Microsoft.Phone.Tasks;
 
+    /// <summary>
+    /// Handles <see cref="TaskExecutionRequested"/> messages and ensures that the property handler receives the completion message.
+    /// </summary>
     public class TaskController : IHandle<TaskExecutionRequested> {
         const string TaskTypeKey = "Caliburn.Micro.TaskType";
         const string TaskSateKey = "Caliburn.Micro.TaskState";
@@ -13,11 +16,19 @@
         bool isResurrecting;
         object continueWithMessage;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TaskController"/> class.
+        /// </summary>
+        /// <param name="phoneService">The phone service.</param>
+        /// <param name="events">The event aggregator.</param>
         public TaskController(IPhoneService phoneService, IEventAggregator events) {
             this.phoneService = phoneService;
             this.events = events;
         }
 
+        /// <summary>
+        /// Starts monitoring for task requests and controlling completion messages.
+        /// </summary>
         public void Start() {
             phoneService.Deactivated += OnDeactivated;
             phoneService.Resurrected += OnResurrected;
@@ -25,6 +36,9 @@
             events.Subscribe(this);
         }
 
+        /// <summary>
+        /// Stops monitoring for task requests and controlling completion messages.
+        /// </summary>
         public void Stop() {
             phoneService.Deactivated -= OnDeactivated;
             phoneService.Resurrected -= OnResurrected;
@@ -32,7 +46,7 @@
             events.Unsubscribe(this);
         }
 
-        public void Handle(TaskExecutionRequested message) {
+        void IHandle<TaskExecutionRequested>.Handle(TaskExecutionRequested message) {
             var taskType = message.Task.GetType();
             var @event = taskType.GetEvent("Completed");
 
@@ -63,8 +77,9 @@
         }
 
         void OnResurrected() {
-            if(!PhoneApplicationService.Current.State.ContainsKey(TaskTypeKey))
+            if (!PhoneApplicationService.Current.State.ContainsKey(TaskTypeKey)) {
                 return;
+            }
 
             isResurrecting = true;
 
@@ -79,8 +94,7 @@
             var taskType = typeof(TaskEventArgs).Assembly.GetType(taskTypeName);
             var taskInstance = Activator.CreateInstance(taskType);
 
-            request = new TaskExecutionRequested
-            {
+            request = new TaskExecutionRequested {
                 State = taskState,
                 Task = taskInstance
             };
@@ -95,8 +109,9 @@
             var messageType = genericMessageType.MakeGenericType(argsType);
             var message = Activator.CreateInstance(messageType);
 
-            if(request.State != null)
+            if (request.State != null) {
                 messageType.GetField("State").SetValue(message, request.State);
+            }
 
             messageType.GetField("Result").SetValue(message, e);
             request = null;

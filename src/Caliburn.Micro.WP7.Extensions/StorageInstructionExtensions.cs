@@ -3,15 +3,36 @@
     using System.Linq;
     using System.Windows;
 
+    /// <summary>
+    /// Extension methods for configuring storage instructions.
+    /// </summary>
     public static class StorageInstructionExtensions {
+        /// <summary>
+        /// Stores the data in the transient phone State.
+        /// </summary>
+        /// <typeparam name="T">The model type.</typeparam>
+        /// <param name="builder">The builder.</param>
+        /// <returns>The builder.</returns>
         public static StorageInstructionBuilder<T> InPhoneState<T>(this StorageInstructionBuilder<T> builder) {
             return builder.Configure(x => { x.StorageMechanism = x.Owner.Coordinator.GetStorageMechanism<PhoneStateStorageMechanism>(); });
         }
 
+        /// <summary>
+        /// Stores the data in the permanent ApplicationSettings.
+        /// </summary>
+        /// <typeparam name="T">The model type.</typeparam>
+        /// <param name="builder">The builder.</param>
+        /// <returns>The builder.</returns>
         public static StorageInstructionBuilder<T> InAppSettings<T>(this StorageInstructionBuilder<T> builder) {
             return builder.Configure(x => { x.StorageMechanism = x.Owner.Coordinator.GetStorageMechanism<AppSettingsStorageMechanism>(); });
         }
 
+        /// <summary>
+        /// Restores the data when IActivate.Activated is raised.
+        /// </summary>
+        /// <typeparam name="T">The model type.</typeparam>
+        /// <param name="builder">The builder.</param>
+        /// <returns>The builder.</returns>
         public static StorageInstructionBuilder<T> RestoreAfterActivation<T>(this StorageInstructionBuilder<T> builder)
             where T : IActivate {
             return builder.Configure(x => {
@@ -32,6 +53,12 @@
             });
         }
 
+        /// <summary>
+        /// Restores the data after view's Loaded event is raised.
+        /// </summary>
+        /// <typeparam name="T">The model type.</typeparam>
+        /// <param name="builder">The builder.</param>
+        /// <returns>The builder.</returns>
         public static StorageInstructionBuilder<T> RestoreAfterViewLoad<T>(this StorageInstructionBuilder<T> builder)
             where T : IViewAware {
             return builder.Configure(x => {
@@ -49,7 +76,13 @@
             });
         }
 
-        public static StorageInstructionBuilder<T> ActiveItem<T>(this StorageHandler<T> handler)
+        /// <summary>
+        /// Stores the index of the Conductor's ActiveItem.
+        /// </summary>
+        /// <typeparam name="T">The model type.</typeparam>
+        /// <param name="handler">The handler.</param>
+        /// <returns>The builder.</returns>
+        public static StorageInstructionBuilder<T> ActiveItemIndex<T>(this StorageHandler<T> handler)
             where T : IParent, IHaveActiveItem, IActivate {
             return handler.AddInstruction().Configure(x => {
                 x.Key = "ActiveItemIndex";
