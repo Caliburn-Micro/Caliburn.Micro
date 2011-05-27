@@ -149,6 +149,12 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\MessageBinder.cs">
       <Link>MessageBinder.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\NameResolutionManager.cs">
+      <Link>NameResolutionManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\NameTransformConvention.cs">
+      <Link>NameTransformConvention.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\Parameter.cs">
       <Link>Parameter.cs</Link>
     </Compile>

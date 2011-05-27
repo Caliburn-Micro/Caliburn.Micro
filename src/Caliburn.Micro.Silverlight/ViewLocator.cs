@@ -17,28 +17,28 @@
     {
         static readonly ILog Log = LogManager.GetLog(typeof(ViewLocator));
 
-        //Use KeyValuePair<string, string> to avoid defining a special class for pattern string / replace string pair
-        private static List<KeyValuePair<string, string>> _TransformPairList = new List<KeyValuePair<string, string>>();
+        private static NameResolutionManager _NameResolutionManager = new NameResolutionManager();
 
         static ViewLocator()
         {
-            //Add pattern string / replace string pairs. Pattern string = Key, Replace string = Value.
             //Add to list by increasing order of specificity (i.e. less specific pattern to more specific pattern)
-        
-            AddTransformPair("ViewModel$", "View");         //less specific pattern
-            AddTransformPair("PageViewModel$", "Page");     //more specific pattern
+
+            //_NameResolutionManager.AddTransformConvention("ViewModel$", "View");         //less specific pattern
+            //_NameResolutionManager.AddTransformConvention("PageViewModel$", "Page");     //more specific pattern
             //Add more default transforms here. Can also be called from the bootstrapper for project-specific transforms.
-            //AddTransformPair("FormViewModel$", "Form");
+            //_NameResolutionManager.AddTransformConvention("FormViewModel$", "Form");
+
+            _NameResolutionManager.AddTransformConvention("ViewModel$", "View");
+            _NameResolutionManager.AddTransformConvention("PageViewModel$", "Page");
         }
 
         /// <summary>
-        /// Add more pattern string / replace string pairs
+        /// Get the static instance of the NameResolutionManager that ViewLocator uses for resolving View names.
         /// </summary>
-        /// <param name="patternStr">The regular expression pattern to match in the ViewModel name.</param>
-        /// <param name="replaceStr">The string that replaces the matched string.</param>
-        public static void AddTransformPair(string patternStr, string replaceStr)
+        /// <returns>The NameResolutionManager for resolving View names</returns>
+        public static NameResolutionManager GetViewResolutionManager()
         {
-            _TransformPairList.Add(new KeyValuePair<string, string>(patternStr, replaceStr));
+            return _NameResolutionManager;
         }
 
         /// <summary>
@@ -73,32 +73,21 @@
                 : modelType.FullName.IndexOf("`")
                 );
 
-            Func<KeyValuePair<string,string>,string> funcGetReplaceStr;
+            Func<string,string> funcGetReplaceStr;
             if (context == null)
             {
-                funcGetReplaceStr = (k) => { return k.Value; };
+                funcGetReplaceStr = (r) => { return r; };
             }
             else
             {
-                funcGetReplaceStr = (k) => { return "." + context; };
+                funcGetReplaceStr = (r) => { return "." + context; };
             }
 
-            //Get a reversed copy of the list so that the least specific transform is done last, if it ever falls through to it
-            var reversedList = _TransformPairList.Reverse<KeyValuePair<string, string>>();
-
-            foreach (var kvp in reversedList)
-            {
-                var replaceStr = funcGetReplaceStr(kvp);
-                if (System.Text.RegularExpressions.Regex.IsMatch(viewTypeName, kvp.Key))
-                {
-                    viewTypeName = System.Text.RegularExpressions.Regex.Replace(viewTypeName, kvp.Key, replaceStr);
-                    break;
-                }
-            }
+            var viewTypeList = _NameResolutionManager.GetResolvedNameList(viewTypeName, funcGetReplaceStr);
 
             var viewType = (from assembly in AssemblySource.Instance
                             from type in assembly.GetExportedTypes()
-                            where type.FullName == viewTypeName
+                            where viewTypeList.Contains(type.FullName)
                             select type).FirstOrDefault();
 
             return viewType;

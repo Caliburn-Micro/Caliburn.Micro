@@ -9,6 +9,35 @@
     /// A strategy for determining which view model to use for a given view.
     /// </summary>
     public static class ViewModelLocator {
+
+        private static NameResolutionManager _NameResolutionManager = new NameResolutionManager();
+        static ViewModelLocator()
+        {
+            //Add to list by increasing order of specificity (i.e. less specific pattern to more specific pattern)
+
+            _NameResolutionManager.AddTransformConvention
+            (
+                "(?<basename>.*)(?<suffix>(View$))", 
+                new string[] {"${basename}ViewModel", "${basename}", "I${basename}ViewModel", "I${basename}"}
+            );
+
+            //Add "View" synonyms below: (?<basename>.*)(?<suffix>(Page$)|(Form$)|(Screen$))
+            _NameResolutionManager.AddTransformConvention
+            (
+                "(?<basename>.*)(?<suffix>(Page$))",
+                new string[] { "${basename}${suffix}ViewModel", "I${basename}${suffix}ViewModel"}
+            );
+        }
+
+        /// <summary>
+        /// Get the static instance of the NameResolutionManager that ViewModelLocator uses for resolving ViewModel names.
+        /// </summary>
+        /// <returns>The NameResolutionManager for resolving ViewModel names</returns>
+        public static NameResolutionManager GetViewModelResolutionManager()
+        {
+            return _NameResolutionManager;
+        }
+
         /// <summary>
         /// Makes a type name into an interface name.
         /// </summary>
@@ -35,24 +64,30 @@
         public static Func<Type, bool, Type> LocateTypeForViewType = (viewType, searchForInterface) => {
             var typeName = viewType.FullName; //ex. ShellView
 
-            if(!typeName.EndsWith("View"))
-                typeName += "View";
-
-            var possibleNames = new List<string>();
-            var baseName = typeName.Replace("View", "ViewModel"); //ex. ShellViewModel
-
-            if(searchForInterface) {
-                possibleNames.Add(MakeInterface(baseName)); //ex. IShellViewModel
-                possibleNames.Add(MakeInterface(baseName.Remove(baseName.LastIndexOf("ViewModel")))); //ex. IShell
+            Func<string, string> funcGetReplaceStr;
+            if (searchForInterface)
+            {
+                funcGetReplaceStr = (r) => { return r; };
             }
-            else {
-                possibleNames.Add(baseName);
+            else
+            {
+                funcGetReplaceStr = (r) =>
+                {
+                    if (r.StartsWith("I$")) //It's an interface transform so make it something impossible to exist
+                    {
+                        return String.Empty;
+                    }
+                    return r;
+                };
             }
+            
+            var viewModelTypeList = _NameResolutionManager.GetResolvedNameList(typeName, funcGetReplaceStr);
 
-            var viewModelType = (from assmebly in AssemblySource.Instance
-                                 from type in assmebly.GetExportedTypes()
-                                 where possibleNames.Contains(type.FullName)
-                                 select type).FirstOrDefault();
+            var viewModelType = (from assembly in AssemblySource.Instance
+                            from type in assembly.GetExportedTypes()
+                            where viewModelTypeList.Contains(type.FullName)
+                            select type).FirstOrDefault();
+
 
             return viewModelType;
         };
