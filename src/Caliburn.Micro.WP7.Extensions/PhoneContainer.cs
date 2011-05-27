@@ -4,13 +4,26 @@
     using System.Linq;
     using System.Windows.Controls;
 
+    /// <summary>
+    /// A custom IoC container which integrates with the phone and properly registers all Caliburn.Micro services.
+    /// </summary>
     public class PhoneContainer : SimpleContainer, IPhoneContainer {
         readonly Frame rootFrame;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PhoneContainer"/> class.
+        /// </summary>
+        /// <param name="rootFrame">The root frame.</param>
         public PhoneContainer(Frame rootFrame) {
             this.rootFrame = rootFrame;
         }
 
+        /// <summary>
+        /// Registers the service as a singleton stored in the phone state.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="phoneStateKey">The phone state key.</param>
+        /// <param name="implementation">The implementation.</param>
         public void RegisterWithPhoneService(Type service, string phoneStateKey, Type implementation) {
             RegisterHandler(service, null, () => {
                 var phoneService = (IPhoneService)GetInstance(typeof(IPhoneService), null);
@@ -23,6 +36,12 @@
             });
         }
 
+        /// <summary>
+        /// Registers the service as a singleton stored in the app settings.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="appSettingsKey">The app settings key.</param>
+        /// <param name="implementation">The implementation.</param>
         public void RegisterWithAppSettings(Type service, string appSettingsKey, Type implementation) {
             RegisterHandler(service, null, () => {
                 if(IsolatedStorageSettings.ApplicationSettings.Contains(appSettingsKey ?? service.FullName)) {
@@ -33,6 +52,10 @@
             });
         }
 
+        /// <summary>
+        /// Registers the Caliburn.Micro services with the container.
+        /// </summary>
+        /// <param name="treatViewAsLoaded">if set to <c>true</c> [treat view as loaded].</param>
         public void RegisterPhoneServices(bool treatViewAsLoaded = false) {
             var toSearch = AssemblySource.Instance.ToArray().Union(new[] { typeof(IStorageMechanism).Assembly });
 
