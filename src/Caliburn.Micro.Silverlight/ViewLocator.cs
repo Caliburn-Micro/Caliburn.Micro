@@ -18,6 +18,16 @@
         static readonly ILog Log = LogManager.GetLog(typeof(ViewLocator));
 
         private static NameResolutionManager _NameResolutionManager = new NameResolutionManager();
+        private static string _ContextSeparator = ".";
+
+        /// <summary>
+        /// Separator used when resolving View names for context instances.
+        /// </summary>
+        public static string ContextSeparator
+        {
+            get { return _ContextSeparator; }
+            set { _ContextSeparator = value; }
+        }
 
         static ViewLocator()
         {
@@ -80,7 +90,7 @@
             }
             else
             {
-                funcGetReplaceStr = (r) => { return "." + context; };
+                funcGetReplaceStr = (r) => { return _ContextSeparator + context; };
             }
 
             var viewTypeList = _NameResolutionManager.GetResolvedNameList(viewTypeName, funcGetReplaceStr);
