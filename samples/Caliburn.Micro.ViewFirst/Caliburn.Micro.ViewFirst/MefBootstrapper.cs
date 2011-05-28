@@ -26,7 +26,7 @@
             container.Compose(batch);
         }
 
-        protected override void DisplayRootView() {
+        protected override void OnStartup(object sender, StartupEventArgs e) {
             Application.Current.RootVisual = new ShellView();
         }
 
