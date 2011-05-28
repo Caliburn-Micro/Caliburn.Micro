@@ -1,5 +1,5 @@
 ﻿namespace Caliburn.Micro.HelloWP7 {
-    public class PageTwoViewModelStorage : StorageHandler<PageTwoViewModel> {
+    public class PivotPageModelStorage : StorageHandler<PivotPageViewModel> {
         public override void Configure() {
             this.ActiveItemIndex()
                 .InPhoneState()

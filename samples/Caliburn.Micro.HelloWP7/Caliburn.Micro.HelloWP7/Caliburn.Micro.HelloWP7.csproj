@@ -74,11 +74,11 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPageViewModel.cs" />
-    <Compile Include="PageTwo.xaml.cs">
-      <DependentUpon>PageTwo.xaml</DependentUpon>
+    <Compile Include="PivotPage.xaml.cs">
+      <DependentUpon>PivotPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PageTwoViewModel.cs" />
-    <Compile Include="PageTwoViewModelStorage.cs" />
+    <Compile Include="PivotPageViewModel.cs" />
+    <Compile Include="PivotPageModelStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TabViewModel.cs" />
     <Compile Include="TabViewModelStorage.cs" />
@@ -92,7 +92,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PageTwo.xaml">
+    <Page Include="PivotPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
