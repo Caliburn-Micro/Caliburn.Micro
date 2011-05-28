@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Collections.Generic;
 
 #if !SILVERLIGHT
     using System.Windows.Interop;
@@ -15,6 +16,40 @@
     public static class ViewLocator
     {
         static readonly ILog Log = LogManager.GetLog(typeof(ViewLocator));
+
+        private static NameResolutionManager _NameResolutionManager = new NameResolutionManager();
+        private static string _ContextSeparator = ".";
+
+        /// <summary>
+        /// Separator used when resolving View names for context instances.
+        /// </summary>
+        public static string ContextSeparator
+        {
+            get { return _ContextSeparator; }
+            set { _ContextSeparator = value; }
+        }
+
+        static ViewLocator()
+        {
+            //Add to list by increasing order of specificity (i.e. less specific pattern to more specific pattern)
+
+            //_NameResolutionManager.AddTransformConvention("ViewModel$", "View");         //less specific pattern
+            //_NameResolutionManager.AddTransformConvention("PageViewModel$", "Page");     //more specific pattern
+            //Add more default transforms here. Can also be called from the bootstrapper for project-specific transforms.
+            //_NameResolutionManager.AddTransformConvention("FormViewModel$", "Form");
+
+            _NameResolutionManager.AddTransformConvention("ViewModel$", "View");
+            _NameResolutionManager.AddTransformConvention("PageViewModel$", "Page");
+        }
+
+        /// <summary>
+        /// Get the static instance of the NameResolutionManager that ViewLocator uses for resolving View names.
+        /// </summary>
+        /// <returns>The NameResolutionManager for resolving View names</returns>
+        public static NameResolutionManager GetViewResolutionManager()
+        {
+            return _NameResolutionManager;
+        }
 
         /// <summary>
         /// Retrieves the view from the IoC container or tries to create it if not found.
@@ -46,21 +81,23 @@
             var viewTypeName = modelType.FullName.Substring(0, modelType.FullName.IndexOf("`") < 0
                 ? modelType.FullName.Length
                 : modelType.FullName.IndexOf("`")
-                ).Replace("Model", string.Empty);
+                );
 
-            if(viewTypeName.Contains("Page") && viewTypeName.EndsWith("View")) {
-                viewTypeName = viewTypeName.Remove(viewTypeName.Length - 4);
-            }
-
-            if (context != null)
+            Func<string,string> funcGetReplaceStr;
+            if (context == null)
             {
-                viewTypeName = viewTypeName.Remove(viewTypeName.Length - 4, 4);
-                viewTypeName = viewTypeName + "." + context;
+                funcGetReplaceStr = (r) => { return r; };
+            }
+            else
+            {
+                funcGetReplaceStr = (r) => { return _ContextSeparator + context; };
             }
 
-            var viewType = (from assmebly in AssemblySource.Instance
-                            from type in assmebly.GetExportedTypes()
-                            where type.FullName == viewTypeName
+            var viewTypeList = _NameResolutionManager.GetResolvedNameList(viewTypeName, funcGetReplaceStr);
+
+            var viewType = (from assembly in AssemblySource.Instance
+                            from type in assembly.GetExportedTypes()
+                            where viewTypeList.Contains(type.FullName)
                             select type).FirstOrDefault();
 
             return viewType;
