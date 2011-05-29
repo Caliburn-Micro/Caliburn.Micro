@@ -2,6 +2,7 @@
     using System;
     using System.Linq;
     using System.Reflection;
+    using System.Text.RegularExpressions;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -35,6 +36,22 @@
 
             NameTransformer.AddRule("ViewModel$", "View");
             NameTransformer.AddRule("PageViewModel$", "Page");
+
+            //Check for <Namespace>.ViewModels.<BaseName>ViewModel construct
+            NameTransformer.AddRule
+                (
+                    @"(?<namespace>(.*\.)*)ViewModels\.(?<basename>[A-Za-z]\w*)(?<suffix>ViewModel$)",
+                    @"${namespace}Views.${basename}View",
+                    @"(.*\.)*ViewModels\.[A-Za-z]\w*ViewModel$"
+                );
+
+            //Check for <Namespace>.ViewModels.<BaseName>PageViewModel construct
+            NameTransformer.AddRule
+                (
+                    @"(?<namespace>(.*\.)*)ViewModels\.(?<basename>[A-Za-z]\w*)(?<suffix>ViewModel$)",
+                    @"${namespace}Views.${basename}Page",
+                    @"(.*\.)*ViewModels\.[A-Za-z]\w*PageViewModel$"
+                );
         }
 
         /// <summary>
@@ -68,21 +85,24 @@
         ///   Pass the model type, display location (or null) and the context instance (or null) as parameters and receive a view type.
         /// </remarks>
         public static Func<Type, DependencyObject, object, Type> LocateTypeForModelType = (modelType, displayLocation, context) => {
-            var viewTypeName = modelType.FullName.Substring(0, modelType.FullName.IndexOf("`") < 0
-                                                                   ? modelType.FullName.Length
-                                                                   : modelType.FullName.IndexOf("`")
+            var viewTypeName = modelType.FullName.Substring(
+                0,
+                modelType.FullName.IndexOf("`") < 0
+                    ? modelType.FullName.Length
+                    : modelType.FullName.IndexOf("`")
                 );
 
-            Func<string, string> funcGetReplaceStr;
-            if(context == null) {
-                funcGetReplaceStr = r => { return r; };
+            Func<string, string> getReplaceString;
+            if (context == null) {
+                getReplaceString = r => { return r; };
             }
             else {
-                funcGetReplaceStr = r => { return ContextSeparator + context; };
+                getReplaceString = r => {
+                    return Regex.Replace(r, Regex.IsMatch(r, "Page$") ? "Page$" : "View$", ContextSeparator + context);
+                };
             }
 
-            var viewTypeList = NameTransformer.Transform(viewTypeName, funcGetReplaceStr);
-
+            var viewTypeList = NameTransformer.Transform(viewTypeName, getReplaceString);
             var viewType = (from assembly in AssemblySource.Instance
                             from type in assembly.GetExportedTypes()
                             where viewTypeList.Contains(type.FullName)
