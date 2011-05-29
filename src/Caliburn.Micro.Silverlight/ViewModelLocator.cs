@@ -2,6 +2,7 @@
     using System;
     using System.Linq;
     using System.Windows;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     ///   A strategy for determining which view model to use for a given view.
@@ -104,9 +105,8 @@
                 funcGetReplaceStr = r => { return r; };
             }
             else {
-                funcGetReplaceStr = r => {
-                    if(r.StartsWith("I$")) //It's an interface transform so make it something impossible to exist
-                    {
+                funcGetReplaceStr = (r) =>{
+                    if (Regex.IsMatch(r, @"I\${basename}")){ //It's an interface transform so make it something impossible to exist
                         return String.Empty;
                     }
                     return r;

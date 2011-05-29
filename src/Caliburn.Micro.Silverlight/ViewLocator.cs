@@ -97,11 +97,9 @@
                 funcGetReplaceStr = r => { return r; };
             }
             else {
-                funcGetReplaceStr = (r) =>
-                {
+                funcGetReplaceStr = (r) => {
                     var repStr = ContextSeparator + context;
-                    if (Regex.IsMatch(r, "Page$"))
-                    {
+                    if (Regex.IsMatch(r, "Page$")){
                         return Regex.Replace(r, "Page$", repStr);
                     }
 
