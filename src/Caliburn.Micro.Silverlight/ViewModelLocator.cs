@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     /// A strategy for determining which view model to use for a given view.
@@ -16,58 +15,17 @@
         {
             //Add to list by increasing order of specificity (i.e. less specific pattern to more specific pattern)
 
-            //Check for <Namespace>.<BaseName>View construct
             _NameResolutionManager.AddTransformConvention
             (
-                @"(?<namespace>(.*\.)*)(?<basename>[A-Za-z]\w*)(?<suffix>View$)"
-                , new string[] 
-                {
-                    @"${namespace}${basename}ViewModel"
-                    , @"${namespace}${basename}"
-                    , @"${namespace}I${basename}ViewModel"
-                    , @"${namespace}I${basename}"
-                }
-                , @"(.*\.)*[A-Za-z]\w*View$"
+                "(?<basename>.*)(?<suffix>(View$))", 
+                new string[] {"${basename}ViewModel", "${basename}", "I${basename}ViewModel", "I${basename}"}
             );
 
-            //Check for <Namespace>.<BaseName>Page construct
-            //Add "View" synonyms below: (?<namespace>(.*\.)*)(?<basename>[A-Za-z]\w*)(?<suffix>(Page$)|(Form$)|(Screen$))"
+            //Add "View" synonyms below: (?<basename>.*)(?<suffix>(Page$)|(Form$)|(Screen$))
             _NameResolutionManager.AddTransformConvention
             (
-                @"(?<namespace>(.*\.)*)(?<basename>[A-Za-z]\w*)(?<suffix>Page$)"
-                , new string[] 
-                {
-                    @"${namespace}${basename}${suffix}ViewModel"
-                    , @"${namespace}I${basename}${suffix}ViewModel"
-                }
-                , @"(.*\.)*[A-Za-z]\w*Page$"
-            );
-
-            //Check for <Namespace>.Views.<BaseName>View construct
-            _NameResolutionManager.AddTransformConvention
-            (
-                @"(?<namespace>(.*\.)*)Views\.(?<basename>[A-Za-z]\w*)(?<suffix>View$)"
-                , new string[] 
-                {
-                    @"${namespace}ViewModels.${basename}ViewModel"
-                    , @"${namespace}ViewModels.${basename}"
-                    , @"${namespace}ViewModels.I${basename}ViewModel"
-                    , @"${namespace}ViewModels.I${basename}"
-                }
-                , @"(.*\.)*Views\.[A-Za-z]\w*View$"
-            );
-
-            //Check for <Namespace>.Views.<BaseName><ViewSynonym> construct
-            //Add "View" synonyms below: (?<namespace>(.*\.)*)Views\.(?<basename>[A-Za-z]\w*)(?<suffix>(Page$)|(Form$)|(Screen$))"
-            _NameResolutionManager.AddTransformConvention
-            (
-                @"(?<namespace>(.*\.)*)Views\.(?<basename>[A-Za-z]\w*)(?<suffix>Page$)"
-                , new string[] 
-                {
-                    @"${namespace}ViewModels.${basename}${suffix}ViewModel"
-                    , @"${namespace}ViewModels.I${basename}${suffix}ViewModel"
-                }
-                , @"(.*\.)*Views\.[A-Za-z]\w*Page$"
+                "(?<basename>.*)(?<suffix>(Page$))",
+                new string[] { "${basename}${suffix}ViewModel", "I${basename}${suffix}ViewModel"}
             );
         }
 
@@ -115,8 +73,7 @@
             {
                 funcGetReplaceStr = (r) =>
                 {
-
-                    if (Regex.IsMatch(r, @"I\${basename}")) //It's an interface transform so make it something impossible to exist
+                    if (r.StartsWith("I$")) //It's an interface transform so make it something impossible to exist
                     {
                         return String.Empty;
                     }
