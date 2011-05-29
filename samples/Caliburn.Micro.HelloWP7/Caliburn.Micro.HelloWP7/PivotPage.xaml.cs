@@ -1,6 +1,6 @@
 ﻿namespace Caliburn.Micro.HelloWP7 {
-    public partial class PageTwo {
-        public PageTwo() {
+    public partial class PivotPage {
+        public PivotPage() {
             InitializeComponent();
         }
     }

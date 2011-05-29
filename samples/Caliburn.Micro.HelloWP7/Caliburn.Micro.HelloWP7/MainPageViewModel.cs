@@ -7,7 +7,7 @@
         }
 
         public void GotoPageTwo() {
-            navigationService.UriFor<PageTwoViewModel>()
+            navigationService.UriFor<PivotPageViewModel>()
                 .WithParam(x => x.NumberOfTabs, 5)
                 .Navigate();
         }

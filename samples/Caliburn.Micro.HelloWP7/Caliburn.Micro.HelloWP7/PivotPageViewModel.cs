@@ -2,10 +2,10 @@
     using System;
     using System.Linq;
 
-    public class PageTwoViewModel : Conductor<IScreen>.Collection.OneActive {
+    public class PivotPageViewModel : Conductor<IScreen>.Collection.OneActive {
         readonly Func<TabViewModel> createTab;
 
-        public PageTwoViewModel(Func<TabViewModel> createTab) {
+        public PivotPageViewModel(Func<TabViewModel> createTab) {
             this.createTab = createTab;
         }
 
