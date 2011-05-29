@@ -36,8 +36,10 @@ obj/
 [Tt]est[Rr]esult*
 [Bb]uild[Ll]og.*
 *.[Pp]ublish.xml
-glob:desktop.ini 
+glob:desktop.ini
 generated-templates
 nuget/package/caliburn.micro.1.0.0.nupkg
 nuget/package/lib/
 *.*~
+*.vs10x
+*.docstates

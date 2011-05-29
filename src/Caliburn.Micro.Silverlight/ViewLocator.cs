@@ -4,6 +4,7 @@
     using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Text.RegularExpressions;
 
 #if !SILVERLIGHT
     using System.Windows.Interop;
@@ -35,6 +36,24 @@
 
             NameTransformer.AddRule("ViewModel$", "View");
             NameTransformer.AddRule("PageViewModel$", "Page");
+
+
+            //Check for <Namespace>.ViewModels.<BaseName>ViewModel construct
+            NameTransformer.AddRule
+                (
+                    @"(?<namespace>(.*\.)*)ViewModels\.(?<basename>[A-Za-z]\w*)(?<suffix>ViewModel$)"
+                    , @"${namespace}Views.${basename}View"
+                    , @"(.*\.)*ViewModels\.[A-Za-z]\w*ViewModel$"
+                );
+
+            //Check for <Namespace>.ViewModels.<BaseName>PageViewModel construct
+            NameTransformer.AddRule
+                (
+                    @"(?<namespace>(.*\.)*)ViewModels\.(?<basename>[A-Za-z]\w*)(?<suffix>ViewModel$)"
+                    , @"${namespace}Views.${basename}Page"
+                    , @"(.*\.)*ViewModels\.[A-Za-z]\w*PageViewModel$"
+                );
+
         }
 
         /// <summary>
@@ -78,7 +97,16 @@
                 funcGetReplaceStr = r => { return r; };
             }
             else {
-                funcGetReplaceStr = r => { return ContextSeparator + context; };
+                funcGetReplaceStr = (r) =>
+                {
+                    var repStr = ContextSeparator + context;
+                    if (Regex.IsMatch(r, "Page$"))
+                    {
+                        return Regex.Replace(r, "Page$", repStr);
+                    }
+
+                    return Regex.Replace(r, "View$", repStr);
+                };
             }
 
             var viewTypeList = NameTransformer.Transform(viewTypeName, funcGetReplaceStr);
