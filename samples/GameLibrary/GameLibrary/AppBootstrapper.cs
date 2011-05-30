@@ -43,23 +43,13 @@
             ConventionManager.AddElementConvention<BusyIndicator>(BusyIndicator.IsBusyProperty, "IsBusy", "IsBusyChanged");
             ConventionManager.AddElementConvention<Rating>(Rating.ValueProperty, "Value", "ValueChanged");
 
-            var baseLocator = ViewLocator.LocateForModelType;
-            ViewLocator.LocateForModelType = (modelType, displayLocation, context) =>
-            {
-                if (modelType.FullName.StartsWith("GameLibrary.Model"))
-                {
-                    var viewName = modelType.FullName.Replace("GameLibrary.Model", "GameLibrary.Views");
-                    var viewType = (from assembly in AssemblySource.Instance
-                                    from type in assembly.GetExportedTypes()
-                                    where type.FullName == viewName
-                                    select type).FirstOrDefault();
-
-                    if (viewType != null)
-                        return ViewLocator.GetOrCreateViewType(viewType);
-                }
-
-                return baseLocator(modelType, displayLocation, context);
-            };
+            //Add custom rule for Model-first transform
+            ViewLocator.NameTransformer.AddRule
+                (
+                    @"(?<namespace>(.*\.)*)Model\.(?<basename>[A-Za-z]\w*)",
+                    @"${namespace}Views.${basename}",
+                    @"(.*\.)*Model\.[A-Za-z]\w*"
+                );
         }
 
         protected override object GetInstance(Type serviceType, string key) {
