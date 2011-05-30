@@ -3,26 +3,26 @@
 
     [Export(typeof(LeftViewModel))]
     public class LeftViewModel : IHandle<RightEvent> {
-        readonly IEventAggregator eventAgg;
-        readonly IObservableCollection<int> events = new BindableCollection<int>();
+        readonly IEventAggregator events;
+        readonly IObservableCollection<int> history = new BindableCollection<int>();
         int count = 1;
 
         [ImportingConstructor]
-        public LeftViewModel(IEventAggregator eventAgg) {
-            this.eventAgg = eventAgg;
-            eventAgg.Subscribe(this);
+        public LeftViewModel(IEventAggregator events) {
+            this.events = events;
+            events.Subscribe(this);
         }
 
-        public IObservableCollection<int> Events {
-            get { return events; }
+        public IObservableCollection<int> History {
+            get { return history; }
         }
 
         public void Handle(RightEvent message) {
-            events.Add(message.Number);
+            history.Add(message.Number);
         }
 
         public void Publish() {
-            eventAgg.Publish(new LeftEvent {
+            events.Publish(new LeftEvent {
                 Number = count++
             });
         }

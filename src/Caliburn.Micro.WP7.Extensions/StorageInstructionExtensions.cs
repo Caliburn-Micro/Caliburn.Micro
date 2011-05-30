@@ -77,6 +77,34 @@
         }
 
         /// <summary>
+        /// Restores the data after view's LayoutUpdated event is raised.
+        /// </summary>
+        /// <typeparam name="T">The model type.</typeparam>
+        /// <param name="builder">The builder.</param>
+        /// <returns>The builder.</returns>
+        public static StorageInstructionBuilder<T> RestoreAfterViewReady<T>(this StorageInstructionBuilder<T> builder)
+            where T : IViewAware {
+            return builder.Configure(x => {
+                var original = x.Restore;
+
+                x.Restore = (instance, getKey, mode) => {
+                    EventHandler<ViewAttachedEventArgs> onViewAttached = null;
+                    onViewAttached = (s, e) => {
+                        var fe = (FrameworkElement)e.View;
+                        instance.ViewAttached -= onViewAttached;
+                        EventHandler handler = null;
+                        handler = (s2, e2) => {
+                            original(instance, getKey, mode);
+                            fe.LayoutUpdated -= handler;
+                        };
+                        fe.LayoutUpdated += handler;
+                    };
+                    instance.ViewAttached += onViewAttached;
+                };
+            });
+        }
+
+        /// <summary>
         /// Stores the index of the Conductor's ActiveItem.
         /// </summary>
         /// <typeparam name="T">The model type.</typeparam>
