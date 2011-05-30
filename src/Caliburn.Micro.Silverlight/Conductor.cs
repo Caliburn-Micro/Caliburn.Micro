@@ -14,8 +14,8 @@
             if(item != null && item.Equals(ActiveItem)) {
                 if (IsActive) {
                     ScreenExtensions.TryActivate(item);
+                    OnActivationProcessed(item, true);
                 }
-                OnActivationProcessed(item, true);
                 return;
             }
 
