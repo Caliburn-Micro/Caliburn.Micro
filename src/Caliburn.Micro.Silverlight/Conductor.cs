@@ -12,6 +12,9 @@
         /// <param name="item">The item to activate.</param>
         public override void ActivateItem(T item) {
             if(item != null && item.Equals(ActiveItem)) {
+                if (IsActive) {
+                    ScreenExtensions.TryActivate(item);
+                }
                 OnActivationProcessed(item, true);
                 return;
             }
