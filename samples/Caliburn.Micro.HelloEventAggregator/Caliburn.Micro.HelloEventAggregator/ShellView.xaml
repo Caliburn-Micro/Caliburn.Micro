@@ -2,7 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <StackPanel>
-        <TextBlock x:Name="LastEvent" />
+        <TextBlock x:Name="LastEvent"
+                   FontSize="16"/>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -11,7 +12,7 @@
 
             <ContentControl x:Name="Left" />
             <ContentControl x:Name="Right"
-                        Grid.Column="1" />
+                            Grid.Column="1" />
         </Grid>
     </StackPanel>
 </UserControl>

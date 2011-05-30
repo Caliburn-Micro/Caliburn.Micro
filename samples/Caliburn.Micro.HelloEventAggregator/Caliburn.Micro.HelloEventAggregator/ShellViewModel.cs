@@ -3,7 +3,7 @@
 
     [Export(typeof(IShell))]
     public class ShellViewModel : PropertyChangedBase, IShell, IHandle<object> {
-        string lastEvent;
+        string lastEvent = "No Events Yet";
 
         [ImportingConstructor]
         public ShellViewModel(LeftViewModel left, RightViewModel right, IEventAggregator events) {
