@@ -11,6 +11,13 @@
         readonly List<TransformRule> rules = new List<TransformRule>();
 
         /// <summary>
+        /// Clears all the rules.
+        /// </summary>
+        public void ClearRules() {
+            rules.Clear();
+        }
+
+        /// <summary>
         ///   Adds a transform using a single replacement value and a global filter pattern.
         /// </summary>
         /// <param name = "replacePattern">Regular expression pattern for replacing text</param>

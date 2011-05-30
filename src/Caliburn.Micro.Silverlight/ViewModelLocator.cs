@@ -1,8 +1,8 @@
 ﻿namespace Caliburn.Micro {
     using System;
     using System.Linq;
-    using System.Windows;
     using System.Text.RegularExpressions;
+    using System.Windows;
 
     /// <summary>
     ///   A strategy for determining which view model to use for a given view.
@@ -18,58 +18,53 @@
 
             //Check for <Namespace>.<BaseName>View construct
             NameTransformer.AddRule
-            (
-                @"(?<namespace>(.*\.)*)(?<basename>[A-Za-z]\w*)(?<suffix>View$)"
-                , new[] 
-                    {
-                        @"${namespace}${basename}ViewModel"
-                        , @"${namespace}${basename}"
-                        , @"${namespace}I${basename}ViewModel"
-                        , @"${namespace}I${basename}"
-                    }
-                , @"(.*\.)*[A-Za-z]\w*View$"
-            );
+                (
+                    @"(?<namespace>(.*\.)*)(?<basename>[A-Za-z]\w*)(?<suffix>View$)",
+                    new[] {
+                        @"${namespace}${basename}ViewModel",
+                        @"${namespace}${basename}",
+                        @"${namespace}I${basename}ViewModel",
+                        @"${namespace}I${basename}"
+                    },
+                    @"(.*\.)*[A-Za-z]\w*View$"
+                );
 
             //Check for <Namespace>.<BaseName>Page construct
             //Add "View" synonyms below: (?<namespace>(.*\.)*)(?<basename>[A-Za-z]\w*)(?<suffix>(Page$)|(Form$)|(Screen$))"
             NameTransformer.AddRule
-            (
-                @"(?<namespace>(.*\.)*)(?<basename>[A-Za-z]\w*)(?<suffix>Page$)"
-                , new[] 
-                    {
-                        @"${namespace}${basename}${suffix}ViewModel"
-                        , @"${namespace}I${basename}${suffix}ViewModel"
-                    }
-                , @"(.*\.)*[A-Za-z]\w*Page$"
-            );
+                (
+                    @"(?<namespace>(.*\.)*)(?<basename>[A-Za-z]\w*)(?<suffix>Page$)",
+                    new[] {
+                        @"${namespace}${basename}${suffix}ViewModel",
+                        @"${namespace}I${basename}${suffix}ViewModel"
+                    },
+                    @"(.*\.)*[A-Za-z]\w*Page$"
+                );
 
             //Check for <Namespace>.Views.<BaseName>View construct
             NameTransformer.AddRule
-            (
-                @"(?<namespace>(.*\.)*)Views\.(?<basename>[A-Za-z]\w*)(?<suffix>View$)"
-                , new[] 
-                    {
-                        @"${namespace}ViewModels.${basename}ViewModel"
-                        , @"${namespace}ViewModels.${basename}"
-                        , @"${namespace}ViewModels.I${basename}ViewModel"
-                        , @"${namespace}ViewModels.I${basename}"
-                    }
-                , @"(.*\.)*Views\.[A-Za-z]\w*View$"
-            );
+                (
+                    @"(?<namespace>(.*\.)*)Views\.(?<basename>[A-Za-z]\w*)(?<suffix>View$)",
+                    new[] {
+                        @"${namespace}ViewModels.${basename}ViewModel",
+                        @"${namespace}ViewModels.${basename}",
+                        @"${namespace}ViewModels.I${basename}ViewModel",
+                        @"${namespace}ViewModels.I${basename}"
+                    },
+                    @"(.*\.)*Views\.[A-Za-z]\w*View$"
+                );
 
             //Check for <Namespace>.Views.<BaseName><ViewSynonym> construct
             //Add "View" synonyms below: (?<namespace>(.*\.)*)Views\.(?<basename>[A-Za-z]\w*)(?<suffix>(Page$)|(Form$)|(Screen$))"
             NameTransformer.AddRule
-            (
-                @"(?<namespace>(.*\.)*)Views\.(?<basename>[A-Za-z]\w*)(?<suffix>Page$)"
-                , new[] 
-                    {
-                        @"${namespace}ViewModels.${basename}${suffix}ViewModel"
-                        , @"${namespace}ViewModels.I${basename}${suffix}ViewModel"
-                    }
-                , @"(.*\.)*Views\.[A-Za-z]\w*Page$"
-            );
-
+                (
+                    @"(?<namespace>(.*\.)*)Views\.(?<basename>[A-Za-z]\w*)(?<suffix>Page$)",
+                    new[] {
+                        @"${namespace}ViewModels.${basename}${suffix}ViewModel",
+                        @"${namespace}ViewModels.I${basename}${suffix}ViewModel"
+                    },
+                    @"(.*\.)*Views\.[A-Za-z]\w*Page$"
+                );
         }
 
         /// <summary>
@@ -98,23 +93,19 @@
         ///   Pass the view type and receive a view model type. Pass true for the second parameter to search for interfaces.
         /// </remarks>
         public static Func<Type, bool, Type> LocateTypeForViewType = (viewType, searchForInterface) => {
-            var typeName = viewType.FullName; //ex. ShellView
+            var typeName = viewType.FullName;
 
-            Func<string, string> funcGetReplaceStr;
+            Func<string, string> getReplaceString;
             if(searchForInterface) {
-                funcGetReplaceStr = r => { return r; };
+                getReplaceString = r => { return r; };
             }
             else {
-                funcGetReplaceStr = (r) =>{
-                    if (Regex.IsMatch(r, @"I\${basename}")){ //It's an interface transform so make it something impossible to exist
-                        return String.Empty;
-                    }
-                    return r;
+                getReplaceString = r => {
+                    return Regex.IsMatch(r, @"I\${basename}") ? String.Empty : r;
                 };
             }
 
-            var viewModelTypeList = NameTransformer.Transform(typeName, funcGetReplaceStr);
-
+            var viewModelTypeList = NameTransformer.Transform(typeName, getReplaceString);
             var viewModelType = (from assembly in AssemblySource.Instance
                                  from type in assembly.GetExportedTypes()
                                  where viewModelTypeList.Contains(type.FullName)
