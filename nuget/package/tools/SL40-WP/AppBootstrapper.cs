@@ -11,13 +11,10 @@
 
         protected override void Configure()
         {
-            container = new PhoneContainer(this);
+            container = new PhoneContainer(RootFrame);
 
 			container.RegisterPhoneServices();
-            container.RegisterAllViewModelsForPages();
-
-            //container.InstallChooser<PhoneNumberChooserTask, PhoneNumberResult>();
-            //container.InstallLauncher<EmailComposeTask>();
+            container.PerRequest<MainPageViewModel>();
 
             AddCustomConventions();
         }
