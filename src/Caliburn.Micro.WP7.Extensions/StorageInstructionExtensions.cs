@@ -77,7 +77,7 @@
         }
 
         /// <summary>
-        /// Restores the data after view's Loaded event is raised.
+        /// Restores the data after view's LayoutUpdated event is raised.
         /// </summary>
         /// <typeparam name="T">The model type.</typeparam>
         /// <param name="builder">The builder.</param>
