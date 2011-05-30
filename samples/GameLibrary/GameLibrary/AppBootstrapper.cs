@@ -43,12 +43,10 @@
             ConventionManager.AddElementConvention<BusyIndicator>(BusyIndicator.IsBusyProperty, "IsBusy", "IsBusyChanged");
             ConventionManager.AddElementConvention<Rating>(Rating.ValueProperty, "Value", "ValueChanged");
 
-            //Add custom rule for Model-first transform
-            ViewLocator.NameTransformer.AddRule
-                (
-                    @"(?<namespace>(.*\.)*)Model\.(?<basename>[A-Za-z]\w*)",
-                    @"${namespace}Views.${basename}",
-                    @"(.*\.)*Model\.[A-Za-z]\w*"
+            ViewLocator.NameTransformer.AddRule(
+                @"(?<namespace>(.*\.)*)Model\.(?<basename>[A-Za-z]\w*)",
+                @"${namespace}Views.${basename}",
+                @"(.*\.)*Model\.[A-Za-z]\w*"
                 );
         }
 
