@@ -99,6 +99,13 @@
                         return Enum.Parse(destinationType, stringValue, true);
                     return Enum.ToObject(destinationType, providedValue);
                 }
+                
+                if(typeof(Guid).IsAssignableFrom(destinationType)) {
+                    var stringValue = providedValue as string;
+                    if(stringValue != null) {
+                        return new Guid(stringValue);
+                    }
+                }
             }
             catch {
                 return GetDefaultValue(destinationType);
