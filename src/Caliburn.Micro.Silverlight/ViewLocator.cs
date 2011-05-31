@@ -34,6 +34,7 @@
             //Add more default transforms here. Can also be called from the bootstrapper for project-specific transforms.
             //NameTransformer.AddRule("FormViewModel$", "Form");
 
+            NameTransformer.AddRule("Model$", string.Empty);
             NameTransformer.AddRule("ViewModel$", "View");
             NameTransformer.AddRule("PageViewModel$", "Page");
 

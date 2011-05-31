@@ -16,6 +16,11 @@
         static ViewModelLocator() {
             //Add to list by increasing order of specificity (i.e. less specific pattern to more specific pattern)
 
+            NameTransformer.AddRule(
+                @"(?<fullname>^.*$)",
+                @"${fullname}Model"
+                );
+
             //Check for <Namespace>.<BaseName>View construct
             NameTransformer.AddRule
                 (
