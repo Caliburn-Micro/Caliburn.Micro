@@ -66,7 +66,17 @@
             var element = nonGeneratedView as FrameworkElement;
             if (element != null && !(bool)element.GetValue(PreviouslyAttachedProperty)) {
                 element.SetValue(PreviouslyAttachedProperty, true);
-                View.ExecuteOnLoad(element, (s, e) => OnViewLoaded(s));
+                View.ExecuteOnLoad(element, (s, e) => {
+                    OnViewLoaded(s);
+#if WP7
+                    EventHandler layoutUpdated = null;
+                    layoutUpdated = (s2, e2) => {
+                        OnViewReady(s2);
+                        element.LayoutUpdated -= layoutUpdated;
+                    };
+                    element.LayoutUpdated += layoutUpdated;
+#endif
+                });
             }
 
             OnViewAttached(nonGeneratedView, context);
@@ -85,6 +95,14 @@
         /// </summary>
         /// <param name = "view"></param>
         protected virtual void OnViewLoaded(object view) {}
+
+#if WP7
+        /// <summary>
+        ///   Called the first time the attached view's LayoutUpdated event fires after its Loaded event fires.
+        /// </summary>
+        /// <param name = "view"></param>
+        protected virtual void OnViewReady(object view) { }
+#endif
 
         /// <summary>
         ///   Gets a view previously attached to this instance.
