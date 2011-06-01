@@ -5,20 +5,11 @@
     using System.Text.RegularExpressions;
 
     /// <summary>
-    ///   Class for managing the list of rules for doing name transformation.
+    ///  Class for managing the list of rules for doing name transformation.
     /// </summary>
-    public class NameTransformer {
-        readonly List<TransformRule> rules = new List<TransformRule>();
-
+    public class NameTransformer : BindableCollection<NameTransformer.Rule> {
         /// <summary>
-        /// Clears all the rules.
-        /// </summary>
-        public void ClearRules() {
-            rules.Clear();
-        }
-
-        /// <summary>
-        ///   Adds a transform using a single replacement value and a global filter pattern.
+        ///  Adds a transform using a single replacement value and a global filter pattern.
         /// </summary>
         /// <param name = "replacePattern">Regular expression pattern for replacing text</param>
         /// <param name = "replaceValue">The replacement value.</param>
@@ -28,27 +19,25 @@
         }
 
         /// <summary>
-        ///   Adds a transform using a list of replacement values and a global filter pattern.
+        ///  Adds a transform using a list of replacement values and a global filter pattern.
         /// </summary>
         /// <param name = "replacePattern">Regular expression pattern for replacing text</param>
         /// <param name = "replaceValueList">The list of replacement values</param>
         /// <param name = "globalFilterPattern">Regular expression pattern for global filtering</param>
         public void AddRule(string replacePattern, IEnumerable<string> replaceValueList, string globalFilterPattern = null) {
-            var conv = new TransformRule {
+            Add(new Rule {
                 ReplacePattern = replacePattern,
-                ReplaceValueList = replaceValueList,
+                ReplacementValues = replaceValueList,
                 GlobalFilterPattern = globalFilterPattern
-            };
-
-            rules.Add(conv);
+            });
         }
 
         /// <summary>
         /// Gets the list of transformations for a given name.
         /// </summary>
         /// <param name = "source">The name to transform into the resolved name list</param>
-        /// <returns></returns>
-        public List<string> Transform(string source) {
+        /// <returns>The transformed names.</returns>
+        public IEnumerable<string> Transform(string source) {
             return Transform(source, r => r);
         }
 
@@ -57,24 +46,24 @@
         /// </summary>
         /// <param name = "source">The name to transform into the resolved name list</param>
         /// <param name = "getReplaceString">A function to do a transform on each item in the ReplaceValueList prior to applying the regular expression transform</param>
-        /// <returns></returns>
-        public List<string> Transform(string source, Func<string, string> getReplaceString) {
+        /// <returns>The transformed names.</returns>
+        public IEnumerable<string> Transform(string source, Func<string, string> getReplaceString) {
             var nameList = new List<string>();
-            var reversedList = rules.Reverse<TransformRule>();
+            var rules = this.Reverse();
 
-            foreach(var conv in reversedList) {
-                if(!string.IsNullOrEmpty(conv.GlobalFilterPattern) && !Regex.IsMatch(source, conv.GlobalFilterPattern)) {
+            foreach(var rule in rules) {
+                if(!string.IsNullOrEmpty(rule.GlobalFilterPattern) && !Regex.IsMatch(source, rule.GlobalFilterPattern)) {
                     continue;
                 }
 
-                if(!Regex.IsMatch(source, conv.ReplacePattern)) {
+                if(!Regex.IsMatch(source, rule.ReplacePattern)) {
                     continue;
                 }
 
                 nameList.AddRange(
-                    conv.ReplaceValueList
+                    rule.ReplacementValues
                         .Select(getReplaceString)
-                        .Select(repString => Regex.Replace(source, conv.ReplacePattern, repString))
+                        .Select(repString => Regex.Replace(source, rule.ReplacePattern, repString))
                     );
 
                 break;
@@ -83,10 +72,24 @@
             return nameList;
         }
 
-        class TransformRule {
+        ///<summary>
+        /// A rule that describes a name transform.
+        ///</summary>
+        public class Rule {
+            /// <summary>
+            /// Regular expression pattern for global filtering
+            /// </summary>
             public string GlobalFilterPattern;
+
+            /// <summary>
+            /// Regular expression pattern for replacing text
+            /// </summary>
             public string ReplacePattern;
-            public IEnumerable<string> ReplaceValueList;
+
+            /// <summary>
+            /// The list of replacement values
+            /// </summary>
+            public IEnumerable<string> ReplacementValues;
         }
     }
 }
