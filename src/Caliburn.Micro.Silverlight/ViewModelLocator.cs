@@ -24,51 +24,51 @@
             //Check for <Namespace>.<BaseName>View construct
             NameTransformer.AddRule
                 (
-                    @"(?<namespace>(.*\.)*)(?<basename>[A-Za-z]\w*)(?<suffix>View$)",
+                    @"(?<namespace>(.*\.)*)(?<basename>[A-Za-z_]\w*)(?<suffix>View$)",
                     new[] {
                         @"${namespace}${basename}ViewModel",
                         @"${namespace}${basename}",
                         @"${namespace}I${basename}ViewModel",
                         @"${namespace}I${basename}"
                     },
-                    @"(.*\.)*[A-Za-z]\w*View$"
+                    @"(.*\.)*[A-Za-z_]\w*View$"
                 );
 
             //Check for <Namespace>.<BaseName>Page construct
             //Add "View" synonyms below: (?<namespace>(.*\.)*)(?<basename>[A-Za-z]\w*)(?<suffix>(Page$)|(Form$)|(Screen$))"
             NameTransformer.AddRule
                 (
-                    @"(?<namespace>(.*\.)*)(?<basename>[A-Za-z]\w*)(?<suffix>Page$)",
+                    @"(?<namespace>(.*\.)*)(?<basename>[A-Za-z_]\w*)(?<suffix>Page$)",
                     new[] {
                         @"${namespace}${basename}${suffix}ViewModel",
                         @"${namespace}I${basename}${suffix}ViewModel"
                     },
-                    @"(.*\.)*[A-Za-z]\w*Page$"
+                    @"(.*\.)*[A-Za-z_]\w*Page$"
                 );
 
             //Check for <Namespace>.Views.<BaseName>View construct
             NameTransformer.AddRule
                 (
-                    @"(?<namespace>(.*\.)*)Views\.(?<basename>[A-Za-z]\w*)(?<suffix>View$)",
+                    @"(?<namespace>(.*\.)*)Views\.(?<basename>[A-Za-z_]\w*)(?<suffix>View$)",
                     new[] {
                         @"${namespace}ViewModels.${basename}ViewModel",
                         @"${namespace}ViewModels.${basename}",
                         @"${namespace}ViewModels.I${basename}ViewModel",
                         @"${namespace}ViewModels.I${basename}"
                     },
-                    @"(.*\.)*Views\.[A-Za-z]\w*View$"
+                    @"(.*\.)*Views\.[A-Za-z_]\w*View$"
                 );
 
             //Check for <Namespace>.Views.<BaseName><ViewSynonym> construct
             //Add "View" synonyms below: (?<namespace>(.*\.)*)Views\.(?<basename>[A-Za-z]\w*)(?<suffix>(Page$)|(Form$)|(Screen$))"
             NameTransformer.AddRule
                 (
-                    @"(?<namespace>(.*\.)*)Views\.(?<basename>[A-Za-z]\w*)(?<suffix>Page$)",
+                    @"(?<namespace>(.*\.)*)Views\.(?<basename>[A-Za-z_]\w*)(?<suffix>Page$)",
                     new[] {
                         @"${namespace}ViewModels.${basename}${suffix}ViewModel",
                         @"${namespace}ViewModels.I${basename}${suffix}ViewModel"
                     },
-                    @"(.*\.)*Views\.[A-Za-z]\w*Page$"
+                    @"(.*\.)*Views\.[A-Za-z_]\w*Page$"
                 );
         }
 

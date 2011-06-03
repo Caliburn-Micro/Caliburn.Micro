@@ -41,17 +41,17 @@
             //Check for <Namespace>.ViewModels.<BaseName>ViewModel construct
             NameTransformer.AddRule
                 (
-                    @"(?<namespace>(.*\.)*)ViewModels\.(?<basename>[A-Za-z]\w*)(?<suffix>ViewModel$)",
+                    @"(?<namespace>(.*\.)*)ViewModels\.(?<basename>[A-Za-z_]\w*)(?<suffix>ViewModel$)",
                     @"${namespace}Views.${basename}View",
-                    @"(.*\.)*ViewModels\.[A-Za-z]\w*ViewModel$"
+                    @"(.*\.)*ViewModels\.[A-Za-z_]\w*ViewModel$"
                 );
 
             //Check for <Namespace>.ViewModels.<BaseName>PageViewModel construct
             NameTransformer.AddRule
                 (
-                    @"(?<namespace>(.*\.)*)ViewModels\.(?<basename>[A-Za-z]\w*)(?<suffix>ViewModel$)",
+                    @"(?<namespace>(.*\.)*)ViewModels\.(?<basename>[A-Za-z_]\w*)(?<suffix>PageViewModel$)",
                     @"${namespace}Views.${basename}Page",
-                    @"(.*\.)*ViewModels\.[A-Za-z]\w*PageViewModel$"
+                    @"(.*\.)*ViewModels\.[A-Za-z_]\w*PageViewModel$"
                 );
         }
 
