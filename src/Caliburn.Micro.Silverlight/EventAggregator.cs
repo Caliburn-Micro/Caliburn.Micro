@@ -39,7 +39,7 @@
         ///   Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />
         /// </summary>
         /// <param name = "instance">The instance to subscribe for event publication.</param>
-        public void Subscribe(object instance) {
+        public virtual void Subscribe(object instance) {
             lock(handlers) {
                 if(handlers.Any(x => x.Matches(instance)))
                     return;
@@ -53,7 +53,7 @@
         ///  Unsubscribes the instance from all events.
         /// </summary>
         /// <param name = "instance">The instance to unsubscribe.</param>
-        public void Unsubscribe(object instance) {
+        public virtual void Unsubscribe(object instance) {
             lock(handlers) {
                 var found = handlers.FirstOrDefault(x => x.Matches(instance));
 
@@ -67,7 +67,7 @@
         /// </summary>
         /// <param name = "message">The message instance.</param>
         /// <param name="marshal">Allows the publisher to provide a custom thread marshaller for the message publication. The default uses the UI thread marshaller.</param>
-        public void Publish(object message, Action<System.Action> marshal = null) {
+        public virtual void Publish(object message, Action<System.Action> marshal = null) {
             Handler[] toNotify;
             lock(handlers)
                 toNotify = handlers.ToArray();
@@ -90,7 +90,7 @@
             });
         }
 
-        class Handler {
+        protected class Handler {
             readonly WeakReference reference;
             readonly Dictionary<Type, MethodInfo> supportedHandlers = new Dictionary<Type, MethodInfo>();
 
