@@ -74,7 +74,7 @@
         /// <param name="container">The container.</param>
         /// <param name="handler">The handler.</param>
         /// <returns>The container.</returns>
-        public static SimpleContainer Handler<TService>(this SimpleContainer container, Func<object> handler) {
+        public static SimpleContainer Handler<TService>(this SimpleContainer container, Func<SimpleContainer, object> handler) {
             container.RegisterHandler(typeof(TService), null, handler);
             return container;
         }
