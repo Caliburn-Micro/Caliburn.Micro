@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Caliburn.Micro</id>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <authors>Rob Eisenberg, Marco Amendola, Ryan Cromwell</authors>
     <description>A small, yet powerful framework designed for WPF, Silverlight and WP7, Caliburn.Micro implements a variety of UI patterns for solving real-world problems. Patterns that are highlighted include MVVM (Presentation Model), MVP and MVC.</description>
     <language>en-US</language>

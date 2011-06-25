@@ -13,7 +13,7 @@
             container.RegisterPhoneServices();
             container.PerRequest<MainPageViewModel>();
             container.PerRequest<PivotPageViewModel>();
-            container.PerRequest<TabViewModel, TabViewModel>();
+            container.PerRequest<TabViewModel>();
 
             AddCustomConventions();
         }

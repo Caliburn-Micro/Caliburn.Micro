@@ -12,10 +12,10 @@
     public class AppBootstrapper : Bootstrapper<IShell> {
         CompositionContainer container;
 
-        protected override void StartDesignTime()
+        protected override void StartRuntime()
         {
             LogManager.GetLog = type => new SimpleLog(type);
-            base.StartDesignTime();
+            base.StartRuntime();
         }
 
         protected override void Configure() {
