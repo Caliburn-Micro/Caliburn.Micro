@@ -19,7 +19,7 @@ $defaultNamespace = $project.Properties.Item("DefaultNamespace").Value
 ls $contentSource | foreach-object { 
 	$content = [System.IO.File]::ReadAllText($_.FullName)
 	$content = $content.Replace('$safeprojectname$', $defaultNamespace)
-	$content | out-file $_.FullName
+	$content | out-file -Encoding UTF8 $_.FullName
 	$project.ProjectItems.AddFromFileCopy($_.FullName)
 }
 
