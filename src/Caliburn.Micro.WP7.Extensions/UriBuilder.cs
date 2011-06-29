@@ -30,7 +30,10 @@
         /// <param name="value">The property value.</param>
         /// <returns>Itself</returns>
         public UriBuilder<TViewModel> WithParam<TValue>(Expression<Func<TViewModel, TValue>> property, TValue value) {
-            queryString[property.GetMemberInfo().Name] = value.ToString();
+            if (!Equals(default(TValue), value)) {
+                queryString[property.GetMemberInfo().Name] = value.ToString();
+            }
+
             return this;
         }
 

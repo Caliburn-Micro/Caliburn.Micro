@@ -138,7 +138,10 @@
             }
 
             viewModelType = LocateTypeForViewType(viewType, true);
-            return IoC.GetInstance(viewModelType, null);
+
+            return viewModelType != null
+                       ? IoC.GetInstance(viewModelType, null)
+                       : null;
         };
 
         /// <summary>
