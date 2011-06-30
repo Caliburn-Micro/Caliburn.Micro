@@ -2,6 +2,10 @@
     using System;
     using System.Collections.Generic;
     using System.Windows;
+#if WP7
+    using System.Windows.Controls;
+    using System.Windows.Navigation;
+#endif
 
     ///<summary>
     ///  A base implementation of <see cref = "IViewAware" /> which is capable of caching views by context.
@@ -66,17 +70,25 @@
             var element = nonGeneratedView as FrameworkElement;
             if (element != null && !(bool)element.GetValue(PreviouslyAttachedProperty)) {
                 element.SetValue(PreviouslyAttachedProperty, true);
-                View.ExecuteOnLoad(element, (s, e) => {
-                    OnViewLoaded(s);
+                View.ExecuteOnLoad(element, (s, e) => OnViewLoaded(s));
+
 #if WP7
-                    EventHandler layoutUpdated = null;
-                    layoutUpdated = (s2, e2) => {
-                        OnViewReady(s2);
-                        element.LayoutUpdated -= layoutUpdated;
+                var page = element as Page;
+                if(page != null) {
+                    NavigatedEventHandler onNavigatedTo = null;
+                    onNavigatedTo = (s2, e2) =>
+                    {
+                        page.NavigationService.Navigated -= onNavigatedTo;
+                        EventHandler onLayoutUpdate = null;
+                        onLayoutUpdate = (s3, e3) => {
+                            OnViewReady(s3);
+                            page.LayoutUpdated -= onLayoutUpdate;
+                        };
+                        page.LayoutUpdated += onLayoutUpdate;
                     };
-                    element.LayoutUpdated += layoutUpdated;
+                    page.NavigationService.Navigated += onNavigatedTo;
+                }
 #endif
-                });
             }
 
             OnViewAttached(nonGeneratedView, context);
@@ -98,7 +110,7 @@
 
 #if WP7
         /// <summary>
-        ///   Called the first time the attached view's LayoutUpdated event fires after its Loaded event fires.
+        ///   Called the first time the page is LayoutUpdated event fires after its Navigated event fires.
         /// </summary>
         /// <param name = "view"></param>
         protected virtual void OnViewReady(object view) { }
