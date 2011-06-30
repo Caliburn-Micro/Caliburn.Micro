@@ -109,6 +109,10 @@
                             where viewTypeList.Contains(type.FullName)
                             select type).FirstOrDefault();
 
+            if(viewType == null) {
+                Log.Warn("View not found. Searched: {0}.", string.Join(", ", viewTypeList.ToArray()));
+            }
+
             return viewType;
         };
 

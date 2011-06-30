@@ -64,6 +64,10 @@
 
         string DeterminePageName() {
             var page = ViewLocator.LocateTypeForModelType(typeof(TViewModel), null, null);
+            if(page == null) {
+                throw new Exception(string.Format("No view was found for {0}. See the log for searched views.", typeof(TViewModel).FullName));
+            }
+
             var pageAssemblyName = GetAssemblyName(page.Assembly);
             var pageName = page.FullName.Replace(pageAssemblyName, "").Replace(".", "/") + ".xaml";
 

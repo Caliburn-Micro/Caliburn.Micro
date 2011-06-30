@@ -8,6 +8,7 @@
     ///   A strategy for determining which view model to use for a given view.
     /// </summary>
     public static class ViewModelLocator {
+        static readonly ILog Log = LogManager.GetLog(typeof(ViewModelLocator));
         ///<summary>
         /// Used to transform names.
         ///</summary>
@@ -116,6 +117,9 @@
                                  where viewModelTypeList.Contains(type.FullName)
                                  select type).FirstOrDefault();
 
+            if (viewModelType == null) {
+                Log.Warn("View Model not found. Searched: {0}.", string.Join(", ", viewModelTypeList.ToArray()));
+            }
 
             return viewModelType;
         };
