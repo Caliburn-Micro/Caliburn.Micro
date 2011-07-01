@@ -40,7 +40,7 @@
 
         static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (Bootstrapper.IsInDesignMode || e.NewValue == null || e.NewValue == e.OldValue)
+            if (Execute.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue)
                 return;
 
             var fe = d as FrameworkElement;

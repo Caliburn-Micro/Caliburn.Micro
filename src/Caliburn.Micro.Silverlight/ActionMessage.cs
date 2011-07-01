@@ -113,7 +113,7 @@ namespace Caliburn.Micro
         /// </summary>
         protected override void OnAttached()
         {
-            if (!Bootstrapper.IsInDesignMode)
+            if (!Execute.InDesignMode)
             {
                 Parameters.Attach(AssociatedObject);
                 Parameters.Apply(x => x.MakeAwareOf(this));
@@ -139,7 +139,7 @@ namespace Caliburn.Micro
         /// </summary>
         protected override void OnDetaching()
         {
-            if (!Bootstrapper.IsInDesignMode)
+            if (!Execute.InDesignMode)
             {
                 Detaching(this, EventArgs.Empty);
                 AssociatedObject.Loaded -= ElementLoaded;

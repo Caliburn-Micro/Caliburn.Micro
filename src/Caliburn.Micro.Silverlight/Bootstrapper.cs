@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Diagnostics;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Threading;
@@ -13,7 +11,6 @@
     /// </summary>
     public class Bootstrapper
     {
-        private static bool? isInDesignMode;
         readonly bool useApplication;
 
         /// <summary>
@@ -21,29 +18,6 @@
         /// </summary>
         public Application Application { get; protected set; }
 
-        /// <summary>
-        /// Indicates whether or not the framework is in design-time mode.
-        /// </summary>
-        public static bool IsInDesignMode
-        {
-            get
-            {
-                if (isInDesignMode == null)
-                {
-#if SILVERLIGHT
-                    isInDesignMode = DesignerProperties.IsInDesignTool;
-#else
-                    var prop = DesignerProperties.IsInDesignModeProperty;
-                    isInDesignMode = (bool)DependencyPropertyDescriptor.FromProperty(prop, typeof(FrameworkElement)).Metadata.DefaultValue;
-
-                    if (!isInDesignMode.GetValueOrDefault(false) && Process.GetCurrentProcess().ProcessName.StartsWith("devenv", StringComparison.Ordinal))
-                        isInDesignMode = true;
-#endif
-                }
-
-                return isInDesignMode.GetValueOrDefault(false);
-            }
-        }
 
         /// <summary>
         /// Creates an instance of the bootstrapper.
@@ -51,7 +25,7 @@
         public Bootstrapper(bool useApplication = true) {
             this.useApplication = useApplication;
 
-            if (IsInDesignMode)
+            if (Execute.InDesignMode)
                 StartDesignTime();
             else StartRuntime();
         }

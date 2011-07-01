@@ -68,9 +68,6 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\Bind.cs">
       <Link>Bind.cs</Link>
     </Compile>
-    <Compile Include="..\Caliburn.Micro.Silverlight\BindableCollection.cs">
-      <Link>BindableCollection.cs</Link>
-    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\BindingScope.cs">
       <Link>BindingScope.cs</Link>
     </Compile>
@@ -110,9 +107,6 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\EventAggregator.cs">
       <Link>EventAggregator.cs</Link>
     </Compile>
-    <Compile Include="..\Caliburn.Micro.Silverlight\Execute.cs">
-      <Link>Execute.cs</Link>
-    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ExtensionMethods.cs">
       <Link>ExtensionMethods.cs</Link>
     </Compile>
@@ -124,6 +118,9 @@
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\IHaveParameters.cs">
       <Link>IHaveParameters.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\INPC.cs">
+      <Link>INPC.cs</Link>
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\IoC.cs">
       <Link>IoC.cs</Link>
@@ -154,9 +151,6 @@
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\Parser.cs">
       <Link>Parser.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.Silverlight\PropertyChangedBase.cs">
-      <Link>PropertyChangedBase.cs</Link>
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ResultCompletionEventArgs.cs">
       <Link>ResultCompletionEventArgs.cs</Link>

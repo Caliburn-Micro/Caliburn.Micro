@@ -70,7 +70,6 @@
     <Compile Include="AssemblySource.cs" />
     <Compile Include="AttachedCollection.cs" />
     <Compile Include="Bind.cs" />
-    <Compile Include="BindableCollection.cs" />
     <Compile Include="BindingScope.cs" />
     <Compile Include="BooleanToVisibilityConverter.cs" />
     <Compile Include="Bootstrapper.cs" />
@@ -85,7 +84,7 @@
     <Compile Include="ConventionManager.cs" />
     <Compile Include="ElementConvention.cs" />
     <Compile Include="EventAggregator.cs" />
-    <Compile Include="Execute.cs" />
+    <Compile Include="INPC.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="IChild.cs" />
     <Compile Include="IConductor.cs" />
@@ -101,7 +100,6 @@
     <Compile Include="Parameter.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PropertyChangedBase.cs" />
     <Compile Include="ResultCompletionEventArgs.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="ScreenExtensions.cs" />
