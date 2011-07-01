@@ -24,8 +24,15 @@
         ///   Publishes a message.
         /// </summary>
         /// <param name = "message">The message instance.</param>
+        /// <remarks>Uses the default thread marshaller during publication.</remarks>
+        void Publish(object message);
+
+        /// <summary>
+        ///   Publishes a message.
+        /// </summary>
+        /// <param name = "message">The message instance.</param>
         /// <param name="marshal">Allows the publisher to provide a custom thread marshaller for the message publication. The default uses the UI thread marshaller.</param>
-        void Publish(object message, Action<System.Action> marshal = null);
+        void Publish(object message, Action<System.Action> marshal);
     }
 
     /// <summary>
@@ -66,14 +73,20 @@
         ///   Publishes a message.
         /// </summary>
         /// <param name = "message">The message instance.</param>
-        /// <param name="marshal">Allows the publisher to provide a custom thread marshaller for the message publication. The default uses the UI thread marshaller.</param>
-        public virtual void Publish(object message, Action<System.Action> marshal = null) {
+        /// <remarks>Uses the default UI thread marshaller during publication.</remarks>
+        public virtual void Publish(object message) {
+            Publish(message, Execute.OnUIThread);
+        }
+
+        /// <summary>
+        ///   Publishes a message.
+        /// </summary>
+        /// <param name = "message">The message instance.</param>
+        /// <param name="marshal">Allows the publisher to provide a custom thread marshaller for the message publication.</param>
+        public virtual void Publish(object message, Action<System.Action> marshal) {
             Handler[] toNotify;
             lock(handlers)
                 toNotify = handlers.ToArray();
-
-            if(marshal == null)
-                marshal = Execute.OnUIThread;
 
             marshal(() => {
                 Log.Info("Publishing {0}.", message);
