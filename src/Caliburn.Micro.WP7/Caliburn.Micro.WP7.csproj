@@ -122,9 +122,6 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\IConductor.cs">
       <Link>IConductor.cs</Link>
     </Compile>
-    <Compile Include="..\Caliburn.Micro.Silverlight\IHandle.cs">
-      <Link>IHandle.cs</Link>
-    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\IHaveParameters.cs">
       <Link>IHaveParameters.cs</Link>
     </Compile>

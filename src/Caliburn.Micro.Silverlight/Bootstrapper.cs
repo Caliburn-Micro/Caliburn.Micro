@@ -66,6 +66,7 @@
         /// </summary>
         protected virtual void StartRuntime() {
             Execute.InitializeWithDispatcher();
+            EventAggregator.DefaultPublicationThreadMarshaller = Execute.OnUIThread;
             AssemblySource.Instance.AddRange(SelectAssemblies());
 
             if (useApplication) {
