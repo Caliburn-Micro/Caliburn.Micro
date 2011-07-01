@@ -156,6 +156,16 @@
             if(activator != null)
                 activator.Activate();
 
+            var viewAware = viewModel as ViewAware;
+            if (viewAware != null) {
+                EventHandler onLayoutUpdate = null;
+                onLayoutUpdate = delegate {
+                    viewAware.OnViewReady(page);
+                    page.LayoutUpdated -= onLayoutUpdate;
+                };
+                page.LayoutUpdated += onLayoutUpdate;
+            }
+
             GC.Collect();
         }
 

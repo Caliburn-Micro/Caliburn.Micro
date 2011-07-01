@@ -71,24 +71,6 @@
             if (element != null && !(bool)element.GetValue(PreviouslyAttachedProperty)) {
                 element.SetValue(PreviouslyAttachedProperty, true);
                 View.ExecuteOnLoad(element, (s, e) => OnViewLoaded(s));
-
-#if WP7
-                var page = element as Page;
-                if(page != null) {
-                    NavigatedEventHandler onNavigatedTo = null;
-                    onNavigatedTo = (s2, e2) =>
-                    {
-                        page.NavigationService.Navigated -= onNavigatedTo;
-                        EventHandler onLayoutUpdate = null;
-                        onLayoutUpdate = (s3, e3) => {
-                            OnViewReady(s3);
-                            page.LayoutUpdated -= onLayoutUpdate;
-                        };
-                        page.LayoutUpdated += onLayoutUpdate;
-                    };
-                    page.NavigationService.Navigated += onNavigatedTo;
-                }
-#endif
             }
 
             OnViewAttached(nonGeneratedView, context);
@@ -100,20 +82,20 @@
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="context">The context in which the view appears.</param>
-        protected virtual void OnViewAttached(object view, object context) {}
+        protected internal virtual void OnViewAttached(object view, object context) {}
 
         /// <summary>
         ///   Called when an attached view's Loaded event fires.
         /// </summary>
         /// <param name = "view"></param>
-        protected virtual void OnViewLoaded(object view) {}
+        protected internal virtual void OnViewLoaded(object view) {}
 
 #if WP7
         /// <summary>
-        ///   Called the first time the page is LayoutUpdated event fires after its Navigated event fires.
+        ///   Called the first time the page's LayoutUpdated event fires after it is navigated to.
         /// </summary>
         /// <param name = "view"></param>
-        protected virtual void OnViewReady(object view) { }
+        protected internal virtual void OnViewReady(object view) { }
 #endif
 
         /// <summary>
