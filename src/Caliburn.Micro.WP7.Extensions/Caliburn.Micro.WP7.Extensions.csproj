@@ -44,6 +44,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Phone" />
+    <Reference Include="Microsoft.Xna.Framework" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
@@ -55,6 +56,7 @@
     <Compile Include="IPhoneContainer.cs" />
     <Compile Include="AppSettingsStorageMechanism.cs" />
     <Compile Include="NavigationExtensions.cs" />
+    <Compile Include="SoundEffectPlayer.cs" />
     <Compile Include="StorageInstruction.cs" />
     <Compile Include="StorageInstructionBuilder.cs" />
     <Compile Include="IStorageMechanism.cs" />
@@ -72,6 +74,8 @@
     <Compile Include="TaskExtensionMethods.cs" />
     <Compile Include="TaskController.cs" />
     <Compile Include="UriBuilder.cs" />
+    <Compile Include="VibrateController.cs" />
+    <Compile Include="WindowManagerExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro.WP7\Caliburn.Micro.WP7.csproj">

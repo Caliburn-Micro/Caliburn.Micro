@@ -74,6 +74,10 @@
             RegisterInstance(typeof(IPhoneService), null, phoneService);
             RegisterSingleton(typeof(IEventAggregator), null, typeof(EventAggregator));
             RegisterSingleton(typeof(IWindowManager), null, typeof(WindowManager));
+			RegisterSingleton(typeof(IVibrateController), null, typeof(SystemVibrateController));
+			RegisterSingleton(typeof(ISoundEffectPlayer), null, typeof(XnaSoundEffectPlayer));
+
+			
 
             RegisterSingleton(typeof(StorageCoordinator), null, typeof(StorageCoordinator));
             var coordinator = (StorageCoordinator)GetInstance(typeof(StorageCoordinator), null);

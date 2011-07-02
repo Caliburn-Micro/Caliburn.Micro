@@ -2,6 +2,7 @@
     using System;
 	using System.Collections.Generic;
 	using System.Windows;
+	using Caliburn.Micro;
 
     public class MainPageViewModel {
 
@@ -25,7 +26,7 @@
 		{
 			var msgVM = messageViewModelFactory();
             msgVM.Message = "A message shown in the dialog.\nSecond row of message shown in the dialog.";
-			windowManager.ShowDialog(msgVM);
+			windowManager.ShowDialogWithFeedback(msgVM, wavOpeningSound:new Uri("Laser.wav", UriKind.Relative));
 		}
 
 		public IEnumerable<IResult> ShowInputDialog() {
