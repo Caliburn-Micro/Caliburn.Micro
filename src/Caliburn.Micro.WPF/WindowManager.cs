@@ -81,7 +81,8 @@
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The view context.</param>
         /// <param name="settings">The optional popup settings.</param>
-        public virtual void ShowPopup(object rootModel, object context = null, IDictionary<string, object> settings = null) {
+        public virtual void ShowPopup(object rootModel, object context = null, IDictionary<string, object> settings = null) 
+		{
             var popup = CreatePopup(rootModel, settings);
             var view = ViewLocator.LocateForModel(rootModel, popup, context);
 
@@ -89,6 +90,7 @@
             popup.SetValue(View.IsGeneratedProperty, true);
 
             ViewModelBinder.Bind(rootModel, popup, null);
+			Action.SetTargetWithoutContext(view, rootModel);
 
             var activatable = rootModel as IActivate;
             if (activatable != null)

@@ -104,6 +104,7 @@
             popup.SetValue(View.IsGeneratedProperty, true);
 
             ViewModelBinder.Bind(rootModel, popup, null);
+			Action.SetTargetWithoutContext(view, rootModel);
 
             var activatable = rootModel as IActivate;
             if (activatable != null)
