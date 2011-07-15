@@ -104,6 +104,9 @@
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event args.</param>
         protected virtual void OnNavigating(object sender, NavigatingCancelEventArgs e) {
+			externalNavigatingHandler(sender, e);   
+			if (e.Cancel) return;
+
             var fe = frame.Content as FrameworkElement;
             if(fe == null)
                 return;
@@ -277,13 +280,14 @@
             remove { frame.Navigated -= value; }
         }
 
+		NavigatingCancelEventHandler externalNavigatingHandler = delegate { };
         /// <summary>
         /// Raised prior to navigation.
         /// </summary>
         public event NavigatingCancelEventHandler Navigating
         {
-            add { frame.Navigating += value; }
-            remove { frame.Navigating -= value; }
+			add { externalNavigatingHandler += value; }
+			remove { externalNavigatingHandler -= value; }
         }
 
         /// <summary>
@@ -294,6 +298,7 @@
             add { frame.NavigationFailed += value; }
             remove { frame.NavigationFailed -= value; }
         }
+
 
         /// <summary>
         /// Raised when navigation is stopped.
