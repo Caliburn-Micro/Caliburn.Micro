@@ -1,0 +1,25 @@
+﻿@using Caliburn.Micro.PackageBuilder
+@{
+    var package = (PackageModel)Model;
+}
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>@package.Id</id>
+    <version>1.2.0</version>
+    <authors>Rob Eisenberg, Marco Amendola, Ryan Cromwell</authors>
+    <description>@package.Description</description>
+    <language>en-US</language>
+    <licenseUrl>http://caliburnmicro.codeplex.com/license</licenseUrl>
+    <projectUrl>http://caliburnmicro.codeplex.com</projectUrl>
+    <iconUrl>http://www.caliburnproject.org/CaliburnIcon.png</iconUrl>
+    <tags>@package.Tags</tags>
+    @if (@package.FrameworkAssemblies.Count > 0) {
+    <frameworkAssemblies>
+        @foreach (var frameworkAssembly in package.FrameworkAssemblies) {
+        <frameworkAssembly assemblyName="@frameworkAssembly.Name" targetFramework="@frameworkAssembly.Target" />                                                                    
+        }
+	</frameworkAssemblies>                                
+    }
+  </metadata>
+</package>
