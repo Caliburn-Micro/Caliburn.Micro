@@ -144,9 +144,7 @@
 
                 if(dead.Any()) {
                     lock(handlers) {
-                        foreach(var handler in dead) {
-                            handlers.Remove(handler);
-                        }
+                        dead.Apply(x => handlers.Remove(x));
                     }
                 }
             });

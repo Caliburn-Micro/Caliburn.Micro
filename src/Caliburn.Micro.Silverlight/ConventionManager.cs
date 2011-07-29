@@ -383,6 +383,28 @@
             Log.Info("Header template applied to {0}.", element.Name);
         }
 
+        /// <summary>
+        /// Gets a property by name, ignoring case and searching all interfaces.
+        /// </summary>
+        /// <param name="type">The type to inspect.</param>
+        /// <param name="propertyName">The property to search for.</param>
+        /// <returns>The property or null if not found.</returns>
+        public static PropertyInfo GetPropertyCaseInsensitive(this Type type, string propertyName) {
+            var typeList = new List<Type> { type };
+
+            if (type.IsInterface)
+                typeList.AddRange(type.GetInterfaces());
+
+            var flags = BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance;
+
+            if (IncludeStaticProperties)
+                flags = flags | BindingFlags.Static;
+
+            return typeList
+                .Select(interfaceType => interfaceType.GetProperty(propertyName, flags))
+                .FirstOrDefault(property => property != null);
+        }
+
 #if SILVERLIGHT
         /// <summary>
         /// Accounts for the lack of UpdateSourceTrigger in silverlight.

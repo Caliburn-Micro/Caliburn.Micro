@@ -25,7 +25,7 @@
                 RenderManifest(packageModel, path);
 
                 if(packageModel.Content.Count > 0) {
-                    var contentPath = Path.Combine(path, "content");
+                    var contentPath = Path.Combine(path, "content/Caliburn.Micro");
                     Directory.CreateDirectory(contentPath);
 
                     foreach(var source in packageModel.Content) {
