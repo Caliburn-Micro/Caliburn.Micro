@@ -5,8 +5,8 @@
         public PackageList() {
             Add(new PackageModel {
                 Id = "Caliburn.Micro.Container",
-                Description = "A simple IoC Container for .NET, Silverlight and WP7.",
-                Tags = "Silverlight WPF WP7 SL4 SL Phone IoC DI Container",
+                Description = "A simple IoC Container for .NET, Silverlight, WP7, Mono and Unity3d.",
+                Tags = "Silverlight WPF WP7 SL4 SL Phone IoC DI Container Mono Unity3d",
                 Content = {
                     "../../../Caliburn.Micro.Silverlight/ExtensionMethods.cs",
                     "../../../Caliburn.Micro.WP7.Extensions/ContainerExtensions.cs",
@@ -16,8 +16,8 @@
 
             Add(new PackageModel {
                 Id = "Caliburn.Micro.EventAggregator",
-                Description = "A small, simple event aggregator implementation for .NET, Silverlight and WP7.",
-                Tags = "Silverlight WPF WP7 SL4 SL Phone EA PubSub EventAggregator Messaging Messenger Publish Subscribe Event",
+                Description = "A small, simple event aggregator implementation for .NET, Silverlight, WP7, Mono and Unity3d.",
+                Tags = "Silverlight WPF WP7 SL4 SL Phone EA PubSub EventAggregator Messaging Messenger Publish Subscribe Event Mono Unity3d",
                 Content = {
                     "../../../Caliburn.Micro.Silverlight/ExtensionMethods.cs",
                     "../../../Caliburn.Micro.Silverlight/EventAggregator.cs",
