@@ -47,7 +47,7 @@
 #if SILVERLIGHT
             var dispatcher = Deployment.Current.Dispatcher;
 
-            executor = action => {
+            SetUIThreadMarshaller(action => {
                 if(dispatcher.CheckAccess())
                     action();
                 else {
@@ -66,15 +66,15 @@
                     if(exception != null)
                         throw new TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
                 }
-            };
+            });
 #else
             var dispatcher = Dispatcher.CurrentDispatcher;
 
-            executor = action => {
+            SetUIThreadMarshaller(action => {
                 if(dispatcher.CheckAccess())
                     action();
                 else dispatcher.Invoke(action);
-            };
+            });
 #endif
         }
 
@@ -82,7 +82,15 @@
         ///   Resets the executor to use a non-dispatcher-based action executor.
         /// </summary>
         public static void ResetWithoutDispatcher() {
-            executor = action => action();
+            SetUIThreadMarshaller(action => action());
+        }
+
+        /// <summary>
+        /// Sets a custom UI thread marshaller.
+        /// </summary>
+        /// <param name="marshaller">The marshaller.</param>
+        public static void SetUIThreadMarshaller(Action<System.Action> marshaller) {
+            executor = marshaller;
         }
 
         /// <summary>
