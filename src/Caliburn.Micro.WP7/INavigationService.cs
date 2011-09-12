@@ -151,9 +151,8 @@
             if(treatViewAsLoaded)
                 page.SetValue(View.IsLoadedProperty, true);
 
-            ViewModelBinder.Bind(viewModel, page, null);
-
             TryInjectQueryString(viewModel, page);
+            ViewModelBinder.Bind(viewModel, page, null);
 
             var activator = viewModel as IActivate;
             if(activator != null)
@@ -177,12 +176,10 @@
         /// </summary>
         /// <param name="viewModel">The view model.</param>
         /// <param name="page">The page.</param>
-        protected virtual void TryInjectQueryString(object viewModel, Page page) 
-        {
+        protected virtual void TryInjectQueryString(object viewModel, Page page) {
             var viewModelType = viewModel.GetType();
 
-            foreach(var pair in page.NavigationContext.QueryString)
-            {
+            foreach(var pair in page.NavigationContext.QueryString) {
                 var property = viewModelType.GetPropertyCaseInsensitive(pair.Key);
                 if(property == null)
                     continue;
