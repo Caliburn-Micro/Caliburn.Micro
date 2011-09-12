@@ -51,15 +51,23 @@
         /// Navigates to the Uri represented by this builder.
         /// </summary>
         public void Navigate() {
-            var pageName = DeterminePageName();
-            var qs = BuildQueryString();
-            var uri = new Uri(pageName + qs, UriKind.Relative);
+            var uri = BuildUri();
 
             if(navigationService == null) {
                 throw new Exception("Cannot navigate without attaching an INavigationService. Call AttachTo first.");
             }
 
             navigationService.Navigate(uri);
+        }
+
+        /// <summary>
+        /// Builds the URI.
+        /// </summary>
+        /// <returns>A uri constructed with the current configuration information.</returns>
+        public Uri BuildUri() {
+            var pageName = DeterminePageName();
+            var qs = BuildQueryString();
+            return new Uri(pageName + qs, UriKind.Relative);
         }
 
         string DeterminePageName() {
