@@ -192,8 +192,12 @@
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// Called when the object is deserialized.
+        /// </summary>
+        /// <param name="c">The streaming context.</param>
         [OnDeserialized]
-        void OnDeserialized(StreamingContext c) {
+        public void OnDeserialized(StreamingContext c) {
             IsNotifying = true;
         }
     }
@@ -433,8 +437,12 @@
             });
         }
 
+        /// <summary>
+        /// Called when the object is deserialized.
+        /// </summary>
+        /// <param name="c">The streaming context.</param>
         [OnDeserialized]
-        void OnDeserialized(StreamingContext c) {
+        public void OnDeserialized(StreamingContext c) {
             IsNotifying = true;
         }
     }
