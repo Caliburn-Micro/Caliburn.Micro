@@ -150,6 +150,52 @@
             });
         }
 
+#if WinRT
+        protected class Handler         {
+            readonly WeakReference reference;
+            readonly Dictionary<TypeInfo, MethodInfo> supportedHandlers = new Dictionary<TypeInfo, MethodInfo>();
+
+            public Handler(object handler)
+            {
+                reference = new WeakReference(handler);
+
+                var handlerInfo = typeof(IHandle).GetTypeInfo();
+                var interfaces = handler.GetType().GetTypeInfo().ImplementedInterfaces
+                    .Where(x => handlerInfo.IsAssignableFrom(x.GetTypeInfo()) && x.IsGenericType);
+
+                foreach (var @interface in interfaces) {
+                    var type = @interface.GenericTypeArguments[0];
+                    var method = @interface.GetTypeInfo().DeclaredMethods.First(x => x.Name == "Handle");
+                    supportedHandlers[type.GetTypeInfo()] = method;
+                }
+            }
+
+            public bool Matches(object instance)
+            {
+                return reference.Target == instance;
+            }
+
+            public bool Handle(Type messageType, object message)
+            {
+                var target = reference.Target;
+                if (target == null)
+                    return false;
+
+                var typeInfo = messageType.GetTypeInfo();
+
+                foreach (var pair in supportedHandlers)
+                {
+                    if (pair.Key.IsAssignableFrom(typeInfo))
+                    {
+                        pair.Value.Invoke(target, new[] { message });
+                        return true;
+                    }
+                }
+
+                return true;
+            }
+        }
+#else
         protected class Handler {
             readonly WeakReference reference;
             readonly Dictionary<Type, MethodInfo> supportedHandlers = new Dictionary<Type, MethodInfo>();
@@ -186,5 +232,6 @@
                 return true;
             }
         }
+#endif
     }
 }
