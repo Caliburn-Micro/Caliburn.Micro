@@ -41,17 +41,17 @@
             //Check for <Namespace>.ViewModels.<BaseName>ViewModel construct
             NameTransformer.AddRule
                 (
-                    @"(?<nsbefore>([A-Za-z_]\w*\.)*)?(?<nsvm>ViewModels\.)(?<nsafter>[A-Za-z_]\w*\.)*(?<basename>[A-Za-z_]\w*)(?<suffix>ViewModel$)",
+                    @"(?<nsbefore>([A-Za-z_]\w*\.)*)(?<nsvm>ViewModels\.)(?<nsafter>([A-Za-z_]\w*\.)*)(?<basename>[A-Za-z_]\w*)(?<suffix>ViewModel$)",
                     @"${nsbefore}Views.${nsafter}${basename}View",
-                    @"(([A-Za-z_]\w*\.)*)?ViewModels\.([A-Za-z_]\w*\.)*[A-Za-z_]\w*ViewModel$"
+                    @"([A-Za-z_]\w*\.)*ViewModels\.([A-Za-z_]\w*\.)*[A-Za-z_]\w*ViewModel$"
                 );
 
             //Check for <Namespace>.ViewModels.<BaseName>PageViewModel construct
             NameTransformer.AddRule
                 (
-                    @"(?<nsbefore>([A-Za-z_]\w*\.)*)?(?<nsvm>ViewModels\.)(?<nsafter>[A-Za-z_]\w*\.)*(?<basename>[A-Za-z_]\w*)(?<suffix>PageViewModel$)",
+                    @"(?<nsbefore>([A-Za-z_]\w*\.)*)(?<nsvm>ViewModels\.)(?<nsafter>([A-Za-z_]\w*\.)*)(?<basename>[A-Za-z_]\w*)(?<suffix>PageViewModel$)",
                     @"${nsbefore}Views.${nsafter}${basename}Page",
-                    @"(([A-Za-z_]\w*\.)*)?ViewModels\.([A-Za-z_]\w*\.)*[A-Za-z_]\w*PageViewModel$"
+                    @"([A-Za-z_]\w*\.)*ViewModels\.([A-Za-z_]\w*\.)*[A-Za-z_]\w*PageViewModel$"
                 );
         }
 
