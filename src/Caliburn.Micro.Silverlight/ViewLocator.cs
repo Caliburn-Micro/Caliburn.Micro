@@ -79,6 +79,20 @@
         };
 
         /// <summary>
+        /// Modifies the name of the type to be used at design time.
+        /// </summary>
+        public static Func<string, string> ModifyModelTypeAtDesignTime = modelTypeName => {
+            if(modelTypeName.StartsWith("_")) {
+                var index = modelTypeName.IndexOf(".");
+                modelTypeName = modelTypeName.Substring(index + 1);
+                index = modelTypeName.IndexOf(".");
+                modelTypeName = modelTypeName.Substring(index + 1);
+            }
+
+            return modelTypeName;
+        };
+
+        /// <summary>
         ///   Locates the view type based on the specified model type.
         /// </summary>
         /// <returns>The view.</returns>
@@ -86,11 +100,17 @@
         ///   Pass the model type, display location (or null) and the context instance (or null) as parameters and receive a view type.
         /// </remarks>
         public static Func<Type, DependencyObject, object, Type> LocateTypeForModelType = (modelType, displayLocation, context) => {
-            var viewTypeName = modelType.FullName.Substring(
+            var viewTypeName = modelType.FullName;
+
+            if (Execute.InDesignMode) {
+                viewTypeName = ModifyModelTypeAtDesignTime(viewTypeName);
+            }
+
+            viewTypeName = viewTypeName.Substring(
                 0,
-                modelType.FullName.IndexOf("`") < 0
-                    ? modelType.FullName.Length
-                    : modelType.FullName.IndexOf("`")
+                viewTypeName.IndexOf("`") < 0
+                    ? viewTypeName.Length
+                    : viewTypeName.IndexOf("`")
                 );
 
             Func<string, string> getReplaceString;

@@ -9,9 +9,9 @@
     /// <summary>
     /// Instantiate this class in order to configure the framework.
     /// </summary>
-    public class Bootstrapper
-    {
+    public class Bootstrapper {
         readonly bool useApplication;
+        readonly bool isInitialized;
 
         /// <summary>
         /// The application.
@@ -25,15 +25,31 @@
         public Bootstrapper(bool useApplication = true) {
             this.useApplication = useApplication;
 
-            if (Execute.InDesignMode)
+            if(isInitialized) {
+                return;
+            }
+
+            isInitialized = true;
+
+            if(Execute.InDesignMode) {
                 StartDesignTime();
-            else StartRuntime();
+            }
+            else {
+                StartRuntime();
+            }
         }
 
         /// <summary>
         /// Called by the bootstrapper's constructor at design time to start the framework.
         /// </summary>
-        protected virtual void StartDesignTime() {}
+        protected virtual void StartDesignTime() {
+            AssemblySource.Instance.AddRange(SelectAssemblies());
+
+            Configure();
+            IoC.GetInstance = GetInstance;
+            IoC.GetAllInstances = GetAllInstances;
+            IoC.BuildUp = BuildUp;
+        }
 
         /// <summary>
         /// Called by the bootstrapper's constructor at runtime to start the framework.
@@ -62,8 +78,7 @@
         /// <summary>
         /// Provides an opportunity to hook into the application object.
         /// </summary>
-        protected virtual void PrepareApplication()
-        {
+        protected virtual void PrepareApplication() {
             Application.Startup += OnStartup;
 #if SILVERLIGHT
             Application.UnhandledException += OnUnhandledException;
@@ -77,8 +92,7 @@
         /// Override to tell the framework where to find assemblies to inspect for views, etc.
         /// </summary>
         /// <returns>A list of assemblies to inspect.</returns>
-        protected virtual IEnumerable<Assembly> SelectAssemblies()
-        {
+        protected virtual IEnumerable<Assembly> SelectAssemblies() {
 #if SILVERLIGHT
             return new[] { Application.Current.GetType().Assembly };
 #else
@@ -92,8 +106,7 @@
         /// <param name="service">The service to locate.</param>
         /// <param name="key">The key to locate.</param>
         /// <returns>The located service.</returns>
-        protected virtual object GetInstance(Type service, string key)
-        {
+        protected virtual object GetInstance(Type service, string key) {
             return Activator.CreateInstance(service);
         }
 
@@ -102,8 +115,7 @@
         /// </summary>
         /// <param name="service">The service to locate.</param>
         /// <returns>The located services.</returns>
-        protected virtual IEnumerable<object> GetAllInstances(Type service)
-        {
+        protected virtual IEnumerable<object> GetAllInstances(Type service) {
             return new[] { Activator.CreateInstance(service) };
         }
 
@@ -195,8 +207,7 @@
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
-        protected override void OnStartup(object sender, StartupEventArgs e)
-        {
+        protected override void OnStartup(object sender, StartupEventArgs e) {
 #if SILVERLIGHT
             DisplayRootViewFor(Application, typeof(TRootModel));
 #else
