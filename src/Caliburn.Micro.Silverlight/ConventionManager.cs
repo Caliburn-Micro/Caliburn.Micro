@@ -349,23 +349,53 @@
         /// <param name="selectedItemProperty">The SelectedItem property.</param>
         /// <param name="viewModelType">The view model type.</param>
         /// <param name="path">The property path.</param>
-        public static void ConfigureSelectedItem(FrameworkElement selector, DependencyProperty selectedItemProperty, Type viewModelType, string path) {
-            if(HasBinding(selector, selectedItemProperty))
-                return;
+        public static Action<FrameworkElement, DependencyProperty, Type, string> ConfigureSelectedItem =
+			(selector, selectedItemProperty, viewModelType, path) => {
+				if (HasBinding(selector, selectedItemProperty))
+					return;
 
-            var index = path.LastIndexOf('.');
-            index = index == -1 ? 0 : index + 1;
-            var baseName = path.Substring(index);
+				var index = path.LastIndexOf('.');
+				index = index == -1 ? 0 : index + 1;
+				var baseName = path.Substring(index);
 
-            foreach (var potentialName in DerivePotentialSelectionNames(baseName)) {
-                if (viewModelType.GetPropertyCaseInsensitive(potentialName) != null) {
-                    var selectionPath = path.Replace(baseName, potentialName);
-                    BindingOperations.SetBinding(selector, selectedItemProperty, new Binding(selectionPath) { Mode = BindingMode.TwoWay });
-                    Log.Info("SelectedItem binding applied to {0}.", selector.Name);
-                    return;
-                }
-            }
-        }
+				foreach (var potentialName in DerivePotentialSelectionNames(baseName))
+				{
+					if (viewModelType.GetPropertyCaseInsensitive(potentialName) != null)
+					{
+						var selectionPath = path.Replace(baseName, potentialName);
+						var binding = new Binding(selectionPath) { Mode = BindingMode.TwoWay };
+						var shouldApplyBinding = ConfigureSelectedItemBinding(selector, selectedItemProperty, viewModelType, selectionPath, binding);
+						if (shouldApplyBinding)
+						{
+							BindingOperations.SetBinding(selector, selectedItemProperty, binding);
+							Log.Info("SelectedItem binding applied to {0}.", selector.Name);
+
+							return;
+						}
+						else
+						{
+							Log.Info("SelectedItem binding not applied to {0} due to 'ConfigureSelectedItemBinding' customization.", selector.Name);
+						}
+							
+						
+					}
+				}
+			};
+
+
+		/// <summary>
+		/// Configures the SelectedItem binding for matched selection path.
+		/// </summary>
+		/// <param name="selector">The element that has a SelectedItem property.</param>
+		/// <param name="selectedItemProperty">The SelectedItem property.</param>
+		/// <param name="viewModelType">The view model type.</param>
+		/// <param name="selectionPath">The property path.</param>
+		/// <param name="binding">The binding to configure.</param>
+		/// <returns>A bool indicating whether to apply binding</returns>
+		public static Func<FrameworkElement, DependencyProperty, Type, string, Binding, bool> ConfigureSelectedItemBinding =
+			(selector, selectedItemProperty, viewModelType, selectionPath, binding) => {
+				return true;
+			};
 
         /// <summary>
         /// Applies a header template based on <see cref="IHaveDisplayName"/>
