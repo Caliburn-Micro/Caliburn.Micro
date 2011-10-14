@@ -124,9 +124,10 @@
                 }
             }
 
+            var page = fe as Page;
             var deactivator = fe.DataContext as IDeactivate;
             if(deactivator != null)
-                deactivator.Deactivate(false);
+                deactivator.Deactivate(page != null && page.NavigationCacheMode == NavigationCacheMode.Disabled);
         }
 
         /// <summary>
