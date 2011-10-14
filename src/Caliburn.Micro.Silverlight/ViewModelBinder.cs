@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Interactivity;
-#if WP7
+#if WP7 || WP71
     using Microsoft.Phone.Controls;
 #endif
 
@@ -191,14 +191,14 @@
             namedElements = BindActions(namedElements, viewModelType);
             namedElements = BindProperties(namedElements, viewModelType);
             HandleUnmatchedElements(namedElements, viewModelType);
-#if WP7
+#if WP7 || WP71
             BindAppBar(view);
 #endif
 
             view.SetValue(ConventionsAppliedProperty, true);
         };
 
-#if WP7
+#if WP7 || WP71
         static void BindAppBar(DependencyObject view) {
             var page = view as PhoneApplicationPage;
             if (page == null || page.ApplicationBar == null)

@@ -56,7 +56,7 @@
             return memberExpression.Member;
         }
 
-#if WP7
+#if WP7 || WP71
 		//Method missing in WP7 Linq
 
 		/// <summary>

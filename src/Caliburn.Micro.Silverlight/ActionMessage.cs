@@ -69,7 +69,7 @@ namespace Caliburn.Micro
 
         ActionExecutionContext context;
 
-#if WP7
+#if WP7 || WP71
         internal AppBarButton buttonSource;
         internal AppBarMenuItem menuItemSource;
 #endif
@@ -294,7 +294,7 @@ namespace Caliburn.Micro
         /// <remarks>Returns a value indicating whether or not the action is available.</remarks>
         public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context =>
         {
-#if WP7
+#if WP7 || WP71
             if (context.Message.buttonSource != null) {
                 if(context.CanExecute != null)
                     context.Message.buttonSource.IsEnabled = context.CanExecute();

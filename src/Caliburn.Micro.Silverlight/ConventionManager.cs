@@ -178,7 +178,7 @@
 
         static ConventionManager()
         {
-#if !WP7
+#if !WP7 && !WP71
             AddElementConvention<DatePicker>(DatePicker.SelectedDateProperty, "SelectedDate", "SelectedDateChanged");
 #endif
 #if SILVERLIGHT
@@ -325,7 +325,7 @@
                         || !property.PropertyType.IsGenericType)
                 return;
 
-#if !WP7
+#if !WP7 && !WP71
             var itemType = property.PropertyType.GetGenericArguments().First();
             if (itemType.IsValueType || typeof(string).IsAssignableFrom(itemType))
                 return;

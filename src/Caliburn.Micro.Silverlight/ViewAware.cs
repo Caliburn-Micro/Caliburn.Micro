@@ -2,10 +2,6 @@
     using System;
     using System.Collections.Generic;
     using System.Windows;
-#if WP7
-    using System.Windows.Controls;
-    using System.Windows.Navigation;
-#endif
 
     ///<summary>
     ///  A base implementation of <see cref = "IViewAware" /> which is capable of caching views by context.
@@ -90,7 +86,7 @@
         /// <param name = "view"></param>
         protected internal virtual void OnViewLoaded(object view) {}
 
-#if WP7
+#if WP7 || WP71
         /// <summary>
         ///   Called the first time the page's LayoutUpdated event fires after it is navigated to.
         /// </summary>

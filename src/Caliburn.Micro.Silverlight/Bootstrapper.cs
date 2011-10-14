@@ -155,7 +155,7 @@
         protected virtual void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) { }
 #endif
             
-#if SILVERLIGHT && !WP7
+#if SILVERLIGHT && !WP7 && !WP71
         /// <summary>
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
         /// </summary>
@@ -196,7 +196,7 @@
 #endif
     }
 
-#if !WP7
+#if !WP7 && !WP71
     /// <summary>
     /// A strongly-typed version of <see cref="Bootstrapper"/> that specifies the type of root model to create for the application.
     /// </summary>
