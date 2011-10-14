@@ -51,6 +51,14 @@
         /// </summary>
         void GoForward();
 
+#if !WP7
+        /// <summary>
+        /// Removes the most recent entry from the back stack.
+        /// </summary>
+        /// <returns>The entry that was removed.</returns>
+        JournalEntry RemoveBackEntry();
+#endif
+
         /// <summary>
         /// Raised after navigation.
         /// </summary>
@@ -268,6 +276,16 @@
         {
             return frame.Navigate(source);
         }
+
+#if !WP7
+        /// <summary>
+        /// Removes the most recent entry from the back stack.
+        /// </summary>
+        /// <returns>The entry that was removed.</returns>
+        public JournalEntry RemoveBackEntry() {
+            return ((Page)frame.Content).NavigationService.RemoveBackEntry();
+        }
+#endif
 
         /// <summary>
         /// Raised after navigation.
