@@ -25,6 +25,13 @@
         /// <param name="phoneStateKey">The phone state key.</param>
         /// <param name="implementation">The implementation.</param>
         public void RegisterWithPhoneService(Type service, string phoneStateKey, Type implementation) {
+            var pservice = (IPhoneService)GetInstance(typeof(IPhoneService), null);
+
+            if (!pservice.State.ContainsKey(phoneStateKey ?? service.FullName))
+            {
+                pservice.State[phoneStateKey ?? service.FullName] = BuildInstance(implementation);
+            }
+
             RegisterHandler(service, phoneStateKey, container => {
                 var phoneService = (IPhoneService)container.GetInstance(typeof(IPhoneService), null);
 
@@ -43,6 +50,10 @@
         /// <param name="appSettingsKey">The app settings key.</param>
         /// <param name="implementation">The implementation.</param>
         public void RegisterWithAppSettings(Type service, string appSettingsKey, Type implementation) {
+            if (!IsolatedStorageSettings.ApplicationSettings.Contains(appSettingsKey ?? service.FullName))
+            {
+                IsolatedStorageSettings.ApplicationSettings[appSettingsKey ?? service.FullName] = BuildInstance(implementation);
+            }
             RegisterHandler(service, appSettingsKey, container => {
                 if(IsolatedStorageSettings.ApplicationSettings.Contains(appSettingsKey ?? service.FullName)) {
                     return IsolatedStorageSettings.ApplicationSettings[appSettingsKey ?? service.FullName];
