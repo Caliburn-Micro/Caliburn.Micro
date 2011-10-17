@@ -144,9 +144,12 @@
         }
 
         ContainerEntry GetEntry(Type service, string key) {
-            return service == null
-                       ? entries.Where(x => x.Key == key).FirstOrDefault()
-                       : entries.Where(x => x.Service == service && x.Key == key).FirstOrDefault();
+            if(service == null)
+                return entries.Where(x => x.Key == key).FirstOrDefault();
+            else if(key == null)
+                return entries.Where(x => x.Service == service && x.Key == key).FirstOrDefault() ?? entries.Where(x => x.Service == service).FirstOrDefault();
+            else
+                entries.Where(x => x.Service == service && x.Key == key).FirstOrDefault();
         }
 
         /// <summary>
