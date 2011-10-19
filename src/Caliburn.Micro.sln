@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.WP71.Extensi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.SL5", "Caliburn.Micro.SL5\Caliburn.Micro.SL5.csproj", "{7A82B446-E050-4373-AA06-F8B62EE1E40C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.WPF.Tests", "Caliburn.Micro.WPF.Tests\Caliburn.Micro.WPF.Tests.csproj", "{374C996D-59C3-426D-B6BD-D884348BE7C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
