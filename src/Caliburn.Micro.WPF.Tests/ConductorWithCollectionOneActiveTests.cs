@@ -6,6 +6,15 @@ namespace Caliburn.Micro.WPF.Tests
     public class ConductorWithCollectionOneActiveTests
     {
         [Fact]
+        public void AddedItemAppearsInChildren()
+        {
+            var conductor = new Conductor<IScreen>.Collection.OneActive();
+            var conducted = new Screen();
+            conductor.Items.Add(conducted);
+            Assert.Contains(conducted, conductor.GetChildren());
+        }
+
+        [Fact]
         public void ParentItemIsSetOnAddedConductedItem()
         {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
@@ -37,7 +46,29 @@ namespace Caliburn.Micro.WPF.Tests
             Assert.Equal(conducted, conductor.ActiveItem);
         }
 
-        [Fact(Skip = "ActiveItem currently set regardless of IsActive value. See [discussion:276374]")]
+        [Fact]
+        public void CanCloseIsTrueWhenItemsAreClosable()
+        {
+            var conductor = new Conductor<IScreen>.Collection.OneActive();
+            var conducted = new StateScreen { IsClosable = true };
+            conductor.Items.Add(conducted);
+            ((IActivate)conductor).Activate();
+            conductor.CanClose(Assert.True);
+            Assert.False(conducted.IsClosed);
+        }
+
+        [Fact(Skip = "Investigating close issue. http://caliburnmicro.codeplex.com/discussions/275824")]
+        public void CanCloseIsTrueWhenItemsAreNotClosableAndCloseStrategyCloses()
+        {
+            var conductor = new Conductor<IScreen>.Collection.OneActive { CloseStrategy = new DefaultCloseStrategy<IScreen>(true) };
+            var conducted = new StateScreen { IsClosable = true };
+            conductor.Items.Add(conducted);
+            ((IActivate)conductor).Activate();
+            conductor.CanClose(Assert.True);
+            Assert.True(conducted.IsClosed);
+        }
+
+        [Fact(Skip = "ActiveItem currently set regardless of IsActive value. See [discussion:276375]")]
         public void ChildrenAreNotActivatedIfConductorIsNotActive()
         {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
@@ -63,6 +94,23 @@ namespace Caliburn.Micro.WPF.Tests
         {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             Assert.Throws<InvalidOperationException>(() => conductor.Items.Add(conductor));
+        }
+
+        class StateScreen : Screen
+        {
+            public Boolean IsClosed { get; private set; }
+            public Boolean IsClosable { get; set; }
+
+            public override void CanClose(Action<bool> callback)
+            {
+                callback(IsClosable);
+            }
+
+            protected override void OnDeactivate(bool close)
+            {
+                base.OnDeactivate(close);
+                IsClosed = close;
+            }
         }
     }
 }
