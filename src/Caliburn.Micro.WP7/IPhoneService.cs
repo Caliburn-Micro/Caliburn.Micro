@@ -69,6 +69,11 @@ namespace Caliburn.Micro {
         ///   Gets or sets whether application idle detection is enabled.
         /// </summary>
         IdleDetectionMode ApplicationIdleDetectionMode { get; set; }
+
+        /// <summary>
+        /// Gets if the app is currently resurrecting.
+        /// </summary>
+        bool IsResurrecting { get; }
     }
 
     /// <summary>
@@ -76,36 +81,45 @@ namespace Caliburn.Micro {
     /// </summary>
     public class PhoneApplicationServiceAdapter : IPhoneService {
         readonly PhoneApplicationService service;
-        bool isResurrecting = true;
 
         /// <summary>
         ///   Creates an instance of <see cref = "PhoneApplicationServiceAdapter" />.
         /// </summary>
         public PhoneApplicationServiceAdapter(Frame rootFrame) {
             service = PhoneApplicationService.Current;
-            service.Launching += delegate { isResurrecting = false; };
-            service.Activated += delegate {
-                if(isResurrecting) {
-                    Resurrecting();
-                    NavigatedEventHandler onNavigated = null;
-                    onNavigated = (s2, e2) => {
-                        Resurrected();
-                        rootFrame.Navigated -= onNavigated;
-                    };
-                    rootFrame.Navigated += onNavigated;
-                    isResurrecting = false;
-                }
-                else {
-                    Continuing();
-                    NavigatedEventHandler onNavigated = null;
-                    onNavigated = (s2, e2) => {
-                        Continued();
-                        rootFrame.Navigated -= onNavigated;
-                    };
-                    rootFrame.Navigated += onNavigated;
-                }
-            };
+            service.Activated += (sender, args) =>
+                                     {
+                                         if (!args.IsApplicationInstancePreserved)
+                                         {
+                                             IsResurrecting = true;
+                                             Resurrecting();
+                                             NavigatedEventHandler onNavigated = null;
+                                             onNavigated = (s2, e2) =>
+                                                               {
+                                                                   IsResurrecting = false;
+                                                                   Resurrected();
+                                                                   rootFrame.Navigated -= onNavigated;
+                                                               };
+                                             rootFrame.Navigated += onNavigated;
+                                         }
+                                         else
+                                         {
+                                             Continuing();
+                                             NavigatedEventHandler onNavigated = null;
+                                             onNavigated = (s2, e2) =>
+                                                               {
+                                                                   Continued();
+                                                                   rootFrame.Navigated -= onNavigated;
+                                                               };
+                                             rootFrame.Navigated += onNavigated;
+                                         }
+                                     };
         }
+
+        /// <summary>
+        /// Gets if the app is currently resurrecting.
+        /// </summary>
+        public bool IsResurrecting { get; private set; }
 
         /// <summary>
         ///   The state that is persisted during the tombstoning process.
