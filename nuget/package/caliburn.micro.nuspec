@@ -11,7 +11,7 @@
     <iconUrl>http://www.caliburnproject.org/CaliburnIcon.png</iconUrl>
     <tags>MVVM Silverlight WPF WP7 WP71 WinRT Metro SL4 SL MVC CoC Convention MVP PM Screen Coroutine Behavior Model-View-ViewModel Presentation UI ViewModel Phone Caliburn</tags>
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="Microsoft.Phone.Controls" targetFramework="sl3-wp, sl4-windowsphone71" />
+      <frameworkAssembly assemblyName="Microsoft.Phone.Controls" targetFramework="sl4-windowsphone71" />
 	  <frameworkAssembly assemblyName="System.ComponentModel.Composition" targetFramework="net40, sl4" />
 	  <frameworkAssembly assemblyName="System.ComponentModel.Composition.Initialization" targetFramework="sl40" />
 	</frameworkAssemblies>

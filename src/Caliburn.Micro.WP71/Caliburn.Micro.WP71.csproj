@@ -185,25 +185,13 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\ViewModelLocator.cs">
       <Link>ViewModelLocator.cs</Link>
     </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7\ActionDelegate.cs">
-      <Link>ActionDelegate.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7\CustomAppBar.cs">
-      <Link>CustomAppBar.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7\INavigationService.cs">
-      <Link>INavigationService.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7\IPhoneService.cs">
-      <Link>IPhoneService.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7\PhoneBootstrapper.cs">
-      <Link>PhoneBootstrapper.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7\WindowManager.cs">
-      <Link>WindowManager.cs</Link>
-    </Compile>
+    <Compile Include="ActionDelegate.cs" />
+    <Compile Include="CustomAppBar.cs" />
+    <Compile Include="INavigationService.cs" />
+    <Compile Include="IPhoneService.cs" />
+    <Compile Include="PhoneBootstrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WindowManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

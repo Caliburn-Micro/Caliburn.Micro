@@ -7,7 +7,6 @@ function get-content-path($contentRoot) {
 	$id = $frameworkname.Identifier
 
 	if($id -eq ".NETFramework") { $relative = "net40" }
-	elseif($id -eq "Silverlight" -and $frameworkname.Profile -eq "WindowsPhone") { $relative = "sl3-wp" }
 	elseif($id -eq "Silverlight" -and $frameworkname.Profile -eq "WindowsPhone71") { $relative = "sl4-windowsphone71" }
 	elseif($id -eq "Silverlight" ) { $relative = "sl4" }
  

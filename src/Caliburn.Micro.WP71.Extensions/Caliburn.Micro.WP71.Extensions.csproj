@@ -53,76 +53,30 @@
     <Reference Include="mscorlib.extensions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\AppSettingsStorageMechanism.cs">
-      <Link>AppSettingsStorageMechanism.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\ContainerExtensions.cs">
-      <Link>ContainerExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\IPhoneContainer.cs">
-      <Link>IPhoneContainer.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\IStorageHandler.cs">
-      <Link>IStorageHandler.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\IStorageMechanism.cs">
-      <Link>IStorageMechanism.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\NavigationExtensions.cs">
-      <Link>NavigationExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\PhoneContainer.cs">
-      <Link>PhoneContainer.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\PhoneStateStorageMechanism.cs">
-      <Link>PhoneStateStorageMechanism.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\SimpleContainer.cs">
-      <Link>SimpleContainer.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\SoundEffectPlayer.cs">
-      <Link>SoundEffectPlayer.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\StorageCoordinator.cs">
-      <Link>StorageCoordinator.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\StorageHandler.cs">
-      <Link>StorageHandler.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\StorageInstruction.cs">
-      <Link>StorageInstruction.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\StorageInstructionBuilder.cs">
-      <Link>StorageInstructionBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\StorageInstructionExtensions.cs">
-      <Link>StorageInstructionExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\StorageMode.cs">
-      <Link>StorageMode.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\TaskCompleted.cs">
-      <Link>TaskCompleted.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\TaskController.cs">
-      <Link>TaskController.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\TaskExecutionRequested.cs">
-      <Link>TaskExecutionRequested.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\TaskExtensionMethods.cs">
-      <Link>TaskExtensionMethods.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\UriBuilder.cs">
-      <Link>UriBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\VibrateController.cs">
-      <Link>VibrateController.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP7.Extensions\WindowManagerExtensions.cs">
-      <Link>WindowManagerExtensions.cs</Link>
-    </Compile>
+    <Compile Include="AppSettingsStorageMechanism.cs" />
+    <Compile Include="ContainerExtensions.cs" />
+    <Compile Include="IPhoneContainer.cs" />
+    <Compile Include="IStorageHandler.cs" />
+    <Compile Include="IStorageMechanism.cs" />
+    <Compile Include="NavigationExtensions.cs" />
+    <Compile Include="PhoneContainer.cs" />
+    <Compile Include="PhoneStateStorageMechanism.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleContainer.cs" />
+    <Compile Include="SoundEffectPlayer.cs" />
+    <Compile Include="StorageCoordinator.cs" />
+    <Compile Include="StorageHandler.cs" />
+    <Compile Include="StorageInstruction.cs" />
+    <Compile Include="StorageInstructionBuilder.cs" />
+    <Compile Include="StorageInstructionExtensions.cs" />
+    <Compile Include="StorageMode.cs" />
+    <Compile Include="TaskCompleted.cs" />
+    <Compile Include="TaskController.cs" />
+    <Compile Include="TaskExecutionRequested.cs" />
+    <Compile Include="TaskExtensionMethods.cs" />
+    <Compile Include="UriBuilder.cs" />
+    <Compile Include="VibrateController.cs" />
+    <Compile Include="WindowManagerExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro.WP71\Caliburn.Micro.WP71.csproj">
