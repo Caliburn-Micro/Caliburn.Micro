@@ -56,7 +56,7 @@
             return memberExpression.Member;
         }
 
-#if WP7 || WP71
+#if WP71
 		//Method missing in WP7 Linq
 
 		/// <summary>
@@ -69,8 +69,7 @@
 		/// <param name="second">The second sequence to merge.</param>
 		/// <param name="resultSelector"> A function that specifies how to merge the elements from the two sequences.</param>
 		/// <returns>An System.Collections.Generic.IEnumerable&lt;T&gt; that contains merged elements of two input sequences.</returns>
-		public static IEnumerable<TResult> Zip<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> resultSelector)
-		{
+		public static IEnumerable<TResult> Zip<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> resultSelector){
 			if (first == null)
 				throw new ArgumentNullException("first");
 			if (second == null)
@@ -85,7 +84,6 @@
 				yield return resultSelector(enumFirst.Current, enumSecond.Current);
 			}
 		}
-
 #endif
     }
 }

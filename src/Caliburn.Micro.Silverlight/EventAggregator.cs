@@ -155,8 +155,7 @@
             readonly WeakReference reference;
             readonly Dictionary<TypeInfo, MethodInfo> supportedHandlers = new Dictionary<TypeInfo, MethodInfo>();
 
-            public Handler(object handler)
-            {
+            public Handler(object handler) {
                 reference = new WeakReference(handler);
 
                 var handlerInfo = typeof(IHandle).GetTypeInfo();
@@ -170,23 +169,19 @@
                 }
             }
 
-            public bool Matches(object instance)
-            {
+            public bool Matches(object instance) {
                 return reference.Target == instance;
             }
 
-            public bool Handle(Type messageType, object message)
-            {
+            public bool Handle(Type messageType, object message) {
                 var target = reference.Target;
                 if (target == null)
                     return false;
 
                 var typeInfo = messageType.GetTypeInfo();
 
-                foreach (var pair in supportedHandlers)
-                {
-                    if (pair.Key.IsAssignableFrom(typeInfo))
-                    {
+                foreach (var pair in supportedHandlers) {
+                    if (pair.Key.IsAssignableFrom(typeInfo)) {
                         pair.Value.Invoke(target, new[] { message });
                         return true;
                     }
