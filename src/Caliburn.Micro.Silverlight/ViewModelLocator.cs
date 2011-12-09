@@ -3,6 +3,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Windows;
+    using System.Collections.Generic;
 
     /// <summary>
     ///   A strategy for determining which view model to use for a given view.
@@ -70,6 +71,46 @@
                         @"${nsbefore}ViewModels.${nsafter}I${basename}${suffix}ViewModel"
                     },
                     @"([A-Za-z_]\w*\.)*Views\.([A-Za-z_]\w*\.)*[A-Za-z_]\w*Page$"
+                );
+        }
+
+        /// <summary>
+        /// Adds a transformation rule based on namespace mapping
+        /// </summary>
+        /// <param name="nssource">Namespace of source type</param>
+        /// <param name="nstargets">Namespaces of target type</param>
+        public static void AddNamespaceMapping(string nssource, params string[] nstargets)
+        {
+            var replist = new List<string>();
+            foreach (var nstarget in nstargets)
+            {
+                replist.Add(nstarget + @".${basename}ViewModel");
+                replist.Add(nstarget + @".I${basename}ViewModel");
+            }
+
+            //Check for <nssource>.<BaseName><ViewSynonym> construct first
+            //Add "View" synonyms below: nssource + @".(?<basename>[A-Za-z_]\w*)(?<suffix>(Page$)|(Form$)|(Screen$))"
+            NameTransformer.AddRule
+                (
+                    nssource + @".(?<basename>[A-Za-z_]\w*)(?<suffix>Page$)",
+                    replist.ToArray(),
+                    nssource + @".[A-Za-z_]\w*Page$"
+                );
+
+            //Continue using the same list since first two replace values can be reused
+            //but add two more replace values
+            foreach (var nstarget in nstargets)
+            {
+                replist.Add(nstarget + @".${basename}");
+                replist.Add(nstarget + @".I${basename}");
+            }
+
+            //Check for <nssource>.<BaseName>View construct
+            NameTransformer.AddRule
+                (
+                    nssource + @".(?<basename>[A-Za-z_]\w*)(?<suffix>View$)",
+                    replist.ToArray(),
+                    nssource + @".[A-Za-z_]\w*View$"
                 );
         }
 

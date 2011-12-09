@@ -5,6 +5,7 @@
     using System.Text.RegularExpressions;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Collections.Generic;
 
 #if !SILVERLIGHT
     using System.Windows.Interop;
@@ -52,6 +53,43 @@
                     @"(?<nsbefore>([A-Za-z_]\w*\.)*)(?<nsvm>ViewModels\.)(?<nsafter>([A-Za-z_]\w*\.)*)(?<basename>[A-Za-z_]\w*)(?<suffix>PageViewModel$)",
                     @"${nsbefore}Views.${nsafter}${basename}Page",
                     @"([A-Za-z_]\w*\.)*ViewModels\.([A-Za-z_]\w*\.)*[A-Za-z_]\w*PageViewModel$"
+                );
+        }
+
+        /// <summary>
+        /// Adds a transformation rule based on namespace mapping
+        /// </summary>
+        /// <param name="nssource">Namespace of source type</param>
+        /// <param name="nstargets">Namespaces of target type</param>
+        public static void AddNamespaceMapping(string nssource, params string[] nstargets)
+        {
+            var replist = new List<string>();
+            foreach (var nstarget in nstargets)
+            {
+                replist.Add(nstarget + @".${basename}View");
+            }
+
+            //Check for <nssource>.<BaseName>ViewModel construct
+            NameTransformer.AddRule
+                (
+                    nssource + @".(?<basename>[A-Za-z_]\w*)(?<suffix>ViewModel$)",
+                    replist.ToArray(),
+                    nssource + @".[A-Za-z_]\w*ViewModel$"
+                );
+
+            //Need to clear since the replace values cannot be reused
+            replist.Clear();    
+            foreach (var nstarget in nstargets)
+            {
+                replist.Add(nstarget + @".${basename}Page");
+            }
+
+            //Check for <nssource>.<BaseName>PageViewModel construct
+            NameTransformer.AddRule
+                (
+                    nssource + @".(?<basename>[A-Za-z_]\w*)(?<suffix>PageViewModel$)",
+                    replist.ToArray(),
+                    nssource + @".[A-Za-z_]\w*PageViewModel$"
                 );
         }
 
