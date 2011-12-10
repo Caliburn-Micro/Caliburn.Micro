@@ -50,7 +50,7 @@
         /// <summary>
         /// Adds a default type mapping using the standard namespace mapping convention
         /// </summary>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym. (Optional)</param>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddDefaultTypeMapping(string viewSuffix = "View")
         {
             AddTypeMapping
@@ -68,7 +68,7 @@
         /// <param name="nsSourceReplaceRegEx">Namespace of source type as RegEx replace pattern</param>
         /// <param name="nsSourceFilterRegEx">Namespace of source type as RegEx filter pattern</param>
         /// <param name="nsTargetsRegEx">Namespaces of target type as an array of RegEx replace values</param>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym. (Optional)</param>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string[] nsTargetsRegEx, string viewSuffix = "View")
         {
             var replist = new List<string>();
@@ -110,7 +110,7 @@
         /// <param name="nsSourceReplaceRegEx">Namespace of source type as RegEx replace pattern</param>
         /// <param name="nsSourceFilterRegEx">Namespace of source type as RegEx filter pattern</param>
         /// <param name="nsTargetRegEx">Namespace of target type as RegEx replace value</param>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym. (Optional)</param>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string nsTargetRegEx, string viewSuffix = "View")
         {
             AddTypeMapping(nsSourceReplaceRegEx, nsSourceFilterRegEx, new string[] { nsTargetRegEx }, viewSuffix);
@@ -122,7 +122,7 @@
         /// </summary>
         /// <param name="nsSource">Namespace of source type</param>
         /// <param name="nsTargets">Namespaces of target type as an array</param>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym. (Optional)</param>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View")
         {
             string nsSourceRegEx = nsSource + ".";
@@ -135,7 +135,7 @@
         /// </summary>
         /// <param name="nsSource">Namespace of source type</param>
         /// <param name="nsTarget">Namespace of target type</param>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym. (Optional)</param>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View")
         {
             AddNamespaceMapping(nsSource, new string[] { nsTarget }, viewSuffix);
@@ -160,6 +160,30 @@
         }
 
         /// <summary>
+        /// Transforms a View type name into all of its possible ViewModel type names. Optionally accepts a flag
+        /// to include interface types.
+        /// </summary>
+        /// <param name="typeName">The name of the ViewModel type being resolved to its companion View.</param>
+        /// <param name="includeInterfaces">Include interface types (Optional)</param>
+        /// <returns></returns>
+        public static IEnumerable<string> TransformName(string typeName, bool includeInterfaces = false)
+        {
+            Func<string, string> getReplaceString;
+            if (includeInterfaces)
+            {
+                getReplaceString = r => { return r; };
+            }
+            else
+            {
+                getReplaceString = r =>
+                {
+                    return Regex.IsMatch(r, @"I\${basename}") ? String.Empty : r;
+                };
+            }
+            return NameTransformer.Transform(typeName, getReplaceString).Where(n => n != String.Empty);
+        }
+
+        /// <summary>
         ///   Determines the view model type based on the specified view type.
         /// </summary>
         /// <returns>The view model type.</returns>
@@ -169,17 +193,7 @@
         public static Func<Type, bool, Type> LocateTypeForViewType = (viewType, searchForInterface) => {
             var typeName = viewType.FullName;
 
-            Func<string, string> getReplaceString;
-            if(searchForInterface) {
-                getReplaceString = r => { return r; };
-            }
-            else {
-                getReplaceString = r => {
-                    return Regex.IsMatch(r, @"I\${basename}") ? String.Empty : r;
-                };
-            }
-
-            var viewModelTypeList = NameTransformer.Transform(typeName, getReplaceString);
+            var viewModelTypeList = TransformName(typeName, searchForInterface);
             var viewModelType = (from assembly in AssemblySource.Instance
                                  from type in assembly.GetExportedTypes()
                                  where viewModelTypeList.Contains(type.FullName)

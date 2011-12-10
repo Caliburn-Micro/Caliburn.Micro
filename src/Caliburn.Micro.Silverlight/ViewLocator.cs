@@ -27,7 +27,15 @@
         /// </summary>
         public static string ContextSeparator = ".";
 
+        /// <summary>
+        /// This keeps a list of view suffixes and synonyms that have been added through a mapping
+        /// or directly through the NameTransformer
+        /// </summary>
+        private static List<string> ViewSuffixList;
+
         static ViewLocator() {
+            ViewSuffixList = new List<string>();
+
             //Add to list by increasing order of specificity (i.e. less specific pattern to more specific pattern)
 
             //NameTransformer.AddRule("ViewModel$", "View");         //less specific pattern
@@ -50,7 +58,7 @@
         /// <summary>
         /// Adds a default type mapping using the standard namespace mapping convention
         /// </summary>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym. (Optional)</param>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddDefaultTypeMapping(string viewSuffix = "View")
         {
             AddTypeMapping
@@ -63,14 +71,31 @@
         }
 
         /// <summary>
+        /// This method registers a View suffix or synonym so that View Context resolution works properly.
+        /// It is automatically called internally when calling AddNamespaceMapping(), AddDefaultTypeMapping(),
+        /// or AddTypeMapping(). It should not need to be called explicitly unless a rule that handles synonyms
+        /// is added directly through the NameTransformer.
+        /// </summary>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View".</param>
+        public static void RegisterViewSuffix(string viewSuffix)
+        {
+            if (ViewSuffixList.Count(s => s == viewSuffix) == 0)
+            {
+                ViewSuffixList.Add(viewSuffix);
+            }
+        }
+
+        /// <summary>
         /// Adds a standard type mapping based on namespace RegEx replace and filter patterns
         /// </summary>
         /// <param name="nsSourceReplaceRegEx">Namespace of source type as RegEx replace pattern</param>
         /// <param name="nsSourceFilterRegEx">Namespace of source type as RegEx filter pattern</param>
         /// <param name="nsTargetsRegEx">Namespaces of target type as an array of RegEx replace values</param>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym. (Optional)</param>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string[] nsTargetsRegEx, string viewSuffix = "View")
         {
+            RegisterViewSuffix(viewSuffix);
+
             var replist = new List<string>();
 
             foreach(var t in nsTargetsRegEx)
@@ -93,7 +118,7 @@
         /// <param name="nsSourceReplaceRegEx">Namespace of source type as RegEx replace pattern</param>
         /// <param name="nsSourceFilterRegEx">Namespace of source type as RegEx filter pattern</param>
         /// <param name="nsTargetRegEx">Namespace of target type as RegEx replace value</param>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym. (Optional)</param>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string nsTargetRegEx, string viewSuffix = "View")
         {
             AddTypeMapping(nsSourceReplaceRegEx, nsSourceFilterRegEx, new string[] { nsTargetRegEx }, viewSuffix);
@@ -104,7 +129,7 @@
         /// </summary>
         /// <param name="nsSource">Namespace of source type</param>
         /// <param name="nsTargets">Namespaces of target type as an array</param>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym. (Optional)</param>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View")
         {
             string nsSourceRegEx = nsSource + ".";
@@ -117,7 +142,7 @@
         /// </summary>
         /// <param name="nsSource">Namespace of source type</param>
         /// <param name="nsTarget">Namespace of target type</param>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym. (Optional)</param>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View")
         {
             AddNamespaceMapping(nsSource, new string[] { nsTarget }, viewSuffix);
@@ -161,6 +186,35 @@
         };
 
         /// <summary>
+        /// Transforms a ViewModel type name into all of its possible View type names. Optionally accepts an instance
+        /// of context object
+        /// </summary>
+        /// <param name="typeName">The name of the ViewModel type being resolved to its companion View.</param>
+        /// <param name="context">An instance of the context. (Optional)</param>
+        /// <returns></returns>
+        public static IEnumerable<string> TransformName(string typeName, object context = null)
+        {
+            Func<string, string> getReplaceString;
+            if (context == null)
+            {
+                getReplaceString = r => { return r; };
+            }
+            else
+            {
+                getReplaceString = r =>
+                {
+                    //Create RegEx for matching any of the synonyms registered
+                    var synonymregex = String.Join("|", ViewSuffixList.Select(s => @"(" + s + @"$)").ToArray());
+
+                    //Strip out the synonym
+                    return Regex.Replace(r, synonymregex, ContextSeparator + context);
+                };
+            }
+
+            return NameTransformer.Transform(typeName, getReplaceString);
+        }
+
+        /// <summary>
         ///   Locates the view type based on the specified model type.
         /// </summary>
         /// <returns>The view.</returns>
@@ -181,17 +235,7 @@
                     : viewTypeName.IndexOf("`")
                 );
 
-            Func<string, string> getReplaceString;
-            if (context == null) {
-                getReplaceString = r => { return r; };
-            }
-            else {
-                getReplaceString = r => {
-                    return Regex.Replace(r, Regex.IsMatch(r, "Page$") ? "Page$" : "View$", ContextSeparator + context);
-                };
-            }
-
-            var viewTypeList = NameTransformer.Transform(viewTypeName, getReplaceString);
+            var viewTypeList = TransformName(viewTypeName, context);
             var viewType = (from assembly in AssemblySource.Instance
                             from type in assembly.GetExportedTypes()
                             where viewTypeList.Contains(type.FullName)
