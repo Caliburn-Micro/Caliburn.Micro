@@ -24,94 +24,121 @@
                 );
 
             //Check for <Namespace>.<BaseName>View construct
-            NameTransformer.AddRule
+            AddTypeMapping
                 (
-                    @"(?<namespace>([A-Za-z_]\w*\.)*)(?<basename>[A-Za-z_]\w*)(?<suffix>View$)",
-                    new[] {
-                        @"${namespace}${basename}ViewModel",
-                        @"${namespace}${basename}",
-                        @"${namespace}I${basename}ViewModel",
-                        @"${namespace}I${basename}"
-                    },
-                    @"([A-Za-z_]\w*\.)*[A-Za-z_]\w*View$"
+                    @"(?<namespace>([A-Za-z_]\w*\.)*)",
+                    @"([A-Za-z_]\w*\.)*",
+                    @"${namespace}"
                 );
 
             //Check for <Namespace>.<BaseName>Page construct
-            //Add "View" synonyms below: (?<namespace>(.*\.)*)(?<basename>[A-Za-z_]\w*)(?<suffix>(Page$)|(Form$)|(Screen$))"
-            NameTransformer.AddRule
+            AddTypeMapping
                 (
-                    @"(?<namespace>([A-Za-z_]\w*\.)*)(?<basename>[A-Za-z_]\w*)(?<suffix>Page$)",
-                    new[] {
-                        @"${namespace}${basename}${suffix}ViewModel",
-                        @"${namespace}I${basename}${suffix}ViewModel"
-                    },
-                    @"([A-Za-z_]\w*\.)*[A-Za-z_]\w*Page$"
+                    @"(?<namespace>([A-Za-z_]\w*\.)*)",
+                    @"([A-Za-z_]\w*\.)*",
+                    @"${namespace}",
+                    "Page"
                 );
 
-            //Check for <Namespace>.Views.<BaseName>View construct
-            NameTransformer.AddRule
-                (
-                    @"(?<nsbefore>([A-Za-z_]\w*\.)*)(?<nsview>Views\.)(?<nsafter>([A-Za-z_]\w*\.)*)(?<basename>[A-Za-z_]\w*)(?<suffix>View$)",
-                    new[] {
-                        @"${nsbefore}ViewModels.${nsafter}${basename}ViewModel",
-                        @"${nsbefore}ViewModels.${nsafter}${basename}",
-                        @"${nsbefore}ViewModels.${nsafter}I${basename}ViewModel",
-                        @"${nsbefore}ViewModels.${nsafter}I${basename}"
-                    },
-                    @"([A-Za-z_]\w*\.)*Views\.([A-Za-z_]\w*\.)*[A-Za-z_]\w*View$"
-                );
+            //Check for <Namespace>.Views.<Namespace>.<BaseName>View construct
+            AddDefaultTypeMapping();
 
-            //Check for <Namespace>.Views.<BaseName><ViewSynonym> construct
-            //Add "View" synonyms below: (?<nsbefore>([A-Za-z_]\w*\.)*)?(?<nsview>Views\.)(?<nsafter>[A-Za-z_]\w*\.)*(?<basename>[A-Za-z_]\w*)(?<suffix>(Page$)|(Form$)|(Screen$))"
-            NameTransformer.AddRule
+            //Check for <Namespace>.Views.<Namespace>.<BaseName>Page construct
+            AddDefaultTypeMapping("Page");
+        }
+
+        /// <summary>
+        /// Adds a default type mapping using the standard namespace mapping convention
+        /// </summary>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym. (Optional)</param>
+        public static void AddDefaultTypeMapping(string viewSuffix = "View")
+        {
+            AddTypeMapping
                 (
-                    @"(?<nsbefore>([A-Za-z_]\w*\.)*)(?<nsview>Views\.)(?<nsafter>([A-Za-z_]\w*\.)*)(?<basename>[A-Za-z_]\w*)(?<suffix>Page$)",
-                    new[] {
-                        @"${nsbefore}ViewModels.${nsafter}${basename}${suffix}ViewModel",
-                        @"${nsbefore}ViewModels.${nsafter}I${basename}${suffix}ViewModel"
-                    },
-                    @"([A-Za-z_]\w*\.)*Views\.([A-Za-z_]\w*\.)*[A-Za-z_]\w*Page$"
+                    @"(?<nsbefore>([A-Za-z_]\w*\.)*)(?<nsview>Views\.)(?<nsafter>([A-Za-z_]\w*\.)*)",
+                    @"([A-Za-z_]\w*\.)*Views\.([A-Za-z_]\w*\.)*",
+                    @"${nsbefore}ViewModels.${nsafter}",
+                    viewSuffix
                 );
         }
 
         /// <summary>
-        /// Adds a transformation rule based on namespace mapping
+        /// Adds a standard type mapping based on namespace RegEx replace and filter patterns
         /// </summary>
-        /// <param name="nssource">Namespace of source type</param>
-        /// <param name="nstargets">Namespaces of target type</param>
-        public static void AddNamespaceMapping(string nssource, params string[] nstargets)
+        /// <param name="nsSourceReplaceRegEx">Namespace of source type as RegEx replace pattern</param>
+        /// <param name="nsSourceFilterRegEx">Namespace of source type as RegEx filter pattern</param>
+        /// <param name="nsTargetsRegEx">Namespaces of target type as an array of RegEx replace values</param>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym. (Optional)</param>
+        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string[] nsTargetsRegEx, string viewSuffix = "View")
         {
             var replist = new List<string>();
-            foreach (var nstarget in nstargets)
+
+            Action<string> func;
+            if (viewSuffix == "View")
             {
-                replist.Add(nstarget + @".${basename}ViewModel");
-                replist.Add(nstarget + @".I${basename}ViewModel");
+                func = t =>
+                {
+                    replist.Add(t + @"${basename}ViewModel");
+                    replist.Add(t + @"${basename}");
+                    replist.Add(t + @"I${basename}ViewModel");
+                    replist.Add(t + @"I${basename}");
+                };
+            }
+            else
+            {
+                func = t =>
+                {
+                    replist.Add(t + @"${basename}${suffix}ViewModel");
+                    replist.Add(t + @"I${basename}${suffix}ViewModel");
+                };
             }
 
-            //Check for <nssource>.<BaseName><ViewSynonym> construct first
-            //Add "View" synonyms below: nssource + @".(?<basename>[A-Za-z_]\w*)(?<suffix>(Page$)|(Form$)|(Screen$))"
+            nsTargetsRegEx.ToList().ForEach(t => func(t));
+
+            var suffixregex = viewSuffix + "$";
             NameTransformer.AddRule
                 (
-                    nssource + @".(?<basename>[A-Za-z_]\w*)(?<suffix>Page$)",
+                    nsSourceReplaceRegEx + @"(?<basename>[A-Za-z_]\w*)(?<suffix>" + suffixregex + ")",
                     replist.ToArray(),
-                    nssource + @".[A-Za-z_]\w*Page$"
+                    nsSourceFilterRegEx + @"[A-Za-z_]\w*" + suffixregex
                 );
+        }
 
-            //Continue using the same list since first two replace values can be reused
-            //but add two more replace values
-            foreach (var nstarget in nstargets)
-            {
-                replist.Add(nstarget + @".${basename}");
-                replist.Add(nstarget + @".I${basename}");
-            }
+        /// <summary>
+        /// Adds a standard type mapping based on namespace RegEx replace and filter patterns
+        /// </summary>
+        /// <param name="nsSourceReplaceRegEx">Namespace of source type as RegEx replace pattern</param>
+        /// <param name="nsSourceFilterRegEx">Namespace of source type as RegEx filter pattern</param>
+        /// <param name="nsTargetRegEx">Namespace of target type as RegEx replace value</param>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym. (Optional)</param>
+        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string nsTargetRegEx, string viewSuffix = "View")
+        {
+            AddTypeMapping(nsSourceReplaceRegEx, nsSourceFilterRegEx, new string[] { nsTargetRegEx }, viewSuffix);
+        }
 
-            //Check for <nssource>.<BaseName>View construct
-            NameTransformer.AddRule
-                (
-                    nssource + @".(?<basename>[A-Za-z_]\w*)(?<suffix>View$)",
-                    replist.ToArray(),
-                    nssource + @".[A-Za-z_]\w*View$"
-                );
+
+        /// <summary>
+        /// Adds a standard type mapping based on simple namespace mapping
+        /// </summary>
+        /// <param name="nsSource">Namespace of source type</param>
+        /// <param name="nsTargets">Namespaces of target type as an array</param>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym. (Optional)</param>
+        public static void AddNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View")
+        {
+            string nsSourceRegEx = nsSource + ".";
+            var nsTargetsRegEx = nsTargets.Select(t => t + ".").ToArray();
+            AddTypeMapping(nsSourceRegEx, nsSourceRegEx, nsTargetsRegEx, viewSuffix);
+        }
+
+        /// <summary>
+        /// Adds a standard type mapping based on simple namespace mapping
+        /// </summary>
+        /// <param name="nsSource">Namespace of source type</param>
+        /// <param name="nsTarget">Namespace of target type</param>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym. (Optional)</param>
+        public static void AddNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View")
+        {
+            AddNamespaceMapping(nsSource, new string[] { nsTarget }, viewSuffix);
         }
 
         /// <summary>
