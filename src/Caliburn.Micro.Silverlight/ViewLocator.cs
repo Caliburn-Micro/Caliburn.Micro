@@ -132,9 +132,29 @@
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View")
         {
-            string nsSourceRegEx = nsSource + ".";
+            var nsencoded = nsSource;
+
+            nsencoded += "."; //need to terminate with "." in order to concatenate with type name later
+
+            //Need to escape the "." as it's a special character in regular expression syntax
+            nsencoded = nsencoded.Replace(".", @"\.");
+
+            //Replace "*" wildcard with regular expression syntax
+            nsencoded = nsencoded.Replace(@"*\.", @"([A-Za-z_]\w*\.)*");
+
+            //Start pattern search from beginning of string ("^")
+            //unless original string was blank (i.e. special case to indicate "append target to source")
+            if (!String.IsNullOrEmpty(nsSource))
+            {
+                nsencoded = "^" + nsencoded;
+            }
+
+            //Capture namespace as "origns" in case we need to use it in the output in the future
+            var nsreplace = @"(?<origns>" + nsencoded + @")";
+            var nsfilter = @"(" + nsencoded + @")";
+
             var nsTargetsRegEx = nsTargets.Select(t => t + ".").ToArray();
-            AddTypeMapping(nsSourceRegEx, nsSourceRegEx, nsTargetsRegEx, viewSuffix);
+            AddTypeMapping(nsreplace, nsfilter, nsTargetsRegEx, viewSuffix);
         }
 
         /// <summary>
