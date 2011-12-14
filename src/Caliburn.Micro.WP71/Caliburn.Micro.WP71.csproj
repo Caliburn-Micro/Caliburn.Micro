@@ -155,6 +155,9 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\Parser.cs">
       <Link>Parser.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\RegExHelper.cs">
+      <Link>RegExHelper.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ResultCompletionEventArgs.cs">
       <Link>ResultCompletionEventArgs.cs</Link>
     </Compile>

@@ -18,32 +18,13 @@
         static ViewModelLocator() {
             //Add to list by increasing order of specificity (i.e. less specific pattern to more specific pattern)
 
-            NameTransformer.AddRule(
+            NameTransformer.AddRule (
                 @"(?<fullname>^.*$)",
                 @"${fullname}Model"
-                );
+            );
 
-            //Check for <Namespace>.<BaseName>View construct
-            AddTypeMapping
-                (
-                    @"(?<namespace>([A-Za-z_]\w*\.)*)",
-                    @"([A-Za-z_]\w*\.)*",
-                    @"${namespace}"
-                );
-
-            //Check for <Namespace>.<BaseName>Page construct
-            AddTypeMapping
-                (
-                    @"(?<namespace>([A-Za-z_]\w*\.)*)",
-                    @"([A-Za-z_]\w*\.)*",
-                    @"${namespace}",
-                    "Page"
-                );
-
-            //Check for <Namespace>.Views.<Namespace>.<BaseName>View construct
-            AddDefaultTypeMapping();
-
-            //Check for <Namespace>.Views.<Namespace>.<BaseName>Page construct
+            //Add support for two standard View suffixes
+            AddDefaultTypeMapping("View");
             AddDefaultTypeMapping("Page");
         }
 
@@ -51,43 +32,34 @@
         /// Adds a default type mapping using the standard namespace mapping convention
         /// </summary>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddDefaultTypeMapping(string viewSuffix = "View")
-        {
-            AddTypeMapping
-                (
-                    @"(?<nsbefore>([A-Za-z_]\w*\.)*)(?<nsview>Views\.)(?<nsafter>([A-Za-z_]\w*\.)*)",
-                    @"([A-Za-z_]\w*\.)*Views\.([A-Za-z_]\w*\.)*",
-                    @"${nsbefore}ViewModels.${nsafter}",
-                    viewSuffix
-                );
+        public static void AddDefaultTypeMapping(string viewSuffix = "View") {
+            //Check for <Namespace>.<BaseName><ViewSuffix> construct
+            AddNamespaceMapping(String.Empty, String.Empty, viewSuffix);
+
+            //Check for <Namespace>.Views.<NameSpace>.<BaseName><ViewSuffix> construct
+            AddSubNamespaceMapping("Views", "ViewModels", viewSuffix);
         }
 
         /// <summary>
         /// Adds a standard type mapping based on namespace RegEx replace and filter patterns
         /// </summary>
-        /// <param name="nsSourceReplaceRegEx">Namespace of source type as RegEx replace pattern</param>
-        /// <param name="nsSourceFilterRegEx">Namespace of source type as RegEx filter pattern</param>
-        /// <param name="nsTargetsRegEx">Namespaces of target type as an array of RegEx replace values</param>
+        /// <param name="nsSourceReplaceRegEx">RegEx replace pattern for source namespace</param>
+        /// <param name="nsSourceFilterRegEx">RegEx filter pattern for source namespace</param>
+        /// <param name="nsTargetsRegEx">Array of RegEx replace values for target namespaces</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string[] nsTargetsRegEx, string viewSuffix = "View")
-        {
+        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string[] nsTargetsRegEx, string viewSuffix = "View") {
             var replist = new List<string>();
-
             Action<string> func;
-            if (viewSuffix == "View")
-            {
-                func = t =>
-                {
+            if (viewSuffix == "View") {
+                func = t => {
                     replist.Add(t + @"${basename}ViewModel");
                     replist.Add(t + @"${basename}");
                     replist.Add(t + @"I${basename}ViewModel");
                     replist.Add(t + @"I${basename}");
                 };
             }
-            else
-            {
-                func = t =>
-                {
+            else {
+                func = t => {
                     replist.Add(t + @"${basename}${suffix}ViewModel");
                     replist.Add(t + @"I${basename}${suffix}ViewModel");
                 };
@@ -96,26 +68,29 @@
             nsTargetsRegEx.ToList().ForEach(t => func(t));
 
             var suffixregex = viewSuffix + "$";
-            NameTransformer.AddRule
-                (
-                    nsSourceReplaceRegEx + @"(?<basename>[A-Za-z_]\w*)(?<suffix>" + suffixregex + ")",
-                    replist.ToArray(),
-                    nsSourceFilterRegEx + @"[A-Za-z_]\w*" + suffixregex
-                );
+            var srcfilterregx = String.IsNullOrEmpty(nsSourceFilterRegEx) 
+                ? null
+                : String.Concat(nsSourceFilterRegEx, RegExHelper.NameRegEx, suffixregex);
+            string rxbase = RegExHelper.GetNameCaptureGroup("basename");
+            string rxsuffix = RegExHelper.GetCaptureGroup("suffix", suffixregex);
+
+            NameTransformer.AddRule (
+                String.Concat(nsSourceReplaceRegEx, rxbase, rxsuffix),
+                replist.ToArray(),
+                srcfilterregx
+            );
         }
 
         /// <summary>
         /// Adds a standard type mapping based on namespace RegEx replace and filter patterns
         /// </summary>
-        /// <param name="nsSourceReplaceRegEx">Namespace of source type as RegEx replace pattern</param>
-        /// <param name="nsSourceFilterRegEx">Namespace of source type as RegEx filter pattern</param>
-        /// <param name="nsTargetRegEx">Namespace of target type as RegEx replace value</param>
+        /// <param name="nsSourceReplaceRegEx">RegEx replace pattern for source namespace</param>
+        /// <param name="nsSourceFilterRegEx">RegEx filter pattern for source namespace</param>
+        /// <param name="nsTargetRegEx">RegEx replace value for target namespace</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string nsTargetRegEx, string viewSuffix = "View")
-        {
+        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string nsTargetRegEx, string viewSuffix = "View") {
             AddTypeMapping(nsSourceReplaceRegEx, nsSourceFilterRegEx, new string[] { nsTargetRegEx }, viewSuffix);
         }
-
 
         /// <summary>
         /// Adds a standard type mapping based on simple namespace mapping
@@ -123,31 +98,21 @@
         /// <param name="nsSource">Namespace of source type</param>
         /// <param name="nsTargets">Namespaces of target type as an array</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View")
-        {
-            var nsencoded = nsSource;
-
-            nsencoded += "."; //need to terminate with "." in order to concatenate with type name later
-
-            //Need to escape the "." as it's a special character in regular expression syntax
-            nsencoded = nsencoded.Replace(".", @"\.");
-
-            //Replace "*" wildcard with regular expression syntax
-            nsencoded = nsencoded.Replace(@"*\.", @"([A-Za-z_]\w*\.)*");
+        public static void AddNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View") {
+            //need to terminate with "." in order to concatenate with type name later
+            var nsencoded = RegExHelper.NamespaceToRegEx(nsSource + ".");
 
             //Start pattern search from beginning of string ("^")
             //unless original string was blank (i.e. special case to indicate "append target to source")
-            if (!String.IsNullOrEmpty(nsSource))
-            {
+            if (!String.IsNullOrEmpty(nsSource)) {
                 nsencoded = "^" + nsencoded;
             }
 
             //Capture namespace as "origns" in case we need to use it in the output in the future
-            var nsreplace = @"(?<origns>" + nsencoded + @")";
-            var nsfilter = @"(" + nsencoded + @")";
+            var nsreplace = RegExHelper.GetCaptureGroup("origns", nsencoded);
 
             var nsTargetsRegEx = nsTargets.Select(t => t + ".").ToArray();
-            AddTypeMapping(nsreplace, nsfilter, nsTargetsRegEx, viewSuffix);
+            AddTypeMapping(nsreplace, null, nsTargetsRegEx, viewSuffix);
         }
 
         /// <summary>
@@ -156,9 +121,50 @@
         /// <param name="nsSource">Namespace of source type</param>
         /// <param name="nsTarget">Namespace of target type</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View")
-        {
+        public static void AddNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View") {
             AddNamespaceMapping(nsSource, new string[] { nsTarget }, viewSuffix);
+        }
+
+        /// Adds a standard type mapping by substituting one subnamespace for another
+        /// </summary>
+        /// <param name="nsSource">Subnamespace of source type</param>
+        /// <param name="nsTargets">Subnamespaces of target type as an array</param>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
+        public static void AddSubNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View") {
+            //need to terminate with "." in order to concatenate with type name later
+            var nsencoded = RegExHelper.NamespaceToRegEx(nsSource + ".");
+
+            string rxbeforesrc, rxbeforetgt, rxaftersrc, rxaftertgt;
+            rxbeforesrc = rxbeforetgt = rxaftersrc = rxaftertgt = String.Empty;
+
+            if (!String.IsNullOrEmpty(nsSource)) {
+                if (!nsSource.StartsWith("*")) {
+                    rxbeforesrc = RegExHelper.GetNSCaptureGroup("nsbefore");
+                    rxbeforetgt = @"${nsbefore}";
+                }
+
+                if (!nsSource.EndsWith("*")) {
+                    rxaftersrc = RegExHelper.GetNSCaptureGroup("nsafter");
+                    rxaftertgt = "${nsafter}";
+                }
+            }
+
+            var rxmid = RegExHelper.GetCaptureGroup("subns", nsencoded);
+            var nsreplace = String.Concat(rxbeforesrc, rxmid, rxaftersrc);
+
+            var nsTargetsRegEx = nsTargets.Select(t => String.Concat(rxbeforetgt, t, ".", rxaftertgt)).ToArray();
+            AddTypeMapping(nsreplace, null, nsTargetsRegEx, viewSuffix);
+        }
+
+        /// <summary>
+        /// Adds a standard type mapping by substituting one subnamespace for another
+        /// </summary>
+        /// <param name="nsSource">Subnamespace of source type</param>
+        /// <param name="nsTarget">Subnamespace of target type</param>
+        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
+        public static void AddSubNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View")
+        {
+            AddSubNamespaceMapping(nsSource, new string[] { nsTarget }, viewSuffix);
         }
 
         /// <summary>
@@ -189,14 +195,11 @@
         public static IEnumerable<string> TransformName(string typeName, bool includeInterfaces = false)
         {
             Func<string, string> getReplaceString;
-            if (includeInterfaces)
-            {
+            if (includeInterfaces) {
                 getReplaceString = r => { return r; };
             }
-            else
-            {
-                getReplaceString = r =>
-                {
+            else {
+                getReplaceString = r => {
                     return Regex.IsMatch(r, @"I\${basename}") ? String.Empty : r;
                 };
             }
