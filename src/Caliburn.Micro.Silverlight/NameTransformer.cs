@@ -8,6 +8,17 @@
     ///  Class for managing the list of rules for doing name transformation.
     /// </summary>
     public class NameTransformer : BindableCollection<NameTransformer.Rule> {
+
+        private bool _UseEagerRuleSelection = true;
+        
+        /// <summary>
+        /// Flag to indicate if transformations from all matched rules are returned. Otherwise, transformations from only the first matched rule are returned.
+        /// </summary>
+        public bool UseEagerRuleSelection {
+            get { return _UseEagerRuleSelection; }
+            set { _UseEagerRuleSelection = value; }
+        }
+
         /// <summary>
         ///  Adds a transform using a single replacement value and a global filter pattern.
         /// </summary>
@@ -66,7 +77,9 @@
                         .Select(repString => Regex.Replace(source, rule.ReplacePattern, repString))
                     );
 
-                break;
+                if (!_UseEagerRuleSelection) {
+                    break;
+                }
             }
 
             return nameList;

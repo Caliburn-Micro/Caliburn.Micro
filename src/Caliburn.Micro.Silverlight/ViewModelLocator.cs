@@ -18,7 +18,7 @@
         static ViewModelLocator() {
             //Add to list by increasing order of specificity (i.e. less specific pattern to more specific pattern)
 
-            NameTransformer.AddRule (
+            NameTransformer.AddRule(
                 @"(?<fullname>^.*$)",
                 @"${fullname}Model"
             );
@@ -52,16 +52,16 @@
             Action<string> func;
             if (viewSuffix == "View") {
                 func = t => {
-                    replist.Add(t + @"${basename}ViewModel");
-                    replist.Add(t + @"${basename}");
                     replist.Add(t + @"I${basename}ViewModel");
                     replist.Add(t + @"I${basename}");
+                    replist.Add(t + @"${basename}ViewModel");
+                    replist.Add(t + @"${basename}");
                 };
             }
             else {
                 func = t => {
-                    replist.Add(t + @"${basename}${suffix}ViewModel");
                     replist.Add(t + @"I${basename}${suffix}ViewModel");
+                    replist.Add(t + @"${basename}${suffix}ViewModel");
                 };
             }
 
@@ -74,7 +74,7 @@
             string rxbase = RegExHelper.GetNameCaptureGroup("basename");
             string rxsuffix = RegExHelper.GetCaptureGroup("suffix", suffixregex);
 
-            NameTransformer.AddRule (
+            NameTransformer.AddRule(
                 String.Concat(nsSourceReplaceRegEx, rxbase, rxsuffix),
                 replist.ToArray(),
                 srcfilterregx

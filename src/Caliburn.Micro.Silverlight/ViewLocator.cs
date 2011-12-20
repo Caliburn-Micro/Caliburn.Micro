@@ -99,7 +99,7 @@
             string rxbase = RegExHelper.GetNameCaptureGroup("basename");
             string rxsuffix = RegExHelper.GetCaptureGroup("suffix", synonym + @"ViewModel$");
 
-            NameTransformer.AddRule (
+            NameTransformer.AddRule(
                 String.Concat(nsSourceReplaceRegEx, rxbase, rxsuffix),
                 replist.ToArray(),
                 rxsrcfilter
