@@ -91,14 +91,26 @@
             if(filter == null)
                 filter = type => true;
 
+#if WinRT
+            var serviceInfo = typeof(TService).GetTypeInfo();
+            var types = from type in assembly.DefinedTypes
+                        let info = type.GetTypeInfo()
+                        where serviceInfo.IsAssignableFrom(info)
+                              && !info.IsAbstract
+                              && !info.IsInterface
+                              && filter(type)
+                        select type;
+#else
+            var serviceType = typeof(TService);
             var types = from type in assembly.GetTypes()
-                        where typeof(TService).IsAssignableFrom(type)
+                        where serviceType.IsAssignableFrom(type)
                               && !type.IsAbstract
                               && !type.IsInterface
                               && filter(type)
                         select type;
+#endif
 
-            foreach(var type in types) {
+            foreach (var type in types) {
                 container.RegisterSingleton(typeof(TService), null, type);
             }
 

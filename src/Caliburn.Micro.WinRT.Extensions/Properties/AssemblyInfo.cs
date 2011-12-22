@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Blue Spire Consulting, Inc.")]
 [assembly: AssemblyCopyright("Copyright © 2010")]
 [assembly: ComVisible(false)]
-[assembly: Guid("566D4CAA-177A-4ED0-94F6-6367871DB4A5")]
+[assembly: Guid("2634F123-71C4-40C8-856D-0E537CF001A6")]
 [assembly: AssemblyVersion("1.3.0.0")]
 [assembly: AssemblyFileVersion("1.3.0.0")]
 

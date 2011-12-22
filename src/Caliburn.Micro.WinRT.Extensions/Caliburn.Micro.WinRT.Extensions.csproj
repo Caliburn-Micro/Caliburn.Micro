@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{FDBDC52D-6A55-4531-9899-A5DCB0E09F15}</ProjectGuid>
+    <ProjectGuid>{E5718A59-1466-4B36-BA76-F596F550B19B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Caliburn.Micro</RootNamespace>
-    <AssemblyName>Caliburn.Micro</AssemblyName>
+    <AssemblyName>Caliburn.Micro.Extensions</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -22,7 +22,7 @@
     <DefineConstants>TRACE;DEBUG;WinRT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\WinRT\Debug\Caliburn.Micro.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\WinRT\Debug\Caliburn.Micro.Extensions.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,20 +31,17 @@
     <DefineConstants>TRACE;WinRT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\WinRT\Release\Caliburn.Micro.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\WinRT\Release\Caliburn.Micro.Extensions.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Caliburn.Micro.Silverlight\EventAggregator.cs">
-      <Link>EventAggregator.cs</Link>
+    <Compile Include="..\Caliburn.Micro.WP71.Extensions\ContainerExtensions.cs">
+      <Link>ContainerExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\Caliburn.Micro.Silverlight\ExtensionMethods.cs">
-      <Link>ExtensionMethods.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.Silverlight\INPC.cs">
-      <Link>INPC.cs</Link>
+    <Compile Include="..\Caliburn.Micro.WP71.Extensions\SimpleContainer.cs">
+      <Link>SimpleContainer.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

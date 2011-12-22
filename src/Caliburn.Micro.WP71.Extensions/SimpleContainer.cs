@@ -9,6 +9,14 @@
     ///   A simple IoC container.
     /// </summary>
     public class SimpleContainer {
+#if WinRT
+        static readonly TypeInfo delegateType = typeof(Delegate).GetTypeInfo();
+        static readonly TypeInfo enumerableType = typeof(IEnumerable).GetTypeInfo();
+#else
+        static readonly Type delegateType = typeof(Delegate);
+        static readonly Type enumerableType = typeof(IEnumerable);
+#endif
+
         readonly List<ContainerEntry> entries;
 
         /// <summary>
@@ -63,6 +71,44 @@
             GetOrCreateEntry(service, key).Add(handler);
         }
 
+#if WinRT
+        /// <summary>
+        ///   Requests an instance.
+        /// </summary>
+        /// <param name = "service">The service.</param>
+        /// <param name = "key">The key.</param>
+        /// <returns>The instance, or null if a handler is not found.</returns>
+        public object GetInstance(Type service, string key) {
+            var entry = GetEntry(service, key);
+            if (entry != null) {
+                return entry.Single()(this);
+            }
+
+            var serviceInfo = service.GetTypeInfo();
+
+            if (delegateType.IsAssignableFrom(serviceInfo)){
+                var typeToCreate = serviceInfo.GenericTypeArguments[0];
+                var factoryFactoryType = typeof(FactoryFactory<>).MakeGenericType(typeToCreate);
+                var factoryFactoryHost = Activator.CreateInstance(factoryFactoryType);
+                var factoryFactoryMethod = factoryFactoryType.GetTypeInfo().DeclaredMethods.First(x => x.Name == "Create");
+                return factoryFactoryMethod.Invoke(factoryFactoryHost, new object[] { this });
+            }
+
+            if (enumerableType.IsAssignableFrom(serviceInfo)) {
+                var listType = service.GenericTypeArguments[0];
+                var instances = GetAllInstances(listType).ToList();
+                var array = Array.CreateInstance(listType, instances.Count);
+
+                for (var i = 0; i < array.Length; i++) {
+                    array.SetValue(instances[i], i);
+                }
+
+                return array;
+            }
+
+            return null;
+        }
+#else
         /// <summary>
         ///   Requests an instance.
         /// </summary>
@@ -75,7 +121,7 @@
                 return entry.Single()(this);
             }
 
-            if(typeof(Delegate).IsAssignableFrom(service)) {
+            if(delegateType.IsAssignableFrom(service)) {
                 var typeToCreate = service.GetGenericArguments()[0];
                 var factoryFactoryType = typeof(FactoryFactory<>).MakeGenericType(typeToCreate);
                 var factoryFactoryHost = Activator.CreateInstance(factoryFactoryType);
@@ -83,7 +129,7 @@
                 return factoryFactoryMethod.Invoke(factoryFactoryHost, new object[] { this });
             }
 
-            if(typeof(IEnumerable).IsAssignableFrom(service)) {
+            if(enumerableType.IsAssignableFrom(service)) {
                 var listType = service.GetGenericArguments()[0];
                 var instances = GetAllInstances(listType).ToList();
                 var array = Array.CreateInstance(listType, instances.Count);
@@ -97,6 +143,7 @@
 
             return null;
         }
+#endif
 
         /// <summary>
         ///   Requests all instances of a given type.
@@ -113,9 +160,15 @@
         /// </summary>
         /// <param name = "instance">The instance.</param>
         public void BuildUp(object instance) {
+#if WinRT
+            var injectables = from property in instance.GetType().GetTypeInfo().DeclaredProperties
+                              where property.CanRead && property.CanWrite && property.PropertyType.GetTypeInfo().IsInterface
+                              select property;
+#else
             var injectables = from property in instance.GetType().GetProperties()
                               where property.CanRead && property.CanWrite && property.PropertyType.IsInterface
                               select property;
+#endif
 
             foreach(var propertyInfo in injectables) {
                 var injection = GetAllInstances(propertyInfo.PropertyType).ToArray();
@@ -186,11 +239,19 @@
             return args.ToArray();
         }
 
+#if WinRT
+        static ConstructorInfo SelectEligibleConstructor(Type type) {
+            return (from c in type.GetTypeInfo().DeclaredConstructors
+                    orderby c.GetParameters().Length descending
+                    select c).FirstOrDefault();
+        }
+#else
         static ConstructorInfo SelectEligibleConstructor(Type type) {
             return (from c in type.GetConstructors()
                     orderby c.GetParameters().Length descending
                     select c).FirstOrDefault();
         }
+#endif
 
         class ContainerEntry : List<Func<SimpleContainer, object>> {
             public string Key;
