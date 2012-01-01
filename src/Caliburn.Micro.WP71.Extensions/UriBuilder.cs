@@ -53,7 +53,7 @@
         public void Navigate() {
             var uri = BuildUri();
 
-            if(navigationService == null) {
+            if (navigationService == null) {
                 throw new Exception("Cannot navigate without attaching an INavigationService. Call AttachTo first.");
             }
 
@@ -72,14 +72,14 @@
 
         string DeterminePageName() {
             var page = ViewLocator.LocateTypeForModelType(typeof(TViewModel), null, null);
-            if(page == null) {
+            if (page == null) {
                 throw new Exception(string.Format("No view was found for {0}. See the log for searched views.", typeof(TViewModel).FullName));
             }
 
             var pageAssemblyName = GetAssemblyName(page.Assembly);
-            var pageName = page.FullName.Replace(pageAssemblyName, "").Replace(".", "/") + ".xaml";
+            var pageName = GetPageName(typeof(TViewModel).FullName, page.FullName);
 
-            if(!entryAssemblyName.Equals(pageAssemblyName)) {
+            if (!entryAssemblyName.Equals(pageAssemblyName)) {
                 return "/" + pageAssemblyName + ";component" + pageName;
             }
 
@@ -87,7 +87,7 @@
         }
 
         string BuildQueryString() {
-            if(queryString.Count < 1) {
+            if (queryString.Count < 1) {
                 return string.Empty;
             }
 
@@ -95,6 +95,22 @@
                 .Aggregate("?", (current, pair) => current + (pair.Key + "=" + pair.Value + "&"));
 
             return result.Remove(result.Length - 1);
+        }
+
+        static string GetPageName(string viewModelFullName, string viewFullName)
+        {
+            var viewModelFullNameSplit = viewModelFullName.Split('.');
+            var viewFullNameSplit = viewFullName.Split('.');
+
+            var i = 0;
+            for (; i < viewModelFullNameSplit.Length || i < viewFullNameSplit.Length; ++i)
+            {
+                if (viewModelFullNameSplit[i] != viewFullNameSplit[i]) break;
+            }
+
+            return string.Format(
+                "/{0}.xaml",
+                string.Join("/", viewFullNameSplit.Where((_, index) => index >= i)));
         }
 
         static string GetAssemblyName(Assembly assembly) {

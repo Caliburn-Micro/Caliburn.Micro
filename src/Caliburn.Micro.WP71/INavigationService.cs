@@ -31,10 +31,10 @@
         /// </summary>
         Uri CurrentSource { get; }
 
-		/// <summary>
-		/// The current content.
-		/// </summary>
-		object CurrentContent { get; }
+        /// <summary>
+        /// The current content.
+        /// </summary>
+        object CurrentContent { get; }
 
         /// <summary>
         /// Stops the loading process.
@@ -112,28 +112,31 @@
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event args.</param>
         protected virtual void OnNavigating(object sender, NavigatingCancelEventArgs e) {
-			externalNavigatingHandler(sender, e);   
-			if (e.Cancel) return;
+            externalNavigatingHandler(sender, e);
+            if (e.Cancel) return;
 
             var fe = frame.Content as FrameworkElement;
-            if(fe == null)
+            if (fe == null)
                 return;
 
             var guard = fe.DataContext as IGuardClose;
-            if(guard != null && !e.Uri.IsAbsoluteUri) {
+            if (guard != null && !e.Uri.IsAbsoluteUri) {
                 bool shouldCancel = false;
                 guard.CanClose(result => {
                     shouldCancel = !result;
                 });
 
-                if(shouldCancel) {
+                if (shouldCancel) {
                     e.Cancel = true;
                     return;
                 }
             }
 
             var deactivator = fe.DataContext as IDeactivate;
-            if(deactivator != null)
+
+            // If we are navigating to the same page there is no need to deactivate
+            // e.g. When the app is activated with Fast Switch
+            if (deactivator != null && frame.CurrentSource != e.Uri)
                 deactivator.Deactivate(false);
         }
 
@@ -193,8 +196,8 @@
                     continue;
 
                 property.SetValue(
-                    viewModel, 
-                    MessageBinder.CoerceValue(property.PropertyType, pair.Value, page.NavigationContext), 
+                    viewModel,
+                    MessageBinder.CoerceValue(property.PropertyType, pair.Value, page.NavigationContext),
                     null
                     );
             }
@@ -233,13 +236,13 @@
             get { return frame.CurrentSource; }
         }
 
-		/// <summary>
-		/// The current content.
-		/// </summary>
-		public object CurrentContent
-		{
-			get { return frame.Content; }
-		}
+        /// <summary>
+        /// The current content.
+        /// </summary>
+        public object CurrentContent
+        {
+            get { return frame.Content; }
+        }
 
 
         /// <summary>
@@ -295,14 +298,14 @@
             remove { frame.Navigated -= value; }
         }
 
-		NavigatingCancelEventHandler externalNavigatingHandler = delegate { };
+        NavigatingCancelEventHandler externalNavigatingHandler = delegate { };
         /// <summary>
         /// Raised prior to navigation.
         /// </summary>
         public event NavigatingCancelEventHandler Navigating
         {
-			add { externalNavigatingHandler += value; }
-			remove { externalNavigatingHandler -= value; }
+            add { externalNavigatingHandler += value; }
+            remove { externalNavigatingHandler -= value; }
         }
 
         /// <summary>
