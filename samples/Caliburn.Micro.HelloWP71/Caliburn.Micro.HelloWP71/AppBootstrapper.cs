@@ -27,7 +27,7 @@
                         ConventionManager
                             .ConfigureSelectedItem(element, Pivot.SelectedItemProperty, viewModelType, path);
                         ConventionManager
-                            .ApplyHeaderTemplate(element, Pivot.HeaderTemplateProperty, viewModelType);
+                            .ApplyHeaderTemplate(element, Pivot.HeaderTemplateProperty, null, viewModelType);
                         return true;
                     }
 
@@ -42,7 +42,7 @@
                         ConventionManager
                             .ConfigureSelectedItem(element, Panorama.SelectedItemProperty, viewModelType, path);
                         ConventionManager
-                            .ApplyHeaderTemplate(element, Panorama.HeaderTemplateProperty, viewModelType);
+                            .ApplyHeaderTemplate(element, Panorama.HeaderTemplateProperty, null, viewModelType);
                         return true;
                     }
 

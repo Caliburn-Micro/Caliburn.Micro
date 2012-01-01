@@ -216,7 +216,7 @@
                     ConfigureSelectedItem(element, Selector.SelectedItemProperty, viewModelType, path);
 
                     if(string.IsNullOrEmpty(tabControl.DisplayMemberPath))
-                        ApplyHeaderTemplate(tabControl, TabControl.ItemTemplateProperty, viewModelType);
+                        ApplyHeaderTemplate(tabControl, TabControl.ItemTemplateProperty, TabControl.ItemTemplateSelectorProperty, viewModelType);
 
                     return true;
                 };
@@ -402,12 +402,17 @@
         /// </summary>
         /// <param name="element"></param>
         /// <param name="headerTemplateProperty"></param>
+        /// <param name="headerTemplateSelectorProperty"> </param>
         /// <param name="viewModelType"></param>
-        public static void ApplyHeaderTemplate(FrameworkElement element, DependencyProperty headerTemplateProperty, Type viewModelType) {
+        public static void ApplyHeaderTemplate(FrameworkElement element, DependencyProperty headerTemplateProperty, DependencyProperty headerTemplateSelectorProperty, Type viewModelType) {
             var template = element.GetValue(headerTemplateProperty);
+            var selector = headerTemplateSelectorProperty != null
+                               ? element.GetValue(headerTemplateSelectorProperty)
+                               : null;
 
-            if (template != null || !typeof(IHaveDisplayName).IsAssignableFrom(viewModelType))
+            if (template != null || selector != null || !typeof(IHaveDisplayName).IsAssignableFrom(viewModelType)) {
                 return;
+            }
 
             element.SetValue(headerTemplateProperty, DefaultHeaderTemplate);
             Log.Info("Header template applied to {0}.", element.Name);
