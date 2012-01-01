@@ -17,12 +17,12 @@
         /// <summary>
         /// The application.
         /// </summary>
-        public Application Application { get; protected set; }
-
+        protected Application Application { get; set; }
 
         /// <summary>
         /// Creates an instance of the bootstrapper.
         /// </summary>
+        /// <param name="useApplication">Set this to false when hosting Caliburn.Micro inside and Office or WinForms application. The default is true.</param>
         public Bootstrapper(bool useApplication = true) {
             this.useApplication = useApplication;
 
@@ -72,11 +72,6 @@
         }
 
         /// <summary>
-        /// Override to configure the framework and setup your IoC container.
-        /// </summary>
-        protected virtual void Configure() { }
-
-        /// <summary>
         /// Provides an opportunity to hook into the application object.
         /// </summary>
         protected virtual void PrepareApplication() {
@@ -88,6 +83,11 @@
 #endif
             Application.Exit += OnExit;
         }
+
+        /// <summary>
+        /// Override to configure the framework and setup your IoC container.
+        /// </summary>
+        protected virtual void Configure() { }
 
         /// <summary>
         /// Override to tell the framework where to find assemblies to inspect for views, etc.
