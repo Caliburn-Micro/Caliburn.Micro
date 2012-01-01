@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Threading;
@@ -93,6 +94,17 @@
         /// </summary>
         /// <returns>A list of assemblies to inspect.</returns>
         protected virtual IEnumerable<Assembly> SelectAssemblies() {
+            if (Execute.InDesignMode) {
+                var appDomain = AppDomain.CurrentDomain;
+                var assemblies = appDomain.GetType().GetMethod("GetAssemblies")
+                                     .Invoke(appDomain, null) as Assembly[] ?? new Assembly[] { };
+                return new[] {
+                    assemblies
+                        .Where(x => x.EntryPoint != null && x.GetTypes().Any(t => t.IsSubclassOf(typeof(Application))))
+                        .FirstOrDefault()
+                };
+            }
+
 #if SILVERLIGHT
             return new[] { Application.Current.GetType().Assembly };
 #else
