@@ -97,20 +97,17 @@
             return result.Remove(result.Length - 1);
         }
 
-        static string GetPageName(string viewModelFullName, string viewFullName)
-        {
+        static string GetPageName(string viewModelFullName, string viewFullName) {
             var viewModelFullNameSplit = viewModelFullName.Split('.');
             var viewFullNameSplit = viewFullName.Split('.');
 
             var i = 0;
-            for (; i < viewModelFullNameSplit.Length || i < viewFullNameSplit.Length; ++i)
-            {
-                if (viewModelFullNameSplit[i] != viewFullNameSplit[i]) break;
+            for(; i < viewModelFullNameSplit.Length || i < viewFullNameSplit.Length; ++i) {
+                if(viewModelFullNameSplit[i] != viewFullNameSplit[i])
+                    break;
             }
 
-            return string.Format(
-                "/{0}.xaml",
-                string.Join("/", viewFullNameSplit.Where((_, index) => index >= i)));
+            return string.Format("/{0}.xaml", string.Join("/", viewFullNameSplit.Where((_, index) => index >= i)));
         }
 
         static string GetAssemblyName(Assembly assembly) {
