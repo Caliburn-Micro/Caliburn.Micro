@@ -25,7 +25,13 @@
         /// <param name="phoneStateKey">The phone state key.</param>
         /// <param name="implementation">The implementation.</param>
         public void RegisterWithPhoneService(Type service, string phoneStateKey, Type implementation) {
-            RegisterHandler(service, null, container => {
+            var pservice = (IPhoneService)GetInstance(typeof(IPhoneService), null);
+
+            if(!pservice.State.ContainsKey(phoneStateKey ?? service.FullName)) {
+                pservice.State[phoneStateKey ?? service.FullName] = BuildInstance(implementation);
+            }
+
+            RegisterHandler(service, phoneStateKey, container => {
                 var phoneService = (IPhoneService)container.GetInstance(typeof(IPhoneService), null);
 
                 if(phoneService.State.ContainsKey(phoneStateKey ?? service.FullName)) {
@@ -43,7 +49,11 @@
         /// <param name="appSettingsKey">The app settings key.</param>
         /// <param name="implementation">The implementation.</param>
         public void RegisterWithAppSettings(Type service, string appSettingsKey, Type implementation) {
-            RegisterHandler(service, null, container => {
+            if(!IsolatedStorageSettings.ApplicationSettings.Contains(appSettingsKey ?? service.FullName)) {
+                IsolatedStorageSettings.ApplicationSettings[appSettingsKey ?? service.FullName] = BuildInstance(implementation);
+            }
+
+            RegisterHandler(service, appSettingsKey, container => {
                 if(IsolatedStorageSettings.ApplicationSettings.Contains(appSettingsKey ?? service.FullName)) {
                     return IsolatedStorageSettings.ApplicationSettings[appSettingsKey ?? service.FullName];
                 }
@@ -57,9 +67,10 @@
         /// </summary>
         /// <param name="treatViewAsLoaded">if set to <c>true</c> [treat view as loaded].</param>
         public void RegisterPhoneServices(bool treatViewAsLoaded = false) {
-            var toSearch = AssemblySource.Instance.ToArray().Union(new[] { typeof(IStorageMechanism).Assembly });
+            var toSearch = AssemblySource.Instance.ToArray()
+                .Union(new[] { typeof(IStorageMechanism).Assembly });
 
-            foreach (var assembly in toSearch) {
+            foreach(var assembly in toSearch) {
                 this.AllTypesOf<IStorageMechanism>(assembly);
                 this.AllTypesOf<IStorageHandler>(assembly);
             }
@@ -74,10 +85,8 @@
             RegisterInstance(typeof(IPhoneService), null, phoneService);
             RegisterSingleton(typeof(IEventAggregator), null, typeof(EventAggregator));
             RegisterSingleton(typeof(IWindowManager), null, typeof(WindowManager));
-			RegisterSingleton(typeof(IVibrateController), null, typeof(SystemVibrateController));
-			RegisterSingleton(typeof(ISoundEffectPlayer), null, typeof(XnaSoundEffectPlayer));
-
-			
+            RegisterSingleton(typeof(IVibrateController), null, typeof(SystemVibrateController));
+            RegisterSingleton(typeof(ISoundEffectPlayer), null, typeof(XnaSoundEffectPlayer));
 
             RegisterSingleton(typeof(StorageCoordinator), null, typeof(StorageCoordinator));
             var coordinator = (StorageCoordinator)GetInstance(typeof(StorageCoordinator), null);
