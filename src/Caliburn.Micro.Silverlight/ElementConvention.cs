@@ -34,6 +34,6 @@
         /// </summary>
         /// <remarks>Pass the view model type, property path, property instance, framework element and its convention.</remarks>
         public Func<Type, string, PropertyInfo, FrameworkElement, ElementConvention, bool> ApplyBinding =
-            (viewModelType, path, property, element, convention) => ConventionManager.SetBinding(viewModelType, path, property, element, convention);
+            (viewModelType, path, property, element, convention) => ConventionManager.SetBindingWithoutBindingOverwrite(viewModelType, path, property, element, convention, convention.GetBindableProperty(element));
     }
 }

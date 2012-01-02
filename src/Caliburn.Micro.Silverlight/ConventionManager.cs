@@ -19,8 +19,7 @@
     /// <summary>
     /// Used to configure the conventions used by the framework to apply bindings and create actions.
     /// </summary>
-    public static class ConventionManager
-    {
+    public static class ConventionManager {
         static readonly ILog Log = LogManager.GetLog(typeof(ConventionManager));
 
         /// <summary>
@@ -91,6 +90,28 @@
         };
 
         /// <summary>
+        /// Creates a binding and sets it on the element, applying the appropriate conventions.
+        /// </summary>
+        /// <param name="viewModelType"></param>
+        /// <param name="path"></param>
+        /// <param name="property"></param>
+        /// <param name="element"></param>
+        /// <param name="convention"></param>
+        /// <param name="bindableProperty"></param>
+        public static Action<Type, string, PropertyInfo, FrameworkElement, ElementConvention, DependencyProperty> SetBinding =
+            (viewModelType, path, property, element, convention, bindableProperty) => {
+                var binding = new Binding(path);
+
+                ApplyBindingMode(binding, property);
+                ApplyValueConverter(binding, bindableProperty, property);
+                ApplyStringFormat(binding, convention, property);
+                ApplyValidation(binding, viewModelType, property);
+                ApplyUpdateSourceTrigger(bindableProperty, element, binding, property);
+
+                BindingOperations.SetBinding(element, bindableProperty, binding);
+            };
+
+        /// <summary>
         /// Applies the appropriate binding mode to the binding.
         /// </summary>
         public static Action<Binding, PropertyInfo> ApplyBindingMode = (binding, property) =>{
@@ -147,35 +168,6 @@
 #endif
         };
 
-        /// <summary>
-        /// Determines whether a particular dependency property already has a binding on the provided element.
-        /// </summary>
-        public static Func<FrameworkElement, DependencyProperty, bool> HasBinding = (element, property) => {
-            return element.GetBindingExpression(property) != null;
-        };
-
-        /// <summary>
-        /// Creates a binding and sets it on the element.
-        /// </summary>
-        public static Func<Type, string, PropertyInfo, FrameworkElement, ElementConvention, bool> SetBinding =
-            (viewModelType, path, property, element, convention) => {
-                var bindableProperty = convention.GetBindableProperty(element);
-                if(bindableProperty == null || HasBinding(element, bindableProperty))
-                    return false;
-
-                var binding = new Binding(path);
-
-                ApplyBindingMode(binding, property);
-                ApplyValueConverter(binding, bindableProperty, property);
-                ApplyStringFormat(binding, convention, property);
-                ApplyValidation(binding, viewModelType, property);
-                ApplyUpdateSourceTrigger(bindableProperty, element, binding, property);
-
-                BindingOperations.SetBinding(element, bindableProperty, binding);
-
-                return true;
-            };
-
         static ConventionManager()
         {
 #if !WP7 && !WP71
@@ -199,7 +191,8 @@
             AddElementConvention<TreeView>(TreeView.ItemsSourceProperty, "SelectedItem", "SelectedItemChanged");
             AddElementConvention<TabControl>(TabControl.ItemsSourceProperty, "ItemsSource", "SelectionChanged")
                 .ApplyBinding = (viewModelType, path, property, element, convention) => {
-                    if(!SetBinding(viewModelType, path, property, element, convention))
+                    var bindableProperty = convention.GetBindableProperty(element);
+                    if(!SetBindingWithoutBindingOverwrite(viewModelType, path, property, element, convention, bindableProperty))
                         return false;
 
                     var tabControl = (TabControl)element;
@@ -232,8 +225,9 @@
             AddElementConvention<ProgressBar>(ProgressBar.ValueProperty, "Value", "ValueChanged");
             AddElementConvention<Selector>(Selector.ItemsSourceProperty, "SelectedItem", "SelectionChanged")
                 .ApplyBinding = (viewModelType, path, property, element, convention) => {
-                    if (!SetBinding(viewModelType, path, property, element, convention))
+                    if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, ItemsControl.ItemsSourceProperty)) {
                         return false;
+                    }
 
                     ConfigureSelectedItem(element, Selector.SelectedItemProperty,viewModelType, path);
                     ApplyItemTemplate((ItemsControl)element, property);
@@ -242,8 +236,9 @@
                 };
             AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", "Loaded")
                 .ApplyBinding = (viewModelType, path, property, element, convention) => {
-                    if (!SetBinding(viewModelType, path, property, element, convention))
+                    if(!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, ItemsControl.ItemsSourceProperty)) {
                         return false;
+                    }
 
                     ApplyItemTemplate((ItemsControl)element, property);
 
@@ -292,8 +287,7 @@
         /// Adds an element convention.
         /// </summary>
         /// <param name="convention"></param>
-        public static ElementConvention AddElementConvention(ElementConvention convention)
-        {
+        public static ElementConvention AddElementConvention(ElementConvention convention) {
             return ElementConventions[convention.ElementType] = convention;
         }
 
@@ -303,14 +297,55 @@
         /// <param name="elementType">The type of element to locate the convention for.</param>
         /// <returns>The convention if found, null otherwise.</returns>
         /// <remarks>Searches the class hierarchy for conventions.</remarks>
-        public static ElementConvention GetElementConvention(Type elementType)
-        {
+        public static ElementConvention GetElementConvention(Type elementType) {
             if (elementType == null)
                 return null;
 
             ElementConvention propertyConvention;
             ElementConventions.TryGetValue(elementType, out propertyConvention);
             return propertyConvention ?? GetElementConvention(elementType.BaseType);
+        }
+
+        /// <summary>
+        /// Determines whether a particular dependency property already has a binding on the provided element.
+        /// </summary>
+        public static bool HasBinding(FrameworkElement element, DependencyProperty property) {
+            return element.GetBindingExpression(property) != null;
+        }
+
+        /// <summary>
+        /// Creates a binding and sets it on the element, guarding against pre-existing bindings.
+        /// </summary>
+        public static bool SetBindingWithoutBindingOverwrite(Type viewModelType, string path, PropertyInfo property, FrameworkElement element, ElementConvention convention, DependencyProperty bindableProperty) {
+            if(bindableProperty == null || HasBinding(element, bindableProperty)) {
+                return false;
+            }
+
+            SetBinding(viewModelType, path, property, element, convention, bindableProperty);
+            return true;
+        }
+
+        /// <summary>
+        /// Creates a binding and set it on the element, guarding against pre-existing bindings and pre-existing values.
+        /// </summary>
+        /// <param name="viewModelType"></param>
+        /// <param name="path"></param>
+        /// <param name="property"></param>
+        /// <param name="element"></param>
+        /// <param name="convention"></param>
+        /// <param name="bindableProperty"> </param>
+        /// <returns></returns>
+        public static bool SetBindingWithoutBindingOrValueOverwrite(Type viewModelType, string path, PropertyInfo property, FrameworkElement element, ElementConvention convention, DependencyProperty bindableProperty) {
+            if(bindableProperty == null || HasBinding(element, bindableProperty)) {
+                return false;
+            }
+
+            if(element.GetValue(bindableProperty) != null) {
+                return false;
+            }
+
+            SetBinding(viewModelType, path, property, element, convention, bindableProperty);
+            return true;
         }
 
         /// <summary>
@@ -350,38 +385,29 @@
         /// <param name="viewModelType">The view model type.</param>
         /// <param name="path">The property path.</param>
         public static Action<FrameworkElement, DependencyProperty, Type, string> ConfigureSelectedItem =
-			(selector, selectedItemProperty, viewModelType, path) => {
-				if (HasBinding(selector, selectedItemProperty))
-					return;
+            (selector, selectedItemProperty, viewModelType, path) => {
+                if(HasBinding(selector, selectedItemProperty))
+                    return;
 
-				var index = path.LastIndexOf('.');
-				index = index == -1 ? 0 : index + 1;
-				var baseName = path.Substring(index);
+                var index = path.LastIndexOf('.');
+                index = index == -1 ? 0 : index + 1;
+                var baseName = path.Substring(index);
 
-				foreach (var potentialName in DerivePotentialSelectionNames(baseName))
-				{
-					if (viewModelType.GetPropertyCaseInsensitive(potentialName) != null)
-					{
-						var selectionPath = path.Replace(baseName, potentialName);
-						var binding = new Binding(selectionPath) { Mode = BindingMode.TwoWay };
-						var shouldApplyBinding = ConfigureSelectedItemBinding(selector, selectedItemProperty, viewModelType, selectionPath, binding);
-						if (shouldApplyBinding)
-						{
-							BindingOperations.SetBinding(selector, selectedItemProperty, binding);
-							Log.Info("SelectedItem binding applied to {0}.", selector.Name);
+                foreach(var potentialName in DerivePotentialSelectionNames(baseName)) {
+                    if(viewModelType.GetPropertyCaseInsensitive(potentialName) != null) {
+                        var selectionPath = path.Replace(baseName, potentialName);
+                        var binding = new Binding(selectionPath) { Mode = BindingMode.TwoWay };
+                        var shouldApplyBinding = ConfigureSelectedItemBinding(selector, selectedItemProperty, viewModelType, selectionPath, binding);
+                        if(shouldApplyBinding) {
+                            BindingOperations.SetBinding(selector, selectedItemProperty, binding);
+                            Log.Info("SelectedItem binding applied to {0}.", selector.Name);
+                            return;
+                        }
 
-							return;
-						}
-						else
-						{
-							Log.Info("SelectedItem binding not applied to {0} due to 'ConfigureSelectedItemBinding' customization.", selector.Name);
-						}
-							
-						
-					}
-				}
-			};
-
+                        Log.Info("SelectedItem binding not applied to {0} due to 'ConfigureSelectedItemBinding' customization.", selector.Name);
+                    }
+                }
+            };
 
 		/// <summary>
 		/// Configures the SelectedItem binding for matched selection path.
@@ -410,7 +436,7 @@
                                ? element.GetValue(headerTemplateSelectorProperty)
                                : null;
 
-            if (template != null || selector != null || !typeof(IHaveDisplayName).IsAssignableFrom(viewModelType)) {
+            if(template != null || selector != null || !typeof(IHaveDisplayName).IsAssignableFrom(viewModelType)) {
                 return;
             }
 
@@ -427,12 +453,12 @@
         public static PropertyInfo GetPropertyCaseInsensitive(this Type type, string propertyName) {
             var typeList = new List<Type> { type };
 
-            if (type.IsInterface)
+            if(type.IsInterface)
                 typeList.AddRange(type.GetInterfaces());
 
             var flags = BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance;
 
-            if (IncludeStaticProperties)
+            if(IncludeStaticProperties)
                 flags = flags | BindingFlags.Static;
 
             return typeList

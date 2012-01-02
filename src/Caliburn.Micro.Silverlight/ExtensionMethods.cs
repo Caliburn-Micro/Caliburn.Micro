@@ -9,8 +9,7 @@
     /// <summary>
     /// Generic extension methods used by the framework.
     /// </summary>
-    public static class ExtensionMethods
-    {
+    public static class ExtensionMethods {
         /// <summary>
         /// Gets all the attributes of a particular type.
         /// </summary>
