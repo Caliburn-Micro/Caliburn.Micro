@@ -8,14 +8,14 @@
     /// A custom IoC container which integrates with the phone and properly registers all Caliburn.Micro services.
     /// </summary>
     public class PhoneContainer : SimpleContainer, IPhoneContainer {
-        readonly Frame rootFrame;
+        protected readonly Frame RootFrame;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PhoneContainer"/> class.
         /// </summary>
         /// <param name="rootFrame">The root frame.</param>
         public PhoneContainer(Frame rootFrame) {
-            this.rootFrame = rootFrame;
+            RootFrame = rootFrame;
         }
 
         /// <summary>
@@ -66,7 +66,40 @@
         /// Registers the Caliburn.Micro services with the container.
         /// </summary>
         /// <param name="treatViewAsLoaded">if set to <c>true</c> [treat view as loaded].</param>
-        public void RegisterPhoneServices(bool treatViewAsLoaded = false) {
+        public virtual void RegisterPhoneServices(bool treatViewAsLoaded = false) {
+            RegisterInstance(typeof(SimpleContainer), null, this);
+            RegisterInstance(typeof(PhoneContainer), null, this);
+            RegisterInstance(typeof(IPhoneContainer), null, this);
+
+            if (!HasHandler(typeof(INavigationService), null)) {
+                RegisterInstance(typeof(INavigationService), null, new FrameAdapter(RootFrame, treatViewAsLoaded));
+            }
+
+            if (!HasHandler(typeof(IPhoneService), null)) {
+                RegisterInstance(typeof(IPhoneService), null, new PhoneApplicationServiceAdapter(RootFrame));
+            }
+
+            if (!HasHandler(typeof(IEventAggregator), null)) {
+                RegisterSingleton(typeof(IEventAggregator), null, typeof(EventAggregator));
+            }
+
+            if (!HasHandler(typeof(IWindowManager), null)) {
+                RegisterSingleton(typeof(IWindowManager), null, typeof(WindowManager));
+            }
+
+            if (!HasHandler(typeof(IVibrateController), null)) {
+                RegisterSingleton(typeof(IVibrateController), null, typeof(SystemVibrateController));
+            }
+
+            if (!HasHandler(typeof(ISoundEffectPlayer), null)) {
+                RegisterSingleton(typeof(ISoundEffectPlayer), null, typeof(XnaSoundEffectPlayer));
+            }
+
+            EnableStorageCoordinator();
+            EnableTaskController();
+        }
+
+        protected void EnableStorageCoordinator() {
             var toSearch = AssemblySource.Instance.ToArray()
                 .Union(new[] { typeof(IStorageMechanism).Assembly });
 
@@ -75,23 +108,12 @@
                 this.AllTypesOf<IStorageHandler>(assembly);
             }
 
-            var phoneService = new PhoneApplicationServiceAdapter(rootFrame);
-            var navigationService = new FrameAdapter(rootFrame, treatViewAsLoaded);
-
-            RegisterInstance(typeof(SimpleContainer), null, this);
-            RegisterInstance(typeof(PhoneContainer), null, this);
-            RegisterInstance(typeof(IPhoneContainer), null, this);
-            RegisterInstance(typeof(INavigationService), null, navigationService);
-            RegisterInstance(typeof(IPhoneService), null, phoneService);
-            RegisterSingleton(typeof(IEventAggregator), null, typeof(EventAggregator));
-            RegisterSingleton(typeof(IWindowManager), null, typeof(WindowManager));
-            RegisterSingleton(typeof(IVibrateController), null, typeof(SystemVibrateController));
-            RegisterSingleton(typeof(ISoundEffectPlayer), null, typeof(XnaSoundEffectPlayer));
-
             RegisterSingleton(typeof(StorageCoordinator), null, typeof(StorageCoordinator));
             var coordinator = (StorageCoordinator)GetInstance(typeof(StorageCoordinator), null);
             coordinator.Start();
+        }
 
+        protected void EnableTaskController() {
             RegisterSingleton(typeof(TaskController), null, typeof(TaskController));
             var taskController = (TaskController)GetInstance(typeof(TaskController), null);
             taskController.Start();
