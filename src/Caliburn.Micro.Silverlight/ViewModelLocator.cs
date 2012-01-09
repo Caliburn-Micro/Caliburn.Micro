@@ -217,10 +217,7 @@
             var typeName = viewType.FullName;
 
             var viewModelTypeList = TransformName(typeName, searchForInterface);
-            var viewModelType = (from assembly in AssemblySource.Instance
-                                 from type in assembly.GetExportedTypes()
-                                 where viewModelTypeList.Contains(type.FullName)
-                                 select type).FirstOrDefault();
+            var viewModelType = viewModelTypeList.Join(AssemblySource.Instance.SelectMany(a => a.GetExportedTypes()), n => n, t => t.FullName, (n, t) => t).FirstOrDefault();
 
             if (viewModelType == null) {
                 Log.Warn("View Model not found. Searched: {0}.", string.Join(", ", viewModelTypeList.ToArray()));

@@ -241,18 +241,21 @@
             Func<string, string> getReplaceString;
             if (context == null) {
                 getReplaceString = r => { return r; };
+                return NameTransformer.Transform(typeName, getReplaceString);
             }
             else {
+                var replacestr = ContextSeparator + context;
                 getReplaceString = r => {
                     //Create RegEx for matching any of the synonyms registered
                     var synonymregex = String.Join("|", ViewSuffixList.Select(s => @"(" + s + @"$)").ToArray());
 
                     //Strip out the synonym
-                    return Regex.Replace(r, synonymregex, ContextSeparator + context);
+                    return Regex.Replace(r, synonymregex, replacestr);
                 };
-            }
 
-            return NameTransformer.Transform(typeName, getReplaceString);
+                //Return only the names for the context
+                return NameTransformer.Transform(typeName, getReplaceString).Where(n => n.EndsWith(replacestr));
+            }
         }
 
         /// <summary>
@@ -277,10 +280,8 @@
                 );
 
             var viewTypeList = TransformName(viewTypeName, context);
-            var viewType = (from assembly in AssemblySource.Instance
-                            from type in assembly.GetExportedTypes()
-                            where viewTypeList.Contains(type.FullName)
-                            select type).FirstOrDefault();
+            
+            var viewType = viewTypeList.Join(AssemblySource.Instance.SelectMany(a => a.GetExportedTypes()), n => n, t => t.FullName, (n, t) => t).FirstOrDefault();
 
             if(viewType == null) {
                 Log.Warn("View not found. Searched: {0}.", string.Join(", ", viewTypeList.ToArray()));
