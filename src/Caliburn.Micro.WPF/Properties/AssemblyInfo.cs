@@ -16,6 +16,4 @@ using System.Windows.Markup;
 [assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.Micro")]
 [assembly: XmlnsPrefix("http://www.caliburnproject.org", "cal")]
 
-#if !SILVERLIGHT
 [assembly: CLSCompliant(true)]
-#endif
