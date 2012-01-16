@@ -86,7 +86,7 @@
             SetUIThreadMarshaller(action => {
                 if (dispatcher.HasThreadAccess)
                     action();
-                else dispatcher.Invoke(CoreDispatcherPriority.Normal, (s, e) => action(), null, null);
+                else dispatcher.Invoke(CoreDispatcherPriority.Normal, (s, e) => action(), dispatcher, null);
             });
 #else
             var dispatcher = Dispatcher.CurrentDispatcher;

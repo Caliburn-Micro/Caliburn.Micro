@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System;
 //using System.Windows.Markup;
 
 [assembly: AssemblyTitle("Caliburn Micro")]

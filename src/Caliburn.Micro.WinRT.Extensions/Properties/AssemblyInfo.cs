@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System;
 //using System.Windows.Markup;
 
 [assembly: AssemblyTitle("Caliburn Micro")]
@@ -15,6 +16,8 @@ using System.Runtime.InteropServices;
 [assembly: Guid("2634F123-71C4-40C8-856D-0E537CF001A6")]
 [assembly: AssemblyVersion("1.3.0.0")]
 [assembly: AssemblyFileVersion("1.3.0.0")]
+
+[assembly: CLSCompliant(true)]
 
 //[assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.Micro")]
 //[assembly: XmlnsPrefix("http://www.caliburnproject.org", "cal")]
