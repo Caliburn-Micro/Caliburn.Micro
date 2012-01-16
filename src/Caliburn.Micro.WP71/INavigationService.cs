@@ -133,8 +133,17 @@
             // If we are navigating to the same page there is no need to deactivate
             // e.g. When the app is activated with Fast Switch
             if(deactivator != null && frame.CurrentSource != e.Uri) {
-                deactivator.Deactivate(false);
+                deactivator.Deactivate(CanCloseOnNavigating(sender, e));
             }
+        }
+
+        /// <summary>
+        /// Called to check whether or not to close current instance on navigating.
+        /// </summary>
+        /// <param name="sender"> The event sender from OnNavigating event. </param>
+        /// <param name="e"> The event args from OnNavigating event. </param>
+        protected virtual bool CanCloseOnNavigating(object sender, NavigatingCancelEventArgs e) {
+            return false;
         }
 
         /// <summary>
