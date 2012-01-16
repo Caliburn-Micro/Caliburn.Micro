@@ -3,8 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Reflection;
-    using System.Windows;
 
     /// <summary>
     /// Builds a Uri in a strongly typed fashion, based on a ViewModel.
@@ -12,15 +10,7 @@
     /// <typeparam name="TViewModel"></typeparam>
     public class UriBuilder<TViewModel> {
         readonly Dictionary<string, string> queryString = new Dictionary<string, string>();
-        readonly string entryAssemblyName;
         INavigationService navigationService;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UriBuilder&lt;TViewModel&gt;"/> class.
-        /// </summary>
-        public UriBuilder() {
-            entryAssemblyName = GetAssemblyName(Application.Current.GetType().Assembly);
-        }
 
         /// <summary>
         /// Adds a query string parameter to the Uri.
@@ -65,25 +55,15 @@
         /// </summary>
         /// <returns>A uri constructed with the current configuration information.</returns>
         public Uri BuildUri() {
-            var pageName = DeterminePageName();
-            var qs = BuildQueryString();
-            return new Uri(pageName + qs, UriKind.Relative);
-        }
-
-        string DeterminePageName() {
-            var page = ViewLocator.LocateTypeForModelType(typeof(TViewModel), null, null);
-            if (page == null) {
+            var viewType = ViewLocator.LocateTypeForModelType(typeof(TViewModel), null, null);
+            if(viewType == null) {
                 throw new Exception(string.Format("No view was found for {0}. See the log for searched views.", typeof(TViewModel).FullName));
             }
 
-            var pageAssemblyName = GetAssemblyName(page.Assembly);
-            var pageName = GetPageName(typeof(TViewModel).FullName, page.FullName);
+            var packUri = ViewLocator.DeterminePackUriFromType(typeof(TViewModel), viewType);
+            var qs = BuildQueryString();
 
-            if (!entryAssemblyName.Equals(pageAssemblyName)) {
-                return "/" + pageAssemblyName + ";component" + pageName;
-            }
-
-            return pageName;
+            return new Uri(packUri + qs, UriKind.Relative);
         }
 
         string BuildQueryString() {
@@ -95,23 +75,6 @@
                 .Aggregate("?", (current, pair) => current + (pair.Key + "=" + pair.Value + "&"));
 
             return result.Remove(result.Length - 1);
-        }
-
-        static string GetPageName(string viewModelFullName, string viewFullName) {
-            var viewModelFullNameSplit = viewModelFullName.Split('.');
-            var viewFullNameSplit = viewFullName.Split('.');
-
-            var i = 0;
-            for(; i < viewModelFullNameSplit.Length || i < viewFullNameSplit.Length; ++i) {
-                if(viewModelFullNameSplit[i] != viewFullNameSplit[i])
-                    break;
-            }
-
-            return string.Format("/{0}.xaml", string.Join("/", viewFullNameSplit.Where((_, index) => index >= i)));
-        }
-
-        static string GetAssemblyName(Assembly assembly) {
-            return assembly.FullName.Remove(assembly.FullName.IndexOf(","));
         }
     }
 }

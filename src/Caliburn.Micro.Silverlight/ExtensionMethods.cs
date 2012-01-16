@@ -11,6 +11,15 @@
     /// </summary>
     public static class ExtensionMethods {
         /// <summary>
+        /// Get's the name of the assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>The assembly's name.</returns>
+        public static string GetAssemblyName(this Assembly assembly) {
+            return assembly.FullName.Remove(assembly.FullName.IndexOf(","));
+        }
+
+        /// <summary>
         /// Gets all the attributes of a particular type.
         /// </summary>
         /// <typeparam name="T">The type of attributes to get.</typeparam>

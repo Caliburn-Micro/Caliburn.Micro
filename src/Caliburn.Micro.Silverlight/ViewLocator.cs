@@ -335,6 +335,20 @@
         };
 
         /// <summary>
+        /// Transforms a view type into a pack uri.
+        /// </summary>
+        public static Func<Type, Type, string> DeterminePackUriFromType = (viewModelType, viewType) => {
+            var assemblyName = viewType.Assembly.GetAssemblyName();
+            var uri = viewType.FullName.Replace(assemblyName, string.Empty).Replace(".", "/") + ".xaml";
+
+            if(!Application.Current.GetType().Assembly.GetAssemblyName().Equals(assemblyName)) {
+                return "/" + assemblyName + ";component" + uri;
+            }
+
+            return uri;
+        };
+
+        /// <summary>
         ///   When a view does not contain a code-behind file, we need to automatically call InitializeCompoent.
         /// </summary>
         /// <param name = "element">The element to initialize</param>
