@@ -159,7 +159,7 @@
                 Mode = bindingMode
             };
 
-#if SILVERLIGHT
+#if SILVERLIGHT && !SL5
             var expression = (BindingExpression)BindingOperations.SetBinding(parameter, Parameter.ValueProperty, binding);
 
             var field = element.GetType().GetField(path + "Property", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);

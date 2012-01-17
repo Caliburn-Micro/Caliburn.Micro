@@ -155,7 +155,7 @@
         /// Determines whether a custom update source trigger should be applied to the binding.
         /// </summary>
         public static Action<DependencyProperty, DependencyObject, Binding, PropertyInfo> ApplyUpdateSourceTrigger = (bindableProperty, element, binding, info) =>{
-#if SILVERLIGHT
+#if SILVERLIGHT && !SL5
             ApplySilverlightTriggers(
                 element, 
                 bindableProperty, 
@@ -466,7 +466,7 @@
                 .FirstOrDefault(property => property != null);
         }
 
-#if SILVERLIGHT
+#if SILVERLIGHT && !SL5
         /// <summary>
         /// Accounts for the lack of UpdateSourceTrigger in silverlight.
         /// </summary>
