@@ -229,6 +229,14 @@
         public void OnDeserialized(StreamingContext c) {
             IsNotifying = true;
         }
+
+        /// <summary>
+        /// Used to indicate whether or not the IsNotifying property is serialized to Xml.
+        /// </summary>
+        /// <returns>Whether or not to serialize the IsNotifying property. The default is false.</returns>
+        public virtual bool ShouldSerializeIsNotifying() {
+            return false;
+        }
     }
 
 #if WinRT
@@ -541,6 +549,14 @@
         [OnDeserialized]
         public void OnDeserialized(StreamingContext c) {
             IsNotifying = true;
+        }
+
+        /// <summary>
+        /// Used to indicate whether or not the IsNotifying property is serialized to Xml.
+        /// </summary>
+        /// <returns>Whether or not to serialize the IsNotifying property. The default is false.</returns>
+        public virtual bool ShouldSerializeIsNotifying() {
+            return false;
         }
     }
 
