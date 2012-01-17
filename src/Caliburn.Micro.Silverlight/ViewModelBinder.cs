@@ -178,6 +178,8 @@
                 return;
             }
 
+            //TODO: wire to changes in DataContext and use that to re-trigger the bind logic?
+
             var viewModelType = viewModel.GetType();
 
             var namedElements = BindingScope.GetNamedElements(element);

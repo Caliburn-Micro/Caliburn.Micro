@@ -14,7 +14,7 @@
                 "Model",
                 typeof(object),
                 typeof(Bind),
-                new PropertyMetadata(new PropertyChangedCallback(ModelChanged))
+                new PropertyMetadata(ModelChanged)
                 );
 
         /// <summary>
@@ -69,7 +69,7 @@
                 "AtDesignTime",
                 typeof(bool),
                 typeof(Bind),
-                new PropertyMetadata(new PropertyChangedCallback(AtDesignTimeChanged))
+                new PropertyMetadata(AtDesignTimeChanged)
                 );
 
 #if !SILVERLIGHT && !WP7
@@ -105,7 +105,7 @@
                 "DataContext",
                 typeof(object),
                 typeof(Bind),
-                new PropertyMetadata(new PropertyChangedCallback(DataContextChanged))
+                new PropertyMetadata(DataContextChanged)
                 );
 
         static void DataContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {

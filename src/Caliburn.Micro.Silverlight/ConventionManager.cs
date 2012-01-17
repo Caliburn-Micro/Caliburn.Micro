@@ -173,33 +173,6 @@
 #if !WP7 && !WP71
             AddElementConvention<DatePicker>(DatePicker.SelectedDateProperty, "SelectedDate", "SelectedDateChanged");
 #endif
-//Databinding is still broken in SL5 for TabControl even though the Codeplex issue was closed!!!
-//#if SL5
-//            AddElementConvention<TabControl>(TabControl.ItemsSourceProperty, "ItemsSource", "SelectionChanged")
-//                .ApplyBinding = (viewModelType, path, property, element, convention) => {
-//                    var bindableProperty = convention.GetBindableProperty(element);
-//                    if(!SetBindingWithoutBindingOverwrite(viewModelType, path, property, element, convention, bindableProperty))
-//                        return false;
-
-            //TODO: add a custom converter here to fix the SL bug in TabControl?
-
-//                    var tabControl = (TabControl)element;
-//                    if(tabControl.ItemTemplate == null && property.PropertyType.IsGenericType) {
-//                        var itemType = property.PropertyType.GetGenericArguments().First();
-//                        if(!itemType.IsValueType && !typeof(string).IsAssignableFrom(itemType)) {
-//                            tabControl.ItemTemplate = DefaultItemTemplate;
-//                            Log.Info("ItemTemplate applied to {0}.", element.Name);
-//                        }
-//                    }
-
-//                    ConfigureSelectedItem(element, TabControl.SelectedItemProperty, viewModelType, path);
-
-//                    if(string.IsNullOrEmpty(tabControl.DisplayMemberPath) && typeof(IHaveDisplayName).IsAssignableFrom(viewModelType))
-//                        tabControl.DisplayMemberPath = "DisplayName";
-
-//                    return true;
-//                };
-//#endif
 #if SILVERLIGHT
             AddElementConvention<HyperlinkButton>(HyperlinkButton.ContentProperty, "DataContext", "Click");
             AddElementConvention<PasswordBox>(PasswordBox.PasswordProperty, "Password", "PasswordChanged");
