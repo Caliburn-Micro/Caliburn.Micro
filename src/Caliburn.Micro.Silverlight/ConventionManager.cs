@@ -124,11 +124,15 @@
         /// </summary>
         public static Action<Binding, Type, PropertyInfo> ApplyValidation = (binding, viewModelType, property) => {
 #if SILVERLIGHT
-            if(typeof(INotifyDataErrorInfo).IsAssignableFrom(viewModelType))
+            if (typeof(INotifyDataErrorInfo).IsAssignableFrom(viewModelType)) {
                 binding.ValidatesOnNotifyDataErrors = true;
+                binding.ValidatesOnExceptions = true;
+            }
 #endif
-            if(typeof(IDataErrorInfo).IsAssignableFrom(viewModelType))
+            if (typeof(IDataErrorInfo).IsAssignableFrom(viewModelType)) {
                 binding.ValidatesOnDataErrors = true;
+                binding.ValidatesOnExceptions = true;
+            }
         };
 
         /// <summary>
