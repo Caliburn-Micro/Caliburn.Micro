@@ -17,6 +17,14 @@
                 new PropertyMetadata(ModelChanged)
                 );
 
+        internal static DependencyProperty NoContextProperty =
+            DependencyProperty.RegisterAttached(
+                "NoContext",
+                typeof(bool),
+                typeof(Bind),
+                new PropertyMetadata(false)
+                );
+
         /// <summary>
         ///   Gets the model to bind to.
         /// </summary>
@@ -57,6 +65,7 @@
                                   ? fe.GetHashCode().ToString()
                                   : fe.Name;
 
+                d.SetValue(NoContextProperty, true);
                 ViewModelBinder.Bind(target, d, context);
             });
         }

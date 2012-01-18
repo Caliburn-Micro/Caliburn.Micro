@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Interactivity;
+
 #if WP71
     using Microsoft.Phone.Controls;
 #endif
@@ -156,11 +157,15 @@
         ///<remarks>Passes the the view model, view and creation context (or null for default) to use in applying binding.</remarks>
         public static Action<object, DependencyObject, object> Bind = (viewModel, view, context) =>{
             Log.Info("Binding {0} and {1}.", view, viewModel);
-            Action.SetTarget(view, viewModel);
+
+            if((bool)view.GetValue(Micro.Bind.NoContextProperty)) {
+                Action.SetTargetWithoutContext(view, viewModel);
+            }else {
+                Action.SetTarget(view, viewModel);
+            }
 
             var viewAware = viewModel as IViewAware;
-            if(viewAware != null)
-            {
+            if (viewAware != null) {
                 Log.Info("Attaching {0} to {1}.", view, viewAware);
                 viewAware.AttachView(view, context);
             }
@@ -172,16 +177,12 @@
             if(element == null)
                 return;
 
-            if(!ShouldApplyConventions(element))
-            {
+            if (!ShouldApplyConventions(element)) {
                 Log.Info("Skipping conventions for {0} and {1}.", element, viewModel);
                 return;
             }
 
-            //TODO: wire to changes in DataContext and use that to re-trigger the bind logic?
-
             var viewModelType = viewModel.GetType();
-
             var namedElements = BindingScope.GetNamedElements(element);
 
 #if SILVERLIGHT
