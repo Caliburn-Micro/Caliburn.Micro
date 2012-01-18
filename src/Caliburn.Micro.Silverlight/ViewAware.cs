@@ -86,7 +86,7 @@
         /// <param name = "view"></param>
         protected internal virtual void OnViewLoaded(object view) {}
 
-#if WP7 || WP71
+#if WP71
         /// <summary>
         ///   Called the first time the page's LayoutUpdated event fires after it is navigated to.
         /// </summary>

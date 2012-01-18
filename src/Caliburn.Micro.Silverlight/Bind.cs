@@ -72,7 +72,7 @@
                 new PropertyMetadata(AtDesignTimeChanged)
                 );
 
-#if !SILVERLIGHT && !WP7
+#if NET
         [AttachedPropertyBrowsableForTypeAttribute(typeof(DependencyObject))]
 #endif
         /// <summary>

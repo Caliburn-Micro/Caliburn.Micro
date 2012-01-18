@@ -65,7 +65,7 @@
         }
 
 #if WP71
-		//Method missing in WP7 Linq
+		//Method missing in WP71 Linq
 
 		/// <summary>
 		/// Merges two sequences by using the specified predicate function.

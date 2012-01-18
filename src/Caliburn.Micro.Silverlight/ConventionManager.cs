@@ -123,14 +123,12 @@
         /// Determines whether or not and what type of validation to enable on the binding.
         /// </summary>
         public static Action<Binding, Type, PropertyInfo> ApplyValidation = (binding, viewModelType, property) => {
-#if SILVERLIGHT && !WP7
+#if SILVERLIGHT
             if(typeof(INotifyDataErrorInfo).IsAssignableFrom(viewModelType))
                 binding.ValidatesOnNotifyDataErrors = true;
 #endif
-#if !WP7
             if(typeof(IDataErrorInfo).IsAssignableFrom(viewModelType))
                 binding.ValidatesOnDataErrors = true;
-#endif
         };
 
         /// <summary>
@@ -145,10 +143,8 @@
         /// Determines whether a custom string format is needed and applies it to the binding.
         /// </summary>
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyStringFormat = (binding, convention, property) =>{
-#if !WP7
             if(typeof(DateTime).IsAssignableFrom(property.PropertyType))
                 binding.StringFormat = "{0:MM/dd/yyyy}";
-#endif
         };
 
         /// <summary>
@@ -170,7 +166,7 @@
 
         static ConventionManager()
         {
-#if !WP7 && !WP71
+#if !WP71
             AddElementConvention<DatePicker>(DatePicker.SelectedDateProperty, "SelectedDate", "SelectedDateChanged");
 #endif
 #if SILVERLIGHT
@@ -360,13 +356,13 @@
                         || !property.PropertyType.IsGenericType)
                 return;
 
-#if !WP7 && !WP71
+#if !WP71
             var itemType = property.PropertyType.GetGenericArguments().First();
             if (itemType.IsValueType || typeof(string).IsAssignableFrom(itemType))
                 return;
 #endif
 
-#if !SILVERLIGHT && !WP7
+#if NET
             if (itemsControl.ItemTemplateSelector == null){
                 itemsControl.ItemTemplate = DefaultItemTemplate;
                 Log.Info("ItemTemplate applied to {0}.", itemsControl.Name);
