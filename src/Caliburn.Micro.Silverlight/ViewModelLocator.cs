@@ -15,17 +15,66 @@
         ///</summary>
         public static readonly NameTransformer NameTransformer = new NameTransformer();
 
+        //These fields are used for configuring the default type mappings. They can be changed using ConfigureTypeMappings().
+        private static string _DefaultSubNSViews;
+        private static string _DefaultSubNSViewModels;
+        private static bool _UseNameSuffixesInMappings = true;
+        private static string _ViewModelSuffix;
+        private static List<string> _ViewSuffixList = new List<string>();
+
         static ViewModelLocator() {
-            //Add to list by increasing order of specificity (i.e. less specific pattern to more specific pattern)
+            ConfigureTypeMappings(new TypeMappingConfiguration());
+        }
 
-            NameTransformer.AddRule(
-                @"(?<fullname>^.*$)",
-                @"${fullname}Model"
-            );
+        /// <summary>
+        /// Specifies how type mappings are created, including default type mappings. Calling this method will
+        /// clear all existing name transformation rules and create new default type mappings according to the
+        /// configuration.
+        /// </summary>
+        /// <param name="config">An instance of TypeMappingConfiguration that provides the settings for configuration</param>
+        public static void ConfigureTypeMappings(TypeMappingConfiguration config)
+        {
+            if (String.IsNullOrEmpty(config.DefaultSubNSViews))
+            {
+                throw new ArgumentException("DefaultSubNSViews field cannot be blank.");
+            }
 
-            //Add support for two standard View suffixes
-            AddDefaultTypeMapping("View");
-            AddDefaultTypeMapping("Page");
+            if (String.IsNullOrEmpty(config.DefaultSubNSViewModels))
+            {
+                throw new ArgumentException("DefaultSubNSViewModels field cannot be blank.");
+            }
+
+            if (config.UseNameSuffixesInMappings)
+            {
+                if (String.IsNullOrEmpty(config.ViewModelSuffix))
+                {
+                    throw new ArgumentException("ViewModelSuffix field cannot be blank if UseNameSuffixesInMappings is true.");
+                }
+            }
+
+            NameTransformer.Clear();
+            _ViewSuffixList.Clear();
+
+            _DefaultSubNSViews = config.DefaultSubNSViews;
+            _DefaultSubNSViewModels = config.DefaultSubNSViewModels;
+            _UseNameSuffixesInMappings = config.UseNameSuffixesInMappings;
+            _ViewModelSuffix = config.ViewModelSuffix;
+            _ViewSuffixList.AddRange(config.ViewSuffixList);
+
+            SetAllDefaults();
+        }
+
+        private static void SetAllDefaults()
+        {
+            if (_UseNameSuffixesInMappings)
+            {
+                //Add support for all view suffixes
+                _ViewSuffixList.ForEach(v => { AddDefaultTypeMapping(v); });
+            }
+            else
+            {
+                AddSubNamespaceMapping(_DefaultSubNSViews, _DefaultSubNSViewModels);
+            }
         }
 
         /// <summary>
@@ -33,11 +82,16 @@
         /// </summary>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddDefaultTypeMapping(string viewSuffix = "View") {
+            if (!_UseNameSuffixesInMappings)
+            {
+                return;
+            }
+
             //Check for <Namespace>.<BaseName><ViewSuffix> construct
             AddNamespaceMapping(String.Empty, String.Empty, viewSuffix);
 
             //Check for <Namespace>.Views.<NameSpace>.<BaseName><ViewSuffix> construct
-            AddSubNamespaceMapping("Views", "ViewModels", viewSuffix);
+            AddSubNamespaceMapping(_DefaultSubNSViews, _DefaultSubNSViewModels, viewSuffix);
         }
 
         /// <summary>
@@ -50,24 +104,46 @@
         public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string[] nsTargetsRegEx, string viewSuffix = "View") {
             var replist = new List<string>();
             Action<string> func;
-            if (viewSuffix == "View") {
-                func = t => {
-                    replist.Add(t + @"I${basename}ViewModel");
-                    replist.Add(t + @"I${basename}");
-                    replist.Add(t + @"${basename}ViewModel");
-                    replist.Add(t + @"${basename}");
-                };
+
+            if (_UseNameSuffixesInMappings)
+            {
+                if (_ViewModelSuffix.Contains(viewSuffix))
+                {
+                    func = t =>
+                    {
+                        replist.Add(t + @"I${basename}" + _ViewModelSuffix);
+                        replist.Add(t + @"I${basename}");
+                        replist.Add(t + @"${basename}" + _ViewModelSuffix);
+                        replist.Add(t + @"${basename}");
+                    };
+                }
+                else
+                {
+                    func = t =>
+                    {
+                        replist.Add(t + @"I${basename}${suffix}" + _ViewModelSuffix);
+                        replist.Add(t + @"${basename}${suffix}" + _ViewModelSuffix);
+                    };
+                }
             }
-            else {
-                func = t => {
-                    replist.Add(t + @"I${basename}${suffix}ViewModel");
-                    replist.Add(t + @"${basename}${suffix}ViewModel");
+            else
+            {
+                func = t =>
+                {
+                    replist.Add(t + @"I${basename}");
+                    replist.Add(t + @"${basename}");
                 };
             }
 
             nsTargetsRegEx.ToList().ForEach(t => func(t));
 
-            var suffixregex = viewSuffix + "$";
+
+            string suffixregex = "$";
+            if (_UseNameSuffixesInMappings)
+            {
+                suffixregex = viewSuffix + suffixregex;
+            }
+
             var srcfilterregx = String.IsNullOrEmpty(nsSourceFilterRegEx) 
                 ? null
                 : String.Concat(nsSourceFilterRegEx, RegExHelper.NameRegEx, suffixregex);
@@ -125,6 +201,7 @@
             AddNamespaceMapping(nsSource, new string[] { nsTarget }, viewSuffix);
         }
 
+        /// <summary>
         /// Adds a standard type mapping by substituting one subnamespace for another
         /// </summary>
         /// <param name="nsSource">Subnamespace of source type</param>

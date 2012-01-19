@@ -27,28 +27,64 @@
         /// </summary>
         public static string ContextSeparator = ".";
 
-        /// <summary>
-        /// This keeps a list of view suffixes and synonyms that have been added through a mapping
-        /// or directly through the NameTransformer
-        /// </summary>
-        private static List<string> ViewSuffixList;
+        //These fields are used for configuring the default type mappings. They can be changed using ConfigureTypeMappings().
+        private static string _DefaultSubNSViews;
+        private static string _DefaultSubNSViewModels;
+        private static bool _UseNameSuffixesInMappings = true;
+        private static string _ViewModelSuffix;
+        private static List<string> _ViewSuffixList = new List<string>();
 
         static ViewLocator() {
-            ViewSuffixList = new List<string>();
+            ConfigureTypeMappings(new TypeMappingConfiguration());
+        }
 
-            //Add to list by increasing order of specificity (i.e. less specific pattern to more specific pattern)
+        /// <summary>
+        /// Specifies how type mappings are created, including default type mappings. Calling this method will
+        /// clear all existing name transformation rules and create new default type mappings according to the
+        /// configuration.
+        /// </summary>
+        /// <param name="config">An instance of TypeMappingConfiguration that provides the settings for configuration</param>
+        public static void ConfigureTypeMappings(TypeMappingConfiguration config)
+        {
+            if (String.IsNullOrEmpty(config.DefaultSubNSViews))
+            {
+                throw new ArgumentException("DefaultSubNSViews field cannot be blank.");
+            }
 
-            //NameTransformer.AddRule("ViewModel$", "View");         //less specific pattern
-            //NameTransformer.AddRule("PageViewModel$", "Page");     //more specific pattern
-            //Add more default transforms here. Can also be called from the bootstrapper for project-specific transforms.
-            //NameTransformer.AddRule("FormViewModel$", "Form");
+            if (String.IsNullOrEmpty(config.DefaultSubNSViewModels))
+            {
+                throw new ArgumentException("DefaultSubNSViewModels field cannot be blank.");
+            }
 
-            //Fallback rule - just remove "Model" from end of name
-            NameTransformer.AddRule("Model$", string.Empty);
+            if (config.UseNameSuffixesInMappings)
+            {
+                if (String.IsNullOrEmpty(config.ViewModelSuffix))
+                {
+                    throw new ArgumentException("ViewModelSuffix field cannot be blank if UseNameSuffixesInMappings is true.");
+                }
+            }
 
-            //Add support for two standard View suffixes
-            AddDefaultTypeMapping("View");
-            AddDefaultTypeMapping("Page");
+            NameTransformer.Clear();
+            _ViewSuffixList.Clear();
+
+            _DefaultSubNSViews = config.DefaultSubNSViews;
+            _DefaultSubNSViewModels = config.DefaultSubNSViewModels;
+            _UseNameSuffixesInMappings = config.UseNameSuffixesInMappings;
+            _ViewModelSuffix = config.ViewModelSuffix;
+            _ViewSuffixList.AddRange(config.ViewSuffixList);
+
+            SetAllDefaults();
+        }
+
+
+        private static void SetAllDefaults() {
+            if (_UseNameSuffixesInMappings) {
+                //Add support for all view suffixes
+                _ViewSuffixList.ForEach(v => { AddDefaultTypeMapping(v); });
+            }
+            else {
+                AddSubNamespaceMapping(_DefaultSubNSViewModels, _DefaultSubNSViews);
+            }
         }
 
         /// <summary>
@@ -56,11 +92,15 @@
         /// </summary>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddDefaultTypeMapping(string viewSuffix = "View") {
+            if (!_UseNameSuffixesInMappings) {
+                return;
+            }
+
             //Check for <Namespace>.<BaseName><ViewSuffix> construct
             AddNamespaceMapping(String.Empty, String.Empty, viewSuffix);
 
             //Check for <Namespace>.ViewModels.<NameSpace>.<BaseName><ViewSuffix> construct
-            AddSubNamespaceMapping("ViewModels", "Views", viewSuffix);
+            AddSubNamespaceMapping(_DefaultSubNSViewModels, _DefaultSubNSViews, viewSuffix);
         }
 
         /// <summary>
@@ -71,8 +111,8 @@
         /// </summary>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View".</param>
         public static void RegisterViewSuffix(string viewSuffix) {
-            if (ViewSuffixList.Count(s => s == viewSuffix) == 0) {
-                ViewSuffixList.Add(viewSuffix);
+            if (_ViewSuffixList.Count(s => s == viewSuffix) == 0) {
+                _ViewSuffixList.Add(viewSuffix);
             }
         }
 
@@ -87,17 +127,27 @@
             RegisterViewSuffix(viewSuffix);
 
             var replist = new List<string>();
+            var repsuffix = _UseNameSuffixesInMappings ? viewSuffix : String.Empty;
 
-            foreach(var t in nsTargetsRegEx) {
-                replist.Add(t + @"${basename}" + viewSuffix);
+            foreach (var t in nsTargetsRegEx)
+            {
+                replist.Add(t + @"${basename}" + repsuffix);
             }
 
-            string synonym = (viewSuffix == "View") ? String.Empty : viewSuffix;
-            string rxsrcfilter = String.IsNullOrEmpty(nsSourceFilterRegEx) 
-                ? null 
-                : String.Concat(nsSourceFilterRegEx, RegExHelper.NameRegEx, synonym, @"ViewModel$");
             string rxbase = RegExHelper.GetNameCaptureGroup("basename");
-            string rxsuffix = RegExHelper.GetCaptureGroup("suffix", synonym + @"ViewModel$");
+            string suffix = "$";
+            if (_UseNameSuffixesInMappings)
+            {
+                suffix = _ViewModelSuffix + "$";
+                if (!_ViewModelSuffix.Contains(viewSuffix))
+                {
+                    suffix = viewSuffix + suffix;
+                }
+            }
+            var rxsrcfilter = String.IsNullOrEmpty(nsSourceFilterRegEx)
+                ? null
+                : String.Concat(nsSourceFilterRegEx, RegExHelper.NameRegEx, suffix);
+            var rxsuffix = RegExHelper.GetCaptureGroup("suffix", suffix);
 
             NameTransformer.AddRule(
                 String.Concat(nsSourceReplaceRegEx, rxbase, rxsuffix),
@@ -246,8 +296,12 @@
             else {
                 var replacestr = ContextSeparator + context;
                 getReplaceString = r => {
-                    //Create RegEx for matching any of the synonyms registered
-                    var synonymregex = String.Join("|", ViewSuffixList.Select(s => @"(" + s + @"$)").ToArray());
+                    string synonymregex = "$";
+
+                    if (_UseNameSuffixesInMappings) {
+                        //Create RegEx for matching any of the synonyms registered
+                        synonymregex = String.Join("|", _ViewSuffixList.Select(s => @"(" + s + @"$)").ToArray());
+                    }
 
                     //Strip out the synonym
                     return Regex.Replace(r, synonymregex, replacestr);
