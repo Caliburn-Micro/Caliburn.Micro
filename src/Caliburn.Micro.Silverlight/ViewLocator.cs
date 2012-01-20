@@ -55,8 +55,7 @@
                 throw new ArgumentException("DefaultSubNamespaceForViewModels field cannot be blank.");
             }
 
-            if (String.IsNullOrEmpty(config.NameFormat))
-            {
+            if (String.IsNullOrEmpty(config.NameFormat)) {
                 throw new ArgumentException("NameFormat field cannot be blank.");
             }
 
@@ -217,12 +216,12 @@
 
             if (!String.IsNullOrEmpty(nsSource)) {
                 if (!nsSource.StartsWith("*")) {
-                    rxbeforesrc = RegExHelper.GetNSCaptureGroup("nsbefore");
+                    rxbeforesrc = RegExHelper.GetNamespaceCaptureGroup("nsbefore");
                     rxbeforetgt = @"${nsbefore}";
                 }
 
                 if (!nsSource.EndsWith("*")) {
-                    rxaftersrc = RegExHelper.GetNSCaptureGroup("nsafter");
+                    rxaftersrc = RegExHelper.GetNamespaceCaptureGroup("nsafter");
                     rxaftertgt = "${nsafter}";
                 }
             }
@@ -340,7 +339,6 @@
                 );
 
             var viewTypeList = TransformName(viewTypeName, context);
-            
             var viewType = viewTypeList.Join(AssemblySource.Instance.SelectMany(a => a.GetExportedTypes()), n => n, t => t.FullName, (n, t) => t).FirstOrDefault();
 
             if(viewType == null) {

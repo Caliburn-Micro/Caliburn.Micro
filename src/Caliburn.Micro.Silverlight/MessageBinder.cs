@@ -71,32 +71,39 @@
         /// <param name="context">An optional context value which can be used during conversion.</param>
         /// <returns>The coerced value.</returns>
         public static object CoerceValue(Type destinationType, object providedValue, object context) {
-            if(providedValue == null)
+            if (providedValue == null) {
                 return GetDefaultValue(destinationType);
+            }
 
-            if (CustomConverters.ContainsKey(destinationType))
+            if (CustomConverters.ContainsKey(destinationType)) {
                 return CustomConverters[destinationType](providedValue, context);
+            }
 
             var providedType = providedValue.GetType();
 
-            if(destinationType.IsAssignableFrom(providedType))
+            if (destinationType.IsAssignableFrom(providedType)) {
                 return providedValue;
+            }
 
             try {
                 var converter = TypeDescriptor.GetConverter(destinationType);
 
-                if(converter.CanConvertFrom(providedType))
+                if (converter.CanConvertFrom(providedType)) {
                     return converter.ConvertFrom(providedValue);
+                }
 
                 converter = TypeDescriptor.GetConverter(providedType);
 
-                if(converter.CanConvertTo(destinationType))
+                if (converter.CanConvertTo(destinationType)) {
                     return converter.ConvertTo(providedValue, destinationType);
+                }
 
                 if (destinationType.IsEnum) {
                     var stringValue = providedValue as string;
-                    if(stringValue != null)
+                    if (stringValue != null) {
                         return Enum.Parse(destinationType, stringValue, true);
+                    }
+
                     return Enum.ToObject(destinationType, providedValue);
                 }
                 

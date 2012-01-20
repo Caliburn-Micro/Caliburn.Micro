@@ -48,8 +48,7 @@
                 throw new ArgumentException("DefaultSubNamespaceForViewModels field cannot be blank.");
             }
 
-            if (String.IsNullOrEmpty(config.NameFormat))
-            {
+            if (String.IsNullOrEmpty(config.NameFormat)) {
                 throw new ArgumentException("NameFormat field cannot be blank.");
             }
 
@@ -73,8 +72,7 @@
             SetAllDefaults();
         }
 
-        private static void SetAllDefaults()
-        {
+        private static void SetAllDefaults() {
             if (useNameSuffixesInMappings) {
                 //Add support for all view suffixes
                 ViewSuffixList.ForEach(AddDefaultTypeMapping);
@@ -116,9 +114,7 @@
 
             if (useNameSuffixesInMappings) {
                 if (viewModelSuffix.Contains(viewSuffix) || !includeViewSuffixInVmNames) {
-
                     var nameregex = String.Format(nameFormat, basegrp, viewModelSuffix);
-                    
                     func = t => {
                         replist.Add(t + "I" + nameregex + interfacegrp);
                         replist.Add(t + "I" + basegrp + interfacegrp);
@@ -143,17 +139,16 @@
 
             nsTargetsRegEx.ToList().ForEach(t => func(t));
 
-
             string suffix = useNameSuffixesInMappings ? viewSuffix : String.Empty;
 
             var srcfilterregx = String.IsNullOrEmpty(nsSourceFilterRegEx) 
                 ? null
                 : String.Concat(nsSourceFilterRegEx, String.Format(nameFormat, RegExHelper.NameRegEx, suffix), "$");
-            string rxbase = RegExHelper.GetNameCaptureGroup("basename");
-            string rxsuffix = RegExHelper.GetCaptureGroup("suffix", suffix);
+            var rxbase = RegExHelper.GetNameCaptureGroup("basename");
+            var rxsuffix = RegExHelper.GetCaptureGroup("suffix", suffix);
             
             //Add a dummy capture group -- place after the "$" so it can never capture anything
-            string rxinterface = RegExHelper.GetCaptureGroup(InterfaceCaptureGroupName, String.Empty);
+            var rxinterface = RegExHelper.GetCaptureGroup(InterfaceCaptureGroupName, String.Empty);
             NameTransformer.AddRule(
                 String.Concat(nsSourceReplaceRegEx, String.Format(nameFormat, rxbase, rxsuffix), "$", rxinterface),
                 replist.ToArray(),
@@ -220,12 +215,12 @@
 
             if (!String.IsNullOrEmpty(nsSource)) {
                 if (!nsSource.StartsWith("*")) {
-                    rxbeforesrc = RegExHelper.GetNSCaptureGroup("nsbefore");
+                    rxbeforesrc = RegExHelper.GetNamespaceCaptureGroup("nsbefore");
                     rxbeforetgt = @"${nsbefore}";
                 }
 
                 if (!nsSource.EndsWith("*")) {
-                    rxaftersrc = RegExHelper.GetNSCaptureGroup("nsafter");
+                    rxaftersrc = RegExHelper.GetNamespaceCaptureGroup("nsafter");
                     rxaftertgt = "${nsafter}";
                 }
             }
@@ -338,12 +333,14 @@
         ///   Pass the view instance as a parameters and receive a view model instance.
         /// </remarks>
         public static Func<object, object> LocateForView = view => {
-            if(view == null)
+            if (view == null) {
                 return null;
+            }
 
             var frameworkElement = view as FrameworkElement;
-            if(frameworkElement != null && frameworkElement.DataContext != null)
+            if (frameworkElement != null && frameworkElement.DataContext != null) {
                 return frameworkElement.DataContext;
+            }
 
             return LocateForViewType(view.GetType());
         };

@@ -72,22 +72,26 @@
         }
 
         static void OnAttachChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if(e.NewValue == e.OldValue)
+            if(e.NewValue == e.OldValue) {
                 return;
+            }
 
             var messageTriggers = (TriggerBase[])d.GetValue(MessageTriggersProperty);
             var allTriggers = Interaction.GetTriggers(d);
 
-            if(messageTriggers != null)
+            if(messageTriggers != null) {
                 messageTriggers.Apply(x => allTriggers.Remove(x));
+            }
 
             var newTriggers = Parser.Parse(d, e.NewValue as string).ToArray();
             newTriggers.Apply(allTriggers.Add);
 
-            if(newTriggers.Length > 0)
+            if(newTriggers.Length > 0) {
                 d.SetValue(MessageTriggersProperty, newTriggers);
-            else
+            }
+            else {
                 d.ClearValue(MessageTriggersProperty);
+            }
         }
     }
 }

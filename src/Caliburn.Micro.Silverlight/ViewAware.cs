@@ -7,6 +7,8 @@
     ///  A base implementation of <see cref = "IViewAware" /> which is capable of caching views by context.
     ///</summary>
     public class ViewAware : PropertyChangedBase, IViewAware {
+        bool cacheViews;
+
         static readonly DependencyProperty PreviouslyAttachedProperty = DependencyProperty.RegisterAttached(
             "PreviouslyAttached",
             typeof(bool),
@@ -18,8 +20,6 @@
         /// Indicates whether or not implementors of <see cref="IViewAware"/> should cache their views by default.
         /// </summary>
         public static bool CacheViewsByDefault = true;
-
-        bool cacheViews;
 
         /// <summary>
         ///   The view chache for this instance.
@@ -58,8 +58,9 @@
         }
 
         void IViewAware.AttachView(object view, object context) {
-            if (CacheViews)
+            if (CacheViews) {
                 Views[context ?? View.DefaultContext] = view;
+            }
 
             var nonGeneratedView = View.GetFirstNonGeneratedView(view);
 

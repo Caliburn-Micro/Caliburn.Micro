@@ -57,6 +57,7 @@
                             ScreenExtensions.TryActivate(item);
                             OnActivationProcessed(item, true);
                         }
+
                         return;
                     }
 
@@ -69,15 +70,18 @@
                 /// <param name="item">The item to close.</param>
                 /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
                 public override void DeactivateItem(T item, bool close) {
-                    if(item == null)
+                    if (item == null) {
                         return;
+                    }
 
-                    if(!close)
+                    if (!close) {
                         ScreenExtensions.TryDeactivate(item, false);
+                    }
                     else {
                         CloseStrategy.Execute(new[] { item }, (canClose, closable) => {
-                            if(canClose)
+                            if (canClose) {
                                 CloseItemCore(item);
+                            }
                         });
                     }
                 }
@@ -89,7 +93,9 @@
 
                         ChangeActiveItem(next, true);
                     }
-                    else ScreenExtensions.TryDeactivate(item, true);
+                    else {
+                        ScreenExtensions.TryDeactivate(item, true);
+                    }
 
                     items.Remove(item);
                 }
@@ -104,10 +110,14 @@
                 protected virtual T DetermineNextItemToActivate(IList<T> list, int lastIndex) {
                     var toRemoveAt = lastIndex - 1;
 
-                    if(toRemoveAt == -1 && list.Count > 1)
+                    if (toRemoveAt == -1 && list.Count > 1) {
                         return list[1];
-                    if(toRemoveAt > -1 && toRemoveAt < list.Count - 1)
+                    }
+
+                    if (toRemoveAt > -1 && toRemoveAt < list.Count - 1) {
                         return list[toRemoveAt];
+                    }
+
                     return default(T);
                 }
 
@@ -160,7 +170,9 @@
                         items.OfType<IDeactivate>().Apply(x => x.Deactivate(true));
                         items.Clear();
                     }
-                    else ScreenExtensions.TryDeactivate(ActiveItem, false);
+                    else {
+                        ScreenExtensions.TryDeactivate(ActiveItem, false);
+                    }
                 }
 
                 /// <summary>
@@ -169,12 +181,13 @@
                 /// <param name="newItem"></param>
                 /// <returns>The item to be activated.</returns>
                 protected override T EnsureItem(T newItem) {
-                    if(newItem == null)
+                    if (newItem == null) {
                         newItem = DetermineNextItemToActivate(items, ActiveItem != null ? items.IndexOf(ActiveItem) : 0);
+                    }
                     else {
                         var index = items.IndexOf(newItem);
 
-                        if(index == -1)
+                        if (index == -1)
                             items.Add(newItem);
                         else newItem = items[index];
                     }

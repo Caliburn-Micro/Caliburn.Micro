@@ -25,10 +25,11 @@
             var enumerator = CreateParentEnumerator(coroutine);
             IoC.BuildUp(enumerator);
 
-            if(callback != null)
+            if (callback != null) {
                 enumerator.Completed += callback;
-            enumerator.Completed += Completed;
+            }
 
+            enumerator.Completed += Completed;
             enumerator.Execute(context ?? new ActionExecutionContext());
         }
 
@@ -39,12 +40,15 @@
             var enumerator = (IResult)s;
             enumerator.Completed -= Completed;
 
-            if(e.Error != null)
+            if(e.Error != null) {
                 Log.Error(e.Error);
-            else if(e.WasCancelled)
+            }
+            else if(e.WasCancelled) {
                 Log.Info("Coroutine execution cancelled.");
-            else
+            }
+            else {
                 Log.Info("Coroutine execution completed.");
+            }
         };
     }
 }

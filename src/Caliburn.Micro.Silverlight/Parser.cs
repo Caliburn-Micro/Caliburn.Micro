@@ -1,5 +1,4 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -14,8 +13,7 @@
     /// <summary>
     /// Parses text into a fully functional set of <see cref="TriggerBase"/> instances with <see cref="ActionMessage"/>.
     /// </summary>
-    public static class Parser
-    {
+    public static class Parser {
         static readonly Regex LongFormatRegularExpression = new Regex(@"^[\s]*\[[^\]]*\][\s]*=[\s]*\[[^\]]*\][\s]*$");
 
         /// <summary>
@@ -25,21 +23,22 @@
         /// <param name="text">The message text.</param>
         /// <returns>The triggers parsed from the text.</returns>
         public static IEnumerable<TriggerBase> Parse(DependencyObject target, string text) {
-            if(string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text)) {
                 return new TriggerBase[0];
+            }
 
             var triggers = new List<TriggerBase>();
             var messageTexts = Split(text, ';');
 
             foreach (var messageText in messageTexts) {
-                var triggerPlusMessage = LongFormatRegularExpression.IsMatch(messageText) 
-                    ? Split(messageText, '=') 
-                    : new[] { null, messageText };
+                var triggerPlusMessage = LongFormatRegularExpression.IsMatch(messageText)
+                                             ? Split(messageText, '=')
+                                             : new[] { null, messageText };
 
                 var messageDetail = triggerPlusMessage.Last()
-                .Replace("[", string.Empty)
-                .Replace("]", string.Empty)
-                .Trim();
+                    .Replace("[", string.Empty)
+                    .Replace("]", string.Empty)
+                    .Trim();
 
                 var trigger = CreateTrigger(target, triggerPlusMessage.Length == 1 ? null : triggerPlusMessage[0]);
                 var message = CreateMessage(target, messageDetail);
@@ -78,11 +77,14 @@
         /// <returns>The created message.</returns>
         public static System.Windows.Interactivity.TriggerAction CreateMessage(DependencyObject target, string messageText) {
             var openingParenthesisIndex = messageText.IndexOf('(');
-            if(openingParenthesisIndex < 0)
+            if (openingParenthesisIndex < 0) {
                 openingParenthesisIndex = messageText.Length;
+            }
+
             var closingParenthesisIndex = messageText.LastIndexOf(')');
-            if(closingParenthesisIndex < 0)
+            if (closingParenthesisIndex < 0) {
                 closingParenthesisIndex = messageText.Length;
+            }
 
             var core = messageText.Substring(0, openingParenthesisIndex).Trim();
             var message = InterpretMessageText(target, core);
@@ -113,11 +115,13 @@
         public static Func<DependencyObject, string, Parameter> CreateParameter = (target, parameterText) => {
             var actualParameter = new Parameter();
 
-            if(parameterText.StartsWith("'") && parameterText.EndsWith("'"))
+            if (parameterText.StartsWith("'") && parameterText.EndsWith("'")) {
                 actualParameter.Value = parameterText.Substring(1, parameterText.Length - 2);
-            else if(MessageBinder.SpecialValues.ContainsKey(parameterText.ToLower()) || char.IsNumber(parameterText[0]))
+            }
+            else if (MessageBinder.SpecialValues.ContainsKey(parameterText.ToLower()) || char.IsNumber(parameterText[0])) {
                 actualParameter.Value = parameterText;
-            else if(target is FrameworkElement) {
+            }
+            else if (target is FrameworkElement) {
                 var fe = (FrameworkElement)target;
                 var nameAndBindingMode = parameterText.Split(':').Select(x => x.Trim()).ToArray();
                 var index = nameAndBindingMode[0].IndexOf('.');
@@ -148,11 +152,13 @@
             var element = elementName == "$this"
                 ? target
                 : BindingScope.GetNamedElements(target).FindName(elementName);
-            if(element == null)
+            if (element == null) {
                 return;
+            }
 
-            if(string.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(path)) {
                 path = ConventionManager.GetElementConvention(element.GetType()).ParameterProperty;
+            }
 
             var binding = new Binding(path) {
                 Source = element,
@@ -163,8 +169,9 @@
             var expression = (BindingExpression)BindingOperations.SetBinding(parameter, Parameter.ValueProperty, binding);
 
             var field = element.GetType().GetField(path + "Property", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-            if(field == null)
+            if (field == null) {
                 return;
+            }
 
             ConventionManager.ApplySilverlightTriggers(element, (DependencyProperty)field.GetValue(null), x => expression, null, null);
 #else
@@ -183,14 +190,17 @@
             int squareBrackets = 0;
             foreach(var current in message) {
                 //Square brackets are used as delimiters, so only separators outside them count...
-                if(current == '[')
+                if (current == '[') {
                     squareBrackets++;
-                else if(current == ']')
+                }
+                else if (current == ']') {
                     squareBrackets--;
-                else if(current == separator) {
-                    if(squareBrackets == 0) {
+                }
+                else if (current == separator) {
+                    if (squareBrackets == 0)
+                    {
                         str = builder.ToString();
-                        if(!string.IsNullOrEmpty(str))
+                        if (!string.IsNullOrEmpty(str))
                             list.Add(builder.ToString());
                         builder.Length = 0;
                         continue;
@@ -201,8 +211,9 @@
             }
 
             str = builder.ToString();
-            if(!string.IsNullOrEmpty(str))
+            if (!string.IsNullOrEmpty(str)) {
                 list.Add(builder.ToString());
+            }
 
             return list.ToArray();
         }
@@ -221,8 +232,9 @@
                 var current = parameters[i];
 
                 if(current == '"') {
-                    if(i == 0 || parameters[i - 1] != '\\')
+                    if (i == 0 || parameters[i - 1] != '\\') {
                         isInString = !isInString;
+                    }
                 }
 
                 if(!isInString) {

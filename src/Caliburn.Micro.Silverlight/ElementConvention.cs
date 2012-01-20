@@ -1,5 +1,4 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Reflection;
     using System.Windows;
@@ -7,8 +6,7 @@
     /// <summary>
     /// Represents the conventions for a particular element type.
     /// </summary>
-    public class ElementConvention
-    {
+    public class ElementConvention {
         /// <summary>
         /// The type of element to which the conventions apply.
         /// </summary>

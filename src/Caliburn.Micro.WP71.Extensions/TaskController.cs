@@ -60,8 +60,9 @@
         }
 
         void OnDeactivated(object sender, DeactivatedEventArgs e) {
-            if(request == null)
+            if (request == null) {
                 return;
+            }
 
             PhoneApplicationService.Current.State[TaskTypeKey] = request.Task.GetType().FullName;
             PhoneApplicationService.Current.State[TaskSateKey] = request.State ?? string.Empty;

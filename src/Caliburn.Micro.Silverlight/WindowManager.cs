@@ -1,5 +1,4 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -11,8 +10,7 @@
     /// <summary>
     /// A service that manages windows.
     /// </summary>
-    public interface IWindowManager
-    {
+    public interface IWindowManager {
         /// <summary>
         /// Shows a modal dialog for the specified model.
         /// </summary>
@@ -83,12 +81,14 @@
             ApplySettings(window, settings);
 
             var activator = rootModel as IActivate;
-            if (activator != null)
+            if (activator != null) {
                 activator.Activate();
+            }
 
             var deactivator = rootModel as IDeactivate;
-            if(deactivator != null)
+            if (deactivator != null) {
                 window.Closed += delegate { deactivator.Deactivate(true); };
+            }
 
             window.Show(durationInMilliseconds);
         }
@@ -110,12 +110,14 @@
 			Action.SetTargetWithoutContext(view, rootModel);
 
             var activatable = rootModel as IActivate;
-            if (activatable != null)
+            if (activatable != null) {
                 activatable.Activate();
+            }
 
             var deactivator = rootModel as IDeactivate;
-            if (deactivator != null)
+            if (deactivator != null) {
                 popup.Closed += delegate { deactivator.Deactivate(true); };
+            }
 
             popup.IsOpen = true;
             popup.CaptureMouse();
@@ -184,8 +186,9 @@
                 this.view = view;
 
                 var activatable = model as IActivate;
-                if (activatable != null)
+                if (activatable != null) {
                     activatable.Activate();
+                }
 
                 var deactivatable = model as IDeactivate;
                 if (deactivatable != null) {
@@ -194,16 +197,18 @@
                 }
 
                 var guard = model as IGuardClose;
-                if (guard != null)
+                if (guard != null) {
                     view.Closing += Closing;
+                }
             }
 
             void Closed(object sender, EventArgs e) {
                 view.Closed -= Closed;
                 view.Closing -= Closing;
 
-                if (deactivateFromViewModel)
+                if (deactivateFromViewModel) {
                     return;
+                }
 
                 var deactivatable = (IDeactivate)model;
 
@@ -218,8 +223,9 @@
 
                 ((IDeactivate)model).Deactivated -= Deactivated;
 
-                if (deactivatingFromView)
+                if (deactivatingFromView) {
                     return;
+                }
 
                 deactivateFromViewModel = true;
                 actuallyClosing = true;
@@ -229,13 +235,13 @@
             }
 
             void Closing(object sender, CancelEventArgs e) {
-                if (e.Cancel)
+                if (e.Cancel) {
                     return;
+                }
 
                 var guard = (IGuardClose)model;
 
-                if (actuallyClosing)
-                {
+                if (actuallyClosing) {
                     actuallyClosing = false;
                     return;
                 }
@@ -248,14 +254,17 @@
                             actuallyClosing = true;
                             view.Close();
                         }
-                        else e.Cancel = !canClose;
+                        else {
+                            e.Cancel = !canClose;
+                        }
 
                         shouldEnd = true;
                     });
                 });
 
-                if (shouldEnd)
+                if (shouldEnd) {
                     return;
+                }
 
                 runningAsync = e.Cancel = true;
             }

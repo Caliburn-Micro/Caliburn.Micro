@@ -1,10 +1,8 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Data;
     using System.Windows.Markup;
 
     /// <summary>
@@ -128,12 +126,14 @@
         /// </remarks>
         public static Func<object, object> GetFirstNonGeneratedView = view => {
             var dependencyObject = view as DependencyObject;
-            if(dependencyObject == null)
+            if (dependencyObject == null) {
                 return view;
+            }
 
             if((bool)dependencyObject.GetValue(IsGeneratedProperty)) {
-                if(dependencyObject is ContentControl)
+                if (dependencyObject is ContentControl) {
                     return ((ContentControl)dependencyObject).Content;
+                }
 
                 var type = dependencyObject.GetType();
                 var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
@@ -201,27 +201,31 @@
         }
 
         static void OnModelChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs args) {
-            if(args.OldValue == args.NewValue)
+            if (args.OldValue == args.NewValue) {
                 return;
+            }
 
-            if(args.NewValue != null) {
+            if (args.NewValue != null) {
                 var context = GetContext(targetLocation);
                 var view = ViewLocator.LocateForModel(args.NewValue, targetLocation, context);
 
                 SetContentProperty(targetLocation, view);
                 ViewModelBinder.Bind(args.NewValue, view, context);
             }
-            else
+            else {
                 SetContentProperty(targetLocation, args.NewValue);
+            }
         }
 
         static void OnContextChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs e) {
-            if(e.OldValue == e.NewValue)
+            if (e.OldValue == e.NewValue) {
                 return;
+            }
 
             var model = GetModel(targetLocation);
-            if(model == null)
+            if (model == null) {
                 return;
+            }
 
             var view = ViewLocator.LocateForModel(model, targetLocation, e.NewValue);
 
@@ -231,8 +235,9 @@
 
         static void SetContentProperty(object targetLocation, object view) {
             var fe = view as FrameworkElement;
-            if(fe != null && fe.Parent != null)
+            if (fe != null && fe.Parent != null) {
                 SetContentPropertyCore(fe.Parent, null);
+            }
 
             SetContentPropertyCore(targetLocation, view);
         }

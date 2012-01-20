@@ -63,7 +63,9 @@
                     return;
                 }
             }
-            else OnComplete(null, false);
+            else {
+                OnComplete(null, false);
+            }
         }
 
         void OnComplete(Exception error, bool wasCancelled) {

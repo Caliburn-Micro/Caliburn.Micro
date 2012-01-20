@@ -1,7 +1,5 @@
 ﻿#if SILVERLIGHT
-
-namespace Caliburn.Micro
-{
+namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -10,8 +8,7 @@ namespace Caliburn.Micro
     /// <summary>
     /// Provides information about the characteristics for a component, such as its attributes, properties, and events. This class cannot be inherited.
     /// </summary>
-    public static class TypeDescriptor
-    {
+    public static class TypeDescriptor {
         static readonly Dictionary<Type, TypeConverter> Cache = new Dictionary<Type, TypeConverter>();
 
         /// <summary>
@@ -19,16 +16,15 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="type">The System.Type of the target component.</param>
         /// <returns>A System.ComponentModel.TypeConverter for the specified type.</returns>
-        public static TypeConverter GetConverter(Type type)
-        {
+        public static TypeConverter GetConverter(Type type) {
             TypeConverter converter;
 
-            if(!Cache.TryGetValue(type, out converter))
-            {
+            if(!Cache.TryGetValue(type, out converter)) {
                 var customAttributes = type.GetAttributes<TypeConverterAttribute>(true);
 
-                if(!customAttributes.Any())
+                if (!customAttributes.Any()) {
                     return new TypeConverter();
+                }
 
                 converter = Activator.CreateInstance(Type.GetType(customAttributes.First().ConverterTypeName)) as TypeConverter;
                 Cache[type] = converter;
@@ -38,5 +34,4 @@ namespace Caliburn.Micro
         }
     }
 }
-
 #endif

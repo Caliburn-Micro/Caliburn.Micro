@@ -6,8 +6,7 @@
     /// <summary>
     /// Used by the framework to pull instances from an IoC container and to inject dependencies into certain existing classes.
     /// </summary>
-    public static class IoC
-    {
+    public static class IoC {
         /// <summary>
         /// Gets an instance by type and key.
         /// </summary>
@@ -28,8 +27,7 @@
         /// </summary>
         /// <typeparam name="T">The type to resolve from the container.</typeparam>
         /// <returns>The resolved instance.</returns>
-        public static T Get<T>()
-        {
+        public static T Get<T>() {
             return (T)GetInstance(typeof(T), null);
         }
 
@@ -39,8 +37,7 @@
         /// <typeparam name="T">The type to resolve.</typeparam>
         /// <param name="key">The key to look up.</param>
         /// <returns>The resolved instance.</returns>
-        public static T Get<T>(string key)
-        {
+        public static T Get<T>(string key) {
             return (T)GetInstance(typeof(T), key);
         }
     }

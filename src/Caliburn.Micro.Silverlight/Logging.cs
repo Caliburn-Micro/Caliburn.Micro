@@ -1,12 +1,10 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
 
     /// <summary>
     /// A logger.
     /// </summary>
-    public interface ILog
-    {
+    public interface ILog {
         /// <summary>
         /// Logs the message as info.
         /// </summary>
@@ -31,8 +29,7 @@
     /// <summary>
     /// Used to manage logging.
     /// </summary>
-    public static class LogManager
-    {
+    public static class LogManager {
         static readonly ILog NullLogInstance = new NullLog();
 
         /// <summary>
@@ -40,8 +37,7 @@
         /// </summary>
         public static Func<Type, ILog> GetLog = type => NullLogInstance;
 
-        private class NullLog : ILog
-        {
+        class NullLog : ILog {
             public void Info(string format, params object[] args) { }
             public void Warn(string format, params object[] args) { }
             public void Error(Exception exception) { }

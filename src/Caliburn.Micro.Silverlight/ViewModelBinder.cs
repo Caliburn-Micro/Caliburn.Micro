@@ -1,5 +1,4 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Linq;
     using System.Collections.Generic;
@@ -13,8 +12,7 @@
     /// <summary>
     /// Binds a view to a view model.
     /// </summary>
-    public static class ViewModelBinder
-    {
+    public static class ViewModelBinder {
         /// <summary>
         /// Gets or sets a value indicating whether to apply conventions by default.
         /// </summary>
@@ -85,8 +83,9 @@
                     convention
                     );
 
-                if(applied)
+                if (applied) {
                     Log.Info("Binding Convention Applied: Element {0}.", element.Name);
+                }
                 else {
                     Log.Info("Binding Convention Not Applied: Element {0} has existing binding.", element.Name);
                     unmatchedElements.Add(element);
@@ -170,12 +169,14 @@
                 viewAware.AttachView(view, context);
             }
 
-            if ((bool)view.GetValue(ConventionsAppliedProperty))
+            if ((bool)view.GetValue(ConventionsAppliedProperty)) {
                 return;
+            }
 
-			var element = View.GetFirstNonGeneratedView(view) as FrameworkElement;
-            if(element == null)
+            var element = View.GetFirstNonGeneratedView(view) as FrameworkElement;
+            if (element == null) {
                 return;
+            }
 
             if (!ShouldApplyConventions(element)) {
                 Log.Info("Skipping conventions for {0} and {1}.", element, viewModel);
@@ -204,15 +205,17 @@
 #if WP71
         static void BindAppBar(DependencyObject view) {
             var page = view as PhoneApplicationPage;
-            if (page == null || page.ApplicationBar == null)
+            if (page == null || page.ApplicationBar == null) {
                 return;
+            }
 
             var triggers = Interaction.GetTriggers(view);
 
             foreach(var item in page.ApplicationBar.Buttons) {
                 var button = item as AppBarButton;
-                if (button == null)
+                if (button == null) {
                     continue;
+                }
 
                 var parsedTrigger = Parser.Parse(view, button.Message).First();
                 var trigger = new AppBarButtonTrigger(button);
@@ -228,8 +231,9 @@
 
             foreach (var item in page.ApplicationBar.MenuItems) {
                 var menuItem = item as AppBarMenuItem;
-                if (menuItem == null)
+                if (menuItem == null) {
 					continue;
+                }
 
                 var parsedTrigger = Parser.Parse(view, menuItem.Message).First();
                 var trigger = new AppBarMenuItemTrigger(menuItem);

@@ -1,5 +1,4 @@
-﻿namespace System
-{
+﻿namespace System {
     /// <summary>
     /// Encapsulates a method that has five type parameters and does not return a value.
     /// </summary>

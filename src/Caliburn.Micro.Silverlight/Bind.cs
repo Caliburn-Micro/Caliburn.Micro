@@ -44,12 +44,14 @@
         }
 
         static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if(Execute.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue)
+            if (Execute.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
                 return;
+            }
 
             var fe = d as FrameworkElement;
-            if(fe == null)
+            if (fe == null) {
                 return;
+            }
 
             View.ExecuteOnLoad(fe, delegate {
                 var target = e.NewValue;
@@ -121,7 +123,7 @@
             if(!Execute.InDesignMode)
                 return;
 
-            object enable = d.GetValue(AtDesignTimeProperty);
+            var enable = d.GetValue(AtDesignTimeProperty);
             if(enable == null || ((bool)enable) == false || e.NewValue == null)
                 return;
 

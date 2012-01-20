@@ -1,5 +1,4 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -13,8 +12,7 @@
     /// <summary>
     /// A service that manages windows.
     /// </summary>
-    public interface IWindowManager
-    {
+    public interface IWindowManager {
         /// <summary>
         /// Shows a modal dialog for the specified model.
         /// </summary>
@@ -44,8 +42,7 @@
     /// <summary>
     /// A service that manages windows.
     /// </summary>
-    public class WindowManager : IWindowManager
-    {
+    public class WindowManager : IWindowManager {
         /// <summary>
         /// Shows a modal dialog for the specified model.
         /// </summary>
@@ -66,8 +63,9 @@
         public virtual void ShowWindow(object rootModel, object context = null, IDictionary<string, object> settings = null){
             NavigationWindow navWindow = null;
 
-            if(Application.Current != null && Application.Current.MainWindow != null)
+            if (Application.Current != null && Application.Current.MainWindow != null) {
                 navWindow = Application.Current.MainWindow as NavigationWindow;
+            }
 
             if(navWindow != null) {
                 var window = CreatePage(rootModel, context, settings);
@@ -95,12 +93,14 @@
 			Action.SetTargetWithoutContext(view, rootModel);
 
             var activatable = rootModel as IActivate;
-            if (activatable != null)
+            if (activatable != null) {
                 activatable.Activate();
+            }
 
             var deactivator = rootModel as IDeactivate;
-            if (deactivator != null)
+            if (deactivator != null) {
                 popup.Closed += delegate { deactivator.Deactivate(true); };
+            }
 
             popup.IsOpen = true;
             popup.CaptureMouse();
@@ -128,8 +128,6 @@
             return popup;
         }
 
-        
-
         /// <summary>
         /// Creates a window.
         /// </summary>
@@ -138,8 +136,7 @@
         /// <param name="context">The view context.</param>
         /// <param name="settings">The optional popup settings.</param>
         /// <returns>The window.</returns>
-        protected virtual Window CreateWindow(object rootModel, bool isDialog, object context, IDictionary<string, object> settings)
-        {
+        protected virtual Window CreateWindow(object rootModel, bool isDialog, object context, IDictionary<string, object> settings) {
             var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context), isDialog);
             ViewModelBinder.Bind(rootModel, view, context);
 
@@ -175,21 +172,19 @@
                 window.SetValue(View.IsGeneratedProperty, true);
 
                 var owner = InferOwnerOf(window);
-                if (owner != null)
-                {
+                if (owner != null) {
                     window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     window.Owner = owner;
                 }
-                else
-                {
+                else {
                     window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                 }
             }
-            else
-            {
+            else {
                 var owner = InferOwnerOf(window);
-                if (owner != null && isDialog)
+                if (owner != null && isDialog) {
                     window.Owner = owner;
+                }
             }
 
             return window;
@@ -201,8 +196,9 @@
         /// <param name="window">The window to whose owner needs to be determined.</param>
         /// <returns>The owner.</returns>
         protected virtual Window InferOwnerOf(Window window) {
-            if(Application.Current == null)
+            if (Application.Current == null) {
                 return null;
+            }
 
             var active = Application.Current.Windows.OfType<Window>()
                 .Where(x => x.IsActive)
@@ -231,12 +227,14 @@
             ApplySettings(view, settings);
 
             var activatable = rootModel as IActivate;
-            if(activatable != null)
+            if (activatable != null) {
                 activatable.Activate();
+            }
 
             var deactivatable = rootModel as IDeactivate;
-            if(deactivatable != null)
+            if (deactivatable != null) {
                 view.Unloaded += (s, e) => deactivatable.Deactivate(true);
+            }
 
             return view;
         }
@@ -262,12 +260,12 @@
             if (settings != null) {
                 var type = target.GetType();
 
-                foreach (var pair in settings)
-                {
+                foreach (var pair in settings) {
                     var propertyInfo = type.GetProperty(pair.Key);
 
-                    if (propertyInfo != null)
+                    if (propertyInfo != null) {
                         propertyInfo.SetValue(target, pair.Value, null);
+                    }
                 }
 
                 return true;
@@ -276,42 +274,41 @@
             return false;
         }
 
-        class WindowConductor
-        {
+        class WindowConductor {
             bool deactivatingFromView;
             bool deactivateFromViewModel;
             bool actuallyClosing;
             readonly Window view;
             readonly object model;
 
-            public WindowConductor(object model, Window view)
-            {
+            public WindowConductor(object model, Window view) {
                 this.model = model;
                 this.view = view;
 
                 var activatable = model as IActivate;
-                if (activatable != null)
+                if (activatable != null) {
                     activatable.Activate();
+                }
 
                 var deactivatable = model as IDeactivate;
-                if (deactivatable != null)
-                {
+                if (deactivatable != null) {
                     view.Closed += Closed;
                     deactivatable.Deactivated += Deactivated;
                 }
 
                 var guard = model as IGuardClose;
-                if (guard != null)
+                if (guard != null) {
                     view.Closing += Closing;
+                }
             }
 
-            void Closed(object sender, EventArgs e)
-            {
+            void Closed(object sender, EventArgs e) {
                 view.Closed -= Closed;
                 view.Closing -= Closing;
 
-                if (deactivateFromViewModel)
+                if (deactivateFromViewModel) {
                     return;
+                }
 
                 var deactivatable = (IDeactivate)model;
 
@@ -320,15 +317,16 @@
                 deactivatingFromView = false;
             }
 
-            void Deactivated(object sender, DeactivationEventArgs e)
-            {
-                if (!e.WasClosed)
+            void Deactivated(object sender, DeactivationEventArgs e) {
+                if (!e.WasClosed) {
                     return;
+                }
 
                 ((IDeactivate)model).Deactivated -= Deactivated;
 
-                if (deactivatingFromView)
+                if (deactivatingFromView) {
                     return;
+                }
 
                 deactivateFromViewModel = true;
                 actuallyClosing = true;
@@ -337,15 +335,14 @@
                 deactivateFromViewModel = false;
             }
 
-            void Closing(object sender, CancelEventArgs e)
-            {
-                if (e.Cancel)
+            void Closing(object sender, CancelEventArgs e) {
+                if (e.Cancel) {
                     return;
+                }
 
                 var guard = (IGuardClose)model;
 
-                if (actuallyClosing)
-                {
+                if (actuallyClosing) {
                     actuallyClosing = false;
                     return;
                 }
@@ -358,14 +355,17 @@
                             actuallyClosing = true;
                             view.Close();
                         }
-                        else e.Cancel = !canClose;
+                        else {
+                            e.Cancel = !canClose;
+                        }
 
                         shouldEnd = true;
                     });
                 });
 
-                if (shouldEnd)
+                if (shouldEnd) {
                     return;
+                }
 
                 runningAsync = e.Cancel = true;
             }

@@ -41,8 +41,9 @@
         /// <param name="enumerable">The elements to enumerate.</param>
         /// <param name="action">The action to apply to each item in the list.</param>
         public static void Apply<T>(this IEnumerable<T> enumerable, Action<T> action) {
-            foreach(var item in enumerable)
+            foreach(var item in enumerable) {
                 action(item);
+            }
         }
 
         /// <summary>
@@ -54,12 +55,13 @@
             var lambda = (LambdaExpression)expression;
 
             MemberExpression memberExpression;
-            if(lambda.Body is UnaryExpression) {
+            if (lambda.Body is UnaryExpression) {
                 var unaryExpression = (UnaryExpression)lambda.Body;
                 memberExpression = (MemberExpression)unaryExpression.Operand;
             }
-            else
+            else {
                 memberExpression = (MemberExpression)lambda.Body;
+            }
 
             return memberExpression.Member;
         }
@@ -78,12 +80,17 @@
 		/// <param name="resultSelector"> A function that specifies how to merge the elements from the two sequences.</param>
 		/// <returns>An System.Collections.Generic.IEnumerable&lt;T&gt; that contains merged elements of two input sequences.</returns>
 		public static IEnumerable<TResult> Zip<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> resultSelector){
-			if (first == null)
+			if (first == null){
 				throw new ArgumentNullException("first");
-			if (second == null)
+            }
+
+			if (second == null) {
 				throw new ArgumentNullException("second");
-			if (resultSelector == null)
+            }
+
+			if (resultSelector == null) {
 				throw new ArgumentNullException("resultSelector");
+            }
 
 			var enumFirst = first.GetEnumerator();
 			var enumSecond = second.GetEnumerator();

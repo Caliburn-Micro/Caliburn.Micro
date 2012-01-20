@@ -357,13 +357,15 @@
             if (!string.IsNullOrEmpty(itemsControl.DisplayMemberPath)
                 || HasBinding(itemsControl, ItemsControl.DisplayMemberPathProperty)
                     || itemsControl.ItemTemplate != null
-                        || !property.PropertyType.IsGenericType)
+                        || !property.PropertyType.IsGenericType) {
                 return;
+            }
 
 #if !WP71
             var itemType = property.PropertyType.GetGenericArguments().First();
-            if (itemType.IsValueType || typeof(string).IsAssignableFrom(itemType))
+            if (itemType.IsValueType || typeof(string).IsAssignableFrom(itemType)) {
                 return;
+            }
 #endif
 
 #if NET
@@ -386,8 +388,9 @@
         /// <param name="path">The property path.</param>
         public static Action<FrameworkElement, DependencyProperty, Type, string> ConfigureSelectedItem =
             (selector, selectedItemProperty, viewModelType, path) => {
-                if(HasBinding(selector, selectedItemProperty))
+                if (HasBinding(selector, selectedItemProperty)) {
                     return;
+                }
 
                 var index = path.LastIndexOf('.');
                 index = index == -1 ? 0 : index + 1;
@@ -453,13 +456,15 @@
         public static PropertyInfo GetPropertyCaseInsensitive(this Type type, string propertyName) {
             var typeList = new List<Type> { type };
 
-            if(type.IsInterface)
+            if (type.IsInterface) {
                 typeList.AddRange(type.GetInterfaces());
+            }
 
             var flags = BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance;
 
-            if(IncludeStaticProperties)
+            if (IncludeStaticProperties) {
                 flags = flags | BindingFlags.Static;
+            }
 
             return typeList
                 .Select(interfaceType => interfaceType.GetProperty(propertyName, flags))
@@ -477,16 +482,12 @@
         /// <param name="binding">The binding if available.</param>
         public static void ApplySilverlightTriggers(DependencyObject element, DependencyProperty dependencyProperty, Func<FrameworkElement, BindingExpression> expressionSource, PropertyInfo property, Binding binding){
             var textBox = element as TextBox;
-            if (textBox != null && dependencyProperty == TextBox.TextProperty)
-            {
-                if (property != null)
-                {
+            if (textBox != null && dependencyProperty == TextBox.TextProperty) {
+                if (property != null) {
                     var typeCode = Type.GetTypeCode(property.PropertyType);
-                    if (typeCode == TypeCode.Single || typeCode == TypeCode.Double || typeCode == TypeCode.Decimal)
-                    {
+                    if (typeCode == TypeCode.Single || typeCode == TypeCode.Double || typeCode == TypeCode.Decimal) {
                         binding.UpdateSourceTrigger = UpdateSourceTrigger.Explicit;
-                        textBox.KeyUp += delegate
-                        {
+                        textBox.KeyUp += delegate {
                             var start = textBox.SelectionStart;
                             var text = textBox.Text;
 
@@ -504,8 +505,7 @@
             }
 
             var passwordBox = element as PasswordBox;
-            if (passwordBox != null && dependencyProperty == PasswordBox.PasswordProperty)
-            {
+            if (passwordBox != null && dependencyProperty == PasswordBox.PasswordProperty) {
                 passwordBox.PasswordChanged += delegate { expressionSource(passwordBox).UpdateSource(); };
                 return;
             }

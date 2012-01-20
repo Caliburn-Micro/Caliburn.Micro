@@ -44,8 +44,9 @@
         /// <param name="key">The key.</param>
         /// <param name="data">The data.</param>
         public void Store(string key, object data) {
-            if(!phoneService.State.ContainsKey(key))
+            if (!phoneService.State.ContainsKey(key)) {
                 keys.Add(key);
+            }
 
             phoneService.State[key] = data;
         }

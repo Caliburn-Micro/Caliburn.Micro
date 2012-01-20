@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
+﻿namespace Caliburn.Micro {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Media;
 
-namespace Caliburn.Micro {
     /// <summary>
     /// Provides methods for searching a given scope for named elements.
     /// </summary>

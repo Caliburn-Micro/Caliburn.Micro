@@ -1,5 +1,4 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -7,8 +6,7 @@
     /// <summary>
     ///   Interface used to define an object associated to a collection of children.
     /// </summary>
-    public interface IParent
-    {
+    public interface IParent {
         /// <summary>
         ///   Gets the children.
         /// </summary>
@@ -40,8 +38,7 @@
     /// <summary>
     /// Denotes an instance which maintains an active item.
     /// </summary>
-    public interface IHaveActiveItem
-    {
+    public interface IHaveActiveItem {
         /// <summary>
         /// The currently active item.
         /// </summary>
@@ -52,8 +49,7 @@
     /// Denotes an instance which conducts other objects by managing an ActiveItem and maintaining a strict lifecycle.
     /// </summary>
     /// <remarks>Conducted instances can optin to the lifecycle by impelenting any of the follosing <see cref="IActivate"/>, <see cref="IDeactivate"/>, <see cref="IGuardClose"/>.</remarks>
-    public interface IConductor : IParent, INotifyPropertyChangedEx
-    {
+    public interface IConductor : IParent, INotifyPropertyChangedEx {
         /// <summary>
         /// Activates the specified item.
         /// </summary>
@@ -76,8 +72,5 @@
     /// <summary>
     /// An <see cref="IConductor"/> that also implements <see cref="IHaveActiveItem"/>.
     /// </summary>
-    public interface IConductActiveItem : IConductor, IHaveActiveItem
-    {
-
-    }
+    public interface IConductActiveItem : IConductor, IHaveActiveItem { }
 }

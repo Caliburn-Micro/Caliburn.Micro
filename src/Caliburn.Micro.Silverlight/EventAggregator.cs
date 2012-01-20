@@ -66,12 +66,12 @@
     ///   Enables loosely-coupled publication of and subscription to events.
     /// </summary>
     public class EventAggregator : IEventAggregator {
+        readonly List<Handler> handlers = new List<Handler>();
+
         /// <summary>
         ///   The default thread marshaller used for publication;
         /// </summary>
         public static Action<System.Action> DefaultPublicationThreadMarshaller = action => action();
-
-        readonly List<Handler> handlers = new List<Handler>();
 
         /// <summary>
         ///   Initializes a new instance of the <see cref = "EventAggregator" /> class.
@@ -94,8 +94,9 @@
         /// <param name = "instance">The instance to subscribe for event publication.</param>
         public virtual void Subscribe(object instance) {
             lock(handlers) {
-                if(handlers.Any(x => x.Matches(instance)))
+                if (handlers.Any(x => x.Matches(instance))) {
                     return;
+                }
 
                 handlers.Add(new Handler(instance));
             }
@@ -109,8 +110,9 @@
             lock(handlers) {
                 var found = handlers.FirstOrDefault(x => x.Matches(instance));
 
-                if(found != null)
+                if (found != null) {
                     handlers.Remove(found);
+                }
             }
         }
 
@@ -132,8 +134,9 @@
         /// <param name = "marshal">Allows the publisher to provide a custom thread marshaller for the message publication.</param>
         public virtual void Publish(object message, Action<System.Action> marshal) {
             Handler[] toNotify;
-            lock(handlers)
+            lock (handlers) {
                 toNotify = handlers.ToArray();
+            }
 
             marshal(() => {
                 var messageType = message.GetType();
@@ -214,8 +217,9 @@
 
             public bool Handle(Type messageType, object message) {
                 var target = reference.Target;
-                if(target == null)
+                if (target == null) {
                     return false;
+                }
 
                 foreach(var pair in supportedHandlers) {
                     if(pair.Key.IsAssignableFrom(messageType)) {

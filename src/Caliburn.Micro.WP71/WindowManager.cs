@@ -71,12 +71,14 @@
             ApplySettings(host, settings);
 
             var activatable = rootModel as IActivate;
-            if (activatable != null)
+            if (activatable != null) {
                 activatable.Activate();
+            }
 
             var deactivator = rootModel as IDeactivate;
-            if (deactivator != null)
+            if (deactivator != null) {
                 host.Closed += delegate { deactivator.Deactivate(true); };
+            }
 
             host.Open();
         }
@@ -97,12 +99,14 @@
             ViewModelBinder.Bind(rootModel, popup, null);
 
             var activatable = rootModel as IActivate;
-            if (activatable != null)
+            if (activatable != null) {
                 activatable.Activate();
+            }
 
             var deactivator = rootModel as IDeactivate;
-            if (deactivator != null)
+            if (deactivator != null) {
                 popup.Closed += delegate { deactivator.Deactivate(true); };
+            }
 
             popup.IsOpen = true;
         }
@@ -154,11 +158,11 @@
                 this.navigationSvc = navigationSvc;
 
                 currentPage = navigationSvc.CurrentContent as PhoneApplicationPage;
-                if(currentPage == null)
+                if (currentPage == null) {
                     throw new InvalidOperationException(
                         string.Format("In order to use ShowDialog the view currently loaded in the application frame ({0})"
                                       + " should inherit from PhoneApplicationPage or one of its descendents.", navigationSvc.CurrentContent.GetType()));
-
+                }
 
                 navigationSvc.Navigating += OnNavigating;
                 navigationSvc.Navigated += OnNavigated;
@@ -168,7 +172,6 @@
             }
 
             public EventHandler Closed = delegate { };
-
 
             public void SetActionTarget(object target) {
                 Action.SetTarget(viewContainer, target);
@@ -180,8 +183,10 @@
             }
 
             public void Open() {
-                if(isOpen)
+                if (isOpen) {
                     return;
+                }
+
                 isOpen = true;
 
                 if(currentPage.ApplicationBar != null) {
@@ -189,7 +194,6 @@
                 }
 
                 ArrangePlacement();
-
 
                 currentPage.BackKeyPress += CurrentPageBackKeyPress;
                 currentPage.OrientationChanged += CurrentPageOrientationChanged;
@@ -202,16 +206,16 @@
             }
 
             void Close(bool reopenOnBackNavigation) {
-                if(!isOpen)
+                if (!isOpen) {
                     return;
-                isOpen = false;
+                }
 
+                isOpen = false;
                 elementPlacementAnimator.Exit(() => { hostPopup.IsOpen = false; });
 
                 if(currentPage.ApplicationBar != null) {
                     RestoreAppBar();
                 }
-
 
                 currentPage.BackKeyPress -= CurrentPageBackKeyPress;
                 currentPage.OrientationChanged -= CurrentPageOrientationChanged;
@@ -219,7 +223,6 @@
                 if(!reopenOnBackNavigation) {
                     navigationSvc.Navigating -= OnNavigating;
                     navigationSvc.Navigated -= OnNavigated;
-
 
                     Closed(this, EventArgs.Empty);
                 }
@@ -289,8 +292,9 @@
 
             Uri currentPageUri;
             void OnNavigating(object sender, System.Windows.Navigation.NavigatingCancelEventArgs e) {
-                if(IsSystemDialogNavigation(e.Uri))
+                if (IsSystemDialogNavigation(e.Uri)) {
                     currentPageUri = navigationSvc.CurrentSource;
+                }
             }
 
             void OnNavigated(object sender, System.Windows.Navigation.NavigationEventArgs e) {
@@ -325,8 +329,10 @@
 
                 public double AngleFromDefault {
                     get {
-                        if((Orientation & PageOrientation.Landscape) == 0)
+                        if ((Orientation & PageOrientation.Landscape) == 0) {
                             return 0;
+                        }
+
                         return Orientation == PageOrientation.LandscapeRight ? 90 : -90;
                     }
                 }

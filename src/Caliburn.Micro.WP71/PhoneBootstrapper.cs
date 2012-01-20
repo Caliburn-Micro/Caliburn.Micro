@@ -1,5 +1,4 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System.Windows.Navigation;
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
@@ -7,8 +6,7 @@
     /// <summary>
     /// A custom bootstrapper designed to setup phone applications.
     /// </summary>
-    public class PhoneBootstrapper : Bootstrapper
-    {
+    public class PhoneBootstrapper : Bootstrapper {
         bool phoneApplicationInitialized;
         PhoneApplicationService phoneService;
 
@@ -31,8 +29,9 @@
 
             Application.ApplicationLifetimeObjects.Add(phoneService);
 
-            if (phoneApplicationInitialized)
+            if (phoneApplicationInitialized) {
                 return;
+            }
 
             RootFrame = CreatePhoneApplicationFrame();
             RootFrame.Navigated += OnNavigated;
@@ -41,8 +40,9 @@
         }
 
         void OnNavigated(object sender, NavigationEventArgs e) {
-            if (Application.RootVisual != RootFrame)
+            if (Application.RootVisual != RootFrame) {
                 Application.RootVisual = RootFrame;
+            }
         }
 
         /// <summary>
