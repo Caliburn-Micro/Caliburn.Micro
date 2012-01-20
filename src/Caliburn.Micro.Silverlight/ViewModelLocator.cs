@@ -32,22 +32,17 @@
         /// configuration.
         /// </summary>
         /// <param name="config">An instance of TypeMappingConfiguration that provides the settings for configuration</param>
-        public static void ConfigureTypeMappings(TypeMappingConfiguration config)
-        {
-            if (String.IsNullOrEmpty(config.DefaultSubNSViews))
-            {
+        public static void ConfigureTypeMappings(TypeMappingConfiguration config) {
+            if (String.IsNullOrEmpty(config.DefaultSubNSViews)) {
                 throw new ArgumentException("DefaultSubNSViews field cannot be blank.");
             }
 
-            if (String.IsNullOrEmpty(config.DefaultSubNSViewModels))
-            {
+            if (String.IsNullOrEmpty(config.DefaultSubNSViewModels)) {
                 throw new ArgumentException("DefaultSubNSViewModels field cannot be blank.");
             }
 
-            if (config.UseNameSuffixesInMappings)
-            {
-                if (String.IsNullOrEmpty(config.ViewModelSuffix))
-                {
+            if (config.UseNameSuffixesInMappings) {
+                if (String.IsNullOrEmpty(config.ViewModelSuffix)) {
                     throw new ArgumentException("ViewModelSuffix field cannot be blank if UseNameSuffixesInMappings is true.");
                 }
             }
@@ -66,13 +61,11 @@
 
         private static void SetAllDefaults()
         {
-            if (_UseNameSuffixesInMappings)
-            {
+            if (_UseNameSuffixesInMappings) {
                 //Add support for all view suffixes
                 _ViewSuffixList.ForEach(v => { AddDefaultTypeMapping(v); });
             }
-            else
-            {
+            else {
                 AddSubNamespaceMapping(_DefaultSubNSViews, _DefaultSubNSViewModels);
             }
         }
@@ -82,8 +75,7 @@
         /// </summary>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddDefaultTypeMapping(string viewSuffix = "View") {
-            if (!_UseNameSuffixesInMappings)
-            {
+            if (!_UseNameSuffixesInMappings) {
                 return;
             }
 
@@ -105,31 +97,24 @@
             var replist = new List<string>();
             Action<string> func;
 
-            if (_UseNameSuffixesInMappings)
-            {
-                if (_ViewModelSuffix.Contains(viewSuffix))
-                {
-                    func = t =>
-                    {
+            if (_UseNameSuffixesInMappings) {
+                if (_ViewModelSuffix.Contains(viewSuffix)) {
+                    func = t => {
                         replist.Add(t + @"I${basename}" + _ViewModelSuffix);
                         replist.Add(t + @"I${basename}");
                         replist.Add(t + @"${basename}" + _ViewModelSuffix);
                         replist.Add(t + @"${basename}");
                     };
                 }
-                else
-                {
-                    func = t =>
-                    {
+                else {
+                    func = t => {
                         replist.Add(t + @"I${basename}${suffix}" + _ViewModelSuffix);
                         replist.Add(t + @"${basename}${suffix}" + _ViewModelSuffix);
                     };
                 }
             }
-            else
-            {
-                func = t =>
-                {
+            else {
+                func = t => {
                     replist.Add(t + @"I${basename}");
                     replist.Add(t + @"${basename}");
                 };
@@ -139,8 +124,7 @@
 
 
             string suffixregex = "$";
-            if (_UseNameSuffixesInMappings)
-            {
+            if (_UseNameSuffixesInMappings) {
                 suffixregex = viewSuffix + suffixregex;
             }
 
@@ -239,8 +223,7 @@
         /// <param name="nsSource">Subnamespace of source type</param>
         /// <param name="nsTarget">Subnamespace of target type</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddSubNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View")
-        {
+        public static void AddSubNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View") {
             AddSubNamespaceMapping(nsSource, new string[] { nsTarget }, viewSuffix);
         }
 
@@ -268,9 +251,8 @@
         /// </summary>
         /// <param name="typeName">The name of the ViewModel type being resolved to its companion View.</param>
         /// <param name="includeInterfaces">Include interface types (Optional)</param>
-        /// <returns></returns>
-        public static IEnumerable<string> TransformName(string typeName, bool includeInterfaces = false)
-        {
+        /// <returns>Enumeration of transformed names</returns>
+        public static Func<string, bool, IEnumerable<string>> TransformName = (typeName, includeInterfaces) => {
             Func<string, string> getReplaceString;
             if (includeInterfaces) {
                 getReplaceString = r => { return r; };
@@ -281,7 +263,7 @@
                 };
             }
             return NameTransformer.Transform(typeName, getReplaceString).Where(n => n != String.Empty);
-        }
+        };
 
         /// <summary>
         ///   Determines the view model type based on the specified view type.

@@ -44,22 +44,17 @@
         /// configuration.
         /// </summary>
         /// <param name="config">An instance of TypeMappingConfiguration that provides the settings for configuration</param>
-        public static void ConfigureTypeMappings(TypeMappingConfiguration config)
-        {
-            if (String.IsNullOrEmpty(config.DefaultSubNSViews))
-            {
+        public static void ConfigureTypeMappings(TypeMappingConfiguration config) {
+            if (String.IsNullOrEmpty(config.DefaultSubNSViews)) {
                 throw new ArgumentException("DefaultSubNSViews field cannot be blank.");
             }
 
-            if (String.IsNullOrEmpty(config.DefaultSubNSViewModels))
-            {
+            if (String.IsNullOrEmpty(config.DefaultSubNSViewModels)) {
                 throw new ArgumentException("DefaultSubNSViewModels field cannot be blank.");
             }
 
-            if (config.UseNameSuffixesInMappings)
-            {
-                if (String.IsNullOrEmpty(config.ViewModelSuffix))
-                {
+            if (config.UseNameSuffixesInMappings) {
+                if (String.IsNullOrEmpty(config.ViewModelSuffix)) {
                     throw new ArgumentException("ViewModelSuffix field cannot be blank if UseNameSuffixesInMappings is true.");
                 }
             }
@@ -129,18 +124,15 @@
             var replist = new List<string>();
             var repsuffix = _UseNameSuffixesInMappings ? viewSuffix : String.Empty;
 
-            foreach (var t in nsTargetsRegEx)
-            {
+            foreach (var t in nsTargetsRegEx) {
                 replist.Add(t + @"${basename}" + repsuffix);
             }
 
             string rxbase = RegExHelper.GetNameCaptureGroup("basename");
             string suffix = "$";
-            if (_UseNameSuffixesInMappings)
-            {
+            if (_UseNameSuffixesInMappings) {
                 suffix = _ViewModelSuffix + "$";
-                if (!_ViewModelSuffix.Contains(viewSuffix))
-                {
+                if (!_ViewModelSuffix.Contains(viewSuffix)) {
                     suffix = viewSuffix + suffix;
                 }
             }
@@ -163,8 +155,7 @@
         /// <param name="nsSourceFilterRegEx">RegEx filter pattern for source namespace</param>
         /// <param name="nsTargetRegEx">RegEx replace value for target namespace</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string nsTargetRegEx, string viewSuffix = "View")
-        {
+        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string nsTargetRegEx, string viewSuffix = "View") {
             AddTypeMapping(nsSourceReplaceRegEx, nsSourceFilterRegEx, new string[] { nsTargetRegEx }, viewSuffix);
         }
 
@@ -286,8 +277,8 @@
         /// </summary>
         /// <param name="typeName">The name of the ViewModel type being resolved to its companion View.</param>
         /// <param name="context">An instance of the context. (Optional)</param>
-        /// <returns></returns>
-        public static IEnumerable<string> TransformName(string typeName, object context = null) {
+        /// <returns>Enumeration of transformed names</returns>
+        public static Func<string, object, IEnumerable<string>> TransformName = (typeName, context) => {
             Func<string, string> getReplaceString;
             if (context == null) {
                 getReplaceString = r => { return r; };
@@ -310,7 +301,7 @@
                 //Return only the names for the context
                 return NameTransformer.Transform(typeName, getReplaceString).Where(n => n.EndsWith(replacestr));
             }
-        }
+        };
 
         /// <summary>
         ///   Locates the view type based on the specified model type.
