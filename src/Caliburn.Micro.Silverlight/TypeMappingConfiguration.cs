@@ -27,6 +27,16 @@
         public bool UseNameSuffixesInMappings = true;
 
         /// <summary>
+        /// The format string used to compose the name of a type from base name and name suffix
+        /// </summary>
+        public string NameFormat = @"{0}{1}";
+
+        /// <summary>
+        /// Flag to indicate if ViewModel names should include View suffixes (i.e. CustomerPageViewModel vs. CustomerViewModel)
+        /// </summary>
+        public bool IncludeViewSuffixInVMNames = true;
+
+        /// <summary>
         /// List of View suffixes for which default type mappings should be created. Applies only when UseNameSuffixesInMappings = true.
         /// Default values are "View", "Page"
         /// </summary>

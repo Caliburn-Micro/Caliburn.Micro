@@ -30,9 +30,11 @@
         //These fields are used for configuring the default type mappings. They can be changed using ConfigureTypeMappings().
         private static string _DefaultSubNSViews;
         private static string _DefaultSubNSViewModels;
-        private static bool _UseNameSuffixesInMappings = true;
+        private static bool _UseNameSuffixesInMappings;
+        private static string _NameFormat;
         private static string _ViewModelSuffix;
         private static List<string> _ViewSuffixList = new List<string>();
+        private static bool _IncludeViewSuffixInVMNames;
 
         static ViewLocator() {
             ConfigureTypeMappings(new TypeMappingConfiguration());
@@ -53,6 +55,11 @@
                 throw new ArgumentException("DefaultSubNSViewModels field cannot be blank.");
             }
 
+            if (String.IsNullOrEmpty(config.NameFormat))
+            {
+                throw new ArgumentException("NameFormat field cannot be blank.");
+            }
+
             if (config.UseNameSuffixesInMappings) {
                 if (String.IsNullOrEmpty(config.ViewModelSuffix)) {
                     throw new ArgumentException("ViewModelSuffix field cannot be blank if UseNameSuffixesInMappings is true.");
@@ -64,9 +71,11 @@
 
             _DefaultSubNSViews = config.DefaultSubNSViews;
             _DefaultSubNSViewModels = config.DefaultSubNSViewModels;
+            _NameFormat = config.NameFormat;
             _UseNameSuffixesInMappings = config.UseNameSuffixesInMappings;
             _ViewModelSuffix = config.ViewModelSuffix;
             _ViewSuffixList.AddRange(config.ViewSuffixList);
+            _IncludeViewSuffixInVMNames = config.IncludeViewSuffixInVMNames;
 
             SetAllDefaults();
         }
@@ -123,26 +132,27 @@
 
             var replist = new List<string>();
             var repsuffix = _UseNameSuffixesInMappings ? viewSuffix : String.Empty;
+            var basegrp = "${basename}";
 
             foreach (var t in nsTargetsRegEx) {
-                replist.Add(t + @"${basename}" + repsuffix);
+                replist.Add(t + String.Format(_NameFormat, basegrp, repsuffix));
             }
 
             string rxbase = RegExHelper.GetNameCaptureGroup("basename");
-            string suffix = "$";
+            string suffix = String.Empty;
             if (_UseNameSuffixesInMappings) {
-                suffix = _ViewModelSuffix + "$";
-                if (!_ViewModelSuffix.Contains(viewSuffix)) {
+                suffix = _ViewModelSuffix;
+                if (!_ViewModelSuffix.Contains(viewSuffix) && _IncludeViewSuffixInVMNames) {
                     suffix = viewSuffix + suffix;
                 }
             }
             var rxsrcfilter = String.IsNullOrEmpty(nsSourceFilterRegEx)
                 ? null
-                : String.Concat(nsSourceFilterRegEx, RegExHelper.NameRegEx, suffix);
+                : String.Concat(nsSourceFilterRegEx, String.Format(_NameFormat, RegExHelper.NameRegEx, suffix), "$");
             var rxsuffix = RegExHelper.GetCaptureGroup("suffix", suffix);
 
             NameTransformer.AddRule(
-                String.Concat(nsSourceReplaceRegEx, rxbase, rxsuffix),
+                String.Concat(nsSourceReplaceRegEx, String.Format(_NameFormat, rxbase, rxsuffix), "$"),
                 replist.ToArray(),
                 rxsrcfilter
             );
@@ -275,9 +285,11 @@
         /// Transforms a ViewModel type name into all of its possible View type names. Optionally accepts an instance
         /// of context object
         /// </summary>
-        /// <param name="typeName">The name of the ViewModel type being resolved to its companion View.</param>
-        /// <param name="context">An instance of the context. (Optional)</param>
         /// <returns>Enumeration of transformed names</returns>
+        /// <remarks>Arguments:
+        /// typeName = The name of the ViewModel type being resolved to its companion View.
+        /// context = An instance of the context or null.
+        /// </remarks>
         public static Func<string, object, IEnumerable<string>> TransformName = (typeName, context) => {
             Func<string, string> getReplaceString;
             if (context == null) {
@@ -285,21 +297,28 @@
                 return NameTransformer.Transform(typeName, getReplaceString);
             }
             else {
-                var replacestr = ContextSeparator + context;
+                var contextstr = ContextSeparator + context;
+                string synonymregex = String.Empty, grpsuffix = String.Empty;
+                if (_UseNameSuffixesInMappings) {
+                    //Create RegEx for matching any of the synonyms registered
+                    synonymregex = "(" + String.Join("|", _ViewSuffixList.ToArray()) + ")";
+                    grpsuffix = RegExHelper.GetCaptureGroup("suffix", synonymregex);
+                }
+
+                var grpbase = @"\${basename}";
+
+                var patternregex = String.Format(_NameFormat, grpbase, grpsuffix) + "$";
+                
+                //Strip out any synonym by just using contents of base capture group with context string
+                var replaceregex = "${basename}" + contextstr;
+
                 getReplaceString = r => {
-                    string synonymregex = "$";
-
-                    if (_UseNameSuffixesInMappings) {
-                        //Create RegEx for matching any of the synonyms registered
-                        synonymregex = String.Join("|", _ViewSuffixList.Select(s => @"(" + s + @"$)").ToArray());
-                    }
-
                     //Strip out the synonym
-                    return Regex.Replace(r, synonymregex, replacestr);
+                    return Regex.Replace(r, patternregex, replaceregex);
                 };
 
                 //Return only the names for the context
-                return NameTransformer.Transform(typeName, getReplaceString).Where(n => n.EndsWith(replacestr));
+                return NameTransformer.Transform(typeName, getReplaceString).Where(n => n.EndsWith(contextstr));
             }
         };
 

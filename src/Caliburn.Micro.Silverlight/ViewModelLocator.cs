@@ -18,9 +18,21 @@
         //These fields are used for configuring the default type mappings. They can be changed using ConfigureTypeMappings().
         private static string _DefaultSubNSViews;
         private static string _DefaultSubNSViewModels;
-        private static bool _UseNameSuffixesInMappings = true;
+        private static bool _UseNameSuffixesInMappings;
+        private static string _NameFormat;
         private static string _ViewModelSuffix;
         private static List<string> _ViewSuffixList = new List<string>();
+        private static bool _IncludeViewSuffixInVMNames;
+
+        /// <summary>
+        /// The name of the capture group used as a marker for rules that return interface types
+        /// </summary>
+        public static string InterfaceCaptureGroupName
+        {
+            get { return _InterfaceCaptureGroupName; }
+        }
+
+        private const string _InterfaceCaptureGroupName = "isinterface";
 
         static ViewModelLocator() {
             ConfigureTypeMappings(new TypeMappingConfiguration());
@@ -41,6 +53,11 @@
                 throw new ArgumentException("DefaultSubNSViewModels field cannot be blank.");
             }
 
+            if (String.IsNullOrEmpty(config.NameFormat))
+            {
+                throw new ArgumentException("NameFormat field cannot be blank.");
+            }
+
             if (config.UseNameSuffixesInMappings) {
                 if (String.IsNullOrEmpty(config.ViewModelSuffix)) {
                     throw new ArgumentException("ViewModelSuffix field cannot be blank if UseNameSuffixesInMappings is true.");
@@ -52,9 +69,11 @@
 
             _DefaultSubNSViews = config.DefaultSubNSViews;
             _DefaultSubNSViewModels = config.DefaultSubNSViewModels;
+            _NameFormat = config.NameFormat;
             _UseNameSuffixesInMappings = config.UseNameSuffixesInMappings;
             _ViewModelSuffix = config.ViewModelSuffix;
             _ViewSuffixList.AddRange(config.ViewSuffixList);
+            _IncludeViewSuffixInVMNames = config.IncludeViewSuffixInVMNames;
 
             SetAllDefaults();
         }
@@ -97,45 +116,51 @@
             var replist = new List<string>();
             Action<string> func;
 
+            var basegrp = "${basename}";
+            var interfacegrp = "${" + _InterfaceCaptureGroupName + "}";
+
             if (_UseNameSuffixesInMappings) {
-                if (_ViewModelSuffix.Contains(viewSuffix)) {
+                if (_ViewModelSuffix.Contains(viewSuffix) || !_IncludeViewSuffixInVMNames) {
+
+                    var nameregex = String.Format(_NameFormat, basegrp, _ViewModelSuffix);
+                    
                     func = t => {
-                        replist.Add(t + @"I${basename}" + _ViewModelSuffix);
-                        replist.Add(t + @"I${basename}");
-                        replist.Add(t + @"${basename}" + _ViewModelSuffix);
-                        replist.Add(t + @"${basename}");
+                        replist.Add(t + "I" + nameregex + interfacegrp);
+                        replist.Add(t + "I" + basegrp + interfacegrp);
+                        replist.Add(t + nameregex);
+                        replist.Add(t + basegrp);
                     };
                 }
                 else {
+                    var nameregex = String.Format(_NameFormat, basegrp, "${suffix}" + _ViewModelSuffix);
                     func = t => {
-                        replist.Add(t + @"I${basename}${suffix}" + _ViewModelSuffix);
-                        replist.Add(t + @"${basename}${suffix}" + _ViewModelSuffix);
+                        replist.Add(t + "I" + nameregex + interfacegrp);
+                        replist.Add(t + nameregex);
                     };
                 }
             }
             else {
                 func = t => {
-                    replist.Add(t + @"I${basename}");
-                    replist.Add(t + @"${basename}");
+                    replist.Add(t + "I" + basegrp + interfacegrp);
+                    replist.Add(t + basegrp);
                 };
             }
 
             nsTargetsRegEx.ToList().ForEach(t => func(t));
 
 
-            string suffixregex = "$";
-            if (_UseNameSuffixesInMappings) {
-                suffixregex = viewSuffix + suffixregex;
-            }
+            string suffix = _UseNameSuffixesInMappings ? viewSuffix : String.Empty;
 
             var srcfilterregx = String.IsNullOrEmpty(nsSourceFilterRegEx) 
                 ? null
-                : String.Concat(nsSourceFilterRegEx, RegExHelper.NameRegEx, suffixregex);
+                : String.Concat(nsSourceFilterRegEx, String.Format(_NameFormat, RegExHelper.NameRegEx, suffix), "$");
             string rxbase = RegExHelper.GetNameCaptureGroup("basename");
-            string rxsuffix = RegExHelper.GetCaptureGroup("suffix", suffixregex);
-
+            string rxsuffix = RegExHelper.GetCaptureGroup("suffix", suffix);
+            
+            //Add a dummy capture group -- place after the "$" so it can never capture anything
+            string rxinterface = RegExHelper.GetCaptureGroup(_InterfaceCaptureGroupName, String.Empty);
             NameTransformer.AddRule(
-                String.Concat(nsSourceReplaceRegEx, rxbase, rxsuffix),
+                String.Concat(nsSourceReplaceRegEx, String.Format(_NameFormat, rxbase, rxsuffix), "$", rxinterface),
                 replist.ToArray(),
                 srcfilterregx
             );
@@ -246,20 +271,23 @@
         }
 
         /// <summary>
-        /// Transforms a View type name into all of its possible ViewModel type names. Optionally accepts a flag
-        /// to include interface types.
+        /// Transforms a View type name into all of its possible ViewModel type names. Accepts a flag
+        /// to include or exclude interface types.
         /// </summary>
-        /// <param name="typeName">The name of the ViewModel type being resolved to its companion View.</param>
-        /// <param name="includeInterfaces">Include interface types (Optional)</param>
         /// <returns>Enumeration of transformed names</returns>
+        /// <remarks>Arguments:
+        /// typeName = The name of the View type being resolved to its companion ViewModel.
+        /// includeInterfaces = Flag to indicate if interface types are included
+        /// </remarks>
         public static Func<string, bool, IEnumerable<string>> TransformName = (typeName, includeInterfaces) => {
             Func<string, string> getReplaceString;
             if (includeInterfaces) {
                 getReplaceString = r => { return r; };
             }
             else {
+                var interfacegrpregex = @"\${" + _InterfaceCaptureGroupName + @"}$";
                 getReplaceString = r => {
-                    return Regex.IsMatch(r, @"I\${basename}") ? String.Empty : r;
+                    return Regex.IsMatch(r, interfacegrpregex) ? String.Empty : r;
                 };
             }
             return NameTransformer.Transform(typeName, getReplaceString).Where(n => n != String.Empty);
