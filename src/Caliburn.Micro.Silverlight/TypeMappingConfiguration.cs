@@ -1,5 +1,4 @@
 ﻿namespace Caliburn.Micro {
-    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -7,19 +6,14 @@
     /// </summary>
     public class TypeMappingConfiguration {
         /// <summary>
-        /// Default constructor
-        /// </summary>
-        public TypeMappingConfiguration() { }
-
-        /// <summary>
         /// The default subnamespace for Views. Used for creating default subnamespace mappings. Defaults to "Views".
         /// </summary>
-        public string DefaultSubNSViews = "Views";
+        public string DefaultSubNamespaceForViews = "Views";
 
         /// <summary>
         /// The default subnamespace for ViewModels. Used for creating default subnamespace mappings. Defaults to "ViewModels".
         /// </summary>
-        public string DefaultSubNSViewModels = "ViewModels";
+        public string DefaultSubNamespaceForViewModels = "ViewModels";
 
         /// <summary>
         /// Flag to indicate whether or not the name of the Type should be transformed when adding a type mapping. Defaults to true.
@@ -34,13 +28,13 @@
         /// <summary>
         /// Flag to indicate if ViewModel names should include View suffixes (i.e. CustomerPageViewModel vs. CustomerViewModel)
         /// </summary>
-        public bool IncludeViewSuffixInVMNames = true;
+        public bool IncludeViewSuffixInViewModelNames = true;
 
         /// <summary>
         /// List of View suffixes for which default type mappings should be created. Applies only when UseNameSuffixesInMappings = true.
         /// Default values are "View", "Page"
         /// </summary>
-        public List<string> ViewSuffixList = new List<string>(new string[] { "View", "Page" });
+        public List<string> ViewSuffixList = new List<string>(new[] { "View", "Page" });
 
         /// <summary>
         /// The name suffix for ViewModels. Applies only when UseNameSuffixesInMappings = true. The default is "ViewModel".

@@ -10,29 +10,24 @@
     /// </summary>
     public static class ViewModelLocator {
         static readonly ILog Log = LogManager.GetLog(typeof(ViewModelLocator));
+        //These fields are used for configuring the default type mappings. They can be changed using ConfigureTypeMappings().
+        static string defaultSubNsViews;
+        static string defaultSubNsViewModels;
+        static bool useNameSuffixesInMappings;
+        static string nameFormat;
+        static string viewModelSuffix;
+        static readonly List<string> ViewSuffixList = new List<string>();
+        static bool includeViewSuffixInVmNames;
+
         ///<summary>
         /// Used to transform names.
         ///</summary>
         public static readonly NameTransformer NameTransformer = new NameTransformer();
 
-        //These fields are used for configuring the default type mappings. They can be changed using ConfigureTypeMappings().
-        private static string _DefaultSubNSViews;
-        private static string _DefaultSubNSViewModels;
-        private static bool _UseNameSuffixesInMappings;
-        private static string _NameFormat;
-        private static string _ViewModelSuffix;
-        private static List<string> _ViewSuffixList = new List<string>();
-        private static bool _IncludeViewSuffixInVMNames;
-
         /// <summary>
         /// The name of the capture group used as a marker for rules that return interface types
         /// </summary>
-        public static string InterfaceCaptureGroupName
-        {
-            get { return _InterfaceCaptureGroupName; }
-        }
-
-        private const string _InterfaceCaptureGroupName = "isinterface";
+        public static string InterfaceCaptureGroupName = "isinterface";
 
         static ViewModelLocator() {
             ConfigureTypeMappings(new TypeMappingConfiguration());
@@ -45,12 +40,12 @@
         /// </summary>
         /// <param name="config">An instance of TypeMappingConfiguration that provides the settings for configuration</param>
         public static void ConfigureTypeMappings(TypeMappingConfiguration config) {
-            if (String.IsNullOrEmpty(config.DefaultSubNSViews)) {
-                throw new ArgumentException("DefaultSubNSViews field cannot be blank.");
+            if (String.IsNullOrEmpty(config.DefaultSubNamespaceForViews)) {
+                throw new ArgumentException("DefaultSubNamespaceForViews field cannot be blank.");
             }
 
-            if (String.IsNullOrEmpty(config.DefaultSubNSViewModels)) {
-                throw new ArgumentException("DefaultSubNSViewModels field cannot be blank.");
+            if (String.IsNullOrEmpty(config.DefaultSubNamespaceForViewModels)) {
+                throw new ArgumentException("DefaultSubNamespaceForViewModels field cannot be blank.");
             }
 
             if (String.IsNullOrEmpty(config.NameFormat))
@@ -65,27 +60,27 @@
             }
 
             NameTransformer.Clear();
-            _ViewSuffixList.Clear();
+            ViewSuffixList.Clear();
 
-            _DefaultSubNSViews = config.DefaultSubNSViews;
-            _DefaultSubNSViewModels = config.DefaultSubNSViewModels;
-            _NameFormat = config.NameFormat;
-            _UseNameSuffixesInMappings = config.UseNameSuffixesInMappings;
-            _ViewModelSuffix = config.ViewModelSuffix;
-            _ViewSuffixList.AddRange(config.ViewSuffixList);
-            _IncludeViewSuffixInVMNames = config.IncludeViewSuffixInVMNames;
+            defaultSubNsViews = config.DefaultSubNamespaceForViews;
+            defaultSubNsViewModels = config.DefaultSubNamespaceForViewModels;
+            nameFormat = config.NameFormat;
+            useNameSuffixesInMappings = config.UseNameSuffixesInMappings;
+            viewModelSuffix = config.ViewModelSuffix;
+            ViewSuffixList.AddRange(config.ViewSuffixList);
+            includeViewSuffixInVmNames = config.IncludeViewSuffixInViewModelNames;
 
             SetAllDefaults();
         }
 
         private static void SetAllDefaults()
         {
-            if (_UseNameSuffixesInMappings) {
+            if (useNameSuffixesInMappings) {
                 //Add support for all view suffixes
-                _ViewSuffixList.ForEach(v => { AddDefaultTypeMapping(v); });
+                ViewSuffixList.ForEach(AddDefaultTypeMapping);
             }
             else {
-                AddSubNamespaceMapping(_DefaultSubNSViews, _DefaultSubNSViewModels);
+                AddSubNamespaceMapping(defaultSubNsViews, defaultSubNsViewModels);
             }
         }
 
@@ -94,7 +89,7 @@
         /// </summary>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddDefaultTypeMapping(string viewSuffix = "View") {
-            if (!_UseNameSuffixesInMappings) {
+            if (!useNameSuffixesInMappings) {
                 return;
             }
 
@@ -102,7 +97,7 @@
             AddNamespaceMapping(String.Empty, String.Empty, viewSuffix);
 
             //Check for <Namespace>.Views.<NameSpace>.<BaseName><ViewSuffix> construct
-            AddSubNamespaceMapping(_DefaultSubNSViews, _DefaultSubNSViewModels, viewSuffix);
+            AddSubNamespaceMapping(defaultSubNsViews, defaultSubNsViewModels, viewSuffix);
         }
 
         /// <summary>
@@ -116,13 +111,13 @@
             var replist = new List<string>();
             Action<string> func;
 
-            var basegrp = "${basename}";
-            var interfacegrp = "${" + _InterfaceCaptureGroupName + "}";
+            const string basegrp = "${basename}";
+            var interfacegrp = "${" + InterfaceCaptureGroupName + "}";
 
-            if (_UseNameSuffixesInMappings) {
-                if (_ViewModelSuffix.Contains(viewSuffix) || !_IncludeViewSuffixInVMNames) {
+            if (useNameSuffixesInMappings) {
+                if (viewModelSuffix.Contains(viewSuffix) || !includeViewSuffixInVmNames) {
 
-                    var nameregex = String.Format(_NameFormat, basegrp, _ViewModelSuffix);
+                    var nameregex = String.Format(nameFormat, basegrp, viewModelSuffix);
                     
                     func = t => {
                         replist.Add(t + "I" + nameregex + interfacegrp);
@@ -132,7 +127,7 @@
                     };
                 }
                 else {
-                    var nameregex = String.Format(_NameFormat, basegrp, "${suffix}" + _ViewModelSuffix);
+                    var nameregex = String.Format(nameFormat, basegrp, "${suffix}" + viewModelSuffix);
                     func = t => {
                         replist.Add(t + "I" + nameregex + interfacegrp);
                         replist.Add(t + nameregex);
@@ -149,18 +144,18 @@
             nsTargetsRegEx.ToList().ForEach(t => func(t));
 
 
-            string suffix = _UseNameSuffixesInMappings ? viewSuffix : String.Empty;
+            string suffix = useNameSuffixesInMappings ? viewSuffix : String.Empty;
 
             var srcfilterregx = String.IsNullOrEmpty(nsSourceFilterRegEx) 
                 ? null
-                : String.Concat(nsSourceFilterRegEx, String.Format(_NameFormat, RegExHelper.NameRegEx, suffix), "$");
+                : String.Concat(nsSourceFilterRegEx, String.Format(nameFormat, RegExHelper.NameRegEx, suffix), "$");
             string rxbase = RegExHelper.GetNameCaptureGroup("basename");
             string rxsuffix = RegExHelper.GetCaptureGroup("suffix", suffix);
             
             //Add a dummy capture group -- place after the "$" so it can never capture anything
-            string rxinterface = RegExHelper.GetCaptureGroup(_InterfaceCaptureGroupName, String.Empty);
+            string rxinterface = RegExHelper.GetCaptureGroup(InterfaceCaptureGroupName, String.Empty);
             NameTransformer.AddRule(
-                String.Concat(nsSourceReplaceRegEx, String.Format(_NameFormat, rxbase, rxsuffix), "$", rxinterface),
+                String.Concat(nsSourceReplaceRegEx, String.Format(nameFormat, rxbase, rxsuffix), "$", rxinterface),
                 replist.ToArray(),
                 srcfilterregx
             );
@@ -174,7 +169,7 @@
         /// <param name="nsTargetRegEx">RegEx replace value for target namespace</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string nsTargetRegEx, string viewSuffix = "View") {
-            AddTypeMapping(nsSourceReplaceRegEx, nsSourceFilterRegEx, new string[] { nsTargetRegEx }, viewSuffix);
+            AddTypeMapping(nsSourceReplaceRegEx, nsSourceFilterRegEx, new[] { nsTargetRegEx }, viewSuffix);
         }
 
         /// <summary>
@@ -207,7 +202,7 @@
         /// <param name="nsTarget">Namespace of target type</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View") {
-            AddNamespaceMapping(nsSource, new string[] { nsTarget }, viewSuffix);
+            AddNamespaceMapping(nsSource, new[] { nsTarget }, viewSuffix);
         }
 
         /// <summary>
@@ -220,8 +215,8 @@
             //need to terminate with "." in order to concatenate with type name later
             var nsencoded = RegExHelper.NamespaceToRegEx(nsSource + ".");
 
-            string rxbeforesrc, rxbeforetgt, rxaftersrc, rxaftertgt;
-            rxbeforesrc = rxbeforetgt = rxaftersrc = rxaftertgt = String.Empty;
+            string rxbeforetgt, rxaftersrc, rxaftertgt;
+            string rxbeforesrc = rxbeforetgt = rxaftersrc = rxaftertgt = String.Empty;
 
             if (!String.IsNullOrEmpty(nsSource)) {
                 if (!nsSource.StartsWith("*")) {
@@ -249,7 +244,7 @@
         /// <param name="nsTarget">Subnamespace of target type</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
         public static void AddSubNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View") {
-            AddSubNamespaceMapping(nsSource, new string[] { nsTarget }, viewSuffix);
+            AddSubNamespaceMapping(nsSource, new[] { nsTarget }, viewSuffix);
         }
 
         /// <summary>
@@ -282,13 +277,11 @@
         public static Func<string, bool, IEnumerable<string>> TransformName = (typeName, includeInterfaces) => {
             Func<string, string> getReplaceString;
             if (includeInterfaces) {
-                getReplaceString = r => { return r; };
+                getReplaceString = r => r;
             }
             else {
-                var interfacegrpregex = @"\${" + _InterfaceCaptureGroupName + @"}$";
-                getReplaceString = r => {
-                    return Regex.IsMatch(r, interfacegrpregex) ? String.Empty : r;
-                };
+                var interfacegrpregex = @"\${" + InterfaceCaptureGroupName + @"}$";
+                getReplaceString = r => Regex.IsMatch(r, interfacegrpregex) ? String.Empty : r;
             }
             return NameTransformer.Transform(typeName, getReplaceString).Where(n => n != String.Empty);
         };
