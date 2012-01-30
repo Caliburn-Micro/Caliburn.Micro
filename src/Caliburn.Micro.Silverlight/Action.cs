@@ -129,8 +129,9 @@
             var target = e.NewValue;
             var containerKey = e.NewValue as string;
 
-            if(containerKey != null)
+            if (containerKey != null) {
                 target = IoC.GetInstance(null, containerKey);
+            }
 
             if(setContext && d is FrameworkElement) {
                 Log.Info("Setting DC of {0} to {1}.", d, target);

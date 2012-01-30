@@ -33,7 +33,12 @@
             isInitialized = true;
 
             if(Execute.InDesignMode) {
-                StartDesignTime();
+                try {
+                    StartDesignTime();
+                }catch {
+                    //if something fails at design-time, there's really nothing we can do...
+                    isInitialized = false;
+                }
             }
             else {
                 StartRuntime();
