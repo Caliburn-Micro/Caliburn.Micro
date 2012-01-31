@@ -26,10 +26,19 @@
             };
 
         /// <summary>
-        /// Custom converters used by the framework registered by detination type for which the will be selected.
+        /// Custom converters used by the framework registered by destination type for which they will be selected.
         /// The converter is passed the existing value to convert and a "context" object.
         /// </summary>
-        public static readonly Dictionary<Type, Func<object, object, object>> CustomConverters = new Dictionary<Type, Func<object, object, object>>();
+        public static readonly Dictionary<Type, Func<object, object, object>> CustomConverters =
+            new Dictionary<Type, Func<object, object, object>> {
+                {
+                    typeof(DateTime), (value, context) => {
+                        DateTime result;
+                        DateTime.TryParse(value.ToString(), out result);
+                        return result;
+                    }
+                }
+            };
 
         /// <summary>
         /// Determines the parameters that a method should be invoked with.
@@ -75,14 +84,13 @@
                 return GetDefaultValue(destinationType);
             }
 
-            if (CustomConverters.ContainsKey(destinationType)) {
-                return CustomConverters[destinationType](providedValue, context);
-            }
-
             var providedType = providedValue.GetType();
-
             if (destinationType.IsAssignableFrom(providedType)) {
                 return providedValue;
+            }
+
+            if (CustomConverters.ContainsKey(destinationType)) {
+                return CustomConverters[destinationType](providedValue, context);
             }
 
             try {
