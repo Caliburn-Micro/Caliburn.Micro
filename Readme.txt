@@ -1,0 +1,1 @@
+Thanks to Xceed, makers of Xceed DataGrid for WPF for sponsoring this project. They also have Silverlight and Windows Phone controls and libraries, too. Check them out at http://xceed.com
