@@ -14,9 +14,6 @@
     using Windows.UI.Core;
     using Windows.UI.Xaml.Controls;
     using Windows.ApplicationModel;
-    //using INotifyPropertyChanged = Windows.UI.Xaml.Data.INotifyPropertyChanged;
-    //using PropertyChangedEventArgs = Windows.UI.Xaml.Data.PropertyChangedEventArgs;
-    //using PropertyChangedEventHandler = Windows.UI.Xaml.Data.PropertyChangedEventHandler;
     using Windows.Foundation.Collections;
     using Windows.UI.Xaml;
 #else
@@ -148,7 +145,6 @@
 #if !SILVERLIGHT && !WinRT
     [Serializable]
 #endif
-
     /// <summary>
     ///   A base class that implements the infrastructure for property change notification and automatically performs UI thread marshalling.
     /// </summary>
@@ -163,7 +159,6 @@
 #if !SILVERLIGHT && !WinRT
         [field: NonSerialized]
 #endif
-
         /// <summary>
         ///   Occurs when a property value changes.
         /// </summary>
@@ -498,5 +493,4 @@
             return false;
         }
     }
-
 }
