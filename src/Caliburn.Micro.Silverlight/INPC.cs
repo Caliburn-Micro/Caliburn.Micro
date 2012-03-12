@@ -14,10 +14,11 @@
     using Windows.UI.Core;
     using Windows.UI.Xaml.Controls;
     using Windows.ApplicationModel;
-    using INotifyPropertyChanged = Windows.UI.Xaml.Data.INotifyPropertyChanged;
-    using PropertyChangedEventArgs = Windows.UI.Xaml.Data.PropertyChangedEventArgs;
-    using PropertyChangedEventHandler = Windows.UI.Xaml.Data.PropertyChangedEventHandler;
+    //using INotifyPropertyChanged = Windows.UI.Xaml.Data.INotifyPropertyChanged;
+    //using PropertyChangedEventArgs = Windows.UI.Xaml.Data.PropertyChangedEventArgs;
+    //using PropertyChangedEventHandler = Windows.UI.Xaml.Data.PropertyChangedEventHandler;
     using Windows.Foundation.Collections;
+    using Windows.UI.Xaml;
 #else
     using System.Windows;
     using System.Windows.Threading;
@@ -81,7 +82,7 @@
                 }
             });
 #elif WinRT
-            var dispatcher = new UserControl().Dispatcher;
+            var dispatcher = Window.Current.Dispatcher;
 
             SetUIThreadMarshaller(action => {
                 if (dispatcher.HasThreadAccess)
@@ -242,22 +243,6 @@
         }
     }
 
-#if WinRT
-    public interface IObservableCollection<T> : IObservableVector<T>, INotifyPropertyChangedEx, INotifyCollectionChanged {
-        /// <summary>
-        ///   Adds the range.
-        /// </summary>
-        /// <param name = "items">The items.</param>
-        void AddRange(IEnumerable<T> items);
-
-        /// <summary>
-        ///   Removes the range.
-        /// </summary>
-        /// <param name = "items">The items.</param>
-        void RemoveRange(IEnumerable<T> items);
-    }
-#else
-
     /// <summary>
     ///   Represents a collection that is observable.
     /// </summary>
@@ -276,8 +261,6 @@
         void RemoveRange(IEnumerable<T> items);
     }
 
-#endif
-
     /// <summary>
     /// A base collection class that supports automatic UI thread marshalling.
     /// </summary>
@@ -286,18 +269,7 @@
     [Serializable]
 #endif
     public class BindableCollection<T> : ObservableCollection<T>, IObservableCollection<T> {
-#if WinRT
-        /// <summary>
-        /// Occurs when the vector changes.
-        /// </summary>
-        public event VectorChangedEventHandler<T> VectorChanged = delegate { };
 
-        /// <summary>
-        ///   Occurs when a property value changes.
-        /// </summary>
-        public new event PropertyChangedEventHandler PropertyChanged = delegate { };
-#endif
-        
         /// <summary>
         ///   Initializes a new instance of the <see cref = "Caliburn.Micro.BindableCollection{T}" /> class.
         /// </summary>
@@ -454,29 +426,6 @@
         /// <param name = "e">Arguments of the event being raised.</param>
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e) {
             if (IsNotifying) {
-#if WinRT
-                var args = new VectorChangedEventArgs();
-                switch (e.Action) {
-                    case NotifyCollectionChangedAction.Add:
-                        args.CollectionChange = CollectionChange.ItemInserted;
-                        args.Index = (uint)e.NewStartingIndex;
-                        break;
-                    case NotifyCollectionChangedAction.Remove:
-                        args.CollectionChange = CollectionChange.ItemRemoved;
-                        args.Index = (uint)e.OldStartingIndex;
-                        break;
-                    case NotifyCollectionChangedAction.Replace:
-                        args.CollectionChange = CollectionChange.ItemChanged;
-                        args.Index = (uint)e.NewStartingIndex;
-                        break;
-                    case NotifyCollectionChangedAction.Reset:
-                    case NotifyCollectionChangedAction.Move:
-                        args.CollectionChange = CollectionChange.Reset;
-                        break;
-                }
-
-                VectorChanged(this, args);
-#endif
                 base.OnCollectionChanged(e);
             }
         }
@@ -487,22 +436,9 @@
         /// <param name = "e">The event data to report in the event.</param>
         protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e) {
             if (IsNotifying) {
-#if WinRT
-                PropertyChanged(this, new PropertyChangedEventArgs(e.PropertyName));
-#endif
                 base.OnPropertyChanged(e);
             }
         }
-
-#if WinRT
-        /// <summary>
-        ///   Raises the PropertyChanged event with the provided arguments.
-        /// </summary>
-        /// <param name = "e">The event data to report in the event.</param>
-        protected void OnPropertyChanged(PropertyChangedEventArgs e) {
-            OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(e.PropertyName));
-        }
-#endif
 
         void RaisePropertyChangedEventImmediately(PropertyChangedEventArgs e) {
             OnPropertyChanged(e);
@@ -563,10 +499,4 @@
         }
     }
 
-#if WinRT
-    public class VectorChangedEventArgs : IVectorChangedEventArgs {
-        public CollectionChange CollectionChange { get; set; }
-        public uint Index { get; set; }
-    }
-#endif
 }

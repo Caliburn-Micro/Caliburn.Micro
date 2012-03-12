@@ -94,11 +94,11 @@
 #if WinRT
             var serviceInfo = typeof(TService).GetTypeInfo();
             var types = from type in assembly.DefinedTypes
-                        let info = type.GetTypeInfo()
+                        let info = type
                         where serviceInfo.IsAssignableFrom(info)
                               && !info.IsAbstract
                               && !info.IsInterface
-                              && filter(type)
+                              && filter(type.GetType())
                         select type;
 #else
             var serviceType = typeof(TService);
@@ -111,7 +111,11 @@
 #endif
 
             foreach (var type in types) {
+#if WinRT
+                container.RegisterSingleton(typeof(TService), null, type.GetType());
+#else
                 container.RegisterSingleton(typeof(TService), null, type);
+#endif
             }
 
             return container;

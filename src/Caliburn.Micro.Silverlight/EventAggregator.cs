@@ -163,7 +163,7 @@
 
                 var handlerInfo = typeof(IHandle).GetTypeInfo();
                 var interfaces = handler.GetType().GetTypeInfo().ImplementedInterfaces
-                    .Where(x => handlerInfo.IsAssignableFrom(x.GetTypeInfo()) && x.IsGenericType);
+                    .Where(x => handlerInfo.IsAssignableFrom(x.GetTypeInfo()) && x.GetTypeInfo().IsGenericType);
 
                 foreach (var @interface in interfaces) {
                     var type = @interface.GenericTypeArguments[0];
