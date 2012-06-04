@@ -81,10 +81,11 @@
 #elif WinRT
             var dispatcher = Window.Current.Dispatcher;
 
-            SetUIThreadMarshaller(action => {
+            SetUIThreadMarshaller(async action => {
                 if (dispatcher.HasThreadAccess)
                     action();
-                else dispatcher.Invoke(CoreDispatcherPriority.Normal, (s, e) => action(), dispatcher, null);
+                else
+                    await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
             });
 #else
             var dispatcher = Dispatcher.CurrentDispatcher;
