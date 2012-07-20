@@ -1,5 +1,4 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -8,11 +7,11 @@
     using System.Windows.Threading;
 
     /// <summary>
-    /// Instantiate this class in order to configure the framework.
+    /// Inherit from this class in order to customize the configuration of the framework.
     /// </summary>
-    public class Bootstrapper {
+    public class BootstrapperBase {
         readonly bool useApplication;
-        readonly bool isInitialized;
+        bool isInitialized;
 
         /// <summary>
         /// The application.
@@ -23,9 +22,11 @@
         /// Creates an instance of the bootstrapper.
         /// </summary>
         /// <param name="useApplication">Set this to false when hosting Caliburn.Micro inside and Office or WinForms application. The default is true.</param>
-        public Bootstrapper(bool useApplication = true) {
+        protected BootstrapperBase(bool useApplication = true) {
             this.useApplication = useApplication;
+        }
 
+        public void Start() {
             if(isInitialized) {
                 return;
             }
@@ -213,12 +214,29 @@
 #endif
     }
 
+    /// <summary>
+    /// Instantiate this class in order to configure the framework.
+    /// </summary>
+    public class Bootstrapper : BootstrapperBase {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Bootstrapper"/> class.
+        /// </summary>
+        /// <param name="useApplication">Set this to false when hosting Caliburn.Micro inside and Office or WinForms application. The default is true.</param>
+        public Bootstrapper(bool useApplication = true)
+            : base(useApplication) {
+            Start();
+        }
+    }
+
 #if !WP71
     /// <summary>
     /// A strongly-typed version of <see cref="Bootstrapper"/> that specifies the type of root model to create for the application.
     /// </summary>
     /// <typeparam name="TRootModel">The type of root model for the application.</typeparam>
     public class Bootstrapper<TRootModel> : Bootstrapper {
+
+        public Bootstrapper(bool useApplication = true) : base(useApplication) {}
+
         /// <summary>
         /// Override this to add custom behavior to execute after the application starts.
         /// </summary>
