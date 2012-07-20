@@ -1,11 +1,9 @@
-﻿using System.Reflection;
-
-namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
@@ -22,9 +20,14 @@ namespace Caliburn.Micro
     [DefaultTrigger(typeof(ButtonBase), typeof(EventTrigger), "Click")] 
     [ContentProperty("Parameters")]
     [TypeConstraint(typeof(FrameworkElement))]
-    public class ActionMessage : TriggerAction<FrameworkElement>, IHaveParameters
-    {
+    public class ActionMessage : TriggerAction<FrameworkElement>, IHaveParameters {
         static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
+        ActionExecutionContext context;
+
+#if WP71
+        internal AppBarButton buttonSource;
+        internal AppBarMenuItem menuItemSource;
+#endif
 
         internal static readonly DependencyProperty HandlerProperty = DependencyProperty.RegisterAttached(
             "Handler",
@@ -67,18 +70,10 @@ namespace Caliburn.Micro
             null
             );
 
-        ActionExecutionContext context;
-
-#if WP7
-        internal AppBarButton buttonSource;
-        internal AppBarMenuItem menuItemSource;
-#endif
-
         /// <summary>
         /// Creates an instance of <see cref="ActionMessage"/>.
         /// </summary>
-        public ActionMessage()
-        {
+        public ActionMessage() {
             SetValue(ParametersProperty, new AttachedCollection<Parameter>());
         }
 
@@ -87,8 +82,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <value>The name of the method.</value>
         [Category("Common Properties")]
-        public string MethodName
-        {
+        public string MethodName {
             get { return (string)GetValue(MethodNameProperty); }
             set { SetValue(MethodNameProperty, value); }
         }
@@ -98,8 +92,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <value>The parameters.</value>
         [Category("Common Properties")]
-        public AttachedCollection<Parameter> Parameters
-        {
+        public AttachedCollection<Parameter> Parameters {
             get { return (AttachedCollection<Parameter>)GetValue(ParametersProperty); }
         }
 
@@ -111,10 +104,8 @@ namespace Caliburn.Micro
         /// <summary>
         /// Called after the action is attached to an AssociatedObject.
         /// </summary>
-        protected override void OnAttached()
-        {
-            if (!Execute.InDesignMode)
-            {
+        protected override void OnAttached() {
+            if (!Execute.InDesignMode) {
                 Parameters.Attach(AssociatedObject);
                 Parameters.Apply(x => x.MakeAwareOf(this));
 
@@ -129,16 +120,14 @@ namespace Caliburn.Micro
             base.OnAttached();
         }
 
-        static void HandlerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
+        static void HandlerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             ((ActionMessage)d).UpdateContext();
         }
 
         /// <summary>
         /// Called when the action is being detached from its AssociatedObject, but before it has actually occurred.
         /// </summary>
-        protected override void OnDetaching()
-        {
+        protected override void OnDetaching() {
             if (!Execute.InDesignMode)
             {
                 Detaching(this, EventArgs.Empty);
@@ -149,10 +138,9 @@ namespace Caliburn.Micro
             base.OnDetaching();
         }
 
-        void ElementLoaded(object sender, RoutedEventArgs e)
-        {
+        void ElementLoaded(object sender, RoutedEventArgs e) {
             UpdateContext();
-#if !WP7
+
             DependencyObject currentElement;
             if(context.View == null) {
                 currentElement = AssociatedObject;
@@ -179,11 +167,9 @@ namespace Caliburn.Micro
 #endif
 
             BindingOperations.SetBinding(this, HandlerProperty, binding);
-#endif
         }
 
-        void UpdateContext()
-        {
+        void UpdateContext() {
             if (context != null)
                 context.Dispose();
 
@@ -203,13 +189,13 @@ namespace Caliburn.Micro
         protected override void Invoke(object eventArgs) {
             Log.Info("Invoking {0}.", this);
 
-            if(context == null)
+            if (context == null) {
                 UpdateContext();
+            }
 
             if(context.Target == null || context.View == null) {
                 PrepareContext(context);
-                if (context.Target == null)
-                {
+                if (context.Target == null) {
                     var ex = new Exception(string.Format("No target found for method {0}.", context.Message.MethodName));
                     Log.Error(ex);
 
@@ -217,12 +203,13 @@ namespace Caliburn.Micro
                         return;
                     throw ex;
                 }
-                if (!UpdateAvailabilityCore())
+
+                if (!UpdateAvailabilityCore()) {
                     return;
+                }
             }
 
-            if (context.Method == null)
-            {
+            if (context.Method == null) {
                 var ex = new Exception(string.Format("Method {0} not found on target of type {1}.", context.Message.MethodName, context.Target.GetType()));
                 Log.Error(ex);
 
@@ -233,8 +220,9 @@ namespace Caliburn.Micro
 
             context.EventArgs = eventArgs;
 
-            if (EnforceGuardsDuringInvocation && context.CanExecute != null && !context.CanExecute())
+            if (EnforceGuardsDuringInvocation && context.CanExecute != null && !context.CanExecute()) {
                 return;
+            }
 
             InvokeAction(context);
             context.EventArgs = null;
@@ -243,8 +231,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Forces an update of the UI's Enabled/Disabled state based on the the preconditions associated with the method.
         /// </summary>
-        public void UpdateAvailability()
-        {
+        public void UpdateAvailability() {
             if (context == null)
                 return;
 
@@ -265,8 +252,7 @@ namespace Caliburn.Micro
         /// <returns>
         /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
         /// </returns>
-        public override string ToString()
-        {
+        public override string ToString() {
             return "Action: " + MethodName;
         }
 
@@ -278,28 +264,31 @@ namespace Caliburn.Micro
             var returnValue = context.Method.Invoke(context.Target, values);
 
             var result = returnValue as IResult;
-            if (result != null)
+            if (result != null) {
                 returnValue = new[] { result };
+            }
 
             var enumerable = returnValue as IEnumerable<IResult>;
-            if(enumerable != null)
+            if (enumerable != null) {
                 Coroutine.BeginExecute(enumerable.GetEnumerator(), context);
-            else if (returnValue is IEnumerator<IResult>)
+            }
+            else if (returnValue is IEnumerator<IResult>) {
                 Coroutine.BeginExecute((IEnumerator<IResult>)returnValue, context);
+            }
         };
 
         /// <summary>
         /// Applies an availability effect, such as IsEnabled, to an element.
         /// </summary>
         /// <remarks>Returns a value indicating whether or not the action is available.</remarks>
-        public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context =>
-        {
-#if WP7
+        public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context => {
+#if WP71
             if (context.Message.buttonSource != null) {
                 if(context.CanExecute != null)
                     context.Message.buttonSource.IsEnabled = context.CanExecute();
                 return context.Message.buttonSource.IsEnabled;
             }
+
             if (context.Message.menuItemSource != null) {
                 if(context.CanExecute != null)
                     context.Message.menuItemSource.IsEnabled = context.CanExecute();
@@ -308,21 +297,26 @@ namespace Caliburn.Micro
 #endif
 
 #if SILVERLIGHT
-            if (!(context.Source is Control))
+            if (!(context.Source is Control)) {
                 return true;
+            }
 #endif
 
 #if SILVERLIGHT
             var source = (Control)context.Source;
-            if (ConventionManager.HasBinding(source, Control.IsEnabledProperty))
+            if (ConventionManager.HasBinding(source, Control.IsEnabledProperty)) {
                 return source.IsEnabled;
+            }
 #else
             var source = context.Source;
-            if (ConventionManager.HasBinding(source, UIElement.IsEnabledProperty))
+            if (ConventionManager.HasBinding(source, UIElement.IsEnabledProperty)){
                 return source.IsEnabled;
+            }
 #endif
-            if (context.CanExecute != null) 
+            if (context.CanExecute != null) {
                 source.IsEnabled = context.CanExecute();
+            }
+
             return source.IsEnabled;
         };
 
@@ -385,15 +379,15 @@ namespace Caliburn.Micro
         /// </summary>
         public static Action<ActionExecutionContext> PrepareContext = context =>{
             SetMethodBinding(context);
-            if (context.Target == null || context.Method == null)
+            if (context.Target == null || context.Method == null) {
                 return;
+            }
 
             var guardName = "Can" + context.Method.Name;
             var targetType = context.Target.GetType();
             var guard = TryFindGuardMethod(context);
 
-            if(guard == null)
-            {
+            if(guard == null) {
                 var inpc = context.Target as INotifyPropertyChanged;
                 if(inpc == null)
                     return;
@@ -433,7 +427,7 @@ namespace Caliburn.Micro
 		/// </summary>
 		/// <param name="context">The execution context</param>
 		/// <returns>A MethodInfo, if found; null otherwise</returns>
-		private static MethodInfo TryFindGuardMethod(ActionExecutionContext context) {
+		static MethodInfo TryFindGuardMethod(ActionExecutionContext context) {
 			var guardName = "Can" + context.Method.Name;
             var targetType = context.Target.GetType();
             var guard = targetType.GetMethod(guardName);
@@ -447,11 +441,14 @@ namespace Caliburn.Micro
 			if (guardPars.Length == 0) return guard;
 			if (guardPars.Length != actionPars.Length) return null;
 
-			var comparisons = guardPars.Zip(
-					context.Method.GetParameters(),
-					(x, y) => x.ParameterType.Equals(y.ParameterType)
-				);
-			if (comparisons.Any(x => !x)) return null;
+		    var comparisons = guardPars.Zip(
+		        context.Method.GetParameters(),
+		        (x, y) => x.ParameterType.Equals(y.ParameterType)
+		        );
+
+			if (comparisons.Any(x => !x)) {
+			    return null;
+			}
 
 			return guard;
 		}

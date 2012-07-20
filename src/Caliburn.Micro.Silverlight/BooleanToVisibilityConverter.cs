@@ -1,5 +1,4 @@
 ﻿#if SILVERLIGHT
-
 namespace Caliburn.Micro
 {
     using System;
@@ -10,8 +9,7 @@ namespace Caliburn.Micro
     /// <summary>
     /// An <see cref="IValueConverter"/> which converts <see cref="bool"/> to <see cref="Visibility"/>.
     /// </summary>
-    public class BooleanToVisibilityConverter : IValueConverter
-    {
+    public class BooleanToVisibilityConverter : IValueConverter {
         /// <summary>
         /// Converts a boolean value to a <see cref="Visibility"/> value.
         /// </summary>
@@ -22,8 +20,7 @@ namespace Caliburn.Micro
         /// <returns>
         /// A converted value. If the method returns null, the valid null value is used.
         /// </returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
             return ((bool)value) ? Visibility.Visible : Visibility.Collapsed;
         }
 
@@ -37,8 +34,7 @@ namespace Caliburn.Micro
         /// <returns>
         /// A converted value. If the method returns null, the valid null value is used.
         /// </returns>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
             return ((Visibility)value) == Visibility.Visible;
         }
     }

@@ -19,8 +19,7 @@
     /// <summary>
     /// Used to configure the conventions used by the framework to apply bindings and create actions.
     /// </summary>
-    public static class ConventionManager
-    {
+    public static class ConventionManager {
         static readonly ILog Log = LogManager.GetLog(typeof(ConventionManager));
 
         /// <summary>
@@ -91,6 +90,28 @@
         };
 
         /// <summary>
+        /// Creates a binding and sets it on the element, applying the appropriate conventions.
+        /// </summary>
+        /// <param name="viewModelType"></param>
+        /// <param name="path"></param>
+        /// <param name="property"></param>
+        /// <param name="element"></param>
+        /// <param name="convention"></param>
+        /// <param name="bindableProperty"></param>
+        public static Action<Type, string, PropertyInfo, FrameworkElement, ElementConvention, DependencyProperty> SetBinding =
+            (viewModelType, path, property, element, convention, bindableProperty) => {
+                var binding = new Binding(path);
+
+                ApplyBindingMode(binding, property);
+                ApplyValueConverter(binding, bindableProperty, property);
+                ApplyStringFormat(binding, convention, property);
+                ApplyValidation(binding, viewModelType, property);
+                ApplyUpdateSourceTrigger(bindableProperty, element, binding, property);
+
+                BindingOperations.SetBinding(element, bindableProperty, binding);
+            };
+
+        /// <summary>
         /// Applies the appropriate binding mode to the binding.
         /// </summary>
         public static Action<Binding, PropertyInfo> ApplyBindingMode = (binding, property) =>{
@@ -102,14 +123,16 @@
         /// Determines whether or not and what type of validation to enable on the binding.
         /// </summary>
         public static Action<Binding, Type, PropertyInfo> ApplyValidation = (binding, viewModelType, property) => {
-#if SILVERLIGHT && !WP7
-            if(typeof(INotifyDataErrorInfo).IsAssignableFrom(viewModelType))
+#if SILVERLIGHT
+            if (typeof(INotifyDataErrorInfo).IsAssignableFrom(viewModelType)) {
                 binding.ValidatesOnNotifyDataErrors = true;
+                binding.ValidatesOnExceptions = true;
+            }
 #endif
-#if !WP7
-            if(typeof(IDataErrorInfo).IsAssignableFrom(viewModelType))
+            if (typeof(IDataErrorInfo).IsAssignableFrom(viewModelType)) {
                 binding.ValidatesOnDataErrors = true;
-#endif
+                binding.ValidatesOnExceptions = true;
+            }
         };
 
         /// <summary>
@@ -124,17 +147,15 @@
         /// Determines whether a custom string format is needed and applies it to the binding.
         /// </summary>
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyStringFormat = (binding, convention, property) =>{
-#if !WP7
             if(typeof(DateTime).IsAssignableFrom(property.PropertyType))
                 binding.StringFormat = "{0:MM/dd/yyyy}";
-#endif
         };
 
         /// <summary>
         /// Determines whether a custom update source trigger should be applied to the binding.
         /// </summary>
         public static Action<DependencyProperty, DependencyObject, Binding, PropertyInfo> ApplyUpdateSourceTrigger = (bindableProperty, element, binding, info) =>{
-#if SILVERLIGHT
+#if SILVERLIGHT && !SL5
             ApplySilverlightTriggers(
                 element, 
                 bindableProperty, 
@@ -147,38 +168,9 @@
 #endif
         };
 
-        /// <summary>
-        /// Determines whether a particular dependency property already has a binding on the provided element.
-        /// </summary>
-        public static Func<FrameworkElement, DependencyProperty, bool> HasBinding = (element, property) => {
-            return element.GetBindingExpression(property) != null;
-        };
-
-        /// <summary>
-        /// Creates a binding and sets it on the element.
-        /// </summary>
-        public static Func<Type, string, PropertyInfo, FrameworkElement, ElementConvention, bool> SetBinding =
-            (viewModelType, path, property, element, convention) => {
-                var bindableProperty = convention.GetBindableProperty(element);
-                if(bindableProperty == null || HasBinding(element, bindableProperty))
-                    return false;
-
-                var binding = new Binding(path);
-
-                ApplyBindingMode(binding, property);
-                ApplyValueConverter(binding, bindableProperty, property);
-                ApplyStringFormat(binding, convention, property);
-                ApplyValidation(binding, viewModelType, property);
-                ApplyUpdateSourceTrigger(bindableProperty, element, binding, property);
-
-                BindingOperations.SetBinding(element, bindableProperty, binding);
-
-                return true;
-            };
-
         static ConventionManager()
         {
-#if !WP7
+#if !WP71
             AddElementConvention<DatePicker>(DatePicker.SelectedDateProperty, "SelectedDate", "SelectedDateChanged");
 #endif
 #if SILVERLIGHT
@@ -199,7 +191,8 @@
             AddElementConvention<TreeView>(TreeView.ItemsSourceProperty, "SelectedItem", "SelectedItemChanged");
             AddElementConvention<TabControl>(TabControl.ItemsSourceProperty, "ItemsSource", "SelectionChanged")
                 .ApplyBinding = (viewModelType, path, property, element, convention) => {
-                    if(!SetBinding(viewModelType, path, property, element, convention))
+                    var bindableProperty = convention.GetBindableProperty(element);
+                    if(!SetBindingWithoutBindingOverwrite(viewModelType, path, property, element, convention, bindableProperty))
                         return false;
 
                     var tabControl = (TabControl)element;
@@ -216,7 +209,7 @@
                     ConfigureSelectedItem(element, Selector.SelectedItemProperty, viewModelType, path);
 
                     if(string.IsNullOrEmpty(tabControl.DisplayMemberPath))
-                        ApplyHeaderTemplate(tabControl, TabControl.ItemTemplateProperty, viewModelType);
+                        ApplyHeaderTemplate(tabControl, TabControl.ItemTemplateProperty, TabControl.ItemTemplateSelectorProperty, viewModelType);
 
                     return true;
                 };
@@ -232,8 +225,9 @@
             AddElementConvention<ProgressBar>(ProgressBar.ValueProperty, "Value", "ValueChanged");
             AddElementConvention<Selector>(Selector.ItemsSourceProperty, "SelectedItem", "SelectionChanged")
                 .ApplyBinding = (viewModelType, path, property, element, convention) => {
-                    if (!SetBinding(viewModelType, path, property, element, convention))
+                    if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, ItemsControl.ItemsSourceProperty)) {
                         return false;
+                    }
 
                     ConfigureSelectedItem(element, Selector.SelectedItemProperty,viewModelType, path);
                     ApplyItemTemplate((ItemsControl)element, property);
@@ -242,8 +236,9 @@
                 };
             AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", "Loaded")
                 .ApplyBinding = (viewModelType, path, property, element, convention) => {
-                    if (!SetBinding(viewModelType, path, property, element, convention))
+                    if(!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, ItemsControl.ItemsSourceProperty)) {
                         return false;
+                    }
 
                     ApplyItemTemplate((ItemsControl)element, property);
 
@@ -292,8 +287,7 @@
         /// Adds an element convention.
         /// </summary>
         /// <param name="convention"></param>
-        public static ElementConvention AddElementConvention(ElementConvention convention)
-        {
+        public static ElementConvention AddElementConvention(ElementConvention convention) {
             return ElementConventions[convention.ElementType] = convention;
         }
 
@@ -303,14 +297,55 @@
         /// <param name="elementType">The type of element to locate the convention for.</param>
         /// <returns>The convention if found, null otherwise.</returns>
         /// <remarks>Searches the class hierarchy for conventions.</remarks>
-        public static ElementConvention GetElementConvention(Type elementType)
-        {
+        public static ElementConvention GetElementConvention(Type elementType) {
             if (elementType == null)
                 return null;
 
             ElementConvention propertyConvention;
             ElementConventions.TryGetValue(elementType, out propertyConvention);
             return propertyConvention ?? GetElementConvention(elementType.BaseType);
+        }
+
+        /// <summary>
+        /// Determines whether a particular dependency property already has a binding on the provided element.
+        /// </summary>
+        public static bool HasBinding(FrameworkElement element, DependencyProperty property) {
+            return element.GetBindingExpression(property) != null;
+        }
+
+        /// <summary>
+        /// Creates a binding and sets it on the element, guarding against pre-existing bindings.
+        /// </summary>
+        public static bool SetBindingWithoutBindingOverwrite(Type viewModelType, string path, PropertyInfo property, FrameworkElement element, ElementConvention convention, DependencyProperty bindableProperty) {
+            if(bindableProperty == null || HasBinding(element, bindableProperty)) {
+                return false;
+            }
+
+            SetBinding(viewModelType, path, property, element, convention, bindableProperty);
+            return true;
+        }
+
+        /// <summary>
+        /// Creates a binding and set it on the element, guarding against pre-existing bindings and pre-existing values.
+        /// </summary>
+        /// <param name="viewModelType"></param>
+        /// <param name="path"></param>
+        /// <param name="property"></param>
+        /// <param name="element"></param>
+        /// <param name="convention"></param>
+        /// <param name="bindableProperty"> </param>
+        /// <returns></returns>
+        public static bool SetBindingWithoutBindingOrValueOverwrite(Type viewModelType, string path, PropertyInfo property, FrameworkElement element, ElementConvention convention, DependencyProperty bindableProperty) {
+            if(bindableProperty == null || HasBinding(element, bindableProperty)) {
+                return false;
+            }
+
+            if(element.GetValue(bindableProperty) != null) {
+                return false;
+            }
+
+            SetBinding(viewModelType, path, property, element, convention, bindableProperty);
+            return true;
         }
 
         /// <summary>
@@ -322,16 +357,18 @@
             if (!string.IsNullOrEmpty(itemsControl.DisplayMemberPath)
                 || HasBinding(itemsControl, ItemsControl.DisplayMemberPathProperty)
                     || itemsControl.ItemTemplate != null
-                        || !property.PropertyType.IsGenericType)
+                        || !property.PropertyType.IsGenericType) {
                 return;
+            }
 
-#if !WP7
+#if !WP71
             var itemType = property.PropertyType.GetGenericArguments().First();
-            if (itemType.IsValueType || typeof(string).IsAssignableFrom(itemType))
+            if (itemType.IsValueType || typeof(string).IsAssignableFrom(itemType)) {
                 return;
+            }
 #endif
 
-#if !SILVERLIGHT && !WP7
+#if NET
             if (itemsControl.ItemTemplateSelector == null){
                 itemsControl.ItemTemplate = DefaultItemTemplate;
                 Log.Info("ItemTemplate applied to {0}.", itemsControl.Name);
@@ -349,35 +386,62 @@
         /// <param name="selectedItemProperty">The SelectedItem property.</param>
         /// <param name="viewModelType">The view model type.</param>
         /// <param name="path">The property path.</param>
-        public static void ConfigureSelectedItem(FrameworkElement selector, DependencyProperty selectedItemProperty, Type viewModelType, string path) {
-            if(HasBinding(selector, selectedItemProperty))
-                return;
-
-            var index = path.LastIndexOf('.');
-            index = index == -1 ? 0 : index + 1;
-            var baseName = path.Substring(index);
-
-            foreach (var potentialName in DerivePotentialSelectionNames(baseName)) {
-                if (viewModelType.GetPropertyCaseInsensitive(potentialName) != null) {
-                    var selectionPath = path.Replace(baseName, potentialName);
-                    BindingOperations.SetBinding(selector, selectedItemProperty, new Binding(selectionPath) { Mode = BindingMode.TwoWay });
-                    Log.Info("SelectedItem binding applied to {0}.", selector.Name);
+        public static Action<FrameworkElement, DependencyProperty, Type, string> ConfigureSelectedItem =
+            (selector, selectedItemProperty, viewModelType, path) => {
+                if (HasBinding(selector, selectedItemProperty)) {
                     return;
                 }
-            }
-        }
+
+                var index = path.LastIndexOf('.');
+                index = index == -1 ? 0 : index + 1;
+                var baseName = path.Substring(index);
+
+                foreach(var potentialName in DerivePotentialSelectionNames(baseName)) {
+                    if(viewModelType.GetPropertyCaseInsensitive(potentialName) != null) {
+                        var selectionPath = path.Replace(baseName, potentialName);
+                        var binding = new Binding(selectionPath) { Mode = BindingMode.TwoWay };
+                        var shouldApplyBinding = ConfigureSelectedItemBinding(selector, selectedItemProperty, viewModelType, selectionPath, binding);
+                        if(shouldApplyBinding) {
+                            BindingOperations.SetBinding(selector, selectedItemProperty, binding);
+                            Log.Info("SelectedItem binding applied to {0}.", selector.Name);
+                            return;
+                        }
+
+                        Log.Info("SelectedItem binding not applied to {0} due to 'ConfigureSelectedItemBinding' customization.", selector.Name);
+                    }
+                }
+            };
+
+		/// <summary>
+		/// Configures the SelectedItem binding for matched selection path.
+		/// </summary>
+		/// <param name="selector">The element that has a SelectedItem property.</param>
+		/// <param name="selectedItemProperty">The SelectedItem property.</param>
+		/// <param name="viewModelType">The view model type.</param>
+		/// <param name="selectionPath">The property path.</param>
+		/// <param name="binding">The binding to configure.</param>
+		/// <returns>A bool indicating whether to apply binding</returns>
+		public static Func<FrameworkElement, DependencyProperty, Type, string, Binding, bool> ConfigureSelectedItemBinding =
+			(selector, selectedItemProperty, viewModelType, selectionPath, binding) => {
+				return true;
+			};
 
         /// <summary>
         /// Applies a header template based on <see cref="IHaveDisplayName"/>
         /// </summary>
         /// <param name="element"></param>
         /// <param name="headerTemplateProperty"></param>
+        /// <param name="headerTemplateSelectorProperty"> </param>
         /// <param name="viewModelType"></param>
-        public static void ApplyHeaderTemplate(FrameworkElement element, DependencyProperty headerTemplateProperty, Type viewModelType) {
+        public static void ApplyHeaderTemplate(FrameworkElement element, DependencyProperty headerTemplateProperty, DependencyProperty headerTemplateSelectorProperty, Type viewModelType) {
             var template = element.GetValue(headerTemplateProperty);
+            var selector = headerTemplateSelectorProperty != null
+                               ? element.GetValue(headerTemplateSelectorProperty)
+                               : null;
 
-            if (template != null || !typeof(IHaveDisplayName).IsAssignableFrom(viewModelType))
+            if(template != null || selector != null || !typeof(IHaveDisplayName).IsAssignableFrom(viewModelType)) {
                 return;
+            }
 
             element.SetValue(headerTemplateProperty, DefaultHeaderTemplate);
             Log.Info("Header template applied to {0}.", element.Name);
@@ -392,20 +456,22 @@
         public static PropertyInfo GetPropertyCaseInsensitive(this Type type, string propertyName) {
             var typeList = new List<Type> { type };
 
-            if (type.IsInterface)
+            if (type.IsInterface) {
                 typeList.AddRange(type.GetInterfaces());
+            }
 
             var flags = BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance;
 
-            if (IncludeStaticProperties)
+            if (IncludeStaticProperties) {
                 flags = flags | BindingFlags.Static;
+            }
 
             return typeList
                 .Select(interfaceType => interfaceType.GetProperty(propertyName, flags))
                 .FirstOrDefault(property => property != null);
         }
 
-#if SILVERLIGHT
+#if SILVERLIGHT && !SL5
         /// <summary>
         /// Accounts for the lack of UpdateSourceTrigger in silverlight.
         /// </summary>
@@ -416,16 +482,12 @@
         /// <param name="binding">The binding if available.</param>
         public static void ApplySilverlightTriggers(DependencyObject element, DependencyProperty dependencyProperty, Func<FrameworkElement, BindingExpression> expressionSource, PropertyInfo property, Binding binding){
             var textBox = element as TextBox;
-            if (textBox != null && dependencyProperty == TextBox.TextProperty)
-            {
-                if (property != null)
-                {
+            if (textBox != null && dependencyProperty == TextBox.TextProperty) {
+                if (property != null) {
                     var typeCode = Type.GetTypeCode(property.PropertyType);
-                    if (typeCode == TypeCode.Single || typeCode == TypeCode.Double || typeCode == TypeCode.Decimal)
-                    {
+                    if (typeCode == TypeCode.Single || typeCode == TypeCode.Double || typeCode == TypeCode.Decimal) {
                         binding.UpdateSourceTrigger = UpdateSourceTrigger.Explicit;
-                        textBox.KeyUp += delegate
-                        {
+                        textBox.KeyUp += delegate {
                             var start = textBox.SelectionStart;
                             var text = textBox.Text;
 
@@ -443,8 +505,7 @@
             }
 
             var passwordBox = element as PasswordBox;
-            if (passwordBox != null && dependencyProperty == PasswordBox.PasswordProperty)
-            {
+            if (passwordBox != null && dependencyProperty == PasswordBox.PasswordProperty) {
                 passwordBox.PasswordChanged += delegate { expressionSource(passwordBox).UpdateSource(); };
                 return;
             }

@@ -62,8 +62,9 @@
                 /// <param name="close">Inidicates whether this instance will be closed.</param>
                 protected override void OnDeactivate(bool close) {
                     items.OfType<IDeactivate>().Apply(x => x.Deactivate(close));
-                    if(close)
+                    if (close) {
                         items.Clear();
+                    }
                 }
 
                 /// <summary>
@@ -99,13 +100,15 @@
                 /// </summary>
                 /// <param name="item">The item to activate.</param>
                 public override void ActivateItem(T item) {
-                    if(item == null)
+                    if (item == null) {
                         return;
+                    }
 
                     item = EnsureItem(item);
 
-                    if(IsActive)
+                    if (IsActive) {
                         ScreenExtensions.TryActivate(item);
+                    }
 
                     OnActivationProcessed(item, true);
                 }
@@ -116,8 +119,9 @@
                 /// <param name="item">The item to close.</param>
                 /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
                 public override void DeactivateItem(T item, bool close) {
-                    if(item == null)
+                    if (item == null) {
                         return;
+                    }
 
                     if(close) {
                         CloseStrategy.Execute(new[] { item }, (canClose, closable) => {
@@ -125,7 +129,9 @@
                                 CloseItemCore(item);
                         });
                     }
-                    else ScreenExtensions.TryDeactivate(item, false);
+                    else {
+                        ScreenExtensions.TryDeactivate(item, false);
+                    }
                 }
 
                 /// <summary>
@@ -149,9 +155,12 @@
                 protected override T EnsureItem(T newItem) {
                     var index = items.IndexOf(newItem);
 
-                    if(index == -1)
+                    if (index == -1) {
                         items.Add(newItem);
-                    else newItem = items[index];
+                    }
+                    else {
+                        newItem = items[index];
+                    }
 
                     return base.EnsureItem(newItem);
                 }

@@ -32,15 +32,15 @@
         }
 
         void ChildCompleted(object sender, ResultCompletionEventArgs args) {
+            var previous = sender as IResult;
+            if (previous != null) {
+                previous.Completed -= ChildCompleted;
+            }
+
             if(args.Error != null || args.WasCancelled) {
                 OnComplete(args.Error, args.WasCancelled);
                 return;
             }
-
-            var previous = sender as IResult;
-
-            if(previous != null)
-                previous.Completed -= ChildCompleted;
 
             var moveNextSucceeded = false;
             try {
@@ -63,7 +63,9 @@
                     return;
                 }
             }
-            else OnComplete(null, false);
+            else {
+                OnComplete(null, false);
+            }
         }
 
         void OnComplete(Exception error, bool wasCancelled) {

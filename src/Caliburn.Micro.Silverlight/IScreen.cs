@@ -1,12 +1,10 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
 
     /// <summary>
     /// Denotes an instance which requires activation.
     /// </summary>
-    public interface IActivate
-    {
+    public interface IActivate {
         ///<summary>
         /// Indicates whether or not this instance is active.
         ///</summary>
@@ -26,8 +24,7 @@
     /// <summary>
     /// Denotes an instance which requires deactivation.
     /// </summary>
-    public interface IDeactivate
-    {
+    public interface IDeactivate {
         /// <summary>
         /// Raised before deactivation.
         /// </summary>
@@ -58,8 +55,7 @@
     /// <summary>
     /// Denotes an instance which may prevent closing.
     /// </summary>
-    public interface IGuardClose : IClose
-    {
+    public interface IGuardClose : IClose {
         /// <summary>
         /// Called to check whether or not this instance can close.
         /// </summary>
@@ -70,8 +66,7 @@
     /// <summary>
     /// Denotes an instance which has a display name.
     /// </summary>
-    public interface IHaveDisplayName
-    {
+    public interface IHaveDisplayName {
         /// <summary>
         /// Gets or Sets the Display Name
         /// </summary>
@@ -81,15 +76,12 @@
     /// <summary>
     /// Denotes an instance which implements <see cref="IHaveDisplayName"/>, <see cref="IActivate"/>, <see cref="IDeactivate"/>, <see cref="IGuardClose"/> and <see cref="INotifyPropertyChangedEx"/>
     /// </summary>
-    public interface IScreen : IHaveDisplayName, IActivate, IDeactivate, IGuardClose, INotifyPropertyChangedEx
-    {
-    }
+    public interface IScreen : IHaveDisplayName, IActivate, IDeactivate, IGuardClose, INotifyPropertyChangedEx { }
 
     /// <summary>
     /// EventArgs sent during activation.
     /// </summary>
-    public class ActivationEventArgs : EventArgs
-    {
+    public class ActivationEventArgs : EventArgs {
         /// <summary>
         /// Indicates whether the sender was initialized in addition to being activated.
         /// </summary>
@@ -99,8 +91,7 @@
     /// <summary>
     /// Contains details about the success or failure of an item's activation through an <see cref="IConductor"/>.
     /// </summary>
-    public class ActivationProcessedEventArgs : EventArgs
-    {
+    public class ActivationProcessedEventArgs : EventArgs {
         /// <summary>
         /// The item whose activation was processed.
         /// </summary>
@@ -116,8 +107,7 @@
     /// <summary>
     /// EventArgs sent during deactivation.
     /// </summary>
-    public class DeactivationEventArgs : EventArgs
-    {
+    public class DeactivationEventArgs : EventArgs {
         /// <summary>
         /// Indicates whether the sender was closed in addition to being deactivated.
         /// </summary>

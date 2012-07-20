@@ -9,8 +9,16 @@
     /// <summary>
     /// Generic extension methods used by the framework.
     /// </summary>
-    public static class ExtensionMethods
-    {
+    public static class ExtensionMethods {
+        /// <summary>
+        /// Get's the name of the assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>The assembly's name.</returns>
+        public static string GetAssemblyName(this Assembly assembly) {
+            return assembly.FullName.Remove(assembly.FullName.IndexOf(","));
+        }
+
         /// <summary>
         /// Gets all the attributes of a particular type.
         /// </summary>
@@ -19,7 +27,11 @@
         /// <param name="inherit">Whether or not to search for inherited attributes.</param>
         /// <returns>The list of attributes found.</returns>
         public static IEnumerable<T> GetAttributes<T>(this MemberInfo member, bool inherit) {
+#if WinRT
+            return member.GetCustomAttributes(inherit).OfType<T>();
+#else
             return Attribute.GetCustomAttributes(member, inherit).OfType<T>();
+#endif
         }
 
         /// <summary>
@@ -29,8 +41,9 @@
         /// <param name="enumerable">The elements to enumerate.</param>
         /// <param name="action">The action to apply to each item in the list.</param>
         public static void Apply<T>(this IEnumerable<T> enumerable, Action<T> action) {
-            foreach(var item in enumerable)
+            foreach(var item in enumerable) {
                 action(item);
+            }
         }
 
         /// <summary>
@@ -42,18 +55,19 @@
             var lambda = (LambdaExpression)expression;
 
             MemberExpression memberExpression;
-            if(lambda.Body is UnaryExpression) {
+            if (lambda.Body is UnaryExpression) {
                 var unaryExpression = (UnaryExpression)lambda.Body;
                 memberExpression = (MemberExpression)unaryExpression.Operand;
             }
-            else
+            else {
                 memberExpression = (MemberExpression)lambda.Body;
+            }
 
             return memberExpression.Member;
         }
 
-#if WP7
-		//Method missing in WP7 Linq
+#if WP71
+		//Method missing in WP71 Linq
 
 		/// <summary>
 		/// Merges two sequences by using the specified predicate function.
@@ -65,14 +79,18 @@
 		/// <param name="second">The second sequence to merge.</param>
 		/// <param name="resultSelector"> A function that specifies how to merge the elements from the two sequences.</param>
 		/// <returns>An System.Collections.Generic.IEnumerable&lt;T&gt; that contains merged elements of two input sequences.</returns>
-		public static IEnumerable<TResult> Zip<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> resultSelector)
-		{
-			if (first == null)
+		public static IEnumerable<TResult> Zip<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> resultSelector){
+			if (first == null){
 				throw new ArgumentNullException("first");
-			if (second == null)
+            }
+
+			if (second == null) {
 				throw new ArgumentNullException("second");
-			if (resultSelector == null)
+            }
+
+			if (resultSelector == null) {
 				throw new ArgumentNullException("resultSelector");
+            }
 
 			var enumFirst = first.GetEnumerator();
 			var enumSecond = second.GetEnumerator();
@@ -81,7 +99,6 @@
 				yield return resultSelector(enumFirst.Current, enumSecond.Current);
 			}
 		}
-
 #endif
     }
 }

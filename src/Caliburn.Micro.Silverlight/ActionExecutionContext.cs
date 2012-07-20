@@ -8,6 +8,12 @@
     /// The context used during the execution of an Action or its guard.
     /// </summary>
     public class ActionExecutionContext : IDisposable {
+        WeakReference message;
+        WeakReference source;
+        WeakReference target;
+        WeakReference view;
+        Dictionary<string, object> values;
+
         /// <summary>
         /// Determines whether the action can execute.
         /// </summary>
@@ -23,12 +29,6 @@
         /// The actual method info to be invoked.
         /// </summary>
         public MethodInfo Method;
-
-        WeakReference message;
-        WeakReference source;
-        WeakReference target;
-        WeakReference view;
-        Dictionary<string, object> values;
 
         /// <summary>
         /// The message being executed.

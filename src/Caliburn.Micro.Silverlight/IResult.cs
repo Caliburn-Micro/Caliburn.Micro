@@ -1,12 +1,10 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
 
     /// <summary>
     /// Allows custom code to execute after the return of a action.
     /// </summary>
-    public interface IResult
-    {
+    public interface IResult {
         /// <summary>
         /// Executes the result using the specified context.
         /// </summary>

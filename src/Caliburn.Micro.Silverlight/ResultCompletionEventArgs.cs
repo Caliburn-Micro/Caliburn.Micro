@@ -1,12 +1,10 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
 
     /// <summary>
     /// The event args for the Completed event of an <see cref="IResult"/>.
     /// </summary>
-    public class ResultCompletionEventArgs : EventArgs
-    {
+    public class ResultCompletionEventArgs : EventArgs {
         /// <summary>
         /// Gets or sets the error if one occurred.
         /// </summary>

@@ -6,9 +6,9 @@ function get-content-path($contentRoot) {
 
 	$id = $frameworkname.Identifier
 
-	if($id -eq ".NETFramework") { $relative = "NET40" }
-	elseif($id -eq "Silverlight" -and $frameworkname.Profile -eq "WindowsPhone") { $relative = "SL40-WP" }
-	elseif($id -eq "Silverlight" ) { $relative = "SL40" }
+	if($id -eq ".NETFramework") { $relative = "net40" }
+	elseif($id -eq "Silverlight" -and $frameworkname.Profile -eq "WindowsPhone71") { $relative = "sl4-windowsphone71" }
+	elseif($id -eq "Silverlight" ) { $relative = "sl4" }
  
 	[System.IO.Path]::Combine($contentRoot, $relative)
 }

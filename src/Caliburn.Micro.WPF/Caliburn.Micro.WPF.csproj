@@ -46,7 +46,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\net-4.0\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\..\lib\net40\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
@@ -148,6 +148,9 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\Parser.cs">
       <Link>Parser.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\RegExHelper.cs">
+      <Link>RegExHelper.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ResultCompletionEventArgs.cs">
       <Link>ResultCompletionEventArgs.cs</Link>
     </Compile>
@@ -159,6 +162,9 @@
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\SequentialResult.cs">
       <Link>SequentialResult.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\TypeMappingConfiguration.cs">
+      <Link>TypeMappingConfiguration.cs</Link>
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\View.cs">
       <Link>View.cs</Link>

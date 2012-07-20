@@ -79,8 +79,9 @@
         public event EventHandler<DeactivationEventArgs> Deactivated = delegate { };
 
         void IActivate.Activate() {
-            if(IsActive)
+            if (IsActive) {
                 return;
+            }
 
             var initialized = false;
 
@@ -93,8 +94,7 @@
             Log.Info("Activating {0}.", this);
             OnActivate();
 
-            Activated(this, new ActivationEventArgs
-            {
+            Activated(this, new ActivationEventArgs {
                 WasInitialized = initialized
             });
         }
@@ -110,11 +110,11 @@
         protected virtual void OnActivate() {}
 
         void IDeactivate.Deactivate(bool close) {
-            if(!IsActive && !IsInitialized)
+            if (!IsActive && !IsInitialized) {
                 return;
+            }
 
-            AttemptingDeactivation(this, new DeactivationEventArgs
-            {
+            AttemptingDeactivation(this, new DeactivationEventArgs {
                 WasClosed = close
             });
 
@@ -122,8 +122,7 @@
             Log.Info("Deactivating {0}.", this);
             OnDeactivate(close);
 
-            Deactivated(this, new DeactivationEventArgs
-            {
+            Deactivated(this, new DeactivationEventArgs {
                 WasClosed = close
             });
 
@@ -149,8 +148,9 @@
 
         System.Action GetViewCloseAction(bool? dialogResult) {
             var conductor = Parent as IConductor;
-            if(conductor != null)
+            if (conductor != null) {
                 return () => conductor.CloseItem(this);
+            }
 
             foreach(var contextualView in Views.Values) {
                 var viewType = contextualView.GetType();
@@ -159,19 +159,26 @@
                 if(closeMethod != null)
                     return () => {
 #if !SILVERLIGHT
+                        var isClosed = false;
                         if(dialogResult != null) {
+                            isClosed = true;
                             var resultProperty = contextualView.GetType().GetProperty("DialogResult");
                             if (resultProperty != null)
                                 resultProperty.SetValue(contextualView, dialogResult, null);
                         }
-#endif
 
+                        if (!isClosed){
+                            closeMethod.Invoke(contextualView, null);
+                        }
+#else
                         closeMethod.Invoke(contextualView, null);
+#endif
                     };
 
                 var isOpenProperty = viewType.GetProperty("IsOpen");
-                if(isOpenProperty != null)
+                if (isOpenProperty != null) {
                     return () => isOpenProperty.SetValue(contextualView, false, null);
+                }
             }
 
             return () => {

@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7A82B446-E050-4373-AA06-F8B62EE1E40C}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Caliburn.Micro</RootNamespace>
+    <AssemblyName>Caliburn.Micro</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <!-- This property group is only here to support building this project using the 
+       MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
+       to set the TargetFrameworkVersion to v3.5 -->
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\SL5\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT SL5</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\bin\SL5\Debug\Caliburn.Micro.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\SL5\Release\</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT SL5</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\bin\SL5\Release\Caliburn.Micro.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Caliburn.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System.Windows" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Controls, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>..\..\lib\sl5\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Browser" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Action.cs">
+      <Link>Action.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ActionExecutionContext.cs">
+      <Link>ActionExecutionContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ActionMessage.cs">
+      <Link>ActionMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\AssemblySource.cs">
+      <Link>AssemblySource.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\AttachedCollection.cs">
+      <Link>AttachedCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Bind.cs">
+      <Link>Bind.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\BindingScope.cs">
+      <Link>BindingScope.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\BooleanToVisibilityConverter.cs">
+      <Link>BooleanToVisibilityConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Bootstrapper.cs">
+      <Link>Bootstrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Conductor.cs">
+      <Link>Conductor.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConductorBase.cs">
+      <Link>ConductorBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConductorBaseWithActiveItem.cs">
+      <Link>ConductorBaseWithActiveItem.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConductorWithCollectionAllActive.cs">
+      <Link>ConductorWithCollectionAllActive.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConductorWithCollectionOneActive.cs">
+      <Link>ConductorWithCollectionOneActive.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConventionManager.cs">
+      <Link>ConventionManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Coroutine.cs">
+      <Link>Coroutine.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\DefaultCloseStrategy.cs">
+      <Link>DefaultCloseStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ElementConvention.cs">
+      <Link>ElementConvention.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\EventAggregator.cs">
+      <Link>EventAggregator.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ExtensionMethods.cs">
+      <Link>ExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IChild.cs">
+      <Link>IChild.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IConductor.cs">
+      <Link>IConductor.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IHaveParameters.cs">
+      <Link>IHaveParameters.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\INPC.cs">
+      <Link>INPC.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IoC.cs">
+      <Link>IoC.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IResult.cs">
+      <Link>IResult.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IScreen.cs">
+      <Link>IScreen.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IViewAware.cs">
+      <Link>IViewAware.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Logging.cs">
+      <Link>Logging.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Message.cs">
+      <Link>Message.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\MessageBinder.cs">
+      <Link>MessageBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Mouse.cs">
+      <Link>Mouse.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\NameTransformer.cs">
+      <Link>NameTransformer.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Parameter.cs">
+      <Link>Parameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Parser.cs">
+      <Link>Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\RegExHelper.cs">
+      <Link>RegExHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ResultCompletionEventArgs.cs">
+      <Link>ResultCompletionEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Screen.cs">
+      <Link>Screen.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ScreenExtensions.cs">
+      <Link>ScreenExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\SequentialResult.cs">
+      <Link>SequentialResult.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\TypeDescriptor.cs">
+      <Link>TypeDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\TypeMappingConfiguration.cs">
+      <Link>TypeMappingConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\View.cs">
+      <Link>View.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ViewAware.cs">
+      <Link>ViewAware.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ViewLocator.cs">
+      <Link>ViewLocator.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ViewModelBinder.cs">
+      <Link>ViewModelBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ViewModelLocator.cs">
+      <Link>ViewModelLocator.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\WindowManager.cs">
+      <Link>WindowManager.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Caliburn.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

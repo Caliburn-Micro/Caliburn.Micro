@@ -1,39 +1,62 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Threading;
 
     /// <summary>
-    /// Instantiate this class in order to configure the framework.
+    /// Inherit from this class in order to customize the configuration of the framework.
     /// </summary>
-    public class Bootstrapper
-    {
+    public class BootstrapperBase {
         readonly bool useApplication;
+        bool isInitialized;
 
         /// <summary>
         /// The application.
         /// </summary>
-        public Application Application { get; protected set; }
-
+        protected Application Application { get; set; }
 
         /// <summary>
         /// Creates an instance of the bootstrapper.
         /// </summary>
-        public Bootstrapper(bool useApplication = true) {
+        /// <param name="useApplication">Set this to false when hosting Caliburn.Micro inside and Office or WinForms application. The default is true.</param>
+        protected BootstrapperBase(bool useApplication = true) {
             this.useApplication = useApplication;
+        }
 
-            if (Execute.InDesignMode)
-                StartDesignTime();
-            else StartRuntime();
+        public void Start() {
+            if(isInitialized) {
+                return;
+            }
+
+            isInitialized = true;
+
+            if(Execute.InDesignMode) {
+                try {
+                    StartDesignTime();
+                }catch {
+                    //if something fails at design-time, there's really nothing we can do...
+                    isInitialized = false;
+                }
+            }
+            else {
+                StartRuntime();
+            }
         }
 
         /// <summary>
         /// Called by the bootstrapper's constructor at design time to start the framework.
         /// </summary>
-        protected virtual void StartDesignTime() {}
+        protected virtual void StartDesignTime() {
+            AssemblySource.Instance.AddRange(SelectAssemblies());
+
+            Configure();
+            IoC.GetInstance = GetInstance;
+            IoC.GetAllInstances = GetAllInstances;
+            IoC.BuildUp = BuildUp;
+        }
 
         /// <summary>
         /// Called by the bootstrapper's constructor at runtime to start the framework.
@@ -55,15 +78,9 @@
         }
 
         /// <summary>
-        /// Override to configure the framework and setup your IoC container.
-        /// </summary>
-        protected virtual void Configure() { }
-
-        /// <summary>
         /// Provides an opportunity to hook into the application object.
         /// </summary>
-        protected virtual void PrepareApplication()
-        {
+        protected virtual void PrepareApplication() {
             Application.Startup += OnStartup;
 #if SILVERLIGHT
             Application.UnhandledException += OnUnhandledException;
@@ -74,11 +91,26 @@
         }
 
         /// <summary>
+        /// Override to configure the framework and setup your IoC container.
+        /// </summary>
+        protected virtual void Configure() { }
+
+        /// <summary>
         /// Override to tell the framework where to find assemblies to inspect for views, etc.
         /// </summary>
         /// <returns>A list of assemblies to inspect.</returns>
-        protected virtual IEnumerable<Assembly> SelectAssemblies()
-        {
+        protected virtual IEnumerable<Assembly> SelectAssemblies() {
+            if (Execute.InDesignMode) {
+                var appDomain = AppDomain.CurrentDomain;
+                var assemblies = appDomain.GetType().GetMethod("GetAssemblies")
+                                     .Invoke(appDomain, null) as Assembly[] ?? new Assembly[] { };
+                return new[] {
+                    assemblies
+                        .Where(x => x.EntryPoint != null && x.GetTypes().Any(t => t.IsSubclassOf(typeof(Application))))
+                        .FirstOrDefault()
+                };
+            }
+
 #if SILVERLIGHT
             return new[] { Application.Current.GetType().Assembly };
 #else
@@ -92,8 +124,7 @@
         /// <param name="service">The service to locate.</param>
         /// <param name="key">The key to locate.</param>
         /// <returns>The located service.</returns>
-        protected virtual object GetInstance(Type service, string key)
-        {
+        protected virtual object GetInstance(Type service, string key) {
             return Activator.CreateInstance(service);
         }
 
@@ -102,8 +133,7 @@
         /// </summary>
         /// <param name="service">The service to locate.</param>
         /// <returns>The located services.</returns>
-        protected virtual IEnumerable<object> GetAllInstances(Type service)
-        {
+        protected virtual IEnumerable<object> GetAllInstances(Type service) {
             return new[] { Activator.CreateInstance(service) };
         }
 
@@ -143,7 +173,7 @@
         protected virtual void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) { }
 #endif
             
-#if SILVERLIGHT && !WP7
+#if SILVERLIGHT && !WP71
         /// <summary>
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
         /// </summary>
@@ -184,19 +214,35 @@
 #endif
     }
 
-#if !WP7
+    /// <summary>
+    /// Instantiate this class in order to configure the framework.
+    /// </summary>
+    public class Bootstrapper : BootstrapperBase {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Bootstrapper"/> class.
+        /// </summary>
+        /// <param name="useApplication">Set this to false when hosting Caliburn.Micro inside and Office or WinForms application. The default is true.</param>
+        public Bootstrapper(bool useApplication = true)
+            : base(useApplication) {
+            Start();
+        }
+    }
+
+#if !WP71
     /// <summary>
     /// A strongly-typed version of <see cref="Bootstrapper"/> that specifies the type of root model to create for the application.
     /// </summary>
     /// <typeparam name="TRootModel">The type of root model for the application.</typeparam>
     public class Bootstrapper<TRootModel> : Bootstrapper {
+
+        public Bootstrapper(bool useApplication = true) : base(useApplication) {}
+
         /// <summary>
         /// Override this to add custom behavior to execute after the application starts.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
-        protected override void OnStartup(object sender, StartupEventArgs e)
-        {
+        protected override void OnStartup(object sender, StartupEventArgs e) {
 #if SILVERLIGHT
             DisplayRootViewFor(Application, typeof(TRootModel));
 #else

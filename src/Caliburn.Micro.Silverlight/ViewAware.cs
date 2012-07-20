@@ -2,15 +2,13 @@
     using System;
     using System.Collections.Generic;
     using System.Windows;
-#if WP7
-    using System.Windows.Controls;
-    using System.Windows.Navigation;
-#endif
 
     ///<summary>
     ///  A base implementation of <see cref = "IViewAware" /> which is capable of caching views by context.
     ///</summary>
     public class ViewAware : PropertyChangedBase, IViewAware {
+        bool cacheViews;
+
         static readonly DependencyProperty PreviouslyAttachedProperty = DependencyProperty.RegisterAttached(
             "PreviouslyAttached",
             typeof(bool),
@@ -22,8 +20,6 @@
         /// Indicates whether or not implementors of <see cref="IViewAware"/> should cache their views by default.
         /// </summary>
         public static bool CacheViewsByDefault = true;
-
-        bool cacheViews;
 
         /// <summary>
         ///   The view chache for this instance.
@@ -62,8 +58,9 @@
         }
 
         void IViewAware.AttachView(object view, object context) {
-            if (CacheViews)
+            if (CacheViews) {
                 Views[context ?? View.DefaultContext] = view;
+            }
 
             var nonGeneratedView = View.GetFirstNonGeneratedView(view);
 
@@ -90,7 +87,7 @@
         /// <param name = "view"></param>
         protected internal virtual void OnViewLoaded(object view) {}
 
-#if WP7
+#if WP71
         /// <summary>
         ///   Called the first time the page's LayoutUpdated event fires after it is navigated to.
         /// </summary>

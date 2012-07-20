@@ -1,19 +1,18 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Linq;
     using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Interactivity;
-#if WP7
+
+#if WP71
     using Microsoft.Phone.Controls;
 #endif
 
     /// <summary>
     /// Binds a view to a view model.
     /// </summary>
-    public static class ViewModelBinder
-    {
+    public static class ViewModelBinder {
         /// <summary>
         /// Gets or sets a value indicating whether to apply conventions by default.
         /// </summary>
@@ -84,8 +83,9 @@
                     convention
                     );
 
-                if(applied)
+                if (applied) {
                     Log.Info("Binding Convention Applied: Element {0}.", element.Name);
+                }
                 else {
                     Log.Info("Binding Convention Not Applied: Element {0} has existing binding.", element.Name);
                     unmatchedElements.Add(element);
@@ -156,30 +156,34 @@
         ///<remarks>Passes the the view model, view and creation context (or null for default) to use in applying binding.</remarks>
         public static Action<object, DependencyObject, object> Bind = (viewModel, view, context) =>{
             Log.Info("Binding {0} and {1}.", view, viewModel);
-            Action.SetTarget(view, viewModel);
+
+            if((bool)view.GetValue(Micro.Bind.NoContextProperty)) {
+                Action.SetTargetWithoutContext(view, viewModel);
+            }else {
+                Action.SetTarget(view, viewModel);
+            }
 
             var viewAware = viewModel as IViewAware;
-            if(viewAware != null)
-            {
+            if (viewAware != null) {
                 Log.Info("Attaching {0} to {1}.", view, viewAware);
                 viewAware.AttachView(view, context);
             }
 
-            if ((bool)view.GetValue(ConventionsAppliedProperty))
+            if ((bool)view.GetValue(ConventionsAppliedProperty)) {
                 return;
+            }
 
-			var element = View.GetFirstNonGeneratedView(view) as FrameworkElement;
-            if(element == null)
+            var element = View.GetFirstNonGeneratedView(view) as FrameworkElement;
+            if (element == null) {
                 return;
+            }
 
-            if(!ShouldApplyConventions(element))
-            {
+            if (!ShouldApplyConventions(element)) {
                 Log.Info("Skipping conventions for {0} and {1}.", element, viewModel);
                 return;
             }
 
             var viewModelType = viewModel.GetType();
-
             var namedElements = BindingScope.GetNamedElements(element);
 
 #if SILVERLIGHT
@@ -191,25 +195,27 @@
             namedElements = BindActions(namedElements, viewModelType);
             namedElements = BindProperties(namedElements, viewModelType);
             HandleUnmatchedElements(namedElements, viewModelType);
-#if WP7
+#if WP71
             BindAppBar(view);
 #endif
 
             view.SetValue(ConventionsAppliedProperty, true);
         };
 
-#if WP7
+#if WP71
         static void BindAppBar(DependencyObject view) {
             var page = view as PhoneApplicationPage;
-            if (page == null || page.ApplicationBar == null)
+            if (page == null || page.ApplicationBar == null) {
                 return;
+            }
 
             var triggers = Interaction.GetTriggers(view);
 
             foreach(var item in page.ApplicationBar.Buttons) {
                 var button = item as AppBarButton;
-                if (button == null)
+                if (button == null) {
                     continue;
+                }
 
                 var parsedTrigger = Parser.Parse(view, button.Message).First();
                 var trigger = new AppBarButtonTrigger(button);
@@ -225,8 +231,9 @@
 
             foreach (var item in page.ApplicationBar.MenuItems) {
                 var menuItem = item as AppBarMenuItem;
-                if (menuItem == null)
+                if (menuItem == null) {
 					continue;
+                }
 
                 var parsedTrigger = Parser.Parse(view, menuItem.Message).First();
                 var trigger = new AppBarMenuItemTrigger(menuItem);

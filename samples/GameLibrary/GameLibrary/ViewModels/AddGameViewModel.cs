@@ -12,7 +12,7 @@
 
     [Export(typeof(AddGameViewModel)), PartCreationPolicy(CreationPolicy.NonShared)]
     public class AddGameViewModel : Screen, IDataErrorInfo {
-        readonly IValidator validator; //NOTE: You could also achieve validation without implementing the IDataErrorInfo interface by using Caliburn's AOP support.
+        readonly IValidator validator;
         string notes;
         double rating;
         string title;

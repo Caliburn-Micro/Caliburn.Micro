@@ -1,5 +1,4 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Linq;
     using System.Windows;
@@ -127,12 +126,14 @@
         /// </remarks>
         public static Func<object, object> GetFirstNonGeneratedView = view => {
             var dependencyObject = view as DependencyObject;
-            if(dependencyObject == null)
+            if (dependencyObject == null) {
                 return view;
+            }
 
             if((bool)dependencyObject.GetValue(IsGeneratedProperty)) {
-                if(dependencyObject is ContentControl)
+                if (dependencyObject is ContentControl) {
                     return ((ContentControl)dependencyObject).Content;
+                }
 
                 var type = dependencyObject.GetType();
                 var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
@@ -150,8 +151,7 @@
         /// </summary>
         /// <param name="d">The element the property is attached to.</param>
         /// <returns>Whether or not to apply conventions.</returns>
-        public static bool? GetApplyConventions(DependencyObject d)
-        {
+        public static bool? GetApplyConventions(DependencyObject d) {
             return (bool?)d.GetValue(ApplyConventionsProperty);
         }
 
@@ -160,8 +160,7 @@
         /// </summary>
         /// <param name="d">The element to attach the property to.</param>
         /// <param name="value">Whether or not to apply conventions.</param>
-        public static void SetApplyConventions(DependencyObject d, bool? value)
-        {
+        public static void SetApplyConventions(DependencyObject d, bool? value) {
             d.SetValue(ApplyConventionsProperty, value);
         }
 
@@ -170,8 +169,7 @@
         /// </summary>
         /// <param name="d">The element to attach the model to.</param>
         /// <param name="value">The model.</param>
-        public static void SetModel(DependencyObject d, object value)
-        {
+        public static void SetModel(DependencyObject d, object value) {
             d.SetValue(ModelProperty, value);
         }
 
@@ -180,8 +178,7 @@
         /// </summary>
         /// <param name="d">The element the model is attached to.</param>
         /// <returns>The model.</returns>
-        public static object GetModel(DependencyObject d)
-        {
+        public static object GetModel(DependencyObject d) {
             return d.GetValue(ModelProperty);
         }
 
@@ -190,8 +187,7 @@
         /// </summary>
         /// <param name="d">The element the context is attached to.</param>
         /// <returns>The context.</returns>
-        public static object GetContext(DependencyObject d)
-        {
+        public static object GetContext(DependencyObject d) {
             return d.GetValue(ContextProperty);
         }
 
@@ -200,35 +196,36 @@
         /// </summary>
         /// <param name="d">The element to attach the context to.</param>
         /// <param name="value">The context.</param>
-        public static void SetContext(DependencyObject d, object value)
-        {
+        public static void SetContext(DependencyObject d, object value) {
             d.SetValue(ContextProperty, value);
         }
 
-        private static void OnModelChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs args)
-        {
-            if (args.OldValue == args.NewValue)
+        static void OnModelChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs args) {
+            if (args.OldValue == args.NewValue) {
                 return;
+            }
 
-            if (args.NewValue != null)
-            {
+            if (args.NewValue != null) {
                 var context = GetContext(targetLocation);
                 var view = ViewLocator.LocateForModel(args.NewValue, targetLocation, context);
 
                 SetContentProperty(targetLocation, view);
                 ViewModelBinder.Bind(args.NewValue, view, context);
             }
-            else SetContentProperty(targetLocation, args.NewValue);
+            else {
+                SetContentProperty(targetLocation, args.NewValue);
+            }
         }
 
-        private static void OnContextChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs e)
-        {
-            if (e.OldValue == e.NewValue)
+        static void OnContextChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs e) {
+            if (e.OldValue == e.NewValue) {
                 return;
+            }
 
             var model = GetModel(targetLocation);
-            if (model == null)
+            if (model == null) {
                 return;
+            }
 
             var view = ViewLocator.LocateForModel(model, targetLocation, e.NewValue);
 
@@ -236,21 +233,20 @@
             ViewModelBinder.Bind(model, view, e.NewValue);
         }
 
-        private static void SetContentProperty(object targetLocation, object view)
-        {
+        static void SetContentProperty(object targetLocation, object view) {
             var fe = view as FrameworkElement;
-            if (fe != null && fe.Parent != null)
+            if (fe != null && fe.Parent != null) {
                 SetContentPropertyCore(fe.Parent, null);
-               
+            }
+
             SetContentPropertyCore(targetLocation, view);
         }
 
-        private static void SetContentPropertyCore(object targetLocation, object view)
-        {
+        static void SetContentPropertyCore(object targetLocation, object view) {
             try {
                 var type = targetLocation.GetType();
                 var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
-                    .FirstOrDefault() ?? DefaultContentProperty;
+                                          .FirstOrDefault() ?? DefaultContentProperty;
 
                 type.GetProperty(contentProperty.Name)
                     .SetValue(targetLocation, view, null);

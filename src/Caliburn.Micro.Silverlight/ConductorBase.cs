@@ -61,8 +61,9 @@
         /// <param name="item">The item on which activation was attempted.</param>
         /// <param name="success">if set to <c>true</c> activation was successful.</param>
         protected virtual void OnActivationProcessed(T item, bool success) {
-            if(item == null)
+            if (item == null) {
                 return;
+            }
 
             ActivationProcessed(this, new ActivationProcessedEventArgs {
                 Item = item,

@@ -1,12 +1,10 @@
-namespace Caliburn.Micro
-{
+namespace Caliburn.Micro {
     using System;
 
     /// <summary>
     /// Denotes a class which is aware of its view(s).
     /// </summary>
-    public interface IViewAware
-    {
+    public interface IViewAware {
         /// <summary>
         /// Attaches a view to this instance.
         /// </summary>
@@ -30,8 +28,7 @@ namespace Caliburn.Micro
     /// <summary>
     /// The event args for the <see cref="IViewAware.ViewAttached"/> event.
     /// </summary>
-    public class ViewAttachedEventArgs : EventArgs
-    {
+    public class ViewAttachedEventArgs : EventArgs {
         /// <summary>
         /// The view.
         /// </summary>
