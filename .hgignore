@@ -38,7 +38,7 @@ obj/
 *.[Pp]ublish.xml
 glob:desktop.ini
 generated-templates
-nuget/package/caliburn.micro.1.0.0.nupkg
+nuget/package/*.nupkg
 nuget/package/lib/
 *.*~
 *.vs10x
