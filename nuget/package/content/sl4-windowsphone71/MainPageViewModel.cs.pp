@@ -1,3 +1,3 @@
-﻿namespace $safeprojectname$ {
+﻿namespace $rootnamespace$ {
     public class MainPageViewModel {}
 }

@@ -1,4 +1,4 @@
-﻿namespace $safeprojectname$
+﻿namespace $rootnamespace$
 {
 	using System;
 	using System.Collections.Generic;
@@ -20,7 +20,7 @@
 		        AssemblySource.Instance.Select(x => new AssemblyCatalog(x)).OfType<ComposablePartCatalog>()
 		        );
 
-			container = new CompositionContainer(catalog);
+			container = CompositionHost.Initialize(catalog);
 
 			var batch = new CompositionBatch();
 
