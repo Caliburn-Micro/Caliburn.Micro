@@ -51,4 +51,17 @@
             }
         };
     }
+
+    /// <summary>
+    ///  Denoes a clas which can handle a particular type of message using a Coroutine.
+    /// </summary>
+    public interface IHandleAsCoroutine<TMessage> : IHandle
+    {
+		/// <summary>
+		///  Handle the message as a Coroutine.
+		/// </summary>
+		/// <param name="message">The message.</param>
+		/// <returns>The coroutine to execute.</returns>
+		IEnumerable<IResult> Handle(TMessage message);
+    }
 }
