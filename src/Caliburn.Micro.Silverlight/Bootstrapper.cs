@@ -64,6 +64,18 @@
         protected virtual void StartRuntime() {
             Execute.InitializeWithDispatcher();
             EventAggregator.DefaultPublicationThreadMarshaller = Execute.OnUIThread;
+
+            EventAggregator.HandlerResultProcessing = (target, result) => {
+                var coroutine = result as IEnumerable<IResult>;
+                if (coroutine != null) {
+                    var viewAware = target as IViewAware;
+                    var view = viewAware != null ? viewAware.GetView() : null;
+                    var context = new ActionExecutionContext { Target = target, View = (DependencyObject)view };
+
+                    Coroutine.BeginExecute(coroutine.GetEnumerator(), context);
+                }
+            };
+
             AssemblySource.Instance.AddRange(SelectAssemblies());
 
             if (useApplication) {

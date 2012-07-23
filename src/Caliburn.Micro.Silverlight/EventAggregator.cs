@@ -74,6 +74,11 @@
         public static Action<System.Action> DefaultPublicationThreadMarshaller = action => action();
 
         /// <summary>
+        /// Processing of handler results on publication thread.
+        /// </summary>
+        public static Action<object, object> HandlerResultProcessing = (target, result) => { };
+
+        /// <summary>
         ///   Initializes a new instance of the <see cref = "EventAggregator" /> class.
         /// </summary>
         public EventAggregator() {
@@ -185,7 +190,10 @@
 
                 foreach (var pair in supportedHandlers) {
                     if (pair.Key.IsAssignableFrom(typeInfo)) {
-                        pair.Value.Invoke(target, new[] { message });
+                        var result = pair.Value.Invoke(target, new[] { message });
+                        if (result != null) {
+                            HandlerResultProcessing(target, result);
+                        }
                         return true;
                     }
                 }
@@ -223,11 +231,14 @@
 
                 foreach(var pair in supportedHandlers) {
                     if(pair.Key.IsAssignableFrom(messageType)) {
-                        pair.Value.Invoke(target, new[] { message });
+                        var result = pair.Value.Invoke(target, new[] { message });
+                        if (result != null) {
+                            HandlerResultProcessing(target, result);
+                        }
                         return true;
                     }
                 }
-
+                
                 return true;
             }
         }
