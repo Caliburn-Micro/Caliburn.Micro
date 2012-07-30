@@ -38,8 +38,8 @@ obj/
 *.[Pp]ublish.xml
 glob:desktop.ini
 generated-templates
-nuget/package/*.nupkg
-nuget/package/lib/
+nuget/*.nupkg
+nuget/*/lib/
 *.*~
 *.vs10x
 *.docstates
