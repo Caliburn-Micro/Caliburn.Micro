@@ -148,7 +148,7 @@
         /// </summary>
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyStringFormat = (binding, convention, property) =>{
             if(typeof(DateTime).IsAssignableFrom(property.PropertyType))
-                binding.StringFormat = "{0:MM/dd/yyyy}";
+                binding.StringFormat = "{0:d}";
         };
 
         /// <summary>
