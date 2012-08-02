@@ -1,13 +1,10 @@
-﻿using System;
-using Xunit;
+﻿namespace Caliburn.Micro.WPF.Tests {
+    using System;
+    using Xunit;
 
-namespace Caliburn.Micro.WPF.Tests
-{
-    public class ConductorWithCollectionOneActiveTests
-    {
+    public class ConductorWithCollectionOneActiveTests {
         [Fact]
-        public void AddedItemAppearsInChildren()
-        {
+        public void AddedItemAppearsInChildren() {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             var conducted = new Screen();
             conductor.Items.Add(conducted);
@@ -15,8 +12,7 @@ namespace Caliburn.Micro.WPF.Tests
         }
 
         [Fact]
-        public void ParentItemIsSetOnAddedConductedItem()
-        {
+        public void ParentItemIsSetOnAddedConductedItem() {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             var conducted = new Screen();
             conductor.Items.Add(conducted);
@@ -24,8 +20,7 @@ namespace Caliburn.Micro.WPF.Tests
         }
 
         [Fact]
-        public void ParentItemIsSetOnReplacedConductedItem()
-        {
+        public void ParentItemIsSetOnReplacedConductedItem() {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             var originalConducted = new Screen();
             conductor.Items.Add(originalConducted);
@@ -35,8 +30,7 @@ namespace Caliburn.Micro.WPF.Tests
         }
 
         [Fact]
-        public void ChildrenAreActivatedIfConductorIsActive()
-        {
+        public void ChildrenAreActivatedIfConductorIsActive() {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             var conducted = new Screen();
             conductor.Items.Add(conducted);
@@ -47,8 +41,7 @@ namespace Caliburn.Micro.WPF.Tests
         }
 
         [Fact]
-        public void CanCloseIsTrueWhenItemsAreClosable()
-        {
+        public void CanCloseIsTrueWhenItemsAreClosable() {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             var conducted = new StateScreen { IsClosable = true };
             conductor.Items.Add(conducted);
@@ -58,8 +51,7 @@ namespace Caliburn.Micro.WPF.Tests
         }
 
         [Fact(Skip = "Investigating close issue. http://caliburnmicro.codeplex.com/discussions/275824")]
-        public void CanCloseIsTrueWhenItemsAreNotClosableAndCloseStrategyCloses()
-        {
+        public void CanCloseIsTrueWhenItemsAreNotClosableAndCloseStrategyCloses() {
             var conductor = new Conductor<IScreen>.Collection.OneActive { CloseStrategy = new DefaultCloseStrategy<IScreen>(true) };
             var conducted = new StateScreen { IsClosable = true };
             conductor.Items.Add(conducted);
@@ -69,8 +61,7 @@ namespace Caliburn.Micro.WPF.Tests
         }
 
         [Fact(Skip = "ActiveItem currently set regardless of IsActive value. See [discussion:276375]")]
-        public void ChildrenAreNotActivatedIfConductorIsNotActive()
-        {
+        public void ChildrenAreNotActivatedIfConductorIsNotActive() {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             var conducted = new Screen();
             conductor.Items.Add(conducted);
@@ -80,8 +71,7 @@ namespace Caliburn.Micro.WPF.Tests
         }
 
         [Fact(Skip = "Parent value not currently updated when conducted item is removed. See [discussion:276374]")]
-        public void ParentItemIsUnsetOnRemovedConductedItem()
-        {
+        public void ParentItemIsUnsetOnRemovedConductedItem() {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             var conducted = new Screen();
             conductor.Items.Add(conducted);
@@ -90,24 +80,20 @@ namespace Caliburn.Micro.WPF.Tests
         }
 
         [Fact(Skip = "Behavior currently allowed; under investigation. See [discussion:276373]")]
-        public void ConductorCannotConductSelf()
-        {
+        public void ConductorCannotConductSelf() {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             Assert.Throws<InvalidOperationException>(() => conductor.Items.Add(conductor));
         }
 
-        class StateScreen : Screen
-        {
+        class StateScreen : Screen {
             public Boolean IsClosed { get; private set; }
             public Boolean IsClosable { get; set; }
 
-            public override void CanClose(Action<bool> callback)
-            {
+            public override void CanClose(Action<bool> callback) {
                 callback(IsClosable);
             }
 
-            protected override void OnDeactivate(bool close)
-            {
+            protected override void OnDeactivate(bool close) {
                 base.OnDeactivate(close);
                 IsClosed = close;
             }
