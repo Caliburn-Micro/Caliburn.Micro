@@ -1,5 +1,12 @@
-﻿namespace Caliburn.Micro {
+﻿namespace Caliburn.Micro
+{
+#if WinRT
+    using System.Linq;
+    using Windows.UI.Xaml;
+    using System.Reflection;
+#else
     using System.Windows;
+#endif
 
     /// <summary>
     ///   A host for action related attached properties.
@@ -15,7 +22,7 @@
                 "Target",
                 typeof(object),
                 typeof(Action),
-                new PropertyMetadata(OnTargetChanged)
+                new PropertyMetadata(null, OnTargetChanged)
                 );
 
         /// <summary>
@@ -26,7 +33,7 @@
                 "TargetWithoutContext",
                 typeof(object),
                 typeof(Action),
-                new PropertyMetadata(OnTargetWithoutContextChanged)
+                new PropertyMetadata(null, OnTargetWithoutContextChanged)
                 );
 
         /// <summary>
@@ -74,11 +81,11 @@
         ///<param name="element"> DependencyObject to check </param>
         ///<returns> True if Target or TargetWithoutContext was set on <paramref name="element" /> </returns>
         public static bool HasTargetSet(DependencyObject element) {
-            if(GetTarget(element) != null || GetTargetWithoutContext(element) != null)
+            if (GetTarget(element) != null || GetTargetWithoutContext(element) != null)
                 return true;
 
             var frameworkElement = element as FrameworkElement;
-            if(frameworkElement == null)
+            if (frameworkElement == null)
                 return false;
 
             return ConventionManager.HasBinding(frameworkElement, TargetProperty)
@@ -95,10 +102,16 @@
         ///<param name="eventArgs"> The event args. </param>
         ///<param name="parameters"> The method parameters. </param>
         public static void Invoke(object target, string methodName, DependencyObject view = null, FrameworkElement source = null, object eventArgs = null, object[] parameters = null) {
-            var context = new ActionExecutionContext {
+            var context = new ActionExecutionContext
+            {
                 Target = target,
+#if WinRT
+                Method = target.GetType().GetRuntimeMethods().Single(m => m.Name == methodName),
+#else
                 Method = target.GetType().GetMethod(methodName),
-                Message = new ActionMessage {
+#endif
+                Message = new ActionMessage
+                {
                     MethodName = methodName
                 },
                 View = view,
@@ -106,7 +119,8 @@
                 EventArgs = eventArgs
             };
 
-            if(parameters != null) {
+            if (parameters != null)
+            {
                 parameters.Apply(x => context.Message.Parameters.Add(x as Parameter ?? new Parameter { Value = x }));
             }
 
@@ -122,18 +136,21 @@
         }
 
         static void SetTargetCore(DependencyPropertyChangedEventArgs e, DependencyObject d, bool setContext) {
-            if(e.NewValue == e.OldValue || e.NewValue == null) {
+            if (e.NewValue == e.OldValue || e.NewValue == null)
+            {
                 return;
             }
 
             var target = e.NewValue;
             var containerKey = e.NewValue as string;
 
-            if (containerKey != null) {
+            if (containerKey != null)
+            {
                 target = IoC.GetInstance(null, containerKey);
             }
 
-            if(setContext && d is FrameworkElement) {
+            if (setContext && d is FrameworkElement)
+            {
                 Log.Info("Setting DC of {0} to {1}.", d, target);
                 ((FrameworkElement)d).DataContext = target;
             }

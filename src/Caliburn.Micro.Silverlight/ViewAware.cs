@@ -1,12 +1,18 @@
-﻿namespace Caliburn.Micro {
+﻿namespace Caliburn.Micro
+{
     using System;
     using System.Collections.Generic;
+#if WinRT
+    using Windows.UI.Xaml;
+#else
     using System.Windows;
+#endif
 
     ///<summary>
     ///  A base implementation of <see cref = "IViewAware" /> which is capable of caching views by context.
     ///</summary>
-    public class ViewAware : PropertyChangedBase, IViewAware {
+    public class ViewAware : PropertyChangedBase, IViewAware
+    {
         bool cacheViews;
 
         static readonly DependencyProperty PreviouslyAttachedProperty = DependencyProperty.RegisterAttached(
@@ -30,13 +36,14 @@
         /// Creates an instance of <see cref="ViewAware"/>.
         ///</summary>
         public ViewAware()
-            : this(CacheViewsByDefault) {}
+            : this(CacheViewsByDefault) { }
 
         ///<summary>
         /// Creates an instance of <see cref="ViewAware"/>.
         ///</summary>
         ///<param name="cacheViews">Indicates whether or not this instance maintains a view cache.</param>
-        public ViewAware(bool cacheViews) {
+        public ViewAware(bool cacheViews)
+        {
             CacheViews = cacheViews;
         }
 
@@ -48,24 +55,29 @@
         ///<summary>
         ///  Indicates whether or not this instance maintains a view cache.
         ///</summary>
-        protected bool CacheViews {
+        protected bool CacheViews
+        {
             get { return cacheViews; }
-            set {
+            set
+            {
                 cacheViews = value;
-                if(!cacheViews)
+                if (!cacheViews)
                     Views.Clear();
             }
         }
 
-        void IViewAware.AttachView(object view, object context) {
-            if (CacheViews) {
+        void IViewAware.AttachView(object view, object context)
+        {
+            if (CacheViews)
+            {
                 Views[context ?? View.DefaultContext] = view;
             }
 
             var nonGeneratedView = View.GetFirstNonGeneratedView(view);
 
             var element = nonGeneratedView as FrameworkElement;
-            if (element != null && !(bool)element.GetValue(PreviouslyAttachedProperty)) {
+            if (element != null && !(bool)element.GetValue(PreviouslyAttachedProperty))
+            {
                 element.SetValue(PreviouslyAttachedProperty, true);
                 View.ExecuteOnLoad(element, (s, e) => OnViewLoaded(s));
             }
@@ -79,15 +91,15 @@
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="context">The context in which the view appears.</param>
-        protected internal virtual void OnViewAttached(object view, object context) {}
+        protected internal virtual void OnViewAttached(object view, object context) { }
 
         /// <summary>
         ///   Called when an attached view's Loaded event fires.
         /// </summary>
         /// <param name = "view"></param>
-        protected internal virtual void OnViewLoaded(object view) {}
+        protected internal virtual void OnViewLoaded(object view) { }
 
-#if WP71
+#if WP71 || WinRT
         /// <summary>
         ///   Called the first time the page's LayoutUpdated event fires after it is navigated to.
         /// </summary>
@@ -100,7 +112,8 @@
         /// </summary>
         /// <param name = "context">The context denoting which view to retrieve.</param>
         /// <returns>The view.</returns>
-        public virtual object GetView(object context = null) {
+        public virtual object GetView(object context = null)
+        {
             object view;
             Views.TryGetValue(context ?? View.DefaultContext, out view);
             return view;

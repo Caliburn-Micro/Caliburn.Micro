@@ -35,18 +35,145 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <ProjectReference Include="..\Windows.UI.Interactivity\Windows.UI.Interactivity.csproj">
+      <Project>{7007121c-6efa-4889-a9ea-a9bc521ca1cb}</Project>
+      <Name>Windows.UI.Interactivity</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Action.cs">
+      <Link>Action.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ActionExecutionContext.cs">
+      <Link>ActionExecutionContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ActionMessage.cs">
+      <Link>ActionMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\AssemblySource.cs">
+      <Link>AssemblySource.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Bind.cs">
+      <Link>Bind.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\BindingScope.cs">
+      <Link>BindingScope.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\BooleanToVisibilityConverter.cs">
+      <Link>BooleanToVisibilityConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Conductor.cs">
+      <Link>Conductor.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConductorBase.cs">
+      <Link>ConductorBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConductorBaseWithActiveItem.cs">
+      <Link>ConductorBaseWithActiveItem.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConductorWithCollectionAllActive.cs">
+      <Link>ConductorWithCollectionAllActive.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConductorWithCollectionOneActive.cs">
+      <Link>ConductorWithCollectionOneActive.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConventionManager.cs">
+      <Link>ConventionManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Coroutine.cs">
+      <Link>Coroutine.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\DefaultCloseStrategy.cs">
+      <Link>DefaultCloseStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ElementConvention.cs">
+      <Link>ElementConvention.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\EventAggregator.cs">
       <Link>EventAggregator.cs</Link>
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ExtensionMethods.cs">
       <Link>ExtensionMethods.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IChild.cs">
+      <Link>IChild.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IConductor.cs">
+      <Link>IConductor.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IHaveParameters.cs">
+      <Link>IHaveParameters.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\INPC.cs">
       <Link>INPC.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IoC.cs">
+      <Link>IoC.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IResult.cs">
+      <Link>IResult.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IScreen.cs">
+      <Link>IScreen.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IViewAware.cs">
+      <Link>IViewAware.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Logging.cs">
+      <Link>Logging.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Message.cs">
+      <Link>Message.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\MessageBinder.cs">
+      <Link>MessageBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\NameTransformer.cs">
+      <Link>NameTransformer.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Parser.cs">
+      <Link>Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\RegExHelper.cs">
+      <Link>RegExHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ResultCompletionEventArgs.cs">
+      <Link>ResultCompletionEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Screen.cs">
+      <Link>Screen.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ScreenExtensions.cs">
+      <Link>ScreenExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\SequentialResult.cs">
+      <Link>SequentialResult.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\TypeMappingConfiguration.cs">
+      <Link>TypeMappingConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\View.cs">
+      <Link>View.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ViewAware.cs">
+      <Link>ViewAware.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ViewLocator.cs">
+      <Link>ViewLocator.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ViewModelBinder.cs">
+      <Link>ViewModelBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ViewModelLocator.cs">
+      <Link>ViewModelLocator.cs</Link>
+    </Compile>
+    <Compile Include="AssemblyExtensions.cs" />
+    <Compile Include="AttachedCollection.cs" />
+    <Compile Include="CaliburnApplication.cs" />
+    <Compile Include="INavigationService.cs" />
+    <Compile Include="Parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReflectionExtentions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v11.0\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

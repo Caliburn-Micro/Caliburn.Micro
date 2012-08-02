@@ -1,4 +1,5 @@
-﻿namespace Caliburn.Micro {
+﻿namespace Caliburn.Micro
+{
     using System;
     using System.Globalization;
     using System.Linq;
@@ -12,7 +13,8 @@
     /// <summary>
     /// A service that is capable of properly binding values to a method's parameters and creating instances of <see cref="IResult"/>.
     /// </summary>
-    public static class MessageBinder {
+    public static class MessageBinder
+    {
         /// <summary>
         /// The special parameter values recognized by the message binder along with their resolvers.
         /// </summary>
@@ -46,16 +48,18 @@
         /// <param name="context">The action execution context.</param>
         /// <param name="requiredParameters">The parameters required to complete the invocation.</param>
         /// <returns>The actual parameter values.</returns>
-        public static object[] DetermineParameters(ActionExecutionContext context, ParameterInfo[] requiredParameters) {
+        public static object[] DetermineParameters(ActionExecutionContext context, ParameterInfo[] requiredParameters)
+        {
             var providedValues = context.Message.Parameters.Select(x => x.Value).ToArray();
             var finalValues = new object[requiredParameters.Length];
 
-            for(int i = 0; i < requiredParameters.Length; i++) {
+            for (int i = 0; i < requiredParameters.Length; i++)
+            {
                 var parameterType = requiredParameters[i].ParameterType;
                 var parameterValue = providedValues[i];
                 var parameterAsString = parameterValue as string;
 
-                if(parameterAsString != null)
+                if (parameterAsString != null)
                     finalValues[i] = CoerceValue(parameterType, EvaluateParameter(parameterAsString, parameterType, context), context);
                 else finalValues[i] = CoerceValue(parameterType, parameterValue, context);
             }
@@ -66,8 +70,13 @@
         /// <summary>
         /// Transforms the textual parameter into the actual parameter.
         /// </summary>
-        public static Func<string, Type, ActionExecutionContext, object> EvaluateParameter = (text, parameterType, context) => {
+        public static Func<string, Type, ActionExecutionContext, object> EvaluateParameter = (text, parameterType, context) =>
+        {
+#if WinRT
+            var lookup = text.ToLower();
+#else
             var lookup = text.ToLower(CultureInfo.InvariantCulture);
+#endif
             Func<ActionExecutionContext, object> resolver;
             return SpecialValues.TryGetValue(lookup, out resolver) ? resolver(context) : text;
         };
@@ -79,21 +88,27 @@
         /// <param name="providedValue">The provided value.</param>
         /// <param name="context">An optional context value which can be used during conversion.</param>
         /// <returns>The coerced value.</returns>
-        public static object CoerceValue(Type destinationType, object providedValue, object context) {
-            if (providedValue == null) {
+        public static object CoerceValue(Type destinationType, object providedValue, object context)
+        {
+            if (providedValue == null)
+            {
                 return GetDefaultValue(destinationType);
             }
 
             var providedType = providedValue.GetType();
-            if (destinationType.IsAssignableFrom(providedType)) {
+            if (destinationType.IsAssignableFrom(providedType))
+            {
                 return providedValue;
             }
 
-            if (CustomConverters.ContainsKey(destinationType)) {
+            if (CustomConverters.ContainsKey(destinationType))
+            {
                 return CustomConverters[destinationType](providedValue, context);
             }
 
-            try {
+            try
+            {
+#if !WinRT
                 var converter = TypeDescriptor.GetConverter(destinationType);
 
                 if (converter.CanConvertFrom(providedType)) {
@@ -105,31 +120,42 @@
                 if (converter.CanConvertTo(destinationType)) {
                     return converter.ConvertTo(providedValue, destinationType);
                 }
-
+#endif
+#if WinRT
+                if (destinationType.GetTypeInfo().IsEnum)
+                {
+#else
                 if (destinationType.IsEnum) {
+#endif
                     var stringValue = providedValue as string;
-                    if (stringValue != null) {
+                    if (stringValue != null)
+                    {
                         return Enum.Parse(destinationType, stringValue, true);
                     }
 
                     return Enum.ToObject(destinationType, providedValue);
                 }
-                
-                if(typeof(Guid).IsAssignableFrom(destinationType)) {
+
+                if (typeof(Guid).IsAssignableFrom(destinationType))
+                {
                     var stringValue = providedValue as string;
-                    if(stringValue != null) {
+                    if (stringValue != null)
+                    {
                         return new Guid(stringValue);
                     }
                 }
             }
-            catch {
+            catch
+            {
                 return GetDefaultValue(destinationType);
             }
 
-            try {
+            try
+            {
                 return Convert.ChangeType(providedValue, destinationType, CultureInfo.CurrentUICulture);
             }
-            catch {
+            catch
+            {
                 return GetDefaultValue(destinationType);
             }
         }
@@ -139,8 +165,16 @@
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>The default value.</returns>
+#if WinRT
+        public static object GetDefaultValue(Type type)
+        {
+            var typeInfo = type.GetTypeInfo();
+            return typeInfo.IsClass || typeInfo.IsInterface ? null : System.Activator.CreateInstance(type);
+        }
+#else
         public static object GetDefaultValue(Type type) {
             return type.IsClass || type.IsInterface ? null : Activator.CreateInstance(type);
         }
+#endif
     }
 }

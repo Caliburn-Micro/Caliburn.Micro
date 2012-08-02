@@ -1,12 +1,21 @@
-﻿namespace Caliburn.Micro {
+﻿
+namespace Caliburn.Micro
+{
     using System;
     using System.Reflection;
+#if WinRT
+    using Windows.UI.Xaml;
+    using TriggerBase = Windows.UI.Interactivity.TriggerBase;
+#else
     using System.Windows;
+    using TriggerBase = System.Windows.Interactivity.TriggerBase;
+#endif
 
     /// <summary>
     /// Represents the conventions for a particular element type.
     /// </summary>
-    public class ElementConvention {
+    public class ElementConvention
+    {
         /// <summary>
         /// The type of element to which the conventions apply.
         /// </summary>
@@ -20,7 +29,7 @@
         /// <summary>
         /// The default trigger to be used when wiring actions on this element.
         /// </summary>
-        public Func<System.Windows.Interactivity.TriggerBase> CreateTrigger;
+        public Func<TriggerBase> CreateTrigger;
 
         /// <summary>
         /// The default property to be used for parameters of this type in actions.
