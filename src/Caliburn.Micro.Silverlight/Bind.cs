@@ -158,7 +158,7 @@
                 "AtDesignTime",
                 typeof(bool),
                 typeof(Bind),
-                new PropertyMetadata(null, AtDesignTimeChanged)
+                new PropertyMetadata(false, AtDesignTimeChanged)
                 );
 
 #if NET
