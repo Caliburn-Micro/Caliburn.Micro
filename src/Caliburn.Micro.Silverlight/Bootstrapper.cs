@@ -126,7 +126,8 @@
 #if SILVERLIGHT
             return new[] { Application.Current.GetType().Assembly };
 #else
-            return new[] { Assembly.GetEntryAssembly() };
+            var entryAssembly = Assembly.GetEntryAssembly();
+            return entryAssembly == null ? new Assembly[] { } : new[] { entryAssembly };
 #endif
         }
 
