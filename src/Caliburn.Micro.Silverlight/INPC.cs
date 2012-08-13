@@ -469,7 +469,9 @@
                 IsNotifying = false;
                 foreach(var item in items) {
                     var index = IndexOf(item);
-                    RemoveItemBase(index);
+                    if (index >= 0) {
+                        RemoveItemBase(index);
+                    }
                 }
                 IsNotifying = previousNotificationSetting;
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
