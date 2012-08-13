@@ -293,6 +293,7 @@
         /// <summary>
         ///   Enables/Disables property change notification.
         /// </summary>
+        [Browsable(false)]
         public bool IsNotifying {
             get { return isNotifying; }
             set { isNotifying = value; }
