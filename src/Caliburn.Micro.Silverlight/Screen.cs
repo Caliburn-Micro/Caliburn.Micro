@@ -220,10 +220,11 @@
 #if !SILVERLIGHT
                         var isClosed = false;
                         if(dialogResult != null) {
-                            isClosed = true;
                             var resultProperty = contextualView.GetType().GetProperty("DialogResult");
-                            if (resultProperty != null)
+                            if (resultProperty != null) {
                                 resultProperty.SetValue(contextualView, dialogResult, null);
+                                isClosed = true;
+                            }
                         }
 
                         if (!isClosed){
