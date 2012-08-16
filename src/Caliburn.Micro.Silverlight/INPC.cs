@@ -293,7 +293,9 @@
         /// <summary>
         ///   Enables/Disables property change notification.
         /// </summary>
+#if !WinRT
         [Browsable(false)]
+#endif
         public bool IsNotifying {
             get { return isNotifying; }
             set { isNotifying = value; }
