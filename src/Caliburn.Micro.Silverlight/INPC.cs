@@ -11,6 +11,7 @@
     using System.Threading;
 
 #if WinRT
+    using System.Runtime.CompilerServices;
     using Windows.UI.Core;
     using Windows.UI.Xaml.Controls;
     using Windows.ApplicationModel;
@@ -189,7 +190,12 @@
         ///   Notifies subscribers of the property change.
         /// </summary>
         /// <param name = "propertyName">Name of the property.</param>
-        public virtual void NotifyOfPropertyChange(string propertyName) {
+#if WinRT
+        public virtual void NotifyOfPropertyChange([CallerMemberName]string propertyName = "")
+#else
+        public virtual void NotifyOfPropertyChange(string propertyName)
+#endif
+        {
             if (IsNotifying) {
                 Execute.OnUIThread(() => RaisePropertyChangedEventCore(propertyName));
             }
@@ -305,7 +311,12 @@
         ///   Notifies subscribers of the property change.
         /// </summary>
         /// <param name = "propertyName">Name of the property.</param>
-        public void NotifyOfPropertyChange(string propertyName) {
+#if WinRT
+        public virtual void NotifyOfPropertyChange([CallerMemberName]string propertyName = "")
+#else
+        public virtual void NotifyOfPropertyChange(string propertyName)
+#endif
+        {
             if(IsNotifying)
                 Execute.OnUIThread(() => RaisePropertyChangedEventImmediately(new PropertyChangedEventArgs(propertyName)));
         }
