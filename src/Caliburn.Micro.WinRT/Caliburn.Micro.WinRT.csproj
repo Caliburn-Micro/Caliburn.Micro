@@ -34,13 +34,6 @@
     <DocumentationFile>..\..\bin\WinRT\Release\Caliburn.Micro.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <ProjectReference Include="..\Windows.UI.Interactivity\Windows.UI.Interactivity.csproj">
-      <Project>{7007121c-6efa-4889-a9ea-a9bc521ca1cb}</Project>
-      <Name>Windows.UI.Interactivity</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="..\Caliburn.Micro.Silverlight\Action.cs">
       <Link>Action.cs</Link>
     </Compile>
@@ -175,6 +168,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionExtentions.cs" />
     <Compile Include="XamlMetadataProvider.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Windows.UI.Interactivity, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Windows.UI.Interactivity.1.0.2.0\lib\winrt45\Windows.UI.Interactivity.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v11.0\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
