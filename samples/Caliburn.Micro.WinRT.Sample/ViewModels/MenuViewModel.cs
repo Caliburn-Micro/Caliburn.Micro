@@ -19,7 +19,8 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
         {
             base.OnInitialize();
 
-            Samples.Add(new SampleViewModel { Title = "Setup", Subtitle = "Setting up a WinRT application.", ViewModelType = typeof(SetupViewModel)});
+            Samples.Add(new SampleViewModel { Title = "Setup", Subtitle = "Setting up a WinRT application.", ViewModelType = typeof(SetupViewModel) });
+            Samples.Add(new SampleViewModel { Title = "Binding Conventions", Subtitle = "Binding view model properties to your view.", ViewModelType = typeof(BindingsViewModel) });
         }
 
         public void SampleSelected(ItemClickEventArgs eventArgs)

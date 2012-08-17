@@ -17,7 +17,7 @@
         <Border Background="{StaticResource MetroBlueBrush}" Margin="0,0,0,10" Width="40" Height="40">
 
         </Border>
-        <StackPanel Grid.Column="1" Margin="10,-4,0,0">
+        <StackPanel Grid.Column="1" Margin="10,-10,0,0">
             <TextBlock Text="{Binding Title}" Style="{StaticResource BodyTextStyle}" TextWrapping="NoWrap"/>
             <TextBlock Text="{Binding Subtitle}" Style="{StaticResource BodyTextStyle}" Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"/>
         </StackPanel>

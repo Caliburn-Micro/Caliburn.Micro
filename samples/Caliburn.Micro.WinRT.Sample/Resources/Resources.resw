@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BindingsExplanation.Text" xml:space="preserve">
+    <value>The property binding conventions in Caliburn.Micro should be working as expected, there have been no changes in this area. Though some work may still be necessary to add default conventions for some of the new controls.
+
+To the right is a sample of a ListBox named "Developers" by convention being bound to the collection Developers and the SelectedDeveloper property,  notice the changes in pluralisation.
+
+Because we haven't specified an ItemTemplate for the ListBox Caliburn.Micro uses it's conventions to locate the user control DeveloperView for each list item.
+
+Below the ListBox is a TextBlock bound to the SelectedDeveloper using the name "SelectedDeveloper_Name".</value>
+  </data>
   <data name="SetupExplanation.Text" xml:space="preserve">
     <value>Unlike other versions of Caliburn Micro the WinRT version doesn't use a Bootstrapper, the non ranty reason for this is that Windows.UI.Xaml.Application exposes most of it's functionality through method overrides and not events. Therefore it makes sense to have a custom Application rather than forcing the developer to wire the application to the bootstrapper.
 
