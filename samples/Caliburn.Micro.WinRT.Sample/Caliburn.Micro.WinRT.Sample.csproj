@@ -115,12 +115,16 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\ActionsViewModel.cs" />
     <Compile Include="ViewModels\BindingsViewModel.cs" />
     <Compile Include="ViewModels\DeveloperViewModel.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="ViewModels\SampleViewModel.cs" />
     <Compile Include="ViewModels\SetupViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\ActionsView.xaml.cs">
+      <DependentUpon>ActionsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BindingsView.xaml.cs">
       <DependentUpon>BindingsView.xaml</DependentUpon>
     </Compile>
@@ -160,6 +164,10 @@
     <Page Include="Resources\StandardStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ActionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BindingsView.xaml">
       <SubType>Designer</SubType>

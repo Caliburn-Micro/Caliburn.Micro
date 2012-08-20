@@ -117,6 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ActionsExplanation.Text" xml:space="preserve">
+    <value>The action binding conventions in Caliburn.Micro should be working as expected, the biggest change has been to use a third party library Windows.UI.Interactivity to replace the System.Windows.Interactivity framework available in other xaml platforms. Therefore there will may be some issues to resolve.
+
+One of the other changes is that when parameters are resolved. Windows 8 is missing UpdateSourceTrigger or GetBindingExpression. So resolution of guard properties will not be responsive as other platforms.
+
+To the right is a number of samples, the first is a method bound to action through the Name of the button. The second uses the Message.Attach property passing through a named parameter. The third uses the full syntax to wire a method to the DoubleTapped event to a method call.
+</value>
+  </data>
   <data name="BindingsExplanation.Text" xml:space="preserve">
     <value>The property binding conventions in Caliburn.Micro should be working as expected, there have been no changes in this area. Though some work may still be necessary to add default conventions for some of the new controls.
 
