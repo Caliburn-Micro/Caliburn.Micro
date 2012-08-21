@@ -134,6 +134,13 @@ Because we haven't specified an ItemTemplate for the ListBox Caliburn.Micro uses
 
 Below the ListBox is a TextBlock bound to the SelectedDeveloper using the name "SelectedDeveloper_Name".</value>
   </data>
+  <data name="CoroutinesExplanation.Text" xml:space="preserve">
+    <value>Thanks to the introduction of async / await into WinRT apps the use of coroutines to provide functionality around asynchronous methods will most likely be limited. However Caliburn.Micro IResult's do have one extra feature in that they provide access to the "ActionExectutionContext", this provides access to the View in a more controlled manner and means any view interaction code can be seperate from  the View Model.
+
+Using these coroutines doesn't preclude you from using the async await keywords as the Execute method on a custom IResult can be an async method. The DelayResult class shows a good example of this.
+
+The button to the left executes a coroutine that returns four results, the first changes the views visual state, the second causes an artificial delay. The third then changes the visual state and the four shows a message dialog.</value>
+  </data>
   <data name="SetupExplanation.Text" xml:space="preserve">
     <value>Unlike other versions of Caliburn Micro the WinRT version doesn't use a Bootstrapper, the non ranty reason for this is that Windows.UI.Xaml.Application exposes most of it's functionality through method overrides and not events. Therefore it makes sense to have a custom Application rather than forcing the developer to wire the application to the bootstrapper.
 

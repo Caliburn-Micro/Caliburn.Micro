@@ -115,8 +115,13 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Results\DelayResult.cs" />
+    <Compile Include="Results\MessageDialogResult.cs" />
+    <Compile Include="Results\ResultBase.cs" />
+    <Compile Include="Results\VisualStateResult.cs" />
     <Compile Include="ViewModels\ActionsViewModel.cs" />
     <Compile Include="ViewModels\BindingsViewModel.cs" />
+    <Compile Include="ViewModels\CoroutineViewModel.cs" />
     <Compile Include="ViewModels\DeveloperViewModel.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="ViewModels\SampleViewModel.cs" />
@@ -127,6 +132,9 @@
     </Compile>
     <Compile Include="Views\BindingsView.xaml.cs">
       <DependentUpon>BindingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CoroutineView.xaml.cs">
+      <DependentUpon>CoroutineView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DeveloperView.xaml.cs">
       <DependentUpon>DeveloperView.xaml</DependentUpon>
@@ -170,6 +178,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BindingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CoroutineView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
