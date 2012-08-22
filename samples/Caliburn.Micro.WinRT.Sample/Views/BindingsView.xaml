@@ -5,6 +5,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    
+    <Page.BottomAppBar>
+        <AppBar Background="{StaticResource MetroOrangeBrush}">
+            <Grid>
+                <ContentControl x:Name="SelectedDeveloper" VerticalAlignment="Center"
+                                FontFamily="{StaticResource ContentControlThemeFontFamily}" FontSize="{StaticResource ControlContentThemeFontSize}" />
+            </Grid>
+        </AppBar>
+    </Page.BottomAppBar>
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>

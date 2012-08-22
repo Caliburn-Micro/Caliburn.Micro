@@ -111,6 +111,19 @@
                         var childDo = VisualTreeHelper.GetChild(current, i);
                         queue.Enqueue(childDo);
                     }
+
+#if WinRT
+                    var page = current as Page;
+
+                    if (page != null)
+                    {
+                        if (page.BottomAppBar != null)
+                            queue.Enqueue(page.BottomAppBar);
+
+                        if (page.TopAppBar != null)
+                            queue.Enqueue(page.TopAppBar);
+                    }
+#endif
                 }
                 else
                 {

@@ -47,5 +47,10 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
         {
             Output = String.Format("Hello {0} from Caliburn.Micro", Input);
         }
+
+        public void AppBarHello()
+        {
+            Output = "Hello from the App Bar.";
+        }
     }
 }

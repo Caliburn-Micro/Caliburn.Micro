@@ -4,22 +4,22 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
 {
     public class DeveloperViewModel : PropertyChangedBase
     {
-        private string _name;
+        private string name;
 
         public DeveloperViewModel(string name)
         {
-            _name = name;
+            this.name = name;
         }
 
         public string Name
         {
             get
             {
-                return _name;
+                return name;
             }
             set
             {
-                _name = value;
+                name = value;
                 NotifyOfPropertyChange();
             }
         }

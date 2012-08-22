@@ -1402,6 +1402,12 @@
 
     -->
 
+    <Style x:Key="SayHelloAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
+        <Setter Property="AutomationProperties.AutomationId" Value="SayHelloAppBarButton"/>
+        <Setter Property="AutomationProperties.Name" Value="Say Hello"/>
+        <Setter Property="Content" Value="&#xE1E2;"/>
+    </Style>
+
     <!-- Title area styles -->
 
     <Style x:Key="PageHeaderTextStyle" TargetType="TextBlock" BasedOn="{StaticResource HeaderTextStyle}">

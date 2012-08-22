@@ -6,6 +6,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:caliburn="using:Caliburn.Micro"
     mc:Ignorable="d">
+    
+    <Page.BottomAppBar>
+        <AppBar Background="{StaticResource MetroOrangeBrush}">
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="AppBarHello" Style="{StaticResource SayHelloAppBarButtonStyle}"/>
+                </StackPanel>
+            </Grid>
+        </AppBar>
+    </Page.BottomAppBar>
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
