@@ -50,6 +50,7 @@
         /// Called by the bootstrapper's constructor at design time to start the framework.
         /// </summary>
         protected virtual void StartDesignTime() {
+            AssemblySource.Instance.Clear();
             AssemblySource.Instance.AddRange(SelectAssemblies());
 
             Configure();
@@ -118,8 +119,8 @@
                                      .Invoke(appDomain, null) as Assembly[] ?? new Assembly[] { };
                 return new[] {
                     assemblies
-                        .Where(x => x.EntryPoint != null && x.GetTypes().Any(t => t.IsSubclassOf(typeof(Application))))
-                        .FirstOrDefault()
+                        .Where(x => x.EntryPoint != null && x.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application))))
+                        .LastOrDefault()
                 };
             }
 
