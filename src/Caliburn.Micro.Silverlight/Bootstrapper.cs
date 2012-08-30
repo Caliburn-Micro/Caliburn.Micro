@@ -119,7 +119,11 @@
                                      .Invoke(appDomain, null) as Assembly[] ?? new Assembly[] { };
                 return new[] {
                     assemblies
+#if SILVERLIGHT
+                        .Where(x => !x.IsDynamic && x.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application))))
+#else
                         .Where(x => x.EntryPoint != null && x.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application))))
+#endif
                         .LastOrDefault()
                 };
             }
