@@ -143,6 +143,11 @@
         /// <param name="key">The key to locate.</param>
         /// <returns>The located service.</returns>
         protected virtual object GetInstance(Type service, string key) {
+#if NET
+            if (service == typeof(IWindowManager))
+                service = typeof(WindowManager);
+#endif
+
             return Activator.CreateInstance(service);
         }
 
@@ -216,17 +221,7 @@
         /// </summary>
         /// <param name="viewModelType">The view model type.</param>
         protected static void DisplayRootViewFor(Type viewModelType) {
-            IWindowManager windowManager;
-
-            try
-            {
-                windowManager = IoC.Get<IWindowManager>();
-            }
-            catch
-            {
-                windowManager = new WindowManager();
-            }
-
+            var windowManager = IoC.Get<IWindowManager>();
             windowManager.ShowWindow(IoC.GetInstance(viewModelType, null));
         }
 #endif
