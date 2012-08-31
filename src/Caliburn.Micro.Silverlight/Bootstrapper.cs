@@ -26,6 +26,9 @@
             this.useApplication = useApplication;
         }
 
+        /// <summary>
+        /// Start the framework.
+        /// </summary>
         public void Start() {
             if(isInitialized) {
                 return;
@@ -247,7 +250,10 @@
     /// </summary>
     /// <typeparam name="TRootModel">The type of root model for the application.</typeparam>
     public class Bootstrapper<TRootModel> : Bootstrapper {
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Bootstrapper&lt;TRootModel&gt;"/> class.
+        /// </summary>
+        /// <param name="useApplication">Set this to false when hosting Caliburn.Micro inside and Office or WinForms application. The default is true.</param>
         public Bootstrapper(bool useApplication = true) : base(useApplication) {}
 
         /// <summary>

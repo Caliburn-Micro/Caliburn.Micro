@@ -127,7 +127,7 @@
 
         void IDeactivate.Deactivate(bool close)
         {
-            if (!IsActive && !IsInitialized)
+            if (!IsActive)
             {
                 return;
             }
