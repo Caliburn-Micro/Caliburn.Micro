@@ -161,14 +161,14 @@
                 new PropertyMetadata(false, AtDesignTimeChanged)
                 );
 
-#if NET
-        [AttachedPropertyBrowsableForTypeAttribute(typeof(DependencyObject))]
-#endif
         /// <summary>
         /// Gets whether or not conventions are being applied at design-time.
         /// </summary>
         /// <param name="dependencyObject">The ui to apply conventions to.</param>
         /// <returns>Whether or not conventions are applied.</returns>
+#if NET
+        [AttachedPropertyBrowsableForTypeAttribute(typeof(DependencyObject))]
+#endif
         public static bool GetAtDesignTime(DependencyObject dependencyObject)
         {
             return (bool)dependencyObject.GetValue(AtDesignTimeProperty);

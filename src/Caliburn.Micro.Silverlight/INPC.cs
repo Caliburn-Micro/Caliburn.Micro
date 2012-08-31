@@ -146,12 +146,12 @@
         void Refresh();
     }
 
-#if !SILVERLIGHT && !WinRT
-    [Serializable]
-#endif
     /// <summary>
     ///   A base class that implements the infrastructure for property change notification and automatically performs UI thread marshalling.
     /// </summary>
+#if !SILVERLIGHT && !WinRT
+    [Serializable]
+#endif
     public class PropertyChangedBase : INotifyPropertyChangedEx {
         /// <summary>
         ///   Creates an instance of <see cref = "PropertyChangedBase" />.
@@ -160,12 +160,12 @@
             IsNotifying = true;
         }
 
-#if !SILVERLIGHT && !WinRT
-        [field: NonSerialized]
-#endif
         /// <summary>
         ///   Occurs when a property value changes.
         /// </summary>
+#if !SILVERLIGHT && !WinRT
+        [field: NonSerialized]
+#endif
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
 #if !SILVERLIGHT && !WinRT
