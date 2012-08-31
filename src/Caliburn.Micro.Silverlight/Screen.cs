@@ -242,9 +242,7 @@
             }
 
             return () => {
-                var ex = new NotSupportedException("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
-                Log.Error(ex);
-                throw ex;
+                Log.Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
             };
         }
 #endif
