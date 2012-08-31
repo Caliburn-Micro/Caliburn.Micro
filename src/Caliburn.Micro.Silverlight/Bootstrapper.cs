@@ -117,15 +117,13 @@
                 var appDomain = AppDomain.CurrentDomain;
                 var assemblies = appDomain.GetType().GetMethod("GetAssemblies")
                                      .Invoke(appDomain, null) as Assembly[] ?? new Assembly[] { };
-                return new[] {
-                    assemblies
+                var applicationAssembly =
 #if SILVERLIGHT
-                        .Where(x => !x.IsDynamic && x.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application))))
+                        assemblies.LastOrDefault(x => !x.IsDynamic && x.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application))));
 #else
-                        .Where(x => x.EntryPoint != null && x.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application))))
+                        assemblies.LastOrDefault(x => x.EntryPoint != null && x.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application))));
 #endif
-                        .LastOrDefault()
-                };
+                return applicationAssembly == null ? new Assembly[] { } : new[] { applicationAssembly };
             }
 
 #if SILVERLIGHT
