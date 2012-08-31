@@ -115,10 +115,12 @@
         protected virtual IEnumerable<Assembly> SelectAssemblies() {
             if (Execute.InDesignMode) {
                 var appDomain = AppDomain.CurrentDomain;
-                var assemblies = appDomain.GetType().GetMethod("GetAssemblies")
+                var assemblies = appDomain.GetType()
+                                     .GetMethod("GetAssemblies")
                                      .Invoke(appDomain, null) as Assembly[] ?? new Assembly[] { };
+
                 var applicationAssembly =
-#if SILVERLIGHT
+#if SILVERLIGHT && !WP71
                         assemblies.LastOrDefault(x => !x.IsDynamic && x.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application))));
 #else
                         assemblies.LastOrDefault(x => x.EntryPoint != null && x.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application))));
