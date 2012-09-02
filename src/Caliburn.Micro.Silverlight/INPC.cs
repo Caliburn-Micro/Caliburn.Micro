@@ -176,6 +176,9 @@
         /// <summary>
         ///   Enables/Disables property change notification.
         /// </summary>
+#if !WinRT
+        [Browsable(false)]
+#endif
         public bool IsNotifying {
             get { return isNotifying; }
             set { isNotifying = value; }
@@ -199,7 +202,7 @@
 #endif
         {
             if (IsNotifying) {
-                Execute.OnUIThread(() => RaisePropertyChangedEventCore(propertyName));
+                Execute.OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
             }
         }
 
@@ -216,16 +219,15 @@
         ///   Raises the property changed event immediately.
         /// </summary>
         /// <param name = "propertyName">Name of the property.</param>
+        [Obsolete("Use NotifyOfPropertyChange instead.")]
         public virtual void RaisePropertyChangedEventImmediately(string propertyName) {
-            if (IsNotifying) {
-                RaisePropertyChangedEventCore(propertyName);
-            }
+            NotifyOfPropertyChange(propertyName);
         }
 
-        void RaisePropertyChangedEventCore(string propertyName) {
+        void OnPropertyChanged(PropertyChangedEventArgs e) {
             var handler = PropertyChanged;
             if (handler != null) {
-                handler(this, new PropertyChangedEventArgs(propertyName));
+                handler(this, e);
             }
         }
 
@@ -320,7 +322,7 @@
 #endif
         {
             if(IsNotifying)
-                Execute.OnUIThread(() => RaisePropertyChangedEventImmediately(new PropertyChangedEventArgs(propertyName)));
+                Execute.OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
         }
 
         /// <summary>
@@ -446,14 +448,10 @@
         ///   Raises the PropertyChanged event with the provided arguments.
         /// </summary>
         /// <param name = "e">The event data to report in the event.</param>
-        protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e) {
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e) {
             if (IsNotifying) {
                 base.OnPropertyChanged(e);
             }
-        }
-
-        void RaisePropertyChangedEventImmediately(PropertyChangedEventArgs e) {
-            OnPropertyChanged(e);
         }
 
         /// <summary>
