@@ -125,31 +125,24 @@
         /// </summary>
         protected virtual void OnActivate() { }
 
-        void IDeactivate.Deactivate(bool close)
-        {
-            if (!IsActive)
-            {
-                return;
-            }
+        void IDeactivate.Deactivate(bool close) {
+            if(IsActive || (IsInitialized && close)) {
+                AttemptingDeactivation(this, new DeactivationEventArgs {
+                    WasClosed = close
+                });
 
-            AttemptingDeactivation(this, new DeactivationEventArgs
-            {
-                WasClosed = close
-            });
+                IsActive = false;
+                Log.Info("Deactivating {0}.", this);
+                OnDeactivate(close);
 
-            IsActive = false;
-            Log.Info("Deactivating {0}.", this);
-            OnDeactivate(close);
+                Deactivated(this, new DeactivationEventArgs {
+                    WasClosed = close
+                });
 
-            Deactivated(this, new DeactivationEventArgs
-            {
-                WasClosed = close
-            });
-
-            if (close)
-            {
-                Views.Clear();
-                Log.Info("Closed {0}.", this);
+                if(close) {
+                    Views.Clear();
+                    Log.Info("Closed {0}.", this);
+                }
             }
         }
 
@@ -158,8 +151,6 @@
         /// </summary>
         /// <param name = "close">Inidicates whether this instance will be closed.</param>
         protected virtual void OnDeactivate(bool close) { }
-
-
 
         /// <summary>
         ///   Called to check whether or not this instance can close.
