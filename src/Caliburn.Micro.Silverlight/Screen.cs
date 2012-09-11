@@ -20,7 +20,7 @@
         /// </summary>
         public Screen()
         {
-            DisplayName = GetType().FullName;
+            displayName = GetType().FullName;
         }
 
         /// <summary>
@@ -160,40 +160,29 @@
         {
             callback(true);
         }
+
 #if WinRT
-        System.Action GetViewCloseAction(bool? dialogResult)
-        {
+        System.Action GetViewCloseAction(bool? dialogResult) {
             var conductor = Parent as IConductor;
-            if (conductor != null)
-            {
+            if (conductor != null) {
                 return () => conductor.CloseItem(this);
             }
 
-            foreach (var contextualView in Views.Values)
-            {
+            foreach (var contextualView in Views.Values) {
                 var viewType = contextualView.GetType();
 
                 var closeMethod = viewType.GetRuntimeMethod("Close", new Type[0]);
-                if (closeMethod != null)
-                    return () =>
-                    {
-
-                        closeMethod.Invoke(contextualView, null);
-                    };
+                if (closeMethod != null) {
+                    return () => { closeMethod.Invoke(contextualView, null); };
+                }
 
                 var isOpenProperty = viewType.GetRuntimeProperty("IsOpen");
-                if (isOpenProperty != null)
-                {
+                if (isOpenProperty != null) {
                     return () => isOpenProperty.SetValue(contextualView, false, null);
                 }
             }
 
-            return () =>
-            {
-                var ex = new NotSupportedException("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
-                Log.Error(ex);
-                throw ex;
-            };
+            return () => Log.Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
         }
 #else
         System.Action GetViewCloseAction(bool? dialogResult) {
@@ -218,7 +207,7 @@
                             }
                         }
 
-                        if (!isClosed){
+                        if (!isClosed) {
                             closeMethod.Invoke(contextualView, null);
                         }
 #else
@@ -232,9 +221,7 @@
                 }
             }
 
-            return () => {
-                Log.Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
-            };
+            return () => Log.Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
         }
 #endif
 
