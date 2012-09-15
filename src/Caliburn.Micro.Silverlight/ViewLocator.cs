@@ -71,14 +71,6 @@
                 throw new ArgumentException("NameFormat field cannot be blank.");
             }
 
-            if (config.UseNameSuffixesInMappings)
-            {
-                if (String.IsNullOrEmpty(config.ViewModelSuffix))
-                {
-                    throw new ArgumentException("ViewModelSuffix field cannot be blank if UseNameSuffixesInMappings is true.");
-                }
-            }
-
             NameTransformer.Clear();
             ViewSuffixList.Clear();
 
