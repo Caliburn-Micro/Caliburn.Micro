@@ -156,11 +156,7 @@
                 }
 #if WinRT
                 var type = dependencyObject.GetType();
-                var typeInfo = type.GetTypeInfo();
-                var contentProperty = typeInfo.GetAttributes<ContentPropertyAttribute>(true)
-                    .FirstOrDefault();
-
-                var contentPropertyName = contentProperty == null ? DefaultContentPropertyName : contentProperty.Name;
+                var contentPropertyName = GetContentPropertyName(type);
 
                 return type.GetRuntimeProperty(contentPropertyName)
                     .GetValue(dependencyObject, null);
@@ -294,11 +290,7 @@
             try
             {
                 var type = targetLocation.GetType();
-                var typeInfo = type.GetTypeInfo();
-                var contentProperty = typeInfo.GetAttributes<ContentPropertyAttribute>(true)
-                                          .FirstOrDefault();
-
-                var contentPropertyName = contentProperty == null ? DefaultContentPropertyName : contentProperty.Name;
+                var contentPropertyName = GetContentPropertyName(type);
 
                 type.GetRuntimeProperty(contentPropertyName)
                     .SetValue(targetLocation, view, null);
@@ -307,6 +299,17 @@
             {
                 Log.Error(e);
             }
+        }
+
+        private static string GetContentPropertyName(Type type)
+        {
+            var typeInfo = type.GetTypeInfo();
+            var contentProperty = typeInfo.CustomAttributes
+                .FirstOrDefault(a => a.AttributeType == typeof(ContentPropertyAttribute));
+
+            return contentProperty == null ?
+                DefaultContentPropertyName :
+                contentProperty.NamedArguments[0].TypedValue.Value.ToString();
         }
 #else
         static void SetContentPropertyCore(object targetLocation, object view) {
