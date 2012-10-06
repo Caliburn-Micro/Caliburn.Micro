@@ -66,6 +66,17 @@
                 if ((bool)root.GetValue(View.IsScopeRootProperty))
                     break;
 
+#if WinRT
+                if (root is AppBar) {
+                    var frame = Window.Current.Content as Frame;
+                    var page = (frame != null) ? frame.Content as Page : null;
+                    if (page != null && (root == page.TopAppBar || root == page.BottomAppBar)) {
+                        root = page;
+                        break;
+                    }
+                }
+#endif
+
                 if (root is ContentPresenter)
                     contentPresenter = root;
                 else if (root is ItemsPresenter && contentPresenter != null)
