@@ -47,6 +47,9 @@
     <Compile Include="..\Caliburn.Micro.WP71.Extensions\SimpleContainer.cs">
       <Link>SimpleContainer.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.WP71.Extensions\UriBuilder.cs">
+      <Link>UriBuilder.cs</Link>
+    </Compile>
     <Compile Include="NavigationExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WinRTContainer.cs" />

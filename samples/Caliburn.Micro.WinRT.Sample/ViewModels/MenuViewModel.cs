@@ -24,6 +24,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             Samples.Add(new SampleViewModel { Title = "Action Conventions", Subtitle = "Wiring view events to view model methods.", ViewModelType = typeof(ActionsViewModel) });
             Samples.Add(new SampleViewModel { Title = "Coroutines", Subtitle = "Mix IResult and Async / Await", ViewModelType = typeof(CoroutineViewModel) });
             Samples.Add(new SampleViewModel { Title = "Execute", Subtitle = "Using Execute to execute code on the UI thread.", ViewModelType = typeof(ExecuteViewModel) });
+            Samples.Add(new SampleViewModel { Title = "Navigating", Subtitle = "Navigating between pages and passing parameters.", ViewModelType = typeof(NavigationViewModel) });
         }
 
         public void SampleSelected(ItemClickEventArgs eventArgs)

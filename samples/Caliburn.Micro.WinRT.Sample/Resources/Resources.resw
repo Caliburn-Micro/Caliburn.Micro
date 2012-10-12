@@ -146,11 +146,18 @@ Using these coroutines doesn't preclude you from using the async await keywords 
 The button to the left executes a coroutine that returns four results, the first changes the views visual state, the second causes an artificial delay. The third then changes the visual state and the four shows a message dialog.</value>
   </data>
   <data name="ExecuteExplanation.Text" xml:space="preserve">
-    <value>Caliburn Micro has always had mechanisms for marshalling code back to the UI thread through the method "Execute.OnUIThread", this hasn't changed. This method is used in the binding base classes PropertyChangedBase and BindableCollection in order to make sure all property changed notifications.
+    <value>Caliburn Micro has always had mechanisms for marshalling code back to the UI thread through the method "Execute.OnUIThread", this hasn't changed. This method is used in the binding base classes PropertyChangedBase and BindableCollection in order to make sure all property changed notifications are on the UI thread.
 
 Note that in initial versions of the WinRT port this method was asynchronous (the method would return before the code was excuted). From this sample the method is synchronous, in order to better control the flow of execution.
 
 The sample to the right side steps all binding and directly updates the view from a background thread. Removing the call to Execute.OnUIThread causes the application to crash.</value>
+  </data>
+  <data name="NavigationExplanation.Text" xml:space="preserve">
+    <value>Navigation in View first applications works much the same as Windows Phone in Caliburn Micro, the interface INavigationService lets you move forward and back between pages. While the Frame control in WinRT only supports a single paramter Caliburn Micro packs multiple values into this single paramter and then on navigation expands them back to their target properties.
+
+The button to the right uses the UriFor syntax to allow you to control more and one parameter to subsequent views.
+
+The back button is bound through Action conventions to the method GoBack and property CanGoBack.</value>
   </data>
   <data name="SetupExplanation.Text" xml:space="preserve">
     <value>Unlike other versions of Caliburn Micro the WinRT version doesn't use a Bootstrapper, the non ranty reason for this is that Windows.UI.Xaml.Application exposes most of it's functionality through method overrides and not events. Therefore it makes sense to have a custom Application rather than forcing the developer to wire the application to the bootstrapper.

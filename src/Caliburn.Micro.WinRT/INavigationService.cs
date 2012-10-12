@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -99,7 +101,7 @@ namespace Caliburn.Micro
                 view.SetValue(View.IsLoadedProperty, true);
             }
 
-            TryInjectParameter(viewModel, e.Parameter);
+            TryInjectParameters(viewModel, e.Parameter);
 
             ViewModelBinder.Bind(viewModel, view, null);
 
@@ -128,15 +130,37 @@ namespace Caliburn.Micro
             GC.Collect(); // Why?
         }
 
-        protected virtual void TryInjectParameter(object viewModel, object parameter)
+        protected virtual void TryInjectParameters(object viewModel, object parameter)
         {
             var viewModelType = viewModel.GetType();
-            var property = viewModelType.GetPropertyCaseInsensitive("Parameter");
 
-            if (property == null)
-                return;
+            if (parameter is string && ((string)parameter).StartsWith("caliburn://"))
+            {
+                var uri = new Uri((string)parameter);
+                var decorder = new WwwFormUrlDecoder(uri.Query);
 
-            property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, parameter, null));
+                foreach (var pair in decorder)
+                {
+                    var property = viewModelType.GetPropertyCaseInsensitive(pair.Name);
+
+                    if (property == null)
+                    {
+                        continue;
+                    }
+
+                    property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, pair.Value, null));
+                }
+            }
+            else
+            {
+                
+                var property = viewModelType.GetPropertyCaseInsensitive("Parameter");
+
+                if (property == null)
+                    return;
+
+                property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, parameter, null));
+            }
         }
 
         /// <summary>
