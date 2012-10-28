@@ -15,10 +15,19 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Caliburn.Micro.WinRT.Sample.App">
-      <VisualElements DisplayName="Caliburn.Micro WinRT Sample" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="Caliburn.Micro WinRT Sample by Marker Metro" ForegroundText="light" BackgroundColor="#464646">
+      <VisualElements DisplayName="Caliburn.Micro WinRT Sample" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="Caliburn.Micro WinRT Sample by Marker Metro" ForegroundText="light" BackgroundColor="#F05A14">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#FFFFFF" />
       </VisualElements>
+      <Extensions>
+        <Extension Category="windows.search" />
+        <Extension Category="windows.shareTarget">
+          <ShareTarget>
+            <DataFormat>URI</DataFormat>
+            <DataFormat>Text</DataFormat>
+          </ShareTarget>
+        </Extension>
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>

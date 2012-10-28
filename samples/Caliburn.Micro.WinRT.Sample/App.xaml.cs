@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Caliburn.Micro.WinRT.Sample.ViewModels;
 using Caliburn.Micro.WinRT.Sample.Views;
+using Windows.ApplicationModel.Activation;
+using Windows.UI.Xaml.Controls;
 
 namespace Caliburn.Micro.WinRT.Sample
 {
@@ -15,9 +18,7 @@ namespace Caliburn.Micro.WinRT.Sample
 
         protected override void Configure()
         {
-            base.Configure();
-
-            container = new WinRTContainer(RootFrame);
+            container = new WinRTContainer();
             container.RegisterWinRTServices();
         }
 
@@ -36,9 +37,29 @@ namespace Caliburn.Micro.WinRT.Sample
             container.BuildUp(instance);
         }
 
-        protected override Type GetDefaultView()
+        protected override void PrepareViewFirst(Frame rootFrame)
         {
-            return typeof (MenuView);
+            container.RegisterNavigationService(rootFrame);
+        }
+
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
+        {
+            DisplayRootView<MenuView>();
+        }
+
+        protected override void OnSearchActivated(SearchActivatedEventArgs args)
+        {
+            DisplayRootView<SearchView>(args.QueryText);
+        }
+
+        protected override void OnShareTargetActivated(ShareTargetActivatedEventArgs args)
+        {
+            // Normally wouldn't need to do this but need the container to be initialised
+            Initialise();
+
+            container.Instance(args.ShareOperation);
+
+            DisplayRootViewFor<ShareTargetViewModel>();
         }
     }
 }

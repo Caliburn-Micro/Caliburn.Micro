@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -87,8 +86,6 @@ namespace Caliburn.Micro
             Resuming += OnResuming;
             Suspending += OnSuspending;
             UnhandledException += OnUnhandledException;
-
-            RootFrame = CreateApplicationFrame();
         }
 
         /// <summary>
@@ -136,13 +133,6 @@ namespace Caliburn.Micro
         {
         }
 
-        protected override void OnLaunched(LaunchActivatedEventArgs args)
-        {
-            base.OnLaunched(args);
-
-            EnsurePage(args);
-        }
-
         protected virtual void OnResuming(object sender, object e)
         {
 
@@ -161,20 +151,22 @@ namespace Caliburn.Micro
             return new Frame();
         }
 
-        protected virtual void EnsurePage(IActivatedEventArgs args)
+        protected virtual void PrepareViewFirst(Frame rootFrame)
+        {
+        }
+
+        protected void DisplayRootView(Type viewType, object paramter = null)
         {
             Initialise();
 
-            switch (args.Kind)
+            if (RootFrame == null)
             {
-                default:
+                RootFrame = CreateApplicationFrame();
 
-                    var defaultView = GetDefaultView();
-
-                    RootFrame.Navigate(defaultView);
-
-                    break;
+                PrepareViewFirst(RootFrame);
             }
+
+            RootFrame.Navigate(viewType, paramter);
 
             // Seems stupid but observed weird behaviour when resetting the Content
             if (Window.Current.Content != RootFrame)
@@ -183,6 +175,31 @@ namespace Caliburn.Micro
             Window.Current.Activate();
         }
 
-        protected abstract Type GetDefaultView();
+        protected void DisplayRootView<T>(object parameter = null)
+        {
+            DisplayRootView(typeof(T), parameter);
+        }
+
+        protected void DisplayRootViewFor(Type viewModelType)
+        {
+            Initialise();
+
+            var viewModel = IoC.GetInstance(viewModelType, null);
+            var view = ViewLocator.LocateForModel(viewModel, null, null);
+
+            ViewModelBinder.Bind(viewModel, view, null);
+
+            var activator = viewModel as IActivate;
+            if (activator != null)
+                activator.Activate();
+
+            Window.Current.Content = view;
+            Window.Current.Activate();
+        }
+
+        protected void DisplayRootViewFor<T>()
+        {
+            DisplayRootViewFor(typeof(T));
+        }
     }
 }
