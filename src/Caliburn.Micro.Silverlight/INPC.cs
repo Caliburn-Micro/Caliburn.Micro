@@ -80,13 +80,11 @@
                 }
             });
 #elif WinRT
-            var dispatcher = Window.Current.Dispatcher;
-
             SetUIThreadMarshaller(action => {
-                if (dispatcher.HasThreadAccess)
+                if (Window.Current.Dispatcher.HasThreadAccess)
                     action();
                 else
-                    dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action())
+                    Window.Current.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action())
                         .AsTask()
                         .Wait();
             });
