@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Silverlight"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.SL5", "Caliburn.Micro.SL5\Caliburn.Micro.SL5.csproj", "{7A82B446-E050-4373-AA06-F8B62EE1E40C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.WP71", "Caliburn.Micro.WP71\Caliburn.Micro.WP71.csproj", "{B3F474B3-85C7-482D-9382-097CF64BCBB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.WP71.Extensions", "Caliburn.Micro.WP71.Extensions\Caliburn.Micro.WP71.Extensions.csproj", "{FDA153CE-6970-48AA-A720-293A4F91D134}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +89,26 @@ Global
 		{7A82B446-E050-4373-AA06-F8B62EE1E40C}.Release|ARM.ActiveCfg = Release|Any CPU
 		{7A82B446-E050-4373-AA06-F8B62EE1E40C}.Release|x64.ActiveCfg = Release|Any CPU
 		{7A82B446-E050-4373-AA06-F8B62EE1E40C}.Release|x86.ActiveCfg = Release|Any CPU
+		{B3F474B3-85C7-482D-9382-097CF64BCBB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3F474B3-85C7-482D-9382-097CF64BCBB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3F474B3-85C7-482D-9382-097CF64BCBB0}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{B3F474B3-85C7-482D-9382-097CF64BCBB0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B3F474B3-85C7-482D-9382-097CF64BCBB0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B3F474B3-85C7-482D-9382-097CF64BCBB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3F474B3-85C7-482D-9382-097CF64BCBB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3F474B3-85C7-482D-9382-097CF64BCBB0}.Release|ARM.ActiveCfg = Release|Any CPU
+		{B3F474B3-85C7-482D-9382-097CF64BCBB0}.Release|x64.ActiveCfg = Release|Any CPU
+		{B3F474B3-85C7-482D-9382-097CF64BCBB0}.Release|x86.ActiveCfg = Release|Any CPU
+		{FDA153CE-6970-48AA-A720-293A4F91D134}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDA153CE-6970-48AA-A720-293A4F91D134}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDA153CE-6970-48AA-A720-293A4F91D134}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{FDA153CE-6970-48AA-A720-293A4F91D134}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FDA153CE-6970-48AA-A720-293A4F91D134}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FDA153CE-6970-48AA-A720-293A4F91D134}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDA153CE-6970-48AA-A720-293A4F91D134}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDA153CE-6970-48AA-A720-293A4F91D134}.Release|ARM.ActiveCfg = Release|Any CPU
+		{FDA153CE-6970-48AA-A720-293A4F91D134}.Release|x64.ActiveCfg = Release|Any CPU
+		{FDA153CE-6970-48AA-A720-293A4F91D134}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
