@@ -26,25 +26,25 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\WP71\Debug\</OutputPath>
+    <OutputPath>..\..\bin\WP8\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;SILVERLIGHT WP71</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\WP71\Debug\Caliburn.Micro.Extensions.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\WP8\Debug\Caliburn.Micro.Extensions.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\WP71\Release\</OutputPath>
+    <OutputPath>..\..\bin\WP8\Release\</OutputPath>
     <DefineConstants>TRACE;SILVERLIGHT WP71</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\WP71\Release\Caliburn.Micro.Extensions.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\WP8\Release\Caliburn.Micro.Extensions.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
