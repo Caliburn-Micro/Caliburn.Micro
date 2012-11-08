@@ -78,6 +78,17 @@ namespace Caliburn.Micro
             }
         }
 
+        protected override void OnWindowCreated(WindowCreatedEventArgs args)
+        {
+            base.OnWindowCreated(args);
+
+            // Because dispatchers are tied to windows Execute will fail in 
+            // scenarios when the app has multiple windows open (though contract 
+            // activation, this keeps Excute up to date with the currently activated window
+
+            args.Window.Activated += (s, e) => Execute.InitializeWithDispatcher();
+        }
+
         /// <summary>
         /// Provides an opportunity to hook into the application object.
         /// </summary>
