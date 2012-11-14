@@ -137,18 +137,22 @@ namespace Caliburn.Micro
             if (parameter is string && ((string)parameter).StartsWith("caliburn://"))
             {
                 var uri = new Uri((string)parameter);
-                var decorder = new WwwFormUrlDecoder(uri.Query);
 
-                foreach (var pair in decorder)
+                if (!String.IsNullOrEmpty(uri.Query))
                 {
-                    var property = viewModelType.GetPropertyCaseInsensitive(pair.Name);
+                    var decorder = new WwwFormUrlDecoder(uri.Query);
 
-                    if (property == null)
+                    foreach (var pair in decorder)
                     {
-                        continue;
-                    }
+                        var property = viewModelType.GetPropertyCaseInsensitive(pair.Name);
 
-                    property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, pair.Value, null));
+                        if (property == null)
+                        {
+                            continue;
+                        }
+
+                        property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, pair.Value, null));
+                    }
                 }
             }
             else
