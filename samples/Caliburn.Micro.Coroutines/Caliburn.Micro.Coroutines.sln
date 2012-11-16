@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Coroutines", "Caliburn.Micro.Coroutines\Caliburn.Micro.Coroutines.csproj", "{A7C0657A-0B1D-4E72-97A1-E616A9E07D56}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "Host\Host.csproj", "{71B3BB3D-2B4F-4A3F-A0F9-8F697EE6054D}"
