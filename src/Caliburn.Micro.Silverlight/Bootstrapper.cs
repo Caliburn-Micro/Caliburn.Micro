@@ -42,6 +42,7 @@
                 }catch {
                     //if something fails at design-time, there's really nothing we can do...
                     isInitialized = false;
+                    throw;
                 }
             }
             else {
@@ -122,21 +123,32 @@
                                      .GetMethod("GetAssemblies")
                                      .Invoke(appDomain, null) as Assembly[] ?? new Assembly[] { };
 
-                var applicationAssembly =
-#if SILVERLIGHT && !WP71
-                        assemblies.LastOrDefault(x => !x.IsDynamic && x.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application))));
-#else
-                        assemblies.LastOrDefault(x => x.EntryPoint != null && x.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application))));
-#endif
+                var applicationAssembly = assemblies.LastOrDefault(x => ContainsApplicationClass(x));
                 return applicationAssembly == null ? new Assembly[] { } : new[] { applicationAssembly };
             }
 
 #if SILVERLIGHT
-            return new[] { Application.Current.GetType().Assembly };
+            var entryAssembly = Application.Current.GetType().Assembly;
 #else
             var entryAssembly = Assembly.GetEntryAssembly();
-            return entryAssembly == null ? new Assembly[] { } : new[] { entryAssembly };
 #endif
+            return entryAssembly == null ? new Assembly[] { } : new[] { entryAssembly };
+        }
+
+        private static bool ContainsApplicationClass(Assembly assembly) {
+            var containsApp = false;
+
+            try {
+#if SILVERLIGHT && !WP71
+                containsApp = !assembly.IsDynamic && assembly.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application)));
+#else
+                containsApp = assembly.EntryPoint != null && assembly.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application)));
+#endif
+            }
+            catch {
+            }
+
+            return containsApp;
         }
 
         /// <summary>

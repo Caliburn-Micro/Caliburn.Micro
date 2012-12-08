@@ -184,6 +184,18 @@
         ///<remarks>Passes the the view model, view and creation context (or null for default) to use in applying binding.</remarks>
         public static Action<object, DependencyObject, object> Bind = (viewModel, view, context) =>
         {
+#if !WinRT
+            // when using d:DesignInstance, Blend tries to assign the DesignInstanceExtension class as the DataContext,
+            // so here we get the actual ViewModel which is in the Instance property of DesignInstanceExtension
+            if (Execute.InDesignMode) {
+                var vmType = viewModel.GetType();
+                if (vmType.FullName == "Microsoft.Expression.DesignModel.InstanceBuilders.DesignInstanceExtension") {
+                    var propInfo = vmType.GetProperty("Instance", BindingFlags.Instance | BindingFlags.NonPublic);
+                    viewModel = propInfo.GetValue(viewModel, null);
+                }
+            }
+#endif
+
             Log.Info("Binding {0} and {1}.", view, viewModel);
 
             if ((bool)view.GetValue(Micro.Bind.NoContextProperty))
