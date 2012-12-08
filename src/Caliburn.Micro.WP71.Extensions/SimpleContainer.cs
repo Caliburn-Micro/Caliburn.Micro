@@ -79,7 +79,20 @@
             GetOrCreateEntry(service, key).Add(handler);
         }
 
-#if WinRT
+        /// <summary>
+        ///   Unregisters any handlers for the service/key that have previously been registered.
+        /// </summary>
+        /// <param name = "service">The service.</param>
+        /// <param name = "key">The key.</param>
+        public void UnregisterHandler(Type service, string key)
+        {
+            var entry = GetEntry(service, key);
+            if (entry != null)
+            {
+                entries.Remove(entry);
+            }
+        }
+
         /// <summary>
         ///   Requests an instance.
         /// </summary>
@@ -89,15 +102,14 @@
         public object GetInstance(Type service, string key)
         {
             var entry = GetEntry(service, key);
-            if (entry != null)
-            {
+            if (entry != null) {
                 return entry.Single()(this);
             }
 
+#if WinRT
             var serviceInfo = service.GetTypeInfo();
 
-            if (delegateType.IsAssignableFrom(serviceInfo))
-            {
+            if (delegateType.IsAssignableFrom(serviceInfo)) {
                 var typeToCreate = serviceInfo.GenericTypeArguments[0];
                 var factoryFactoryType = typeof(FactoryFactory<>).MakeGenericType(typeToCreate);
                 var factoryFactoryHost = Activator.CreateInstance(factoryFactoryType);
@@ -105,49 +117,18 @@
                 return factoryFactoryMethod.Invoke(factoryFactoryHost, new object[] { this });
             }
 
-            if (enumerableType.IsAssignableFrom(serviceInfo))
-            {
+            if (enumerableType.IsAssignableFrom(serviceInfo)) {
                 var listType = service.GenericTypeArguments[0];
                 var instances = GetAllInstances(listType).ToList();
                 var array = Array.CreateInstance(listType, instances.Count);
 
-                for (var i = 0; i < array.Length; i++)
-                {
+                for (var i = 0; i < array.Length; i++) {
                     array.SetValue(instances[i], i);
                 }
 
                 return array;
             }
-
-            if (IsConcrete(service))
-            {
-                RegisterPerRequest(service, key, service);
-
-                return GetInstance(service, key);
-            }
-
-            return null;
-        }
-
-        private bool IsConcrete(Type service)
-        {
-            var serviceInfo = service.GetTypeInfo();
-
-            return !serviceInfo.IsAbstract && !serviceInfo.IsInterface;
-        }
 #else
-        /// <summary>
-        ///   Requests an instance.
-        /// </summary>
-        /// <param name = "service">The service.</param>
-        /// <param name = "key">The key.</param>
-        /// <returns>The instance, or null if a handler is not found.</returns>
-        public object GetInstance(Type service, string key) {
-            var entry = GetEntry(service, key);
-            if(entry != null) {
-                return entry.Single()(this);
-            }
-
             if(delegateType.IsAssignableFrom(service)) {
                 var typeToCreate = service.GetGenericArguments()[0];
                 var factoryFactoryType = typeof(FactoryFactory<>).MakeGenericType(typeToCreate);
@@ -167,10 +148,11 @@
 
                 return array;
             }
+#endif
 
             return null;
         }
-#endif
+
         /// <summary>
         /// Determines if a handler for the service/key has previously been registered.
         /// </summary>
