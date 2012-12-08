@@ -236,9 +236,6 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\ViewModelLocator.cs">
       <Link>ViewModelLocator.cs</Link>
     </Compile>
-    <Compile Include="..\Caliburn.Micro.WP71\ActionDelegate.cs">
-      <Link>ActionDelegate.cs</Link>
-    </Compile>
     <Compile Include="..\Caliburn.Micro.WP71\CustomAppBar.cs">
       <Link>CustomAppBar.cs</Link>
     </Compile>
