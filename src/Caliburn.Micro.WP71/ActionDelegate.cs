@@ -1,4 +1,4 @@
-﻿namespace System {
+﻿namespace Caliburn.Micro {
     /// <summary>
     /// Encapsulates a method that has five type parameters and does not return a value.
     /// </summary>
