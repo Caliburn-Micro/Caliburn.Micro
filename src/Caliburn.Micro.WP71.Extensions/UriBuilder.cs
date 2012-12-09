@@ -80,7 +80,7 @@
             }
 
             var result = queryString
-                .Aggregate("?", (current, pair) => current + (pair.Key + "=" + pair.Value + "&"));
+                .Aggregate("?", (current, pair) => current + (pair.Key + "=" + Uri.EscapeDataString(pair.Value) + "&"));
 
             return result.Remove(result.Length - 1);
         }
