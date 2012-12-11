@@ -10,6 +10,13 @@
     <projectUrl>http://caliburnmicro.codeplex.com</projectUrl>
     <iconUrl>http://www.caliburnproject.org/CaliburnIcon.png</iconUrl>
     <tags>MVVM Silverlight WPF WP7 WP71 WP8 WinRT Metro SL4 SL5 SL MVC CoC Convention MVP PM Screen Coroutine Behavior Model-View-ViewModel Presentation UI ViewModel Phone Caliburn</tags>
+
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="Microsoft.Phone.Controls" targetFramework="wp71" />
+      <frameworkAssembly assemblyName="System.ComponentModel.Composition" targetFramework="net40, sl4, sl5" />
+      <frameworkAssembly assemblyName="System.ComponentModel.Composition.Initialization" targetFramework="sl4, sl5" />
+    </frameworkAssemblies>
+
     <dependencies>
       <group>
         <dependency id="Caliburn.Micro" version="1.4" />

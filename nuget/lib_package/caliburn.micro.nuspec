@@ -12,15 +12,11 @@
     <tags>MVVM Silverlight WPF WP7 WP71 WP8 WinRT Metro SL4 SL5 SL MVC CoC Convention MVP PM Screen Coroutine Behavior Model-View-ViewModel Presentation UI ViewModel Phone Caliburn</tags>
 
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="Microsoft.Phone.Controls" targetFramework="sl4-windowsphone71" />
-      <frameworkAssembly assemblyName="System.ComponentModel.Composition" targetFramework="net40, sl4, sl5" />
-      <frameworkAssembly assemblyName="System.ComponentModel.Composition.Initialization" targetFramework="sl4, sl5" />
+	  <frameworkAssembly assemblyName="System.Windows.Controls" targetFramework="sl4, sl5" />
     </frameworkAssemblies>
 
     <dependencies>
-      <group>
-      </group>
-      <group targetFramework="winrt45">
+      <group targetFramework="win8">
         <dependency id="Windows.UI.Interactivity" version="[1.0.2]" />
       </group>
     </dependencies>
