@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.Micro {
     using System;
+    using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Navigation;
@@ -54,6 +55,12 @@
         /// </summary>
         /// <returns> The entry that was removed. </returns>
         JournalEntry RemoveBackEntry();
+
+        /// <summary>
+        ///   Gets an IEnumerable that you use to enumerate the entries in back navigation history.
+        /// </summary>
+        /// <returns>List of entries in the back stack.</returns>
+        IEnumerable<JournalEntry> BackStack { get; }
 
         /// <summary>
         ///   Raised after navigation.
@@ -287,6 +294,14 @@
         /// <returns> The entry that was removed. </returns>
         public JournalEntry RemoveBackEntry() {
             return ((Page)frame.Content).NavigationService.RemoveBackEntry();
+        }
+
+        /// <summary>
+        ///   Gets an IEnumerable that you use to enumerate the entries in back navigation history.
+        /// </summary>
+        /// <returns>List of entries in the back stack.</returns>
+        public IEnumerable<JournalEntry> BackStack {
+            get { return ((Page)frame.Content).NavigationService.BackStack; }
         }
 
         /// <summary>
