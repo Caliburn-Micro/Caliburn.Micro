@@ -117,7 +117,7 @@
                 return factoryFactoryMethod.Invoke(factoryFactoryHost, new object[] { this });
             }
 
-            if (enumerableType.IsAssignableFrom(serviceInfo)) {
+            if (enumerableType.IsAssignableFrom(serviceInfo) && serviceInfo.IsGenericType) {
                 var listType = service.GenericTypeArguments[0];
                 var instances = GetAllInstances(listType).ToList();
                 var array = Array.CreateInstance(listType, instances.Count);
@@ -129,7 +129,7 @@
                 return array;
             }
 #else
-            if(delegateType.IsAssignableFrom(service)) {
+            if (delegateType.IsAssignableFrom(service)) {
                 var typeToCreate = service.GetGenericArguments()[0];
                 var factoryFactoryType = typeof(FactoryFactory<>).MakeGenericType(typeToCreate);
                 var factoryFactoryHost = Activator.CreateInstance(factoryFactoryType);
@@ -137,12 +137,12 @@
                 return factoryFactoryMethod.Invoke(factoryFactoryHost, new object[] { this });
             }
 
-            if(enumerableType.IsAssignableFrom(service)) {
+            if (enumerableType.IsAssignableFrom(service) && service.IsGenericType) {
                 var listType = service.GetGenericArguments()[0];
                 var instances = GetAllInstances(listType).ToList();
                 var array = Array.CreateInstance(listType, instances.Count);
 
-                for(var i = 0; i < array.Length; i++) {
+                for (var i = 0; i < array.Length; i++) {
                     array.SetValue(instances[i], i);
                 }
 
@@ -226,16 +226,16 @@
         {
             if (service == null)
             {
-                return entries.Where(x => x.Key == key).FirstOrDefault();
+                return entries.FirstOrDefault(x => x.Key == key);
             }
 
             if (key == null)
             {
-                return entries.Where(x => x.Service == service && x.Key == null).FirstOrDefault()
-                       ?? entries.Where(x => x.Service == service).FirstOrDefault();
+                return entries.FirstOrDefault(x => x.Service == service && x.Key == null)
+                       ?? entries.FirstOrDefault(x => x.Service == service);
             }
 
-            return entries.Where(x => x.Service == service && x.Key == key).FirstOrDefault();
+            return entries.FirstOrDefault(x => x.Service == service && x.Key == key);
         }
 
         /// <summary>
