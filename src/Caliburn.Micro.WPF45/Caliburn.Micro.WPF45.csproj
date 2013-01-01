@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EF2C0C7D-3FFE-4884-9AAC-7622FEE66809}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Caliburn.Micro</RootNamespace>
+    <AssemblyName>Caliburn.Micro</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\WPF45\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET NET45</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\bin\WPF45\Debug\Caliburn.Micro.XML</DocumentationFile>
+    <NoWarn>1572</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\WPF45\Release\</OutputPath>
+    <DefineConstants>TRACE;NET NET45</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\bin\WPF45\Release\Caliburn.Micro.XML</DocumentationFile>
+    <NoWarn>1572</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Caliburn.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Action.cs">
+      <Link>Action.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ActionExecutionContext.cs">
+      <Link>ActionExecutionContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ActionMessage.cs">
+      <Link>ActionMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\AssemblySource.cs">
+      <Link>AssemblySource.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Bind.cs">
+      <Link>Bind.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\BindingScope.cs">
+      <Link>BindingScope.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\BooleanToVisibilityConverter.cs">
+      <Link>BooleanToVisibilityConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Bootstrapper.cs">
+      <Link>Bootstrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Conductor.cs">
+      <Link>Conductor.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConductorBase.cs">
+      <Link>ConductorBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConductorBaseWithActiveItem.cs">
+      <Link>ConductorBaseWithActiveItem.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConductorWithCollectionAllActive.cs">
+      <Link>ConductorWithCollectionAllActive.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConductorWithCollectionOneActive.cs">
+      <Link>ConductorWithCollectionOneActive.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ConventionManager.cs">
+      <Link>ConventionManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Coroutine.cs">
+      <Link>Coroutine.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\DefaultCloseStrategy.cs">
+      <Link>DefaultCloseStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ElementConvention.cs">
+      <Link>ElementConvention.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\EventAggregator.cs">
+      <Link>EventAggregator.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ExtensionMethods.cs">
+      <Link>ExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IChild.cs">
+      <Link>IChild.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IConductor.cs">
+      <Link>IConductor.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IHaveParameters.cs">
+      <Link>IHaveParameters.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\INPC.cs">
+      <Link>INPC.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IoC.cs">
+      <Link>IoC.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IResult.cs">
+      <Link>IResult.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IScreen.cs">
+      <Link>IScreen.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\IViewAware.cs">
+      <Link>IViewAware.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Logging.cs">
+      <Link>Logging.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Message.cs">
+      <Link>Message.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\MessageBinder.cs">
+      <Link>MessageBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Mouse.cs">
+      <Link>Mouse.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\NameTransformer.cs">
+      <Link>NameTransformer.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Parser.cs">
+      <Link>Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\RegExHelper.cs">
+      <Link>RegExHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ResultCompletionEventArgs.cs">
+      <Link>ResultCompletionEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\Screen.cs">
+      <Link>Screen.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ScreenExtensions.cs">
+      <Link>ScreenExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\SequentialResult.cs">
+      <Link>SequentialResult.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\TypeDescriptor.cs">
+      <Link>TypeDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\TypeMappingConfiguration.cs">
+      <Link>TypeMappingConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\View.cs">
+      <Link>View.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ViewAware.cs">
+      <Link>ViewAware.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ViewLocator.cs">
+      <Link>ViewLocator.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ViewModelBinder.cs">
+      <Link>ViewModelBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ViewModelLocator.cs">
+      <Link>ViewModelLocator.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.WPF\AttachedCollection.cs">
+      <Link>AttachedCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.WPF\Parameter.cs">
+      <Link>Parameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.WPF\WindowManager.cs">
+      <Link>WindowManager.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Caliburn.snk">
+      <Link>Caliburn.snk</Link>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

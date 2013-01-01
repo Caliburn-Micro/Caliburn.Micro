@@ -9,9 +9,9 @@
     using System.Reflection;
     using System.Runtime.Serialization;
     using System.Threading;
+    using System.Runtime.CompilerServices;
 
 #if WinRT
-    using System.Runtime.CompilerServices;
     using Windows.UI.Core;
     using Windows.UI.Xaml.Controls;
     using Windows.ApplicationModel;
@@ -196,7 +196,7 @@
         ///   Notifies subscribers of the property change.
         /// </summary>
         /// <param name = "propertyName">Name of the property.</param>
-#if WinRT
+#if WinRT || NET45
         public virtual void NotifyOfPropertyChange([CallerMemberName]string propertyName = "")
 #else
         public virtual void NotifyOfPropertyChange(string propertyName)
@@ -316,7 +316,7 @@
         ///   Notifies subscribers of the property change.
         /// </summary>
         /// <param name = "propertyName">Name of the property.</param>
-#if WinRT
+#if WinRT || NET45
         public virtual void NotifyOfPropertyChange([CallerMemberName]string propertyName = "")
 #else
         public virtual void NotifyOfPropertyChange(string propertyName)

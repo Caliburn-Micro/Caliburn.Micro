@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.WP8", "Calib
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.WP8.Extensions", "Caliburn.Micro.WP8.Extensions\Caliburn.Micro.WP8.Extensions.csproj", "{749ADF14-7D11-4380-AB64-CEB61DFF2A73}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.WPF45", "Caliburn.Micro.WPF45\Caliburn.Micro.WPF45.csproj", "{EF2C0C7D-3FFE-4884-9AAC-7622FEE66809}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +135,16 @@ Global
 		{749ADF14-7D11-4380-AB64-CEB61DFF2A73}.Release|ARM.ActiveCfg = Release|Any CPU
 		{749ADF14-7D11-4380-AB64-CEB61DFF2A73}.Release|x64.ActiveCfg = Release|Any CPU
 		{749ADF14-7D11-4380-AB64-CEB61DFF2A73}.Release|x86.ActiveCfg = Release|Any CPU
+		{EF2C0C7D-3FFE-4884-9AAC-7622FEE66809}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF2C0C7D-3FFE-4884-9AAC-7622FEE66809}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF2C0C7D-3FFE-4884-9AAC-7622FEE66809}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{EF2C0C7D-3FFE-4884-9AAC-7622FEE66809}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EF2C0C7D-3FFE-4884-9AAC-7622FEE66809}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EF2C0C7D-3FFE-4884-9AAC-7622FEE66809}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF2C0C7D-3FFE-4884-9AAC-7622FEE66809}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF2C0C7D-3FFE-4884-9AAC-7622FEE66809}.Release|ARM.ActiveCfg = Release|Any CPU
+		{EF2C0C7D-3FFE-4884-9AAC-7622FEE66809}.Release|x64.ActiveCfg = Release|Any CPU
+		{EF2C0C7D-3FFE-4884-9AAC-7622FEE66809}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
