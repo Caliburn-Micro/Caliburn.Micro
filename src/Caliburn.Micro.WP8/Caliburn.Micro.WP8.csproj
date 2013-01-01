@@ -27,7 +27,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\bin\WP8\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SILVERLIGHT WP71</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT WP71 WP8</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -40,7 +40,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin\WP8\Release\</OutputPath>
-    <DefineConstants>TRACE;SILVERLIGHT WP71</DefineConstants>
+    <DefineConstants>TRACE;SILVERLIGHT WP71 WP8</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -237,6 +237,9 @@
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ViewModelLocator.cs">
       <Link>ViewModelLocator.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.WP71\ActionDelegate.cs">
+      <Link>ActionDelegate.cs</Link>
     </Compile>
     <Compile Include="..\Caliburn.Micro.WP71\CustomAppBar.cs">
       <Link>CustomAppBar.cs</Link>

@@ -1,4 +1,5 @@
-﻿namespace Caliburn.Micro {
+﻿#if WP71 && !WP8
+namespace Caliburn.Micro {
     /// <summary>
     /// Encapsulates a method that has five type parameters and does not return a value.
     /// </summary>
@@ -21,3 +22,4 @@
     /// <typeparam name="TResult">The return type.</typeparam>
     public delegate TResult Func<T1, T2, T3, T4, T5, TResult>(T1 param1, T2 param2, T3 param3, T4 param4, T5 param5);
 }
+#endif
