@@ -1,10 +1,7 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-
+﻿using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System;
+
 //using System.Windows.Markup;
 
 [assembly: AssemblyTitle("Caliburn Micro")]
@@ -17,7 +14,7 @@ using System;
 [assembly: AssemblyVersion("1.4.1")]
 [assembly: AssemblyFileVersion("1.4.1")]
 
-[assembly: CLSCompliant(true)]
+//[assembly: CLSCompliant(true)]
 
 //[assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.Micro")]
 //[assembly: XmlnsPrefix("http://www.caliburnproject.org", "cal")]

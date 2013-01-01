@@ -30,6 +30,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\..\bin\WP71\Debug\Caliburn.Micro.xml</DocumentationFile>
+    <NoWarn>1572</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -41,6 +42,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\..\bin\WP71\Release\Caliburn.Micro.xml</DocumentationFile>
+    <NoWarn>1572</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Phone" />
