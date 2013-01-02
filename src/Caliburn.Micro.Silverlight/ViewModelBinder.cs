@@ -232,8 +232,14 @@
             }
 
             var viewModelType = viewModel.GetType();
-            var namedElements = BindingScope.GetNamedElements(element);
+#if SL5 || NET45
+            var viewModelTypeProvider = viewModel as ICustomTypeProvider;
+            if (viewModelTypeProvider != null) {
+                viewModelType = viewModelTypeProvider.GetCustomType();
+            }
+#endif
 
+            var namedElements = BindingScope.GetNamedElements(element);
 #if SILVERLIGHT
             namedElements.Apply(x => x.SetValue(
                 View.IsLoadedProperty,
@@ -243,6 +249,7 @@
             namedElements = BindActions(namedElements, viewModelType);
             namedElements = BindProperties(namedElements, viewModelType);
             HandleUnmatchedElements(namedElements, viewModelType);
+
 #if WP71
             BindAppBar(view);
 #endif
