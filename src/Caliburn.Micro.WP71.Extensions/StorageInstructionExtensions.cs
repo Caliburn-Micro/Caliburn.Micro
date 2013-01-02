@@ -116,16 +116,17 @@
                 x.Key = "ActiveItemIndex";
                 x.Save = (instance, getKey, mode) => {
                     var children = instance.GetChildren().OfType<object>().ToList();
-                    x.StorageMechanism.Store(getKey(), children.IndexOf(instance.ActiveItem));
+                    var index = children.IndexOf(instance.ActiveItem);
+                    x.StorageMechanism.Store(getKey(), index);
                 };
                 x.Restore = (instance, getKey, mode) => {
                     object value;
                     var key = getKey();
                     if(x.StorageMechanism.TryGet(key, out value)) {
-                        var children = instance.GetChildren().OfType<object>().ToList();
-                        var index = Convert.ToInt32(value);
-                        instance.ActiveItem = children[index];
                         x.StorageMechanism.Delete(key);
+                        var index = Convert.ToInt32(value);
+                        var activeItem = instance.GetChildren().OfType<object>().ElementAtOrDefault(index);
+                        instance.ActiveItem = activeItem;
                     }
                 };
             });

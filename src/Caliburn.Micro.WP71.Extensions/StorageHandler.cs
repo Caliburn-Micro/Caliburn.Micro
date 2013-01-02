@@ -67,8 +67,8 @@
                     object value;
                     var key = getKey();
                     if(x.StorageMechanism.TryGet(key, out value)) {
-                        info.SetValue(instance, value, null);
                         x.StorageMechanism.Delete(key);
+                        info.SetValue(instance, value, null);
                     }
                 };
             });
