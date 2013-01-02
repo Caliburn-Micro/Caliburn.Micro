@@ -8,6 +8,10 @@
     /// A custom IoC container which integrates with the phone and properly registers all Caliburn.Micro services.
     /// </summary>
     public class PhoneContainer : SimpleContainer, IPhoneContainer {
+
+        /// <summary>
+        /// The root frame of the application.
+        /// </summary>
         protected readonly Frame RootFrame;
 
         /// <summary>
@@ -99,6 +103,9 @@
             EnableTaskController();
         }
 
+        /// <summary>
+        /// Enable the <see cref="StorageCoordinator"/>.
+        /// </summary>
         protected void EnableStorageCoordinator() {
             var toSearch = AssemblySource.Instance.ToArray()
                 .Union(new[] { typeof(IStorageMechanism).Assembly });
@@ -113,6 +120,9 @@
             coordinator.Start();
         }
 
+        /// <summary>
+        /// Enable the <see cref="TaskController"/>.
+        /// </summary>
         protected void EnableTaskController() {
             RegisterSingleton(typeof(TaskController), null, typeof(TaskController));
             var taskController = (TaskController)GetInstance(typeof(TaskController), null);

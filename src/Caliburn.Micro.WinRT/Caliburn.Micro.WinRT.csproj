@@ -168,7 +168,7 @@
     <Compile Include="INavigationService.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReflectionExtentions.cs" />
+    <Compile Include="TypeExtentions.cs" />
     <Compile Include="XamlMetadataProvider.cs" />
   </ItemGroup>
   <ItemGroup>

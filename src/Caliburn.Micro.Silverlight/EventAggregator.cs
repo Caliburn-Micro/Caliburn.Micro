@@ -159,7 +159,7 @@
         }
 
 #if WinRT
-        protected class Handler         {
+        class Handler         {
             readonly WeakReference reference;
             readonly Dictionary<TypeInfo, MethodInfo> supportedHandlers = new Dictionary<TypeInfo, MethodInfo>();
 
@@ -202,7 +202,7 @@
             }
         }
 #else
-        protected class Handler {
+        class Handler {
             readonly WeakReference reference;
             readonly Dictionary<Type, MethodInfo> supportedHandlers = new Dictionary<Type, MethodInfo>();
 

@@ -123,7 +123,7 @@
                                      .GetMethod("GetAssemblies")
                                      .Invoke(appDomain, null) as Assembly[] ?? new Assembly[] { };
 
-                var applicationAssembly = assemblies.LastOrDefault(x => ContainsApplicationClass(x));
+                var applicationAssembly = assemblies.LastOrDefault(ContainsApplicationClass);
                 return applicationAssembly == null ? new Assembly[] { } : new[] { applicationAssembly };
             }
 

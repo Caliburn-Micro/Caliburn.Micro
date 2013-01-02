@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -12,28 +6,91 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Caliburn.Micro
 {
+    /// <summary>
+    ///   Implemented by services that provide (<see cref="Uri" /> based) navigation.
+    /// </summary>
     public interface INavigationService
     {
+        /// <summary>
+        ///   Raised after navigation.
+        /// </summary>
         event NavigatedEventHandler Navigated;
+
+        /// <summary>
+        ///   Raised prior to navigation.
+        /// </summary>
         event NavigatingCancelEventHandler Navigating;
+
+        /// <summary>
+        ///   Raised when navigation fails.
+        /// </summary>
         event NavigationFailedEventHandler NavigationFailed;
+
+        /// <summary>
+        ///   Raised when navigation is stopped.
+        /// </summary>
         event NavigationStoppedEventHandler NavigationStopped;
+
+        /// <summary>
+        /// Gets or sets the data type of the current content, or the content that should be navigated to.
+        /// </summary>
         Type SourcePageType { get; set; }
+
+        /// <summary>
+        /// Gets the data type of the content that is currently displayed.
+        /// </summary>
         Type CurrentSourcePageType { get; }
+
+        /// <summary>
+        ///   Indicates whether the navigator can navigate forward.
+        /// </summary>
         bool CanGoForward { get; }
+
+        /// <summary>
+        ///   Indicates whether the navigator can navigate back.
+        /// </summary>
         bool CanGoBack { get; }
+
+        /// <summary>
+        ///   Navigates to the specified content.
+        /// </summary>
+        /// <param name="sourcePageType"> The <see cref="System.Type" /> to navigate to. </param>
+        /// <returns> Whether or not navigation succeeded. </returns>
         bool Navigate(Type sourcePageType);
+
+        /// <summary>
+        ///   Navigates to the specified content.
+        /// </summary>
+        /// <param name="sourcePageType"> The <see cref="System.Type" /> to navigate to. </param>
+        /// <param name="parameter">The object parameter to pass to the target.</param>
+        /// <returns> Whether or not navigation succeeded. </returns>
         bool Navigate(Type sourcePageType, object parameter);
+
+        /// <summary>
+        ///   Navigates forward.
+        /// </summary>
         void GoForward();
+
+        /// <summary>
+        ///   Navigates back.
+        /// </summary>
         void GoBack();
     }
 
+    /// <summary>
+    ///   A basic implementation of <see cref="INavigationService" /> designed to adapt the <see cref="Frame" /> control.
+    /// </summary>
     public class FrameAdapter : INavigationService
     {
         private readonly Frame frame;
         private readonly bool treatViewAsLoaded;
         private event NavigatingCancelEventHandler ExternalNavigatingHandler = delegate { };
 
+        /// <summary>
+        ///   Creates an instance of <see cref="FrameAdapter" />
+        /// </summary>
+        /// <param name="frame"> The frame to represent as a <see cref="INavigationService" /> . </param>
+        /// <param name="treatViewAsLoaded"> Tells the frame adapter to assume that the view has already been loaded by the time OnNavigated is called. This is necessary when using the TransitionFrame. </param>
         public FrameAdapter(Frame frame, bool treatViewAsLoaded = false)
         {
             this.frame = frame;
@@ -43,6 +100,11 @@ namespace Caliburn.Micro
             this.frame.Navigated += OnNavigated;
         }
 
+        /// <summary>
+        ///   Occurs before navigation
+        /// </summary>
+        /// <param name="sender"> The event sender. </param>
+        /// <param name="e"> The event args. </param>
         protected virtual void OnNavigating(object sender, NavigatingCancelEventArgs e)
         {
             ExternalNavigatingHandler(sender, e);
@@ -77,6 +139,11 @@ namespace Caliburn.Micro
             }
         }
 
+        /// <summary>
+        ///   Occurs after navigation
+        /// </summary>
+        /// <param name="sender"> The event sender. </param>
+        /// <param name="e"> The event args. </param>
         protected virtual void OnNavigated(object sender, NavigationEventArgs e)
         {
             if (e.Content == null)
@@ -130,6 +197,11 @@ namespace Caliburn.Micro
             GC.Collect(); // Why?
         }
 
+        /// <summary>
+        ///   Attempts to inject query string parameters from the view into the view model.
+        /// </summary>
+        /// <param name="viewModel"> The view model.</param>
+        /// <param name="parameter"> The parameter.</param>
         protected virtual void TryInjectParameters(object viewModel, object parameter)
         {
             var viewModelType = viewModel.GetType();
@@ -157,7 +229,6 @@ namespace Caliburn.Micro
             }
             else
             {
-                
                 var property = viewModelType.GetPropertyCaseInsensitive("Parameter");
 
                 if (property == null)
@@ -177,108 +248,110 @@ namespace Caliburn.Micro
             return false;
         }
 
+        /// <summary>
+        ///   Raised after navigation.
+        /// </summary>
         public event NavigatedEventHandler Navigated
         {
-            add
-            {
-                frame.Navigated += value;
-            }
-            remove
-            {
-                frame.Navigated -= value;
-            }
+            add { frame.Navigated += value; }
+            remove { frame.Navigated -= value; }
         }
 
+        /// <summary>
+        ///   Raised prior to navigation.
+        /// </summary>
         public event NavigatingCancelEventHandler Navigating
         {
-            add
-            {
-                ExternalNavigatingHandler += value;
-            }
-            remove
-            {
-                ExternalNavigatingHandler -= value;
-            }
+            add { ExternalNavigatingHandler += value; }
+            remove { ExternalNavigatingHandler -= value; }
         }
 
+        /// <summary>
+        ///   Raised when navigation fails.
+        /// </summary>
         public event NavigationFailedEventHandler NavigationFailed
         {
-            add
-            {
-                frame.NavigationFailed += value;
-            }
-            remove
-            {
-                frame.NavigationFailed -= value;
-            }
+            add { frame.NavigationFailed += value; }
+            remove { frame.NavigationFailed -= value; }
         }
 
+        /// <summary>
+        ///   Raised when navigation is stopped.
+        /// </summary>
         public event NavigationStoppedEventHandler NavigationStopped
         {
-            add
-            {
-                frame.NavigationStopped += value;
-            }
-            remove
-            {
-                frame.NavigationStopped -= value;
-            }
+            add { frame.NavigationStopped += value; }
+            remove { frame.NavigationStopped -= value; }
         }
 
+        /// <summary>
+        /// Gets or sets the data type of the current content, or the content that should be navigated to.
+        /// </summary>
         public Type SourcePageType
         {
-            get
-            {
-                return frame.SourcePageType;
-            }
-            set
-            {
-                frame.SourcePageType = value;
-            }
+            get { return frame.SourcePageType; }
+            set { frame.SourcePageType = value; }
         }
 
+        /// <summary>
+        /// Gets the data type of the content that is currently displayed.
+        /// </summary>
         public Type CurrentSourcePageType
         {
-            get
-            {
-                return frame.CurrentSourcePageType;
-            }
+            get { return frame.CurrentSourcePageType; }
         }
 
+        /// <summary>
+        ///   Navigates to the specified content.
+        /// </summary>
+        /// <param name="sourcePageType"> The <see cref="System.Type" /> to navigate to. </param>
+        /// <returns> Whether or not navigation succeeded. </returns>
         public bool Navigate(Type sourcePageType)
         {
             return frame.Navigate(sourcePageType);
         }
 
+        /// <summary>
+        ///   Navigates to the specified content.
+        /// </summary>
+        /// <param name="sourcePageType"> The <see cref="System.Type" /> to navigate to. </param>
+        /// <param name="parameter">The object parameter to pass to the target.</param>
+        /// <returns> Whether or not navigation succeeded. </returns>
         public bool Navigate(Type sourcePageType, object parameter)
         {
             return frame.Navigate(sourcePageType, parameter);
         }
 
+        /// <summary>
+        ///   Navigates forward.
+        /// </summary>
         public void GoForward()
         {
             frame.GoForward();
         }
 
+        /// <summary>
+        ///   Navigates back.
+        /// </summary>
         public void GoBack()
         {
             frame.GoBack();
         }
 
+        /// <summary>
+        ///   Indicates whether the navigator can navigate forward.
+        /// </summary>
         public bool CanGoForward
         {
-            get
-            {
-                return frame.CanGoForward;
-            }
+            get { return frame.CanGoForward; }
         }
 
+        /// <summary>
+        ///   Indicates whether the navigator can navigate back.
+        /// </summary>
         public bool CanGoBack
         {
-            get
-            {
-                return frame.CanGoBack;
-            }
+            get { return frame.CanGoBack; }
         }
     }
 }

@@ -8,12 +8,15 @@ using Windows.UI.Xaml.Controls;
 namespace Caliburn.Micro
 {
     /// <summary>
-    /// 
+    /// Encapsulates the app and its available services.
     /// </summary>
     public abstract class CaliburnApplication : Application
     {
         private bool isInitialized;
 
+        /// <summary>
+        /// The root frame of the application.
+        /// </summary>
         public Frame RootFrame
         {
             get;
@@ -25,6 +28,7 @@ namespace Caliburn.Micro
         /// </summary>
         protected virtual void StartDesignTime()
         {
+            AssemblySource.Instance.Clear();
             AssemblySource.Instance.AddRange(SelectAssemblies());
 
             Configure();
@@ -39,8 +43,19 @@ namespace Caliburn.Micro
         protected virtual void StartRuntime()
         {
             Execute.InitializeWithDispatcher();
-
             EventAggregator.DefaultPublicationThreadMarshaller = Execute.OnUIThread;
+
+            EventAggregator.HandlerResultProcessing = (target, result) => {
+                var coroutine = result as IEnumerable<IResult>;
+                if (coroutine != null) {
+                    var viewAware = target as IViewAware;
+                    var view = viewAware != null ? viewAware.GetView() : null;
+                    var context = new ActionExecutionContext { Target = target, View = (DependencyObject)view };
+
+                    Coroutine.BeginExecute(coroutine.GetEnumerator(), context);
+                }
+            };
+
             AssemblySource.Instance.AddRange(SelectAssemblies());
 
             PrepareApplication();
@@ -51,33 +66,34 @@ namespace Caliburn.Micro
             IoC.BuildUp = BuildUp;
         }
 
+        /// <summary>
+        /// Start the framework.
+        /// </summary>
         protected virtual void Initialise()
         {
-            if (isInitialized)
-            {
+            if (isInitialized) {
                 return;
             }
 
             isInitialized = true;
 
-            if (Execute.InDesignMode)
-            {
-                try
-                {
+            if (Execute.InDesignMode) {
+                try {
                     StartDesignTime();
-                }
-                catch
-                {
+                } catch {
                     //if something fails at design-time, there's really nothing we can do...
                     isInitialized = false;
                 }
             }
-            else
-            {
+            else {
                 StartRuntime();
             }
         }
 
+        /// <summary>
+        /// Invoked when the application creates a window.
+        /// </summary>
+        /// <param name="args">Event data for the event.</param>
         protected override void OnWindowCreated(WindowCreatedEventArgs args)
         {
             base.OnWindowCreated(args);
@@ -144,28 +160,55 @@ namespace Caliburn.Micro
         {
         }
 
+        /// <summary>
+        /// Override this to add custom behavior when the application transitions from Suspended state to Running state.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event args.</param>
         protected virtual void OnResuming(object sender, object e)
         {
-
         }
 
+        /// <summary>
+        /// Override this to add custom behavior when the application transitions to Suspended state from some other state.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event args.</param>
         protected virtual void OnSuspending(object sender, SuspendingEventArgs e)
         {
         }
 
+        /// <summary>
+        /// Override this to add custom behavior for unhandled exceptions.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event args.</param>
         protected virtual void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
         }
 
+        /// <summary>
+        /// Creates the root frame used by the application.
+        /// </summary>
+        /// <returns>The frame.</returns>
         protected virtual Frame CreateApplicationFrame()
         {
             return new Frame();
         }
 
+        /// <summary>
+        /// Override this to register a navigation service.
+        /// </summary>
+        /// <param name="rootFrame">The root frame of the application.</param>
         protected virtual void PrepareViewFirst(Frame rootFrame)
         {
         }
 
+        /// <summary>
+        /// Creates the root frame and navigates to the specified view.
+        /// </summary>
+        /// <param name="viewType">The view type to navigate to.</param>
+        /// <param name="paramter">The object parameter to pass to the target.</param>
         protected void DisplayRootView(Type viewType, object paramter = null)
         {
             Initialise();
@@ -173,7 +216,6 @@ namespace Caliburn.Micro
             if (RootFrame == null)
             {
                 RootFrame = CreateApplicationFrame();
-
                 PrepareViewFirst(RootFrame);
             }
 
@@ -186,11 +228,20 @@ namespace Caliburn.Micro
             Window.Current.Activate();
         }
 
+        /// <summary>
+        /// Creates the root frame and navigates to the specified view.
+        /// </summary>
+        /// <typeparam name="T">The view type to navigate to.</typeparam>
+        /// <param name="parameter">The object parameter to pass to the target.</param>
         protected void DisplayRootView<T>(object parameter = null)
         {
             DisplayRootView(typeof(T), parameter);
         }
 
+        /// <summary>
+        /// Locates the view model, locates the associate view, binds them and shows it as the root view.
+        /// </summary>
+        /// <param name="viewModelType">The view model type.</param>
         protected void DisplayRootViewFor(Type viewModelType)
         {
             Initialise();
@@ -208,6 +259,10 @@ namespace Caliburn.Micro
             Window.Current.Activate();
         }
 
+        /// <summary>
+        /// Locates the view model, locates the associate view, binds them and shows it as the root view.
+        /// </summary>
+        /// <typeparam name="T">The view model type.</typeparam>
         protected void DisplayRootViewFor<T>()
         {
             DisplayRootViewFor(typeof(T));

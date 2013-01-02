@@ -56,6 +56,12 @@
             IsolatedStorageSettings.ApplicationSettings.Save();
         }
 
+        /// <summary>
+        /// Tries to get the data previously stored with the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>true if found; false otherwise</returns>
         public bool TryGet(string key, out object value) {
             return IsolatedStorageSettings.ApplicationSettings.TryGetValue(key, out value);
         }

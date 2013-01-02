@@ -5,10 +5,18 @@ using Windows.UI.Xaml;
 
 namespace Caliburn.Micro
 {
+    /// <summary>
+    /// Implements XAML schema context concepts that support XAML parsing.
+    /// </summary>
     public class XamlMetadataProvider : IXamlMetadataProvider
     {
         private XamlTypeInfoProvider _provider;
 
+        /// <summary>
+        /// Implements XAML schema context access to underlying type mapping, based on providing a helper value that describes a type.
+        /// </summary>
+        /// <param name="type">The type as represented by the relevant type system or interop support type.</param>
+        /// <returns>The schema context's implementation of the <see cref="IXamlType"/> concept.</returns>
         public IXamlType GetXamlType(Type type)
         {
             if (_provider == null)
@@ -18,6 +26,11 @@ namespace Caliburn.Micro
             return _provider.GetXamlTypeByType(type);
         }
 
+        /// <summary>
+        /// Implements XAML schema context access to underlying type mapping, based on specifying a full type name.
+        /// </summary>
+        /// <param name="typeName">The name of the class for which to return a XAML type mapping.</param>
+        /// <returns>The schema context's implementation of the IXamlType concept.</returns>
         public IXamlType GetXamlType(String typeName)
         {
             if (_provider == null)
@@ -27,6 +40,10 @@ namespace Caliburn.Micro
             return _provider.GetXamlTypeByName(typeName);
         }
 
+        /// <summary>
+        /// Gets the set of XMLNS (XAML namespace) definitions that apply to the context.
+        /// </summary>
+        /// <returns>The set of XMLNS (XAML namespace) definitions.</returns>
         public XmlnsDefinition[] GetXmlnsDefinitions()
         {
             return new XmlnsDefinition[0];
@@ -108,7 +125,7 @@ namespace Caliburn.Micro
             switch (typeName)
             {
                 case "Object":
-                    xamlType = new XamlSystemBaseType(typeName, typeof(System.Object));
+                    xamlType = new XamlSystemBaseType(typeName, typeof(Object));
                     break;
 
                 //case "Caliburn.Micro.Message":
@@ -120,7 +137,7 @@ namespace Caliburn.Micro
                 //    break;
 
                 case "Caliburn.Micro.View":
-                    userType = new XamlUserType(this, typeName, typeof(Caliburn.Micro.View), GetXamlTypeByName("Object"));
+                    userType = new XamlUserType(this, typeName, typeof(View), GetXamlTypeByName("Object"));
                     userType.AddMemberName("Model");
                     AddToMapOfTypeToStandardName(typeof(Object), "Object");
                     xamlType = userType;
@@ -132,12 +149,12 @@ namespace Caliburn.Micro
 
         private object get_1_View_Model(object instance)
         {
-            return Caliburn.Micro.View.GetModel((Windows.UI.Xaml.DependencyObject)instance);
+            return View.GetModel((DependencyObject)instance);
         }
 
-        private void set_1_View_Model(object instance, object Value)
+        private void set_1_View_Model(object instance, object value)
         {
-            Caliburn.Micro.View.SetModel((Windows.UI.Xaml.DependencyObject)instance, (System.Object)Value);
+            View.SetModel((DependencyObject)instance, value);
         }
 
         private IXamlMember CreateXamlMember(string longMemberName)
@@ -158,7 +175,6 @@ namespace Caliburn.Micro
             }
             return xamlMember;
         }
-
     }
 
 
@@ -293,10 +309,10 @@ namespace Caliburn.Micro
 
                 foreach (string valuePart in valueParts)
                 {
-                    object partValue;
                     Int32 enumFieldValue = 0;
                     try
                     {
+                        object partValue;
                         if (_enumValues.TryGetValue(valuePart.Trim(), out partValue))
                         {
                             enumFieldValue = Convert.ToInt32(partValue);
@@ -309,9 +325,9 @@ namespace Caliburn.Micro
                             }
                             catch (FormatException)
                             {
-                                foreach (string key in _enumValues.Keys)
+                                foreach (var key in _enumValues.Keys)
                                 {
-                                    if (String.Compare(valuePart.Trim(), key, System.StringComparison.OrdinalIgnoreCase) == 0)
+                                    if (String.Compare(valuePart.Trim(), key, StringComparison.OrdinalIgnoreCase) == 0)
                                     {
                                         if (_enumValues.TryGetValue(key.Trim(), out partValue))
                                         {
@@ -475,8 +491,7 @@ namespace Caliburn.Micro
         {
             if (Getter != null)
                 return Getter(instance);
-            else
-                throw new InvalidOperationException("GetValue");
+            throw new InvalidOperationException("GetValue");
         }
 
         public Setter Setter
