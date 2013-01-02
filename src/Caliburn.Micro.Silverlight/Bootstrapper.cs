@@ -9,7 +9,7 @@
     /// <summary>
     /// Inherit from this class in order to customize the configuration of the framework.
     /// </summary>
-    public class BootstrapperBase {
+    public abstract class BootstrapperBase {
         readonly bool useApplication;
         bool isInitialized;
 
@@ -215,9 +215,8 @@
         /// <summary>
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
         /// </summary>
-        /// <param name="application">The application.</param>
         /// <param name="viewModelType">The view model type.</param>
-        protected static void DisplayRootViewFor(Application application, Type viewModelType) {
+        protected void DisplayRootViewFor(Type viewModelType) {
             var viewModel = IoC.GetInstance(viewModelType, null);
             var view = ViewLocator.LocateForModel(viewModel, null, null);
 
@@ -228,14 +227,14 @@
                 activator.Activate();
 
             Mouse.Initialize(view);
-            application.RootVisual = view;
+            Application.RootVisual = view;
         }
 #elif NET
         /// <summary>
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
         /// </summary>
         /// <param name="viewModelType">The view model type.</param>
-        protected static void DisplayRootViewFor(Type viewModelType) {
+        protected void DisplayRootViewFor(Type viewModelType) {
             var windowManager = IoC.Get<IWindowManager>();
             windowManager.ShowWindow(IoC.GetInstance(viewModelType, null));
         }
@@ -250,8 +249,7 @@
         /// Initializes a new instance of the <see cref="Bootstrapper"/> class.
         /// </summary>
         /// <param name="useApplication">Set this to false when hosting Caliburn.Micro inside and Office or WinForms application. The default is true.</param>
-        public Bootstrapper(bool useApplication = true)
-            : base(useApplication) {
+        public Bootstrapper(bool useApplication = true) : base(useApplication) {
             Start();
         }
     }
@@ -261,12 +259,14 @@
     /// A strongly-typed version of <see cref="Bootstrapper"/> that specifies the type of root model to create for the application.
     /// </summary>
     /// <typeparam name="TRootModel">The type of root model for the application.</typeparam>
-    public class Bootstrapper<TRootModel> : Bootstrapper {
+    public class Bootstrapper<TRootModel> : BootstrapperBase {
         /// <summary>
         /// Initializes a new instance of the <see cref="Bootstrapper&lt;TRootModel&gt;"/> class.
         /// </summary>
         /// <param name="useApplication">Set this to false when hosting Caliburn.Micro inside and Office or WinForms application. The default is true.</param>
-        public Bootstrapper(bool useApplication = true) : base(useApplication) {}
+        public Bootstrapper(bool useApplication = true) : base(useApplication) {
+            Start();
+        }
 
         /// <summary>
         /// Override this to add custom behavior to execute after the application starts.
@@ -274,11 +274,7 @@
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
         protected override void OnStartup(object sender, StartupEventArgs e) {
-#if SILVERLIGHT
-            DisplayRootViewFor(Application, typeof(TRootModel));
-#else
             DisplayRootViewFor(typeof(TRootModel));
-#endif
         }
     }
 #endif

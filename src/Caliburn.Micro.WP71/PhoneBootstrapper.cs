@@ -6,7 +6,7 @@
     /// <summary>
     /// A custom bootstrapper designed to setup phone applications.
     /// </summary>
-    public class PhoneBootstrapper : Bootstrapper {
+    public abstract class PhoneBootstrapperBase : BootstrapperBase {
         bool phoneApplicationInitialized;
         PhoneApplicationService phoneService;
 
@@ -14,6 +14,11 @@
         /// The root frame used for navigation.
         /// </summary>
         public PhoneApplicationFrame RootFrame { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PhoneBootstrapperBase"/> class.
+        /// </summary>
+        protected PhoneBootstrapperBase() : base(true) { }
 
         /// <summary>
         /// Provides an opportunity to hook into the application object.
@@ -72,5 +77,17 @@
         /// Occurs when the application is closing.
         /// </summary>
         protected virtual void OnClose(object sender, ClosingEventArgs e) { }
+    }
+
+    /// <summary>
+    /// A custom bootstrapper designed to setup phone applications.
+    /// </summary>
+    public class PhoneBootstrapper : PhoneBootstrapperBase {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PhoneBootstrapper"/> class.
+        /// </summary>
+        public PhoneBootstrapper() {
+            Start();
+        }
     }
 }
