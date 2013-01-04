@@ -16,7 +16,7 @@
         /// <param name="assembly">The assembly.</param>
         /// <returns>The assembly's name.</returns>
         public static string GetAssemblyName(this Assembly assembly) {
-            return assembly.FullName.Remove(assembly.FullName.IndexOf(","));
+            return assembly.FullName.Remove(assembly.FullName.IndexOf(','));
         }
 
         /// <summary>

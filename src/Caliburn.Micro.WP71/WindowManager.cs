@@ -281,7 +281,7 @@
             void ArrangePlacement() {
                 maskingLayer.Dispatcher.BeginInvoke(() => {
                     var placement = new ElementPlacement {
-                        Transform = (Transform)currentPage.TransformToVisual(null),
+                        Transform = (Transform)currentPage.SafeTransformToVisual(null),
                         Orientation = currentPage.Orientation,
                         Size = new Size(currentPage.ActualWidth, currentPage.ActualHeight)
                     };

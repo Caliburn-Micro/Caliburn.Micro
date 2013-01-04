@@ -253,6 +253,9 @@
     <Compile Include="..\Caliburn.Micro.WP71\PhoneBootstrapper.cs">
       <Link>PhoneBootstrapper.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.WP71\UIElementExtensions.cs">
+      <Link>UIElementExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.WP71\WindowManager.cs">
       <Link>WindowManager.cs</Link>
     </Compile>

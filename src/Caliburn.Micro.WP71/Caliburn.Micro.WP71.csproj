@@ -202,6 +202,7 @@
     <Compile Include="IPhoneService.cs" />
     <Compile Include="PhoneBootstrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UIElementExtensions.cs" />
     <Compile Include="WindowManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
