@@ -34,15 +34,18 @@
                 /// <summary>
                 /// Initializes a new instance of the <see cref="Conductor&lt;T&gt;.Collection.AllActive"/> class.
                 /// </summary>
-                public AllActive()
-                {
-                    items.CollectionChanged += (s, e) =>
-                    {
-                        switch (e.Action)
-                        {
+                public AllActive() {
+                    items.CollectionChanged += (s, e) => {
+                        switch(e.Action) {
                             case NotifyCollectionChangedAction.Add:
+                                e.NewItems.OfType<IChild>().Apply(x => x.Parent = this);
+                                break;
+                            case NotifyCollectionChangedAction.Remove:
+                                e.OldItems.OfType<IChild>().Apply(x => x.Parent = null);
+                                break;
                             case NotifyCollectionChangedAction.Replace:
                                 e.NewItems.OfType<IChild>().Apply(x => x.Parent = this);
+                                e.OldItems.OfType<IChild>().Apply(x => x.Parent = null);
                                 break;
                             case NotifyCollectionChangedAction.Reset:
                                 items.OfType<IChild>().Apply(x => x.Parent = this);

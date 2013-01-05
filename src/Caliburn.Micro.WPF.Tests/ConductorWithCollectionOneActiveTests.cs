@@ -60,7 +60,7 @@
             Assert.True(conducted.IsClosed);
         }
 
-        [Fact(Skip = "ActiveItem currently set regardless of IsActive value. See [discussion:276375]")]
+        [Fact(Skip = "ActiveItem currently set regardless of IsActive value. See http://caliburnmicro.codeplex.com/discussions/276375")]
         public void ChildrenAreNotActivatedIfConductorIsNotActive() {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             var conducted = new Screen();
@@ -70,7 +70,7 @@
             Assert.NotEqual(conducted, conductor.ActiveItem);
         }
 
-        [Fact(Skip = "Parent value not currently updated when conducted item is removed. See [discussion:276374]")]
+        [Fact]
         public void ParentItemIsUnsetOnRemovedConductedItem() {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             var conducted = new Screen();
@@ -79,7 +79,29 @@
             Assert.NotEqual(conductor, conducted.Parent);
         }
 
-        [Fact(Skip = "Behavior currently allowed; under investigation. See [discussion:276373]")]
+        [Fact(Skip = "This is not possible as we don't get the removed items in the event handler.")]
+        public void ParentItemIsUnsetOnClear()
+        {
+            var conductor = new Conductor<IScreen>.Collection.OneActive();
+            var conducted = new Screen();
+            conductor.Items.Add(conducted);
+            conductor.Items.Clear();
+            Assert.NotEqual(conductor, conducted.Parent);
+        }
+
+        [Fact]
+        public void ParentItemIsUnsetOnReplaceConductedItem()
+        {
+            var conductor = new Conductor<IScreen>.Collection.OneActive();
+            var conducted = new Screen();
+            conductor.Items.Add(conducted);
+            var conducted2 = new Screen();
+            conductor.Items[0] = conducted2;
+            Assert.NotEqual(conductor, conducted.Parent);
+            Assert.Equal(conductor, conducted2.Parent);
+        }
+
+        [Fact(Skip = "Behavior currently allowed; under investigation. See http://caliburnmicro.codeplex.com/discussions/276373")]
         public void ConductorCannotConductSelf() {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             Assert.Throws<InvalidOperationException>(() => conductor.Items.Add(conductor));

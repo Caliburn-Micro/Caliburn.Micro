@@ -22,8 +22,14 @@
                     items.CollectionChanged += (s, e) => {
                         switch(e.Action) {
                             case NotifyCollectionChangedAction.Add:
+                                e.NewItems.OfType<IChild>().Apply(x => x.Parent = this);
+                                break;
+                            case NotifyCollectionChangedAction.Remove:
+                                e.OldItems.OfType<IChild>().Apply(x => x.Parent = null);
+                                break;
                             case NotifyCollectionChangedAction.Replace:
                                 e.NewItems.OfType<IChild>().Apply(x => x.Parent = this);
+                                e.OldItems.OfType<IChild>().Apply(x => x.Parent = null);
                                 break;
                             case NotifyCollectionChangedAction.Reset:
                                 items.OfType<IChild>().Apply(x => x.Parent = this);
