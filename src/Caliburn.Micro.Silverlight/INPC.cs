@@ -5,6 +5,7 @@
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Runtime.Serialization;
@@ -291,9 +292,8 @@
         /// <exception cref = "T:System.ArgumentNullException">
         ///   The <paramref name = "collection" /> parameter cannot be null.
         /// </exception>
-        public BindableCollection(IEnumerable<T> collection) {
+        public BindableCollection(IEnumerable<T> collection) : base(collection) {
             IsNotifying = true;
-            AddRange(collection);
         }
 
 #if !SILVERLIGHT && !WinRT
@@ -331,8 +331,9 @@
         /// </summary>
         public void Refresh() {
             Execute.OnUIThread(() => {
+                OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+                OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-                OnPropertyChanged(new PropertyChangedEventArgs(string.Empty));
             });
         }
 
@@ -469,8 +470,14 @@
                     index++;
                 }
                 IsNotifying = previousNotificationSetting;
+
+                OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+                OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+#if !SILVERLIGHT || WP8
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, items.ToList()));
+#else
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-                OnPropertyChanged(new PropertyChangedEventArgs(string.Empty));
+#endif
             });
         }
 
@@ -489,8 +496,14 @@
                     }
                 }
                 IsNotifying = previousNotificationSetting;
+
+                OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+                OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+#if !SILVERLIGHT || WP8
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, items.ToList()));
+#else
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-                OnPropertyChanged(new PropertyChangedEventArgs(string.Empty));
+#endif
             });
         }
 
