@@ -189,7 +189,11 @@
             if (!Execute.InDesignMode)
                 return;
 
-            BindingOperations.SetBinding(d, DataContextProperty, (bool)e.NewValue ? new Binding() : null);
+            var atDesignTime = (bool) e.NewValue;
+            if (!atDesignTime)
+                return;
+
+            BindingOperations.SetBinding(d, DataContextProperty, new Binding());
         }
 
         static readonly DependencyProperty DataContextProperty =
