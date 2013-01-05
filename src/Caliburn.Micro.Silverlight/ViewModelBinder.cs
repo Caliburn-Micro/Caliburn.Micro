@@ -268,7 +268,7 @@
 
             foreach(var item in page.ApplicationBar.Buttons) {
                 var button = item as AppBarButton;
-                if (button == null) {
+                if (button == null || string.IsNullOrEmpty(button.Message)) {
                     continue;
                 }
 
@@ -286,7 +286,7 @@
 
             foreach (var item in page.ApplicationBar.MenuItems) {
                 var menuItem = item as AppBarMenuItem;
-                if (menuItem == null) {
+                if (menuItem == null || string.IsNullOrEmpty(menuItem.Message)) {
 					continue;
                 }
 
