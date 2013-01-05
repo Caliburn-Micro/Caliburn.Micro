@@ -225,9 +225,16 @@
                 return;
             }
 
+#if WP71
+            BindAppBar(view);
+#endif
+
             if (!ShouldApplyConventions(element))
             {
                 Log.Info("Skipping conventions for {0} and {1}.", element, viewModel);
+#if WP71
+                view.SetValue(ConventionsAppliedProperty, true); // we always apply the AppBar conventions
+#endif
                 return;
             }
 
@@ -249,10 +256,6 @@
             namedElements = BindActions(namedElements, viewModelType);
             namedElements = BindProperties(namedElements, viewModelType);
             HandleUnmatchedElements(namedElements, viewModelType);
-
-#if WP71
-            BindAppBar(view);
-#endif
 
             view.SetValue(ConventionsAppliedProperty, true);
         };
