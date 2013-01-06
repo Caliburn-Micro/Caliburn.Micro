@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Hello", "Caliburn.Micro.Hello\Caliburn.Micro.Hello.csproj", "{3777F0C7-CD1D-4964-AF3F-FFCBF61AA9B1}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.HelloExplicitAction", "Caliburn.Micro.Hello\Caliburn.Micro.HelloExplicitAction.csproj", "{3777F0C7-CD1D-4964-AF3F-FFCBF61AA9B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

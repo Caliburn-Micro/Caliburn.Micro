@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>SilverlightToolkit-Layout</id>
+    <version>4.2010.4</version>
+    <title>Silverlight Toolkit - Layout</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>http://silverlight.codeplex.com/license</licenseUrl>
+    <projectUrl>http://silverlight.codeplex.com/</projectUrl>
+    <iconUrl>http://silverlight.microsoft.com/assets/sl-32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Layout components of the Microsoft Silverlight Toolkit.  Details at http://silverlight.codeplex.com  This package includes System.Windows.Controls.Layout.Toolkit.</description>
+    <summary>Layout components of the Microsoft Silverlight Toolkit.  Details at http://silverlight.codeplex.com  This package includes System.Windows.Controls.Layout.Toolkit.</summary>
+    <tags>silverlight toolkit sltoolkit layout dockpanel</tags>
+    <dependencies>
+      <dependency id="SilverlightToolkit-Core" version="4.2010.4" />
+    </dependencies>
+    <references>
+      <reference file="System.Windows.Controls.Layout.Toolkit.dll" />
+    </references>
+  </metadata>
+</package>

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>SilverlightToolkit-Core</id>
+    <version>4.2010.4</version>
+    <title>Silverlight Toolkit - Core</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>http://silverlight.codeplex.com/license</licenseUrl>
+    <projectUrl>http://silverlight.codeplex.com/</projectUrl>
+    <iconUrl>http://silverlight.microsoft.com/assets/sl-32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>The core components Microsoft Silverlight Toolkit.  Details at http://silverlight.codeplex.com</description>
+    <summary>The core components Microsoft Silverlight Toolkit.  Details at http://silverlight.codeplex.com</summary>
+    <tags>silverlight toolkit sltoolkit</tags>
+    <references>
+      <reference file="System.Windows.Controls.Toolkit.dll" />
+    </references>
+  </metadata>
+</package>
