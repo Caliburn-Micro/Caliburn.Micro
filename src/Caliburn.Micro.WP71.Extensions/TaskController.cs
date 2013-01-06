@@ -41,19 +41,19 @@
         /// Stops monitoring for task requests and controlling completion messages.
         /// </summary>
         public void Stop() {
+            events.Unsubscribe(this);
             phoneService.Deactivated -= OnDeactivated;
             phoneService.Resurrected -= OnResurrected;
             phoneService.Continued -= OnContinued;
-            events.Unsubscribe(this);
         }
 
         void IHandle<TaskExecutionRequested>.Handle(TaskExecutionRequested message) {
             var taskType = message.Task.GetType();
-            var @event = taskType.GetEvent("Completed");
 
+            var @event = taskType.GetEvent("Completed");
             if(@event != null) {
                 request = message;
-                @event.AddEventHandler(message.Task, CreateOnTaskCompletedDelegate(@event));
+                @event.AddEventHandler(request.Task, CreateOnTaskCompletedDelegate(@event));
             }
 
             var showMethod = taskType.GetMethod("Show");
@@ -65,8 +65,8 @@
                 return;
             }
 
-            PhoneApplicationService.Current.State[TaskTypeKey] = request.Task.GetType().FullName;
-            PhoneApplicationService.Current.State[TaskSateKey] = request.State ?? string.Empty;
+            phoneService.State[TaskTypeKey] = request.Task.GetType().FullName;
+            phoneService.State[TaskSateKey] = request.State ?? string.Empty;
         }
 
         void OnContinued() {
@@ -79,18 +79,18 @@
         }
 
         void OnResurrected() {
-            if (!PhoneApplicationService.Current.State.ContainsKey(TaskTypeKey)) {
+            if (!phoneService.State.ContainsKey(TaskTypeKey)) {
                 return;
             }
 
             isResurrecting = true;
 
-            var taskTypeName = (string)PhoneApplicationService.Current.State[TaskTypeKey];
-            PhoneApplicationService.Current.State.Remove(TaskTypeKey);
+            var taskTypeName = (string)phoneService.State[TaskTypeKey];
+            phoneService.State.Remove(TaskTypeKey);
 
             object taskState;
-            if (PhoneApplicationService.Current.State.TryGetValue(TaskSateKey, out taskState))
-                PhoneApplicationService.Current.State.Remove(TaskSateKey);
+            if (phoneService.State.TryGetValue(TaskSateKey, out taskState))
+                phoneService.State.Remove(TaskSateKey);
 
             var taskType = typeof(TaskEventArgs).Assembly.GetType(taskTypeName);
             var taskInstance = Activator.CreateInstance(taskType);
@@ -101,7 +101,9 @@
             };
 
             var @event = taskType.GetEvent("Completed");
-            @event.AddEventHandler(taskInstance, CreateOnTaskCompletedDelegate(@event));
+            if(@event != null) {
+                @event.AddEventHandler(request.Task, CreateOnTaskCompletedDelegate(@event));
+            }
         }
 
         Delegate CreateOnTaskCompletedDelegate(EventInfo @event) {
