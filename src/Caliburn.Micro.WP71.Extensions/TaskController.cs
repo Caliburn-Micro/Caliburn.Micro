@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.Micro {
     using System;
+    using System.Reflection;
     using System.Threading;
     using Microsoft.Phone.Shell;
     using Microsoft.Phone.Tasks;
@@ -52,7 +53,7 @@
 
             if(@event != null) {
                 request = message;
-                @event.AddEventHandler(message.Task, Delegate.CreateDelegate(@event.EventHandlerType, this, "OnTaskComplete"));
+                @event.AddEventHandler(message.Task, CreateOnTaskCompletedDelegate(@event));
             }
 
             var showMethod = taskType.GetMethod("Show");
@@ -88,9 +89,8 @@
             PhoneApplicationService.Current.State.Remove(TaskTypeKey);
 
             object taskState;
-            if(!PhoneApplicationService.Current.State.TryGetValue(TaskSateKey, out taskState))
-                taskState = null;
-            else PhoneApplicationService.Current.State.Remove(TaskSateKey);
+            if (PhoneApplicationService.Current.State.TryGetValue(TaskSateKey, out taskState))
+                PhoneApplicationService.Current.State.Remove(TaskSateKey);
 
             var taskType = typeof(TaskEventArgs).Assembly.GetType(taskTypeName);
             var taskInstance = Activator.CreateInstance(taskType);
@@ -101,7 +101,13 @@
             };
 
             var @event = taskType.GetEvent("Completed");
-            @event.AddEventHandler(taskInstance, Delegate.CreateDelegate(@event.EventHandlerType, this, "OnTaskComplete"));
+            @event.AddEventHandler(taskInstance, CreateOnTaskCompletedDelegate(@event));
+        }
+
+        Delegate CreateOnTaskCompletedDelegate(EventInfo @event) {
+            var methodInfo = typeof(TaskController).GetMethod("OnTaskComplete", BindingFlags.Instance | BindingFlags.NonPublic);
+            var handler = Delegate.CreateDelegate(@event.EventHandlerType, this, methodInfo);
+            return handler;
         }
 
         void OnTaskComplete(object sender, EventArgs e) {
