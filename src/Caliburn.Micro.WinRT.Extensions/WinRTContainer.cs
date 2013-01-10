@@ -10,8 +10,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Registers the Caliburn.Micro WinRT services with the container.
         /// </summary>
-        /// <param name="treatViewAsLoaded">if set to <c>true</c> [treat view as loaded].</param>
-        public void RegisterWinRTServices(bool treatViewAsLoaded = false)
+        public void RegisterWinRTServices()
         {
             RegisterInstance(typeof(SimpleContainer), null, this);
             RegisterInstance(typeof(WinRTContainer), null, this);
