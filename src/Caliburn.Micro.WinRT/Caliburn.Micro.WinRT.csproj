@@ -172,9 +172,9 @@
     <Compile Include="XamlMetadataProvider.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Windows.UI.Interactivity, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Windows.UI.Interactivity, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Windows.UI.Interactivity.1.0.2.0\lib\winrt45\Windows.UI.Interactivity.dll</HintPath>
+      <HintPath>..\packages\Windows.UI.Interactivity.1.1.0.0\lib\win\Windows.UI.Interactivity.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

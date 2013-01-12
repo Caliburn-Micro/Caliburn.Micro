@@ -34,10 +34,9 @@
     [ContentProperty(Name = "Parameters")]
 #else
     [ContentProperty("Parameters")]
-#endif
-
     [DefaultTrigger(typeof(FrameworkElement), typeof(EventTrigger), "MouseLeftButtonDown")]
     [DefaultTrigger(typeof(ButtonBase), typeof(EventTrigger), "Click")]
+#endif
 
     [TypeConstraint(typeof(FrameworkElement))]
     public class ActionMessage : TriggerAction<FrameworkElement>, IHaveParameters

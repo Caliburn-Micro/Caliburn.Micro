@@ -9,7 +9,7 @@
     /// A collection that can exist as part of a behavior.
     /// </summary>
     /// <typeparam name="T">The type of item in the attached collection.</typeparam>
-    public class AttachedCollection<T> : DependencyObjectCollection<T>, IAttachedObject
+    public class AttachedCollection<T> : FrameworkElementCollection<T>, IAttachedObject
         where T : FrameworkElement, IAttachedObject
     {
         FrameworkElement associatedObject;

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Windows.UI.Interactivity</id>
+    <version>1.1.0.0</version>
+    <title>Windows.UI.Interactivity</title>
+    <authors>Johan Laanstra</authors>
+    <owners>Johan Laanstra</owners>
+    <licenseUrl>https://github.com/jlaanstra/Windows.UI.Interactivity/blob/master/license.txt</licenseUrl>
+    <projectUrl>https://github.com/jlaanstra/Windows.UI.Interactivity</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Windows.UI.Interactivity is a port of System.Windows.Interactivity to the Windows Runtime and allows you to use behaviors and triggers as in Silverlight.</description>
+    <copyright>Copyright 2012</copyright>
+    <tags>winrt, behaviors, triggers, interactivity</tags>
+    <references>
+      <reference file="Windows.UI.Interactivity.dll" />
+    </references>
+  </metadata>
+</package>

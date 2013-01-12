@@ -4,9 +4,11 @@
     using System.Linq;
     using System.Reflection;
 #if WinRT
+    using Windows.UI.Interactivity;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Markup;
+    using Windows.UI.Xaml.Media;
 #else
     using System.Windows;
     using System.Windows.Controls;
@@ -104,8 +106,10 @@
         /// <returns>true if the handler was executed immediately; false otherwise</returns>
         public static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler)
         {
-#if SILVERLIGHT || WinRT
+#if SILVERLIGHT
             if ((bool)element.GetValue(IsLoadedProperty))
+#elif WinRT
+            if (IsElementLoaded(element))
 #else
             if(element.IsLoaded)
 #endif
@@ -129,6 +133,27 @@
                 return false;
             }
         }
+
+#if WinRT
+        public static bool IsElementLoaded(FrameworkElement element)
+        {
+            var rootVisual = Window.Current.Content;
+
+            if ((element.Parent ?? VisualTreeHelper.GetParent(element)) != null)
+            {
+                return true;
+            }
+
+            if (rootVisual != null)
+            {
+                return element == rootVisual;
+            }
+            else
+            {
+                return false;
+            }
+        }
+#endif   
 
         /// <summary>
         /// Used to retrieve the root, non-framework-created view.
