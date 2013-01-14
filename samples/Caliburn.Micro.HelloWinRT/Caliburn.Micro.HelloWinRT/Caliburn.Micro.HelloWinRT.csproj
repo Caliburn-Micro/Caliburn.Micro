@@ -164,7 +164,6 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="Caliburn.Micro.WinRT.Sample_TemporaryKey.pfx" />
-    <None Include="packages.config" />
     <PRIResource Include="Resources\Resources.resw" />
   </ItemGroup>
   <ItemGroup>

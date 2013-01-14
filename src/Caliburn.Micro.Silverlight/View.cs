@@ -4,7 +4,6 @@
     using System.Linq;
     using System.Reflection;
 #if WinRT
-    using Windows.UI.Interactivity;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Markup;
@@ -135,25 +134,28 @@
         }
 
 #if WinRT
+        /// <summary>
+        /// Determines whether the specified <paramref name="element"/> is loaded.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns>true if the element is loaded; otherwise, false.
+        /// </returns>
         public static bool IsElementLoaded(FrameworkElement element)
         {
-            var rootVisual = Window.Current.Content;
-
             if ((element.Parent ?? VisualTreeHelper.GetParent(element)) != null)
             {
                 return true;
             }
 
+            var rootVisual = Window.Current.Content;
             if (rootVisual != null)
             {
                 return element == rootVisual;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
-#endif   
+#endif
 
         /// <summary>
         /// Used to retrieve the root, non-framework-created view.
