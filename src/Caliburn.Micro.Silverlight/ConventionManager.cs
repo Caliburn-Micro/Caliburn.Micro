@@ -159,7 +159,7 @@ XamlReader.Load(
         /// </summary>
         public static Action<Binding, Type, PropertyInfo> ApplyValidation = (binding, viewModelType, property) =>
         {
-#if SILVERLIGHT
+#if SILVERLIGHT || NET45
             if (typeof(INotifyDataErrorInfo).IsAssignableFrom(viewModelType)) {
                 binding.ValidatesOnNotifyDataErrors = true;
                 binding.ValidatesOnExceptions = true;
