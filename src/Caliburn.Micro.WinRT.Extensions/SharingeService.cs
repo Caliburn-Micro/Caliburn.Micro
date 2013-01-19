@@ -5,23 +5,42 @@ using Windows.UI.Xaml.Controls;
 namespace Caliburn.Micro
 {
     /// <summary>
+    /// Service that handles sharing data with the Share Charm.
+    /// </summary>
+    public interface ISharingService
+    {
+        /// <summary>
+        /// Programmatically initiates the user interface for sharing content with another app.
+        /// </summary>
+        void ShowShareUI();
+    }
+
+    /// <summary>
     /// Service that handles the <see cref="DataTransferManager.DataRequested"/> event.
     /// </summary>
-    public class ShareSourceService
+    internal class SharingeService : ISharingService
     {
         private readonly Frame _rootFrame;
         private readonly DataTransferManager _transferManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ShareSourceService" /> class.
+        /// Initializes a new instance of the <see cref="SharingeService" /> class.
         /// </summary>
         /// <param name="rootFrame">The root frame.</param>
-        public ShareSourceService(Frame rootFrame)
+        public SharingeService(Frame rootFrame)
         {
             _rootFrame = rootFrame;
 
             _transferManager = DataTransferManager.GetForCurrentView();
             _transferManager.DataRequested += OnDataRequested;
+        }
+
+        /// <summary>
+        /// Programmatically initiates the user interface for sharing content with another app.
+        /// </summary>
+        public void ShowShareUI()
+        {
+            DataTransferManager.ShowShareUI();
         }
 
         /// <summary>

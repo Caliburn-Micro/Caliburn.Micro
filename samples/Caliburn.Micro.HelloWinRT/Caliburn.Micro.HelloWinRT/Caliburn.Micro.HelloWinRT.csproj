@@ -109,6 +109,7 @@
     <Compile Include="Results\MessageDialogResult.cs" />
     <Compile Include="Results\ResultBase.cs" />
     <Compile Include="Results\VisualStateResult.cs" />
+    <Compile Include="Settings\SimplePopupSettingsWindowManager.cs" />
     <Compile Include="ViewModels\ActionsViewModel.cs" />
     <Compile Include="ViewModels\BindingsViewModel.cs" />
     <Compile Include="ViewModels\CoroutineViewModel.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="ViewModels\NavigationTargetViewModel.cs" />
     <Compile Include="ViewModels\NavigationViewModel.cs" />
+    <Compile Include="ViewModels\SampleSettingsViewModel.cs" />
     <Compile Include="ViewModels\SampleViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="ViewModels\SetupViewModel.cs" />
@@ -145,6 +147,9 @@
     </Compile>
     <Compile Include="Views\NavigationView.xaml.cs">
       <DependentUpon>NavigationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SampleSettingsView.xaml.cs">
+      <DependentUpon>SampleSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SampleView.xaml.cs">
       <DependentUpon>SampleView.xaml</DependentUpon>
@@ -213,6 +218,10 @@
     <Page Include="Views\NavigationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SampleSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\SampleView.xaml">
       <SubType>Designer</SubType>

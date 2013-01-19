@@ -1,4 +1,6 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using System;
+using System.Collections.Generic;
+using Windows.UI.Xaml.Controls;
 
 namespace Caliburn.Micro
 {
@@ -31,19 +33,53 @@ namespace Caliburn.Micro
             if (HasHandler(typeof(INavigationService), null))
                 return;
 
+            if (rootFrame == null)
+                throw new ArgumentNullException("rootFrame");
+
             RegisterInstance(typeof(INavigationService), null, new FrameAdapter(rootFrame, treatViewAsLoaded));
         }
 
         /// <summary>
-        /// Registers the Caliburn.Micro share source service with the container.
+        /// Registers the Caliburn.Micro sharing service with the container.
         /// </summary>
         /// <param name="rootFrame">The application root frame.</param>
-        public void RegisterShareSourceService(Frame rootFrame)
+        public void RegisterSharingService(Frame rootFrame)
         {
-            if (HasHandler(typeof (ShareSourceService), null))
+            if (HasHandler(typeof (ISharingService), null))
                 return;
 
-            RegisterInstance(typeof(ShareSourceService), null, new ShareSourceService(rootFrame));
+            if (rootFrame == null)
+                throw new ArgumentNullException("rootFrame");
+
+            RegisterInstance(typeof(ISharingService), null, new SharingeService(rootFrame));
+        }
+
+        /// <summary>
+        /// Registers the settings service with the container.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="settingsWindowManager">The settings window manager.</param>
+        public void RegisterSettingsService(ISettingsWindowManager settingsWindowManager)
+        {
+            if (HasHandler(typeof(ISettingsService), null))
+                return;
+
+            if (settingsWindowManager == null)
+                throw new ArgumentNullException("settingsWindowManager");
+
+            RegisterInstance(typeof(ISettingsService), null, new SettingsService(settingsWindowManager));
+        }
+
+        /// <summary>
+        /// Registers a Settings Command with the container.
+        /// </summary>
+        /// <typeparam name="TViewModel">The commands view model.</typeparam>
+        /// <param name="commandId">The command id.</param>
+        /// <param name="label">The command label.</param>
+        /// <param name="viewSettings">The optional flyout view settings.</param>
+        public void SettingsCommand<TViewModel>(object commandId, string label, IDictionary<string, object> viewSettings = null)
+        {
+            RegisterInstance(typeof(CaliburnSettingsCommand), null, new CaliburnSettingsCommand(commandId, label, typeof(TViewModel), viewSettings));
         }
     }
 }
