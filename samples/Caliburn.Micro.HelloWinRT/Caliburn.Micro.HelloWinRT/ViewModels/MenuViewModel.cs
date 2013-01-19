@@ -1,16 +1,17 @@
 ﻿using System;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml.Controls;
 
 namespace Caliburn.Micro.WinRT.Sample.ViewModels
 {
-    public class MenuViewModel : ViewModelBase
+    public class MenuViewModel : ViewModelBase, ISupportSharing
     {
-        private readonly INavigationService navigationService;
+        private readonly INavigationService _navigationService;
 
         public MenuViewModel(INavigationService navigationService)
             : base(navigationService)
         {
-            this.navigationService = navigationService;
+            _navigationService = navigationService;
             
             Samples = new BindableCollection<SampleViewModel>();
         }
@@ -32,13 +33,20 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
         {
             var sample = (SampleViewModel)eventArgs.ClickedItem;
 
-            navigationService.NavigateToViewModel(sample.ViewModelType);
+            _navigationService.NavigateToViewModel(sample.ViewModelType);
         }
 
         public BindableCollection<SampleViewModel> Samples
         {
             get;
             private set;
+        }
+
+        public void OnShareRequested(DataRequest dataRequest)
+        {
+            dataRequest.Data.Properties.Title = "Caliburn.Micro Share Sample";
+            dataRequest.Data.Properties.Description = "from Marker Metro";
+            dataRequest.Data.SetUri(new Uri("https://markermetro.com"));
         }
     }
 }

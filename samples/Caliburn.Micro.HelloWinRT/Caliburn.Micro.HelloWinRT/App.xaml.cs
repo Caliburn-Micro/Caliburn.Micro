@@ -57,6 +57,7 @@ namespace Caliburn.Micro.WinRT.Sample
         protected override void PrepareViewFirst(Frame rootFrame)
         {
             container.RegisterNavigationService(rootFrame);
+            container.RegisterShareSourceService(rootFrame);
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)

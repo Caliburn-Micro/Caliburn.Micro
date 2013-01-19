@@ -33,5 +33,17 @@ namespace Caliburn.Micro
 
             RegisterInstance(typeof(INavigationService), null, new FrameAdapter(rootFrame, treatViewAsLoaded));
         }
+
+        /// <summary>
+        /// Registers the Caliburn.Micro share source service with the container.
+        /// </summary>
+        /// <param name="rootFrame">The application root frame.</param>
+        public void RegisterShareSourceService(Frame rootFrame)
+        {
+            if (HasHandler(typeof (ShareSourceService), null))
+                return;
+
+            RegisterInstance(typeof(ShareSourceService), null, new ShareSourceService(rootFrame));
+        }
     }
 }
