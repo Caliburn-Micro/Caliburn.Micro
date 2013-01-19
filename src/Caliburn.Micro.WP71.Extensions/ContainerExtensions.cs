@@ -80,7 +80,7 @@
         }
 
         /// <summary>
-        /// Registers all specified types in an assembly as singletong in the container.
+        /// Registers all specified types in an assembly as singleton in the container.
         /// </summary>
         /// <typeparam name="TService">The type of the service.</typeparam>
         /// <param name="container">The container.</param>
@@ -93,12 +93,12 @@
 
 #if WinRT
             var serviceInfo = typeof(TService).GetTypeInfo();
-            var types = from type in assembly.DefinedTypes
-                        let info = type
+            var types = from info in assembly.DefinedTypes
+                        let type = info.AsType()
                         where serviceInfo.IsAssignableFrom(info)
                               && !info.IsAbstract
                               && !info.IsInterface
-                              && filter(type.GetType())
+                              && filter(type)
                         select type;
 #else
             var serviceType = typeof(TService);
@@ -111,11 +111,7 @@
 #endif
 
             foreach (var type in types) {
-#if WinRT
-                container.RegisterSingleton(typeof(TService), null, type.GetType());
-#else
                 container.RegisterSingleton(typeof(TService), null, type);
-#endif
             }
 
             return container;

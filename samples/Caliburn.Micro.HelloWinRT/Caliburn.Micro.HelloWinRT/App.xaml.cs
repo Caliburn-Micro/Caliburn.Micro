@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Caliburn.Micro.WinRT.Sample.Settings;
 using Caliburn.Micro.WinRT.Sample.ViewModels;
@@ -23,26 +24,20 @@ namespace Caliburn.Micro.WinRT.Sample
         {
             _container = new WinRTContainer();
             _container.RegisterWinRTServices();
-        }
 
-        private static bool IsConcrete(Type service)
-        {
-            var serviceInfo = service.GetTypeInfo();
-            return !serviceInfo.IsAbstract && !serviceInfo.IsInterface;
+            // register all view models
+            var serviceInfo = typeof(PropertyChangedBase).GetTypeInfo();
+            var types = from info in typeof(App).GetTypeInfo().Assembly.DefinedTypes
+                        where serviceInfo.IsAssignableFrom(info)
+                              && !info.IsAbstract
+                              && !info.IsInterface
+                        select info.AsType();
+            types.Apply(t => _container.RegisterPerRequest(t, null, t));
         }
 
         protected override object GetInstance(Type service, string key)
         {
-            var obj = _container.GetInstance(service, key);
-
-            // mimic previous behaviour of WinRT SimpleContainer
-            if (obj == null && IsConcrete(service))
-            {
-                _container.RegisterPerRequest(service, key, service);
-                obj = _container.GetInstance(service, key);
-            }
-
-            return obj;
+            return _container.GetInstance(service, key);
         }
 
         protected override IEnumerable<object> GetAllInstances(Type service)
