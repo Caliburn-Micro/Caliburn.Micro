@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Caliburn.Micro.WinRT.Sample.ViewModels;
 using Caliburn.Micro.WinRT.Sample.Views;
 using Windows.ApplicationModel.Activation;
@@ -27,26 +26,26 @@ namespace Caliburn.Micro.WinRT.Sample
 
             container.RegisterSettingsService()
                 .RegisterCommand<SampleSettingsViewModel>("Custom");
-        }
 
-        private static bool IsConcrete(Type service)
-        {
-            var serviceInfo = service.GetTypeInfo();
-            return !serviceInfo.IsAbstract && !serviceInfo.IsInterface;
+            container
+                .PerRequest<ActionsViewModel>()
+                .PerRequest<BindingsViewModel>()
+                .PerRequest<CoroutineViewModel>()
+                .PerRequest<ExecuteViewModel>()
+                .PerRequest<MenuViewModel>()
+                .PerRequest<NavigationTargetViewModel>()
+                .PerRequest<NavigationViewModel>()
+                .PerRequest<SampleSettingsViewModel>()
+                .PerRequest<SearchViewModel>()
+                .PerRequest<SettingsViewModel>()
+                .PerRequest<SetupViewModel>()
+                .PerRequest<ShareSourceViewModel>()
+                .PerRequest<ShareTargetViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)
         {
-            var obj = container.GetInstance(service, key);
-
-            // mimic previous behaviour of WinRT SimpleContainer
-            if (obj == null && IsConcrete(service))
-            {
-                container.RegisterPerRequest(service, key, service);
-                obj = container.GetInstance(service, key);
-            }
-
-            return obj;
+            return container.GetInstance(service, key);
         }
 
         protected override IEnumerable<object> GetAllInstances(Type service)

@@ -4,19 +4,19 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
 {
     public class SampleViewModel : PropertyChangedBase
     {
-        private string _title;
-        private string _subtitle;
-        private Type _viewModelType;
+        private string title;
+        private string subtitle;
+        private Type viewModelType;
 
         public string Title
         {
             get
             {
-                return _title;
+                return title;
             }
             set
             {
-                _title = value;
+                title = value;
                 NotifyOfPropertyChange();
             }
         }
@@ -25,11 +25,11 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
         {
             get
             {
-                return _viewModelType;
+                return viewModelType;
             }
             set
             {
-                _viewModelType = value;
+                viewModelType = value;
                 NotifyOfPropertyChange();
             }
         }
@@ -38,11 +38,11 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
         {
             get
             {
-                return _subtitle;
+                return subtitle;
             }
             set
             {
-                _subtitle = value;
+                subtitle = value;
                 NotifyOfPropertyChange();
             }
         }
