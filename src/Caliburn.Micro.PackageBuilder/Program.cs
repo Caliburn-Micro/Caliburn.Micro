@@ -10,6 +10,7 @@
             var packages = new PackageList();
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var packagesPath = Path.Combine(baseDirectory, "Packages");
+            var nugetPath = ResolveRelativePath(baseDirectory, "../../../../nuget/nuget.exe");
 
             if(!Directory.Exists(packagesPath)) {
                 Directory.CreateDirectory(packagesPath);
@@ -37,12 +38,8 @@
                     }
                 }
 
-                var nugetPath = ResolveRelativePath(baseDirectory, "../../../../nuget/nuget.exe");
-                var localNuget = Path.Combine(path, "nuget.exe");
-                File.Copy(nugetPath, localNuget);
-
                 var proc = new Process {
-                    StartInfo = new ProcessStartInfo(localNuget) {
+                    StartInfo = new ProcessStartInfo(nugetPath) {
                         WorkingDirectory = path,
                         Arguments = "pack " + packageModel.Id + ".nuspec"
                     }
