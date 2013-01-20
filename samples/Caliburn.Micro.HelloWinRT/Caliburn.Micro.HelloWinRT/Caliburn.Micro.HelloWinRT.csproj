@@ -109,7 +109,6 @@
     <Compile Include="Results\MessageDialogResult.cs" />
     <Compile Include="Results\ResultBase.cs" />
     <Compile Include="Results\VisualStateResult.cs" />
-    <Compile Include="Settings\SimplePopupSettingsWindowManager.cs" />
     <Compile Include="ViewModels\ActionsViewModel.cs" />
     <Compile Include="ViewModels\BindingsViewModel.cs" />
     <Compile Include="ViewModels\CoroutineViewModel.cs" />
@@ -121,7 +120,9 @@
     <Compile Include="ViewModels\SampleSettingsViewModel.cs" />
     <Compile Include="ViewModels\SampleViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SetupViewModel.cs" />
+    <Compile Include="ViewModels\ShareSourceViewModel.cs" />
     <Compile Include="ViewModels\ShareTargetViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\ActionsView.xaml.cs">
@@ -157,8 +158,14 @@
     <Compile Include="Views\SearchView.xaml.cs">
       <DependentUpon>SearchView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SetupView.xaml.cs">
       <DependentUpon>SetupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ShareSourceView.xaml.cs">
+      <DependentUpon>ShareSourceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ShareTargetView.xaml.cs">
       <DependentUpon>ShareTargetView.xaml</DependentUpon>
@@ -169,6 +176,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="Caliburn.Micro.WinRT.Sample_TemporaryKey.pfx" />
+    <None Include="packages.config" />
     <PRIResource Include="Resources\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
@@ -231,7 +239,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SetupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ShareSourceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -249,6 +265,10 @@
     <Reference Include="Caliburn.Micro.Extensions, Version=1.3.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\bin\WinRT\Debug\Caliburn.Micro.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Callisto, Version=1.2.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Callisto.1.2.6\lib\winrt45\Callisto.dll</HintPath>
     </Reference>
     <Reference Include="Windows.UI.Interactivity, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

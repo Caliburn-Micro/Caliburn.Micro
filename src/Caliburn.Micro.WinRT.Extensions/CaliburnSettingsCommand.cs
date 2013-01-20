@@ -3,39 +3,50 @@ using System.Collections.Generic;
 
 namespace Caliburn.Micro
 {
-    internal class CaliburnSettingsCommand
+    /// <summary>
+    /// Represents a command registered with the <see cref="SettingsService" />
+    /// </summary>
+    public class CaliburnSettingsCommand
     {
-        private readonly object _id;
-        private readonly string _label;
-        private readonly Type _viewModelType;
-        private readonly IDictionary<string, object> _viewSettings;
+        private readonly string label;
+        private readonly Type viewModelType;
+        private readonly IDictionary<string, object> viewSettings;
 
-        public CaliburnSettingsCommand(object id, string label, Type viewModelType, IDictionary<string, object> viewSettings)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CaliburnSettingsCommand" /> class.
+        /// </summary>
+        /// <param name="label">The label to use in the settings charm.</param>
+        /// <param name="viewModelType">The view model to display.</param>
+        /// <param name="viewSettings">Additional settings to pass to the <see cref="ISettingsWindowManager" />.</param>
+        public CaliburnSettingsCommand(string label, Type viewModelType, IDictionary<string, object> viewSettings)
         {
-            _id = id;
-            _label = label;
-            _viewModelType = viewModelType;
-            _viewSettings = viewSettings;
+            this.label = label;
+            this.viewModelType = viewModelType;
+            this.viewSettings = viewSettings;
         }
 
+        /// <summary>
+        /// The view model to display.
+        /// </summary>
         public Type ViewModelType
         {
-            get { return _viewModelType; }
+            get { return viewModelType; }
         }
 
-        public object Id
-        {
-            get { return _id; }
-        }
-
+        /// <summary>
+        /// The label to use in the settings charm.
+        /// </summary>
         public string Label
         {
-            get { return _label; }
+            get { return label; }
         }
 
+        /// <summary>
+        /// Additional settings to pass to the <see cref="ISettingsWindowManager" />.
+        /// </summary>
         public IDictionary<string, object> ViewSettings
         {
-            get { return _viewSettings; }
+            get { return viewSettings; }
         }
     }
 }

@@ -1,29 +1,30 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Windows.UI.ApplicationSettings;
 
 namespace Caliburn.Micro
 {
     /// <summary>
-    /// Service that handles the Settings Charm.
+    /// Serivce tha handles the settings charm
     /// </summary>
-    public interface ISettingsService
+    public class SettingsService : ISettingsService
     {
+        private readonly ISettingsWindowManager settingsWindowManager;
+        private readonly SettingsPane settingsPane;
+        private readonly List<CaliburnSettingsCommand> commands;
+
         /// <summary>
-        /// Displays the Settings Charm pane to the user.
+        /// Initializes a new instance of the <see cref="SettingsService" /> class.
         /// </summary>
-        void ShowSettingsUI();
-    }
-
-    internal class SettingsService : ISettingsService
-    {
-        private readonly ISettingsWindowManager _settingsWindowManager;
-        private readonly SettingsPane _settingsPane;
-
+        /// <param name="settingsWindowManager">The window manager used to open the settings views.</param>
         public SettingsService(ISettingsWindowManager settingsWindowManager)
         {
-            _settingsWindowManager = settingsWindowManager;
-            _settingsPane = SettingsPane.GetForCurrentView();
-            _settingsPane.CommandsRequested += OnCommandsRequested;
+            this.settingsWindowManager = settingsWindowManager;
+
+            commands = new List<CaliburnSettingsCommand>();
+
+            settingsPane = SettingsPane.GetForCurrentView();
+            settingsPane.CommandsRequested += OnCommandsRequested;
         }
 
         /// <summary>
@@ -34,10 +35,20 @@ namespace Caliburn.Micro
             SettingsPane.Show();
         }
 
+        /// <summary>
+        /// Registers a Settings Command with the service.
+        /// </summary>
+        /// <typeparam name="TViewModel">The commands view model.</typeparam>
+        /// <param name="label">The command label.</param>
+        /// <param name="viewSettings">The optional flyout view settings.</param>
+        public void RegisterCommand<TViewModel>(string label, IDictionary<string, object> viewSettings = null)
+        {
+            commands.Add(new CaliburnSettingsCommand(label, typeof(TViewModel), viewSettings));
+        }
+
         protected virtual void OnCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
         {
-            var caliburnCommands = IoC.GetAllInstances(typeof(CaliburnSettingsCommand)).Cast<CaliburnSettingsCommand>();
-            var settingsCommands = caliburnCommands.Select(c => new SettingsCommand(c.Id, c.Label, h => OnCommandSelected(c)));
+            var settingsCommands = commands.Select((c, i) => new SettingsCommand(i, c.Label, h => OnCommandSelected(c)));
 
             settingsCommands.Apply(args.Request.ApplicationCommands.Add);
         }
@@ -45,10 +56,11 @@ namespace Caliburn.Micro
         protected virtual void OnCommandSelected(CaliburnSettingsCommand command)
         {
             var viewModel = IoC.GetInstance(command.ViewModelType, null);
+
             if (viewModel == null)
                 return;
 
-            _settingsWindowManager.ShowSettingsFlyout(viewModel, command.Label, command.ViewSettings);
+            settingsWindowManager.ShowSettingsFlyout(viewModel, command.Label, command.ViewSettings);
         }
     }
 }

@@ -1,17 +1,16 @@
 ﻿using System;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml.Controls;
 
 namespace Caliburn.Micro.WinRT.Sample.ViewModels
 {
-    public class MenuViewModel : ViewModelBase, ISupportSharing
+    public class MenuViewModel : ViewModelBase
     {
-        private readonly INavigationService _navigationService;
+        private readonly INavigationService navigationService;
 
         public MenuViewModel(INavigationService navigationService)
             : base(navigationService)
         {
-            _navigationService = navigationService;
+            this.navigationService = navigationService;
             
             Samples = new BindableCollection<SampleViewModel>();
         }
@@ -27,26 +26,21 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             Samples.Add(new SampleViewModel { Title = "Execute", Subtitle = "Using Execute to execute code on the UI thread.", ViewModelType = typeof(ExecuteViewModel) });
             Samples.Add(new SampleViewModel { Title = "Navigating", Subtitle = "Navigating between pages and passing parameters.", ViewModelType = typeof(NavigationViewModel) });
             Samples.Add(new SampleViewModel { Title = "Search", Subtitle = "How to integrate the Share charm in your app.", ViewModelType = typeof(SearchViewModel) });
+            Samples.Add(new SampleViewModel { Title = "Settings", Subtitle = "How to use your view models in the settings charm.", ViewModelType = typeof(SettingsViewModel) });
+            Samples.Add(new SampleViewModel { Title = "Share Source", Subtitle = "How to use the share charm from your view model.", ViewModelType = typeof(ShareSourceViewModel) });
         }
 
         public void SampleSelected(ItemClickEventArgs eventArgs)
         {
             var sample = (SampleViewModel)eventArgs.ClickedItem;
 
-            _navigationService.NavigateToViewModel(sample.ViewModelType);
+            navigationService.NavigateToViewModel(sample.ViewModelType);
         }
 
         public BindableCollection<SampleViewModel> Samples
         {
             get;
             private set;
-        }
-
-        public void OnShareRequested(DataRequest dataRequest)
-        {
-            dataRequest.Data.Properties.Title = "Caliburn.Micro Share Sample";
-            dataRequest.Data.Properties.Description = "from Marker Metro";
-            dataRequest.Data.SetUri(new Uri("https://markermetro.com"));
         }
     }
 }

@@ -162,6 +162,13 @@ The back button is bound through Action conventions to the method GoBack and pro
   <data name="SearchExplanation.Text" xml:space="preserve">
     <value>To enable your applicaiton for search you will need to set the Search declaration in your Package.appxmanifest file. Then override OnSearchActivated in App.xaml.cs, this will let you tell Caliburn Micro how to handle the Search activation, in this example app we use the root Frame control to navigate to this search view passing the query text as a parameter.</value>
   </data>
+  <data name="SettingsExplanation.Text" xml:space="preserve">
+    <value>Caliburn Micro now supports using your view models as part of the settings charm.  To start using this feature use the RegisterSettingsService on WinRTContainer. By default uses the UI library Callisto to display settings through the interface ISettingsWindowManager, if you wish to use a differing windowing manager then register an instance of this interface before calling RegisterSettingsService.
+
+This method returns a settings service interface that you can use register commands with, the generic paramter is the type of the view model you wish to display. The second is the label of the settings section to be used in the charm.
+
+Caliburn will then use it's default behavior to locate the view for your view model and display it as a settings flyout.</value>
+  </data>
   <data name="SetupExplanation.Text" xml:space="preserve">
     <value>Unlike other versions of Caliburn Micro the WinRT version doesn't use a Bootstrapper, the non ranty reason for this is that Windows.UI.Xaml.Application exposes most of it's functionality through method overrides and not events. Therefore it makes sense to have a custom Application rather than forcing the developer to wire the application to the bootstrapper.
 
@@ -194,5 +201,8 @@ Combining both approaches
 
 Any significantly sized WinRT application will most likely use a combination of the two approaches. While you may use View first to quickly enable the navigation metaphor with a back button you may compose individual views with child view models. Also some launch scenarios such as Share Target give you a small window to work in where View Model first will be simpler. The sample WinRT application shows this approach.
 Overall these changes should give you increased functionality and better control of your application using Caliburn Micro.</value>
+  </data>
+  <data name="ShareExplanation.Text" xml:space="preserve">
+    <value>To support being a source of data on your view models the first step is to register the sharing service on the WinRTContainer using RegisterSharingService. For each view model you wish to be a share source use the interface ISupportSharing. In a view first approach Caliburn Micro will query for the current view model. In a view model first scenario then the root (or shell) view model will be queried.</value>
   </data>
 </root>

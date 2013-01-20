@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Windows.UI.Xaml.Controls;
 
 namespace Caliburn.Micro
@@ -42,44 +41,30 @@ namespace Caliburn.Micro
         /// <summary>
         /// Registers the Caliburn.Micro sharing service with the container.
         /// </summary>
-        /// <param name="rootFrame">The application root frame.</param>
-        public void RegisterSharingService(Frame rootFrame)
+        public void RegisterSharingService()
         {
             if (HasHandler(typeof (ISharingService), null))
                 return;
 
-            if (rootFrame == null)
-                throw new ArgumentNullException("rootFrame");
-
-            RegisterInstance(typeof(ISharingService), null, new SharingeService(rootFrame));
+            RegisterInstance(typeof(ISharingService), null, new SharingService());
         }
 
         /// <summary>
-        /// Registers the settings service with the container.
+        /// Registers the Caliburn.Micro settings service with the container.
         /// </summary>
-        /// <param name="container">The container.</param>
-        /// <param name="settingsWindowManager">The settings window manager.</param>
-        public void RegisterSettingsService(ISettingsWindowManager settingsWindowManager)
+        public ISettingsService RegisterSettingsService()
         {
+            if (!HasHandler(typeof (ISettingsService), null))
+                RegisterInstance(typeof(ISettingsWindowManager), null, new CallistoSettingsWindowManager());
+
             if (HasHandler(typeof(ISettingsService), null))
-                return;
+                return (ISettingsService) GetInstance(typeof(ISettingsService), null);
 
-            if (settingsWindowManager == null)
-                throw new ArgumentNullException("settingsWindowManager");
+            var settingsService = new SettingsService((ISettingsWindowManager)GetInstance(typeof(ISettingsWindowManager), null));
 
-            RegisterInstance(typeof(ISettingsService), null, new SettingsService(settingsWindowManager));
-        }
+            RegisterInstance(typeof(ISettingsService), null, settingsService);
 
-        /// <summary>
-        /// Registers a Settings Command with the container.
-        /// </summary>
-        /// <typeparam name="TViewModel">The commands view model.</typeparam>
-        /// <param name="commandId">The command id.</param>
-        /// <param name="label">The command label.</param>
-        /// <param name="viewSettings">The optional flyout view settings.</param>
-        public void SettingsCommand<TViewModel>(object commandId, string label, IDictionary<string, object> viewSettings = null)
-        {
-            RegisterInstance(typeof(CaliburnSettingsCommand), null, new CaliburnSettingsCommand(commandId, label, typeof(TViewModel), viewSettings));
+            return settingsService;
         }
     }
 }

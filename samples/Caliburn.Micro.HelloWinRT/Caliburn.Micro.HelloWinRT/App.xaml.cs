@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Caliburn.Micro.WinRT.Sample.Settings;
 using Caliburn.Micro.WinRT.Sample.ViewModels;
 using Caliburn.Micro.WinRT.Sample.Views;
 using Windows.ApplicationModel.Activation;
@@ -12,7 +11,7 @@ namespace Caliburn.Micro.WinRT.Sample
 {
     public sealed partial class App
     {
-        private WinRTContainer _container;
+        private WinRTContainer container;
 
         public App()
         {
@@ -21,8 +20,13 @@ namespace Caliburn.Micro.WinRT.Sample
 
         protected override void Configure()
         {
-            _container = new WinRTContainer();
-            _container.RegisterWinRTServices();
+            container = new WinRTContainer();
+            container.RegisterWinRTServices();
+
+            container.RegisterSharingService();
+
+            container.RegisterSettingsService()
+                .RegisterCommand<SampleSettingsViewModel>("Custom");
         }
 
         private static bool IsConcrete(Type service)
@@ -33,13 +37,13 @@ namespace Caliburn.Micro.WinRT.Sample
 
         protected override object GetInstance(Type service, string key)
         {
-            var obj = _container.GetInstance(service, key);
+            var obj = container.GetInstance(service, key);
 
             // mimic previous behaviour of WinRT SimpleContainer
             if (obj == null && IsConcrete(service))
             {
-                _container.RegisterPerRequest(service, key, service);
-                obj = _container.GetInstance(service, key);
+                container.RegisterPerRequest(service, key, service);
+                obj = container.GetInstance(service, key);
             }
 
             return obj;
@@ -47,21 +51,17 @@ namespace Caliburn.Micro.WinRT.Sample
 
         protected override IEnumerable<object> GetAllInstances(Type service)
         {
-            return _container.GetAllInstances(service);
+            return container.GetAllInstances(service);
         }
 
         protected override void BuildUp(object instance)
         {
-            _container.BuildUp(instance);
+            container.BuildUp(instance);
         }
 
         protected override void PrepareViewFirst(Frame rootFrame)
         {
-            _container.RegisterNavigationService(rootFrame);
-            _container.RegisterSharingService(rootFrame);
-
-            _container.RegisterSettingsService(new SimplePopupSettingsWindowManager());
-            _container.SettingsCommand<SampleSettingsViewModel>(1, "Custom");
+            container.RegisterNavigationService(rootFrame);
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
@@ -80,8 +80,8 @@ namespace Caliburn.Micro.WinRT.Sample
             Initialise();
 
             // replace the share operation in the container
-            _container.UnregisterHandler(typeof(ShareOperation), null);
-            _container.Instance(args.ShareOperation);
+            container.UnregisterHandler(typeof(ShareOperation), null);
+            container.Instance(args.ShareOperation);
 
             DisplayRootViewFor<ShareTargetViewModel>();
         }

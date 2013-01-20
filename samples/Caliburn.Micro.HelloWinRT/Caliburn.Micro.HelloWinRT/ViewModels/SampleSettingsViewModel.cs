@@ -5,13 +5,13 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
 {
     public class SampleSettingsViewModel : Screen
     {
-        private string _savedText;
+        private string savedText;
 
         protected override void OnActivate()
         {
             base.OnActivate();
 
-            SavedText = (string)ApplicationData.Current.LocalSettings.Values["SavedText"];
+            SavedText = (string) ApplicationData.Current.LocalSettings.Values["SavedText"];
         }
 
         protected override void OnDeactivate(bool close)
@@ -25,11 +25,11 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
         {
             get
             {
-                return _savedText;
+                return savedText;
             }
             set
             {
-                _savedText = value;
+                savedText = value;
                 NotifyOfPropertyChange();
             }
         }
