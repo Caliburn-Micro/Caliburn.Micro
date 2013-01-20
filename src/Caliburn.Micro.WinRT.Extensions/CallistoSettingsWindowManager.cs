@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Callisto.Controls;
 
 namespace Caliburn.Micro
@@ -9,6 +8,12 @@ namespace Caliburn.Micro
     /// </summary>
     public class CallistoSettingsWindowManager : ISettingsWindowManager
     {
+        /// <summary>
+        /// Shows a settings flyout panel for the specified model.
+        /// </summary>
+        /// <param name="viewModel">The settings view model.</param>
+        /// <param name="commandLabel">The settings command label.</param>
+        /// <param name="viewSettings">The optional dialog settings.</param>
         public void ShowSettingsFlyout(object viewModel, string commandLabel, IDictionary<string, object> viewSettings = null)
         {
             var view = ViewLocator.LocateForModel(viewModel, null, null);

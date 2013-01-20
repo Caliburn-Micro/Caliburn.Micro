@@ -54,14 +54,13 @@ namespace Caliburn.Micro
         /// </summary>
         public ISettingsService RegisterSettingsService()
         {
-            if (!HasHandler(typeof (ISettingsService), null))
+            if (HasHandler(typeof(ISettingsService), null))
+                return (ISettingsService)GetInstance(typeof(ISettingsService), null);
+
+            if (!HasHandler(typeof(ISettingsWindowManager), null))
                 RegisterInstance(typeof(ISettingsWindowManager), null, new CallistoSettingsWindowManager());
 
-            if (HasHandler(typeof(ISettingsService), null))
-                return (ISettingsService) GetInstance(typeof(ISettingsService), null);
-
             var settingsService = new SettingsService((ISettingsWindowManager)GetInstance(typeof(ISettingsWindowManager), null));
-
             RegisterInstance(typeof(ISettingsService), null, settingsService);
 
             return settingsService;

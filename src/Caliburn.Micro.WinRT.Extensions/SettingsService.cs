@@ -46,6 +46,11 @@ namespace Caliburn.Micro
             commands.Add(new CaliburnSettingsCommand(label, typeof(TViewModel), viewSettings));
         }
 
+        /// <summary>
+        /// Occurs when the user opens the settings pane.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="SettingsPaneCommandsRequestedEventArgs" /> instance containing the event data.</param>
         protected virtual void OnCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
         {
             var settingsCommands = commands.Select((c, i) => new SettingsCommand(i, c.Label, h => OnCommandSelected(c)));
@@ -53,6 +58,10 @@ namespace Caliburn.Micro
             settingsCommands.Apply(args.Request.ApplicationCommands.Add);
         }
 
+        /// <summary>
+        /// Called when a settings command was selected in the Settings Charm.
+        /// </summary>
+        /// <param name="command">The settings command.</param>
         protected virtual void OnCommandSelected(CaliburnSettingsCommand command)
         {
             var viewModel = IoC.GetInstance(command.ViewModelType, null);
