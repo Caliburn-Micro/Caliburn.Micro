@@ -68,6 +68,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Action.cs" />
     <Compile Include="ActionExecutionContext.cs" />
     <Compile Include="ActionMessage.cs" />

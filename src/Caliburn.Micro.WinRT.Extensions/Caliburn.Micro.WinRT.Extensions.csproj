@@ -52,6 +52,9 @@
     <Compile Include="..\Caliburn.Micro.WP71.Extensions\UriBuilder.cs">
       <Link>UriBuilder.cs</Link>
     </Compile>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="CaliburnSettingsCommand.cs" />
     <Compile Include="CallistoSettingsWindowManager.cs" />
     <Compile Include="ISettingsService.cs" />

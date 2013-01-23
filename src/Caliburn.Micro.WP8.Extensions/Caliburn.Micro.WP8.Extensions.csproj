@@ -169,6 +169,9 @@
     <Compile Include="..\Caliburn.Micro.WP71.Extensions\WindowManagerExtensions.cs">
       <Link>WindowManagerExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
