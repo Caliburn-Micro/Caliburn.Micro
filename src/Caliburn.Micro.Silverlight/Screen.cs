@@ -228,7 +228,7 @@
         /// <summary>
         ///   Tries to close this instance by asking its Parent to initiate shutdown or by asking its corresponding view to close.
         /// </summary>
-        public void TryClose()
+        public virtual void TryClose()
         {
             Execute.OnUIThread(() =>
             {
