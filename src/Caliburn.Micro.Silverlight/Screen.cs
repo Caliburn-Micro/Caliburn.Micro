@@ -161,7 +161,6 @@
             callback(true);
         }
 
-#if WinRT
         System.Action GetViewCloseAction(bool? dialogResult) {
             var conductor = Parent as IConductor;
             if (conductor != null) {
@@ -171,33 +170,14 @@
             foreach (var contextualView in Views.Values) {
                 var viewType = contextualView.GetType();
 
+#if WinRT
                 var closeMethod = viewType.GetRuntimeMethod("Close", new Type[0]);
-                if (closeMethod != null) {
-                    return () => { closeMethod.Invoke(contextualView, null); };
-                }
-
-                var isOpenProperty = viewType.GetRuntimeProperty("IsOpen");
-                if (isOpenProperty != null) {
-                    return () => isOpenProperty.SetValue(contextualView, false, null);
-                }
-            }
-
-            return () => Log.Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
-        }
 #else
-        System.Action GetViewCloseAction(bool? dialogResult) {
-            var conductor = Parent as IConductor;
-            if (conductor != null) {
-                return () => conductor.CloseItem(this);
-            }
-
-            foreach(var contextualView in Views.Values) {
-                var viewType = contextualView.GetType();
-
                 var closeMethod = viewType.GetMethod("Close");
+#endif
                 if(closeMethod != null)
                     return () => {
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !WinRT
                         var isClosed = false;
                         if(dialogResult != null) {
                             var resultProperty = contextualView.GetType().GetProperty("DialogResult");
@@ -215,7 +195,11 @@
 #endif
                     };
 
+#if WinRT
+                var isOpenProperty = viewType.GetRuntimeProperty("IsOpen");
+#else
                 var isOpenProperty = viewType.GetProperty("IsOpen");
+#endif
                 if (isOpenProperty != null) {
                     return () => isOpenProperty.SetValue(contextualView, false, null);
                 }
@@ -223,7 +207,6 @@
 
             return () => Log.Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
         }
-#endif
 
         /// <summary>
         ///   Tries to close this instance by asking its Parent to initiate shutdown or by asking its corresponding view to close.

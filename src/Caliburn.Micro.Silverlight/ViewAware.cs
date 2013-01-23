@@ -91,13 +91,13 @@
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="context">The context in which the view appears.</param>
-        protected internal virtual void OnViewAttached(object view, object context) { }
+        protected virtual void OnViewAttached(object view, object context) { }
 
         /// <summary>
         ///   Called when an attached view's Loaded event fires.
         /// </summary>
         /// <param name = "view"></param>
-        protected internal virtual void OnViewLoaded(object view) { }
+        protected virtual void OnViewLoaded(object view) { }
 
 #if WP71 || WinRT
         /// <summary>
