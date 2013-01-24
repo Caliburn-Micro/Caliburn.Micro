@@ -368,15 +368,17 @@ XamlReader.Load(
         /// </summary>
         public static bool HasBinding(FrameworkElement element, DependencyProperty property)
         {
-#if !WinRT
-            return element.GetBindingExpression(property) != null;
-#else
+#if NET
+            return BindingOperations.GetBindingBase(element, property) != null;
+#elif WinRT
             var localValue = element.ReadLocalValue(property);
 
             if (localValue == DependencyProperty.UnsetValue)
                 return false;
 
             return localValue.GetType().FullName == "System.__ComObject";
+#else
+            return element.GetBindingExpression(property) != null;
 #endif
         }
 
