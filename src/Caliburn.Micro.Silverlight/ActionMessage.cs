@@ -569,7 +569,7 @@
 
 			if (guard ==null) return null;
 			if (guard.ContainsGenericParameters) return null;
-			if (!typeof(bool).Equals(guard.ReturnType)) return null;
+			if (!(typeof(bool) == guard.ReturnType)) return null;
 
 			var guardPars = guard.GetParameters();
 			var actionPars = context.Method.GetParameters();
@@ -578,7 +578,7 @@
 
 		    var comparisons = guardPars.Zip(
 		        context.Method.GetParameters(),
-		        (x, y) => x.ParameterType.Equals(y.ParameterType)
+		        (x, y) => x.ParameterType == y.ParameterType
 		        );
 
 			if (comparisons.Any(x => !x)) {

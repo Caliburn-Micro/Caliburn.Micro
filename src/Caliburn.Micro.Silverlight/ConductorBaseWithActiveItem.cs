@@ -3,7 +3,7 @@
     /// A base class for various implementations of <see cref="IConductor"/> that maintain an active item.
     /// </summary>
     /// <typeparam name="T">The type that is being conducted.</typeparam>
-    public abstract class ConductorBaseWithActiveItem<T> : ConductorBase<T>, IConductActiveItem {
+    public abstract class ConductorBaseWithActiveItem<T> : ConductorBase<T>, IConductActiveItem where T: class {
         T activeItem;
 
         /// <summary>

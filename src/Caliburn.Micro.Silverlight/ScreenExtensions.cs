@@ -40,7 +40,7 @@
         /// </summary>
         /// <param name="conductor">The conductor.</param>
         /// <param name="item">The item to close.</param>
-        public static void CloseItem<T>(this ConductorBase<T> conductor, T item) {
+        public static void CloseItem<T>(this ConductorBase<T> conductor, T item) where T: class {
             conductor.DeactivateItem(item, true);
         }
 

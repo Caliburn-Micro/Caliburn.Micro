@@ -7,7 +7,7 @@
     /// A base class for various implementations of <see cref="IConductor"/>.
     /// </summary>
     /// <typeparam name="T">The type that is being conducted.</typeparam>
-    public abstract class ConductorBase<T> : Screen, IConductor, IParent<T> {
+    public abstract class ConductorBase<T> : Screen, IConductor, IParent<T> where T: class {
         ICloseStrategy<T> closeStrategy;
 
         /// <summary>
