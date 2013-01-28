@@ -1,5 +1,7 @@
 ﻿namespace Caliburn.Micro.WPF.Tests {
     using System;
+    using System.Globalization;
+    using System.Linq;
     using Xunit;
 
     public class ConductorWithCollectionOneActiveTests {
@@ -105,6 +107,17 @@
         public void ConductorCannotConductSelf() {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             Assert.Throws<InvalidOperationException>(() => conductor.Items.Add(conductor));
+        }
+
+        [Fact(Skip = "Fails with StackOverflowException. See http://caliburnmicro.codeplex.com/discussions/430917")]
+        public void TryCloseStressTest()
+        {
+            var conductor = new Conductor<IScreen>.Collection.OneActive();
+            var conducted = Enumerable.Range(0, 10000)
+                .Select(i => new Screen {DisplayName = i.ToString(CultureInfo.InvariantCulture)});
+            conductor.Items.AddRange(conducted);
+
+            conductor.CanClose(Assert.True);
         }
 
         class StateScreen : Screen {
