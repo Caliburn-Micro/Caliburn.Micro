@@ -158,6 +158,25 @@
 #endif
 
         /// <summary>
+        /// Executes the handler the first time the elements's LayoutUpdated event fires.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="handler">The handler.</param>
+#if WinRT
+        public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler<object> handler) {
+            EventHandler<object> onLayoutUpdate = null;
+#else
+        public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler handler) {
+            EventHandler onLayoutUpdate = null;
+#endif
+            onLayoutUpdate = (s, e) => {
+                handler(s, e);
+                element.LayoutUpdated -= onLayoutUpdate;
+            };
+            element.LayoutUpdated += onLayoutUpdate;
+        }
+
+        /// <summary>
         /// Used to retrieve the root, non-framework-created view.
         /// </summary>
         /// <param name="view">The view to search.</param>

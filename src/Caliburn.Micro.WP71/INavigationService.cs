@@ -187,14 +187,9 @@
                 activator.Activate();
             }
 
-            var viewAware = viewModel as ViewAware;
+            var viewAware = viewModel as IViewAware;
             if(viewAware != null) {
-                EventHandler onLayoutUpdate = null;
-                onLayoutUpdate = delegate {
-                    viewAware.OnViewReady(page);
-                    page.LayoutUpdated -= onLayoutUpdate;
-                };
-                page.LayoutUpdated += onLayoutUpdate;
+                View.ExecuteOnLayoutUpdated(page, (s, a) => viewAware.OnViewReady(page));
             }
 
             GC.Collect();

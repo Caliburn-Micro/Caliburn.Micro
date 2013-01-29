@@ -152,46 +152,29 @@ namespace Caliburn.Micro
             ViewLocator.InitializeComponent(e.Content);
 
             var viewModel = ViewModelLocator.LocateForView(e.Content);
-
             if (viewModel == null)
                 return;
 
             var view = e.Content as Page;
-
-            if (view == null)
-            {
+            if (view == null) {
                 throw new ArgumentException("View '" + e.Content.GetType().FullName + "' should inherit from Page or one of its descendents.");
             }
 
-            if (treatViewAsLoaded)
-            {
+            if (treatViewAsLoaded) {
                 view.SetValue(View.IsLoadedProperty, true);
             }
 
             TryInjectParameters(viewModel, e.Parameter);
-
             ViewModelBinder.Bind(viewModel, view, null);
 
             var activator = viewModel as IActivate;
-
-            if (activator != null)
-            {
+            if (activator != null) {
                 activator.Activate();
             }
 
-            var viewAware = viewModel as ViewAware;
-
-            if (viewAware != null)
-            {
-                EventHandler<object> onLayoutUpdate = null;
-
-                onLayoutUpdate = delegate
-                {
-                    viewAware.OnViewReady(view);
-                    view.LayoutUpdated -= onLayoutUpdate;
-                };
-
-                view.LayoutUpdated += onLayoutUpdate;
+            var viewAware = viewModel as IViewAware;
+            if (viewAware != null) {
+                View.ExecuteOnLayoutUpdated(view, (s, a) => viewAware.OnViewReady(view));
             }
 
             GC.Collect(); // Why?

@@ -100,11 +100,15 @@
         protected virtual void OnViewLoaded(object view) { }
 
 #if WP71 || WinRT
+        void IViewAware.OnViewReady(object view) {
+            OnViewReady(view);
+        }
+
         /// <summary>
         ///   Called the first time the page's LayoutUpdated event fires after it is navigated to.
         /// </summary>
         /// <param name = "view"></param>
-        protected internal virtual void OnViewReady(object view) { }
+        protected virtual void OnViewReady(object view) { }
 #endif
 
         /// <summary>
