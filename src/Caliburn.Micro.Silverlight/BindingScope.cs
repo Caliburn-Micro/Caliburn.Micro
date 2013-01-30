@@ -67,10 +67,12 @@
                     break;
 
 #if WinRT
-                if (root is AppBar) {
+                if (root is AppBar)
+                {
                     var frame = Window.Current.Content as Frame;
                     var page = (frame != null) ? frame.Content as Page : null;
-                    if (page != null && (root == page.TopAppBar || root == page.BottomAppBar)) {
+                    if (page != null && (root == page.TopAppBar || root == page.BottomAppBar))
+                    {
                         root = page;
                         break;
                     }
@@ -149,20 +151,29 @@
                             queue.Enqueue(headeredControl.Header as DependencyObject);
 #endif
                     }
-                    else
+
+                    var itemsControl = current as ItemsControl;
+                    if (itemsControl != null)
                     {
-                        var itemsControl = current as ItemsControl;
-                        if (itemsControl != null)
-                        {
-                            itemsControl.Items.OfType<DependencyObject>()
-                                .Apply(queue.Enqueue);
+                        itemsControl.Items.OfType<DependencyObject>()
+                            .Apply(queue.Enqueue);
 #if !SILVERLIGHT && !WinRT
-                            var headeredControl = itemsControl as HeaderedItemsControl;
-                            if (headeredControl != null && headeredControl.Header is DependencyObject)
-                                queue.Enqueue(headeredControl.Header as DependencyObject);
+                        var headeredControl = itemsControl as HeaderedItemsControl;
+                        if (headeredControl != null && headeredControl.Header is DependencyObject)
+                            queue.Enqueue(headeredControl.Header as DependencyObject);
 #endif
-                        }
                     }
+#if WinRT
+                    var semanticZoom = current as SemanticZoom;
+                    if (semanticZoom != null) 
+                    {
+                        if (semanticZoom.ZoomedInView is DependencyObject)
+                            queue.Enqueue(semanticZoom.ZoomedInView as DependencyObject);
+
+                        if (semanticZoom.ZoomedOutView is DependencyObject)
+                            queue.Enqueue(semanticZoom.ZoomedOutView as DependencyObject);
+                    }
+#endif
                 }
             }
 
