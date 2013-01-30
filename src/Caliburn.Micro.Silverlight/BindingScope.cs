@@ -101,7 +101,7 @@
                 if (currentElement != null && !string.IsNullOrEmpty(currentElement.Name))
                     descendants.Add(currentElement);
 
-                if (current is UserControl && ReferenceEquals(current, root))
+                if (current is UserControl && !ReferenceEquals(current, root))
                     continue;
 
                 if (routeHops.ContainsKey(current))
