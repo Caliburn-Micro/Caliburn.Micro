@@ -2,7 +2,7 @@
     using System.ComponentModel;
 
     public abstract class DocumentWorkspace<TDocument> : Conductor<TDocument>.Collection.OneActive, IDocumentWorkspace
-        where TDocument : INotifyPropertyChanged, IDeactivate, IHaveDisplayName {
+        where TDocument : class, INotifyPropertyChanged, IDeactivate, IHaveDisplayName {
         DocumentWorkspaceState state = DocumentWorkspaceState.Master;
 
         protected DocumentWorkspace() {
