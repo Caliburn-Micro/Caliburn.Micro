@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\bin\WinRT\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WinRT</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WinRT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\..\bin\WinRT\Debug\Caliburn.Micro.xml</DocumentationFile>
@@ -29,7 +29,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin\WinRT\Release\</OutputPath>
-    <DefineConstants>TRACE;WinRT</DefineConstants>
+    <DefineConstants>TRACE;NETFX_CORE;WinRT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\..\bin\WinRT\Release\Caliburn.Micro.xml</DocumentationFile>

@@ -1,4 +1,8 @@
-﻿namespace Caliburn.Micro {
+﻿#if NETFX_CORE && !WinRT
+#define WinRT
+#endif
+
+namespace Caliburn.Micro {
     using System;
     using System.Linq;
     using System.Reflection;

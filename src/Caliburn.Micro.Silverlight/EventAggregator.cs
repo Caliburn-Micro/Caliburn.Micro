@@ -1,4 +1,8 @@
-﻿namespace Caliburn.Micro {
+﻿#if NETFX_CORE && !WinRT
+#define WinRT
+#endif
+
+namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -7,7 +11,7 @@
     /// <summary>
     ///   A marker interface for classes that subscribe to messages.
     /// </summary>
-    public interface IHandle {}
+    public interface IHandle { }
 
     /// <summary>
     ///   Denotes a class which can handle a particular type of message.

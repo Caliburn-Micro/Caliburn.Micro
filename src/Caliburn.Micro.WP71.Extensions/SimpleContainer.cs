@@ -1,5 +1,8 @@
-﻿namespace Caliburn.Micro
-{
+﻿#if NETFX_CORE && !WinRT
+#define WinRT
+#endif
+
+namespace Caliburn.Micro {
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -9,8 +12,7 @@
     /// <summary>
     ///   A simple IoC container.
     /// </summary>
-    public class SimpleContainer
-    {
+    public class SimpleContainer {
 #if WinRT
         static readonly TypeInfo delegateType = typeof(Delegate).GetTypeInfo();
         static readonly TypeInfo enumerableType = typeof(IEnumerable).GetTypeInfo();
@@ -24,13 +26,11 @@
         /// <summary>
         ///   Initializes a new instance of the <see cref = "SimpleContainer" /> class.
         /// </summary>
-        public SimpleContainer()
-        {
+        public SimpleContainer() {
             entries = new List<ContainerEntry>();
         }
 
-        SimpleContainer(IEnumerable<ContainerEntry> entries)
-        {
+        SimpleContainer(IEnumerable<ContainerEntry> entries) {
             this.entries = new List<ContainerEntry>(entries);
         }
 
@@ -40,8 +40,7 @@
         /// <param name = "service">The service.</param>
         /// <param name = "key">The key.</param>
         /// <param name = "implementation">The implementation.</param>
-        public void RegisterInstance(Type service, string key, object implementation)
-        {
+        public void RegisterInstance(Type service, string key, object implementation) {
             RegisterHandler(service, key, container => implementation);
         }
 
@@ -51,8 +50,7 @@
         /// <param name = "service">The service.</param>
         /// <param name = "key">The key.</param>
         /// <param name = "implementation">The implementation.</param>
-        public void RegisterPerRequest(Type service, string key, Type implementation)
-        {
+        public void RegisterPerRequest(Type service, string key, Type implementation) {
             RegisterHandler(service, key, container => container.BuildInstance(implementation));
         }
 
@@ -62,8 +60,7 @@
         /// <param name = "service">The service.</param>
         /// <param name = "key">The key.</param>
         /// <param name = "implementation">The implementation.</param>
-        public void RegisterSingleton(Type service, string key, Type implementation)
-        {
+        public void RegisterSingleton(Type service, string key, Type implementation) {
             object singleton = null;
             RegisterHandler(service, key, container => singleton ?? (singleton = container.BuildInstance(implementation)));
         }
@@ -74,8 +71,7 @@
         /// <param name = "service">The service.</param>
         /// <param name = "key">The key.</param>
         /// <param name = "handler">The handler.</param>
-        public void RegisterHandler(Type service, string key, Func<SimpleContainer, object> handler)
-        {
+        public void RegisterHandler(Type service, string key, Func<SimpleContainer, object> handler) {
             GetOrCreateEntry(service, key).Add(handler);
         }
 
@@ -84,11 +80,9 @@
         /// </summary>
         /// <param name = "service">The service.</param>
         /// <param name = "key">The key.</param>
-        public void UnregisterHandler(Type service, string key)
-        {
+        public void UnregisterHandler(Type service, string key) {
             var entry = GetEntry(service, key);
-            if (entry != null)
-            {
+            if (entry != null) {
                 entries.Remove(entry);
             }
         }
@@ -99,8 +93,7 @@
         /// <param name = "service">The service.</param>
         /// <param name = "key">The key.</param>
         /// <returns>The instance, or null if a handler is not found.</returns>
-        public object GetInstance(Type service, string key)
-        {
+        public object GetInstance(Type service, string key) {
             var entry = GetEntry(service, key);
             if (entry != null) {
                 return entry.Single()(this);
@@ -159,8 +152,7 @@
         /// <param name="service">The service.</param>
         /// <param name="key">The key.</param>
         /// <returns>True if a handler is registere; false otherwise.</returns>
-        public bool HasHandler(Type service, string key)
-        {
+        public bool HasHandler(Type service, string key) {
             return GetEntry(service, key) != null;
         }
 
@@ -169,8 +161,7 @@
         /// </summary>
         /// <param name = "service">The service.</param>
         /// <returns>All the instances or an empty enumerable if none are found.</returns>
-        public IEnumerable<object> GetAllInstances(Type service)
-        {
+        public IEnumerable<object> GetAllInstances(Type service) {
             var entry = GetEntry(service, null);
             return entry != null ? entry.Select(x => x(this)) : new object[0];
         }
@@ -179,8 +170,7 @@
         ///   Pushes dependencies into an existing instance based on interface properties with setters.
         /// </summary>
         /// <param name = "instance">The instance.</param>
-        public void BuildUp(object instance)
-        {
+        public void BuildUp(object instance) {
 #if WinRT
             var injectables = from property in instance.GetType().GetTypeInfo().DeclaredProperties
                               where property.CanRead && property.CanWrite && property.PropertyType.GetTypeInfo().IsInterface
@@ -191,11 +181,9 @@
                               select property;
 #endif
 
-            foreach (var propertyInfo in injectables)
-            {
+            foreach (var propertyInfo in injectables) {
                 var injection = GetAllInstances(propertyInfo.PropertyType).ToArray();
-                if (injection.Any())
-                {
+                if (injection.Any()) {
                     propertyInfo.SetValue(instance, injection.First(), null);
                 }
             }
@@ -205,16 +193,13 @@
         /// Creates a child container.
         /// </summary>
         /// <returns>A new container.</returns>
-        public SimpleContainer CreateChildContainer()
-        {
+        public SimpleContainer CreateChildContainer() {
             return new SimpleContainer(entries);
         }
 
-        ContainerEntry GetOrCreateEntry(Type service, string key)
-        {
+        ContainerEntry GetOrCreateEntry(Type service, string key) {
             var entry = GetEntry(service, key);
-            if (entry == null)
-            {
+            if (entry == null) {
                 entry = new ContainerEntry { Service = service, Key = key };
                 entries.Add(entry);
             }
@@ -222,15 +207,12 @@
             return entry;
         }
 
-        ContainerEntry GetEntry(Type service, string key)
-        {
-            if (service == null)
-            {
+        ContainerEntry GetEntry(Type service, string key) {
+            if (service == null) {
                 return entries.FirstOrDefault(x => x.Key == key);
             }
 
-            if (key == null)
-            {
+            if (key == null) {
                 return entries.FirstOrDefault(x => x.Service == service && x.Key == null)
                        ?? entries.FirstOrDefault(x => x.Service == service);
             }
@@ -243,8 +225,7 @@
         /// </summary>
         /// <param name = "type">The type.</param>
         /// <returns></returns>
-        protected object BuildInstance(Type type)
-        {
+        protected object BuildInstance(Type type) {
             var args = DetermineConstructorArgs(type);
             return ActivateInstance(type, args);
         }
@@ -255,8 +236,7 @@
         /// <param name = "type">The type.</param>
         /// <param name = "args">The constructor args.</param>
         /// <returns>The created instance.</returns>
-        protected virtual object ActivateInstance(Type type, object[] args)
-        {
+        protected virtual object ActivateInstance(Type type, object[] args) {
             var instance = args.Length > 0 ? Activator.CreateInstance(type, args) : Activator.CreateInstance(type);
             Activated(instance);
             return instance;
@@ -267,8 +247,7 @@
         /// </summary>
         public event Action<object> Activated = delegate { };
 
-        object[] DetermineConstructorArgs(Type implementation)
-        {
+        object[] DetermineConstructorArgs(Type implementation) {
             var args = new List<object>();
             var constructor = SelectEligibleConstructor(implementation);
 
@@ -279,8 +258,7 @@
         }
 
 #if WinRT
-        static ConstructorInfo SelectEligibleConstructor(Type type)
-        {
+        static ConstructorInfo SelectEligibleConstructor(Type type) {
             return (from c in type.GetTypeInfo().DeclaredConstructors
                     orderby c.GetParameters().Length descending
                     select c).FirstOrDefault();
@@ -293,16 +271,13 @@
         }
 #endif
 
-        class ContainerEntry : List<Func<SimpleContainer, object>>
-        {
+        class ContainerEntry : List<Func<SimpleContainer, object>> {
             public string Key;
             public Type Service;
         }
 
-        class FactoryFactory<T>
-        {
-            public Func<T> Create(SimpleContainer container)
-            {
+        class FactoryFactory<T> {
+            public Func<T> Create(SimpleContainer container) {
                 return () => (T)container.GetInstance(typeof(T), null);
             }
         }

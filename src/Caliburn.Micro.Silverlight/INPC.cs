@@ -1,4 +1,8 @@
-﻿namespace Caliburn.Micro {
+﻿#if NETFX_CORE && !WinRT
+#define WinRT
+#endif
+
+namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -13,10 +17,8 @@
     using System.Runtime.CompilerServices;
 
 #if WinRT
-    using Windows.UI.Core;
-    using Windows.UI.Xaml.Controls;
     using Windows.ApplicationModel;
-    using Windows.Foundation.Collections;
+    using Windows.UI.Core;
     using Windows.UI.Xaml;
 #else
     using System.Windows;
@@ -83,8 +85,7 @@
 #elif WinRT
             var dispatcher = Window.Current.Dispatcher;
 
-            SetUIThreadMarshaller(action =>
-            {
+            SetUIThreadMarshaller(action => {
                 if (Window.Current != null)
                     action();
                 else
@@ -198,11 +199,10 @@
         /// </summary>
         /// <param name = "propertyName">Name of the property.</param>
 #if WinRT || NET45
-        public virtual void NotifyOfPropertyChange([CallerMemberName]string propertyName = "")
+        public virtual void NotifyOfPropertyChange([CallerMemberName]string propertyName = "") {
 #else
-        public virtual void NotifyOfPropertyChange(string propertyName)
+        public virtual void NotifyOfPropertyChange(string propertyName) {
 #endif
-        {
             if (IsNotifying) {
                 Execute.OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
             }
@@ -317,11 +317,10 @@
         /// </summary>
         /// <param name = "propertyName">Name of the property.</param>
 #if WinRT || NET45
-        public virtual void NotifyOfPropertyChange([CallerMemberName]string propertyName = "")
+        public virtual void NotifyOfPropertyChange([CallerMemberName]string propertyName = "") {
 #else
-        public virtual void NotifyOfPropertyChange(string propertyName)
+        public virtual void NotifyOfPropertyChange(string propertyName) {
 #endif
-        {
             if(IsNotifying)
                 Execute.OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
         }
@@ -358,7 +357,7 @@
             base.InsertItem(index, item);
         }
 
-#if NET
+#if NET || WP8 || WinRT
     /// <summary>
     /// Moves the item within the collection.
     /// </summary>
