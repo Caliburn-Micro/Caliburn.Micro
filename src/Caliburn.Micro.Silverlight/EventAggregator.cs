@@ -13,7 +13,7 @@
     ///   Denotes a class which can handle a particular type of message.
     /// </summary>
     /// <typeparam name = "TMessage">The type of message to handle.</typeparam>
-    public interface IHandle<TMessage> : IHandle {
+    public interface IHandle<in TMessage> : IHandle {
         /// <summary>
         ///   Handles the message.
         /// </summary>
@@ -158,50 +158,6 @@
             });
         }
 
-#if WinRT
-        class Handler         {
-            readonly WeakReference reference;
-            readonly Dictionary<TypeInfo, MethodInfo> supportedHandlers = new Dictionary<TypeInfo, MethodInfo>();
-
-            public Handler(object handler) {
-                reference = new WeakReference(handler);
-
-                var handlerInfo = typeof(IHandle).GetTypeInfo();
-                var interfaces = handler.GetType().GetTypeInfo().ImplementedInterfaces
-                    .Where(x => handlerInfo.IsAssignableFrom(x.GetTypeInfo()) && x.GetTypeInfo().IsGenericType);
-
-                foreach (var @interface in interfaces) {
-                    var type = @interface.GenericTypeArguments[0];
-                    var method = @interface.GetTypeInfo().DeclaredMethods.First(x => x.Name == "Handle");
-                    supportedHandlers[type.GetTypeInfo()] = method;
-                }
-            }
-
-            public bool Matches(object instance) {
-                return reference.Target == instance;
-            }
-
-            public bool Handle(Type messageType, object message) {
-                var target = reference.Target;
-                if (target == null)
-                    return false;
-
-                var typeInfo = messageType.GetTypeInfo();
-
-                foreach (var pair in supportedHandlers) {
-                    if (pair.Key.IsAssignableFrom(typeInfo)) {
-                        var result = pair.Value.Invoke(target, new[] { message });
-                        if (result != null) {
-                            HandlerResultProcessing(target, result);
-                        }
-                        return true;
-                    }
-                }
-
-                return true;
-            }
-        }
-#else
         class Handler {
             readonly WeakReference reference;
             readonly Dictionary<Type, MethodInfo> supportedHandlers = new Dictionary<Type, MethodInfo>();
@@ -209,6 +165,17 @@
             public Handler(object handler) {
                 reference = new WeakReference(handler);
 
+#if WinRT
+                var handlerInfo = typeof(IHandle).GetTypeInfo();
+                var interfaces = handler.GetType().GetTypeInfo().ImplementedInterfaces
+                    .Where(x => handlerInfo.IsAssignableFrom(x.GetTypeInfo()) && x.GetTypeInfo().IsGenericType);
+
+                foreach (var @interface in interfaces) {
+                    var type = @interface.GenericTypeArguments[0];
+                    var method = @interface.GetTypeInfo().DeclaredMethods.First(x => x.Name == "Handle");
+                    supportedHandlers[type] = method;
+                }
+#else
                 var interfaces = handler.GetType().GetInterfaces()
                     .Where(x => typeof(IHandle).IsAssignableFrom(x) && x.IsGenericType);
 
@@ -217,6 +184,7 @@
                     var method = @interface.GetMethod("Handle");
                     supportedHandlers[type] = method;
                 }
+#endif
             }
 
             public bool Matches(object instance) {
@@ -235,13 +203,11 @@
                         if (result != null) {
                             HandlerResultProcessing(target, result);
                         }
-                        return true;
                     }
                 }
                 
                 return true;
             }
         }
-#endif
     }
 }

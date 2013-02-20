@@ -26,20 +26,26 @@
             IoC.BuildUp(enumerator);
 
             if (callback != null) {
-                enumerator.Completed += callback;
+                ExecuteOnCompleted(enumerator, callback);
             }
 
-            enumerator.Completed += Completed;
+            ExecuteOnCompleted(enumerator, Completed);
             enumerator.Execute(context ?? new ActionExecutionContext());
+        }
+
+        static void ExecuteOnCompleted(IResult result, EventHandler<ResultCompletionEventArgs> handler) {
+            EventHandler<ResultCompletionEventArgs> onCompledted = null;
+            onCompledted = (s, e) => {
+                result.Completed -= onCompledted;
+                handler(s, e);
+            };
+            result.Completed += onCompledted;
         }
 
         /// <summary>
         /// Called upon completion of a coroutine.
         /// </summary>
         public static event EventHandler<ResultCompletionEventArgs> Completed = (s, e) => {
-            var enumerator = (IResult)s;
-            enumerator.Completed -= Completed;
-
             if(e.Error != null) {
                 Log.Error(e.Error);
             }
@@ -55,7 +61,7 @@
     /// <summary>
     ///  Denotes a class which can handle a particular type of message and uses a Coroutine to do so.
     /// </summary>
-    public interface IHandleWithCoroutine<TMessage> : IHandle {
+    public interface IHandleWithCoroutine<in TMessage> : IHandle {
 		/// <summary>
 		///  Handle the message with a Coroutine.
 		/// </summary>

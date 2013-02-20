@@ -66,7 +66,7 @@
             return memberExpression.Member;
         }
 
-#if WP71
+#if WP71 && !WP8
 		//Method missing in WP71 Linq
 
 		/// <summary>
@@ -99,6 +99,31 @@
 				yield return resultSelector(enumFirst.Current, enumSecond.Current);
 			}
 		}
+#endif
+
+#if WinRT
+        /// <summary>
+        /// Gets a collection of the public types defined in this assembly that are visible outside the assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>A collection of the public types defined in this assembly that are visible outside the assembly.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static IEnumerable<Type> GetExportedTypes(this Assembly assembly) {
+            if (assembly == null)
+                throw new ArgumentNullException("assembly");
+
+            return assembly.ExportedTypes;
+        }
+
+        /// <summary>
+        /// Returns a value that indicates whether the specified type can be assigned to the current type.
+        /// </summary>
+        /// <param name="target">The target type</param>
+        /// <param name="type">The type to check.</param>
+        /// <returns>true if the specified type can be assigned to this type; otherwise, false.</returns>
+        public static bool IsAssignableFrom(this Type target, Type type) {
+            return target.GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
+        }
 #endif
     }
 }
