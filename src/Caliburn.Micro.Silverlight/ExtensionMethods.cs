@@ -69,8 +69,8 @@ namespace Caliburn.Micro {
             return memberExpression.Member;
         }
 
-#if WP71 && !WP8
-		//Method missing in WP71 Linq
+#if WINDOWS_PHONE && !WP8
+		//Method missing in WP7.1 Linq
 
 		/// <summary>
 		/// Merges two sequences by using the specified predicate function.

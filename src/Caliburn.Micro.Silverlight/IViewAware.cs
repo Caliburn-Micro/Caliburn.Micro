@@ -12,7 +12,7 @@ namespace Caliburn.Micro {
         /// <param name="context">The context in which the view appears.</param>
         void AttachView(object view, object context = null);
 
-#if WP71 || WinRT
+#if WINDOWS_PHONE || WinRT
         /// <summary>
         ///   Called the first time the view's LayoutUpdated event fires after it is navigated to.
         /// </summary>

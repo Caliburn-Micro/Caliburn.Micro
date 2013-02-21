@@ -139,7 +139,7 @@
             var containsApp = false;
 
             try {
-#if SILVERLIGHT && !WP71
+#if SILVERLIGHT && !WINDOWS_PHONE
                 containsApp = !assembly.IsDynamic && assembly.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application)));
 #else
                 containsApp = assembly.EntryPoint != null && assembly.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application)));
@@ -179,14 +179,14 @@
         /// Override this to provide an IoC specific implementation.
         /// </summary>
         /// <param name="instance">The instance to perform injection on.</param>
-        protected virtual void BuildUp(object instance) {}
+        protected virtual void BuildUp(object instance) { }
 
         /// <summary>
         /// Override this to add custom behavior to execute after the application starts.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
-        protected virtual void OnStartup(object sender, StartupEventArgs e) {}
+        protected virtual void OnStartup(object sender, StartupEventArgs e) { }
 
         /// <summary>
         /// Override this to add custom behavior on exit.
@@ -201,7 +201,7 @@
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event args.</param>
-        protected virtual void OnUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e) {}
+        protected virtual void OnUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e) { }
 #else
         /// <summary>
         /// Override this to add custom behavior for unhandled exceptions.
@@ -211,7 +211,7 @@
         protected virtual void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) { }
 #endif
             
-#if SILVERLIGHT && !WP71
+#if SILVERLIGHT && !WINDOWS_PHONE
         /// <summary>
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
         /// </summary>
@@ -254,7 +254,7 @@
         }
     }
 
-#if !WP71
+#if !WINDOWS_PHONE
     /// <summary>
     /// A strongly-typed version of <see cref="Bootstrapper"/> that specifies the type of root model to create for the application.
     /// </summary>

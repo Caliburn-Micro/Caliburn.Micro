@@ -1,5 +1,4 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -29,8 +28,7 @@
     /// <summary>
     /// Used to configure the conventions used by the framework to apply bindings and create actions.
     /// </summary>
-    public static class ConventionManager
-    {
+    public static class ConventionManager {
         static readonly ILog Log = LogManager.GetLog(typeof(ConventionManager));
 
         /// <summary>
@@ -55,17 +53,17 @@
         /// </summary>
         public static DataTemplate DefaultItemTemplate = (DataTemplate)
 #if SILVERLIGHT || WinRT
-XamlReader.Load(
+        XamlReader.Load(
 #else
         XamlReader.Parse(
 #endif
 #if WinRT
-"<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' xmlns:cal='using:Caliburn.Micro'>" +
+            "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' xmlns:cal='using:Caliburn.Micro'>" +
                 "<ContentControl cal:View.Model=\"{Binding}\" VerticalContentAlignment=\"Stretch\" HorizontalContentAlignment=\"Stretch\" IsTabStop=\"False\" />" +
             "</DataTemplate>"
 #else
              "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' " +
-                          "xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro'> " +
+                           "xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro'> " +
                 "<ContentControl cal:View.Model=\"{Binding}\" VerticalContentAlignment=\"Stretch\" HorizontalContentAlignment=\"Stretch\" IsTabStop=\"False\" />" +
             "</DataTemplate>"
 #endif
@@ -76,11 +74,11 @@ XamlReader.Load(
         /// </summary>
         public static DataTemplate DefaultHeaderTemplate = (DataTemplate)
 #if SILVERLIGHT || WinRT
-XamlReader.Load(
+        XamlReader.Load(
 #else
         XamlReader.Parse(
 #endif
-"<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'><TextBlock Text=\"{Binding DisplayName, Mode=TwoWay}\" /></DataTemplate>"
+            "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'><TextBlock Text=\"{Binding DisplayName, Mode=TwoWay}\" /></DataTemplate>"
         );
 
         static readonly Dictionary<Type, ElementConvention> ElementConventions = new Dictionary<Type, ElementConvention>();
@@ -88,8 +86,7 @@ XamlReader.Load(
         /// <summary>
         /// Changes the provided word from a plural form to a singular form.
         /// </summary>
-        public static Func<string, string> Singularize = original =>
-        {
+        public static Func<string, string> Singularize = original => {
             return original.EndsWith("ies")
                 ? original.TrimEnd('s').TrimEnd('e').TrimEnd('i') + "y"
                 : original.TrimEnd('s');
@@ -98,8 +95,7 @@ XamlReader.Load(
         /// <summary>
         /// Derives the SelectedItem property name.
         /// </summary>
-        public static Func<string, IEnumerable<string>> DerivePotentialSelectionNames = name =>
-        {
+        public static Func<string, IEnumerable<string>> DerivePotentialSelectionNames = name => {
             var singular = Singularize(name);
             return new[] {
                 "Active" + singular,
@@ -118,8 +114,7 @@ XamlReader.Load(
         /// <param name="convention"></param>
         /// <param name="bindableProperty"></param>
         public static Action<Type, string, PropertyInfo, FrameworkElement, ElementConvention, DependencyProperty> SetBinding =
-            (viewModelType, path, property, element, convention, bindableProperty) =>
-            {
+            (viewModelType, path, property, element, convention, bindableProperty) => {
 #if WinRT
                 var binding = new Binding { Path = new PropertyPath(path) };
 #else
@@ -135,30 +130,23 @@ XamlReader.Load(
                 BindingOperations.SetBinding(element, bindableProperty, binding);
             };
 
-#if WinRT
         /// <summary>
         /// Applies the appropriate binding mode to the binding.
         /// </summary>
-        public static Action<Binding, PropertyInfo> ApplyBindingMode = (binding, property) =>
-        {
+        public static Action<Binding, PropertyInfo> ApplyBindingMode = (binding, property) => {
+#if WinRT
             var setMethod = property.SetMethod;
             binding.Mode = (property.CanWrite && setMethod != null && setMethod.IsPublic) ? BindingMode.TwoWay : BindingMode.OneWay;
-        };
 #else
-          /// <summary>
-        /// Applies the appropriate binding mode to the binding.
-        /// </summary>
-        public static Action<Binding, PropertyInfo> ApplyBindingMode = (binding, property) =>{
             var setMethod = property.GetSetMethod();
             binding.Mode = (property.CanWrite && setMethod != null && setMethod.IsPublic) ? BindingMode.TwoWay : BindingMode.OneWay;
-        };
 #endif
+        };
 
         /// <summary>
         /// Determines whether or not and what type of validation to enable on the binding.
         /// </summary>
-        public static Action<Binding, Type, PropertyInfo> ApplyValidation = (binding, viewModelType, property) =>
-        {
+        public static Action<Binding, Type, PropertyInfo> ApplyValidation = (binding, viewModelType, property) => {
 #if SILVERLIGHT || NET45
             if (typeof(INotifyDataErrorInfo).IsAssignableFrom(viewModelType)) {
                 binding.ValidatesOnNotifyDataErrors = true;
@@ -176,8 +164,7 @@ XamlReader.Load(
         /// <summary>
         /// Determines whether a value converter is is needed and applies one to the binding.
         /// </summary>
-        public static Action<Binding, DependencyProperty, PropertyInfo> ApplyValueConverter = (binding, bindableProperty, property) =>
-        {
+        public static Action<Binding, DependencyProperty, PropertyInfo> ApplyValueConverter = (binding, bindableProperty, property) => {
             if (bindableProperty == UIElement.VisibilityProperty && typeof(bool).IsAssignableFrom(property.PropertyType))
                 binding.Converter = BooleanToVisibilityConverter;
         };
@@ -185,8 +172,7 @@ XamlReader.Load(
         /// <summary>
         /// Determines whether a custom string format is needed and applies it to the binding.
         /// </summary>
-        public static Action<Binding, ElementConvention, PropertyInfo> ApplyStringFormat = (binding, convention, property) =>
-        {
+        public static Action<Binding, ElementConvention, PropertyInfo> ApplyStringFormat = (binding, convention, property) => {
 #if !WinRT
             if(typeof(DateTime).IsAssignableFrom(property.PropertyType))
                 binding.StringFormat = "{0:d}";
@@ -196,8 +182,7 @@ XamlReader.Load(
         /// <summary>
         /// Determines whether a custom update source trigger should be applied to the binding.
         /// </summary>
-        public static Action<DependencyProperty, DependencyObject, Binding, PropertyInfo> ApplyUpdateSourceTrigger = (bindableProperty, element, binding, info) =>
-        {
+        public static Action<DependencyProperty, DependencyObject, Binding, PropertyInfo> ApplyUpdateSourceTrigger = (bindableProperty, element, binding, info) => {
 #if SILVERLIGHT && !SL5
             ApplySilverlightTriggers(
                 element, 
@@ -211,9 +196,8 @@ XamlReader.Load(
 #endif
         };
 
-        static ConventionManager()
-        {
-#if !WP71 && !WinRT
+        static ConventionManager() {
+#if !WINDOWS_PHONE && !WinRT
             AddElementConvention<DatePicker>(DatePicker.SelectedDateProperty, "SelectedDate", "SelectedDateChanged");
 #endif
 #if SILVERLIGHT || WinRT
@@ -267,10 +251,8 @@ XamlReader.Load(
             AddElementConvention<TextBlock>(TextBlock.TextProperty, "Text", "DataContextChanged");
             AddElementConvention<ProgressBar>(ProgressBar.ValueProperty, "Value", "ValueChanged");
             AddElementConvention<Selector>(Selector.ItemsSourceProperty, "SelectedItem", "SelectionChanged")
-                .ApplyBinding = (viewModelType, path, property, element, convention) =>
-                {
-                    if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, ItemsControl.ItemsSourceProperty))
-                    {
+                .ApplyBinding = (viewModelType, path, property, element, convention) => {
+                    if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, ItemsControl.ItemsSourceProperty)) {
                         return false;
                     }
 
@@ -280,10 +262,8 @@ XamlReader.Load(
                     return true;
                 };
             AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", "Loaded")
-                .ApplyBinding = (viewModelType, path, property, element, convention) =>
-                {
-                    if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, ItemsControl.ItemsSourceProperty))
-                    {
+                .ApplyBinding = (viewModelType, path, property, element, convention) => {
+                    if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, ItemsControl.ItemsSourceProperty)) {
                         return false;
                     }
 
@@ -292,8 +272,7 @@ XamlReader.Load(
                     return true;
                 };
             AddElementConvention<ContentControl>(ContentControl.ContentProperty, "DataContext", "Loaded").GetBindableProperty =
-                delegate(DependencyObject foundControl)
-                {
+                delegate(DependencyObject foundControl) {
                     var element = (ContentControl)foundControl;
 
                     if (element.Content is DependencyObject && !OverwriteContent)
@@ -303,8 +282,7 @@ XamlReader.Load(
 #else
                     var useViewModel = element.ContentTemplate == null && element.ContentTemplateSelector == null;
 #endif
-                    if (useViewModel)
-                    {
+                    if (useViewModel) {
                         Log.Info("ViewModel bound on {0}.", element.Name);
                         return View.ModelProperty;
                     }
@@ -323,10 +301,8 @@ XamlReader.Load(
         /// <param name="bindableProperty">The default property for binding conventions.</param>
         /// <param name="parameterProperty">The default property for action parameters.</param>
         /// <param name="eventName">The default event to trigger actions.</param>
-        public static ElementConvention AddElementConvention<T>(DependencyProperty bindableProperty, string parameterProperty, string eventName)
-        {
-            return AddElementConvention(new ElementConvention
-            {
+        public static ElementConvention AddElementConvention<T>(DependencyProperty bindableProperty, string parameterProperty, string eventName) {
+            return AddElementConvention(new ElementConvention {
                 ElementType = typeof(T),
                 GetBindableProperty = element => bindableProperty,
                 ParameterProperty = parameterProperty,
@@ -338,8 +314,7 @@ XamlReader.Load(
         /// Adds an element convention.
         /// </summary>
         /// <param name="convention"></param>
-        public static ElementConvention AddElementConvention(ElementConvention convention)
-        {
+        public static ElementConvention AddElementConvention(ElementConvention convention) {
             return ElementConventions[convention.ElementType] = convention;
         }
 
@@ -349,8 +324,7 @@ XamlReader.Load(
         /// <param name="elementType">The type of element to locate the convention for.</param>
         /// <returns>The convention if found, null otherwise.</returns>
         /// <remarks>Searches the class hierarchy for conventions.</remarks>
-        public static ElementConvention GetElementConvention(Type elementType)
-        {
+        public static ElementConvention GetElementConvention(Type elementType) {
             if (elementType == null)
                 return null;
 
@@ -366,8 +340,7 @@ XamlReader.Load(
         /// <summary>
         /// Determines whether a particular dependency property already has a binding on the provided element.
         /// </summary>
-        public static bool HasBinding(FrameworkElement element, DependencyProperty property)
-        {
+        public static bool HasBinding(FrameworkElement element, DependencyProperty property) {
 #if NET
             return BindingOperations.GetBindingBase(element, property) != null;
 #elif WinRT
@@ -385,10 +358,10 @@ XamlReader.Load(
         /// <summary>
         /// Creates a binding and sets it on the element, guarding against pre-existing bindings.
         /// </summary>
-        public static bool SetBindingWithoutBindingOverwrite(Type viewModelType, string path, PropertyInfo property, FrameworkElement element, ElementConvention convention, DependencyProperty bindableProperty)
-        {
-            if (bindableProperty == null || HasBinding(element, bindableProperty))
-            {
+        public static bool SetBindingWithoutBindingOverwrite(Type viewModelType, string path, PropertyInfo property,
+                                                             FrameworkElement element, ElementConvention convention,
+                                                             DependencyProperty bindableProperty) {
+            if (bindableProperty == null || HasBinding(element, bindableProperty)) {
                 return false;
             }
 
@@ -406,15 +379,15 @@ XamlReader.Load(
         /// <param name="convention"></param>
         /// <param name="bindableProperty"> </param>
         /// <returns></returns>
-        public static bool SetBindingWithoutBindingOrValueOverwrite(Type viewModelType, string path, PropertyInfo property, FrameworkElement element, ElementConvention convention, DependencyProperty bindableProperty)
-        {
-            if (bindableProperty == null || HasBinding(element, bindableProperty))
-            {
+        public static bool SetBindingWithoutBindingOrValueOverwrite(Type viewModelType, string path,
+                                                                    PropertyInfo property, FrameworkElement element,
+                                                                    ElementConvention convention,
+                                                                    DependencyProperty bindableProperty) {
+            if (bindableProperty == null || HasBinding(element, bindableProperty)) {
                 return false;
             }
 
-            if (element.GetValue(bindableProperty) != null)
-            {
+            if (element.GetValue(bindableProperty) != null) {
                 return false;
             }
 
@@ -432,8 +405,7 @@ XamlReader.Load(
 
             if (!string.IsNullOrEmpty(itemsControl.DisplayMemberPath)
                 || HasBinding(itemsControl, ItemsControl.DisplayMemberPathProperty)
-                    || itemsControl.ItemTemplate != null)
-            {
+                || itemsControl.ItemTemplate != null) {
                 return;
             }
 #if !WinRT
@@ -441,7 +413,7 @@ XamlReader.Load(
                 return;
 #endif
 
-#if !WP71 && !WinRT
+#if !WINDOWS_PHONE && !WinRT
             var itemType = property.PropertyType.GetGenericArguments().First();
             if (itemType.IsValueType || typeof(string).IsAssignableFrom(itemType)) {
                 return;
@@ -467,10 +439,8 @@ XamlReader.Load(
         /// <param name="viewModelType">The view model type.</param>
         /// <param name="path">The property path.</param>
         public static Action<FrameworkElement, DependencyProperty, Type, string> ConfigureSelectedItem =
-            (selector, selectedItemProperty, viewModelType, path) =>
-            {
-                if (HasBinding(selector, selectedItemProperty))
-                {
+            (selector, selectedItemProperty, viewModelType, path) => {
+                if (HasBinding(selector, selectedItemProperty)) {
                     return;
                 }
 
@@ -478,10 +448,8 @@ XamlReader.Load(
                 index = index == -1 ? 0 : index + 1;
                 var baseName = path.Substring(index);
 
-                foreach (var potentialName in DerivePotentialSelectionNames(baseName))
-                {
-                    if (viewModelType.GetPropertyCaseInsensitive(potentialName) != null)
-                    {
+                foreach (var potentialName in DerivePotentialSelectionNames(baseName)) {
+                    if (viewModelType.GetPropertyCaseInsensitive(potentialName) != null) {
                         var selectionPath = path.Replace(baseName, potentialName);
 #if WinRT
                         var binding = new Binding { Mode = BindingMode.TwoWay, Path = new PropertyPath(selectionPath) };
@@ -489,8 +457,7 @@ XamlReader.Load(
                         var binding = new Binding(selectionPath) { Mode = BindingMode.TwoWay };
 #endif
                         var shouldApplyBinding = ConfigureSelectedItemBinding(selector, selectedItemProperty, viewModelType, selectionPath, binding);
-                        if (shouldApplyBinding)
-                        {
+                        if (shouldApplyBinding) {
                             BindingOperations.SetBinding(selector, selectedItemProperty, binding);
                             Log.Info("SelectedItem binding applied to {0}.", selector.Name);
                             return;
@@ -511,8 +478,7 @@ XamlReader.Load(
         /// <param name="binding">The binding to configure.</param>
         /// <returns>A bool indicating whether to apply binding</returns>
         public static Func<FrameworkElement, DependencyProperty, Type, string, Binding, bool> ConfigureSelectedItemBinding =
-            (selector, selectedItemProperty, viewModelType, selectionPath, binding) =>
-            {
+            (selector, selectedItemProperty, viewModelType, selectionPath, binding) => {
                 return true;
             };
 
@@ -523,15 +489,13 @@ XamlReader.Load(
         /// <param name="headerTemplateProperty"></param>
         /// <param name="headerTemplateSelectorProperty"> </param>
         /// <param name="viewModelType"></param>
-        public static void ApplyHeaderTemplate(FrameworkElement element, DependencyProperty headerTemplateProperty, DependencyProperty headerTemplateSelectorProperty, Type viewModelType)
-        {
+        public static void ApplyHeaderTemplate(FrameworkElement element, DependencyProperty headerTemplateProperty, DependencyProperty headerTemplateSelectorProperty, Type viewModelType) {
             var template = element.GetValue(headerTemplateProperty);
             var selector = headerTemplateSelectorProperty != null
                                ? element.GetValue(headerTemplateSelectorProperty)
                                : null;
 
-            if (template != null || selector != null || !typeof(IHaveDisplayName).IsAssignableFrom(viewModelType))
-            {
+            if (template != null || selector != null || !typeof(IHaveDisplayName).IsAssignableFrom(viewModelType)) {
                 return;
             }
 
@@ -545,13 +509,11 @@ XamlReader.Load(
         /// <param name="type">The type to inspect.</param>
         /// <param name="propertyName">The property to search for.</param>
         /// <returns>The property or null if not found.</returns>
-        public static PropertyInfo GetPropertyCaseInsensitive(this Type type, string propertyName)
-        {
+        public static PropertyInfo GetPropertyCaseInsensitive(this Type type, string propertyName) {
             var typeInfo = type.GetTypeInfo();
             var typeList = new List<Type> { type };
 
-            if (typeInfo.IsInterface)
-            {
+            if (typeInfo.IsInterface) {
                 typeList.AddRange(typeInfo.ImplementedInterfaces);
             }
 
@@ -620,7 +582,6 @@ XamlReader.Load(
             var passwordBox = element as PasswordBox;
             if (passwordBox != null && dependencyProperty == PasswordBox.PasswordProperty) {
                 passwordBox.PasswordChanged += delegate { expressionSource(passwordBox).UpdateSource(); };
-                return;
             }
         }
 #endif

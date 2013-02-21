@@ -20,7 +20,7 @@
     /// Interface used to define a specialized parent.
     /// </summary>
     /// <typeparam name="T">The type of children.</typeparam>
-#if NET
+#if !SILVERLIGHT || SL5 || WP8
     public interface IParent<out T> : IParent 
 #else
     public interface IParent<T> : IParent       

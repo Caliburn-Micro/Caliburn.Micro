@@ -1,4 +1,4 @@
-﻿#if WP71 && !WP8
+﻿#if WINDOWS_PHONE && !WP8
 namespace Caliburn.Micro {
     /// <summary>
     /// Encapsulates a method that has five type parameters and does not return a value.

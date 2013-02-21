@@ -29,7 +29,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\bin\SL5\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SILVERLIGHT SL5</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT;SL5</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -41,7 +41,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin\SL5\Release\</OutputPath>
-    <DefineConstants>TRACE;SILVERLIGHT SL5</DefineConstants>
+    <DefineConstants>TRACE;SILVERLIGHT;SL5</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
