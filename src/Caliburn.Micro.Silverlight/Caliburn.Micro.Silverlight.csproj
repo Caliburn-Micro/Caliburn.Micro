@@ -82,6 +82,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="ConductorBaseWithActiveItem.cs" />
     <Compile Include="ConductorWithCollectionAllActive.cs" />
+    <Compile Include="TaskExtensions.cs" />
     <Compile Include="TypeMappingConfiguration.cs" />
     <Compile Include="RegExHelper.cs" />
     <Compile Include="NameTransformer.cs" />

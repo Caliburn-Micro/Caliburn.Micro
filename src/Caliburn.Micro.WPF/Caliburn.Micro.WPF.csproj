@@ -165,6 +165,9 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\SequentialResult.cs">
       <Link>SequentialResult.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\TaskExtensions.cs">
+      <Link>TaskExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\TypeMappingConfiguration.cs">
       <Link>TypeMappingConfiguration.cs</Link>
     </Compile>

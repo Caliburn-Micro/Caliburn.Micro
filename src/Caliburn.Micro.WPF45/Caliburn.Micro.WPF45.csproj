@@ -170,6 +170,9 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\SequentialResult.cs">
       <Link>SequentialResult.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\TaskExtensions.cs">
+      <Link>TaskExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\TypeDescriptor.cs">
       <Link>TypeDescriptor.cs</Link>
     </Compile>

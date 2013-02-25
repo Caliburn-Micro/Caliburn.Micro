@@ -1,6 +1,9 @@
 ﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
+#if !SILVERLIGHT || SL5 || WP8
+    using System.Threading.Tasks;
+#endif
 
     /// <summary>
     /// Manages coroutine execution.
@@ -32,6 +35,29 @@
             ExecuteOnCompleted(enumerator, Completed);
             enumerator.Execute(context ?? new ActionExecutionContext());
         }
+
+#if !SILVERLIGHT || SL5 || WP8
+        /// <summary>
+        /// Executes a coroutine asynchronous.
+        /// </summary>
+        /// <param name="coroutine">The coroutine to execute.</param>
+        /// <param name="context">The context to execute the coroutine within.</param>
+        /// <returns>A task that represents the asynchronous coroutine.</returns>
+        public static Task ExecuteAsync(IEnumerator<IResult> coroutine, ActionExecutionContext context = null) {
+            var taskSource = new TaskCompletionSource<object>();
+
+            BeginExecute(coroutine, context, (s, e) => {
+                if (e.Error != null)
+                    taskSource.SetException(e.Error);
+                else if (e.WasCancelled)
+                    taskSource.SetCanceled();
+                else
+                    taskSource.SetResult(null);
+            });
+
+            return taskSource.Task;
+        }
+#endif
 
         static void ExecuteOnCompleted(IResult result, EventHandler<ResultCompletionEventArgs> handler) {
             EventHandler<ResultCompletionEventArgs> onCompledted = null;
