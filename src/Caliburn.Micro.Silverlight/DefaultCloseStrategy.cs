@@ -23,6 +23,7 @@
     public class DefaultCloseStrategy<T> : ICloseStrategy<T> {
         List<T> closable;
         bool finalResult;
+        bool guardMustCallEvaluate;
         readonly bool closeConductedItemsWhenConductorCannotClose;
 
         /// <summary>
@@ -42,6 +43,7 @@
         public void Execute(IEnumerable<T> toClose, Action<bool, IEnumerable<T>> callback) {
             finalResult = true;
             closable = new List<T>();
+            guardMustCallEvaluate = false;
 
             Evaluate(true, toClose.GetEnumerator(), callback);
         }
@@ -49,26 +51,35 @@
         void Evaluate(bool result, IEnumerator<T> enumerator, Action<bool, IEnumerable<T>> callback) {
             finalResult = finalResult && result;
 
-            if (!enumerator.MoveNext()) {
-                callback(finalResult, closeConductedItemsWhenConductorCannotClose ? closable : new List<T>());
-                closable = null;
-            }
-            else {
+            var guardPending = false;
+            do {
+                if (!enumerator.MoveNext()) {
+                    callback(finalResult, closeConductedItemsWhenConductorCannotClose ? closable : new List<T>());
+                    closable = null;
+                    break;
+                }
+
                 var current = enumerator.Current;
                 var guard = current as IGuardClose;
                 if (guard != null) {
+                    guardPending = true;
                     guard.CanClose(canClose =>{
+                        guardPending = false;
                         if (canClose) {
                             closable.Add(current);
                         }
-
-                        Evaluate(canClose, enumerator, callback);
+                        if (guardMustCallEvaluate) {
+                            guardMustCallEvaluate = false;
+                            Evaluate(canClose, enumerator, callback);
+                        } else {
+                            finalResult = finalResult && canClose;  
+                        }
                     });
+                    guardMustCallEvaluate = guardMustCallEvaluate || guardPending;
                 } else {
                     closable.Add(current);
-                    Evaluate(true, enumerator, callback);
                 }
-            }
+            } while (!guardPending);
         }
     }
 }

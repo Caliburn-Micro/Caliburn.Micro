@@ -109,7 +109,7 @@
             Assert.Throws<InvalidOperationException>(() => conductor.Items.Add(conductor));
         }
 
-        [Fact(Skip = "Fails with StackOverflowException. See http://caliburnmicro.codeplex.com/discussions/430917")]
+        [Fact] // See http://caliburnmicro.codeplex.com/discussions/430917
         public void TryCloseStressTest()
         {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
@@ -117,7 +117,21 @@
                 .Select(i => new Screen {DisplayName = i.ToString(CultureInfo.InvariantCulture)});
             conductor.Items.AddRange(conducted);
 
-            conductor.CanClose(Assert.True);
+            var defered1 = new DeferredCloseScreen {DisplayName = "d1", IsClosable = true};
+            var defered2 = new DeferredCloseScreen {DisplayName = "d2", IsClosable = true};
+            conductor.Items.Insert(0, defered1);
+            conductor.Items.Insert(500, defered2);
+
+            var finished = false;
+            conductor.CanClose(canClose => {
+                finished = true;
+                Assert.True(canClose);
+            });
+            Assert.False(finished);
+
+            defered1.TryClose();
+            defered2.TryClose();
+            Assert.True(finished);
         }
 
         class StateScreen : Screen {
@@ -131,6 +145,20 @@
             protected override void OnDeactivate(bool close) {
                 base.OnDeactivate(close);
                 IsClosed = close;
+            }
+        }
+
+        class DeferredCloseScreen : StateScreen {
+            Action<bool> closeCallback;
+
+            public override void CanClose(Action<bool> callback) {
+                closeCallback = callback;
+            }
+
+            public override void TryClose() {
+                if (closeCallback != null) {
+                    closeCallback(IsClosable);
+                }
             }
         }
     }
