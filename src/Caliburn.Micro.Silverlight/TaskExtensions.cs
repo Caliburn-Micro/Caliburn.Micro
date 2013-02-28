@@ -143,5 +143,17 @@ namespace Caliburn.Micro {
             base.OnCompleted(task);
         }
     }
+
+    /// <summary>
+    ///  Denotes a class which can handle a particular type of message and uses a Task to do so.
+    /// </summary>
+    public interface IHandleWithTask<in TMessage> : IHandle {
+        /// <summary>
+        ///  Handle the message with a Task.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>The Task that represents the operation.</returns>
+        Task Handle(TMessage message);
+    }
 }
 #endif

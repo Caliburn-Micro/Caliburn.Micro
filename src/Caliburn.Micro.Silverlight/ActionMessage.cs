@@ -290,6 +290,13 @@
             var values = MessageBinder.DetermineParameters(context, context.Method.GetParameters());
             var returnValue = context.Method.Invoke(context.Target, values);
 
+#if !SILVERLIGHT || SL5 || WP8
+            var task = returnValue as System.Threading.Tasks.Task;
+            if (task != null) {
+                returnValue = task.AsResult();
+            }
+#endif
+            
             var result = returnValue as IResult;
             if (result != null) {
                 returnValue = new[] { result };
@@ -297,10 +304,12 @@
 
             var enumerable = returnValue as IEnumerable<IResult>;
             if (enumerable != null) {
-                Coroutine.BeginExecute(enumerable.GetEnumerator(), context);
+                returnValue = enumerable.GetEnumerator();
             }
-            else if (returnValue is IEnumerator<IResult>) {
-                Coroutine.BeginExecute((IEnumerator<IResult>)returnValue, context);
+
+            var enumerator = returnValue as IEnumerator<IResult>;
+            if (enumerator != null) {
+                Coroutine.BeginExecute(enumerator, context);
             }
         };
 
