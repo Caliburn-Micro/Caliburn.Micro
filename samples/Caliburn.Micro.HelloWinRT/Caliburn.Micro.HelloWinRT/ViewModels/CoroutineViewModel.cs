@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Caliburn.Micro.WinRT.Sample.Results;
 
 namespace Caliburn.Micro.WinRT.Sample.ViewModels
@@ -14,7 +15,10 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
         public IEnumerable<IResult> Execute()
         {
             yield return new VisualStateResult("Loading");
-            yield return new DelayResult(2000);
+
+            // You can use an async operation inside a Coroutine by using AsResult() extension methods
+            yield return Task.Delay(2000).AsResult();
+            
             yield return new VisualStateResult("LoadingComplete");
             yield return new MessageDialogResult("This was executed from a custom IResult, MessageDialogResult.", "IResult Coroutines");
         }
