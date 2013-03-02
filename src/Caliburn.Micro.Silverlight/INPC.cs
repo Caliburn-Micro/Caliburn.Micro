@@ -63,7 +63,7 @@ namespace Caliburn.Micro {
             var dispatcher = Deployment.Current.Dispatcher;
 
             SetUIThreadMarshaller(action => {
-                if(dispatcher.CheckAccess())
+                if (dispatcher.CheckAccess())
                     action();
                 else {
                     var waitHandle = new ManualResetEvent(false);
@@ -72,13 +72,13 @@ namespace Caliburn.Micro {
                         try {
                             action();
                         }
-                        catch(Exception ex) {
+                        catch (Exception ex) {
                             exception = ex;
                         }
                         waitHandle.Set();
                     });
                     waitHandle.WaitOne();
-                    if(exception != null)
+                    if (exception != null)
                         throw new TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
                 }
             });
@@ -97,9 +97,22 @@ namespace Caliburn.Micro {
             var dispatcher = Dispatcher.CurrentDispatcher;
 
             SetUIThreadMarshaller(action => {
-                if(dispatcher.CheckAccess())
+                if (dispatcher.CheckAccess())
                     action();
-                else dispatcher.Invoke(action);
+                else {
+                    Exception exception = null;
+                    System.Action method = () => {
+                        try {
+                            action();
+                        }
+                        catch (Exception ex) {
+                            exception = ex;
+                        }
+                    };
+                    dispatcher.Invoke(method);
+                    if (exception != null)
+                        throw new TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
+                }
             });
 #endif
         }
