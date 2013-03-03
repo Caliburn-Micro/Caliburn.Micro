@@ -8,27 +8,31 @@ namespace Caliburn.Micro {
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Linq;
     using System.Linq.Expressions;
-    using System.Reflection;
     using System.Runtime.Serialization;
-    using System.Threading;
     using System.Runtime.CompilerServices;
-
 #if WinRT
     using Windows.ApplicationModel;
     using Windows.UI.Core;
     using Windows.UI.Xaml;
 #else
+    using System.Diagnostics;
     using System.Windows;
     using System.Windows.Threading;
+#endif
+#if !SILVERLIGHT || SL5 || WP8
+    using System.Threading.Tasks;
 #endif
 
     /// <summary>
     ///   Enables easy marshalling of code to the UI thread.
     /// </summary>
     public static class Execute {
+#if WinRT
+        static CoreDispatcher dispatcher;
+#else
+        static Dispatcher dispatcher;
+#endif
         static bool? inDesignMode;
         static Action<System.Action> executor = action => action();
 
@@ -60,76 +64,85 @@ namespace Caliburn.Micro {
         /// </summary>
         public static void InitializeWithDispatcher() {
 #if SILVERLIGHT
-            var dispatcher = Deployment.Current.Dispatcher;
-
-            SetUIThreadMarshaller(action => {
-                if (dispatcher.CheckAccess())
-                    action();
-                else {
-                    var waitHandle = new ManualResetEvent(false);
-                    Exception exception = null;
-                    dispatcher.BeginInvoke(() => {
-                        try {
-                            action();
-                        }
-                        catch (Exception ex) {
-                            exception = ex;
-                        }
-                        waitHandle.Set();
-                    });
-                    waitHandle.WaitOne();
-                    if (exception != null)
-                        throw new TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
-                }
-            });
+            dispatcher = System.Windows.Deployment.Current.Dispatcher;
 #elif WinRT
-            var dispatcher = Window.Current.Dispatcher;
-
-            SetUIThreadMarshaller(action => {
-                if (Window.Current != null)
-                    action();
-                else
-                    dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action())
-                        .AsTask()
-                        .Wait();
-            });
+            dispatcher = Window.Current.Dispatcher;
 #else
-            var dispatcher = Dispatcher.CurrentDispatcher;
-
-            SetUIThreadMarshaller(action => {
-                if (dispatcher.CheckAccess())
-                    action();
-                else {
-                    Exception exception = null;
-                    System.Action method = () => {
-                        try {
-                            action();
-                        }
-                        catch (Exception ex) {
-                            exception = ex;
-                        }
-                    };
-                    dispatcher.Invoke(method);
-                    if (exception != null)
-                        throw new TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
-                }
-            });
+            dispatcher = Dispatcher.CurrentDispatcher;
 #endif
+            executor = null;
         }
 
         /// <summary>
         ///   Resets the executor to use a non-dispatcher-based action executor.
         /// </summary>
         public static void ResetWithoutDispatcher() {
-            SetUIThreadMarshaller(action => action());
+            executor = action => action();
+            dispatcher = null;
         }
 
         /// <summary>
-        /// Sets a custom UI thread marshaller.
+        ///   Sets a custom UI thread marshaller.
         /// </summary>
         /// <param name="marshaller">The marshaller.</param>
+        [Obsolete]
         public static void SetUIThreadMarshaller(Action<System.Action> marshaller) {
             executor = marshaller;
+            dispatcher = null;
+        }
+
+        static void ValidateDispatcher() {
+            if (dispatcher == null)
+                throw new InvalidOperationException("Not initialized with dispatcher.");
+        }
+
+        /// <summary>
+        ///   Executes the action on the UI thread asynchronously.
+        /// </summary>
+        /// <param name="action">The action to execute.</param>
+        public static void BeginOnUIThread(this System.Action action) {
+            ValidateDispatcher();
+#if WinRT
+            var dummy = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+#else
+            dispatcher.BeginInvoke(action);
+#endif
+        }
+
+#if !SILVERLIGHT || SL5 || WP8
+        /// <summary>
+        ///   Executes the action on the UI thread asynchronously.
+        /// </summary>
+        /// <param name = "action">The action to execute.</param>
+        public static Task OnUIThreadAsync(this System.Action action) {
+            ValidateDispatcher();
+#if WinRT
+            return dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask();
+#elif NET45
+            return dispatcher.InvokeAsync(action).Task;
+#else
+            var taskSource = new TaskCompletionSource<object>();
+            System.Action method = () => {
+                try {
+                    action();
+                    taskSource.SetResult(null);
+                }
+                catch(Exception ex) {
+                    taskSource.SetException(ex);
+                }
+            };
+            dispatcher.BeginInvoke(method);
+            return taskSource.Task;
+#endif
+        }
+#endif
+
+        static bool CheckAccess() {
+#if WinRT
+            return dispatcher == null || Window.Current != null;
+#else
+            return dispatcher == null || dispatcher.CheckAccess();
+#endif
         }
 
         /// <summary>
@@ -137,7 +150,31 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name = "action">The action to execute.</param>
         public static void OnUIThread(this System.Action action) {
-            executor(action);
+            if (executor != null)
+                executor(action);
+            else if (CheckAccess())
+                action();
+            else
+#if !SILVERLIGHT || SL5 || WP8
+                OnUIThreadAsync(action).Wait();
+#else
+            {
+                var waitHandle = new System.Threading.ManualResetEvent(false);
+                Exception exception = null;
+                BeginOnUIThread(() => {
+                    try {
+                        action();
+                    }
+                    catch (Exception ex) {
+                        exception = ex;
+                    }
+                    waitHandle.Set();
+                });
+                waitHandle.WaitOne();
+                if (exception != null)
+                    throw new System.Reflection.TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
+            }
+#endif
         }
     }
 

@@ -27,7 +27,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             // Do some expensive work here ...
 
             // UpdateView(); // Crashes
-            Execute.OnUIThread(UpdateView);
+            Execute.OnUIThreadAsync(UpdateView);
         }
 
         private void UpdateView()
