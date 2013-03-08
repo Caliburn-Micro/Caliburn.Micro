@@ -451,7 +451,7 @@
                             inpc.PropertyChanged -= handler;
                             return;
                         }
-                        context.Message.UpdateAvailability();
+                        Execute.OnUIThread(() => context.Message.UpdateAvailability());
                     }
                 };
 
