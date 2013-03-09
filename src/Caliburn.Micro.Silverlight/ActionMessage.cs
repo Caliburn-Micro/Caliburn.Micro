@@ -447,11 +447,14 @@
                 PropertyChangedEventHandler handler = null;
                 handler = (s, e) => {
                     if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == guardName) {
-                        if (context.Message == null) {
-                            inpc.PropertyChanged -= handler;
-                            return;
-                        }
-                        Execute.OnUIThread(() => context.Message.UpdateAvailability());
+                        Execute.OnUIThread(() => {
+                            var message = context.Message;
+                            if (message == null) {
+                                inpc.PropertyChanged -= handler;
+                                return;
+                            }
+                            message.UpdateAvailability();
+                        });
                     }
                 };
 
