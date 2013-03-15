@@ -99,6 +99,10 @@ namespace Caliburn.Micro {
                 return entry.Single()(this);
             }
 
+            if (service == null) {
+                return null;
+            }
+
 #if WinRT
             var serviceInfo = service.GetTypeInfo();
 
