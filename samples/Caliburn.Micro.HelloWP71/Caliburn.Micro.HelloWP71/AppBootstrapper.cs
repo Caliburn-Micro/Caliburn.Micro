@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Windows.Controls;
     using Microsoft.Phone.Controls;
+    using Caliburn.Micro.HelloWP71.ViewModels;
 
     public class AppBootstrapper : PhoneBootstrapper {
         PhoneContainer container;

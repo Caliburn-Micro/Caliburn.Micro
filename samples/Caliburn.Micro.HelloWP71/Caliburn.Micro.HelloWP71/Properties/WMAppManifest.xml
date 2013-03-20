@@ -14,7 +14,7 @@
       <Capability Name="ID_CAP_WEBBROWSERCOMPONENT" />
     </Capabilities>
     <Tasks>
-      <DefaultTask Name="_default" NavigationPage="MainPage.xaml" />
+      <DefaultTask Name="_default" NavigationPage="Views/MainPage.xaml" />
     </Tasks>
     <Tokens>
       <PrimaryToken TokenID="Caliburn.Micro.HelloWP7Token" TaskName="_default">
