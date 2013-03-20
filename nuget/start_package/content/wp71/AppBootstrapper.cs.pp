@@ -21,7 +21,7 @@
 
         protected override object GetInstance(Type service, string key)
         {
-			var instance = container.GetInstance(service, key);
+            var instance = container.GetInstance(service, key);
             if (instance != null)
                 return instance;
 
