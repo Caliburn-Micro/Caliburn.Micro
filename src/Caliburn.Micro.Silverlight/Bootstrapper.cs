@@ -251,6 +251,7 @@
     /// <summary>
     /// Instantiate this class in order to configure the framework.
     /// </summary>
+    [Obsolete]
     public class Bootstrapper : BootstrapperBase {
         /// <summary>
         /// Initializes a new instance of the <see cref="Bootstrapper"/> class.

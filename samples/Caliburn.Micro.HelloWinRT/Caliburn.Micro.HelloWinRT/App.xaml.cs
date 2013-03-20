@@ -45,7 +45,11 @@ namespace Caliburn.Micro.WinRT.Sample
 
         protected override object GetInstance(Type service, string key)
         {
-            return container.GetInstance(service, key);
+            var instance = container.GetInstance(service, key);
+            if (instance != null)
+                return instance;
+
+            throw new Exception("Could not locate any instances.");
         }
 
         protected override IEnumerable<object> GetAllInstances(Type service)
