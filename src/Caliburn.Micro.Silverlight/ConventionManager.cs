@@ -1,7 +1,6 @@
 ﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
 #if WinRT
@@ -13,6 +12,7 @@
     using EventTrigger = Windows.UI.Interactivity.EventTrigger;
     using Windows.UI.Xaml.Shapes;
 #else
+    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
@@ -400,27 +400,23 @@
         /// </summary>
         /// <param name="itemsControl">The items control.</param>
         /// <param name="property">The collection property.</param>
-        public static void ApplyItemTemplate(ItemsControl itemsControl, PropertyInfo property)
-        {
-
+        public static void ApplyItemTemplate(ItemsControl itemsControl, PropertyInfo property) {
             if (!string.IsNullOrEmpty(itemsControl.DisplayMemberPath)
                 || HasBinding(itemsControl, ItemsControl.DisplayMemberPathProperty)
                 || itemsControl.ItemTemplate != null) {
                 return;
             }
-#if !WinRT
-            if (!property.PropertyType.IsGenericType)
-                return;
-#endif
 
 #if !WINDOWS_PHONE && !WinRT
-            var itemType = property.PropertyType.GetGenericArguments().First();
-            if (itemType.IsValueType || typeof(string).IsAssignableFrom(itemType)) {
-                return;
+            if (property.PropertyType.IsGenericType) {
+                var itemType = property.PropertyType.GetGenericArguments().First();
+                if (itemType.IsValueType || typeof(string).IsAssignableFrom(itemType)) {
+                    return;
+                }
             }
 #endif
 
-#if NET
+#if !SILVERLIGHT
             if (itemsControl.ItemTemplateSelector == null){
                 itemsControl.ItemTemplate = DefaultItemTemplate;
                 Log.Info("ItemTemplate applied to {0}.", itemsControl.Name);
@@ -502,7 +498,7 @@
             element.SetValue(headerTemplateProperty, DefaultHeaderTemplate);
             Log.Info("Header template applied to {0}.", element.Name);
         }
-#if WinRT
+
         /// <summary>
         /// Gets a property by name, ignoring case and searching all interfaces.
         /// </summary>
@@ -510,6 +506,7 @@
         /// <param name="propertyName">The property to search for.</param>
         /// <returns>The property or null if not found.</returns>
         public static PropertyInfo GetPropertyCaseInsensitive(this Type type, string propertyName) {
+#if WinRT
             var typeInfo = type.GetTypeInfo();
             var typeList = new List<Type> { type };
 
@@ -520,15 +517,7 @@
             return typeList
                 .Select(interfaceType => interfaceType.GetRuntimeProperty(propertyName))
                 .FirstOrDefault(property => property != null);
-        }
 #else
-        /// <summary>
-        /// Gets a property by name, ignoring case and searching all interfaces.
-        /// </summary>
-        /// <param name="type">The type to inspect.</param>
-        /// <param name="propertyName">The property to search for.</param>
-        /// <returns>The property or null if not found.</returns>
-        public static PropertyInfo GetPropertyCaseInsensitive(this Type type, string propertyName) {
             var typeList = new List<Type> { type };
 
             if (type.IsInterface) {
@@ -544,8 +533,9 @@
             return typeList
                 .Select(interfaceType => interfaceType.GetProperty(propertyName, flags))
                 .FirstOrDefault(property => property != null);
-        }
 #endif
+        }
+
 #if (SILVERLIGHT && !SL5)
         /// <summary>
         /// Accounts for the lack of UpdateSourceTrigger in silverlight.
