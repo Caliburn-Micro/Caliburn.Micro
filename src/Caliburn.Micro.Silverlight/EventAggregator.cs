@@ -17,11 +17,7 @@ namespace Caliburn.Micro {
     ///   Denotes a class which can handle a particular type of message.
     /// </summary>
     /// <typeparam name = "TMessage">The type of message to handle.</typeparam>
-#if !SILVERLIGHT || SL5 || WP8
-    public interface IHandle<in TMessage> : IHandle {
-#else
-    public interface IHandle<TMessage> : IHandle {
-#endif
+    public interface IHandle<TMessage> : IHandle {  //don't use contravariance here
         /// <summary>
         ///   Handles the message.
         /// </summary>

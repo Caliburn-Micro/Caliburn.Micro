@@ -87,11 +87,7 @@
     /// <summary>
     ///  Denotes a class which can handle a particular type of message and uses a Coroutine to do so.
     /// </summary>
-#if !SILVERLIGHT || SL5 || WP8
-    public interface IHandleWithCoroutine<in TMessage> : IHandle {
-#else
-    public interface IHandleWithCoroutine<TMessage> : IHandle {
-#endif
+    public interface IHandleWithCoroutine<TMessage> : IHandle {  //don't use contravariance here
 		/// <summary>
 		///  Handle the message with a Coroutine.
 		/// </summary>
