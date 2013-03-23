@@ -97,7 +97,13 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name="context">The context.</param>
         public void Execute(ActionExecutionContext context) {
-            innerTask.ContinueWith(OnCompleted, TaskScheduler.FromCurrentSynchronizationContext());
+            if (innerTask.IsCompleted)
+                OnCompleted(innerTask);
+            else
+                innerTask.ContinueWith(OnCompleted,
+                                       System.Threading.SynchronizationContext.Current != null
+                                           ? TaskScheduler.FromCurrentSynchronizationContext()
+                                           : TaskScheduler.Current);
         }
 
         /// <summary>
