@@ -264,15 +264,23 @@
 
 #if !WINDOWS_PHONE
     /// <summary>
-    /// A strongly-typed version of <see cref="Bootstrapper"/> that specifies the type of root model to create for the application.
+    /// A strongly-typed version of <see cref="BootstrapperBase"/> that specifies the type of root model to create for the application.
     /// </summary>
     /// <typeparam name="TRootModel">The type of root model for the application.</typeparam>
     public class Bootstrapper<TRootModel> : BootstrapperBase {
         /// <summary>
         /// Initializes a new instance of the <see cref="Bootstrapper&lt;TRootModel&gt;"/> class.
         /// </summary>
+        public Bootstrapper() : base(true) {
+            Start();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Bootstrapper&lt;TRootModel&gt;"/> class.
+        /// </summary>
         /// <param name="useApplication">Set this to false when hosting Caliburn.Micro inside and Office or WinForms application. The default is true.</param>
-        public Bootstrapper(bool useApplication = true) : base(useApplication) {
+        [Obsolete]
+        public Bootstrapper(bool useApplication) : base(useApplication) {
             Start();
         }
 
