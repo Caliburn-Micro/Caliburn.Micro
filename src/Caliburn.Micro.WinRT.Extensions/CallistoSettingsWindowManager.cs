@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
-using Callisto.Controls;
+﻿using Callisto.Controls;
+using System;
+using System.Collections.Generic;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Caliburn.Micro
 {
@@ -14,7 +17,7 @@ namespace Caliburn.Micro
         /// <param name="viewModel">The settings view model.</param>
         /// <param name="commandLabel">The settings command label.</param>
         /// <param name="viewSettings">The optional dialog settings.</param>
-        public void ShowSettingsFlyout(object viewModel, string commandLabel, IDictionary<string, object> viewSettings = null)
+        async public void ShowSettingsFlyout(object viewModel, string commandLabel, IDictionary<string, object> viewSettings = null)
         {
             var view = ViewLocator.LocateForModel(viewModel, null, null);
 
@@ -26,12 +29,29 @@ namespace Caliburn.Micro
                             (SettingsFlyout.SettingsFlyoutWidth) viewSettings["width"] :
                             SettingsFlyout.SettingsFlyoutWidth.Narrow;
 
+            // extract the header color/logo from the appmanifest.xml
+            var visualElements = await Callisto.Controls.Common.AppManifestHelper.GetManifestVisualElementsAsync();
+            
+            // enable the overriding of these, but default to manifest
+            var headerBackground = viewSettings.ContainsKey("headerbackground")
+                                       ? (SolidColorBrush) viewSettings["headerbackground"]
+                                       : new SolidColorBrush(visualElements.BackgroundColor);
+
+            var smallLogoUri = viewSettings.ContainsKey("smalllogouri")
+                                   ? (Uri) viewSettings["smalllogouri"]
+                                   : visualElements.SmallLogoUri;
+
+            var smallLogo = new BitmapImage(smallLogoUri);
+
+
             var settingsFlyout = new SettingsFlyout
             {
                 FlyoutWidth = width,
                 HeaderText = commandLabel,
                 Content = view,
-                IsOpen = true
+                IsOpen = true,
+                HeaderBrush = headerBackground,
+                SmallLogoImageSource = smallLogo
             };
 
             settingsFlyout.Closed += (s, e) =>
