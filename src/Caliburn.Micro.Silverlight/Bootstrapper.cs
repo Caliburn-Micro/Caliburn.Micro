@@ -241,9 +241,10 @@
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
         /// </summary>
         /// <param name="viewModelType">The view model type.</param>
-        protected void DisplayRootViewFor(Type viewModelType) {
+        /// <param name="settings">The optional window settings.</param>
+        protected void DisplayRootViewFor(Type viewModelType, IDictionary<string, object> settings = null) {
             var windowManager = IoC.Get<IWindowManager>();
-            windowManager.ShowWindow(IoC.GetInstance(viewModelType, null));
+            windowManager.ShowWindow(IoC.GetInstance(viewModelType, null), null, settings);
         }
 #endif
     }
