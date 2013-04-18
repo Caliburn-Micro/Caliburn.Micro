@@ -38,6 +38,14 @@ namespace Caliburn.Micro {
         Action<System.Action> PublicationThreadMarshaller { get; set; }
 
         /// <summary>
+        /// Searches the subscribed handlers to check if we have a handler for
+        /// the message type supplied.
+        /// </summary>
+        /// <param name="messageType">The message type to check with</param>
+        /// <returns>True if any handler is found, false if not.</returns>
+        bool HandlerExistsFor(Type messageType);
+
+        /// <summary>
         ///   Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />
         /// </summary>
         /// <param name = "instance">The instance to subscribe for event publication.</param>
@@ -96,6 +104,10 @@ namespace Caliburn.Micro {
         ///   The default publication thread marshaller.
         /// </value>
         public Action<System.Action> PublicationThreadMarshaller { get; set; }
+
+        public bool HandlerExistsFor(Type messageType) {
+                return handlers.Any(handler => handler.Handles(messageType) & !handler.IsDead);
+        }
 
         /// <summary>
         ///   Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />
@@ -166,6 +178,10 @@ namespace Caliburn.Micro {
             readonly WeakReference reference;
             readonly Dictionary<Type, MethodInfo> supportedHandlers = new Dictionary<Type, MethodInfo>();
 
+            public bool IsDead {
+                get { return reference.Target == null; }
+            }
+
             public Handler(object handler) {
                 reference = new WeakReference(handler);
 
@@ -211,6 +227,10 @@ namespace Caliburn.Micro {
                 }
                 
                 return true;
+            }
+
+            public bool Handles(Type messageType) {
+                return supportedHandlers.Any(pair => pair.Key.IsAssignableFrom(messageType));
             }
         }
     }
