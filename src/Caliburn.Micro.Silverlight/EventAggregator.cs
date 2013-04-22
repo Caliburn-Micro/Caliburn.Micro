@@ -105,6 +105,12 @@ namespace Caliburn.Micro {
         /// </value>
         public Action<System.Action> PublicationThreadMarshaller { get; set; }
 
+        /// <summary>
+        /// Searches the subscribed handlers to check if we have a handler for
+        /// the message type supplied.
+        /// </summary>
+        /// <param name="messageType">The message type to check with</param>
+        /// <returns>True if any handler is found, false if not.</returns>
         public bool HandlerExistsFor(Type messageType) {
                 return handlers.Any(handler => handler.Handles(messageType) & !handler.IsDead);
         }
