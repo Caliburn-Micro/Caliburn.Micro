@@ -8,12 +8,16 @@
     /// </summary>
     public abstract class PhoneBootstrapperBase : BootstrapperBase {
         bool phoneApplicationInitialized;
-        PhoneApplicationService phoneService;
+
+        /// <summary>
+        /// The phone application service.
+        /// </summary>
+        protected PhoneApplicationService PhoneService { get; private set; }
 
         /// <summary>
         /// The root frame used for navigation.
         /// </summary>
-        public PhoneApplicationFrame RootFrame { get; private set; }
+        protected PhoneApplicationFrame RootFrame { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PhoneBootstrapperBase"/> class.
@@ -26,13 +30,13 @@
         protected override void PrepareApplication() {
             base.PrepareApplication();
 
-            phoneService = new PhoneApplicationService();
-            phoneService.Activated += OnActivate;
-            phoneService.Deactivated += OnDeactivate;
-            phoneService.Launching += OnLaunch;
-            phoneService.Closing += OnClose;
+            PhoneService = new PhoneApplicationService();
+            PhoneService.Activated += OnActivate;
+            PhoneService.Deactivated += OnDeactivate;
+            PhoneService.Launching += OnLaunch;
+            PhoneService.Closing += OnClose;
 
-            Application.ApplicationLifetimeObjects.Add(phoneService);
+            Application.ApplicationLifetimeObjects.Add(PhoneService);
 
             if (phoneApplicationInitialized) {
                 return;

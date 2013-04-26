@@ -17,7 +17,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// The root frame of the application.
         /// </summary>
-        public Frame RootFrame
+        protected Frame RootFrame
         {
             get;
             private set;

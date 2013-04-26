@@ -16,7 +16,7 @@
         /// <summary>
         /// The application.
         /// </summary>
-        protected Application Application { get; set; }
+        protected Application Application { get; private set; }
 
         /// <summary>
         /// Creates an instance of the bootstrapper.
