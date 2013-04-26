@@ -9,20 +9,6 @@
     /// A custom IoC container which integrates with the phone and properly registers all Caliburn.Micro services.
     /// </summary>
     public class PhoneContainer : SimpleContainer, IPhoneContainer {
-
-        /// <summary>
-        /// The root frame of the application.
-        /// </summary>
-        protected readonly Frame RootFrame;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PhoneContainer"/> class.
-        /// </summary>
-        /// <param name="rootFrame">The root frame.</param>
-        public PhoneContainer(Frame rootFrame) {
-            RootFrame = rootFrame;
-        }
-
         /// <summary>
         /// Registers the service as a singleton stored in the phone state.
         /// </summary>
@@ -31,6 +17,8 @@
         /// <param name="implementation">The implementation.</param>
         public void RegisterWithPhoneService(Type service, string phoneStateKey, Type implementation) {
             var pservice = (IPhoneService)GetInstance(typeof(IPhoneService), null);
+            if (pservice == null)
+                throw new InvalidOperationException("IPhoneService instance cannot be found.");
 
             if(!pservice.State.ContainsKey(phoneStateKey ?? service.FullName)) {
                 pservice.State[phoneStateKey ?? service.FullName] = BuildInstance(implementation);
@@ -70,27 +58,28 @@
         /// <summary>
         /// Registers the Caliburn.Micro services with the container.
         /// </summary>
+        /// <param name="rootFrame">The root frame of the application.</param>
         /// <param name="treatViewAsLoaded">if set to <c>true</c> [treat view as loaded].</param>
-        public virtual void RegisterPhoneServices(bool treatViewAsLoaded = false) {
+        public virtual void RegisterPhoneServices(Frame rootFrame, bool treatViewAsLoaded = false) {
             RegisterInstance(typeof(SimpleContainer), null, this);
             RegisterInstance(typeof(PhoneContainer), null, this);
             RegisterInstance(typeof(IPhoneContainer), null, this);
 
             if (!HasHandler(typeof(INavigationService), null)) {
-                if (RootFrame == null)
-                    throw new InvalidOperationException("RootFrame is not yet initialized.");
+                if (rootFrame == null)
+                    throw new ArgumentNullException("rootFrame");
 
-                RegisterInstance(typeof(INavigationService), null, new FrameAdapter(RootFrame, treatViewAsLoaded));
+                RegisterInstance(typeof(INavigationService), null, new FrameAdapter(rootFrame, treatViewAsLoaded));
             }
 
             if (!HasHandler(typeof(IPhoneService), null)) {
+                if (rootFrame == null)
+                    throw new ArgumentNullException("rootFrame");
                 var service = PhoneApplicationService.Current;
                 if (service == null)
                     throw new InvalidOperationException("PhoneApplicationService is not yet initialized.");
-                if (RootFrame == null)
-                    throw new InvalidOperationException("RootFrame is not yet initialized.");
 
-                RegisterInstance(typeof(IPhoneService), null, new PhoneApplicationServiceAdapter(service, RootFrame));
+                RegisterInstance(typeof(IPhoneService), null, new PhoneApplicationServiceAdapter(service, rootFrame));
             }
 
             if (!HasHandler(typeof(IEventAggregator), null)) {

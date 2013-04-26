@@ -11,9 +11,9 @@
 
         protected override void Configure()
         {
-            container = new PhoneContainer(RootFrame);
+            container = new PhoneContainer();
             if (!Execute.InDesignMode)
-                container.RegisterPhoneServices();
+                container.RegisterPhoneServices(RootFrame);
 
             container.PerRequest<MainPageViewModel>();
 
