@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindingScopeTests.cs" />
+    <Compile Include="EventAggregatorTests.cs" />
     <Compile Include="ScopeNamingRouteTests.cs" />
     <Compile Include="ConductorWithCollectionOneActiveTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
