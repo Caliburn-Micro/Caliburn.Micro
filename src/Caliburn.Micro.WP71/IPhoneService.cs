@@ -84,8 +84,8 @@ namespace Caliburn.Micro {
         /// <summary>
         ///   Creates an instance of <see cref = "PhoneApplicationServiceAdapter" />.
         /// </summary>
-        public PhoneApplicationServiceAdapter(Frame rootFrame) {
-            service = PhoneApplicationService.Current;
+        public PhoneApplicationServiceAdapter(PhoneApplicationService phoneApplicationServiceservice, Frame rootFrame) {
+            service = phoneApplicationServiceservice;
             service.Activated += (sender, args) => {
                 if(!args.IsApplicationInstancePreserved) {
                     IsResurrecting = true;

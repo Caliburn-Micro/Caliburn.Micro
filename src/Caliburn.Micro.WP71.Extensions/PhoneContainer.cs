@@ -3,6 +3,7 @@
     using System.IO.IsolatedStorage;
     using System.Linq;
     using System.Windows.Controls;
+    using Microsoft.Phone.Shell;
 
     /// <summary>
     /// A custom IoC container which integrates with the phone and properly registers all Caliburn.Micro services.
@@ -76,11 +77,20 @@
             RegisterInstance(typeof(IPhoneContainer), null, this);
 
             if (!HasHandler(typeof(INavigationService), null)) {
+                if (RootFrame == null)
+                    throw new InvalidOperationException("RootFrame is not yet initialized.");
+
                 RegisterInstance(typeof(INavigationService), null, new FrameAdapter(RootFrame, treatViewAsLoaded));
             }
 
             if (!HasHandler(typeof(IPhoneService), null)) {
-                RegisterInstance(typeof(IPhoneService), null, new PhoneApplicationServiceAdapter(RootFrame));
+                var service = PhoneApplicationService.Current;
+                if (service == null)
+                    throw new InvalidOperationException("PhoneApplicationService is not yet initialized.");
+                if (RootFrame == null)
+                    throw new InvalidOperationException("RootFrame is not yet initialized.");
+
+                RegisterInstance(typeof(IPhoneService), null, new PhoneApplicationServiceAdapter(service, RootFrame));
             }
 
             if (!HasHandler(typeof(IEventAggregator), null)) {

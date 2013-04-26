@@ -12,8 +12,9 @@
         protected override void Configure()
         {
             container = new PhoneContainer(RootFrame);
+            if (!Execute.InDesignMode)
+                container.RegisterPhoneServices();
 
-			container.RegisterPhoneServices();
             container.PerRequest<MainPageViewModel>();
 
             AddCustomConventions();
