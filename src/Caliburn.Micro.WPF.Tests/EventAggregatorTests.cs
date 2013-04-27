@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Moq;
-
-namespace Caliburn.Micro.WPF.Tests
+﻿namespace Caliburn.Micro.WPF.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Moq;
     using Xunit;
 
     public class EventAggregatorTests
