@@ -36,6 +36,18 @@
                     new EventAggregator().Unsubscribe(null);
                 });
             }
+
+            [Fact]
+            public void A_valid_subscriber_gets_removed_from_the_handler_list() {
+                var eventAggregator = new EventAggregator();
+                var handlerMock = new Mock<IHandle<object>>();
+
+                eventAggregator.Subscribe(handlerMock.Object);
+                Assert.True(eventAggregator.HandlerExistsFor(typeof(object)));
+
+                eventAggregator.Unsubscribe(handlerMock.Object);
+                Assert.False(eventAggregator.HandlerExistsFor(typeof(object)));
+            }
         }
 
         public class EventAggregator_Publishing {
