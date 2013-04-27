@@ -48,14 +48,14 @@ namespace Caliburn.Micro {
         /// <summary>
         ///   Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />
         /// </summary>
-        /// <param name = "instance">The instance to subscribe for event publication.</param>
-        void Subscribe(object instance);
+        /// <param name = "subscriber">The instance to subscribe for event publication.</param>
+        void Subscribe(object subscriber);
 
         /// <summary>
         ///   Unsubscribes the instance from all events.
         /// </summary>
-        /// <param name = "instance">The instance to unsubscribe.</param>
-        void Unsubscribe(object instance);
+        /// <param name = "subscriber">The instance to unsubscribe.</param>
+        void Unsubscribe(object subscriber);
 
         /// <summary>
         ///   Publishes a message.
@@ -118,24 +118,30 @@ namespace Caliburn.Micro {
         /// <summary>
         ///   Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />
         /// </summary>
-        /// <param name = "instance">The instance to subscribe for event publication.</param>
-        public virtual void Subscribe(object instance) {
+        /// <param name = "subscriber">The instance to subscribe for event publication.</param>
+        public virtual void Subscribe(object subscriber) {
+            if (subscriber == null) {
+                throw new ArgumentNullException("subscriber");
+            }
             lock(handlers) {
-                if (handlers.Any(x => x.Matches(instance))) {
+                if (handlers.Any(x => x.Matches(subscriber))) {
                     return;
                 }
 
-                handlers.Add(new Handler(instance));
+                handlers.Add(new Handler(subscriber));
             }
         }
 
         /// <summary>
         ///   Unsubscribes the instance from all events.
         /// </summary>
-        /// <param name = "instance">The instance to unsubscribe.</param>
-        public virtual void Unsubscribe(object instance) {
+        /// <param name = "subscriber">The instance to unsubscribe.</param>
+        public virtual void Unsubscribe(object subscriber) {
+            if (subscriber == null) {
+                throw new ArgumentNullException("subscriber");
+            }
             lock(handlers) {
-                var found = handlers.FirstOrDefault(x => x.Matches(instance));
+                var found = handlers.FirstOrDefault(x => x.Matches(subscriber));
 
                 if (found != null) {
                     handlers.Remove(found);
@@ -151,6 +157,9 @@ namespace Caliburn.Micro {
         ///   Does not marshall the the publication to any special thread by default.
         /// </remarks>
         public virtual void Publish(object message) {
+            if (message == null) {
+                throw new ArgumentNullException("message");
+            }
             Publish(message, PublicationThreadMarshaller);
         }
 
@@ -160,6 +169,13 @@ namespace Caliburn.Micro {
         /// <param name = "message">The message instance.</param>
         /// <param name = "marshal">Allows the publisher to provide a custom thread marshaller for the message publication.</param>
         public virtual void Publish(object message, Action<System.Action> marshal) {
+            if (message == null){
+                throw new ArgumentNullException("message");
+            }
+            if (marshal == null) {
+                throw new ArgumentNullException("marshal");
+            }
+
             Handler[] toNotify;
             lock (handlers) {
                 toNotify = handlers.ToArray();
