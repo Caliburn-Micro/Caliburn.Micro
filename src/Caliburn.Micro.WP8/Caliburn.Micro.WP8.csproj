@@ -142,6 +142,9 @@
     <Compile Include="..\Caliburn.Micro.Silverlight\ConductorWithCollectionOneActive.cs">
       <Link>ConductorWithCollectionOneActive.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\ContainerExtensions.cs">
+      <Link>ContainerExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\ConventionManager.cs">
       <Link>ConventionManager.cs</Link>
     </Compile>
@@ -216,6 +219,9 @@
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\SequentialResult.cs">
       <Link>SequentialResult.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Silverlight\SimpleContainer.cs">
+      <Link>SimpleContainer.cs</Link>
     </Compile>
     <Compile Include="..\Caliburn.Micro.Silverlight\TaskExtensions.cs">
       <Link>TaskExtensions.cs</Link>

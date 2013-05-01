@@ -9,8 +9,8 @@
                 Tags = "Silverlight WPF WP7 WP71 WP8 SL4 SL5 SL Phone IoC DI Container Mono Unity3d WinRT Metro",
                 Content = {
                     "../../../Caliburn.Micro.Silverlight/ExtensionMethods.cs",
-                    "../../../Caliburn.Micro.WP71.Extensions/ContainerExtensions.cs",
-                    "../../../Caliburn.Micro.WP71.Extensions/SimpleContainer.cs"
+                    "../../../Caliburn.Micro.Silverlight/ContainerExtensions.cs",
+                    "../../../Caliburn.Micro.Silverlight/SimpleContainer.cs"
                 }
             });
 

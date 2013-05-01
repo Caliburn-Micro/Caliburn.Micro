@@ -109,7 +109,7 @@ namespace Caliburn.Micro {
             if (delegateType.IsAssignableFrom(serviceInfo)) {
                 var typeToCreate = serviceInfo.GenericTypeArguments[0];
                 var factoryFactoryType = typeof(FactoryFactory<>).MakeGenericType(typeToCreate);
-                var factoryFactoryHost = Activator.CreateInstance(factoryFactoryType);
+                var factoryFactoryHost = System.Activator.CreateInstance(factoryFactoryType);
                 var factoryFactoryMethod = factoryFactoryType.GetTypeInfo().DeclaredMethods.First(x => x.Name == "Create");
                 return factoryFactoryMethod.Invoke(factoryFactoryHost, new object[] { this });
             }
@@ -241,7 +241,7 @@ namespace Caliburn.Micro {
         /// <param name = "args">The constructor args.</param>
         /// <returns>The created instance.</returns>
         protected virtual object ActivateInstance(Type type, object[] args) {
-            var instance = args.Length > 0 ? Activator.CreateInstance(type, args) : Activator.CreateInstance(type);
+            var instance = args.Length > 0 ? System.Activator.CreateInstance(type, args) : System.Activator.CreateInstance(type);
             Activated(instance);
             return instance;
         }

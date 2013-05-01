@@ -43,12 +43,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Caliburn.Micro.WP71.Extensions\ContainerExtensions.cs">
-      <Link>ContainerExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP71.Extensions\SimpleContainer.cs">
-      <Link>SimpleContainer.cs</Link>
-    </Compile>
     <Compile Include="..\Caliburn.Micro.WP71.Extensions\UriBuilder.cs">
       <Link>UriBuilder.cs</Link>
     </Compile>

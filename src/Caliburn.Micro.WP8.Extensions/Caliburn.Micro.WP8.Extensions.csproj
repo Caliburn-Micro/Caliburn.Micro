@@ -103,9 +103,6 @@
     <Compile Include="..\Caliburn.Micro.WP71.Extensions\AppSettingsStorageMechanism.cs">
       <Link>AppSettingsStorageMechanism.cs</Link>
     </Compile>
-    <Compile Include="..\Caliburn.Micro.WP71.Extensions\ContainerExtensions.cs">
-      <Link>ContainerExtensions.cs</Link>
-    </Compile>
     <Compile Include="..\Caliburn.Micro.WP71.Extensions\IPhoneContainer.cs">
       <Link>IPhoneContainer.cs</Link>
     </Compile>
@@ -123,9 +120,6 @@
     </Compile>
     <Compile Include="..\Caliburn.Micro.WP71.Extensions\PhoneStateStorageMechanism.cs">
       <Link>PhoneStateStorageMechanism.cs</Link>
-    </Compile>
-    <Compile Include="..\Caliburn.Micro.WP71.Extensions\SimpleContainer.cs">
-      <Link>SimpleContainer.cs</Link>
     </Compile>
     <Compile Include="..\Caliburn.Micro.WP71.Extensions\SoundEffectPlayer.cs">
       <Link>SoundEffectPlayer.cs</Link>
