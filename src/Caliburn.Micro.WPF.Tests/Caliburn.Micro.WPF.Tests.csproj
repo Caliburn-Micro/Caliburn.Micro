@@ -57,6 +57,7 @@
     <Compile Include="ScopeNamingRouteTests.cs" />
     <Compile Include="ConductorWithCollectionOneActiveTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleContainerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro.WPF\Caliburn.Micro.WPF.csproj">
