@@ -1,101 +1,69 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using Xunit;
+﻿namespace Caliburn.Micro.WPF.Tests {
 
-namespace Caliburn.Micro.WPF.Tests
-{
-    public class BindingScopeTests
-    {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+    using Xunit;
+
+    public class BindingScope_FindName {
         [Fact]
-        public void FindNameMatchesElementNameExactly()
-        {
-            var elements = new List<FrameworkElement>
-                {
+        public void A_given_name_is_matched_correctly() {
+            var elements = new List<FrameworkElement> {
                     new FrameworkElement { Name = "Bar" },
-                    new FrameworkElement { Name = "Foo" },
-                    new FrameworkElement { Name = "Baz" },
-                    new FrameworkElement { Name = "Qux" },
                     new FrameworkElement { Name = "Foo" },
                 };
 
             var found = BindingScope.FindName(elements, "Foo");
             Assert.NotNull(found);
-            Assert.Equal(1, elements.IndexOf(found));
         }
 
         [Fact]
-        public void FindNameMatchesElementNameCaseInsensitive()
-        {
-            var elements = new List<FrameworkElement>
-                {
-                    new FrameworkElement { Name = "BAR" },
-                    new FrameworkElement { Name = "FOO" },
-                    new FrameworkElement { Name = "BAZ" },
-                    new FrameworkElement { Name = "QUX" },
+        public void A_given_name_is_found_regardless_of_case_sensitivity() {
+            var elements = new List<FrameworkElement> {
                     new FrameworkElement { Name = "FOO" },
                 };
 
             var found = BindingScope.FindName(elements, "foo");
             Assert.NotNull(found);
-            Assert.Equal(1, elements.IndexOf(found));
         }
 
         [Fact]
-        public void FindNameMatchesFirstElement()
-        {
-            var elements = new List<FrameworkElement>
-                {
-                    new FrameworkElement { Name = "Bar" },
-                    new FrameworkElement { Name = "Foo" },
-                    new FrameworkElement { Name = "Baz" },
-                    new FrameworkElement { Name = "Qux" },
-                    new FrameworkElement { Name = "Foo" },
+        public void A_given_match_is_always_the_first_instance_found() {
+            var elements = new List<FrameworkElement> {
+                    new FrameworkElement {Name = "Foo"},
+                    new FrameworkElement {Name = "Foo"},
                 };
 
             var found = BindingScope.FindName(elements, "Foo");
-            Assert.NotNull(found);
             Assert.NotSame(elements.Last(), found);
         }
+    }
 
+    public class BindingScope_FindScopeNamingRoute {
         [Fact]
-        public void UserControlIsScopeRoot()
-        {
+        public void A_given_UserControl_is_ScopeRoute() {
             var userControl = new UserControl();
             var route = BindingScope.FindScopeNamingRoute(userControl);
+
             Assert.Same(userControl, route.Root);
         }
 
         [Fact]
-        public void PageContentIsScopeRootIfDependencyObject()
-        {
+        public void A_given_Pages_Content_is_ScopeRoute_if_it_is_a_dependency_object() {
             var page = new Page { Content = new Control() };
-
             var route = BindingScope.FindScopeNamingRoute(page);
+
             Assert.Same(page.Content, route.Root);
         }
 
         [Fact]
-        public void AnyDependencyObjectIsScopeRootIfIsScopeRootPropertyIsTrue()
-        {
+        public void Any_DependencyObject_is_ScopeRoot_if_IsScopeRoot_is_true() {
             var dependencyObject = new DependencyObject();
             dependencyObject.SetValue(View.IsScopeRootProperty, true);
-
             var route = BindingScope.FindScopeNamingRoute(dependencyObject);
+
             Assert.Same(dependencyObject, route.Root);
-        }
-
-        [Fact(Skip = "Incomplete")]
-        public void FindNamedDescendentsCorrectlyInspectsContentControl()
-        {
-
-        }
-
-        [Fact(Skip = "Incomplete")]
-        public void FindNamedDescendentsCorrectlyInspectsItemContentControl()
-        {
-
         }
     }
 }
