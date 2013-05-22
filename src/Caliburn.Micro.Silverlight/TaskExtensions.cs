@@ -47,6 +47,7 @@ namespace Caliburn.Micro {
             };
 
             try {
+                IoC.BuildUp(result);
                 result.Completed += completed;
                 result.Execute(context ?? new ActionExecutionContext());
             }
