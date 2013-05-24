@@ -268,15 +268,6 @@ namespace Caliburn.Micro {
         }
 
         /// <summary>
-        ///   Raises the property changed event immediately.
-        /// </summary>
-        /// <param name = "propertyName">Name of the property.</param>
-        [Obsolete("Use NotifyOfPropertyChange instead.")]
-        public void RaisePropertyChangedEventImmediately(string propertyName) {
-            NotifyOfPropertyChange(propertyName);
-        }
-
-        /// <summary>
         ///   Raises the <see cref="E:PropertyChanged" /> event directly.
         /// </summary>
         /// <param name="e">The <see cref="PropertyChangedEventArgs"/> instance containing the event data.</param>
