@@ -276,7 +276,12 @@ namespace Caliburn.Micro {
             NotifyOfPropertyChange(propertyName);
         }
 
-        void OnPropertyChanged(PropertyChangedEventArgs e) {
+        /// <summary>
+        ///   Raises the <see cref="E:PropertyChanged" /> event directly.
+        /// </summary>
+        /// <param name="e">The <see cref="PropertyChangedEventArgs"/> instance containing the event data.</param>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected void OnPropertyChanged(PropertyChangedEventArgs e) {
             var handler = PropertyChanged;
             if (handler != null) {
                 handler(this, e);
