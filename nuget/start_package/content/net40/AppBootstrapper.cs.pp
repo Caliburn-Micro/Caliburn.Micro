@@ -2,55 +2,37 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using System.ComponentModel.Composition;
-	using System.ComponentModel.Composition.Hosting;
-	using System.ComponentModel.Composition.Primitives;
-	using System.Linq;
 	using Caliburn.Micro;
 
 	public class AppBootstrapper : Bootstrapper<IShell>
 	{
-		CompositionContainer container;
+		SimpleContainer container;
 
-		/// <summary>
-		/// By default, we are configured to use MEF
-		/// </summary>
 		protected override void Configure() {
-		    var catalog = new AggregateCatalog(
-		        AssemblySource.Instance.Select(x => new AssemblyCatalog(x)).OfType<ComposablePartCatalog>()
-		        );
+			container = new SimpleContainer();
 
-			container = new CompositionContainer(catalog);
-
-			var batch = new CompositionBatch();
-
-			batch.AddExportedValue<IWindowManager>(new WindowManager());
-			batch.AddExportedValue<IEventAggregator>(new EventAggregator());
-			batch.AddExportedValue(container);
-		    batch.AddExportedValue(catalog);
-
-			container.Compose(batch);
+			container.Singleton<IWindowManager, WindowManager>();
+			container.Singleton<IEventAggregator, EventAggregator>();
+			container.PerRequest<IShell, ShellViewModel>();
 		}
 
-		protected override object GetInstance(Type serviceType, string key)
+		protected override object GetInstance(Type service, string key)
 		{
-			var contract = string.IsNullOrEmpty(key) ? AttributedModelServices.GetContractName(serviceType) : key;
-			var exports = container.GetExportedValues<object>(contract);
+			var instance = container.GetInstance(service, key);
+			if (instance != null)
+				return instance;
 
-			if (exports.Any())
-				return exports.First();
-
-			throw new Exception(string.Format("Could not locate any instances of contract {0}.", contract));
+			throw new Exception("Could not locate any instances.");
 		}
 
-		protected override IEnumerable<object> GetAllInstances(Type serviceType)
+		protected override IEnumerable<object> GetAllInstances(Type service)
 		{
-			return container.GetExportedValues<object>(AttributedModelServices.GetContractName(serviceType));
+			return container.GetAllInstances(service);
 		}
 
 		protected override void BuildUp(object instance)
 		{
-			container.SatisfyImportsOnce(instance);
+			container.BuildUp(instance);
 		}
 	}
 }

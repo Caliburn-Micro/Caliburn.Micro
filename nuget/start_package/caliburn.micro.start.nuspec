@@ -13,13 +13,11 @@
 
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="Microsoft.Phone.Controls" targetFramework="wp71" />
-      <frameworkAssembly assemblyName="System.ComponentModel.Composition" targetFramework="net40, sl4, sl5" />
-      <frameworkAssembly assemblyName="System.ComponentModel.Composition.Initialization" targetFramework="sl4, sl5" />
     </frameworkAssemblies>
 
     <dependencies>
       <group>
-        <dependency id="Caliburn.Micro" version="1.5.1" />
+        <dependency id="Caliburn.Micro" version="1.5.2" />
       </group>
     </dependencies>
   </metadata>
