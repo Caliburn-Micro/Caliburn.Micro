@@ -1,13 +1,11 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Reflection;
 
     /// <summary>
     ///   A base implementation of <see cref = "IScreen" />.
     /// </summary>
-    public class Screen : ViewAware, IScreen, IChild
-    {
+    public class Screen : ViewAware, IScreen, IChild {
         static readonly ILog Log = LogManager.GetLog(typeof(Screen));
 
         bool isActive;
@@ -18,19 +16,16 @@
         /// <summary>
         ///   Creates an instance of the screen.
         /// </summary>
-        public Screen()
-        {
+        public Screen() {
             displayName = GetType().FullName;
         }
 
         /// <summary>
         ///   Gets or Sets the Parent <see cref = "IConductor" />
         /// </summary>
-        public virtual object Parent
-        {
+        public object Parent {
             get { return parent; }
-            set
-            {
+            set {
                 parent = value;
                 NotifyOfPropertyChange("Parent");
             }
@@ -39,11 +34,9 @@
         /// <summary>
         ///   Gets or Sets the Display Name
         /// </summary>
-        public virtual string DisplayName
-        {
+        public string DisplayName {
             get { return displayName; }
-            set
-            {
+            set {
                 displayName = value;
                 NotifyOfPropertyChange("DisplayName");
             }
@@ -52,11 +45,9 @@
         /// <summary>
         ///   Indicates whether or not this instance is currently active.
         /// </summary>
-        public bool IsActive
-        {
+        public bool IsActive {
             get { return isActive; }
-            private set
-            {
+            private set {
                 isActive = value;
                 NotifyOfPropertyChange("IsActive");
             }
@@ -65,11 +56,9 @@
         /// <summary>
         ///   Indicates whether or not this instance is currently initialized.
         /// </summary>
-        public bool IsInitialized
-        {
+        public bool IsInitialized {
             get { return isInitialized; }
-            private set
-            {
+            private set {
                 isInitialized = value;
                 NotifyOfPropertyChange("IsInitialized");
             }
@@ -90,17 +79,14 @@
         /// </summary>
         public event EventHandler<DeactivationEventArgs> Deactivated = delegate { };
 
-        void IActivate.Activate()
-        {
-            if (IsActive)
-            {
+        void IActivate.Activate() {
+            if (IsActive) {
                 return;
             }
 
             var initialized = false;
 
-            if (!IsInitialized)
-            {
+            if (!IsInitialized) {
                 IsInitialized = initialized = true;
                 OnInitialize();
             }
@@ -109,8 +95,7 @@
             Log.Info("Activating {0}.", this);
             OnActivate();
 
-            Activated(this, new ActivationEventArgs
-            {
+            Activated(this, new ActivationEventArgs {
                 WasInitialized = initialized
             });
         }
@@ -156,8 +141,7 @@
         ///   Called to check whether or not this instance can close.
         /// </summary>
         /// <param name = "callback">The implementor calls this action with the result of the close check.</param>
-        public virtual void CanClose(Action<bool> callback)
-        {
+        public virtual void CanClose(Action<bool> callback) {
             callback(true);
         }
 
@@ -169,7 +153,6 @@
 
             foreach (var contextualView in Views.Values) {
                 var viewType = contextualView.GetType();
-
 #if WinRT
                 var closeMethod = viewType.GetRuntimeMethod("Close", new Type[0]);
 #else
@@ -211,31 +194,19 @@
         /// <summary>
         ///   Tries to close this instance by asking its Parent to initiate shutdown or by asking its corresponding view to close.
         /// </summary>
-        public virtual void TryClose()
-        {
-            Execute.OnUIThread(() =>
-            {
-                var closeAction = GetViewCloseAction(null);
-                closeAction();
-            });
+        public virtual void TryClose() {
+            GetViewCloseAction(null).OnUIThread();
         }
 
 #if !SILVERLIGHT
-
         /// <summary>
         /// Closes this instance by asking its Parent to initiate shutdown or by asking it's corresponding view to close.
         /// This overload also provides an opportunity to pass a dialog result to it's corresponding view.
         /// </summary>
         /// <param name="dialogResult">The dialog result.</param>
-        public virtual void TryClose(bool? dialogResult)
-        {
-            Execute.OnUIThread(() =>
-            {
-                var closeAction = GetViewCloseAction(dialogResult);
-                closeAction();
-            });
+        public virtual void TryClose(bool? dialogResult) {
+            GetViewCloseAction(dialogResult).OnUIThread();
         }
-
 #endif
     }
 }

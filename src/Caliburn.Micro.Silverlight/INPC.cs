@@ -263,7 +263,7 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <typeparam name = "TProperty">The type of the property.</typeparam>
         /// <param name = "property">The property expression.</param>
-        public virtual void NotifyOfPropertyChange<TProperty>(Expression<Func<TProperty>> property) {
+        public void NotifyOfPropertyChange<TProperty>(Expression<Func<TProperty>> property) {
             NotifyOfPropertyChange(property.GetMemberInfo().Name);
         }
 
@@ -272,7 +272,7 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name = "propertyName">Name of the property.</param>
         [Obsolete("Use NotifyOfPropertyChange instead.")]
-        public virtual void RaisePropertyChangedEventImmediately(string propertyName) {
+        public void RaisePropertyChangedEventImmediately(string propertyName) {
             NotifyOfPropertyChange(propertyName);
         }
 
