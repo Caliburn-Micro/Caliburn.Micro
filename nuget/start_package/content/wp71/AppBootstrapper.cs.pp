@@ -1,77 +1,82 @@
 ﻿namespace $rootnamespace$ {
-    using System;
-    using System.Collections.Generic;
-    using System.Windows.Controls;
-    using Microsoft.Phone.Controls;
-    using Caliburn.Micro;
+	using System;
+	using System.Collections.Generic;
+	using System.Windows.Controls;
+	using Microsoft.Phone.Controls;
+	using Caliburn.Micro;
 
-    public class AppBootstrapper : PhoneBootstrapper
-    {
-        PhoneContainer container;
+	public class AppBootstrapper : PhoneBootstrapperBase
+	{
+		PhoneContainer container;
 
-        protected override void Configure()
-        {
-            container = new PhoneContainer();
-            if (!Execute.InDesignMode)
-                container.RegisterPhoneServices(RootFrame);
+		public AppBootstrapper()
+		{
+			Start();
+		}
 
-            container.PerRequest<MainPageViewModel>();
+		protected override void Configure()
+		{
+			container = new PhoneContainer();
+			if (!Execute.InDesignMode)
+				container.RegisterPhoneServices(RootFrame);
 
-            AddCustomConventions();
-        }
+			container.PerRequest<MainPageViewModel>();
 
-        protected override object GetInstance(Type service, string key)
-        {
-            var instance = container.GetInstance(service, key);
-            if (instance != null)
-                return instance;
+			AddCustomConventions();
+		}
 
-            throw new Exception("Could not locate any instances.");
-        }
+		protected override object GetInstance(Type service, string key)
+		{
+			var instance = container.GetInstance(service, key);
+			if (instance != null)
+				return instance;
 
-        protected override IEnumerable<object> GetAllInstances(Type service)
-        {
-            return container.GetAllInstances(service);
-        }
+			throw new Exception("Could not locate any instances.");
+		}
 
-        protected override void BuildUp(object instance)
-        {
-            container.BuildUp(instance);
-        }
+		protected override IEnumerable<object> GetAllInstances(Type service)
+		{
+			return container.GetAllInstances(service);
+		}
 
-        static void AddCustomConventions()
-        {
-            ConventionManager.AddElementConvention<Pivot>(Pivot.ItemsSourceProperty, "SelectedItem", "SelectionChanged").ApplyBinding =
-                (viewModelType, path, property, element, convention) => {
-                    if (ConventionManager
-                        .GetElementConvention(typeof(ItemsControl))
-                        .ApplyBinding(viewModelType, path, property, element, convention))
-                    {
-                        ConventionManager
-                            .ConfigureSelectedItem(element, Pivot.SelectedItemProperty, viewModelType, path);
-                        ConventionManager
-                            .ApplyHeaderTemplate(element, Pivot.HeaderTemplateProperty, null, viewModelType);
-                        return true;
-                    }
+		protected override void BuildUp(object instance)
+		{
+			container.BuildUp(instance);
+		}
 
-                    return false;
-                };
+		static void AddCustomConventions()
+		{
+			ConventionManager.AddElementConvention<Pivot>(Pivot.ItemsSourceProperty, "SelectedItem", "SelectionChanged").ApplyBinding =
+				(viewModelType, path, property, element, convention) => {
+					if (ConventionManager
+						.GetElementConvention(typeof(ItemsControl))
+						.ApplyBinding(viewModelType, path, property, element, convention))
+					{
+						ConventionManager
+							.ConfigureSelectedItem(element, Pivot.SelectedItemProperty, viewModelType, path);
+						ConventionManager
+							.ApplyHeaderTemplate(element, Pivot.HeaderTemplateProperty, null, viewModelType);
+						return true;
+					}
 
-            ConventionManager.AddElementConvention<Panorama>(Panorama.ItemsSourceProperty, "SelectedItem", "SelectionChanged").ApplyBinding =
-                (viewModelType, path, property, element, convention) => {
-                    if (ConventionManager
-                        .GetElementConvention(typeof(ItemsControl))
-                        .ApplyBinding(viewModelType, path, property, element, convention))
-                    {
-                        ConventionManager
-                            .ConfigureSelectedItem(element, Panorama.SelectedItemProperty, viewModelType, path);
-                        ConventionManager
-                            .ApplyHeaderTemplate(element, Panorama.HeaderTemplateProperty, null, viewModelType);
-                        return true;
-                    }
+					return false;
+				};
 
-                    return false;
-                };
-        }
-    }
+			ConventionManager.AddElementConvention<Panorama>(Panorama.ItemsSourceProperty, "SelectedItem", "SelectionChanged").ApplyBinding =
+				(viewModelType, path, property, element, convention) => {
+					if (ConventionManager
+						.GetElementConvention(typeof(ItemsControl))
+						.ApplyBinding(viewModelType, path, property, element, convention))
+					{
+						ConventionManager
+							.ConfigureSelectedItem(element, Panorama.SelectedItemProperty, viewModelType, path);
+						ConventionManager
+							.ApplyHeaderTemplate(element, Panorama.HeaderTemplateProperty, null, viewModelType);
+						return true;
+					}
+
+					return false;
+				};
+		}
+	}
 }

@@ -4,11 +4,17 @@
 	using System.Collections.Generic;
 	using Caliburn.Micro;
 
-	public class AppBootstrapper : Bootstrapper<IShell>
+	public class AppBootstrapper : BootstrapperBase
 	{
 		SimpleContainer container;
 
-		protected override void Configure() {
+		public AppBootstrapper()
+		{
+			Start();
+		}
+
+		protected override void Configure()
+		{
 			container = new SimpleContainer();
 
 			container.Singleton<IWindowManager, WindowManager>();
@@ -33,6 +39,11 @@
 		protected override void BuildUp(object instance)
 		{
 			container.BuildUp(instance);
+		}
+
+		protected override void OnStartup(object sender, System.Windows.StartupEventArgs e)
+		{
+			DisplayRootViewFor(typeof(IShell));
 		}
 	}
 }
