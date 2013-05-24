@@ -1,5 +1,4 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
 
@@ -23,22 +22,22 @@
         public static Action<object> BuildUp;
 
         /// <summary>
-        /// Gets an instance by type.
-        /// </summary>
-        /// <typeparam name="T">The type to resolve from the container.</typeparam>
-        /// <returns>The resolved instance.</returns>
-        public static T Get<T>() {
-            return (T)GetInstance(typeof(T), null);
-        }
-
-        /// <summary>
-        /// Gets an instance from the container using type and key.
+        /// Gets an instance from the container.
         /// </summary>
         /// <typeparam name="T">The type to resolve.</typeparam>
         /// <param name="key">The key to look up.</param>
         /// <returns>The resolved instance.</returns>
-        public static T Get<T>(string key) {
+        public static T Get<T>(string key = null) {
             return (T)GetInstance(typeof(T), key);
+        }
+
+        /// <summary>
+        /// Gets all instances of a particular type.
+        /// </summary>
+        /// <typeparam name="T">The type to resolve.</typeparam>
+        /// <returns>The resolved instances.</returns>
+        public static IEnumerable<T> GetAll<T>() {
+            return (IEnumerable<T>)GetAllInstances(typeof(T));
         }
     }
 }
