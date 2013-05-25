@@ -236,6 +236,14 @@
             Mouse.Initialize(view);
             Application.RootVisual = view;
         }
+
+        /// <summary>
+        /// Locates the view model, locates the associate view, binds them and shows it as the root view.
+        /// </summary>
+        /// <typeparam name="TViewModel">The view model type.</typeparam>
+        protected void DisplayRootViewFor<TViewModel>() {
+            DisplayRootViewFor(typeof(TViewModel));
+        }
 #elif NET
         /// <summary>
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
@@ -245,6 +253,15 @@
         protected void DisplayRootViewFor(Type viewModelType, IDictionary<string, object> settings = null) {
             var windowManager = IoC.Get<IWindowManager>();
             windowManager.ShowWindow(IoC.GetInstance(viewModelType, null), null, settings);
+        }
+
+        /// <summary>
+        /// Locates the view model, locates the associate view, binds them and shows it as the root view.
+        /// </summary>
+        /// <typeparam name="TViewModel">The view model type.</typeparam>
+        /// <param name="settings">The optional window settings.</param>
+        protected void DisplayRootViewFor<TViewModel>(IDictionary<string, object> settings = null) {
+            DisplayRootViewFor(typeof(TViewModel), settings);
         }
 #endif
     }
@@ -268,7 +285,7 @@
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
         protected override void OnStartup(object sender, StartupEventArgs e) {
-            DisplayRootViewFor(typeof(TRootModel));
+            DisplayRootViewFor<TRootModel>();
         }
     }
 #endif
