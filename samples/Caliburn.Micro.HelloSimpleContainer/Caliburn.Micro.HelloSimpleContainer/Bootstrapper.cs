@@ -3,9 +3,14 @@ using System.Collections.Generic;
 
 namespace Caliburn.Micro.HelloSimpleContainer
 {
-    public class Bootstrapper : Bootstrapper<IShell>
+    public class Bootstrapper : BootstrapperBase
     {
         SimpleContainer container;
+
+        public Bootstrapper()
+        {
+            Start();
+        }
 
         protected override void Configure()
         {
@@ -33,6 +38,11 @@ namespace Caliburn.Micro.HelloSimpleContainer
         protected override void BuildUp(object instance)
         {
             container.BuildUp(instance);
+        }
+
+        protected override void OnStartup(object sender, System.Windows.StartupEventArgs e)
+        {
+            DisplayRootViewFor<IShell>();
         }
     }
 }
