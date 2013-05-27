@@ -44,14 +44,13 @@
             var uri = BuildUri();
 
             if (navigationService == null) {
-                throw new Exception("Cannot navigate without attaching an INavigationService. Call AttachTo first.");
+                throw new InvalidOperationException("Cannot navigate without attaching an INavigationService. Call AttachTo first.");
             }
 #if WinRT
             navigationService.NavigateToViewModel<TViewModel>(uri.AbsoluteUri);
 #else
             navigationService.Navigate(uri);
 #endif
-
         }
 
         /// <summary>
@@ -61,7 +60,7 @@
         public Uri BuildUri() {
             var viewType = ViewLocator.LocateTypeForModelType(typeof(TViewModel), null, null);
             if(viewType == null) {
-                throw new Exception(string.Format("No view was found for {0}. See the log for searched views.", typeof(TViewModel).FullName));
+                throw new InvalidOperationException(string.Format("No view was found for {0}. See the log for searched views.", typeof(TViewModel).FullName));
             }
 
             var packUri = ViewLocator.DeterminePackUriFromType(typeof(TViewModel), viewType);
