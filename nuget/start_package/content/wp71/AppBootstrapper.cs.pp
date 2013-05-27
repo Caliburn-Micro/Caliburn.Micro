@@ -31,7 +31,7 @@
 			if (instance != null)
 				return instance;
 
-			throw new Exception("Could not locate any instances.");
+			throw new InvalidOperationException("Could not locate any instances.");
 		}
 
 		protected override IEnumerable<object> GetAllInstances(Type service)
