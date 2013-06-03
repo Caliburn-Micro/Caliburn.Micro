@@ -63,5 +63,13 @@
                 Assert.DoesNotThrow(() => IoC.Get<Object>());
             }
         }
+
+        [Fact]
+        public void A_valid_GetAll_does_not_throw() {
+            using (IoCReset.Create()) {
+                IoC.GetAllInstances = type => new object[] {"foo", "bar"};
+                Assert.DoesNotThrow(() => IoC.GetAll<string>());
+            }
+        }
     }
 }

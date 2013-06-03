@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.Micro {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
 
     /// <summary>
@@ -37,7 +38,7 @@
         /// <typeparam name="T">The type to resolve.</typeparam>
         /// <returns>The resolved instances.</returns>
         public static IEnumerable<T> GetAll<T>() {
-            return (IEnumerable<T>)GetAllInstances(typeof(T));
+            return GetAllInstances(typeof(T)).Cast<T>();
         }
     }
 }
