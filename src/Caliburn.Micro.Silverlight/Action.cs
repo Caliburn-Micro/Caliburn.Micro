@@ -1,5 +1,4 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
 #if WinRT
     using System.Linq;
     using Windows.UI.Xaml;
@@ -102,25 +101,20 @@
         ///<param name="eventArgs"> The event args. </param>
         ///<param name="parameters"> The method parameters. </param>
         public static void Invoke(object target, string methodName, DependencyObject view = null, FrameworkElement source = null, object eventArgs = null, object[] parameters = null) {
-            var context = new ActionExecutionContext
-            {
+            var context = new ActionExecutionContext {
                 Target = target,
 #if WinRT
                 Method = target.GetType().GetRuntimeMethods().Single(m => m.Name == methodName),
 #else
                 Method = target.GetType().GetMethod(methodName),
 #endif
-                Message = new ActionMessage
-                {
-                    MethodName = methodName
-                },
+                Message = new ActionMessage {MethodName = methodName},
                 View = view,
                 Source = source,
                 EventArgs = eventArgs
             };
 
-            if (parameters != null)
-            {
+            if (parameters != null) {
                 parameters.Apply(x => context.Message.Parameters.Add(x as Parameter ?? new Parameter { Value = x }));
             }
 
@@ -136,21 +130,17 @@
         }
 
         static void SetTargetCore(DependencyPropertyChangedEventArgs e, DependencyObject d, bool setContext) {
-            if (e.NewValue == e.OldValue || e.NewValue == null)
-            {
+            if (e.NewValue == e.OldValue || e.NewValue == null) {
                 return;
             }
 
             var target = e.NewValue;
             var containerKey = e.NewValue as string;
-
-            if (containerKey != null)
-            {
+            if (containerKey != null) {
                 target = IoC.GetInstance(null, containerKey);
             }
 
-            if (setContext && d is FrameworkElement)
-            {
+            if (setContext && d is FrameworkElement) {
                 Log.Info("Setting DC of {0} to {1}.", d, target);
                 ((FrameworkElement)d).DataContext = target;
             }

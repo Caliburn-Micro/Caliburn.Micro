@@ -1,5 +1,4 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
 #if WinRT
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Data;
@@ -11,8 +10,7 @@
     /// <summary>
     ///   Hosts dependency properties for binding.
     /// </summary>
-    public static class Bind
-    {
+    public static class Bind {
         /// <summary>
         ///   Allows binding on an existing view. Use this on root UserControls, Pages and Windows; not in a DataTemplate.
         /// </summary>
@@ -48,8 +46,7 @@
         /// </summary>
         /// <param name = "dependencyObject">The dependency object to bind to.</param>
         /// <returns>The model.</returns>
-        public static object GetModelWithoutContext(DependencyObject dependencyObject)
-        {
+        public static object GetModelWithoutContext(DependencyObject dependencyObject) {
             return dependencyObject.GetValue(ModelWithoutContextProperty);
         }
 
@@ -58,8 +55,7 @@
         /// </summary>
         /// <param name = "dependencyObject">The dependency object to bind to.</param>
         /// <param name = "value">The model.</param>
-        public static void SetModelWithoutContext(DependencyObject dependencyObject, object value)
-        {
+        public static void SetModelWithoutContext(DependencyObject dependencyObject, object value) {
             dependencyObject.SetValue(ModelWithoutContextProperty, value);
         }
 
@@ -68,8 +64,7 @@
         /// </summary>
         /// <param name = "dependencyObject">The dependency object to bind to.</param>
         /// <returns>The model.</returns>
-        public static object GetModel(DependencyObject dependencyObject)
-        {
+        public static object GetModel(DependencyObject dependencyObject) {
             return dependencyObject.GetValue(ModelProperty);
         }
 
@@ -78,31 +73,24 @@
         /// </summary>
         /// <param name = "dependencyObject">The dependency object to bind to.</param>
         /// <param name = "value">The model.</param>
-        public static void SetModel(DependencyObject dependencyObject, object value)
-        {
+        public static void SetModel(DependencyObject dependencyObject, object value) {
             dependencyObject.SetValue(ModelProperty, value);
         }
 
-        static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (Execute.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue)
-            {
+        static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (Execute.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
                 return;
             }
 
             var fe = d as FrameworkElement;
-            if (fe == null)
-            {
+            if (fe == null) {
                 return;
             }
 
-            View.ExecuteOnLoad(fe, delegate
-            {
+            View.ExecuteOnLoad(fe, delegate {
                 var target = e.NewValue;
                 var containerKey = e.NewValue as string;
-
-                if (containerKey != null)
-                {
+                if (containerKey != null) {
                     target = IoC.GetInstance(null, containerKey);
                 }
 
@@ -116,26 +104,20 @@
             });
         }
 
-        static void ModelWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (Execute.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue)
-            {
+        static void ModelWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (Execute.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
                 return;
             }
 
             var fe = d as FrameworkElement;
-            if (fe == null)
-            {
+            if (fe == null) {
                 return;
             }
 
-            View.ExecuteOnLoad(fe, delegate
-            {
+            View.ExecuteOnLoad(fe, delegate {
                 var target = e.NewValue;
                 var containerKey = e.NewValue as string;
-
-                if (containerKey != null)
-                {
+                if (containerKey != null) {
                     target = IoC.GetInstance(null, containerKey);
                 }
 
@@ -169,8 +151,7 @@
 #if NET
         [AttachedPropertyBrowsableForTypeAttribute(typeof(DependencyObject))]
 #endif
-        public static bool GetAtDesignTime(DependencyObject dependencyObject)
-        {
+        public static bool GetAtDesignTime(DependencyObject dependencyObject) {
             return (bool)dependencyObject.GetValue(AtDesignTimeProperty);
         }
 
@@ -179,13 +160,11 @@
         /// </summary>
         /// <param name="dependencyObject">The ui to apply conventions to.</param>
         /// <param name="value">Whether or not to apply conventions.</param>
-        public static void SetAtDesignTime(DependencyObject dependencyObject, bool value)
-        {
+        public static void SetAtDesignTime(DependencyObject dependencyObject, bool value) {
             dependencyObject.SetValue(AtDesignTimeProperty, value);
         }
 
-        static void AtDesignTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
+        static void AtDesignTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             if (!Execute.InDesignMode)
                 return;
 
@@ -204,8 +183,7 @@
                 new PropertyMetadata(null, DataContextChanged)
                 );
 
-        static void DataContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
+        static void DataContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             if (!Execute.InDesignMode)
                 return;
 
