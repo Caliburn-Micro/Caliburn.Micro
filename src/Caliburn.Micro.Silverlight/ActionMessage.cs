@@ -42,8 +42,7 @@
         ActionExecutionContext context;
 
 #if WINDOWS_PHONE
-        internal AppBarButton buttonSource;
-        internal AppBarMenuItem menuItemSource;
+        internal Microsoft.Phone.Shell.IApplicationBarMenuItem applicationBarSource;
 #endif
 
         internal static readonly DependencyProperty HandlerProperty = DependencyProperty.RegisterAttached(
@@ -319,16 +318,10 @@
         /// <remarks>Returns a value indicating whether or not the action is available.</remarks>
         public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context => {
 #if WINDOWS_PHONE
-            if (context.Message.buttonSource != null) {
+            if (context.Message.applicationBarSource != null) {
                 if(context.CanExecute != null)
-                    context.Message.buttonSource.IsEnabled = context.CanExecute();
-                return context.Message.buttonSource.IsEnabled;
-            }
-
-            if (context.Message.menuItemSource != null) {
-                if(context.CanExecute != null)
-                    context.Message.menuItemSource.IsEnabled = context.CanExecute();
-                return context.Message.menuItemSource.IsEnabled;
+                    context.Message.applicationBarSource.IsEnabled = context.CanExecute();
+                return context.Message.applicationBarSource.IsEnabled;
             }
 #endif
 

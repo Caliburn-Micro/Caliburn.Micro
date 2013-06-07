@@ -246,16 +246,16 @@
             var triggers = Interaction.GetTriggers(view);
 
             foreach(var item in page.ApplicationBar.Buttons) {
-                var button = item as AppBarButton;
+                var button = item as IAppBarActionMessage;
                 if (button == null || string.IsNullOrEmpty(button.Message)) {
                     continue;
                 }
 
                 var parsedTrigger = Parser.Parse(view, button.Message).First();
-                var trigger = new AppBarButtonTrigger(button);
+                var trigger = new AppBarItemTrigger(button);
                 var actionMessages = parsedTrigger.Actions.OfType<ActionMessage>().ToList();
                 actionMessages.Apply(x => {
-                    x.buttonSource = button;
+                    x.applicationBarSource = button;
                     parsedTrigger.Actions.Remove(x);
                     trigger.Actions.Add(x);
                 });
@@ -264,16 +264,16 @@
             }
 
             foreach (var item in page.ApplicationBar.MenuItems) {
-                var menuItem = item as AppBarMenuItem;
+                var menuItem = item as IAppBarActionMessage;
                 if (menuItem == null || string.IsNullOrEmpty(menuItem.Message)) {
 					continue;
                 }
 
                 var parsedTrigger = Parser.Parse(view, menuItem.Message).First();
-                var trigger = new AppBarMenuItemTrigger(menuItem);
+                var trigger = new AppBarItemTrigger(menuItem);
                 var actionMessages = parsedTrigger.Actions.OfType<ActionMessage>().ToList();
                 actionMessages.Apply(x => {
-                    x.menuItemSource = menuItem;
+                    x.applicationBarSource = menuItem;
                     parsedTrigger.Actions.Remove(x);
                     trigger.Actions.Add(x);
                 });
