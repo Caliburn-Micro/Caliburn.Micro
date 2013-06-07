@@ -130,7 +130,7 @@
         }
 
         static void SetTargetCore(DependencyPropertyChangedEventArgs e, DependencyObject d, bool setContext) {
-            if (e.NewValue == e.OldValue || e.NewValue == null) {
+            if (e.NewValue == e.OldValue) {
                 return;
             }
 
