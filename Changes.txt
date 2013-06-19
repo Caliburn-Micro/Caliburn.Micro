@@ -1,0 +1,20 @@
+1.5.2
+-Fix Task.AsResult() extension issues when Task is already completed or the coroutine is not executed on the UI thread
+-BuildUp IResult in ExecuteAsync() (issue 314)
+-fix UriBuilder.WithParam() ignores default values of value types (issue 317)
+-[Tim Heuer] Modifying CallistoSettingsWindowManager to leverage automatic settings from AppxManifest for the app.
+-change PhoneContainer to be more like WinRTContainer and add parameter checks (issue 307)
+-use SimpleContainer for WPF and Silverlight (instead of MEF in Start package)
+-make PropertyChangedBase.OnPropertyChanged protected (issue 291)
+-give more info when IoC is not initialized (issue 313)
+-Allow to specify window settings on DisplayRootViewFor() (WPF only)
+-Make SimpleContainer available for all platforms
+-add HelloSimpleContainer sample
+-add DisplayRootViewFor<TViewModel>() overload
+-add IoC.GetAll<T>() (issue 313)
+-Event Aggregator now throws an ArguementNullException when any methods with parameters receive null (fails fast).
+-Changed Handler class in EventAggregator to have an IsDead property (needed for the above to work).
+-Changed parameter names in all EventAggregator methods from instance to message where dealing with the message.
+-Added HandlerExistsFor to EventAggregator class for checking the for the existence of a specified handler.
+-Now it is posssible to use a custom AppBarButton/AppBarMenuItem implementation with our ActionMessage. All you need to do is to implement the Interface.
+-More unit test coverage
