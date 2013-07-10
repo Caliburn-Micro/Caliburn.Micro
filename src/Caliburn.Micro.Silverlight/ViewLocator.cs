@@ -348,7 +348,7 @@
                 );
 
             var viewTypeList = TransformName(viewTypeName, context);
-            var viewType = viewTypeList.Join(AssemblySource.Instance.SelectMany(a => a.GetExportedTypes()), n => n, t => t.FullName, (n, t) => t).FirstOrDefault();
+            var viewType = AssemblySource.FindTypeByNames(viewTypeList);
 
             if (viewType == null) {
                 Log.Warn("View not found. Searched: {0}.", string.Join(", ", viewTypeList.ToArray()));

@@ -326,7 +326,7 @@
 
             var viewModelTypeList = TransformName(typeName, searchForInterface);
 
-            var viewModelType = viewModelTypeList.Join(AssemblySource.Instance.SelectMany(a => a.GetExportedTypes()), n => n, t => t.FullName, (n, t) => t).FirstOrDefault();
+            var viewModelType = AssemblySource.FindTypeByNames(viewModelTypeList);
 
             if (viewModelType == null)
             {
