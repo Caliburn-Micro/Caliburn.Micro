@@ -17,7 +17,7 @@
         ///   Finds a type which matches a sequence or one of the elements in the sequence of names.
         /// </summary>
         /// <remarks>
-        ///   By default, the first name which matches a <see cref="Type.FullName"/> from the <see cref="Assembly.GetExportedTypes"/> 
+        ///   By default, the first name which matches a <see cref="Type.FullName"/> from the GetExportedTypes 
         ///   of assemblies in <see cref="AssemblySource.Instance"/> is selected.
         /// </remarks>
         public static Func<IEnumerable<string>, Type> FindTypeByNames = names => {
