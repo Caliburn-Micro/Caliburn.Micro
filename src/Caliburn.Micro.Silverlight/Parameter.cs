@@ -36,7 +36,10 @@
             get { return associatedObject; }
         }
 
-        ActionMessage Owner {
+        /// <summary>
+        /// Gets or sets the owner.
+        /// </summary>
+        protected ActionMessage Owner {
             get { return owner == null ? null : owner.Target as ActionMessage; }
             set { owner = new WeakReference(value); }
         }
