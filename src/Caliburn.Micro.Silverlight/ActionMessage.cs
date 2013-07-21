@@ -369,7 +369,6 @@
                     let methodParameters = method.GetParameters()
                     where message.Parameters.Count == methodParameters.Length
                     select method).FirstOrDefault();
-
 #endif
         };
 
@@ -377,8 +376,9 @@
         /// Sets the target, method and view on the context. Uses a bubbling strategy by default.
         /// </summary>
         public static Action<ActionExecutionContext> SetMethodBinding = context => {
-            DependencyObject currentElement = context.Source;
+            var source = context.Source;
 
+            DependencyObject currentElement = source;
             while (currentElement != null) {
                 if (Action.HasTargetSet(currentElement)) {
                     var target = Message.GetHandler(currentElement);
@@ -400,14 +400,14 @@
                 currentElement = VisualTreeHelper.GetParent(currentElement);
             }
 
-            if (context.Source.DataContext != null) {
-                var target = context.Source.DataContext;
+            if (source != null && source.DataContext != null) {
+                var target = source.DataContext;
                 var method = GetTargetMethod(context.Message, target);
 
                 if (method != null) {
                     context.Target = target;
                     context.Method = method;
-                    context.View = context.Source;
+                    context.View = source;
                 }
             }
         };

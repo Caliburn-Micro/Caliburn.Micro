@@ -1,3 +1,11 @@
+1.5.3
+-Revert BootstrapperBase.Application.set() to be protected (issue 325)
+-Provide Parameter.Owner property protected access (issue 328)
+-add some more ContainerExtensions
+-allow to set all SettingsFlyout properties (WinRT)
+-Extract FindTypeByNames from ViewLocator and ViewModelLocator to AssemblySource
+-Fix NullReferenceException in ActionMessage.SetMethodBinding() (issue 329)
+
 1.5.2
 -Fix Task.AsResult() extension issues when Task is already completed or the coroutine is not executed on the UI thread
 -BuildUp IResult in ExecuteAsync() (issue 314)
