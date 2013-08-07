@@ -21,10 +21,11 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\WinRT81\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NETFX_CORE;WinRT;WinRT81</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\bin\WinRT81\Debug\Caliburn.Micro.Extensions.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -137,6 +138,9 @@
     </Compile>
     <Compile Include="..\Caliburn.Micro.WinRT.Extensions\WinRTContainer.cs">
       <Link>WinRTContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.WP71.Extensions\UriBuilder.cs">
+      <Link>UriBuilder.cs</Link>
     </Compile>
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
