@@ -58,7 +58,11 @@ namespace Caliburn.Micro
                 return (ISettingsService)GetInstance(typeof(ISettingsService), null);
 
             if (!HasHandler(typeof(ISettingsWindowManager), null))
+#if WinRT81
+                RegisterInstance(typeof(ISettingsWindowManager), null, new SettingsWindowManager());
+#else
                 RegisterInstance(typeof(ISettingsWindowManager), null, new CallistoSettingsWindowManager());
+#endif
 
             var settingsService = new SettingsService((ISettingsWindowManager)GetInstance(typeof(ISettingsWindowManager), null));
             RegisterInstance(typeof(ISettingsService), null, settingsService);
