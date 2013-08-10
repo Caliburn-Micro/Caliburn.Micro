@@ -343,7 +343,7 @@
         public static bool HasBinding(FrameworkElement element, DependencyProperty property) {
 #if NET
             return BindingOperations.GetBindingBase(element, property) != null;
-#elif WinRT
+#elif WinRT && !WinRT81
             var localValue = element.ReadLocalValue(property);
 
             if (localValue == DependencyProperty.UnsetValue)
