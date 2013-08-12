@@ -31,7 +31,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock x:Uid="BindingsExplanation" Style="{StaticResource ExplanationTextStyle}" />
+            <TextBlock x:Uid="ConventionsExplanation" Style="{StaticResource ExplanationTextStyle}" />
 
             <StackPanel Grid.Column="1">
                 <SearchBox x:Name="SearchText" caliburn:Message.Attach="ExecuteSearch" />

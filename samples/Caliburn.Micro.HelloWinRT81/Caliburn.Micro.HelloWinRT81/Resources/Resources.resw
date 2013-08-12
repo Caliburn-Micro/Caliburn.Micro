@@ -138,6 +138,9 @@ Below the ListBox is a TextBlock bound to the SelectedDeveloper using the name "
 
 Controls in the AppBar work be bound like any other other control (unlike Windows Phone) and all standard conventions should apply.</value>
   </data>
+  <data name="ConventionsExplanation.Text" xml:space="preserve">
+    <value>To the right is a sample of conventions working against the new 8.1 controls including SearchBox, DatePicker and TimePicker. Also now included are conventions for the 8.0 controls ToggleSwitch, ProgressRing and Slider.</value>
+  </data>
   <data name="CoroutinesExplanation.Text" xml:space="preserve">
     <value>Thanks to the introduction of async / await into WinRT apps the use of coroutines to provide functionality around asynchronous methods will most likely be limited. However Caliburn.Micro IResult's do have one extra feature in that they provide access to the "ActionExectutionContext", this provides access to the View in a more controlled manner and means any view interaction code can be seperate from  the View Model.
 
