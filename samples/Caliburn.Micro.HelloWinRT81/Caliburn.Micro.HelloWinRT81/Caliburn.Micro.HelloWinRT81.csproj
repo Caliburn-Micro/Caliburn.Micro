@@ -113,6 +113,7 @@
     <Compile Include="Results\VisualStateResult.cs" />
     <Compile Include="ViewModels\ActionsViewModel.cs" />
     <Compile Include="ViewModels\BindingsViewModel.cs" />
+    <Compile Include="ViewModels\ConventionsViewModel.cs" />
     <Compile Include="ViewModels\CoroutineViewModel.cs" />
     <Compile Include="ViewModels\DeveloperViewModel.cs" />
     <Compile Include="ViewModels\ExecuteViewModel.cs" />
@@ -132,6 +133,9 @@
     </Compile>
     <Compile Include="Views\BindingsView.xaml.cs">
       <DependentUpon>BindingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ConventionsView.xaml.cs">
+      <DependentUpon>ConventionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CoroutineView.xaml.cs">
       <DependentUpon>CoroutineView.xaml</DependentUpon>
@@ -211,6 +215,10 @@
     <Page Include="Views\BindingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ConventionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CoroutineView.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -200,6 +200,17 @@
 #if !WINDOWS_PHONE && !WinRT
             AddElementConvention<DatePicker>(DatePicker.SelectedDateProperty, "SelectedDate", "SelectedDateChanged");
 #endif
+#if WinRT81
+            AddElementConvention<DatePicker>(DatePicker.DateProperty, "Date", "DateChanged");
+            AddElementConvention<TimePicker>(TimePicker.TimeProperty, "Time", "TimeChanged");
+            AddElementConvention<SearchBox>(SearchBox.QueryTextProperty, "QueryText", "QuerySubmitted");
+#endif
+#if WinRT
+            AddElementConvention<ToggleSwitch>(ToggleSwitch.IsOnProperty, "IsOn", "Toggled");
+            AddElementConvention<ProgressRing>(ProgressRing.IsActiveProperty, "IsActive", "Loaded");
+            AddElementConvention<Slider>(Slider.ValueProperty, "Value", "ValueChanged");
+            AddElementConvention<RichEditBox>(RichEditBox.DataContextProperty, "DataContext", "TextChanged");
+#endif
 #if SILVERLIGHT || WinRT
             AddElementConvention<HyperlinkButton>(HyperlinkButton.ContentProperty, "DataContext", "Click");
             AddElementConvention<PasswordBox>(PasswordBox.PasswordProperty, "Password", "PasswordChanged");

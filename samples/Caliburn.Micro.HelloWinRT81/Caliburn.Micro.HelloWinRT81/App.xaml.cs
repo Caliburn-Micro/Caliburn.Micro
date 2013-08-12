@@ -40,7 +40,8 @@ namespace Caliburn.Micro.WinRT.Sample
                 .PerRequest<SettingsViewModel>()
                 .PerRequest<SetupViewModel>()
                 .PerRequest<ShareSourceViewModel>()
-                .PerRequest<ShareTargetViewModel>();
+                .PerRequest<ShareTargetViewModel>()
+                .PerRequest<ConventionsViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)
