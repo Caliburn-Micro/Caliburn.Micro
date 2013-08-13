@@ -5,6 +5,7 @@ using Caliburn.Micro.WinRT.Sample.Views;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.DataTransfer.ShareTarget;
 using Windows.UI.Xaml.Controls;
+using Caliburn.Micro.HelloWinRT.Logging;
 
 namespace Caliburn.Micro.WinRT.Sample
 {
@@ -19,6 +20,8 @@ namespace Caliburn.Micro.WinRT.Sample
 
         protected override void Configure()
         {
+            LogManager.GetLog = t => new DebugLog();
+
             container = new WinRTContainer();
             container.RegisterWinRTServices();
 
@@ -41,7 +44,8 @@ namespace Caliburn.Micro.WinRT.Sample
                 .PerRequest<SetupViewModel>()
                 .PerRequest<ShareSourceViewModel>()
                 .PerRequest<ShareTargetViewModel>()
-                .PerRequest<ConventionsViewModel>();
+                .PerRequest<ConventionsViewModel>()
+                .PerRequest<HubViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)

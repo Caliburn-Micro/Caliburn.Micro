@@ -155,6 +155,13 @@ Note that in initial versions of the WinRT port this method was asynchronous (th
 
 The sample to the right side steps all binding and directly updates the view from a background thread. Removing the call to Execute.OnUIThread causes the application to crash.</value>
   </data>
+  <data name="HubExplanation.Text" xml:space="preserve">
+    <value>Windows 8.1 introduced the Hub control and it's child HubSection's. These controls don't follow convention in that Hub doesn't inherit ItemsControl nor ContentControl. As such most of the conventions don't out of the box work for Hub's.
+
+To increase performance and enable on demand loading for each section the Hub Section declares it's content inside a DataTemplate. This also inhibits Caliburn.Micro from discovering controls inside these templates for conventions.
+
+If you do wish to have conventions inside your HubSection's then inside the DataTemplate use the Bind.Model="{Binding}" syntax as demonstrated by this page.</value>
+  </data>
   <data name="NavigationExplanation.Text" xml:space="preserve">
     <value>Navigation in View first applications works much the same as Windows Phone in Caliburn Micro, the interface INavigationService lets you move forward and back between pages. While the Frame control in WinRT only supports a single paramter Caliburn Micro packs multiple values into this single paramter and then on navigation expands them back to their target properties.
 

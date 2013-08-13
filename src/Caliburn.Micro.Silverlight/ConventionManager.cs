@@ -204,6 +204,8 @@
             AddElementConvention<DatePicker>(DatePicker.DateProperty, "Date", "DateChanged");
             AddElementConvention<TimePicker>(TimePicker.TimeProperty, "Time", "TimeChanged");
             AddElementConvention<SearchBox>(SearchBox.QueryTextProperty, "QueryText", "QuerySubmitted");
+            AddElementConvention<Hub>(Hub.HeaderProperty, "Header", "Loaded");
+            AddElementConvention<HubSection>(HubSection.HeaderProperty, "Header", "SectionsInViewChanged");
 #endif
 #if WinRT
             AddElementConvention<ToggleSwitch>(ToggleSwitch.IsOnProperty, "IsOn", "Toggled");

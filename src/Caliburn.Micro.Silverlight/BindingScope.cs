@@ -177,6 +177,26 @@
                             queue.Enqueue(semanticZoom.ZoomedOutView as DependencyObject);
                     }
 #endif
+#if WinRT81
+                    var hub = current as Hub;
+                    if (hub != null)
+                    {
+                        if (hub.Header is DependencyObject)
+                            queue.Enqueue(hub.Header as DependencyObject);
+
+                        foreach(var section in hub.Sections)
+                        {
+                            queue.Enqueue(section);
+                        }
+                    }
+
+                    var hubSection = current as HubSection;
+                    if (hubSection != null)
+                    {
+                        if (hubSection.Header is DependencyObject)
+                            queue.Enqueue(hubSection.Header as DependencyObject);
+                    }   
+#endif
                     else {
                         var currentType = current.GetType();
 
