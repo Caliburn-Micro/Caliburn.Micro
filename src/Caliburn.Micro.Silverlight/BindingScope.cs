@@ -179,23 +179,33 @@
 #endif
 #if WinRT81
                     var hub = current as Hub;
-                    if (hub != null)
-                    {
+                    if (hub != null) {
                         if (hub.Header is DependencyObject)
                             queue.Enqueue(hub.Header as DependencyObject);
 
-                        foreach(var section in hub.Sections)
-                        {
+                        foreach(var section in hub.Sections) {
                             queue.Enqueue(section);
                         }
                     }
 
                     var hubSection = current as HubSection;
-                    if (hubSection != null)
-                    {
+                    if (hubSection != null) {
                         if (hubSection.Header is DependencyObject)
                             queue.Enqueue(hubSection.Header as DependencyObject);
-                    }   
+                    }
+
+                    var commandBar = current as CommandBar;
+                    if (commandBar != null) {
+                        foreach (var command in commandBar.PrimaryCommands) {
+                            if (command is DependencyObject)
+                                queue.Enqueue(command as DependencyObject);
+                        }
+
+                        foreach (var command in commandBar.SecondaryCommands) {
+                            if (command is DependencyObject)
+                                queue.Enqueue(command as DependencyObject);
+                        }
+                    }
 #endif
                     else {
                         var currentType = current.GetType();

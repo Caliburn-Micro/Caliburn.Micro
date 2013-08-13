@@ -10,7 +10,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
 {
     public class ConventionsViewModel : ViewModelBase
     {
-        private DateTime currentDate = DateTime.Now;
+        private DateTime currentDate = DateTime.Now.Date;
         private TimeSpan currentTime = DateTime.Now.TimeOfDay;
         private string searchText;
 
@@ -62,6 +62,12 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
         public IEnumerable<IResult> ExecuteSearch()
         {
             yield return new MessageDialogResult("Search Executed", String.Format("Searching for {0}", SearchText));
+        }
+
+        public void Refresh()
+        {
+            CurrentDate = DateTime.Now.Date;
+            CurrentTime = DateTime.Now.TimeOfDay;
         }
     }
 }
