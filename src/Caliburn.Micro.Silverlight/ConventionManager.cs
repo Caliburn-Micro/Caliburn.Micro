@@ -191,7 +191,7 @@
                 info,
                 binding
                 );
-#elif !WinRT
+#elif !(WinRT && !WinRT81)
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
         };
