@@ -420,10 +420,17 @@
                 return;
             }
 
-#if !WINDOWS_PHONE && !WinRT
+#if !WinRT
             if (property.PropertyType.IsGenericType) {
                 var itemType = property.PropertyType.GetGenericArguments().First();
                 if (itemType.IsValueType || typeof(string).IsAssignableFrom(itemType)) {
+                    return;
+                }
+            }
+#else
+            if (property.PropertyType.GetTypeInfo().IsGenericType) {
+                var itemType = property.PropertyType.GenericTypeArguments.First();
+                if (itemType.GetTypeInfo().IsValueType || typeof (string).IsAssignableFrom(itemType)) {
                     return;
                 }
             }
