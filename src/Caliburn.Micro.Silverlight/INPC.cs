@@ -131,7 +131,12 @@ namespace Caliburn.Micro {
                     taskSource.SetException(ex);
                 }
             };
-            dispatcher.BeginInvoke(method);
+            var operation = dispatcher.BeginInvoke(method);
+#if !SL5 && !WP8
+            if (operation.Status == DispatcherOperationStatus.Aborted) {
+                taskSource.SetCanceled();
+            }
+#endif
             return taskSource.Task;
 #endif
         }
