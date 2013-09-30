@@ -109,16 +109,12 @@
         /// Gets the parameters to pass as part of the method invocation.
         /// </summary>
         /// <value>The parameters.</value>
-#if WinRT
-        public AttachedCollection<Parameter> Parameters {
-            get { return (AttachedCollection<Parameter>)GetValue(ParametersProperty); }
-        }
-#else
+#if !WinRT
         [Category("Common Properties")]
+#endif  
         public AttachedCollection<Parameter> Parameters {
             get { return (AttachedCollection<Parameter>)GetValue(ParametersProperty); }
         }
-#endif
 
         /// <summary>
         /// Occurs before the message detaches from the associated object.
@@ -192,7 +188,6 @@
             binding.Source = currentElement;
 #endif
             BindingOperations.SetBinding(this, HandlerProperty, binding);
-
         }
 
         void UpdateContext() {
@@ -348,7 +343,6 @@
 
             return source.IsEnabled;
         };
-
 
         /// <summary>
         /// Finds the method on the target matching the specified message.
