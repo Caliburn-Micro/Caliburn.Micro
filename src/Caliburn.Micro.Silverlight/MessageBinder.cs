@@ -139,7 +139,7 @@
             }
 
             try {
-                return Convert.ChangeType(providedValue, destinationType, CultureInfo.CurrentUICulture);
+                return Convert.ChangeType(providedValue, destinationType, CultureInfo.CurrentCulture);
             }
             catch {
                 return GetDefaultValue(destinationType);
