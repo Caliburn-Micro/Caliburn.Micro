@@ -8,9 +8,9 @@
                 Description = "A simple IoC Container for .NET, SL, WP7, WP8, WinRT, Mono and Unity3d.",
                 Tags = "Silverlight WPF WP7 WP71 WP8 SL4 SL5 SL Phone IoC DI Container Mono Unity3d WinRT Metro",
                 Content = {
-                    "../../../Caliburn.Micro.Silverlight/ExtensionMethods.cs",
-                    "../../../Caliburn.Micro.Silverlight/ContainerExtensions.cs",
-                    "../../../Caliburn.Micro.Silverlight/SimpleContainer.cs"
+                    "../../../Caliburn.Micro.Platform/ExtensionMethods.cs",
+                    "../../../Caliburn.Micro.Platform/ContainerExtensions.cs",
+                    "../../../Caliburn.Micro.Platform/SimpleContainer.cs"
                 }
             });
 
@@ -19,8 +19,8 @@
                 Description = "A small, simple event aggregator implementation for .NET, SL, WP7, WP8, WinRT, Mono and Unity3d.",
                 Tags = "Silverlight WPF WP7 WP71 WP8 SL4 SL5 SL Phone EA PubSub EventAggregator Messaging Messenger Publish Subscribe Event Mono Unity3d WinRT Metro",
                 Content = {
-                    "../../../Caliburn.Micro.Silverlight/ExtensionMethods.cs",
-                    "../../../Caliburn.Micro.Silverlight/EventAggregator.cs",
+                    "../../../Caliburn.Micro.Platform/ExtensionMethods.cs",
+                    "../../../Caliburn.Micro.Platform/EventAggregator.cs",
                 }
             });
 
@@ -29,8 +29,8 @@
                 Description = "A standalone version of Caliburn.Micro's INPC implementation, BindableCollection, Execute.OnUIThread and InDesignMode checking designed for all Xaml platforms.",
                 Tags = "Silverlight WPF WP7 WP71 WP8 SL4 SL5 SL Phone WinRT INPC INotifyPropertyChanged MVVM WinRT Metro",
                 Content = {
-                    "../../../Caliburn.Micro.Silverlight/ExtensionMethods.cs",
-                    "../../../Caliburn.Micro.Silverlight/INPC.cs",
+                    "../../../Caliburn.Micro.Platform/ExtensionMethods.cs",
+                    "../../../Caliburn.Micro.Platform/INPC.cs",
                 }
             });
         }
