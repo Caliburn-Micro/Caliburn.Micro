@@ -1,9 +1,7 @@
 ﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
-#if !SILVERLIGHT || SL5 || WP8
     using System.Threading.Tasks;
-#endif
 
     /// <summary>
     /// Manages coroutine execution.
@@ -22,7 +20,7 @@
         /// <param name="coroutine">The coroutine to execute.</param>
         /// <param name="context">The context to execute the coroutine within.</param>
         /// /// <param name="callback">The completion callback for the coroutine.</param>
-        public static void BeginExecute(IEnumerator<IResult> coroutine, ActionExecutionContext context = null, EventHandler<ResultCompletionEventArgs> callback = null) {
+        public static void BeginExecute(IEnumerator<IResult> coroutine, CoroutineExecutionContext context = null, EventHandler<ResultCompletionEventArgs> callback = null) {
             Log.Info("Executing coroutine.");
 
             var enumerator = CreateParentEnumerator(coroutine);
@@ -33,17 +31,16 @@
             }
 
             ExecuteOnCompleted(enumerator, Completed);
-            enumerator.Execute(context ?? new ActionExecutionContext());
+            enumerator.Execute(context ?? new CoroutineExecutionContext());
         }
 
-#if !SILVERLIGHT || SL5 || WP8
         /// <summary>
         /// Executes a coroutine asynchronous.
         /// </summary>
         /// <param name="coroutine">The coroutine to execute.</param>
         /// <param name="context">The context to execute the coroutine within.</param>
         /// <returns>A task that represents the asynchronous coroutine.</returns>
-        public static Task ExecuteAsync(IEnumerator<IResult> coroutine, ActionExecutionContext context = null) {
+        public static Task ExecuteAsync(IEnumerator<IResult> coroutine, CoroutineExecutionContext context = null) {
             var taskSource = new TaskCompletionSource<object>();
 
             BeginExecute(coroutine, context, (s, e) => {
@@ -57,7 +54,6 @@
 
             return taskSource.Task;
         }
-#endif
 
         static void ExecuteOnCompleted(IResult result, EventHandler<ResultCompletionEventArgs> handler) {
             EventHandler<ResultCompletionEventArgs> onCompledted = null;
@@ -82,17 +78,5 @@
                 Log.Info("Coroutine execution completed.");
             }
         };
-    }
-
-    /// <summary>
-    ///  Denotes a class which can handle a particular type of message and uses a Coroutine to do so.
-    /// </summary>
-    public interface IHandleWithCoroutine<TMessage> : IHandle {  //don't use contravariance here
-		/// <summary>
-		///  Handle the message with a Coroutine.
-		/// </summary>
-		/// <param name="message">The message.</param>
-		/// <returns>The coroutine to execute.</returns>
-		IEnumerable<IResult> Handle(TMessage message);
     }
 }

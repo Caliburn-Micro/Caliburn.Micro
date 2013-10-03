@@ -303,7 +303,13 @@
 
             var enumerator = returnValue as IEnumerator<IResult>;
             if (enumerator != null) {
-                Coroutine.BeginExecute(enumerator, context);
+                Coroutine.BeginExecute(enumerator,
+                    new CoroutineExecutionContext
+                    {
+                        Source = context.Source,
+                        View = context.View,
+                        Target = context.Target
+                    });
             }
         };
 

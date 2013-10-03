@@ -7,7 +7,7 @@
     /// </summary>
     public class SequentialResult : IResult {
         readonly IEnumerator<IResult> enumerator;
-        ActionExecutionContext context;
+        CoroutineExecutionContext context;
 
         /// <summary>
         ///   Initializes a new instance of the <see cref = "SequentialResult" /> class.
@@ -26,7 +26,7 @@
         ///   Executes the result using the specified context.
         /// </summary>
         /// <param name = "context">The context.</param>
-        public void Execute(ActionExecutionContext context) {
+        public void Execute(CoroutineExecutionContext context) {
             this.context = context;
             ChildCompleted(null, new ResultCompletionEventArgs());
         }

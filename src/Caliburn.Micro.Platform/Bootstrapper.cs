@@ -82,7 +82,7 @@
                 if (coroutine != null) {
                     var viewAware = target as IViewAware;
                     var view = viewAware != null ? viewAware.GetView() : null;
-                    var context = new ActionExecutionContext { Target = target, View = (DependencyObject)view };
+                    var context = new CoroutineExecutionContext { Target = target, View = view };
 
                     Coroutine.BeginExecute(coroutine.GetEnumerator(), context);
                 }

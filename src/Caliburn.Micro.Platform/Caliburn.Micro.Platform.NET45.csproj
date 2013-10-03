@@ -70,11 +70,9 @@
     <Compile Include="BooleanToVisibilityConverter.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="ConventionManager.cs" />
-    <Compile Include="Coroutine.cs" />
     <Compile Include="ElementConvention.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="IHaveParameters.cs" />
-    <Compile Include="IResult.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageBinder.cs" />
     <Compile Include="NameTransformer.cs" />
@@ -87,9 +85,6 @@
     </Compile>
     <AppDesigner Include="Properties\" />
     <Compile Include="RegExHelper.cs" />
-    <Compile Include="ResultCompletionEventArgs.cs" />
-    <Compile Include="SequentialResult.cs" />
-    <Compile Include="TaskExtensions.cs" />
     <Compile Include="TypeDescriptor.cs" />
     <Compile Include="TypeMappingConfiguration.cs" />
     <Compile Include="View.cs" />

@@ -9,7 +9,7 @@
         /// Executes the result using the specified context.
         /// </summary>
         /// <param name="context">The context.</param>
-        void Execute(ActionExecutionContext context);
+        void Execute(CoroutineExecutionContext context);
 
         /// <summary>
         /// Occurs when execution has completed.
@@ -17,7 +17,6 @@
         event EventHandler<ResultCompletionEventArgs> Completed;
     }
 
-#if !SILVERLIGHT || SL5 || WP8
     /// <summary>
     /// Allows custom code to execute after the return of a action.
     /// </summary>
@@ -29,5 +28,4 @@
         /// </summary>
         TResult Result { get; }
     }
-#endif
 }

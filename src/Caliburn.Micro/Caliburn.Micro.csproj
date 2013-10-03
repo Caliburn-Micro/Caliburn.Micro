@@ -60,6 +60,8 @@
     <Compile Include="ConductorWithCollectionAllActive.cs" />
     <Compile Include="ConductorWithCollectionOneActive.cs" />
     <Compile Include="ContainerExtensions.cs" />
+    <Compile Include="Coroutine.cs" />
+    <Compile Include="CoroutineExecutionContext.cs" />
     <Compile Include="DeactivationEventArgs.cs" />
     <Compile Include="DefaultCloseStrategy.cs" />
     <Compile Include="DefaultPlatformProvider.cs" />
@@ -76,6 +78,8 @@
     <Compile Include="IEventAggregator.cs" />
     <Compile Include="IGuardClose.cs" />
     <Compile Include="IHandle.cs" />
+    <Compile Include="IHandleWithCoroutine.cs" />
+    <Compile Include="IHandleWithTask.cs" />
     <Compile Include="IHaveActiveItem.cs" />
     <Compile Include="IHaveDisplayName.cs" />
     <Compile Include="ILog.cs" />
@@ -84,15 +88,20 @@
     <Compile Include="IoC.cs" />
     <Compile Include="IParent.cs" />
     <Compile Include="IPlatformProvider.cs" />
+    <Compile Include="IResult.cs" />
     <Compile Include="IScreen.cs" />
     <Compile Include="IViewAware.cs" />
     <Compile Include="LogManager.cs" />
     <Compile Include="PlatformProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyChangedBase.cs" />
+    <Compile Include="ResultCompletionEventArgs.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="ScreenExtensions.cs" />
+    <Compile Include="SequentialResult.cs" />
     <Compile Include="SimpleContainer.cs" />
+    <Compile Include="TaskExtensions.cs" />
+    <Compile Include="TaskResult.cs" />
     <Compile Include="ViewAttachedEventArgs.cs" />
     <Compile Include="ViewAware.cs" />
   </ItemGroup>
