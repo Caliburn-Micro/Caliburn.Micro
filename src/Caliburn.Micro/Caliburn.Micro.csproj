@@ -64,6 +64,7 @@
     <Compile Include="DefaultCloseStrategy.cs" />
     <Compile Include="DefaultPlatformProvider.cs" />
     <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="EventAggregator.cs" />
     <Compile Include="Execute.cs" />
     <Compile Include="ExpressionExtensions.cs" />
     <Compile Include="IActivate.cs" />
@@ -72,7 +73,9 @@
     <Compile Include="ICloseStrategy.cs" />
     <Compile Include="IConductor.cs" />
     <Compile Include="IDeactivate.cs" />
+    <Compile Include="IEventAggregator.cs" />
     <Compile Include="IGuardClose.cs" />
+    <Compile Include="IHandle.cs" />
     <Compile Include="IHaveActiveItem.cs" />
     <Compile Include="IHaveDisplayName.cs" />
     <Compile Include="ILog.cs" />

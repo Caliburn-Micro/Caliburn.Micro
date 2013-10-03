@@ -72,7 +72,6 @@
     <Compile Include="ConventionManager.cs" />
     <Compile Include="Coroutine.cs" />
     <Compile Include="ElementConvention.cs" />
-    <Compile Include="EventAggregator.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="IHaveParameters.cs" />
     <Compile Include="IResult.cs" />
