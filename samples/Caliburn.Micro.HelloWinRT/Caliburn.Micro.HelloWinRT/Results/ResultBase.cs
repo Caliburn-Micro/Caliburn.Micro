@@ -32,6 +32,6 @@ namespace Caliburn.Micro.WinRT.Sample.Results
             Micro.Execute.OnUIThread(() => Completed(this, e));
         }
 
-        public abstract void Execute(ActionExecutionContext context);
+        public abstract void Execute(CoroutineExecutionContext context);
     }
 }

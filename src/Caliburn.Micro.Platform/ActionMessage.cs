@@ -182,7 +182,7 @@
                 Source = currentElement
             };
 #else
-            const string bindingText = "<Binding xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation\' xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro' Path='(cal:Message.Handler)' />";
+            const string bindingText = "<Binding xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation\' xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform' Path='(cal:Message.Handler)' />";
 
             var binding = (Binding)XamlReader.Load(bindingText);
             binding.Source = currentElement;

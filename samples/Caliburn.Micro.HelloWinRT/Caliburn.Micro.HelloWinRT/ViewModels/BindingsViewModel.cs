@@ -33,7 +33,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             set
             {
                 selectedDeveloper = value;
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange("SelectedDeveloper");
             }
         }
     }
