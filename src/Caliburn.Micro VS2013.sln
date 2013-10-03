@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.20827.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.WIN81", "Caliburn.Micro.Platform\Caliburn.Micro.WIN81.csproj", "{73A34351-FB6A-489E-82DC-5790AF7693E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.WIN81", "Caliburn.Micro.Platform\Caliburn.Micro.Platform.WIN81.csproj", "{73A34351-FB6A-489E-82DC-5790AF7693E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Extensions.WIN81", "Caliburn.Micro.Extensions.WIN8\Caliburn.Micro.Extensions.WIN81.csproj", "{F85A33A3-89B4-415B-8232-7B097815DE1F}"
 EndProject

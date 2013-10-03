@@ -87,9 +87,9 @@
     <Compile Include="WindowManagerExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.WP71.csproj">
+    <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.Platform.WP71.csproj">
       <Project>{B3F474B3-85C7-482D-9382-097CF64BCBB0}</Project>
-      <Name>Caliburn.Micro.WP71</Name>
+      <Name>Caliburn.Micro.Platform.WP71</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />

@@ -61,9 +61,9 @@
     <Compile Include="SimpleContainerTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.NET40.csproj">
+    <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.Platform.NET40.csproj">
       <Project>{B633FE8C-B40E-4122-A763-F94C8B1A70F8}</Project>
-      <Name>Caliburn.Micro.NET40</Name>
+      <Name>Caliburn.Micro.Platform.NET40</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

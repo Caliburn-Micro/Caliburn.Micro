@@ -41,9 +41,9 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.WIN81.csproj">
+    <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.Platform.WIN81.csproj">
       <Project>{73a34351-fb6a-489e-82dc-5790af7693e3}</Project>
-      <Name>Caliburn.Micro.WIN81</Name>
+      <Name>Caliburn.Micro.Platform.WIN81</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
