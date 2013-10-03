@@ -59,6 +59,7 @@
     <Compile Include="ConductorBaseWithActiveItem.cs" />
     <Compile Include="ConductorWithCollectionAllActive.cs" />
     <Compile Include="ConductorWithCollectionOneActive.cs" />
+    <Compile Include="ContainerExtensions.cs" />
     <Compile Include="DeactivationEventArgs.cs" />
     <Compile Include="DefaultCloseStrategy.cs" />
     <Compile Include="DefaultPlatformProvider.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="ILog.cs" />
     <Compile Include="INotifyPropertyChangedEx.cs" />
     <Compile Include="IObservableCollection.cs" />
+    <Compile Include="IoC.cs" />
     <Compile Include="IParent.cs" />
     <Compile Include="IPlatformProvider.cs" />
     <Compile Include="IScreen.cs" />
@@ -87,6 +89,7 @@
     <Compile Include="PropertyChangedBase.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="ScreenExtensions.cs" />
+    <Compile Include="SimpleContainer.cs" />
     <Compile Include="ViewAttachedEventArgs.cs" />
     <Compile Include="ViewAware.cs" />
   </ItemGroup>

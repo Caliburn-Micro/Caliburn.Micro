@@ -1,8 +1,4 @@
-﻿#if NETFX_CORE && !WinRT
-#define WinRT
-#endif
-
-namespace Caliburn.Micro {
+﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -100,16 +96,6 @@ namespace Caliburn.Micro {
             if (filter == null)
                 filter = type => true;
 
-#if WinRT
-            var serviceInfo = typeof(TService).GetTypeInfo();
-            var types = from info in assembly.DefinedTypes
-                        let type = info.AsType()
-                        where serviceInfo.IsAssignableFrom(info)
-                              && !info.IsAbstract
-                              && !info.IsInterface
-                              && filter(type)
-                        select type;
-#else
             var serviceType = typeof (TService);
             var types = from type in assembly.GetTypes()
                         where serviceType.IsAssignableFrom(type)
@@ -117,7 +103,6 @@ namespace Caliburn.Micro {
                               && !type.IsInterface
                               && filter(type)
                         select type;
-#endif
 
             foreach (var type in types) {
                 container.RegisterSingleton(typeof (TService), null, type);

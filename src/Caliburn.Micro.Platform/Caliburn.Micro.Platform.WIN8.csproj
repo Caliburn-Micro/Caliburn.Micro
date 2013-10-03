@@ -52,14 +52,12 @@
       <Link>Caliburn.snk</Link>
     </None>
     <None Include="Bootstrapper.cs" />
-    <Compile Include="ContainerExtensions.cs" />
     <Compile Include="ConventionManager.cs" />
     <Compile Include="Coroutine.cs" />
     <Compile Include="ElementConvention.cs" />
     <Compile Include="EventAggregator.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="IHaveParameters.cs" />
-    <Compile Include="IoC.cs" />
     <Compile Include="IResult.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageBinder.cs" />
@@ -69,7 +67,6 @@
     <Compile Include="RegExHelper.cs" />
     <Compile Include="ResultCompletionEventArgs.cs" />
     <Compile Include="SequentialResult.cs" />
-    <Compile Include="SimpleContainer.cs" />
     <Compile Include="TaskExtensions.cs" />
     <Compile Include="TypeDescriptor.cs" />
     <Compile Include="TypeMappingConfiguration.cs" />
