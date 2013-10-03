@@ -70,7 +70,6 @@
     <Compile Include="IoC.cs" />
     <Compile Include="IResult.cs" />
     <Compile Include="IScreen.cs" />
-    <Compile Include="IViewAware.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageBinder.cs" />
@@ -87,7 +86,6 @@
     <Compile Include="TypeDescriptor.cs" />
     <Compile Include="TypeMappingConfiguration.cs" />
     <Compile Include="View.cs" />
-    <Compile Include="ViewAware.cs" />
     <Compile Include="ViewLocator.cs" />
     <Compile Include="ViewModelBinder.cs" />
     <Compile Include="ViewModelLocator.cs" />

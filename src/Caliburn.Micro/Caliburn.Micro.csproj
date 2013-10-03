@@ -58,9 +58,12 @@
     <Compile Include="INotifyPropertyChangedEx.cs" />
     <Compile Include="IObservableCollection.cs" />
     <Compile Include="IPlatformProvider.cs" />
+    <Compile Include="IViewAware.cs" />
     <Compile Include="PlatformProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyChangedBase.cs" />
+    <Compile Include="ViewAttachedEventArgs.cs" />
+    <Compile Include="ViewAware.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

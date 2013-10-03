@@ -148,16 +148,26 @@ namespace Caliburn.Micro {
             return View.GetFirstNonGeneratedView(view);
         }
 
+        private static readonly DependencyProperty PreviouslyAttachedProperty = DependencyProperty.RegisterAttached(
+            "PreviouslyAttached",
+            typeof (bool),
+            typeof (XamlPlatformProvider),
+            null
+            );
+
         /// <summary>
-        /// Executes the handler immediately if the element is loaded, otherwise wires it to the Loaded event.
+        /// Executes the handler the fist time the view is loaded.
         /// </summary>
-        /// <param name="element">The element.</param>
+        /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        /// <returns>
-        /// true if the handler was executed immediately; false otherwise
-        /// </returns>
-        public bool ExecuteOnLoad(object element, Action<object> handler) {
-            return View.ExecuteOnLoad((FrameworkElement)element, (sender, args) => handler(sender));
+        /// <returns>true if the handler was executed immediately; false otherwise</returns>
+        public bool ExecuteOnFirstLoad(object view, Action<object> handler) {
+            var element = view as FrameworkElement;
+            if (element != null && !(bool) element.GetValue(PreviouslyAttachedProperty)) {
+                element.SetValue(PreviouslyAttachedProperty, true);
+                return View.ExecuteOnLoad(element, (s, e) => handler(s));
+            }
+            return false;
         }
 
         /// <summary>
@@ -170,8 +180,7 @@ namespace Caliburn.Micro {
         /// An <see cref="Action" /> to close the view model.
         /// </returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public System.Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
-        {
+        public System.Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult) {
             throw new NotImplementedException();
         }
     }

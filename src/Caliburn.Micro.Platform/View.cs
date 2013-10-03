@@ -27,11 +27,6 @@
 #endif
 
         /// <summary>
-        /// The default view context.
-        /// </summary>
-        public static readonly object DefaultContext = new object();
-
-        /// <summary>
         /// A dependency property which allows the framework to track whether a certain element has already been loaded in certain scenarios.
         /// </summary>
         public static readonly DependencyProperty IsLoadedProperty =

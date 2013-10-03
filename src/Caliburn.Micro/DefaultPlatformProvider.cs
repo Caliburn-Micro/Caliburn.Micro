@@ -57,15 +57,13 @@
         }
 
         /// <summary>
-        /// Executes the handler immediately if the element is loaded, otherwise wires it to the Loaded event.
+        /// Executes the handler the fist time the view is loaded.
         /// </summary>
-        /// <param name="element">The element.</param>
+        /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        /// <returns>
-        /// true if the handler was executed immediately; false otherwise
-        /// </returns>
-        public bool ExecuteOnLoad(object element, Action<object> handler) {
-            handler(element);
+        /// <returns>true if the handler was executed immediately; false otherwise</returns>
+        public bool ExecuteOnFirstLoad(object view, Action<object> handler) {
+            handler(view);
             return true;
         }
 

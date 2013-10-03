@@ -1,4 +1,4 @@
-namespace Caliburn.Micro {
+﻿namespace Caliburn.Micro {
     using System;
 
     /// <summary>
@@ -12,13 +12,11 @@ namespace Caliburn.Micro {
         /// <param name="context">The context in which the view appears.</param>
         void AttachView(object view, object context = null);
 
-#if WINDOWS_PHONE || WinRT
         /// <summary>
         ///   Called the first time the view's LayoutUpdated event fires after it is navigated to.
         /// </summary>
         /// <param name = "view">The view.</param>
         void OnViewReady(object view);
-#endif
 
         /// <summary>
         /// Gets a view previously attached to this instance.
@@ -31,20 +29,5 @@ namespace Caliburn.Micro {
         /// Raised when a view is attached.
         /// </summary>
         event EventHandler<ViewAttachedEventArgs> ViewAttached;
-    }
-
-    /// <summary>
-    /// The event args for the <see cref="IViewAware.ViewAttached"/> event.
-    /// </summary>
-    public class ViewAttachedEventArgs : EventArgs {
-        /// <summary>
-        /// The view.
-        /// </summary>
-        public object View;
-
-        /// <summary>
-        /// The context.
-        /// </summary>
-        public object Context;
     }
 }
