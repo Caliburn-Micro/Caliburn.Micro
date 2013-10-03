@@ -64,13 +64,10 @@
     <Compile Include="ElementConvention.cs" />
     <Compile Include="EventAggregator.cs" />
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="IChild.cs" />
     <Compile Include="IConductor.cs" />
     <Compile Include="IHaveParameters.cs" />
     <Compile Include="IoC.cs" />
     <Compile Include="IResult.cs" />
-    <Compile Include="IScreen.cs" />
-    <Compile Include="Logging.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageBinder.cs" />
     <Compile Include="NameTransformer.cs" />
@@ -78,7 +75,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegExHelper.cs" />
     <Compile Include="ResultCompletionEventArgs.cs" />
-    <Compile Include="Screen.cs" />
     <Compile Include="ScreenExtensions.cs" />
     <Compile Include="SequentialResult.cs" />
     <Compile Include="SimpleContainer.cs" />

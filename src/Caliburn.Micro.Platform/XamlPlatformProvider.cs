@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Windows;
-
+﻿namespace Caliburn.Micro {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Threading.Tasks;
+    using System.Windows;
 #if WinRT
-using Windows.ApplicationModel;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
+    using System.Reflection;
+    using Windows.ApplicationModel;
+    using Windows.UI.Core;
+    using Windows.UI.Xaml;
 #else
-using System.Windows.Threading;
+    using System.Windows.Threading;
 #endif
 
-namespace Caliburn.Micro {
     /// <summary>
     /// A <see cref="IPlatformProvider"/> implementation for the XAML platfrom.
     /// </summary>
@@ -181,7 +181,52 @@ namespace Caliburn.Micro {
         /// </returns>
         /// <exception cref="System.NotImplementedException"></exception>
         public System.Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult) {
-            throw new NotImplementedException();
+            var child = viewModel as IChild;
+            if (child != null) {
+                var conductor = child.Parent as IConductor;
+                if (conductor != null) {
+                    return () => conductor.CloseItem(this);
+                }
+            }
+
+            foreach (var contextualView in views) {
+                var viewType = contextualView.GetType();
+#if WinRT
+                var closeMethod = viewType.GetRuntimeMethod("Close", new Type[0]);
+#else
+                var closeMethod = viewType.GetMethod("Close");
+#endif
+                if (closeMethod != null)
+                    return () => {
+#if !SILVERLIGHT && !WinRT
+                        var isClosed = false;
+                        if (dialogResult != null) {
+                            var resultProperty = contextualView.GetType().GetProperty("DialogResult");
+                            if (resultProperty != null) {
+                                resultProperty.SetValue(contextualView, dialogResult, null);
+                                isClosed = true;
+                            }
+                        }
+
+                        if (!isClosed) {
+                            closeMethod.Invoke(contextualView, null);
+                        }
+#else
+                        closeMethod.Invoke(contextualView, null);
+#endif
+                    };
+
+#if WinRT
+                var isOpenProperty = viewType.GetRuntimeProperty("IsOpen");
+#else
+                var isOpenProperty = viewType.GetProperty("IsOpen");
+#endif
+                if (isOpenProperty != null) {
+                    return () => isOpenProperty.SetValue(contextualView, false, null);
+                }
+            }
+
+            return () => LogManager.GetLog(typeof(Screen)).Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
         }
     }
 }
