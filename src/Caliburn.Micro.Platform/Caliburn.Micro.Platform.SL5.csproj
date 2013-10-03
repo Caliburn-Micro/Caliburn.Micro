@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Caliburn.Micro</RootNamespace>
-    <AssemblyName>Caliburn.Micro</AssemblyName>
+    <AssemblyName>Caliburn.Micro.Platform</AssemblyName>
     <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
@@ -35,7 +35,7 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\sl5\Debug\Caliburn.Micro.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\sl5\Debug\Caliburn.Micro.Platform.xml</DocumentationFile>
     <NoWarn>1572</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -47,7 +47,7 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\sl5\Release\Caliburn.Micro.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\sl5\Release\Caliburn.Micro.Platform.xml</DocumentationFile>
     <NoWarn>1572</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -98,7 +98,6 @@
     <Compile Include="IChild.cs" />
     <Compile Include="IConductor.cs" />
     <Compile Include="IHaveParameters.cs" />
-    <Compile Include="INPC.cs" />
     <Compile Include="IoC.cs" />
     <Compile Include="IResult.cs" />
     <Compile Include="IScreen.cs" />
@@ -127,11 +126,18 @@
     <Compile Include="ViewLocator.cs" />
     <Compile Include="ViewModelBinder.cs" />
     <Compile Include="ViewModelLocator.cs" />
+    <Compile Include="XamlPlatformProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Caliburn.snk">
       <Link>Caliburn.snk</Link>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">
+      <Project>{6d772b52-da8f-4784-971a-4bf50cb6d306}</Project>
+      <Name>Caliburn.Micro</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>

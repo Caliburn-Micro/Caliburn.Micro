@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Caliburn.Micro</RootNamespace>
-    <AssemblyName>Caliburn.Micro</AssemblyName>
+    <AssemblyName>Caliburn.Micro.Platform</AssemblyName>
     <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
     <SilverlightVersion>
     </SilverlightVersion>
@@ -33,7 +33,7 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\wp8\Debug\Caliburn.Micro.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\wp8\Debug\Caliburn.Micro.Platform.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
     <NoWarn>1572</NoWarn>
   </PropertyGroup>
@@ -46,7 +46,7 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\wp8\Release\Caliburn.Micro.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\wp8\Release\Caliburn.Micro.Platform.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
     <NoWarn>1572</NoWarn>
   </PropertyGroup>
@@ -77,7 +77,6 @@
     <Compile Include="IChild.cs" />
     <Compile Include="IConductor.cs" />
     <Compile Include="IHaveParameters.cs" />
-    <Compile Include="INPC.cs" />
     <Compile Include="IoC.cs" />
     <Compile Include="IResult.cs" />
     <Compile Include="IScreen.cs" />
@@ -97,6 +96,7 @@
     <Compile Include="sl4\AttachedCollection.cs" />
     <Compile Include="sl4\Mouse.cs" />
     <Compile Include="sl4\Parameter.cs" />
+    <Compile Include="XamlPlatformProvider.cs" />
     <None Include="sl4\WindowManager.cs" />
     <Compile Include="TaskExtensions.cs" />
     <Compile Include="TypeDescriptor.cs" />
@@ -124,6 +124,12 @@
     <None Include="..\Caliburn.snk">
       <Link>Caliburn.snk</Link>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">
+      <Project>{6D772B52-DA8F-4784-971A-4BF50CB6D306}</Project>
+      <Name>Caliburn.Micro</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />

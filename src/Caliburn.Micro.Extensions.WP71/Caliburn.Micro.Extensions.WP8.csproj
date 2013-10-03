@@ -82,6 +82,10 @@
       <Project>{50DAA3F0-3BAD-433A-B4B2-4A38DEF9DFAF}</Project>
       <Name>Caliburn.Micro.Platform.WP8</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">
+      <Project>{6D772B52-DA8F-4784-971A-4BF50CB6D306}</Project>
+      <Name>Caliburn.Micro</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Windows.Interactivity, Version=3.9.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">

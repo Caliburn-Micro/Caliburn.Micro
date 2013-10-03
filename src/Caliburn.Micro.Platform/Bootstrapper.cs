@@ -67,7 +67,7 @@
         /// Called by the bootstrapper's constructor at runtime to start the framework.
         /// </summary>
         protected virtual void StartRuntime() {
-            Execute.InitializeWithDispatcher();
+            PlatformProvider.Current = new XamlPlatformProvider();
             EventAggregator.DefaultPublicationThreadMarshaller = Execute.OnUIThread;
 
             EventAggregator.HandlerResultProcessing = (target, result) => {

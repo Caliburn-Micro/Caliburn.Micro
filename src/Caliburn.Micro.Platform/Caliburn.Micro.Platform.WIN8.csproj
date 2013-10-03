@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Caliburn.Micro</RootNamespace>
-    <AssemblyName>Caliburn.Micro</AssemblyName>
+    <AssemblyName>Caliburn.Micro.Platform</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -23,7 +23,7 @@
     <DefineConstants>TRACE;DEBUG;NETFX_CORE;WinRT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\win8\Debug\Caliburn.Micro.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\win8\Debug\Caliburn.Micro.Platform.xml</DocumentationFile>
     <NoWarn>1572</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -33,7 +33,7 @@
     <DefineConstants>TRACE;NETFX_CORE;WinRT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\win8\Release\Caliburn.Micro.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\win8\Release\Caliburn.Micro.Platform.xml</DocumentationFile>
     <NoWarn>1572</NoWarn>
   </PropertyGroup>
   <ItemGroup>
@@ -47,6 +47,7 @@
     <Compile Include="Bind.cs" />
     <Compile Include="BindingScope.cs" />
     <Compile Include="BooleanToVisibilityConverter.cs" />
+    <Compile Include="XamlPlatformProvider.cs" />
     <None Include="..\Caliburn.snk">
       <Link>Caliburn.snk</Link>
     </None>
@@ -66,7 +67,6 @@
     <Compile Include="IChild.cs" />
     <Compile Include="IConductor.cs" />
     <Compile Include="IHaveParameters.cs" />
-    <Compile Include="INPC.cs" />
     <Compile Include="IoC.cs" />
     <Compile Include="IResult.cs" />
     <Compile Include="IScreen.cs" />
@@ -105,6 +105,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">
+      <Project>{6d772b52-da8f-4784-971a-4bf50cb6d306}</Project>
+      <Name>Caliburn.Micro</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v11.0\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
