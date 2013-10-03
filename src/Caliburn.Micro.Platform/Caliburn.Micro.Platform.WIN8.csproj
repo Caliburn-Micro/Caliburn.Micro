@@ -52,10 +52,6 @@
       <Link>Caliburn.snk</Link>
     </None>
     <None Include="Bootstrapper.cs" />
-    <Compile Include="Conductor.cs" />
-    <Compile Include="ConductorBaseWithActiveItem.cs" />
-    <Compile Include="ConductorWithCollectionAllActive.cs" />
-    <Compile Include="ConductorWithCollectionOneActive.cs" />
     <Compile Include="ContainerExtensions.cs" />
     <Compile Include="ConventionManager.cs" />
     <Compile Include="Coroutine.cs" />
@@ -72,7 +68,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegExHelper.cs" />
     <Compile Include="ResultCompletionEventArgs.cs" />
-    <Compile Include="ScreenExtensions.cs" />
     <Compile Include="SequentialResult.cs" />
     <Compile Include="SimpleContainer.cs" />
     <Compile Include="TaskExtensions.cs" />

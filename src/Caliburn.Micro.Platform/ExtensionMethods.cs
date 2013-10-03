@@ -37,18 +37,6 @@ namespace Caliburn.Micro {
 #endif
         }
 
-        /// <summary>
-        /// Applies the action to each element in the list.
-        /// </summary>
-        /// <typeparam name="T">The enumerable item's type.</typeparam>
-        /// <param name="enumerable">The elements to enumerate.</param>
-        /// <param name="action">The action to apply to each item in the list.</param>
-        public static void Apply<T>(this IEnumerable<T> enumerable, Action<T> action) {
-            foreach(var item in enumerable) {
-                action(item);
-            }
-        }
-
 #if WINDOWS_PHONE && !WP8
 		//Method missing in WP7.1 Linq
 
