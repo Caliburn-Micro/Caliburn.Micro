@@ -22,7 +22,7 @@
         }
 
         public void Publish() {
-            events.Publish(new LeftEvent {
+            events.PublishOnUIThread(new LeftEvent {
                 Number = count++
             });
         }

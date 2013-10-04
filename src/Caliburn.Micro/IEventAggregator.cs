@@ -29,15 +29,6 @@
         ///   Publishes a message.
         /// </summary>
         /// <param name = "message">The message instance.</param>
-        /// <remarks>
-        /// Uses the default thread marshaller during publication.
-        /// </remarks>
-        void Publish(object message);
-
-        /// <summary>
-        ///   Publishes a message.
-        /// </summary>
-        /// <param name = "message">The message instance.</param>
         /// <param name = "marshal">Allows the publisher to provide a custom thread marshaller for the message publication.</param>
         void Publish(object message, Action<System.Action> marshal);
     }

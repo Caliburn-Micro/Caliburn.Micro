@@ -52,7 +52,7 @@
         [Fact]
         public void A_null_message_causes_an_ArgumentNullException() {
             Assert.Throws<ArgumentNullException>(() => {
-                new EventAggregator().Publish(null);
+                new EventAggregator().PublishOnCurrentThread(null);
             });
         }
 
@@ -72,7 +72,7 @@
 
             eventAggregator.Subscribe(handlerMockA.Object);
             eventAggregator.Subscribe(handlerMockB.Object);
-            eventAggregator.Publish(new object());
+            eventAggregator.PublishOnCurrentThread(new object());
 
             handlerMockA.Verify(handlerStub => handlerStub.Handle(It.IsAny<object>()),
                                 Times.AtLeastOnce());
@@ -107,7 +107,7 @@
 
             eventAggregator.Subscribe(coroutineHandlerMock.Object);
             eventAggregator.Subscribe(taskHandlerMock.Object);
-            eventAggregator.Publish(new object());
+            eventAggregator.PublishOnCurrentThread(new object());
 
             Assert.True(coroutineHandlerProcessed);
             Assert.True(taskHandlerProcessed);
