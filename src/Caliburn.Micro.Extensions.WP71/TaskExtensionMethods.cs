@@ -20,7 +20,7 @@
                 configure(task);
             }
 
-            events.Publish(new TaskExecutionRequested {
+            events.PublishOnUIThread(new TaskExecutionRequested {
                 State = state,
                 Task = task
             });

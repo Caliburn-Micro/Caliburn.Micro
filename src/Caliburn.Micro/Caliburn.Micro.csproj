@@ -67,6 +67,7 @@
     <Compile Include="DefaultPlatformProvider.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="EventAggregator.cs" />
+    <Compile Include="EventAggregatorExtensions.cs" />
     <Compile Include="Execute.cs" />
     <Compile Include="ExpressionExtensions.cs" />
     <Compile Include="IActivate.cs" />

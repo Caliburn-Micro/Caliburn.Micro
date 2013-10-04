@@ -74,7 +74,7 @@
                 return;
             }
 
-            events.Publish(continueWithMessage);
+            events.PublishOnUIThread(continueWithMessage);
             continueWithMessage = null;
         }
 
@@ -129,7 +129,7 @@
                 ThreadPool.QueueUserWorkItem(state => {
                     Thread.Sleep(500);
                     Execute.OnUIThread(() => {
-                        events.Publish(message);
+                        events.PublishOnUIThread(message);
                         isResurrecting = false;
                     });
                 });

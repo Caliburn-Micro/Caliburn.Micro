@@ -6,14 +6,6 @@
     /// </summary>
     public interface IEventAggregator {
         /// <summary>
-        ///   Gets or sets the default publication thread marshaller.
-        /// </summary>
-        /// <value>
-        ///   The default publication thread marshaller.
-        /// </value>
-        Action<System.Action> PublicationThreadMarshaller { get; set; }
-
-        /// <summary>
         /// Searches the subscribed handlers to check if we have a handler for
         /// the message type supplied.
         /// </summary>
@@ -38,7 +30,7 @@
         /// </summary>
         /// <param name = "message">The message instance.</param>
         /// <remarks>
-        ///   Uses the default thread marshaller during publication.
+        /// Uses the default thread marshaller during publication.
         /// </remarks>
         void Publish(object message);
 

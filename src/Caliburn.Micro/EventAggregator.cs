@@ -11,26 +11,9 @@
         readonly List<Handler> handlers = new List<Handler>();
 
         /// <summary>
-        /// The default thread marshaller used for publication;
-        /// </summary>
-        public static Action<System.Action> DefaultPublicationThreadMarshaller = action => action();
-
-        /// <summary>
         /// Processing of handler results on publication thread.
         /// </summary>
         public static Action<object, object> HandlerResultProcessing = (target, result) => { };
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref = "EventAggregator" /> class.
-        /// </summary>
-        public EventAggregator() {
-            PublicationThreadMarshaller = DefaultPublicationThreadMarshaller;
-        }
-
-        /// <summary>
-        /// Gets or sets the default publication thread marshaller.
-        /// </summary>
-        public Action<System.Action> PublicationThreadMarshaller { get; set; }
 
         /// <summary>
         /// Searches the subscribed handlers to check if we have a handler for
@@ -81,13 +64,10 @@
         /// </summary>
         /// <param name = "message">The message instance.</param>
         /// <remarks>
-        ///   Does not marshall the the publication to any special thread by default.
+        /// Uses the default thread marshaller during publication.
         /// </remarks>
         public virtual void Publish(object message) {
-            if (message == null) {
-                throw new ArgumentNullException("message");
-            }
-            Publish(message, PublicationThreadMarshaller);
+            Publish(message, Execute.OnUIThread);
         }
 
         /// <summary>

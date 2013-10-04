@@ -35,7 +35,6 @@
         /// </summary>
         protected virtual void StartRuntime() {
             PlatformProvider.Current = new XamlPlatformProvider();
-            EventAggregator.DefaultPublicationThreadMarshaller = Execute.OnUIThread;
 
             EventAggregator.HandlerResultProcessing = (target, result) => {
                 var task = result as System.Threading.Tasks.Task;

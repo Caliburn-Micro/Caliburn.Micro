@@ -68,15 +68,12 @@
         /// </summary>
         protected virtual void StartRuntime() {
             PlatformProvider.Current = new XamlPlatformProvider();
-            EventAggregator.DefaultPublicationThreadMarshaller = Execute.OnUIThread;
 
             EventAggregator.HandlerResultProcessing = (target, result) => {
-#if !SILVERLIGHT || SL5 || WP8
                 var task = result as System.Threading.Tasks.Task;
                 if (task != null) {
                     result = new IResult[] {task.AsResult()};
                 }
-#endif
 
                 var coroutine = result as IEnumerable<IResult>;
                 if (coroutine != null) {
