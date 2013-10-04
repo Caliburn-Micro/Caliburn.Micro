@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>Caliburn.Micro</id>
+    <id>Caliburn.Micro.Core</id>
     <version>2.0.0-alpha</version>
     <authors>Rob Eisenberg, Marco Amendola, Chin Bae, Ryan Cromwell, Nigel Sampson, Thomas Ibel, Matt Hidinger</authors>
     <description>A small, yet powerful framework designed for Xaml platforms, Caliburn.Micro implements a variety of UI patterns for solving real-world problems. Patterns that are highlighted include MVVM (Presentation Model), MVP and MVC.</description>
@@ -9,20 +9,13 @@
     <licenseUrl>http://caliburnmicro.codeplex.com/license</licenseUrl>
     <projectUrl>http://caliburnmicro.codeplex.com</projectUrl>
     <iconUrl>http://www.caliburnproject.org/CaliburnIcon.png</iconUrl>
-    <tags>MVVM Silverlight WPF WP7 WP71 WP8 WinRT Metro SL4 SL5 SL MVC CoC Convention MVP PM Screen Coroutine Behavior Model-View-ViewModel Presentation UI ViewModel Phone Caliburn</tags>
-
-    <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System.Windows.Controls" targetFramework="sl5" />
-    </frameworkAssemblies>
-
-    <dependencies>
-      <group targetFramework="win8">
-        <dependency id="Windows.UI.Interactivity" version="[1.3.0]" />
-        <dependency id="Callisto" version="1.3.1" />
-      </group>
-      <group targetFramework="win81">
-        <dependency id="Windows.UI.Interactivity" version="[1.3.0]" />
-      </group>
-    </dependencies>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright (c) 2010 Blue Spire Consulting, Inc.</copyright>
+    <tags>MVVM Silverlight WPF WP8 WinRT Metro SL5 SL MVC CoC Convention MVP PM Screen Coroutine Behavior Model-View-ViewModel Presentation UI ViewModel Phone Caliburn</tags>
   </metadata>
+
+  <files>
+    <file src="..\bin\portable\Release\Caliburn.Micro.*" target="lib\portable-net45+sl5+win8+wp8" />
+  </files>
 </package>

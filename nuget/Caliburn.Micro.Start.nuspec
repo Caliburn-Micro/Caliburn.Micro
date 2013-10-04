@@ -9,7 +9,10 @@
     <licenseUrl>http://caliburnmicro.codeplex.com/license</licenseUrl>
     <projectUrl>http://caliburnmicro.codeplex.com</projectUrl>
     <iconUrl>http://www.caliburnproject.org/CaliburnIcon.png</iconUrl>
-    <tags>MVVM Silverlight WPF WP7 WP71 WP8 WinRT Metro SL4 SL5 SL MVC CoC Convention MVP PM Screen Coroutine Behavior Model-View-ViewModel Presentation UI ViewModel Phone Caliburn</tags>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright (c) 2010 Blue Spire Consulting, Inc.</copyright>
+    <tags>MVVM Silverlight WPF WP8 WinRT Metro SL5 SL MVC CoC Convention MVP PM Screen Coroutine Behavior Model-View-ViewModel Presentation UI ViewModel Phone Caliburn</tags>
 
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="Microsoft.Phone.Controls" targetFramework="wp8" />
@@ -21,4 +24,9 @@
       </group>
     </dependencies>
   </metadata>
+
+  <files>
+    <file src="content\**" target="content" />
+    <file src="tools\**" target="tools" />
+  </files>
 </package>
