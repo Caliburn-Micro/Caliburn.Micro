@@ -82,16 +82,4 @@
         /// </summary>
         protected virtual void OnClose(object sender, ClosingEventArgs e) { }
     }
-
-    /// <summary>
-    /// A custom bootstrapper designed to setup phone applications.
-    /// </summary>
-    public class PhoneBootstrapper : PhoneBootstrapperBase {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PhoneBootstrapper"/> class.
-        /// </summary>
-        public PhoneBootstrapper() {
-            Start();
-        }
-    }
 }

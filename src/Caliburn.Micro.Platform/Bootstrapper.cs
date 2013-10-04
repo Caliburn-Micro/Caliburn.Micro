@@ -265,28 +265,4 @@
         }
 #endif
     }
-
-#if !WINDOWS_PHONE
-    /// <summary>
-    /// A strongly-typed version of <see cref="BootstrapperBase"/> that specifies the type of root model to create for the application.
-    /// </summary>
-    /// <typeparam name="TRootModel">The type of root model for the application.</typeparam>
-    public class Bootstrapper<TRootModel> : BootstrapperBase {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Bootstrapper&lt;TRootModel&gt;"/> class.
-        /// </summary>
-        public Bootstrapper() : base(true) {
-            Start();
-        }
-
-        /// <summary>
-        /// Override this to add custom behavior to execute after the application starts.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The args.</param>
-        protected override void OnStartup(object sender, StartupEventArgs e) {
-            DisplayRootViewFor<TRootModel>();
-        }
-    }
-#endif
 }
