@@ -20,13 +20,14 @@
     ///   Default <see cref="ISoundEffectPlayer" /> implementation, using Xna Framework. The sound effect is played without interrupting the music playback on the phone (which is required for the app certification in the WP7 Marketplace. Also note that using the Xna Framework in a WP7 Silverlight app is explicitly allowed for this very purpose.
     /// </summary>
     public class XnaSoundEffectPlayer : ISoundEffectPlayer {
-        static XNAFrameworkDispatcherUpdater updater = new XNAFrameworkDispatcherUpdater();
+        static readonly XNAFrameworkDispatcherUpdater updater = new XNAFrameworkDispatcherUpdater();
 
         /// <summary>
         ///   Plays a sound effect
         /// </summary>
         /// <param name="wavResource"> The uri of the resource containing the .wav file </param>
         public void Play(Uri wavResource) {
+            var type = updater.GetType(); // dummy call so updater is created
             var res = Application.GetResourceStream(wavResource);
             using(var stream = res.Stream) {
                 var effect = SoundEffect.FromStream(stream);
