@@ -83,7 +83,6 @@
     <Compile Include="ViewLocator.cs" />
     <Compile Include="ViewModelBinder.cs" />
     <Compile Include="ViewModelLocator.cs" />
-    <Compile Include="wp71\ActionDelegate.cs" />
     <Compile Include="wp71\CustomAppBar.cs" />
     <Compile Include="wp71\INavigationService.cs" />
     <Compile Include="wp71\IPhoneService.cs" />

@@ -284,12 +284,10 @@
             var values = MessageBinder.DetermineParameters(context, context.Method.GetParameters());
             var returnValue = context.Method.Invoke(context.Target, values);
 
-#if !SILVERLIGHT || SL5 || WP8
             var task = returnValue as System.Threading.Tasks.Task;
             if (task != null) {
                 returnValue = task.AsResult();
             }
-#endif
             
             var result = returnValue as IResult;
             if (result != null) {
