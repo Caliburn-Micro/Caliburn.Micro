@@ -8,9 +8,14 @@
     using System.Linq;
     using System.Windows;
 
-    public class CoroutinesBootstrapper : Bootstrapper<IShell>
+    public class CoroutinesBootstrapper : BootstrapperBase
     {
         private CompositionContainer container;
+
+        public CoroutinesBootstrapper()
+        {
+            Start();
+        }
 
         protected override void Configure()
         {
@@ -51,6 +56,11 @@
         protected override void BuildUp(object instance)
         {
             container.SatisfyImportsOnce(instance);
+        }
+
+        protected override void OnStartup(object sender, StartupEventArgs e)
+        {
+            DisplayRootViewFor<IShell>();
         }
     }
 }

@@ -5,9 +5,15 @@
     using System.ComponentModel.Composition.Hosting;
     using System.ComponentModel.Composition.Primitives;
     using System.Linq;
+    using System.Windows;
 
-    public class MefBootstrapper : Bootstrapper<IShell> {
+    public class MefBootstrapper : BootstrapperBase {
         private CompositionContainer container;
+
+        public MefBootstrapper()
+        {
+            Start();
+        }
 
         protected override void Configure()
         {
@@ -45,6 +51,11 @@
         protected override void BuildUp(object instance)
         {
             container.SatisfyImportsOnce(instance);
+        }
+
+        protected override void OnStartup(object sender, StartupEventArgs e)
+        {
+            DisplayRootViewFor<IShell>();
         }
     }
 }

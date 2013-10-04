@@ -19,7 +19,7 @@
             this.hide = hide;
         }
 
-        public void Execute(ActionExecutionContext context)
+        public void Execute(CoroutineExecutionContext context)
         {
             var view = context.View as FrameworkElement;
             while(view != null)

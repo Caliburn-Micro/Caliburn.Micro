@@ -21,7 +21,7 @@
             this.screenType = screenType;
         }
 
-        public void Execute(ActionExecutionContext context)
+        public void Execute(CoroutineExecutionContext context)
         {
             var screen = !string.IsNullOrEmpty(name)
                 ? IoC.Get<object>(name)

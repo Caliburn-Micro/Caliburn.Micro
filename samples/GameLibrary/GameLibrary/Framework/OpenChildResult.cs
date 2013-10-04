@@ -3,8 +3,8 @@
     using Caliburn.Micro;
 
     public class OpenChildResult<TChild> : OpenResultBase<TChild> {
-        readonly Func<ActionExecutionContext, TChild> locateChild = c => IoC.Get<TChild>();
-        Func<ActionExecutionContext, IConductor> locateParent = c => (IConductor)c.Target;
+        readonly Func<CoroutineExecutionContext, TChild> locateChild = c => IoC.Get<TChild>();
+        Func<CoroutineExecutionContext, IConductor> locateParent = c => (IConductor)c.Target;
 
         public OpenChildResult() {}
 
@@ -23,7 +23,7 @@
             return this;
         }
 
-        public override void Execute(ActionExecutionContext context) {
+        public override void Execute(CoroutineExecutionContext context) {
             var parent = locateParent(context);
             var child = locateChild(context);
 

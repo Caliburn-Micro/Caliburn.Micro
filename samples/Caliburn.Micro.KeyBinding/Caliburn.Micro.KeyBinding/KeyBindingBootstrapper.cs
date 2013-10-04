@@ -1,9 +1,14 @@
 ﻿namespace Caliburn.Micro.KeyBinding {
-    using System;
-    using System.Windows.Input;
     using Input;
+    using System;
+    using System.Windows;
+    using System.Windows.Input;
 
-    public class KeyBindingBootstrapper : Bootstrapper<ShellViewModel> {
+    public class KeyBindingBootstrapper : BootstrapperBase {
+        public KeyBindingBootstrapper() {
+            Start();
+        }
+
         protected override void Configure() {
             var trigger = Parser.CreateTrigger;
 
@@ -25,6 +30,10 @@
 
                 return trigger(target, triggerText);
             };
+        }
+
+        protected override void OnStartup(object sender, StartupEventArgs e) {
+            DisplayRootViewFor<ShellViewModel>();
         }
     }
 }

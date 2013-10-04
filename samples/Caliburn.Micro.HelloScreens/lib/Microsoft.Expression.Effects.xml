@@ -1040,5 +1040,21 @@
             Gets or sets the LineOffset variable within the shader.
             </summary>
         </member>
+        <member name="T:Microsoft.Expression.Effects.ExceptionStringTable">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Expression.Effects.ExceptionStringTable.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Expression.Effects.ExceptionStringTable.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
     </members>
 </doc>

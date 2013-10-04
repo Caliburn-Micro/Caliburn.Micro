@@ -4,8 +4,13 @@
     using System.Windows.Controls;
     using Microsoft.Phone.Controls;
 
-    public class AppBootstrapper : PhoneBootstrapper {
+    public class AppBootstrapper : PhoneBootstrapperBase {
         PhoneContainer container;
+
+        public AppBootstrapper()
+        {
+            Start();
+        }
 
         protected override void Configure() {
             container = new PhoneContainer();

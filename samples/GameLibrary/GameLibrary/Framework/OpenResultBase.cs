@@ -19,7 +19,7 @@ namespace GameLibrary.Framework {
             set { onClose = value; }
         }
 
-        public abstract void Execute(ActionExecutionContext context);
+        public abstract void Execute(CoroutineExecutionContext context);
 
         protected virtual void OnCompleted(Exception exception, bool wasCancelled)
         {

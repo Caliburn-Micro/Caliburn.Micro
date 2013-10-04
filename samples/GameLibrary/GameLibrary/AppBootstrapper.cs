@@ -1,21 +1,22 @@
 ﻿namespace GameLibrary {
+    using Caliburn.Micro;
+    using Framework;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.ComponentModel.Composition.Primitives;
     using System.Linq;
+    using System.Windows;
     using System.Windows.Controls;
-    using Caliburn.Micro;
-    using Framework;
 
-    public class AppBootstrapper : Bootstrapper<IShell> {
+    public class AppBootstrapper : BootstrapperBase {
         CompositionContainer container;
 
-        protected override void StartRuntime()
+        public AppBootstrapper()
         {
             LogManager.GetLog = type => new SimpleLog(type);
-            base.StartRuntime();
+            Start();
         }
 
         protected override void Configure() {
@@ -66,6 +67,11 @@
 
         protected override void BuildUp(object instance) {
             container.SatisfyImportsOnce(instance);
+        }
+
+        protected override void OnStartup(object sender, StartupEventArgs e)
+        {
+            DisplayRootViewFor<IShell>();
         }
     }
 }

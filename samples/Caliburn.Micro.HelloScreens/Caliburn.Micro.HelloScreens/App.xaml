@@ -1,7 +1,7 @@
 ﻿<Application xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:Shell="clr-namespace:Caliburn.Micro.HelloScreens.Shell"
-             xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
+             xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
              xmlns:Converters="clr-namespace:Caliburn.Micro.HelloScreens.Framework.Converters"
              x:Class="Caliburn.Micro.HelloScreens.App">
 	<Application.Resources>

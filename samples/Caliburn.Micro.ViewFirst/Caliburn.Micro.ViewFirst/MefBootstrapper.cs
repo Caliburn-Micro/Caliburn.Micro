@@ -7,8 +7,13 @@
     using System.Linq;
     using System.Windows;
 
-    public class MefBootstrapper : Bootstrapper {
+    public class MefBootstrapper : BootstrapperBase {
         CompositionContainer container;
+
+        public MefBootstrapper()
+        {
+            Start();
+        }
 
         protected override void Configure() {
             container = CompositionHost.Initialize(

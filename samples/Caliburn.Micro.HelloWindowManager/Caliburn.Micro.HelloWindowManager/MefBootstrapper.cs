@@ -1,12 +1,18 @@
 ﻿namespace Caliburn.Micro.HelloWindowManager {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Linq;
-    using System.ComponentModel.Composition;
+    using System.Windows;
 
-    public class MefBootstrapper : Bootstrapper<IShell> {
+    public class MefBootstrapper : BootstrapperBase {
         private CompositionContainer container;
+
+        public MefBootstrapper()
+        {
+            Start();
+        }
 
         protected override void Configure() {
             container = new CompositionContainer(
@@ -41,6 +47,11 @@
         protected override void BuildUp(object instance)
         {
             container.SatisfyImportsOnce(instance);
+        }
+
+        protected override void OnStartup(object sender, StartupEventArgs e)
+        {
+            DisplayRootViewFor<IShell>();
         }
     }
 }

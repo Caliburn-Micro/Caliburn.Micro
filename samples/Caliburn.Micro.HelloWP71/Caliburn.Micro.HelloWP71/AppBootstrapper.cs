@@ -5,8 +5,13 @@
     using Microsoft.Phone.Controls;
     using Caliburn.Micro.HelloWP71.ViewModels;
 
-    public class AppBootstrapper : PhoneBootstrapper {
+    public class AppBootstrapper : PhoneBootstrapperBase {
         PhoneContainer container;
+
+        public AppBootstrapper()
+        {
+            Start();
+        }
 
         protected override void Configure() {
             container = new PhoneContainer();

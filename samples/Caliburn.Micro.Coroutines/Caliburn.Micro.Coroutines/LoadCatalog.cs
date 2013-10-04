@@ -20,7 +20,7 @@
             uri = relativeUri;
         }
 
-        public void Execute(ActionExecutionContext context)
+        public void Execute(CoroutineExecutionContext context)
         {
             DeploymentCatalog catalog;
 

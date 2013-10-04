@@ -12,11 +12,16 @@
     using Framework;
     using Orders;
 
-    public class ScreensBootstrapper : Bootstrapper<IShell>
+    public class ScreensBootstrapper : BootstrapperBase
     {
         CompositionContainer container;
         Window mainWindow;
         bool actuallyClosing;
+
+        public ScreensBootstrapper()
+        {
+            Start();
+        }
 
         protected override void Configure() {
             container = CompositionHost.Initialize(
@@ -56,7 +61,7 @@
         }
 
         protected override void OnStartup(object sender, StartupEventArgs e) {
-            base.OnStartup(sender, e);
+            DisplayRootViewFor<IShell>();
 
             if(Application.IsRunningOutOfBrowser) {
                 mainWindow = Application.MainWindow;

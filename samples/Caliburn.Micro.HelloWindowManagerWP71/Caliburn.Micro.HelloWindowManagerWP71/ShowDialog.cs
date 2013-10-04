@@ -11,7 +11,7 @@
             return this;
         }
 
-        public void Execute(ActionExecutionContext context) {
+        public void Execute(CoroutineExecutionContext context) {
             var screen = IoC.Get<T>();
             initialization.Invoke(screen);
 

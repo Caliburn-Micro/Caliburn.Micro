@@ -13,7 +13,7 @@
             this.command = command;
         }
 
-        public void Execute(ActionExecutionContext context) {
+        public void Execute(CoroutineExecutionContext context) {
             Backend.Send(command);
             Completed(this, new ResultCompletionEventArgs());
         }

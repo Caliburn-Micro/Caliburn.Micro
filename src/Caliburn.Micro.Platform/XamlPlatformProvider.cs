@@ -185,7 +185,7 @@
             if (child != null) {
                 var conductor = child.Parent as IConductor;
                 if (conductor != null) {
-                    return () => conductor.CloseItem(this);
+                    return () => conductor.CloseItem(viewModel);
                 }
             }
 

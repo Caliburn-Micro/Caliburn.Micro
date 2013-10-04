@@ -14,7 +14,7 @@
         public IBackend Backend { get; set; }
         public TResponse Response { get; set; }
 
-        public void Execute(ActionExecutionContext context) {
+        public void Execute(CoroutineExecutionContext context) {
             Backend.Send(query, response => {
                 Response = response;
                 Caliburn.Micro.Execute.OnUIThread(() => Completed(this, new ResultCompletionEventArgs()));
