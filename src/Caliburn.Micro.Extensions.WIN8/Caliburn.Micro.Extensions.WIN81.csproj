@@ -33,7 +33,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin\win81\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
+    <DefineConstants>TRACE;NETFX_CORE;WinRT;WinRT81</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\..\bin\win81\Release\Caliburn.Micro.Extensions.XML</DocumentationFile>
@@ -44,6 +44,10 @@
     <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.Platform.WIN81.csproj">
       <Project>{73a34351-fb6a-489e-82dc-5790af7693e3}</Project>
       <Name>Caliburn.Micro.Platform.WIN81</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">
+      <Project>{6d772b52-da8f-4784-971a-4bf50cb6d306}</Project>
+      <Name>Caliburn.Micro</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

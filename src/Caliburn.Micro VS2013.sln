@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.WIN
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Extensions.WIN81", "Caliburn.Micro.Extensions.WIN8\Caliburn.Micro.Extensions.WIN81.csproj", "{F85A33A3-89B4-415B-8232-7B097815DE1F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro", "Caliburn.Micro\Caliburn.Micro.csproj", "{6D772B52-DA8F-4784-971A-4BF50CB6D306}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F85A33A3-89B4-415B-8232-7B097815DE1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F85A33A3-89B4-415B-8232-7B097815DE1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F85A33A3-89B4-415B-8232-7B097815DE1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D772B52-DA8F-4784-971A-4BF50CB6D306}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D772B52-DA8F-4784-971A-4BF50CB6D306}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D772B52-DA8F-4784-971A-4BF50CB6D306}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D772B52-DA8F-4784-971A-4BF50CB6D306}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
