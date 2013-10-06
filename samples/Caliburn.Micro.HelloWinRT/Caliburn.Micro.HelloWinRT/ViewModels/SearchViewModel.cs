@@ -27,6 +27,8 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
 
         protected override void OnInitialize()
         {
+            base.OnInitialize();
+
             Parameter = Parameter ?? "None";
         }
 
