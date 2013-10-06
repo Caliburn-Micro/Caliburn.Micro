@@ -8,8 +8,8 @@
     public class AppBootstrapper : PhoneBootstrapperBase {
         PhoneContainer container;
 
-        public AppBootstrapper()
-        {
+        public AppBootstrapper() {
+            LogManager.GetLog = type => new SimpleLog(type);
             Start();
         }
 

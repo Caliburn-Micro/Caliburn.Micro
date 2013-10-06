@@ -172,8 +172,7 @@
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public void ExecuteOnLayoutUpdated(object view, Action<object> handler)
-        {
+        public void ExecuteOnLayoutUpdated(object view, Action<object> handler) {
             var element = view as FrameworkElement;
             if (element != null) {
                 View.ExecuteOnLayoutUpdated(element, (s, e) => handler(s));

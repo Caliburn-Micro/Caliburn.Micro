@@ -1,5 +1,5 @@
 ﻿namespace Caliburn.Micro.HelloWP71.ViewModels {
-    public class MainPageViewModel {
+    public class MainPageViewModel : Screen {
         readonly INavigationService navigationService;
 
         public MainPageViewModel(INavigationService navigationService) {
