@@ -53,8 +53,14 @@
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        /// <returns>true if the handler was executed immediately; false otherwise</returns>
-        bool ExecuteOnFirstLoad(object view, Action<object> handler);
+        void ExecuteOnFirstLoad(object view, Action<object> handler);
+
+        /// <summary>
+        /// Executes the handler the next time the view's LayoutUpdated event fires.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <param name="handler">The handler.</param>
+        void ExecuteOnLayoutUpdated(object view, Action<object> handler);
 
         /// <summary>
         /// Get the close action for the specified view model.

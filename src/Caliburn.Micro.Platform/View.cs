@@ -142,7 +142,7 @@
 #endif
 
         /// <summary>
-        /// Executes the handler the first time the elements's LayoutUpdated event fires.
+        /// Executes the handler the next time the elements's LayoutUpdated event fires.
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="handler">The handler.</param>

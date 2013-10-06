@@ -2,7 +2,6 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Threading.Tasks;
     using System.Windows;
 #if WinRT
@@ -52,7 +51,7 @@
                     var prop = DesignerProperties.IsInDesignModeProperty;
                     inDesignMode = (bool)DependencyPropertyDescriptor.FromProperty(prop, typeof(FrameworkElement)).Metadata.DefaultValue;
 
-                    if (!inDesignMode.GetValueOrDefault(false) && Process.GetCurrentProcess().ProcessName.StartsWith("devenv", StringComparison.Ordinal))
+                    if (!inDesignMode.GetValueOrDefault(false) && System.Diagnostics.Process.GetCurrentProcess().ProcessName.StartsWith("devenv", StringComparison.Ordinal))
                         inDesignMode = true;
 #endif
                 }
@@ -160,14 +159,25 @@
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        /// <returns>true if the handler was executed immediately; false otherwise</returns>
-        public bool ExecuteOnFirstLoad(object view, Action<object> handler) {
+        public void ExecuteOnFirstLoad(object view, Action<object> handler) {
             var element = view as FrameworkElement;
             if (element != null && !(bool) element.GetValue(PreviouslyAttachedProperty)) {
                 element.SetValue(PreviouslyAttachedProperty, true);
-                return View.ExecuteOnLoad(element, (s, e) => handler(s));
+                View.ExecuteOnLoad(element, (s, e) => handler(s));
             }
-            return false;
+        }
+
+        /// <summary>
+        /// Executes the handler the next time the view's LayoutUpdated event fires.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <param name="handler">The handler.</param>
+        public void ExecuteOnLayoutUpdated(object view, Action<object> handler)
+        {
+            var element = view as FrameworkElement;
+            if (element != null) {
+                View.ExecuteOnLayoutUpdated(element, (s, e) => handler(s));
+            }
         }
 
         /// <summary>

@@ -62,9 +62,17 @@
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
         /// <returns>true if the handler was executed immediately; false otherwise</returns>
-        public bool ExecuteOnFirstLoad(object view, Action<object> handler) {
+        public void ExecuteOnFirstLoad(object view, Action<object> handler) {
             handler(view);
-            return true;
+        }
+
+        /// <summary>
+        /// Executes the handler the next time the view's LayoutUpdated event fires.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <param name="handler">The handler.</param>
+        public void ExecuteOnLayoutUpdated(object view, Action<object> handler) {
+            handler(view);
         }
 
         /// <summary>
