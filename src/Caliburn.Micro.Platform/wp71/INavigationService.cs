@@ -187,11 +187,6 @@
                 activator.Activate();
             }
 
-            var viewAware = viewModel as IViewAware;
-            if(viewAware != null) {
-                View.ExecuteOnLayoutUpdated(page, (s, a) => viewAware.OnViewReady(page));
-            }
-
             GC.Collect();
         }
 

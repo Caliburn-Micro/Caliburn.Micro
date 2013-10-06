@@ -64,6 +64,27 @@
             PlatformProvider.Current.ExecuteOnFirstLoad(nonGeneratedView, OnViewLoaded);
             OnViewAttached(nonGeneratedView, context);
             ViewAttached(this, new ViewAttachedEventArgs {View = nonGeneratedView, Context = context});
+
+            var activatable = this as IActivate;
+            if (activatable == null || activatable.IsActive) {
+                PlatformProvider.Current.ExecuteOnLayoutUpdated(nonGeneratedView, OnViewReady);
+            }
+            else {
+                AttachViewReadyOnActivated(activatable, nonGeneratedView);
+            }
+        }
+
+        static void AttachViewReadyOnActivated(IActivate activatable, object nonGeneratedView) {
+            var viewReference = new WeakReference(nonGeneratedView);
+            EventHandler<ActivationEventArgs> handler = null;
+            handler = (s, e) => {
+                ((IActivate)s).Activated -= handler;
+                var view = viewReference.Target;
+                if (view != null) {
+                    PlatformProvider.Current.ExecuteOnLayoutUpdated(view, ((ViewAware)s).OnViewReady);
+                }
+            };
+            activatable.Activated += handler;
         }
 
         /// <summary>
@@ -79,10 +100,6 @@
         /// </summary>
         /// <param name = "view"></param>
         protected virtual void OnViewLoaded(object view) {
-        }
-
-        void IViewAware.OnViewReady(object view) {
-            OnViewReady(view);
         }
 
         /// <summary>

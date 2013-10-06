@@ -13,12 +13,6 @@
         void AttachView(object view, object context = null);
 
         /// <summary>
-        ///   Called the first time the view's LayoutUpdated event fires after it is navigated to.
-        /// </summary>
-        /// <param name = "view">The view.</param>
-        void OnViewReady(object view);
-
-        /// <summary>
         /// Gets a view previously attached to this instance.
         /// </summary>
         /// <param name="context">The context denoting which view to retrieve.</param>

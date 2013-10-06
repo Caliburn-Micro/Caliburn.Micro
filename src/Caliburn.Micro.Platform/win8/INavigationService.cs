@@ -172,11 +172,6 @@ namespace Caliburn.Micro
                 activator.Activate();
             }
 
-            var viewAware = viewModel as IViewAware;
-            if (viewAware != null) {
-                View.ExecuteOnLayoutUpdated(view, (s, a) => viewAware.OnViewReady(view));
-            }
-
             GC.Collect(); // Why?
         }
 
