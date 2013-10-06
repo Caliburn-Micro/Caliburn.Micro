@@ -1,7 +1,7 @@
 ﻿namespace Caliburn.Micro {
     using System;
     using System.Reflection;
-    using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.Phone.Shell;
     using Microsoft.Phone.Tasks;
 
@@ -112,7 +112,12 @@
             return handler;
         }
 
-        void OnTaskComplete(object sender, EventArgs e) {
+        /// <summary>
+        /// Called when the task is compled.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        protected void OnTaskComplete(object sender, EventArgs e) {
             var genericMessageType = typeof(TaskCompleted<>);
             var argsType = e.GetType();
             var messageType = genericMessageType.MakeGenericType(argsType);
@@ -126,13 +131,11 @@
             request = null;
 
             if(isResurrecting) {
-                ThreadPool.QueueUserWorkItem(state => {
-                    Thread.Sleep(500);
-                    Execute.OnUIThread(() => {
+                Task.Delay(500)
+                    .ContinueWith(t => {
                         events.PublishOnUIThread(message);
                         isResurrecting = false;
                     });
-                });
             }
             else {
                 continueWithMessage = message;
