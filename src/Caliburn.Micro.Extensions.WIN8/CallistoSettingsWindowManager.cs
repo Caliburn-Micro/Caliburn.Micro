@@ -61,8 +61,8 @@
             if (deactivator != null) {
                 EventHandler<object> closed = null;
                 closed = (s, e) => {
-                    deactivator.Deactivate(true);
                     settingsFlyout.Closed -= closed;
+                    deactivator.Deactivate(true);
                 };
 
                 settingsFlyout.Closed += closed;
