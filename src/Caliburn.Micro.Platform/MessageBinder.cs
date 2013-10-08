@@ -48,7 +48,7 @@
         /// <param name="requiredParameters">The parameters required to complete the invocation.</param>
         /// <returns>The actual parameter values.</returns>
         public static object[] DetermineParameters(ActionExecutionContext context, ParameterInfo[] requiredParameters) {
-            var providedValues = context.Message.Parameters.Select(x => x.Value).ToArray();
+            var providedValues = context.Message.Parameters.OfType<Parameter>().Select(x => x.Value).ToArray();
             var finalValues = new object[requiredParameters.Length];
 
             for (int i = 0; i < requiredParameters.Length; i++) {

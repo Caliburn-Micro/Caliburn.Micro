@@ -29,7 +29,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             set
             {
                 currentDate = value;
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange(() => CurrentDate);
             }
         }
 
@@ -42,7 +42,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             set
             {
                 currentTime = value;
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange(() => CurrentTime);
             }
         }
 
@@ -55,7 +55,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             set
             {
                 searchText = value;
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange(() => SearchText);
             }
         }
 

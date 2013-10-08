@@ -4,7 +4,7 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
-#if WinRT
+#if WinRT && !WinRT81
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Data;
     using Windows.UI.Interactivity;
@@ -15,6 +15,15 @@
     using TriggerBase = Windows.UI.Interactivity.TriggerBase;
     using EventTrigger = Windows.UI.Interactivity.EventTrigger;
     using TriggerAction = Windows.UI.Interactivity.TriggerAction;
+#elif WinRT81
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Data;
+    using Windows.UI.Xaml.Markup;
+    using Windows.UI.Xaml.Media;
+    using Windows.UI.Xaml.Controls;
+    using Microsoft.Xaml.Interactivity;
+    using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
+    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
 #else
     using System.Windows;
     using System.Windows.Controls;
@@ -35,8 +44,8 @@
     [ContentProperty("Parameters")]
     [DefaultTrigger(typeof(FrameworkElement), typeof(EventTrigger), "MouseLeftButtonDown")]
     [DefaultTrigger(typeof(ButtonBase), typeof(EventTrigger), "Click")]
-#endif
     [TypeConstraint(typeof(FrameworkElement))]
+#endif
     public class ActionMessage : TriggerAction<FrameworkElement>, IHaveParameters {
         static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
         ActionExecutionContext context;
@@ -124,8 +133,27 @@
         /// <summary>
         /// Called after the action is attached to an AssociatedObject.
         /// </summary>
+#if WinRT81
         protected override void OnAttached() {
-            if (!Execute.InDesignMode) {
+            if (!Caliburn.Micro.Execute.InDesignMode) {
+                Parameters.Attach(AssociatedObject);
+                Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
+
+                // Not yet sure if this will be needed
+                if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded))
+                {
+                    //var trigger = Interaction.GetTriggers(AssociatedObject)
+                    //    .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
+                    //if (trigger != null && trigger.EventName == "Loaded")
+                    //    Invoke(new RoutedEventArgs());
+                }
+            }
+
+            base.OnAttached();
+        }
+#else
+        protected override void OnAttached() {
+            if (!Caliburn.Micro.Execute.InDesignMode) {
                 Parameters.Attach(AssociatedObject);
                 Parameters.Apply(x => x.MakeAwareOf(this));
 
@@ -139,6 +167,7 @@
 
             base.OnAttached();
         }
+#endif
 
         static void HandlerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             ((ActionMessage)d).UpdateContext();
@@ -148,7 +177,7 @@
         /// Called when the action is being detached from its AssociatedObject, but before it has actually occurred.
         /// </summary>
         protected override void OnDetaching() {
-            if (!Execute.InDesignMode) {
+            if (!Caliburn.Micro.Execute.InDesignMode) {
                 Detaching(this, EventArgs.Empty);
                 AssociatedObject.Loaded -= ElementLoaded;
                 Parameters.Detach();
@@ -438,7 +467,7 @@
                 PropertyChangedEventHandler handler = null;
                 handler = (s, e) => {
                     if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == guardName) {
-                        Execute.OnUIThread(() => {
+                        Caliburn.Micro.Execute.OnUIThread(() => {
                             var message = context.Message;
                             if (message == null) {
                                 inpc.PropertyChanged -= handler;

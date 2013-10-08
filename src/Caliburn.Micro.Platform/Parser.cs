@@ -3,12 +3,22 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-#if WinRT
+#if WinRT && !WinRT81
     using Windows.UI.Xaml;
     using Windows.UI.Interactivity;
     using TriggerBase = Windows.UI.Interactivity.TriggerBase;
     using EventTrigger = Windows.UI.Interactivity.EventTrigger;
     using TriggerAction = Windows.UI.Interactivity.TriggerAction;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using Windows.UI.Xaml.Data;
+#elif WinRT81
+    using System.Reflection;
+    using Windows.UI.Xaml;
+    using Microsoft.Xaml.Interactivity;
+    using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
+    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    using TriggerAction = Microsoft.Xaml.Interactivity.IAction;
     using System.Text;
     using System.Text.RegularExpressions;
     using Windows.UI.Xaml.Data;
@@ -29,6 +39,7 @@
     public static class Parser
     {
         static readonly Regex LongFormatRegularExpression = new Regex(@"^[\s]*\[[^\]]*\][\s]*=[\s]*\[[^\]]*\][\s]*$");
+        static readonly ILog Log = LogManager.GetLog(typeof(Parser));
 
         /// <summary>
         /// Parses the specified message text.
@@ -60,12 +71,81 @@
                 var trigger = CreateTrigger(target, triggerPlusMessage.Length == 1 ? null : triggerPlusMessage[0]);
                 var message = CreateMessage(target, messageDetail);
 
+#if WinRT81
+                AddActionToTrigger(target, message, trigger);
+#else
                 trigger.Actions.Add(message);
+#endif
+
                 triggers.Add(trigger);
             }
 
             return triggers;
         }
+
+#if WinRT81
+
+        private static void AddActionToTrigger(DependencyObject target, TriggerAction message, TriggerBase trigger)
+        {
+            // This is stupid, but there a number of limitiations in the 8.1 Behaviours SDK
+
+            // The first is that there is no base class for a Trigger, just IBehaviour. Which
+            // means there's no strongly typed way to add an action to a trigger. Every trigger
+            // in the SDK implements the same pattern but no interface, we're going to have to
+            // use reflection to set it.
+
+            var actionsProperty = trigger.GetType().GetRuntimeProperty("Actions");
+
+            if (actionsProperty == null)
+            {
+                Log.Warn("Could not find Actions collection on trigger {0}.", trigger.GetType().FullName);
+                return;
+            }
+
+            var actionCollection = actionsProperty.GetValue(trigger) as ActionCollection;
+
+            if (actionCollection == null)
+            {
+                Log.Warn("{0}.Actions is either not an ActionCollection or is null.", trigger.GetType().FullName);
+                return;
+            }
+            
+            // More stupidity, ActionCollection doesn't care about IAction, but DependencyObject
+            // and there's no actual implementation of 
+
+            var messageDependencyObject = message as DependencyObject;
+
+            if (messageDependencyObject == null)
+            {
+                Log.Warn("{0} doesn't inherit DependencyObject and can't be added to ActionCollection", trigger.GetType().FullName);
+                return;
+            }
+
+            actionCollection.Add(messageDependencyObject);
+
+            // The second is the IAction doesn't have an associated object property so we have
+            // to create it ourselves, could be potential issues here with leaking the associated 
+            // object and not correctly detaching, this may depend if the trigger implements it's
+            // AssociatedObject as a DependencyProperty.
+
+            // Turns out trying to a binding won't work because the trigger doesn't notify the 
+            // binding of changes, so we just need to set it, yay.
+
+            var actionMessage = message as ActionMessage;
+            var targetElement = target as FrameworkElement;
+
+            if (actionMessage != null && targetElement != null)
+            {
+                //var binding = new Binding { Source = trigger, Path = new PropertyPath("AssociatedObject") };
+
+                //BindingOperations.SetBinding(actionMessage, ActionMessage.AssociatedObjectProperty, binding);
+
+                actionMessage.AssociatedObject = targetElement;
+            }
+            
+        }
+
+#endif
 
         /// <summary>
         /// The function used to generate a trigger.

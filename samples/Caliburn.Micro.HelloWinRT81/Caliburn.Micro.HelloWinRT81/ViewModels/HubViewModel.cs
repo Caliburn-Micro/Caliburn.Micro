@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro.WinRT.Sample.Results;
+﻿using Windows.UI.Xaml.Controls;
+using Caliburn.Micro.WinRT.Sample.Results;
 using Caliburn.Micro.WinRT.Sample.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             set
             {
                 pageTitle = value;
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange(() => PageTitle);
             }
         }
 
@@ -43,7 +44,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             set
             {
                 firstSectionContent = value;
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange(() => FirstSectionContent);
             }
         }
 
@@ -56,7 +57,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             set
             {
                 secondSection = value;
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange(() => SecondSection);
             }
         }
     }

@@ -30,7 +30,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             set
             {
                 savedText = value;
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange(() => SavedText);
             }
         }
     }

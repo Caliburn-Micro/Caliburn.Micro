@@ -3,13 +3,21 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-#if WinRT
+#if WinRT && !WinRT81
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Controls.Primitives;
     using Windows.UI.Xaml.Data;
     using Windows.UI.Xaml.Markup;
     using EventTrigger = Windows.UI.Interactivity.EventTrigger;
+    using Windows.UI.Xaml.Shapes;
+#elif WinRT81
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Controls.Primitives;
+    using Windows.UI.Xaml.Data;
+    using Windows.UI.Xaml.Markup;
+    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
     using Windows.UI.Xaml.Shapes;
 #else
     using System.ComponentModel;

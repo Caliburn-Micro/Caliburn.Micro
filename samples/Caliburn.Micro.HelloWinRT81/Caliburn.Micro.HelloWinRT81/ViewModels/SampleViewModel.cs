@@ -17,7 +17,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             set
             {
                 title = value;
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange(() => Title);
             }
         }
 
@@ -30,7 +30,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             set
             {
                 viewModelType = value;
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange(() => ViewModelType);
             }
         }
 
@@ -43,7 +43,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             set
             {
                 subtitle = value;
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange(() => Subtitle);
             }
         }
     }

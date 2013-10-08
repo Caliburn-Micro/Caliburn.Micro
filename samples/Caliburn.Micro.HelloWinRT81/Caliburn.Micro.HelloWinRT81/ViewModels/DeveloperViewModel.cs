@@ -20,7 +20,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             set
             {
                 name = value;
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange(() => Name);
             }
         }
     }

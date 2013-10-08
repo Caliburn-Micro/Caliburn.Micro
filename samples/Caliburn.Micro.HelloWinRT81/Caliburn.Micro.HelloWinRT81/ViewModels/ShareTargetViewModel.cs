@@ -46,7 +46,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             set
             {
                 uri = value;
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange(() => Uri);
             }
         }
 
@@ -59,7 +59,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             set
             {
                 text = value;
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange(() => Text);
             }
         }
     }

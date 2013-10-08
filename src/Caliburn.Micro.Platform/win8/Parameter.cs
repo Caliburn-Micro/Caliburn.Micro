@@ -1,13 +1,20 @@
 ﻿namespace Caliburn.Micro {
     using System;
-    using Windows.UI.Interactivity;
     using Windows.UI.Xaml;
+
+#if WinRT && !WinRT81
+    using Windows.UI.Interactivity;
+#endif
 
     /// <summary>
     /// Represents a parameter of an <see cref="ActionMessage"/>.
     /// </summary>
-    public class Parameter : FrameworkElement, IAttachedObject {
+    public class Parameter : DependencyObject, IAttachedObject {
+#if WinRT81
+        DependencyObject associatedObject;
+#else
         FrameworkElement associatedObject;
+#endif
         WeakReference owner;
 
         /// <summary>
@@ -30,9 +37,16 @@
             set { SetValue(ValueProperty, value); }
         }
 
+#if WinRT81
+        DependencyObject IAttachedObject.AssociatedObject
+        {
+            get { return associatedObject; }
+        }
+#else
         FrameworkElement IAttachedObject.AssociatedObject {
             get { return associatedObject; }
         }
+#endif
 
         /// <summary>
         /// Gets or sets the owner.
@@ -42,9 +56,16 @@
             set { owner = new WeakReference(value); }
         }
 
+#if WinRT81
+        void IAttachedObject.Attach(DependencyObject dependencyObject)
+        {
+            associatedObject = dependencyObject;
+        }
+#else
         void IAttachedObject.Attach(FrameworkElement dependencyObject) {
             associatedObject = dependencyObject;
         }
+#endif
 
         void IAttachedObject.Detach() {
             associatedObject = null;

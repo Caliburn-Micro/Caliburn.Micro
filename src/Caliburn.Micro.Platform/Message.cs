@@ -1,9 +1,14 @@
 ﻿namespace Caliburn.Micro {
-#if WinRT
+#if WinRT && !WinRT81
     using System.Linq;
     using Windows.UI.Xaml;
     using Windows.UI.Interactivity;
     using TriggerBase = Windows.UI.Interactivity.TriggerBase;
+#elif WinRT81
+    using System.Linq;
+    using Windows.UI.Xaml;
+    using Microsoft.Xaml.Interactivity;
+    using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
 #else
     using System.Linq;
     using System.Windows;
@@ -85,14 +90,27 @@
             }
 
             var messageTriggers = (TriggerBase[])d.GetValue(MessageTriggersProperty);
+
+#if WinRT81
+            var allTriggers = Interaction.GetBehaviors(d);
+
+            if (messageTriggers != null)
+            {
+                messageTriggers.OfType<DependencyObject>().Apply(x => allTriggers.Remove(x));
+            }
+
+            var newTriggers = Parser.Parse(d, e.NewValue as string).ToArray();
+            newTriggers.OfType<DependencyObject>().Apply(allTriggers.Add);
+#else
             var allTriggers = Interaction.GetTriggers(d);
 
-            if (messageTriggers != null) {
+             if (messageTriggers != null) {
                 messageTriggers.Apply(x => allTriggers.Remove(x));
             }
 
             var newTriggers = Parser.Parse(d, e.NewValue as string).ToArray();
             newTriggers.Apply(allTriggers.Add);
+#endif
 
             if (newTriggers.Length > 0) {
                 d.SetValue(MessageTriggersProperty, newTriggers);

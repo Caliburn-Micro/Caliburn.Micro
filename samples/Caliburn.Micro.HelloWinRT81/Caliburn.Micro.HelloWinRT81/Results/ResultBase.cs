@@ -4,6 +4,8 @@ namespace Caliburn.Micro.WinRT.Sample.Results
 {
     public abstract class ResultBase : IResult
     {
+        public abstract void Execute(CoroutineExecutionContext context);
+
         public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
 
         protected virtual void OnCompleted()
@@ -31,7 +33,5 @@ namespace Caliburn.Micro.WinRT.Sample.Results
         {
             Micro.Execute.OnUIThread(() => Completed(this, e));
         }
-
-        public abstract void Execute(ActionExecutionContext context);
     }
 }

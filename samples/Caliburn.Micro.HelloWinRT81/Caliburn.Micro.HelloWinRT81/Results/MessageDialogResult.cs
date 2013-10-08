@@ -14,7 +14,7 @@ namespace Caliburn.Micro.WinRT.Sample.Results
             _title = title;
         }
 
-        public async override void Execute(ActionExecutionContext context)
+        public async override void Execute(CoroutineExecutionContext context)
         {
             var dialog = new MessageDialog(_content, _title);
 

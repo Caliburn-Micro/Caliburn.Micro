@@ -3,9 +3,12 @@ namespace Caliburn.Micro
 {
     using System;
     using System.Reflection;
-#if WinRT
+#if WinRT && !WinRT81
     using Windows.UI.Xaml;
     using TriggerBase = Windows.UI.Interactivity.TriggerBase;
+#elif WinRT81
+    using Windows.UI.Xaml;
+    using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
 #else
     using System.Windows;
     using TriggerBase = System.Windows.Interactivity.TriggerBase;

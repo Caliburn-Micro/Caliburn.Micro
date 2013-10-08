@@ -192,16 +192,22 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Caliburn.Micro">
-      <HintPath>..\..\..\bin\WinRT81\Debug\Caliburn.Micro.dll</HintPath>
+      <HintPath>..\..\..\bin\win81\Debug\Caliburn.Micro.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.Extensions">
-      <HintPath>..\..\..\bin\WinRT81\Debug\Caliburn.Micro.Extensions.dll</HintPath>
+      <HintPath>..\..\..\bin\win81\Debug\Caliburn.Micro.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform">
+      <HintPath>..\..\..\bin\win81\Debug\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
     <Reference Include="Callisto">
       <HintPath>..\..\packages\Callisto.1.3.1\lib\winrt45\Callisto.dll</HintPath>
     </Reference>
-    <Reference Include="Windows.UI.Interactivity">
-      <HintPath>..\..\..\bin\WinRT81\Debug\Windows.UI.Interactivity.dll</HintPath>
+    <Reference Include="Microsoft.Xaml.Interactions">
+      <HintPath>..\..\..\bin\win81\Debug\Microsoft.Xaml.Interactions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xaml.Interactivity">
+      <HintPath>..\..\..\bin\win81\Debug\Microsoft.Xaml.Interactivity.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

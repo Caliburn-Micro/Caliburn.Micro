@@ -50,6 +50,9 @@
     <Compile Include="Bind.cs" />
     <Compile Include="BindingScope.cs" />
     <Compile Include="BooleanToVisibilityConverter.cs" />
+    <Compile Include="win8\AttachedCollection.81.cs" />
+    <Compile Include="win8\IAttachedObject.cs" />
+    <Compile Include="win8\TriggerAction.cs" />
     <Compile Include="XamlPlatformProvider.cs" />
     <None Include="..\Caliburn.snk">
       <Link>Caliburn.snk</Link>
@@ -71,16 +74,10 @@
     <Compile Include="ViewLocator.cs" />
     <Compile Include="ViewModelBinder.cs" />
     <Compile Include="ViewModelLocator.cs" />
-    <Compile Include="win8\AttachedCollection.cs" />
     <Compile Include="win8\CaliburnApplication.cs" />
     <Compile Include="win8\INavigationService.cs" />
     <Compile Include="win8\Parameter.cs" />
     <Compile Include="win8\XamlMetadataProvider.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Windows.UI.Interactivity">
-      <HintPath>..\packages\Windows.UI.Interactivity.1.3.0.0\lib\win8\Windows.UI.Interactivity.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -90,6 +87,11 @@
       <Project>{6d772b52-da8f-4784-971a-4bf50cb6d306}</Project>
       <Name>Caliburn.Micro</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
+      <Name>Behaviors SDK %28XAML%29</Name>
+    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

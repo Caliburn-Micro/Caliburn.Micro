@@ -3,9 +3,12 @@
     using System.Linq;
     using System.Collections.Generic;
     using System.Reflection;
-#if WinRT
+#if WinRT && !WinRT81
     using Windows.UI.Xaml;
     using Windows.UI.Interactivity;
+#elif WinRT81
+    using Windows.UI.Xaml;
+    using Microsoft.Xaml.Interactivity;
 #else
     using System.Windows;
     using System.Windows.Interactivity;
@@ -123,11 +126,20 @@
 
                 unmatchedElements.Remove(foundControl);
 
+#if WinRT && !WinRT81
                 var triggers = Interaction.GetTriggers(foundControl);
                 if (triggers != null && triggers.Count > 0) {
                     Log.Info("Action Convention Not Applied: Interaction.Triggers already set on {0}.", foundControl.Name);
                     continue;
                 }
+#elif WinRT81
+                var triggers = Interaction.GetBehaviors(foundControl);
+                if (triggers != null && triggers.Count > 0)
+                {
+                    Log.Info("Action Convention Not Applied: Interaction.Triggers already set on {0}.", foundControl.Name);
+                    continue;
+                }
+#endif
 
                 var message = method.Name;
                 var parameters = method.GetParameters();
