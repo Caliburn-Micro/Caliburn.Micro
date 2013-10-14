@@ -135,13 +135,12 @@
         /// </summary>
 #if WinRT81
         protected override void OnAttached() {
-            if (!Caliburn.Micro.Execute.InDesignMode) {
+            if (!Execute.InDesignMode) {
                 Parameters.Attach(AssociatedObject);
                 Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
 
                 
-                if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded))
-                {
+                if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded)) {
                     // Not yet sure if this will be needed
                     //var trigger = Interaction.GetTriggers(AssociatedObject)
                     //    .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
@@ -161,7 +160,7 @@
         }
 #else
         protected override void OnAttached() {
-            if (!Caliburn.Micro.Execute.InDesignMode) {
+            if (!Execute.InDesignMode) {
                 Parameters.Attach(AssociatedObject);
                 Parameters.Apply(x => x.MakeAwareOf(this));
 
@@ -185,7 +184,7 @@
         /// Called when the action is being detached from its AssociatedObject, but before it has actually occurred.
         /// </summary>
         protected override void OnDetaching() {
-            if (!Caliburn.Micro.Execute.InDesignMode) {
+            if (!Execute.InDesignMode) {
                 Detaching(this, EventArgs.Empty);
                 AssociatedObject.Loaded -= ElementLoaded;
                 Parameters.Detach();
@@ -475,7 +474,7 @@
                 PropertyChangedEventHandler handler = null;
                 handler = (s, e) => {
                     if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == guardName) {
-                        Caliburn.Micro.Execute.OnUIThread(() => {
+                        Execute.OnUIThread(() => {
                             var message = context.Message;
                             if (message == null) {
                                 inpc.PropertyChanged -= handler;
