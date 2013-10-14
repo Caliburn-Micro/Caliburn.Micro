@@ -19,6 +19,10 @@ namespace Caliburn.Micro
         /// <typeparam name="TViewModel">The commands view model.</typeparam>
         /// <param name="label">The command label.</param>
         /// <param name="viewSettings">The optional flyout view settings.</param>
-        void RegisterCommand<TViewModel>(string label, IDictionary<string, object> viewSettings = null);
+        void RegisterFlyoutCommand<TViewModel>(string label, IDictionary<string, object> viewSettings = null);
+
+        void RegisterUriCommand(string label, Uri uri);
+
+        void RegisterCommand(SettingsCommandBase command);
     }
 }

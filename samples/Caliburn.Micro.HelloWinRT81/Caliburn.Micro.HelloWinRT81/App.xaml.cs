@@ -27,8 +27,10 @@ namespace Caliburn.Micro.WinRT.Sample
 
             container.RegisterSharingService();
 
-            container.RegisterSettingsService()
-                .RegisterCommand<SampleSettingsViewModel>("Custom");
+            var settingsService = container.RegisterSettingsService();
+                
+            settingsService.RegisterFlyoutCommand<SampleSettingsViewModel>("Custom");
+            settingsService.RegisterUriCommand("View Website", new Uri("http://caliburnmicro.codeplex.com"));
 
             container
                 .PerRequest<ActionsViewModel>()
