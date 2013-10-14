@@ -121,6 +121,22 @@
         }
 
 #if WinRT
+        public static bool ExecuteOnUnload(FrameworkElement element, RoutedEventHandler handler)
+        {
+            RoutedEventHandler unloaded = null;
+
+            unloaded = (s, e) =>
+            {
+                element.Unloaded -= unloaded;
+
+                handler(s, e);
+            };
+
+            element.Unloaded += unloaded;
+
+            return false;
+        }
+
         /// <summary>
         /// Determines whether the specified <paramref name="element"/> is loaded.
         /// </summary>
@@ -128,16 +144,27 @@
         /// <returns>true if the element is loaded; otherwise, false.
         /// </returns>
         public static bool IsElementLoaded(FrameworkElement element) {
-            if ((element.Parent ?? VisualTreeHelper.GetParent(element)) != null) {
-                return true;
-            }
+            try
+            {
+                if ((element.Parent ?? VisualTreeHelper.GetParent(element)) != null)
+                {
+                    return true;
+                }
 
-            var rootVisual = Window.Current.Content;
-            if (rootVisual != null) {
-                return element == rootVisual;
-            }
+                var rootVisual = Window.Current.Content;
 
-            return false;
+                if (rootVisual != null)
+                {
+                    return element == rootVisual;
+                }
+
+                return false;
+
+            }
+            catch
+            {
+                return false;
+            }
         }
 #endif
 

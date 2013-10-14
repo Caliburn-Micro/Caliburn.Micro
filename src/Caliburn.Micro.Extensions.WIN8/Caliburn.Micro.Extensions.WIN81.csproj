@@ -56,7 +56,6 @@
     </Compile>
     <Compile Include="AppManifestHelper.cs" />
     <Compile Include="CaliburnSettingsCommand.cs" />
-    <None Include="CallistoSettingsWindowManager.cs" />
     <Compile Include="ISettingsService.cs" />
     <Compile Include="ISettingsWindowManager.cs" />
     <Compile Include="ISharingService.cs" />
@@ -68,11 +67,6 @@
     <Compile Include="SharingService.cs" />
     <Compile Include="UriBuilder.cs" />
     <Compile Include="WinRTContainer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Windows.UI.Interactivity">
-      <HintPath>..\packages\Windows.UI.Interactivity.1.3.0.0\lib\win8\Windows.UI.Interactivity.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

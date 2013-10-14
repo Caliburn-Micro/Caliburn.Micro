@@ -139,17 +139,25 @@
                 Parameters.Attach(AssociatedObject);
                 Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
 
-                // Not yet sure if this will be needed
+                
                 if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded))
                 {
+                    // Not yet sure if this will be needed
                     //var trigger = Interaction.GetTriggers(AssociatedObject)
                     //    .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
                     //if (trigger != null && trigger.EventName == "Loaded")
                     //    Invoke(new RoutedEventArgs());
                 }
+
+                View.ExecuteOnUnload(AssociatedObject, ElementUnloaded);
             }
 
             base.OnAttached();
+        }
+
+        void ElementUnloaded(object sender, RoutedEventArgs e)
+        {
+            OnDetaching();
         }
 #else
         protected override void OnAttached() {
