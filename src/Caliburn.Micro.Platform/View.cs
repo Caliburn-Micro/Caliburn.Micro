@@ -120,23 +120,21 @@
             return false;
         }
 
-#if WinRT
-        public static bool ExecuteOnUnload(FrameworkElement element, RoutedEventHandler handler)
-        {
+        /// <summary>
+        /// Executes the handler when the element is unloaded.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="handler">The handler.</param>
+        public static void ExecuteOnUnload(FrameworkElement element, RoutedEventHandler handler) {
             RoutedEventHandler unloaded = null;
-
-            unloaded = (s, e) =>
-            {
+            unloaded = (s, e) => {
                 element.Unloaded -= unloaded;
-
                 handler(s, e);
             };
-
             element.Unloaded += unloaded;
-
-            return false;
         }
 
+#if WinRT
         /// <summary>
         /// Determines whether the specified <paramref name="element"/> is loaded.
         /// </summary>

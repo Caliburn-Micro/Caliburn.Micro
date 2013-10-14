@@ -1,29 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using Windows.UI.Xaml.Markup;
-using Windows.UI.Xaml;
+﻿namespace Caliburn.Micro {
+    using System;
+    using System.Collections.Generic;
+    using Windows.UI.Xaml.Markup;
+    using Windows.UI.Xaml;
 
-namespace Caliburn.Micro
-{
     /// <summary>
     /// Implements XAML schema context concepts that support XAML parsing.
     /// </summary>
-    public class XamlMetadataProvider : IXamlMetadataProvider
-    {
-        private XamlTypeInfoProvider _provider;
+    public class XamlMetadataProvider : IXamlMetadataProvider {
+        private XamlTypeInfoProvider provider;
 
         /// <summary>
         /// Implements XAML schema context access to underlying type mapping, based on providing a helper value that describes a type.
         /// </summary>
         /// <param name="type">The type as represented by the relevant type system or interop support type.</param>
         /// <returns>The schema context's implementation of the <see cref="IXamlType"/> concept.</returns>
-        public IXamlType GetXamlType(Type type)
-        {
-            if (_provider == null)
-            {
-                _provider = new XamlTypeInfoProvider();
+        public IXamlType GetXamlType(Type type) {
+            if (provider == null) {
+                provider = new XamlTypeInfoProvider();
             }
-            return _provider.GetXamlTypeByType(type);
+            return provider.GetXamlTypeByType(type);
         }
 
         /// <summary>
@@ -31,115 +27,96 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="typeName">The name of the class for which to return a XAML type mapping.</param>
         /// <returns>The schema context's implementation of the IXamlType concept.</returns>
-        public IXamlType GetXamlType(String typeName)
-        {
-            if (_provider == null)
-            {
-                _provider = new XamlTypeInfoProvider();
+        public IXamlType GetXamlType(String typeName) {
+            if (provider == null) {
+                provider = new XamlTypeInfoProvider();
             }
-            return _provider.GetXamlTypeByName(typeName);
+            return provider.GetXamlTypeByName(typeName);
         }
 
         /// <summary>
         /// Gets the set of XMLNS (XAML namespace) definitions that apply to the context.
         /// </summary>
         /// <returns>The set of XMLNS (XAML namespace) definitions.</returns>
-        public XmlnsDefinition[] GetXmlnsDefinitions()
-        {
+        public XmlnsDefinition[] GetXmlnsDefinitions() {
             return new XmlnsDefinition[0];
         }
     }
 
-    internal class XamlTypeInfoProvider
-    {
-        public IXamlType GetXamlTypeByType(Type type)
-        {
+    internal class XamlTypeInfoProvider {
+        public IXamlType GetXamlTypeByType(Type type) {
             string standardName;
             IXamlType xamlType = null;
-            if (_xamlTypeToStandardName.TryGetValue(type, out standardName))
-            {
+            if (_xamlTypeToStandardName.TryGetValue(type, out standardName)) {
                 xamlType = GetXamlTypeByName(standardName);
             }
-            else
-            {
+            else {
                 xamlType = GetXamlTypeByName(type.FullName);
             }
             return xamlType;
         }
 
-        public IXamlType GetXamlTypeByName(string typeName)
-        {
-            if (String.IsNullOrEmpty(typeName))
-            {
+        public IXamlType GetXamlTypeByName(string typeName) {
+            if (String.IsNullOrEmpty(typeName)) {
                 return null;
             }
             IXamlType xamlType;
-            if (_xamlTypes.TryGetValue(typeName, out xamlType))
-            {
+            if (_xamlTypes.TryGetValue(typeName, out xamlType)) {
                 return xamlType;
             }
             xamlType = CreateXamlType(typeName);
-            if (xamlType != null)
-            {
+            if (xamlType != null) {
                 _xamlTypes.Add(typeName, xamlType);
             }
             return xamlType;
         }
 
-        public IXamlMember GetMemberByLongName(string longMemberName)
-        {
-            if (String.IsNullOrEmpty(longMemberName))
-            {
+        public IXamlMember GetMemberByLongName(string longMemberName) {
+            if (String.IsNullOrEmpty(longMemberName)) {
                 return null;
             }
             IXamlMember xamlMember;
-            if (_xamlMembers.TryGetValue(longMemberName, out xamlMember))
-            {
+            if (_xamlMembers.TryGetValue(longMemberName, out xamlMember)) {
                 return xamlMember;
             }
             xamlMember = CreateXamlMember(longMemberName);
-            if (xamlMember != null)
-            {
+            if (xamlMember != null) {
                 _xamlMembers.Add(longMemberName, xamlMember);
             }
             return xamlMember;
         }
 
-        Dictionary<string, IXamlType> _xamlTypes = new Dictionary<string, IXamlType>();
-        Dictionary<string, IXamlMember> _xamlMembers = new Dictionary<string, IXamlMember>();
-        Dictionary<Type, string> _xamlTypeToStandardName = new Dictionary<Type, string>();
+        private Dictionary<string, IXamlType> _xamlTypes = new Dictionary<string, IXamlType>();
+        private Dictionary<string, IXamlMember> _xamlMembers = new Dictionary<string, IXamlMember>();
+        private Dictionary<Type, string> _xamlTypeToStandardName = new Dictionary<Type, string>();
 
-        private void AddToMapOfTypeToStandardName(Type t, String str)
-        {
-            if (!_xamlTypeToStandardName.ContainsKey(t))
-            {
+        private void AddToMapOfTypeToStandardName(Type t, String str) {
+            if (!_xamlTypeToStandardName.ContainsKey(t)) {
                 _xamlTypeToStandardName.Add(t, str);
             }
         }
 
-        private IXamlType CreateXamlType(string typeName)
-        {
+        private IXamlType CreateXamlType(string typeName) {
             XamlSystemBaseType xamlType = null;
             XamlUserType userType;
 
-            switch (typeName)
-            {
+            switch (typeName) {
                 case "Object":
-                    xamlType = new XamlSystemBaseType(typeName, typeof(Object));
+                    xamlType = new XamlSystemBaseType(typeName, typeof (Object));
                     break;
 
-                //case "Caliburn.Micro.Message":
-                //    userType = new XamlUserType(this, typeName, typeof(Caliburn.Micro.Message), GetXamlTypeByName("Object"));
-                //    userType.AddMemberName("Handler");
-                //    AddToMapOfTypeToStandardName(typeof(System.Object),
-                //                                       "Object");
-                //    xamlType = userType;
-                //    break;
+                    //case "Caliburn.Micro.Message":
+                    //    userType = new XamlUserType(this, typeName, typeof(Caliburn.Micro.Message), GetXamlTypeByName("Object"));
+                    //    userType.AddMemberName("Handler");
+                    //    AddToMapOfTypeToStandardName(typeof(System.Object),
+                    //                                       "Object");
+                    //    xamlType = userType;
+                    //    break;
 
                 case "Caliburn.Micro.View":
-                    userType = new XamlUserType(this, typeName, typeof(View), GetXamlTypeByName("Object"));
+                    userType = new XamlUserType(this, typeName, typeof (View), GetXamlTypeByName("Object"));
                     userType.AddMemberName("Model");
-                    AddToMapOfTypeToStandardName(typeof(Object), "Object");
+                    AddToMapOfTypeToStandardName(typeof (Object), "Object");
                     xamlType = userType;
                     break;
 
@@ -147,25 +124,21 @@ namespace Caliburn.Micro
             return xamlType;
         }
 
-        private object get_1_View_Model(object instance)
-        {
-            return View.GetModel((DependencyObject)instance);
+        private object get_1_View_Model(object instance) {
+            return View.GetModel((DependencyObject) instance);
         }
 
-        private void set_1_View_Model(object instance, object value)
-        {
-            View.SetModel((DependencyObject)instance, value);
+        private void set_1_View_Model(object instance, object value) {
+            View.SetModel((DependencyObject) instance, value);
         }
 
-        private IXamlMember CreateXamlMember(string longMemberName)
-        {
+        private IXamlMember CreateXamlMember(string longMemberName) {
             XamlMember xamlMember = null;
             XamlUserType userType;
 
-            switch (longMemberName)
-            {
+            switch (longMemberName) {
                 case "Caliburn.Micro.View.Model":
-                    userType = (XamlUserType)GetXamlTypeByName("Caliburn.Micro.View");
+                    userType = (XamlUserType) GetXamlTypeByName("Caliburn.Micro.View");
                     xamlMember = new XamlMember(this, "Model", "Object");
                     xamlMember.SetTargetTypeName("Windows.UI.Xaml.DependencyObject");
                     xamlMember.SetIsAttachable();
@@ -178,51 +151,97 @@ namespace Caliburn.Micro
     }
 
 
-    internal class XamlSystemBaseType : IXamlType
-    {
-        string _fullName;
-        Type _underlyingType;
+    internal class XamlSystemBaseType : IXamlType {
+        private string _fullName;
+        private Type _underlyingType;
 
-        public XamlSystemBaseType(string fullName, Type underlyingType)
-        {
+        public XamlSystemBaseType(string fullName, Type underlyingType) {
             _fullName = fullName;
             _underlyingType = underlyingType;
         }
 
-        public string FullName { get { return _fullName; } }
+        public string FullName {
+            get { return _fullName; }
+        }
 
-        public Type UnderlyingType
-        {
-            get
-            {
+        public Type UnderlyingType {
+            get {
                 return _underlyingType;
             }
         }
 
-        public virtual IXamlType BaseType { get { throw new NotImplementedException(); } }
-        public virtual IXamlMember ContentProperty { get { throw new NotImplementedException(); } }
-        public virtual IXamlMember GetMember(string name) { throw new NotImplementedException(); }
-        public virtual bool IsArray { get { throw new NotImplementedException(); } }
-        public virtual bool IsCollection { get { throw new NotImplementedException(); } }
-        public virtual bool IsConstructible { get { throw new NotImplementedException(); } }
-        public virtual bool IsDictionary { get { throw new NotImplementedException(); } }
-        public virtual bool IsMarkupExtension { get { throw new NotImplementedException(); } }
-        public virtual bool IsBindable { get { throw new NotImplementedException(); } }
-        public virtual IXamlType ItemType { get { throw new NotImplementedException(); } }
-        public virtual IXamlType KeyType { get { throw new NotImplementedException(); } }
-        public virtual object ActivateInstance() { throw new NotImplementedException(); }
-        public virtual void AddToMap(object instance, object key, object item) { throw new NotImplementedException(); }
-        public virtual void AddToVector(object instance, object item) { throw new NotImplementedException(); }
-        public virtual void RunInitializer() { throw new NotImplementedException(); }
-        public virtual object CreateFromString(String input) { throw new NotImplementedException(); }
+        public virtual IXamlType BaseType {
+            get { throw new NotImplementedException(); }
+        }
+
+        public virtual IXamlMember ContentProperty {
+            get { throw new NotImplementedException(); }
+        }
+
+        public virtual IXamlMember GetMember(string name) {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool IsArray {
+            get { throw new NotImplementedException(); }
+        }
+
+        public virtual bool IsCollection {
+            get { throw new NotImplementedException(); }
+        }
+
+        public virtual bool IsConstructible {
+            get { throw new NotImplementedException(); }
+        }
+
+        public virtual bool IsDictionary {
+            get { throw new NotImplementedException(); }
+        }
+
+        public virtual bool IsMarkupExtension {
+            get { throw new NotImplementedException(); }
+        }
+
+        public virtual bool IsBindable {
+            get { throw new NotImplementedException(); }
+        }
+
+        public virtual IXamlType ItemType {
+            get { throw new NotImplementedException(); }
+        }
+
+        public virtual IXamlType KeyType {
+            get { throw new NotImplementedException(); }
+        }
+
+        public virtual object ActivateInstance() {
+            throw new NotImplementedException();
+        }
+
+        public virtual void AddToMap(object instance, object key, object item) {
+            throw new NotImplementedException();
+        }
+
+        public virtual void AddToVector(object instance, object item) {
+            throw new NotImplementedException();
+        }
+
+        public virtual void RunInitializer() {
+            throw new NotImplementedException();
+        }
+
+        public virtual object CreateFromString(String input) {
+            throw new NotImplementedException();
+        }
     }
 
     internal delegate object Activator();
+
     internal delegate void AddToCollection(object instance, object item);
+
     internal delegate void AddToDictionary(object instance, object key, object item);
 
-    internal class XamlUserType : XamlSystemBaseType
-    {
+    internal class XamlUserType : XamlSystemBaseType {
         private readonly XamlTypeInfoProvider _provider;
         private readonly IXamlType _baseType;
         private bool _isArray;
@@ -236,101 +255,99 @@ namespace Caliburn.Micro
         private Dictionary<string, object> _enumValues;
 
         public XamlUserType(XamlTypeInfoProvider provider, string fullName, Type fullType, IXamlType baseType)
-            : base(fullName, fullType)
-        {
+            : base(fullName, fullType) {
             _provider = provider;
             _baseType = baseType;
         }
 
-        public override IXamlType BaseType { get { return _baseType; } }
-        public override bool IsArray { get { return _isArray; } }
-        public override bool IsCollection { get { return (CollectionAdd != null); } }
-        public override bool IsConstructible { get { return (Activator != null); } }
-        public override bool IsDictionary { get { return (DictionaryAdd != null); } }
-        public override bool IsMarkupExtension { get { return _isMarkupExtension; } }
-        public override bool IsBindable { get { return _isBindable; } }
+        public override IXamlType BaseType {
+            get { return _baseType; }
+        }
 
-        public override IXamlMember ContentProperty
-        {
+        public override bool IsArray {
+            get { return _isArray; }
+        }
+
+        public override bool IsCollection {
+            get { return (CollectionAdd != null); }
+        }
+
+        public override bool IsConstructible {
+            get { return (Activator != null); }
+        }
+
+        public override bool IsDictionary {
+            get { return (DictionaryAdd != null); }
+        }
+
+        public override bool IsMarkupExtension {
+            get { return _isMarkupExtension; }
+        }
+
+        public override bool IsBindable {
+            get { return _isBindable; }
+        }
+
+        public override IXamlMember ContentProperty {
             get { return _provider.GetMemberByLongName(_contentPropertyName); }
         }
 
-        public override IXamlType ItemType
-        {
+        public override IXamlType ItemType {
             get { return _provider.GetXamlTypeByName(_itemTypeName); }
         }
 
-        public override IXamlType KeyType
-        {
+        public override IXamlType KeyType {
             get { return _provider.GetXamlTypeByName(_keyTypeName); }
         }
 
-        public override IXamlMember GetMember(string name)
-        {
-            if (_memberNames == null)
-            {
+        public override IXamlMember GetMember(string name) {
+            if (_memberNames == null) {
                 return null;
             }
             string longName;
-            if (_memberNames.TryGetValue(name, out longName))
-            {
+            if (_memberNames.TryGetValue(name, out longName)) {
                 return _provider.GetMemberByLongName(longName);
             }
             return null;
         }
 
-        public override object ActivateInstance()
-        {
+        public override object ActivateInstance() {
             return Activator();
         }
 
-        public override void AddToMap(object instance, object key, object item)
-        {
+        public override void AddToMap(object instance, object key, object item) {
             DictionaryAdd(instance, key, item);
         }
 
-        public override void AddToVector(object instance, object item)
-        {
+        public override void AddToVector(object instance, object item) {
             CollectionAdd(instance, item);
         }
 
-        public override void RunInitializer()
-        {
+        public override void RunInitializer() {
             System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(UnderlyingType.TypeHandle);
         }
 
-        public override object CreateFromString(String input)
-        {
-            if (_enumValues != null)
-            {
+        public override object CreateFromString(String input) {
+            if (_enumValues != null) {
                 Int32 value = 0;
 
                 string[] valueParts = input.Split(',');
 
-                foreach (string valuePart in valueParts)
-                {
+                foreach (string valuePart in valueParts) {
                     Int32 enumFieldValue = 0;
-                    try
-                    {
+                    try {
                         object partValue;
-                        if (_enumValues.TryGetValue(valuePart.Trim(), out partValue))
-                        {
+                        if (_enumValues.TryGetValue(valuePart.Trim(), out partValue)) {
                             enumFieldValue = Convert.ToInt32(partValue);
                         }
-                        else
-                        {
-                            try
-                            {
+                        else {
+                            try {
                                 enumFieldValue = Convert.ToInt32(valuePart.Trim());
                             }
-                            catch (FormatException)
-                            {
-                                foreach (var key in _enumValues.Keys)
-                                {
-                                    if (String.Compare(valuePart.Trim(), key, StringComparison.OrdinalIgnoreCase) == 0)
-                                    {
-                                        if (_enumValues.TryGetValue(key.Trim(), out partValue))
-                                        {
+                            catch (FormatException) {
+                                foreach (var key in _enumValues.Keys) {
+                                    if (String.Compare(valuePart.Trim(), key, StringComparison.OrdinalIgnoreCase) == 0) {
+                                        if (_enumValues.TryGetValue(key.Trim(), out partValue)) {
                                             enumFieldValue = Convert.ToInt32(partValue);
                                             break;
                                         }
@@ -340,8 +357,7 @@ namespace Caliburn.Micro
                         }
                         value |= enumFieldValue;
                     }
-                    catch (FormatException)
-                    {
+                    catch (FormatException) {
                         throw new ArgumentException(input, FullName);
                     }
                 }
@@ -355,49 +371,39 @@ namespace Caliburn.Micro
         public AddToCollection CollectionAdd { get; set; }
         public AddToDictionary DictionaryAdd { get; set; }
 
-        public void SetContentPropertyName(string contentPropertyName)
-        {
+        public void SetContentPropertyName(string contentPropertyName) {
             _contentPropertyName = contentPropertyName;
         }
 
-        public void SetIsArray()
-        {
+        public void SetIsArray() {
             _isArray = true;
         }
 
-        public void SetIsMarkupExtension()
-        {
+        public void SetIsMarkupExtension() {
             _isMarkupExtension = true;
         }
 
-        public void SetIsBindable()
-        {
+        public void SetIsBindable() {
             _isBindable = true;
         }
 
-        public void SetItemTypeName(string itemTypeName)
-        {
+        public void SetItemTypeName(string itemTypeName) {
             _itemTypeName = itemTypeName;
         }
 
-        public void SetKeyTypeName(string keyTypeName)
-        {
+        public void SetKeyTypeName(string keyTypeName) {
             _keyTypeName = keyTypeName;
         }
 
-        public void AddMemberName(string shortName)
-        {
-            if (_memberNames == null)
-            {
+        public void AddMemberName(string shortName) {
+            if (_memberNames == null) {
                 _memberNames = new Dictionary<string, string>();
             }
             _memberNames.Add(shortName, FullName + "." + shortName);
         }
 
-        public void AddEnumValue(string name, object value)
-        {
-            if (_enumValues == null)
-            {
+        public void AddEnumValue(string name, object value) {
+            if (_enumValues == null) {
                 _enumValues = new Dictionary<string, object>();
             }
             _enumValues.Add(name, value);
@@ -405,10 +411,10 @@ namespace Caliburn.Micro
     }
 
     internal delegate object Getter(object instance);
+
     internal delegate void Setter(object instance, object value);
 
-    internal class XamlMember : IXamlMember
-    {
+    internal class XamlMember : IXamlMember {
         private readonly XamlTypeInfoProvider _provider;
         private readonly string _name;
         private bool _isAttachable;
@@ -418,65 +424,54 @@ namespace Caliburn.Micro
         private readonly string _typeName;
         private string _targetTypeName;
 
-        public XamlMember(XamlTypeInfoProvider provider, string name, string typeName)
-        {
+        public XamlMember(XamlTypeInfoProvider provider, string name, string typeName) {
             _name = name;
             _typeName = typeName;
             _provider = provider;
         }
 
-        public string Name { get { return _name; } }
+        public string Name {
+            get { return _name; }
+        }
 
-        public IXamlType Type
-        {
+        public IXamlType Type {
             get { return _provider.GetXamlTypeByName(_typeName); }
         }
 
-        public void SetTargetTypeName(String targetTypeName)
-        {
+        public void SetTargetTypeName(String targetTypeName) {
             _targetTypeName = targetTypeName;
         }
 
-        public IXamlType TargetType
-        {
+        public IXamlType TargetType {
             get { return _provider.GetXamlTypeByName(_targetTypeName); }
         }
 
-        public void SetIsAttachable()
-        {
+        public void SetIsAttachable() {
             _isAttachable = true;
         }
 
-        public bool IsAttachable
-        {
-            get
-            {
+        public bool IsAttachable {
+            get {
                 return _isAttachable;
             }
         }
 
-        public void SetIsDependencyProperty()
-        {
+        public void SetIsDependencyProperty() {
             _isDependencyProperty = true;
         }
 
-        public bool IsDependencyProperty
-        {
-            get
-            {
+        public bool IsDependencyProperty {
+            get {
                 return _isDependencyProperty;
             }
         }
 
-        public void SetIsReadOnly()
-        {
+        public void SetIsReadOnly() {
             _isReadOnly = true;
         }
 
-        public bool IsReadOnly
-        {
-            get
-            {
+        public bool IsReadOnly {
+            get {
                 return _isReadOnly;
             }
         }
@@ -487,8 +482,7 @@ namespace Caliburn.Micro
             set;
         }
 
-        public object GetValue(object instance)
-        {
+        public object GetValue(object instance) {
             if (Getter != null)
                 return Getter(instance);
             throw new InvalidOperationException("GetValue");
@@ -500,8 +494,7 @@ namespace Caliburn.Micro
             set;
         }
 
-        public void SetValue(object instance, object value)
-        {
+        public void SetValue(object instance, object value) {
             if (Setter != null)
                 Setter(instance, value);
             else
@@ -509,5 +502,3 @@ namespace Caliburn.Micro
         }
     }
 }
-
-

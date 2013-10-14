@@ -4,13 +4,11 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-namespace Caliburn.Micro
-{
+namespace Caliburn.Micro {
     /// <summary>
     ///   Implemented by services that provide (<see cref="Uri" /> based) navigation.
     /// </summary>
-    public interface INavigationService
-    {
+    public interface INavigationService {
         /// <summary>
         ///   Raised after navigation.
         /// </summary>
@@ -80,8 +78,7 @@ namespace Caliburn.Micro
     /// <summary>
     ///   A basic implementation of <see cref="INavigationService" /> designed to adapt the <see cref="Frame" /> control.
     /// </summary>
-    public class FrameAdapter : INavigationService
-    {
+    public class FrameAdapter : INavigationService {
         private readonly Frame frame;
         private readonly bool treatViewAsLoaded;
         private event NavigatingCancelEventHandler ExternalNavigatingHandler = delegate { };
@@ -91,8 +88,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="frame"> The frame to represent as a <see cref="INavigationService" /> . </param>
         /// <param name="treatViewAsLoaded"> Tells the frame adapter to assume that the view has already been loaded by the time OnNavigated is called. This is necessary when using the TransitionFrame. </param>
-        public FrameAdapter(Frame frame, bool treatViewAsLoaded = false)
-        {
+        public FrameAdapter(Frame frame, bool treatViewAsLoaded = false) {
             this.frame = frame;
             this.treatViewAsLoaded = treatViewAsLoaded;
 
@@ -105,8 +101,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="sender"> The event sender. </param>
         /// <param name="e"> The event args. </param>
-        protected virtual void OnNavigating(object sender, NavigatingCancelEventArgs e)
-        {
+        protected virtual void OnNavigating(object sender, NavigatingCancelEventArgs e) {
             ExternalNavigatingHandler(sender, e);
 
             if (e.Cancel)
@@ -119,13 +114,11 @@ namespace Caliburn.Micro
 
             var guard = view.DataContext as IGuardClose;
 
-            if (guard != null)
-            {
+            if (guard != null) {
                 var shouldCancel = false;
                 guard.CanClose(result => { shouldCancel = !result; });
 
-                if (shouldCancel)
-                {
+                if (shouldCancel) {
                     e.Cancel = true;
                     return;
                 }
@@ -133,8 +126,7 @@ namespace Caliburn.Micro
 
             var deactivator = view.DataContext as IDeactivate;
 
-            if (deactivator != null)
-            {
+            if (deactivator != null) {
                 deactivator.Deactivate(CanCloseOnNavigating(sender, e));
             }
         }
@@ -144,8 +136,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="sender"> The event sender. </param>
         /// <param name="e"> The event args. </param>
-        protected virtual void OnNavigated(object sender, NavigationEventArgs e)
-        {
+        protected virtual void OnNavigated(object sender, NavigationEventArgs e) {
             if (e.Content == null)
                 return;
 
@@ -157,7 +148,8 @@ namespace Caliburn.Micro
 
             var view = e.Content as Page;
             if (view == null) {
-                throw new ArgumentException("View '" + e.Content.GetType().FullName + "' should inherit from Page or one of its descendents.");
+                throw new ArgumentException("View '" + e.Content.GetType().FullName +
+                                            "' should inherit from Page or one of its descendents.");
             }
 
             if (treatViewAsLoaded) {
@@ -180,24 +172,19 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="viewModel"> The view model.</param>
         /// <param name="parameter"> The parameter.</param>
-        protected virtual void TryInjectParameters(object viewModel, object parameter)
-        {
+        protected virtual void TryInjectParameters(object viewModel, object parameter) {
             var viewModelType = viewModel.GetType();
 
-            if (parameter is string && ((string)parameter).StartsWith("caliburn://"))
-            {
-                var uri = new Uri((string)parameter);
+            if (parameter is string && ((string) parameter).StartsWith("caliburn://")) {
+                var uri = new Uri((string) parameter);
 
-                if (!String.IsNullOrEmpty(uri.Query))
-                {
+                if (!String.IsNullOrEmpty(uri.Query)) {
                     var decorder = new WwwFormUrlDecoder(uri.Query);
 
-                    foreach (var pair in decorder)
-                    {
+                    foreach (var pair in decorder) {
                         var property = viewModelType.GetPropertyCaseInsensitive(pair.Name);
 
-                        if (property == null)
-                        {
+                        if (property == null) {
                             continue;
                         }
 
@@ -205,8 +192,7 @@ namespace Caliburn.Micro
                     }
                 }
             }
-            else
-            {
+            else {
                 var property = viewModelType.GetPropertyCaseInsensitive("Parameter");
 
                 if (property == null)
@@ -221,16 +207,14 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="sender"> The event sender from OnNavigating event. </param>
         /// <param name="e"> The event args from OnNavigating event. </param>
-        protected virtual bool CanCloseOnNavigating(object sender, NavigatingCancelEventArgs e)
-        {
+        protected virtual bool CanCloseOnNavigating(object sender, NavigatingCancelEventArgs e) {
             return false;
         }
 
         /// <summary>
         ///   Raised after navigation.
         /// </summary>
-        public event NavigatedEventHandler Navigated
-        {
+        public event NavigatedEventHandler Navigated {
             add { frame.Navigated += value; }
             remove { frame.Navigated -= value; }
         }
@@ -238,8 +222,7 @@ namespace Caliburn.Micro
         /// <summary>
         ///   Raised prior to navigation.
         /// </summary>
-        public event NavigatingCancelEventHandler Navigating
-        {
+        public event NavigatingCancelEventHandler Navigating {
             add { ExternalNavigatingHandler += value; }
             remove { ExternalNavigatingHandler -= value; }
         }
@@ -247,8 +230,7 @@ namespace Caliburn.Micro
         /// <summary>
         ///   Raised when navigation fails.
         /// </summary>
-        public event NavigationFailedEventHandler NavigationFailed
-        {
+        public event NavigationFailedEventHandler NavigationFailed {
             add { frame.NavigationFailed += value; }
             remove { frame.NavigationFailed -= value; }
         }
@@ -256,8 +238,7 @@ namespace Caliburn.Micro
         /// <summary>
         ///   Raised when navigation is stopped.
         /// </summary>
-        public event NavigationStoppedEventHandler NavigationStopped
-        {
+        public event NavigationStoppedEventHandler NavigationStopped {
             add { frame.NavigationStopped += value; }
             remove { frame.NavigationStopped -= value; }
         }
@@ -265,8 +246,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Gets or sets the data type of the current content, or the content that should be navigated to.
         /// </summary>
-        public Type SourcePageType
-        {
+        public Type SourcePageType {
             get { return frame.SourcePageType; }
             set { frame.SourcePageType = value; }
         }
@@ -274,8 +254,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Gets the data type of the content that is currently displayed.
         /// </summary>
-        public Type CurrentSourcePageType
-        {
+        public Type CurrentSourcePageType {
             get { return frame.CurrentSourcePageType; }
         }
 
@@ -284,8 +263,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="sourcePageType"> The <see cref="System.Type" /> to navigate to. </param>
         /// <returns> Whether or not navigation succeeded. </returns>
-        public bool Navigate(Type sourcePageType)
-        {
+        public bool Navigate(Type sourcePageType) {
             return frame.Navigate(sourcePageType);
         }
 
@@ -295,40 +273,35 @@ namespace Caliburn.Micro
         /// <param name="sourcePageType"> The <see cref="System.Type" /> to navigate to. </param>
         /// <param name="parameter">The object parameter to pass to the target.</param>
         /// <returns> Whether or not navigation succeeded. </returns>
-        public bool Navigate(Type sourcePageType, object parameter)
-        {
+        public bool Navigate(Type sourcePageType, object parameter) {
             return frame.Navigate(sourcePageType, parameter);
         }
 
         /// <summary>
         ///   Navigates forward.
         /// </summary>
-        public void GoForward()
-        {
+        public void GoForward() {
             frame.GoForward();
         }
 
         /// <summary>
         ///   Navigates back.
         /// </summary>
-        public void GoBack()
-        {
+        public void GoBack() {
             frame.GoBack();
         }
 
         /// <summary>
         ///   Indicates whether the navigator can navigate forward.
         /// </summary>
-        public bool CanGoForward
-        {
+        public bool CanGoForward {
             get { return frame.CanGoForward; }
         }
 
         /// <summary>
         ///   Indicates whether the navigator can navigate back.
         /// </summary>
-        public bool CanGoBack
-        {
+        public bool CanGoBack {
             get { return frame.CanGoBack; }
         }
     }
