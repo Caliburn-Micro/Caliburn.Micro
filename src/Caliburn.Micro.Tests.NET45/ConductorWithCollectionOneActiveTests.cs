@@ -155,7 +155,7 @@
                 closeCallback = callback;
             }
 
-            public override void TryClose() {
+            public override void TryClose(bool? dialogResult = null) {
                 if (closeCallback != null) {
                     closeCallback(IsClosable);
                 }

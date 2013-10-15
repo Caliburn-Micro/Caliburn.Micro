@@ -144,21 +144,12 @@
             callback(true);
         }
 
-       
-
         /// <summary>
         /// Tries to close this instance by asking its Parent to initiate shutdown or by asking its corresponding view to close.
-        /// </summary>
-        public virtual void TryClose() {
-            PlatformProvider.Current.GetViewCloseAction(this, Views.Values, null).OnUIThread();
-        }
-
-        /// <summary>
-        /// Closes this instance by asking its Parent to initiate shutdown or by asking it's corresponding view to close.
-        /// This overload also provides an opportunity to pass a dialog result to it's corresponding view.
+        /// Also provides an opportunity to pass a dialog result to it's corresponding view.
         /// </summary>
         /// <param name="dialogResult">The dialog result.</param>
-        public virtual void TryClose(bool? dialogResult) {
+        public virtual void TryClose(bool? dialogResult = null) {
             PlatformProvider.Current.GetViewCloseAction(this, Views.Values, dialogResult).OnUIThread();
         }
     }
