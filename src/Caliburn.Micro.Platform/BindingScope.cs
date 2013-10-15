@@ -1,13 +1,12 @@
-﻿using System.ServiceModel;
-using Windows.UI.Xaml.Controls.Primitives;
-
-namespace Caliburn.Micro {
+﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 #if WinRT
+    using System.ServiceModel;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Controls.Primitives;
     using Windows.UI.Xaml.Media;
 #else
     using System.Windows;
