@@ -27,7 +27,7 @@ namespace Caliburn.Micro.WinRT.Sample
             container.RegisterSharingService();
 
             container.RegisterSettingsService()
-                .RegisterCommand<SampleSettingsViewModel>("Custom");
+                .RegisterFlyoutCommand<SampleSettingsViewModel>("Custom");
 
             container
                 .PerRequest<ActionsViewModel>()
