@@ -214,6 +214,8 @@
             AddElementConvention<SearchBox>(SearchBox.QueryTextProperty, "QueryText", "QuerySubmitted");
             AddElementConvention<Hub>(Hub.HeaderProperty, "Header", "Loaded");
             AddElementConvention<HubSection>(HubSection.HeaderProperty, "Header", "SectionsInViewChanged");
+            AddElementConvention<MenuFlyoutItem>(MenuFlyoutItem.TextProperty, "Text", "Click");
+            AddElementConvention<ToggleMenuFlyoutItem>(ToggleMenuFlyoutItem.IsCheckedProperty, "IsChecked", "Click");
 #endif
 #if WinRT
             AddElementConvention<ToggleSwitch>(ToggleSwitch.IsOnProperty, "IsOn", "Toggled");

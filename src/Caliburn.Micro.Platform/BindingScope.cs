@@ -1,4 +1,7 @@
-﻿namespace Caliburn.Micro {
+﻿using System.ServiceModel;
+using Windows.UI.Xaml.Controls.Primitives;
+
+namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -206,6 +209,31 @@
                                 queue.Enqueue(command as DependencyObject);
                         }
                     }
+
+                    var button = current as Button;
+
+                    if (button != null) {
+                        var flyoutBase = button.Flyout;
+
+                        if (flyoutBase != null) {
+                            foreach (var flyoutItem in DecomposeFlyout(flyoutBase)) {
+                                queue.Enqueue(flyoutItem);
+                            }
+                        }
+                    }
+
+                    var element = current as FrameworkElement;
+
+                    if (element != null) {
+                        var flyoutBase = Flyout.GetAttachedFlyout(element);
+
+                        if (flyoutBase != null) {
+                            foreach (var flyoutItem in DecomposeFlyout(flyoutBase)) {
+                                queue.Enqueue(flyoutItem);
+                            }
+                        }
+                    }
+
 #endif
                     else {
                         var currentType = current.GetType();
@@ -228,6 +256,25 @@
 
             return descendants;
         };
+
+#if WinRT81
+        private static IEnumerable<DependencyObject> DecomposeFlyout(FlyoutBase flyoutBase) {
+            var flyout = flyoutBase as Flyout;
+
+            if (flyout != null && flyout.Content != null)
+                yield return flyout.Content;
+
+            var menuFlyout = flyoutBase as MenuFlyout;
+
+            if (menuFlyout != null && menuFlyout.Items != null) {
+                foreach (var item in menuFlyout.Items)
+                {
+                    yield return item;
+                }
+            }
+        }
+#endif
+
 
         /// <summary>
         /// Finds a path of dependency objects which traces through visual anscestry until a root which is <see langword="null"/>,

@@ -69,5 +69,20 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             CurrentDate = DateTime.Now.Date;
             CurrentTime = DateTime.Now.TimeOfDay;
         }
+
+        public void FlyoutRefresh()
+        {
+            Refresh();
+        }
+
+        public void MenuFlyoutRefresh()
+        {
+            Refresh();
+        }
+
+        public void AttachedFlyoutRefresh()
+        {
+            Refresh();
+        }
     }
 }

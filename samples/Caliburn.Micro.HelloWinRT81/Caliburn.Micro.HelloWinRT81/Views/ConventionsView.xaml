@@ -6,11 +6,27 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:caliburn="using:Caliburn.Micro"
     mc:Ignorable="d">
-    
+
     <Page.BottomAppBar>
         <CommandBar>
             <CommandBar.PrimaryCommands>
                 <AppBarButton x:Name="Refresh" Icon="Refresh" Label="Refresh" />
+                <AppBarButton Icon="FullScreen" Label="Flyout">
+                    <AppBarButton.Flyout>
+                        <Flyout>
+                            <Grid>
+                                <Button x:Name="FlyoutRefresh" Content="Refresh from Flyout" />
+                            </Grid>
+                        </Flyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarButton Icon="FullScreen" Label="Menu Flyout">
+                    <AppBarButton.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem x:Name="MenuFlyoutRefresh" Text="Refresh from Menu Flyout" />
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
@@ -44,6 +60,16 @@
                 <SearchBox x:Name="SearchText" caliburn:Message.Attach="ExecuteSearch" />
                 <DatePicker x:Name="CurrentDate" Header="Current Date" Margin="0,20,0,0"/>
                 <TimePicker x:Name="CurrentTime" Header="Current Time" Margin="0,20,0,0"/>
+                
+                <TextBlock x:Name="AttachedFlyoutTest" Tapped="OnShowFlyout" Style="{StaticResource TitleTextStyle}" Text="Attached Flyout (tap to show)">
+                    <Flyout.AttachedFlyout>
+                        <Flyout>
+                            <Grid>
+                                <Button x:Name="AttachedFlyoutRefresh" Content="Refresh from Flyout" />
+                            </Grid>
+                        </Flyout>
+                    </Flyout.AttachedFlyout>
+                </TextBlock>
             </StackPanel>
 
         </Grid>
