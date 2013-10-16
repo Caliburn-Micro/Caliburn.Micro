@@ -94,22 +94,6 @@
             // in the SDK implements the same pattern but no interface, we're going to have to
             // use reflection to set it.
 
-            var actionsProperty = trigger.GetType().GetRuntimeProperty("Actions");
-
-            if (actionsProperty == null)
-            {
-                Log.Warn("Could not find Actions collection on trigger {0}.", trigger.GetType().FullName);
-                return;
-            }
-
-            var actionCollection = actionsProperty.GetValue(trigger) as ActionCollection;
-
-            if (actionCollection == null)
-            {
-                Log.Warn("{0}.Actions is either not an ActionCollection or is null.", trigger.GetType().FullName);
-                return;
-            }
-            
             // More stupidity, ActionCollection doesn't care about IAction, but DependencyObject
             // and there's no actual implementation of 
 
@@ -121,7 +105,34 @@
                 return;
             }
 
-            actionCollection.Add(messageDependencyObject);
+            // 95% of the time the trigger will be an EventTrigger, let's optimise for that case
+
+            if (trigger is EventTrigger)
+            {
+                var eventTrigger = (EventTrigger) trigger;
+
+                eventTrigger.Actions.Add(messageDependencyObject);
+            }
+            else
+            {
+                var actionsProperty = trigger.GetType().GetRuntimeProperty("Actions");
+
+                if (actionsProperty == null)
+                {
+                    Log.Warn("Could not find Actions collection on trigger {0}.", trigger.GetType().FullName);
+                    return;
+                }
+
+                var actionCollection = actionsProperty.GetValue(trigger) as ActionCollection;
+
+                if (actionCollection == null)
+                {
+                    Log.Warn("{0}.Actions is either not an ActionCollection or is null.", trigger.GetType().FullName);
+                    return;
+                }
+
+                actionCollection.Add(messageDependencyObject);
+            }
 
             // The second is the IAction doesn't have an associated object property so we have
             // to create it ourselves, could be potential issues here with leaking the associated 
