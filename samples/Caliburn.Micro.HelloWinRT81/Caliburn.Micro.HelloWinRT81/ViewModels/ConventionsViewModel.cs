@@ -1,10 +1,6 @@
 ﻿using Caliburn.Micro.WinRT.Sample.Results;
-using Caliburn.Micro.WinRT.Sample.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Caliburn.Micro.WinRT.Sample.ViewModels
 {
@@ -28,8 +24,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             }
             set
             {
-                currentDate = value;
-                NotifyOfPropertyChange(() => CurrentDate);
+                this.Set(ref currentDate, value);
             }
         }
 
@@ -41,8 +36,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             }
             set
             {
-                currentTime = value;
-                NotifyOfPropertyChange(() => CurrentTime);
+                this.Set(ref currentTime, value);
             }
         }
 
@@ -54,8 +48,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             }
             set
             {
-                searchText = value;
-                NotifyOfPropertyChange(() => SearchText);
+                this.Set(ref searchText, value);
             }
         }
 

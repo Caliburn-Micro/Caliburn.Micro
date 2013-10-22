@@ -1,12 +1,4 @@
-﻿using Windows.UI.Xaml.Controls;
-using Caliburn.Micro.WinRT.Sample.Results;
-using Caliburn.Micro.WinRT.Sample.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Caliburn.Micro.WinRT.Sample.ViewModels
 {
     public class HubViewModel : ViewModelBase
@@ -30,8 +22,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             }
             set
             {
-                pageTitle = value;
-                NotifyOfPropertyChange(() => PageTitle);
+                this.Set(ref pageTitle, value);
             }
         }
 
@@ -43,8 +34,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             }
             set
             {
-                firstSectionContent = value;
-                NotifyOfPropertyChange(() => FirstSectionContent);
+                this.Set(ref firstSectionContent, value);
             }
         }
 
@@ -56,8 +46,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             }
             set
             {
-                secondSection = value;
-                NotifyOfPropertyChange(() => SecondSection);
+                this.Set(ref secondSection, value);
             }
         }
     }

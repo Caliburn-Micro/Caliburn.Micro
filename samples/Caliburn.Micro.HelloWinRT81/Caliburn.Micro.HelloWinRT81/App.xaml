@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:caliburn="using:Caliburn.Micro" 
-    xmlns:callisto="using:Callisto.Controls"
     RequestedTheme="Light">
 
     <Application.Resources>
@@ -35,7 +34,7 @@
                 <Setter Property="Height" Value="140"/>
             </Style>
 
-            <Style TargetType="callisto:SettingsFlyout">
+            <Style TargetType="SettingsFlyout">
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             </Style>
 
