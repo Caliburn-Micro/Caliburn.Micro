@@ -20,8 +20,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             }
             set
             {
-                output = value;
-                NotifyOfPropertyChange("Output");
+                this.Set(ref output, value);
             }
         }
 
@@ -33,8 +32,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             }
             set
             {
-                input = value;
-                NotifyOfPropertyChange("Input");
+                this.Set(ref input, value);
             }
         }
 

@@ -20,8 +20,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             }
             set
             {
-                parameter = value;
-                NotifyOfPropertyChange("Parameter");
+                this.Set(ref parameter, value);
             }
         }
 

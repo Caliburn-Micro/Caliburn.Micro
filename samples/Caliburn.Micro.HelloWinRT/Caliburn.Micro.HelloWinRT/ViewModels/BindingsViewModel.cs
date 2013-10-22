@@ -32,8 +32,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             }
             set
             {
-                selectedDeveloper = value;
-                NotifyOfPropertyChange("SelectedDeveloper");
+                this.Set(ref selectedDeveloper, value);
             }
         }
     }

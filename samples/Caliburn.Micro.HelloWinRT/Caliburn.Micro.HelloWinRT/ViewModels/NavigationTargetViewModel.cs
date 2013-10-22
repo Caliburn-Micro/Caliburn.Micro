@@ -21,8 +21,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             }
             set
             {
-                name = value;
-                NotifyOfPropertyChange("Name");
+                this.Set(ref name, value);
             }
         }
 
@@ -34,8 +33,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             }
             set
             {
-                age = value;
-                NotifyOfPropertyChange("Age");
+                this.Set(ref age, value);
             }
         }
 
@@ -47,8 +45,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             }
             set
             {
-                isMarried = value;
-                NotifyOfPropertyChange("IsMarried");
+                this.Set(ref isMarried, value);
             }
         }
     }
