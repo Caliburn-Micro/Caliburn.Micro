@@ -13,7 +13,7 @@
         private FrameworkElement associatedObject;
 
         /// <summary>
-        /// Creates an instance of <see cref="AttachedCollection{T}"/>
+        /// Creates an instance of <see cref="AttachedCollection&lt;T&gt;"/>
         /// </summary>
         public AttachedCollection() {
             CollectionChanged += OnCollectionChanged;

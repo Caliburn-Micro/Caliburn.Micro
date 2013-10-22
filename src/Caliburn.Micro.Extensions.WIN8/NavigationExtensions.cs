@@ -1,5 +1,4 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
 
     /// <summary>
@@ -14,7 +13,7 @@
         /// <typeparam name="T">The <see cref="System.Type" /> to navigate to.</typeparam>
         /// <returns>Whether or not navigation succeeded.</returns>
         public static bool Navigate<T>(this INavigationService navigationService, object parameter = null) {
-            return navigationService.Navigate(typeof(T), parameter);
+            return navigationService.Navigate(typeof (T), parameter);
         }
 
         /// <summary>
@@ -24,10 +23,12 @@
         /// <param name="viewModelType">The model type to navigate to.</param>
         /// <param name="parameter">The object parameter to pass to the target.</param>
         /// <returns>Whether or not navigation succeeded.</returns>
-        public static bool NavigateToViewModel(this INavigationService navigationService, Type viewModelType, object parameter = null) {
+        public static bool NavigateToViewModel(this INavigationService navigationService, Type viewModelType,
+            object parameter = null) {
             var viewType = ViewLocator.LocateTypeForModelType(viewModelType, null, null);
             if (viewType == null) {
-                throw new InvalidOperationException(string.Format("No view was found for {0}. See the log for searched views.", viewModelType.FullName));
+                throw new InvalidOperationException(
+                    string.Format("No view was found for {0}. See the log for searched views.", viewModelType.FullName));
             }
 
             return navigationService.Navigate(viewType, parameter);
@@ -41,7 +42,7 @@
         /// <typeparam name="T">The model type to navigate to.</typeparam>
         /// <returns>Whether or not navigation succeeded.</returns>
         public static bool NavigateToViewModel<T>(this INavigationService navigationService, object parameter = null) {
-            return navigationService.NavigateToViewModel(typeof(T), parameter);
+            return navigationService.NavigateToViewModel(typeof (T), parameter);
         }
 
         /// <summary>

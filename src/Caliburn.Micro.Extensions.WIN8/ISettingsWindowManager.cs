@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
+﻿namespace Caliburn.Micro {
+    using System.Collections.Generic;
 
-namespace Caliburn.Micro
-{
     /// <summary>
     /// The settings window manager.
     /// </summary>
-    public interface ISettingsWindowManager
-    {
+    public interface ISettingsWindowManager {
         /// <summary>
         /// Shows a settings flyout panel for the specified model.
         /// </summary>

@@ -1,13 +1,10 @@
-﻿using System;
-using Windows.UI.Xaml;
+﻿namespace Caliburn.Micro {
+    using Windows.UI.Xaml;
 
-namespace Caliburn.Micro
-{
     /// <summary>
     /// Interaface usually from the Interactivity SDK's included here for completeness.
     /// </summary>
-    public interface IAttachedObject
-    {
+    public interface IAttachedObject {
         /// <summary>
         /// Attached the specified dependency object
         /// </summary>

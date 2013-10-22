@@ -1,10 +1,10 @@
-﻿using System;
-using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+﻿namespace Caliburn.Micro {
+    using System;
+    using Windows.Foundation;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Navigation;
 
-namespace Caliburn.Micro {
     /// <summary>
     ///   Implemented by services that provide (<see cref="Uri" /> based) navigation.
     /// </summary>
