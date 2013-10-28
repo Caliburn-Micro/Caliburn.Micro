@@ -1,10 +1,17 @@
 2.0-alpha
--portable library net45+sl5+win8+wp8
--SL4, WP71 and NET40 will not be supported
+-portable library net45+sl5+win8+wp8 (issue 259), SL4, WP71 and NET40 will not be supported
+-Support Windows 8.1 (issue 336) and use new Behavior SDK (issue 338)
+-Fix CultureInfo in CoerceValue
+-Remove Bootstrapper<TRootModel> and PhoneBootstrapper, use BootstrapperBase and PhoneBootstrapperBase
+-Remove package builder (will not work because portable/platform split)
+-Remove EventAggregator PublicationThreadMarshaller and Publish() without marshaller
+-Add EventAggregatorExtensions (PublishOnCurrentThread, PublishOnBackgroundThread, PublishOnUIThread, BeginPublishOnUIThread and PublishOnUIThreadAsync)
+-Fix OnViewReady should be called on child views too (issue 292)
+-Screen only have one TryClose(bool? dialogResult = null)
+-Coroutine uses CoroutineExecutionContext instead of ActionExecutionContext (as it is not portable)
 
 
 1.6 (not released)
--Support Windows 8.1 (issue 336)
 -Revert BootstrapperBase.Application.set() to be protected (issue 325)
 -add some more ContainerExtensions
 -allow to set all SettingsFlyout properties (WinRT only)
