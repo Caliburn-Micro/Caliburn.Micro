@@ -40,7 +40,8 @@
 
     <file src="..\bin\win8\Release\Caliburn.Micro.*.*" target="lib\win8" />
 
-    <!--file src="..\bin\win81\Release\Caliburn.Micro.*.*" target="lib\win81" /-->
+    <file src="..\bin\win81\Release\Caliburn.Micro.*.*" target="lib\win81" />
+    <file src="..\bin\win81\Release\Microsoft.Xaml.*.*" target="lib\win81" />
 
     <file src="..\bin\wp8\Release\Caliburn.Micro.*.*" target="lib\wp8" />
     <file src="..\bin\wp8\Release\System.Windows.Interactivity.*" target="lib\wp8" />
