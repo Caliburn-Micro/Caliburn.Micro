@@ -36,6 +36,7 @@
 
             isInitialized = true;
 
+            PlatformProvider.Current = new XamlPlatformProvider();
             if(Execute.InDesignMode) {
                 try {
                     StartDesignTime();
@@ -54,8 +55,6 @@
         /// Called by the bootstrapper's constructor at design time to start the framework.
         /// </summary>
         protected virtual void StartDesignTime() {
-            PlatformProvider.Current = new XamlPlatformProvider();
-
             AssemblySource.Instance.Clear();
             AssemblySource.Instance.AddRange(SelectAssemblies());
 
@@ -69,8 +68,6 @@
         /// Called by the bootstrapper's constructor at runtime to start the framework.
         /// </summary>
         protected virtual void StartRuntime() {
-            PlatformProvider.Current = new XamlPlatformProvider();
-
             EventAggregator.HandlerResultProcessing = (target, result) => {
                 var task = result as System.Threading.Tasks.Task;
                 if (task != null) {
