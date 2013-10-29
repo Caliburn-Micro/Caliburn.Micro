@@ -54,6 +54,8 @@
         /// Called by the bootstrapper's constructor at design time to start the framework.
         /// </summary>
         protected virtual void StartDesignTime() {
+            PlatformProvider.Current = new XamlPlatformProvider();
+
             AssemblySource.Instance.Clear();
             AssemblySource.Instance.AddRange(SelectAssemblies());
 

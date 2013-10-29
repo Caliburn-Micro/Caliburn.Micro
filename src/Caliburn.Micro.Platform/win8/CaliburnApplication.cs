@@ -21,6 +21,8 @@
         /// Called by the bootstrapper's constructor at design time to start the framework.
         /// </summary>
         protected virtual void StartDesignTime() {
+            PlatformProvider.Current = new XamlPlatformProvider();
+
             AssemblySource.Instance.Clear();
             AssemblySource.Instance.AddRange(SelectAssemblies());
 
@@ -65,7 +67,7 @@
         /// <summary>
         /// Start the framework.
         /// </summary>
-        protected virtual void Initialise() {
+        protected virtual void Initialize() {
             if (isInitialized) {
                 return;
             }
@@ -79,6 +81,7 @@
                 catch {
                     //if something fails at design-time, there's really nothing we can do...
                     isInitialized = false;
+                    throw;
                 }
             }
             else {
@@ -194,7 +197,7 @@
         /// <param name="viewType">The view type to navigate to.</param>
         /// <param name="paramter">The object parameter to pass to the target.</param>
         protected void DisplayRootView(Type viewType, object paramter = null) {
-            Initialise();
+            Initialize();
 
             if (RootFrame == null) {
                 RootFrame = CreateApplicationFrame();
@@ -224,7 +227,7 @@
         /// </summary>
         /// <param name="viewModelType">The view model type.</param>
         protected void DisplayRootViewFor(Type viewModelType) {
-            Initialise();
+            Initialize();
 
             var viewModel = IoC.GetInstance(viewModelType, null);
             var view = ViewLocator.LocateForModel(viewModel, null, null);
