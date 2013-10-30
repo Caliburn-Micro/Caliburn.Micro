@@ -82,7 +82,7 @@ namespace Caliburn.Micro.WinRT.Sample
         protected override void OnShareTargetActivated(ShareTargetActivatedEventArgs args)
         {
             // Normally wouldn't need to do this but need the container to be initialised
-            Initialise();
+            Initialize();
 
             // replace the share operation in the container
             container.UnregisterHandler(typeof(ShareOperation), null);
