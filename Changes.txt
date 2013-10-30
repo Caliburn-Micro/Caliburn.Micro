@@ -9,6 +9,10 @@
 -Fix OnViewReady should be called on child views too (issue 292)
 -Screen only have one TryClose(bool? dialogResult = null)
 -Coroutine uses CoroutineExecutionContext instead of ActionExecutionContext (as it is not portable)
+-SettingsService.RegisterCommand renamed to RegisterFlyoutCommand
+-CallistoSettingsWindowManager removed, repaced with SettingsWindowManager
+-Dependency on Callisto removed
+-Dependency on Windows.UI.Interactivity removed, replaced with 8.1 Behaviours SDK.
 
 
 1.6 (not released)
