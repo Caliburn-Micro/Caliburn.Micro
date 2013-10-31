@@ -11,7 +11,7 @@
         /// Indicates whether or not the framework is in design-time mode.
         /// </summary>
         public bool InDesignMode {
-            get { return false; }
+            get { return true; }
         }
 
         /// <summary>

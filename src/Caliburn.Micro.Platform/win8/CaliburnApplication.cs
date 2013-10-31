@@ -63,7 +63,7 @@
         /// <summary>
         /// Start the framework.
         /// </summary>
-        protected virtual void Initialize() {
+        protected void Initialize() {
             if (isInitialized) {
                 return;
             }
