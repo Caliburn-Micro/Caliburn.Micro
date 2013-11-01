@@ -1,7 +1,6 @@
 ﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Threading;
@@ -120,38 +119,7 @@
         /// </summary>
         /// <returns>A list of assemblies to inspect.</returns>
         protected virtual IEnumerable<Assembly> SelectAssemblies() {
-            if (Execute.InDesignMode) {
-                var appDomain = AppDomain.CurrentDomain;
-                var assemblies = appDomain.GetType()
-                                     .GetMethod("GetAssemblies")
-                                     .Invoke(appDomain, null) as Assembly[] ?? new Assembly[] { };
-
-                var applicationAssembly = assemblies.LastOrDefault(ContainsApplicationClass);
-                return applicationAssembly == null ? new Assembly[] { } : new[] { applicationAssembly };
-            }
-
-#if SILVERLIGHT
-            var entryAssembly = Application.Current.GetType().Assembly;
-#else
-            var entryAssembly = Assembly.GetEntryAssembly();
-#endif
-            return entryAssembly == null ? new Assembly[] { } : new[] { entryAssembly };
-        }
-
-        private static bool ContainsApplicationClass(Assembly assembly) {
-            var containsApp = false;
-
-            try {
-#if SILVERLIGHT && !WINDOWS_PHONE
-                containsApp = !assembly.IsDynamic && assembly.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application)));
-#else
-                containsApp = assembly.EntryPoint != null && assembly.GetExportedTypes().Any(t => t.IsSubclassOf(typeof(Application)));
-#endif
-            }
-            catch {
-            }
-
-            return containsApp;
+            return new[] { GetType().Assembly };
         }
 
         /// <summary>

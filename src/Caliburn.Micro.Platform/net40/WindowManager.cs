@@ -63,8 +63,9 @@
         public virtual void ShowWindow(object rootModel, object context = null, IDictionary<string, object> settings = null){
             NavigationWindow navWindow = null;
 
-            if (Application.Current != null && Application.Current.MainWindow != null) {
-                navWindow = Application.Current.MainWindow as NavigationWindow;
+            var application = Application.Current;
+            if (application != null && application.MainWindow != null) {
+                navWindow = application.MainWindow as NavigationWindow;
             }
 
             if(navWindow != null) {
@@ -196,14 +197,13 @@
         /// <param name="window">The window to whose owner needs to be determined.</param>
         /// <returns>The owner.</returns>
         protected virtual Window InferOwnerOf(Window window) {
-            if (Application.Current == null) {
+            var application = Application.Current;
+            if (application == null) {
                 return null;
             }
 
-            var active = Application.Current.Windows.OfType<Window>()
-                .Where(x => x.IsActive)
-                .FirstOrDefault();
-            active = active ?? Application.Current.MainWindow;
+            var active = application.Windows.OfType<Window>().FirstOrDefault(x => x.IsActive);
+            active = active ?? application.MainWindow;
             return active == window ? null : active;
         }
 
