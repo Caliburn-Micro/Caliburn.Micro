@@ -14,6 +14,7 @@
 -Dependency on Callisto removed
 -Dependency on Windows.UI.Interactivity removed, replaced with 8.1 Behaviours SDK.
 -NotifyOfPropertyChange() does not support [CallerMemberName] at the moment
+-Fix Memory leak in ActivateWith() and DeactivateWith()
 
 
 1.6 (not released)

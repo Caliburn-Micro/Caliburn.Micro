@@ -50,20 +50,16 @@
         ///<param name="child">The child to activate.</param>
         ///<param name="parent">The parent whose activation triggers the child's activation.</param>
         public static void ActivateWith(this IActivate child, IActivate parent) {
-            EventHandler<ActivationEventArgs> handler = (s, e) => child.Activate();
+            var childReference = new WeakReference(child);
+            EventHandler<ActivationEventArgs> handler = null;
+            handler = (s, e) => {
+                var activatable = (IActivate) childReference.Target;
+                if (activatable == null)
+                    ((IActivate) s).Activated -= handler;
+                else
+                    activatable.Activate();
+            };
             parent.Activated += handler;
-
-            var deactivator = parent as IDeactivate;
-            if(deactivator != null) {
-                EventHandler<DeactivationEventArgs> handler2 = null;
-                handler2 = (s, e) => {
-                    if (e.WasClosed) {
-                        parent.Activated -= handler;
-                        deactivator.Deactivated -= handler2;
-                    }
-                };
-                deactivator.Deactivated += handler2;
-            }
         }
 
         ///<summary>
@@ -72,11 +68,14 @@
         ///<param name="child">The child to deactivate.</param>
         ///<param name="parent">The parent whose deactivation triggers the child's deactivation.</param>
         public static void DeactivateWith(this IDeactivate child, IDeactivate parent) {
+            var childReference = new WeakReference(child);
             EventHandler<DeactivationEventArgs> handler = null;
             handler = (s, e) => {
-                child.Deactivate(e.WasClosed);
-                if (e.WasClosed)
-                    parent.Deactivated -= handler;
+                var deactivatable = (IDeactivate) childReference.Target;
+                if (deactivatable == null)
+                    ((IDeactivate)s).Deactivated -= handler;
+                else
+                    deactivatable.Deactivate(e.WasClosed);
             };
             parent.Deactivated += handler;
         }
