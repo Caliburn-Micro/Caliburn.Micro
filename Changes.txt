@@ -10,11 +10,12 @@
 -Screen only have one TryClose(bool? dialogResult = null)
 -Coroutine uses CoroutineExecutionContext instead of ActionExecutionContext (as it is not portable)
 -SettingsService.RegisterCommand renamed to RegisterFlyoutCommand
--CallistoSettingsWindowManager removed, repaced with SettingsWindowManager
+-CallistoSettingsWindowManager removed, replaced with SettingsWindowManager
 -Dependency on Callisto removed
 -Dependency on Windows.UI.Interactivity removed, replaced with 8.1 Behaviours SDK.
 -NotifyOfPropertyChange() does not support [CallerMemberName] at the moment
 -Fix Memory leak in ActivateWith() and DeactivateWith()
+-View/ViewModel-Locator performance improvement (issue 342)
 
 
 1.6 (not released)
@@ -50,5 +51,5 @@
 -Changed Handler class in EventAggregator to have an IsDead property (needed for the above to work).
 -Changed parameter names in all EventAggregator methods from instance to message where dealing with the message.
 -Added HandlerExistsFor to EventAggregator class for checking the for the existence of a specified handler.
--Now it is posssible to use a custom AppBarButton/AppBarMenuItem implementation with our ActionMessage. All you need to do is to implement the Interface.
+-Now it is possible to use a custom AppBarButton/AppBarMenuItem implementation with our ActionMessage. All you need to do is to implement the Interface.
 -More unit test coverage
