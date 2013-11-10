@@ -48,11 +48,8 @@
 #elif SILVERLIGHT
                     inDesignMode = DesignerProperties.IsInDesignTool;
 #else
-                    var prop = DesignerProperties.IsInDesignModeProperty;
-                    inDesignMode = (bool)DependencyPropertyDescriptor.FromProperty(prop, typeof(FrameworkElement)).Metadata.DefaultValue;
-
-                    if (!inDesignMode.GetValueOrDefault(false) && System.Diagnostics.Process.GetCurrentProcess().ProcessName.StartsWith("devenv", StringComparison.Ordinal))
-                        inDesignMode = true;
+                    var descriptor = DependencyPropertyDescriptor.FromProperty(DesignerProperties.IsInDesignModeProperty, typeof (FrameworkElement));
+                    inDesignMode = (bool)descriptor.Metadata.DefaultValue;
 #endif
                 }
 
@@ -95,7 +92,7 @@
             ValidateDispatcher();
 #if WinRT
             return dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask();
-#elif NET45
+#elif NET
             return dispatcher.InvokeAsync(action).Task;
 #else
             var taskSource = new TaskCompletionSource<object>();
@@ -108,12 +105,7 @@
                     taskSource.SetException(ex);
                 }
             };
-            var operation = dispatcher.BeginInvoke(method);
-#if !SL5 && !WP8
-            if (operation.Status == DispatcherOperationStatus.Aborted) {
-                taskSource.SetCanceled();
-            }
-#endif
+            dispatcher.BeginInvoke(method);
             return taskSource.Task;
 #endif
         }
@@ -126,8 +118,40 @@
         public void OnUIThread(System.Action action) {
             if (CheckAccess())
                 action();
-            else
-                OnUIThreadAsync(action).Wait();
+            else {
+#if WinRT
+                dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask().Wait();
+#elif NET
+                Exception exception = null;
+                System.Action method = () => {
+                    try {
+                        action();
+                    }
+                    catch(Exception ex) {
+                        exception = ex;
+                    }
+                };
+                dispatcher.Invoke(method);
+                if (exception != null)
+                    throw new System.Reflection.TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
+#else
+                var waitHandle = new System.Threading.ManualResetEvent(false);
+                Exception exception = null;
+                System.Action method = () => {
+                    try {
+                        action();
+                    }
+                    catch (Exception ex) {
+                        exception = ex;
+                    }
+                    waitHandle.Set();
+                };
+                dispatcher.BeginInvoke(method);
+                waitHandle.WaitOne();
+                if (exception != null)
+                    throw new System.Reflection.TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
+#endif
+            }
         }
 
         /// <summary>
