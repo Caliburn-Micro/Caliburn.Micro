@@ -22,7 +22,7 @@
         /// <summary>
         /// Gets or Sets the Parent <see cref = "IConductor" />
         /// </summary>
-        public object Parent {
+        public virtual object Parent {
             get { return parent; }
             set {
                 parent = value;
@@ -33,7 +33,7 @@
         /// <summary>
         /// Gets or Sets the Display Name
         /// </summary>
-        public string DisplayName {
+        public virtual string DisplayName {
             get { return displayName; }
             set {
                 displayName = value;
