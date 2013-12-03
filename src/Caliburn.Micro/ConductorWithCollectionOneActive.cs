@@ -10,7 +10,7 @@
         /// </summary>
         public partial class Collection {
             /// <summary>
-            /// An implementation of <see cref="IConductor"/> that holds on many items but only activates on at a time.
+            /// An implementation of <see cref="IConductor"/> that holds on many items but only activates one at a time.
             /// </summary>
             public class OneActive : ConductorBaseWithActiveItem<T> {
                 readonly BindableCollection<T> items = new BindableCollection<T>();
