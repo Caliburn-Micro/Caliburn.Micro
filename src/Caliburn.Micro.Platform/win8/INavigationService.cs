@@ -1,5 +1,7 @@
 ﻿namespace Caliburn.Micro {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using Windows.Foundation;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
@@ -73,6 +75,26 @@
         ///   Navigates back.
         /// </summary>
         void GoBack();
+
+#if WinRT81
+        /// <summary>
+        /// Gets a collection of PageStackEntry instances representing the backward navigation history of the Frame.
+        /// </summary>
+        /// 
+        /// <returns>
+        /// The backward navigation stack.
+        /// </returns>
+        IList<PageStackEntry> BackStack { get; }
+
+        /// <summary>
+        /// Gets a collection of PageStackEntry instances representing the forward navigation history of the Frame.
+        /// </summary>
+        /// 
+        /// <returns>
+        /// The forward navigation stack.
+        /// </returns>
+        IList<PageStackEntry> ForwardStack { get; }
+#endif
     }
 
     /// <summary>
@@ -304,5 +326,19 @@
         public bool CanGoBack {
             get { return frame.CanGoBack; }
         }
+
+#if WinRT81
+        public IList<PageStackEntry> BackStack {
+            get {
+                return frame.BackStack;
+            }
+        }
+
+        public IList<PageStackEntry> ForwardStack {
+            get {
+                return frame.ForwardStack;
+            }
+        }
+#endif
     }
 }
