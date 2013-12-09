@@ -178,8 +178,20 @@
                         if (semanticZoom.ZoomedOutView is DependencyObject)
                             queue.Enqueue(semanticZoom.ZoomedOutView as DependencyObject);
                     }
+
+                    var listViewBase = current as ListViewBase;
+                    if (listViewBase != null) {
+                        if (listViewBase.Header is DependencyObject)
+                            queue.Enqueue(listViewBase.Header as DependencyObject);
+                    }
 #endif
 #if WinRT81
+                    if (listViewBase != null)
+                    {
+                        if (listViewBase.Footer is DependencyObject)
+                            queue.Enqueue(listViewBase.Footer as DependencyObject);
+                    }
+                    
                     var hub = current as Hub;
                     if (hub != null) {
                         if (hub.Header is DependencyObject)
