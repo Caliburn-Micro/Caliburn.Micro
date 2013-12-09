@@ -23,24 +23,32 @@
         /// </summary>
         /// <param name="rootFrame">The application root frame.</param>
         /// <param name="treatViewAsLoaded">if set to <c>true</c> [treat view as loaded].</param>
-        public void RegisterNavigationService(Frame rootFrame, bool treatViewAsLoaded = false) {
+        public INavigationService RegisterNavigationService(Frame rootFrame, bool treatViewAsLoaded = false) {
             if (HasHandler(typeof (INavigationService), null))
-                return;
+                return this.GetInstance<INavigationService>(null);
 
             if (rootFrame == null)
                 throw new ArgumentNullException("rootFrame");
 
-            RegisterInstance(typeof (INavigationService), null, new FrameAdapter(rootFrame, treatViewAsLoaded));
+            var frameAdapter = new FrameAdapter(rootFrame, treatViewAsLoaded);
+
+            RegisterInstance(typeof (INavigationService), null, frameAdapter);
+
+            return frameAdapter;
         }
 
         /// <summary>
         /// Registers the Caliburn.Micro sharing service with the container.
         /// </summary>
-        public void RegisterSharingService() {
+        public ISharingService RegisterSharingService() {
             if (HasHandler(typeof (ISharingService), null))
-                return;
+                return this.GetInstance<ISharingService>(null);
 
-            RegisterInstance(typeof (ISharingService), null, new SharingService());
+            var sharingService = new SharingService();
+
+            RegisterInstance(typeof (ISharingService), null, sharingService);
+
+            return sharingService;
         }
 
         /// <summary>
@@ -48,7 +56,7 @@
         /// </summary>
         public ISettingsService RegisterSettingsService() {
             if (HasHandler(typeof (ISettingsService), null))
-                return (ISettingsService) GetInstance(typeof (ISettingsService), null);
+                return this.GetInstance<ISettingsService>(null);
 
             if (!HasHandler(typeof (ISettingsWindowManager), null))
 #if WinRT81
