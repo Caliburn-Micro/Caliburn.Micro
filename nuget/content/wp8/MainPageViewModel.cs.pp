@@ -1,3 +1,3 @@
 ﻿namespace $rootnamespace$ {
-    public class MainPageViewModel {}
+    public class MainPageViewModel : Caliburn.Micro.PropertyChangedBase { }
 }
