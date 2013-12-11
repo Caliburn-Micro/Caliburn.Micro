@@ -1,3 +1,3 @@
 ﻿namespace $rootnamespace$ {
-    public class ShellViewModel : IShell {}
+    public class ShellViewModel : Caliburn.Micro.PropertyChangedBase, IShell { }
 }
