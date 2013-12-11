@@ -182,6 +182,18 @@
         }
 
         /// <summary>
+        /// Allows you to trigger the creation of the RootFrame from Configure if necessary.
+        /// </summary>
+        protected virtual void PrepareViewFirst()
+        {
+            if (RootFrame != null)
+                return;
+
+            RootFrame = CreateApplicationFrame();
+            PrepareViewFirst(RootFrame);
+        }
+
+        /// <summary>
         /// Override this to register a navigation service.
         /// </summary>
         /// <param name="rootFrame">The root frame of the application.</param>
@@ -196,10 +208,7 @@
         protected void DisplayRootView(Type viewType, object paramter = null) {
             Initialize();
 
-            if (RootFrame == null) {
-                RootFrame = CreateApplicationFrame();
-                PrepareViewFirst(RootFrame);
-            }
+            PrepareViewFirst();
 
             RootFrame.Navigate(viewType, paramter);
 
