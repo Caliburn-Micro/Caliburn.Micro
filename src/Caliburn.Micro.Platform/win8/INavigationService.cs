@@ -1,4 +1,6 @@
-﻿namespace Caliburn.Micro {
+﻿using Windows.Storage;
+
+namespace Caliburn.Micro {
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -95,15 +97,34 @@
         /// </returns>
         IList<PageStackEntry> ForwardStack { get; }
 #endif
+
+        /// <summary>
+        /// Stores the frame navigation state in local settings if it can.
+        /// </summary>
+        /// <returns>Whether the suspension was sucessful</returns>
+        bool SuspendState();
+
+        /// <summary>
+        /// Tries to restore the frame navigation state from local settings.
+        /// </summary>
+        /// <returns>Whether the restoration of successful.</returns>
+        bool ResumeState();
     }
 
     /// <summary>
     ///   A basic implementation of <see cref="INavigationService" /> designed to adapt the <see cref="Frame" /> control.
     /// </summary>
     public class FrameAdapter : INavigationService {
+
+        private static readonly ILog Log = LogManager.GetLog(typeof(FrameAdapter));
+        private const string FrameStateKey = "FrameState";
+        private const string ParameterKey = "ParameterKey";
+
         private readonly Frame frame;
         private readonly bool treatViewAsLoaded;
         private event NavigatingCancelEventHandler ExternalNavigatingHandler = delegate { };
+
+        private object currentParameter;
 
         /// <summary>
         ///   Creates an instance of <see cref="FrameAdapter" />
@@ -159,26 +180,34 @@
         /// <param name="sender"> The event sender. </param>
         /// <param name="e"> The event args. </param>
         protected virtual void OnNavigated(object sender, NavigationEventArgs e) {
+
             if (e.Content == null)
                 return;
 
-            ViewLocator.InitializeComponent(e.Content);
-
-            var viewModel = ViewModelLocator.LocateForView(e.Content);
-            if (viewModel == null)
-                return;
+            currentParameter = e.Parameter;
 
             var view = e.Content as Page;
+
             if (view == null) {
                 throw new ArgumentException("View '" + e.Content.GetType().FullName +
                                             "' should inherit from Page or one of its descendents.");
             }
 
+            BindViewModel(view);
+        }
+
+        protected virtual void BindViewModel(DependencyObject view) {
+            ViewLocator.InitializeComponent(view);
+
+            var viewModel = ViewModelLocator.LocateForView(view);
+            if (viewModel == null)
+                return;
+
             if (treatViewAsLoaded) {
                 view.SetValue(View.IsLoadedProperty, true);
             }
 
-            TryInjectParameters(viewModel, e.Parameter);
+            TryInjectParameters(viewModel, currentParameter);
             ViewModelBinder.Bind(viewModel, view, null);
 
             var activator = viewModel as IActivate;
@@ -340,5 +369,68 @@
             }
         }
 #endif
+        /// <summary>
+        /// Stores the frame navigation state in local settings if it can.
+        /// </summary>
+        /// <returns>Whether the suspension was sucessful</returns>
+        public bool SuspendState()
+        {
+            try
+            {
+                var container = GetSettingsContainer();
+
+                container.Values[FrameStateKey] = frame.GetNavigationState();
+                container.Values[ParameterKey] = currentParameter;
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Tries to restore the frame navigation state from local settings.
+        /// </summary>
+        /// <returns>Whether the restoration of successful.</returns>
+        public bool ResumeState() {
+            var container = GetSettingsContainer();
+
+            if (!container.Values.ContainsKey(FrameStateKey))
+                return false;
+
+            var frameState = (string) container.Values[FrameStateKey];
+
+            currentParameter = container.Values.ContainsKey(ParameterKey) ?
+                container.Values[ParameterKey] :
+                null;
+
+            if (String.IsNullOrEmpty(frameState))
+                return false;
+
+            frame.SetNavigationState(frameState);
+
+            var view = frame.Content as Page;
+            if (view == null) {
+                return false;
+            }
+
+            BindViewModel(view);
+
+            if (Window.Current.Content != frame)
+                Window.Current.Content = frame;
+
+            Window.Current.Activate();
+
+            return true;
+        }
+
+        private ApplicationDataContainer GetSettingsContainer()
+        {
+            return ApplicationData.Current.LocalSettings.CreateContainer("Caliburn.Micro", ApplicationDataCreateDisposition.Always);
+        }
     }
 }

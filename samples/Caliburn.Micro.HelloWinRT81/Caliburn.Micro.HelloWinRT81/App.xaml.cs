@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Windows.ApplicationModel;
 using Caliburn.Micro.WinRT.Sample.ViewModels;
 using Caliburn.Micro.WinRT.Sample.Views;
 using Windows.ApplicationModel.Activation;
@@ -12,6 +13,7 @@ namespace Caliburn.Micro.WinRT.Sample
     public sealed partial class App
     {
         private WinRTContainer container;
+        private INavigationService navigationService;
 
         public App()
         {
@@ -48,6 +50,10 @@ namespace Caliburn.Micro.WinRT.Sample
                 .PerRequest<ShareTargetViewModel>()
                 .PerRequest<ConventionsViewModel>()
                 .PerRequest<HubViewModel>();
+
+            // We want to use the Frame in OnLaunched so set it up here
+
+            PrepareViewFirst();
         }
 
         protected override object GetInstance(Type service, string key)
@@ -71,12 +77,22 @@ namespace Caliburn.Micro.WinRT.Sample
 
         protected override void PrepareViewFirst(Frame rootFrame)
         {
-            container.RegisterNavigationService(rootFrame);
+            navigationService = container.RegisterNavigationService(rootFrame);
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            DisplayRootView<MenuView>();
+            Initialize();
+
+            var resumed = false;
+
+            if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+            {
+                resumed = navigationService.ResumeState();
+            }
+
+            if (!resumed)
+                DisplayRootView<MenuView>();
         }
 
         protected override void OnSearchActivated(SearchActivatedEventArgs args)
@@ -94,6 +110,11 @@ namespace Caliburn.Micro.WinRT.Sample
             container.Instance(args.ShareOperation);
 
             DisplayRootViewFor<ShareTargetViewModel>();
+        }
+
+        protected override void OnSuspending(object sender, SuspendingEventArgs e)
+        {
+            navigationService.SuspendState();
         }
     }
 }
