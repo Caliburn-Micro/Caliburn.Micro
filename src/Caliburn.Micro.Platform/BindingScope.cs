@@ -186,8 +186,7 @@
                     }
 #endif
 #if WinRT81
-                    if (listViewBase != null)
-                    {
+                    if (listViewBase != null) {
                         if (listViewBase.Footer is DependencyObject)
                             queue.Enqueue(listViewBase.Footer as DependencyObject);
                     }
@@ -278,14 +277,12 @@
             var menuFlyout = flyoutBase as MenuFlyout;
 
             if (menuFlyout != null && menuFlyout.Items != null) {
-                foreach (var item in menuFlyout.Items)
-                {
+                foreach (var item in menuFlyout.Items) {
                     yield return item;
                 }
             }
         }
 #endif
-
 
         /// <summary>
         /// Finds a path of dependency objects which traces through visual anscestry until a root which is <see langword="null"/>,

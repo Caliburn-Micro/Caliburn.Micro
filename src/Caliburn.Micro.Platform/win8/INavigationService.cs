@@ -1,10 +1,8 @@
-﻿using Windows.Storage;
-
-namespace Caliburn.Micro {
+﻿namespace Caliburn.Micro {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using Windows.Foundation;
+    using Windows.Storage;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Navigation;
@@ -82,19 +80,11 @@ namespace Caliburn.Micro {
         /// <summary>
         /// Gets a collection of PageStackEntry instances representing the backward navigation history of the Frame.
         /// </summary>
-        /// 
-        /// <returns>
-        /// The backward navigation stack.
-        /// </returns>
         IList<PageStackEntry> BackStack { get; }
 
         /// <summary>
         /// Gets a collection of PageStackEntry instances representing the forward navigation history of the Frame.
         /// </summary>
-        /// 
-        /// <returns>
-        /// The forward navigation stack.
-        /// </returns>
         IList<PageStackEntry> ForwardStack { get; }
 #endif
 
@@ -127,10 +117,13 @@ namespace Caliburn.Micro {
         private object currentParameter;
 
         /// <summary>
-        ///   Creates an instance of <see cref="FrameAdapter" />
+        /// Creates an instance of <see cref="FrameAdapter" />.
         /// </summary>
-        /// <param name="frame"> The frame to represent as a <see cref="INavigationService" /> . </param>
-        /// <param name="treatViewAsLoaded"> Tells the frame adapter to assume that the view has already been loaded by the time OnNavigated is called. This is necessary when using the TransitionFrame. </param>
+        /// <param name="frame">The frame to represent as a <see cref="INavigationService" />.</param>
+        /// <param name="treatViewAsLoaded">
+        /// Tells the frame adapter to assume that the view has already been loaded by the time OnNavigated is called.
+        /// This is necessary when using the TransitionFrame.
+        /// </param>
         public FrameAdapter(Frame frame, bool treatViewAsLoaded = false) {
             this.frame = frame;
             this.treatViewAsLoaded = treatViewAsLoaded;
@@ -196,6 +189,10 @@ namespace Caliburn.Micro {
             BindViewModel(view);
         }
 
+        /// <summary>
+        /// Binds the view model.
+        /// </summary>
+        /// <param name="view">The view.</param>
         protected virtual void BindViewModel(DependencyObject view) {
             ViewLocator.InitializeComponent(view);
 
@@ -357,26 +354,27 @@ namespace Caliburn.Micro {
         }
 
 #if WinRT81
+        /// <summary>
+        /// Gets a collection of PageStackEntry instances representing the backward navigation history of the Frame.
+        /// </summary>
         public IList<PageStackEntry> BackStack {
-            get {
-                return frame.BackStack;
-            }
+            get { return frame.BackStack; }
         }
 
+        /// <summary>
+        /// Gets a collection of PageStackEntry instances representing the forward navigation history of the Frame.
+        /// </summary>
         public IList<PageStackEntry> ForwardStack {
-            get {
-                return frame.ForwardStack;
-            }
+            get { return frame.ForwardStack; }
         }
 #endif
+
         /// <summary>
         /// Stores the frame navigation state in local settings if it can.
         /// </summary>
         /// <returns>Whether the suspension was sucessful</returns>
-        public bool SuspendState()
-        {
-            try
-            {
+        public bool SuspendState() {
+            try {
                 var container = GetSettingsContainer();
 
                 container.Values[FrameStateKey] = frame.GetNavigationState();
@@ -384,8 +382,7 @@ namespace Caliburn.Micro {
 
                 return true;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 Log.Error(ex);
             }
 
@@ -428,9 +425,9 @@ namespace Caliburn.Micro {
             return true;
         }
 
-        private ApplicationDataContainer GetSettingsContainer()
-        {
-            return ApplicationData.Current.LocalSettings.CreateContainer("Caliburn.Micro", ApplicationDataCreateDisposition.Always);
+        private static ApplicationDataContainer GetSettingsContainer() {
+            return ApplicationData.Current.LocalSettings.CreateContainer("Caliburn.Micro",
+                ApplicationDataCreateDisposition.Always);
         }
     }
 }

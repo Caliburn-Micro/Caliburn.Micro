@@ -184,8 +184,7 @@
         /// <summary>
         /// Allows you to trigger the creation of the RootFrame from Configure if necessary.
         /// </summary>
-        protected virtual void PrepareViewFirst()
-        {
+        protected virtual void PrepareViewFirst() {
             if (RootFrame != null)
                 return;
 
