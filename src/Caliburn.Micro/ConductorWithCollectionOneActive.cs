@@ -132,7 +132,7 @@
                 /// </summary>
                 /// <param name="callback">The implementor calls this action with the result of the close check.</param>
                 public override void CanClose(Action<bool> callback) {
-                    CloseStrategy.Execute(items, (canClose, closable) => {
+                    CloseStrategy.Execute(items.ToList(), (canClose, closable) => {
                         if(!canClose && closable.Any()) {
                             if(closable.Contains(ActiveItem)) {
                                 var list = items.ToList();

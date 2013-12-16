@@ -7,9 +7,6 @@
     /// </summary>
     /// <typeparam name="T">The type of child element.</typeparam>
     public class DefaultCloseStrategy<T> : ICloseStrategy<T> {
-        List<T> closable;
-        bool finalResult;
-        bool guardMustCallEvaluate;
         readonly bool closeConductedItemsWhenConductorCannotClose;
 
         /// <summary>
@@ -27,21 +24,14 @@
         /// <param name="callback">The action to call when all enumeration is complete and the close results are aggregated.
         /// The bool indicates whether close can occur. The enumerable indicates which children should close if the parent cannot.</param>
         public void Execute(IEnumerable<T> toClose, Action<bool, IEnumerable<T>> callback) {
-            finalResult = true;
-            closable = new List<T>();
-            guardMustCallEvaluate = false;
-
-            Evaluate(true, toClose.GetEnumerator(), callback);
+            Evaluate(new EvaluationState(), toClose.GetEnumerator(), callback);
         }
 
-        void Evaluate(bool result, IEnumerator<T> enumerator, Action<bool, IEnumerable<T>> callback) {
-            finalResult = finalResult && result;
-
+        void Evaluate(EvaluationState state, IEnumerator<T> enumerator, Action<bool, IEnumerable<T>> callback) {
             var guardPending = false;
             do {
                 if (!enumerator.MoveNext()) {
-                    callback(finalResult, closeConductedItemsWhenConductorCannotClose ? closable : new List<T>());
-                    closable = null;
+                    callback(state.FinalResult, closeConductedItemsWhenConductorCannotClose ? state.Closable : new List<T>());
                     break;
                 }
 
@@ -49,23 +39,30 @@
                 var guard = current as IGuardClose;
                 if (guard != null) {
                     guardPending = true;
-                    guard.CanClose(canClose =>{
+                    guard.CanClose(canClose => {
                         guardPending = false;
                         if (canClose) {
-                            closable.Add(current);
+                            state.Closable.Add(current);
                         }
-                        if (guardMustCallEvaluate) {
-                            guardMustCallEvaluate = false;
-                            Evaluate(canClose, enumerator, callback);
-                        } else {
-                            finalResult = finalResult && canClose;  
+
+                        state.FinalResult = state.FinalResult && canClose;
+
+                        if (state.GuardMustCallEvaluate) {
+                            state.GuardMustCallEvaluate = false;
+                            Evaluate(state, enumerator, callback);
                         }
                     });
-                    guardMustCallEvaluate = guardMustCallEvaluate || guardPending;
+                    state.GuardMustCallEvaluate = state.GuardMustCallEvaluate || guardPending;
                 } else {
-                    closable.Add(current);
+                    state.Closable.Add(current);
                 }
             } while (!guardPending);
+        }
+
+        class EvaluationState {
+            public readonly List<T> Closable = new List<T>();
+            public bool FinalResult = true;
+            public bool GuardMustCallEvaluate;
         }
     }
 }
