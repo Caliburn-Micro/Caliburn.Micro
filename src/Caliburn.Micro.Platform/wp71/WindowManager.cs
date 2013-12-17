@@ -1,5 +1,4 @@
-﻿namespace Caliburn.Micro
-{
+﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -12,7 +11,6 @@
     using System.Windows.Media.Animation;
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
-    using System.Threading;
 
     /// <summary>
     ///   A service that manages windows.
@@ -123,7 +121,7 @@
             return popup;
         }
 
-        bool ApplySettings(object target, IEnumerable<KeyValuePair<string, object>> settings) {
+        static bool ApplySettings(object target, IEnumerable<KeyValuePair<string, object>> settings) {
             if(settings != null) {
                 var type = target.GetType();
 
@@ -281,7 +279,7 @@
             void ArrangePlacement() {
                 maskingLayer.Dispatcher.BeginInvoke(() => {
                     var placement = new ElementPlacement {
-                        Transform = (Transform)currentPage.SafeTransformToVisual(null),
+                        Transform = currentPage.SafeTransformToVisual(null) as Transform ?? new TranslateTransform(),
                         Orientation = currentPage.Orientation,
                         Size = new Size(currentPage.ActualWidth, currentPage.ActualHeight)
                     };
