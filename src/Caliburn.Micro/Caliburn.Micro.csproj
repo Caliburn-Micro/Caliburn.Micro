@@ -63,6 +63,7 @@
     <Compile Include="Coroutine.cs" />
     <Compile Include="CoroutineExecutionContext.cs" />
     <Compile Include="DeactivationEventArgs.cs" />
+    <Compile Include="DebugLog.cs" />
     <Compile Include="DefaultCloseStrategy.cs" />
     <Compile Include="DefaultPlatformProvider.cs" />
     <Compile Include="EnumerableExtensions.cs" />

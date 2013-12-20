@@ -109,7 +109,6 @@
     <Compile Include="Results\MessageDialogResult.cs" />
     <Compile Include="Results\ResultBase.cs" />
     <Compile Include="Results\VisualStateResult.cs" />
-    <Compile Include="SimpleLog.cs" />
     <Compile Include="ViewModelHelper.cs" />
     <Compile Include="ViewModels\ActionsViewModel.cs" />
     <Compile Include="ViewModels\BindingsViewModel.cs" />

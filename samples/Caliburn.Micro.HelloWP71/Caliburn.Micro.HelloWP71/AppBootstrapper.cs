@@ -9,7 +9,7 @@
         PhoneContainer container;
 
         public AppBootstrapper() {
-            LogManager.GetLog = type => new SimpleLog(type);
+            LogManager.GetLog = type => new DebugLog(type);
             Start();
         }
 

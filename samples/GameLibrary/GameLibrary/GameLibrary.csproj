@@ -116,7 +116,6 @@
     </Compile>
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="Framework\BusyResult.cs" />
-    <Compile Include="Framework\SimpleLog.cs" />
     <Compile Include="Framework\Error.cs" />
     <Compile Include="Framework\IOpenResult.cs" />
     <Compile Include="Framework\OpenChildResult.cs" />

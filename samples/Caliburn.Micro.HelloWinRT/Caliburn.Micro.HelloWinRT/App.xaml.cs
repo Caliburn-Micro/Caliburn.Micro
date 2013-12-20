@@ -14,7 +14,7 @@ namespace Caliburn.Micro.WinRT.Sample
 
         public App()
         {
-            LogManager.GetLog = type => new SimpleLog(type);
+            LogManager.GetLog = type => new DebugLog(type);
 
             InitializeComponent();
         }
