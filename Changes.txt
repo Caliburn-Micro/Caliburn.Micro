@@ -1,6 +1,8 @@
 2.0-rc
 -DefaultCloseStrategy fails with null ref exception (issue 350)
 -Unable to cast object of type 'MS.Internal.InternalTransform' to type 'System.Windows.Media.Transform' (issue 352)
+-add DebugLog
+-add IResult decorators
 
 
 2.0-alpha
