@@ -92,7 +92,7 @@
             ValidateDispatcher();
 #if WinRT
             return dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask();
-#elif NET
+#elif NET45
             return dispatcher.InvokeAsync(action).Task;
 #else
             var taskSource = new TaskCompletionSource<object>();
