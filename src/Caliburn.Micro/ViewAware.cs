@@ -2,11 +2,12 @@
     using System;
     using System.Collections.Generic;
 
-    ///<summary>
-    ///  A base implementation of <see cref = "IViewAware" /> which is capable of caching views by context.
-    ///</summary>
+    /// <summary>
+    /// A base implementation of <see cref = "IViewAware" /> which is capable of caching views by context.
+    /// </summary>
     public class ViewAware : PropertyChangedBase, IViewAware {
-        private bool cacheViews;
+        bool cacheViews;
+        readonly IDictionary<object, object> views;
 
         /// <summary>
         /// The default view context.
@@ -19,33 +20,36 @@
         public static bool CacheViewsByDefault = true;
 
         /// <summary>
-        ///   The view chache for this instance.
+        /// The view chache for this instance.
         /// </summary>
-        protected readonly IDictionary<object, object> Views = new Dictionary<object, object>();
+        protected IDictionary<object, object> Views {
+            get { return views; }
+        }
 
-        ///<summary>
+        /// <summary>
         /// Creates an instance of <see cref="ViewAware"/>.
-        ///</summary>
+        /// </summary>
         public ViewAware()
             : this(CacheViewsByDefault) {
         }
 
-        ///<summary>
+        /// <summary>
         /// Creates an instance of <see cref="ViewAware"/>.
-        ///</summary>
-        ///<param name="cacheViews">Indicates whether or not this instance maintains a view cache.</param>
+        /// </summary>
+        /// <param name="cacheViews">Indicates whether or not this instance maintains a view cache.</param>
         public ViewAware(bool cacheViews) {
-            CacheViews = cacheViews;
+            this.cacheViews = cacheViews;
+            views = new Dictionary<object, object>();
         }
 
         /// <summary>
-        ///   Raised when a view is attached.
+        /// Raised when a view is attached.
         /// </summary>
         public event EventHandler<ViewAttachedEventArgs> ViewAttached = delegate { };
 
-        ///<summary>
-        ///  Indicates whether or not this instance maintains a view cache.
-        ///</summary>
+        /// <summary>
+        /// Indicates whether or not this instance maintains a view cache.
+        /// </summary>
         protected bool CacheViews {
             get { return cacheViews; }
             set {
@@ -96,25 +100,25 @@
         }
 
         /// <summary>
-        ///   Called when an attached view's Loaded event fires.
+        /// Called when an attached view's Loaded event fires.
         /// </summary>
         /// <param name = "view"></param>
         protected virtual void OnViewLoaded(object view) {
         }
 
         /// <summary>
-        ///   Called the first time the page's LayoutUpdated event fires after it is navigated to.
+        /// Called the first time the page's LayoutUpdated event fires after it is navigated to.
         /// </summary>
         /// <param name = "view"></param>
         protected virtual void OnViewReady(object view) {
         }
 
         /// <summary>
-        ///   Gets a view previously attached to this instance.
+        /// Gets a view previously attached to this instance.
         /// </summary>
         /// <param name = "context">The context denoting which view to retrieve.</param>
         /// <returns>The view.</returns>
-        public virtual object GetView(object context = null) {
+        public object GetView(object context = null) {
             object view;
             Views.TryGetValue(context ?? DefaultContext, out view);
             return view;
