@@ -1,4 +1,4 @@
-2.0-rc
+2.0.0
 -DefaultCloseStrategy fails with null ref exception (issue 350)
 -Unable to cast object of type 'MS.Internal.InternalTransform' to type 'System.Windows.Media.Transform' (issue 352)
 -add DebugLog
@@ -6,7 +6,7 @@
 -add DelegateResult
 
 
-2.0-alpha
+2.0.0-alpha
 -portable library net45+sl5+win8+wp8 (issue 259), SL4, WP71 and NET40 will not be supported
 -Support Windows 8.1 (issue 336) and use new Behavior SDK (issue 338)
 -Fix CultureInfo in CoerceValue
