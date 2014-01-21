@@ -4,6 +4,7 @@
 -add DebugLog
 -add IResult decorators
 -add DelegateResult
+-workaround issue EntryPointNotFoundException in Design Mode
 
 
 2.0.0-alpha

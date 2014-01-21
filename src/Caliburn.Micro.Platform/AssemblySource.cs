@@ -20,10 +20,45 @@
         /// </summary>
         public static readonly IObservableCollection<Assembly> Instance = new BindableCollection<Assembly>();
 
-        private static readonly IDictionary<String, Type> TypeNameCache = new Dictionary<string, Type>();
+        /// <summary>
+        /// Finds a type which matches one of the elements in the sequence of names.
+        /// </summary>
+        public static Func<IEnumerable<string>, Type> FindTypeByNames = names => {
+            if (names == null) {
+                return null;
+            }
 
-        static AssemblySource() {
-            Instance.CollectionChanged += (s, e) => {
+            var type = names
+                .Join(Instance.SelectMany(a => a.GetExportedTypes()), n => n, t => t.FullName, (n, t) => t)
+                .FirstOrDefault();
+            return type;
+        };
+    }
+
+    /// <summary>
+    /// A caching subsystem for <see cref="AssemblySource"/>.
+    /// </summary>
+    public static class AssemblySourceCache {
+        static bool isInstalled;
+        static readonly IDictionary<String, Type> TypeNameCache = new Dictionary<string, Type>();
+
+        /// <summary>
+        /// Extracts the types from the spezified assembly for storing in the cache.
+        /// </summary>
+        public static Func<Assembly, IEnumerable<Type>> ExtractTypes = assembly =>
+            assembly.GetExportedTypes()
+                .Where(t =>
+                    typeof(UIElement).IsAssignableFrom(t) ||
+                    typeof(INotifyPropertyChanged).IsAssignableFrom(t));
+
+        /// <summary>
+        /// Installs the caching subsystem.
+        /// </summary>
+        public static void Install() {
+            if (isInstalled) return;
+            isInstalled = true;
+
+            AssemblySource.Instance.CollectionChanged += (s, e) => {
                 switch (e.Action) {
                     case NotifyCollectionChangedAction.Add:
                         e.NewItems.OfType<Assembly>()
@@ -34,33 +69,23 @@
                     case NotifyCollectionChangedAction.Replace:
                     case NotifyCollectionChangedAction.Reset:
                         TypeNameCache.Clear();
-                        Instance
+                        AssemblySource.Instance
                             .SelectMany(a => ExtractTypes(a))
                             .Apply(t => TypeNameCache.Add(t.FullName, t));
                         break;
                 }
             };
-        }
 
-        /// <summary>
-        /// Extracts the types from the spezified assembly for <see cref="FindTypeByNames"/>.
-        /// </summary>
-        public static Func<Assembly, IEnumerable<Type>> ExtractTypes = assembly =>
-            assembly.GetExportedTypes()
-                .Where(t =>
-                    typeof (UIElement).IsAssignableFrom(t) ||
-                    typeof (INotifyPropertyChanged).IsAssignableFrom(t));
+            AssemblySource.Instance.Refresh();
 
-        /// <summary>
-        /// Finds a type which matches one of the elements in the sequence of names.
-        /// </summary>
-        public static Type FindTypeByNames(IEnumerable<string> names) {
-            if (names == null) {
-                return null;
-            }
+            AssemblySource.FindTypeByNames = names => {
+                if (names == null) {
+                    return null;
+                }
 
-            var type = names.Select(n => TypeNameCache.GetValueOrDefault(n)).FirstOrDefault(t => t != null);
-            return type;
+                var type = names.Select(n => TypeNameCache.GetValueOrDefault(n)).FirstOrDefault(t => t != null);
+                return type;
+            };
         }
     }
 }

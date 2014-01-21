@@ -83,6 +83,7 @@
                 }
             };
 
+            AssemblySourceCache.Install();
             AssemblySource.Instance.AddRange(SelectAssemblies());
 
             if (useApplication) {
