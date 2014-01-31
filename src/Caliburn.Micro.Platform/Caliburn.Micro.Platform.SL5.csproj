@@ -97,6 +97,7 @@
     <Compile Include="sl4\Mouse.cs" />
     <Compile Include="sl4\Parameter.cs" />
     <Compile Include="sl4\WindowManager.cs" />
+    <Compile Include="StringSplitter.cs" />
     <Compile Include="TypeDescriptor.cs" />
     <Compile Include="TypeMappingConfiguration.cs" />
     <Compile Include="View.cs" />

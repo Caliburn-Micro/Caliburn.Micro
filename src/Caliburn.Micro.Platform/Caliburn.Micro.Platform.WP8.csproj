@@ -75,6 +75,7 @@
     <Compile Include="sl4\AttachedCollection.cs" />
     <Compile Include="sl4\Mouse.cs" />
     <Compile Include="sl4\Parameter.cs" />
+    <Compile Include="StringSplitter.cs" />
     <Compile Include="XamlPlatformProvider.cs" />
     <None Include="sl4\WindowManager.cs" />
     <Compile Include="TypeDescriptor.cs" />
