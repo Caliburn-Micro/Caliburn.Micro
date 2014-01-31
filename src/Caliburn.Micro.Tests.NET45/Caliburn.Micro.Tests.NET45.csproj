@@ -66,6 +66,7 @@
     <Compile Include="SimpleContainerTests.cs" />
     <Compile Include="StringSplitterTests.cs" />
     <Compile Include="ViewLocatorTests.cs" />
+    <Compile Include="ViewModelLocatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
