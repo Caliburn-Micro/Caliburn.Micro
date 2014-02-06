@@ -1,3 +1,0 @@
-Caliburn.Micro is a small, yet powerful framework, designed for building applications across all XAML platforms. With strong support for MVVM and other proven UI patterns, Caliburn.Micro will enable you to build your solution quickly, without the need to sacrifice code quality or testability.
-
-Thanks to Xceed, makers of Xceed DataGrid for WPF for sponsoring this project. They also have Silverlight and Windows Phone controls and libraries, too. Check them out at http://xceed.com
