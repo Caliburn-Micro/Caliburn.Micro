@@ -1,8 +1,11 @@
 ﻿namespace Caliburn.Micro {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.ComponentModel;
+    using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     /// A base collection class that supports automatic UI thread marshalling.
@@ -165,7 +168,7 @@
 
                 OnPropertyChanged(new PropertyChangedEventArgs("Count"));
                 OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                OnCollectionChanged(NotifyCollectionChangedAction.Add, items);
             });
         }
 
@@ -187,8 +190,17 @@
 
                 OnPropertyChanged(new PropertyChangedEventArgs("Count"));
                 OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                OnCollectionChanged(NotifyCollectionChangedAction.Remove, items);
             });
+        }
+
+        protected void OnCollectionChanged(NotifyCollectionChangedAction action, IEnumerable<T> items)
+        {
+            var eventArgs = new NotifyCollectionChangedEventArgs(action, new object(), -1);
+            var fieldName = action == NotifyCollectionChangedAction.Add ? "_newItems" : "_oldItems";
+            var field = eventArgs.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+            field.SetValue(eventArgs, items.ToList());
+            OnCollectionChanged(eventArgs);
         }
     }
 }
