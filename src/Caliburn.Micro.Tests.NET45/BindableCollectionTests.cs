@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using System.Windows.Data;
 using Xunit;
 
 namespace Caliburn.Micro.WPF.Tests
@@ -84,6 +85,19 @@ namespace Caliburn.Micro.WPF.Tests
 
             Assert.True(eventArgs.OldItems.Contains(1));
             Assert.True(eventArgs.OldItems.Contains(3));
+        }
+    }
+
+    public class CollectionViewTests
+    {
+        [Fact]
+        public void CollectionView_IsAJerk()
+        {
+            var bindable = new BindableCollection<int>();
+            var view = new CollectionView(bindable);
+
+            Assert.DoesNotThrow(
+                () => bindable.AddRange(new[] { 1, 2, 3, 4, 5 }));
         }
     }
 }
