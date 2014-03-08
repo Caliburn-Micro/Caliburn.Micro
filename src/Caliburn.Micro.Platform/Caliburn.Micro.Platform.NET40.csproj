@@ -79,6 +79,7 @@
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegExHelper.cs" />
+    <Compile Include="StringSplitter.cs" />
     <Compile Include="TypeDescriptor.cs" />
     <Compile Include="TypeMappingConfiguration.cs" />
     <Compile Include="View.cs" />
