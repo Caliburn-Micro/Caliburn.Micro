@@ -211,11 +211,13 @@
 #if WinRT81
             AddElementConvention<DatePicker>(DatePicker.DateProperty, "Date", "DateChanged");
             AddElementConvention<TimePicker>(TimePicker.TimeProperty, "Time", "TimeChanged");
-            AddElementConvention<SearchBox>(SearchBox.QueryTextProperty, "QueryText", "QuerySubmitted");
             AddElementConvention<Hub>(Hub.HeaderProperty, "Header", "Loaded");
             AddElementConvention<HubSection>(HubSection.HeaderProperty, "Header", "SectionsInViewChanged");
             AddElementConvention<MenuFlyoutItem>(MenuFlyoutItem.TextProperty, "Text", "Click");
             AddElementConvention<ToggleMenuFlyoutItem>(ToggleMenuFlyoutItem.IsCheckedProperty, "IsChecked", "Click");
+#endif
+#if WinRT81 && !WP81
+            AddElementConvention<SearchBox>(SearchBox.QueryTextProperty, "QueryText", "QuerySubmitted");
 #endif
 #if WinRT
             AddElementConvention<ToggleSwitch>(ToggleSwitch.IsOnProperty, "IsOn", "Toggled");

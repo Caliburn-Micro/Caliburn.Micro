@@ -51,9 +51,11 @@
             return sharingService;
         }
 
+#if !WP81
         /// <summary>
         /// Registers the Caliburn.Micro settings service with the container.
         /// </summary>
+
         public ISettingsService RegisterSettingsService() {
             if (HasHandler(typeof (ISettingsService), null))
                 return this.GetInstance<ISettingsService>(null);
@@ -71,5 +73,6 @@
 
             return settingsService;
         }
+#endif
     }
 }
