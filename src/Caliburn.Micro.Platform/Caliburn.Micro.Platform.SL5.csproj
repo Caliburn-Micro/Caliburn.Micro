@@ -112,9 +112,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">
-      <Project>{6d772b52-da8f-4784-971a-4bf50cb6d306}</Project>
-      <Name>Caliburn.Micro</Name>
+    <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.SL5.csproj">
+      <Project>{21935b00-9e24-46df-aa7a-a0065010c594}</Project>
+      <Name>Caliburn.Micro.SL5</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />

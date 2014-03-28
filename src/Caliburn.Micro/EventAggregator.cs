@@ -104,11 +104,11 @@
                 reference = new WeakReference(handler);
 
                 var interfaces = handler.GetType().GetInterfaces()
-                    .Where(x => typeof(IHandle).IsAssignableFrom(x) && x.IsGenericType);
+                    .Where(x => typeof(IHandle).IsAssignableFrom(x) && x.IsGenericType());
 
                 foreach(var @interface in interfaces) {
                     var type = @interface.GetGenericArguments()[0];
-                    var method = @interface.GetMethod("Handle");
+                    var method = @interface.GetMethod("Handle", new Type[] { type });
                     supportedHandlers[type] = method;
                 }
             }

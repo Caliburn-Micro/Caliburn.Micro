@@ -98,11 +98,11 @@
                 var typeToCreate = service.GetGenericArguments()[0];
                 var factoryFactoryType = typeof(FactoryFactory<>).MakeGenericType(typeToCreate);
                 var factoryFactoryHost = Activator.CreateInstance(factoryFactoryType);
-                var factoryFactoryMethod = factoryFactoryType.GetMethod("Create");
+                var factoryFactoryMethod = factoryFactoryType.GetMethod("Create", new Type[] { typeof(SimpleContainer) });
                 return factoryFactoryMethod.Invoke(factoryFactoryHost, new object[] { this });
             }
 
-            if (enumerableType.IsAssignableFrom(service) && service.IsGenericType) {
+            if (enumerableType.IsAssignableFrom(service) && service.IsGenericType()) {
                 var listType = service.GetGenericArguments()[0];
                 var instances = GetAllInstances(listType).ToList();
                 var array = Array.CreateInstance(listType, instances.Count);
@@ -143,7 +143,7 @@
         /// <param name = "instance">The instance.</param>
         public void BuildUp(object instance) {
             var injectables = from property in instance.GetType().GetProperties()
-                              where property.CanRead && property.CanWrite && property.PropertyType.IsInterface
+                              where property.CanRead && property.CanWrite && property.PropertyType.IsInterface()
                               select property;
 
             foreach (var propertyInfo in injectables) {

@@ -99,8 +99,8 @@
             var serviceType = typeof (TService);
             var types = from type in assembly.GetTypes()
                         where serviceType.IsAssignableFrom(type)
-                              && !type.IsAbstract
-                              && !type.IsInterface
+                              && !type.IsAbstract()
+                              && !type.IsInterface()
                               && filter(type)
                         select type;
 
