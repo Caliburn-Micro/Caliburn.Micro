@@ -21,20 +21,20 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\wp81\Debug\</OutputPath>
+    <OutputPath>..\..\bin\wpa81\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NETFX_CORE;WinRT;WinRT81;WP81;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\wp81\Debug\Caliburn.Micro.Platform.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\wpa81\Debug\Caliburn.Micro.Platform.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\wp81\Release\</OutputPath>
+    <OutputPath>..\..\bin\wpa81\Release\</OutputPath>
     <DefineConstants>TRACE;NETFX_CORE;WinRT;WinRT81;WP81;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\wp81\Release\Caliburn.Micro.Platform.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\wpa81\Release\Caliburn.Micro.Platform.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
