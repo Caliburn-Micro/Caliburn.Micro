@@ -1,4 +1,5 @@
 ﻿namespace Caliburn.Micro {
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -20,7 +21,7 @@
         /// <param name="eventAggregator">The event aggregator.</param>
         /// <param name = "message">The message instance.</param>
         public static void PublishOnBackgroundThread(this IEventAggregator eventAggregator, object message) {
-            eventAggregator.Publish(message, action => Task.Factory.StartNew(action));
+            eventAggregator.Publish(message, action => Task.Factory.StartNew(action, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default));
         }
 
         /// <summary>
