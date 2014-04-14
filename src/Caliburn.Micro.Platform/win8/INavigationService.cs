@@ -130,6 +130,11 @@
 
             this.frame.Navigating += OnNavigating;
             this.frame.Navigated += OnNavigated;
+            
+#if WP81
+            this.frame.Loaded += (sender, args) => { HardwareButtons.BackPressed += HardwareButtons_BackPressed; };
+            this.frame.Unloaded += (sender, args) => { HardwareButtons.BackPressed -= HardwareButtons_BackPressed; };
+#endif
         }
 
         /// <summary>
@@ -424,6 +429,17 @@
 
             return true;
         }
+
+#if WP81
+        private void HardwareButtons_BackPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
+        {
+            if (CanGoBack)
+            {
+                e.Handled = true;
+                GoBack();
+            }
+        }
+#endif
 
         private static ApplicationDataContainer GetSettingsContainer() {
             return ApplicationData.Current.LocalSettings.CreateContainer("Caliburn.Micro",
