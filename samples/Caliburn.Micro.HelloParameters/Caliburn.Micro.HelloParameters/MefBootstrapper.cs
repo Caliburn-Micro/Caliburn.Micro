@@ -14,7 +14,7 @@
 
         public MefBootstrapper()
         {
-            Start();
+            Initialize();
         }
 
         protected override void Configure()

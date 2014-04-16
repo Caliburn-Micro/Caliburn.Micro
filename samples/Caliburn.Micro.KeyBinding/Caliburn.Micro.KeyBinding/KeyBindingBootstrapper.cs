@@ -6,7 +6,7 @@
 
     public class KeyBindingBootstrapper : BootstrapperBase {
         public KeyBindingBootstrapper() {
-            Start();
+            Initialize();
         }
 
         protected override void Configure() {

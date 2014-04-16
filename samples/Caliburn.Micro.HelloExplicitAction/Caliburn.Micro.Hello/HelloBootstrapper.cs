@@ -6,7 +6,7 @@ namespace Caliburn.Micro.Hello
     {
         public HelloBootstrapper()
         {
-            Start();
+            Initialize();
         }
 
         protected override void OnStartup(object sender, StartupEventArgs e)

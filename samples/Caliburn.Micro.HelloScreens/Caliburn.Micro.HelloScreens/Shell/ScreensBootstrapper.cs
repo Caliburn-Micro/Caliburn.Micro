@@ -20,7 +20,7 @@
 
         public ScreensBootstrapper()
         {
-            Start();
+            Initialize();
         }
 
         protected override void Configure() {

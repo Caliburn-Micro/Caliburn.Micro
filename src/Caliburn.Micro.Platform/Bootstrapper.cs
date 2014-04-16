@@ -26,9 +26,9 @@
         }
 
         /// <summary>
-        /// Start the framework.
+        /// Initialize the framework.
         /// </summary>
-        public void Start() {
+        public void Initialize() {
             if(isInitialized) {
                 return;
             }

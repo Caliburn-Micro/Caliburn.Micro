@@ -10,7 +10,7 @@
 
         public AppBootstrapper() {
             LogManager.GetLog = type => new DebugLog(type);
-            Start();
+            Initialize();
         }
 
         protected override void Configure() {

@@ -6,7 +6,7 @@
     {
         public AppBootstrapper()
         {
-            Start();
+            Initialize();
         }
 
         protected override void OnStartup(object sender, StartupEventArgs e)

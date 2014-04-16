@@ -14,7 +14,7 @@
 
         public CoroutinesBootstrapper()
         {
-            Start();
+            Initialize();
         }
 
         protected override void Configure()
