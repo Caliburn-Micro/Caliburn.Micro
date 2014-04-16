@@ -52,7 +52,6 @@
     <None Include="..\Caliburn.snk">
       <Link>Caliburn.snk</Link>
     </None>
-    <None Include="Bootstrapper.cs" />
     <Compile Include="ConventionManager.cs" />
     <Compile Include="ElementConvention.cs" />
     <Compile Include="ExtensionMethods.cs" />
