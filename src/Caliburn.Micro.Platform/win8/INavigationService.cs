@@ -1,4 +1,5 @@
-﻿namespace Caliburn.Micro {
+﻿
+namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using Windows.Foundation;
@@ -132,8 +133,8 @@
             this.frame.Navigated += OnNavigated;
             
 #if WP81
-            this.frame.Loaded += (sender, args) => { HardwareButtons.BackPressed += HardwareButtons_BackPressed; };
-            this.frame.Unloaded += (sender, args) => { HardwareButtons.BackPressed -= HardwareButtons_BackPressed; };
+            this.frame.Loaded += (sender, args) => { Windows.Phone.UI.Input.HardwareButtons.BackPressed += OnHardwareBackPressed; };
+            this.frame.Unloaded += (sender, args) => { Windows.Phone.UI.Input.HardwareButtons.BackPressed -= OnHardwareBackPressed; };
 #endif
         }
 
@@ -431,7 +432,7 @@
         }
 
 #if WP81
-        private void HardwareButtons_BackPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
+        private void OnHardwareBackPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
         {
             if (CanGoBack)
             {
