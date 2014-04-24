@@ -17,5 +17,9 @@
 
   <files>
     <file src="..\bin\portable\Release\Caliburn.Micro.*" target="lib\portable-net45+win8+wp8+wpa81" />
+
+    <file src="..\bin\sl5\Release\Caliburn.Micro.*" exclude="**\Caliburn.Micro.*.*" target="lib\sl5" />
+	<file src="..\bin\net40\Release\Caliburn.Micro.*" exclude="**\Caliburn.Micro.*.*" target="lib\net40" />
+    <file src="..\bin\net45\Release\Caliburn.Micro.*" exclude="**\Caliburn.Micro.*.*" target="lib\net45" />
   </files>
 </package>

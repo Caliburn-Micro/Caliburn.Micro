@@ -34,10 +34,13 @@
   </metadata>
 
   <files>
+    <file src="..\bin\net40\Release\Caliburn.Micro.*.*" target="lib\net40" />
+    <file src="..\bin\net40\Release\System.Windows.Interactivity.*" target="lib\net40" />
+
     <file src="..\bin\net45\Release\Caliburn.Micro.*.*" target="lib\net45" />
     <file src="..\bin\net45\Release\System.Windows.Interactivity.*" target="lib\net45" />
 
-    <file src="..\bin\sl5\Release\Caliburn.Micro.*" target="lib\sl5" />
+    <file src="..\bin\sl5\Release\Caliburn.Micro.*.*" target="lib\sl5" />
     <file src="..\bin\sl5\Release\System.Windows.Interactivity.*" target="lib\sl5" />
 
     <file src="..\bin\win8\Release\Caliburn.Micro.*.*" target="lib\win8" />
