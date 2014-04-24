@@ -132,6 +132,7 @@
     <Compile Include="TaskResult.cs" />
     <Compile Include="ViewAttachedEventArgs.cs" />
     <Compile Include="ViewAware.cs" />
+    <Compile Include="WeakValueDictionary.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Caliburn.snk">
