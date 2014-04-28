@@ -5,6 +5,9 @@
 -add IResult decorators
 -add DelegateResult
 -workaround issue EntryPointNotFoundException in Design Mode
+-add support for NET40
+-add nuget symbol packages
+-fix CacheViews=false should not influence IViewAware.GetView() behaviour
 
 
 2.0.0-alpha
