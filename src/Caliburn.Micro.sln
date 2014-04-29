@@ -31,9 +31,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Extensions.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.SL5", "Caliburn.Micro\Caliburn.Micro.SL5.csproj", "{21935B00-9E24-46DF-AA7A-A0065010C594}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.WP81", "Caliburn.Micro.Platform\Caliburn.Micro.Platform.WP81.csproj", "{7CBF76FE-E094-4DFE-B6E1-ABFCE98C78EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.WPA81", "Caliburn.Micro.Platform\Caliburn.Micro.Platform.WPA81.csproj", "{7CBF76FE-E094-4DFE-B6E1-ABFCE98C78EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Extensions.WP81", "Caliburn.Micro.Extensions.WIN8\Caliburn.Micro.Extensions.WP81.csproj", "{6B26A463-E070-422F-B070-3FB206FAFD4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Extensions.WPA81", "Caliburn.Micro.Extensions.WIN8\Caliburn.Micro.Extensions.WPA81.csproj", "{6B26A463-E070-422F-B070-3FB206FAFD4E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.NET40", "Caliburn.Micro\Caliburn.Micro.NET40.csproj", "{5198B87D-8E7B-48D9-960D-63170A6956C5}"
 EndProject

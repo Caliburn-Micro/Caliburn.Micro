@@ -16,6 +16,7 @@
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{76F1466A-8B6D-4E39-A767-685A06062A39};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <BaseIntermediateOutputPath>..\..\obj\Extensions\wpa81\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,9 +39,9 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.Platform.WP81.csproj">
+    <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.Platform.WPA81.csproj">
       <Project>{7cbf76fe-e094-4dfe-b6e1-abfce98c78ea}</Project>
-      <Name>Caliburn.Micro.Platform.WP81</Name>
+      <Name>Caliburn.Micro.Platform.WPA81</Name>
     </ProjectReference>
     <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">
       <Project>{6d772b52-da8f-4784-971a-4bf50cb6d306}</Project>
