@@ -35,7 +35,11 @@
         /// Notifies subscribers of the property change.
         /// </summary>
         /// <param name = "propertyName">Name of the property.</param>
+#if NET || SILVERLIGHT
         public virtual void NotifyOfPropertyChange(string propertyName) {
+#else
+        public virtual void NotifyOfPropertyChange([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null) {
+#endif
             if (IsNotifying) {
                 Execute.OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
             }
