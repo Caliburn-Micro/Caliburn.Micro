@@ -6,9 +6,9 @@
     <authors>Rob Eisenberg, Marco Amendola, Chin Bae, Ryan Cromwell, Nigel Sampson, Thomas Ibel, Matt Hidinger</authors>
     <description>A startup sample for Caliburn.Micro.</description>
     <language>en-US</language>
-    <licenseUrl>http://caliburnmicro.codeplex.com/license</licenseUrl>
-    <projectUrl>http://caliburnmicro.codeplex.com</projectUrl>
-    <iconUrl>http://www.caliburnproject.org/CaliburnIcon.png</iconUrl>
+    <licenseUrl>https://raw.githubusercontent.com/Caliburn-Micro/Caliburn.Micro/master/License.txt</licenseUrl>
+    <projectUrl>http://caliburnmicro.com/</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/Caliburn-Micro/Caliburn.Micro/master/CaliburnIcon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <releaseNotes></releaseNotes>
     <copyright>Copyright (c) 2010 Blue Spire Consulting, Inc.</copyright>
