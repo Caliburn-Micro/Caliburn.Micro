@@ -9,7 +9,7 @@
         PhoneContainer container;
 
         public AppBootstrapper() {
-            Start();
+            Initialize();
         }
 
         protected override void Configure() {
