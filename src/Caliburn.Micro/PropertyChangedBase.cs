@@ -2,10 +2,12 @@
     using System;
     using System.ComponentModel;
     using System.Linq.Expressions;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// A base class that implements the infrastructure for property change notification and automatically performs UI thread marshalling.
     /// </summary>
+    [DataContract]
     public class PropertyChangedBase : INotifyPropertyChangedEx {
         /// <summary>
         /// Creates an instance of <see cref = "PropertyChangedBase" />.
