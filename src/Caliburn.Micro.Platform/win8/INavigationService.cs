@@ -12,6 +12,10 @@ namespace Caliburn.Micro {
     using Windows.Phone.UI.Input;
 #endif
 
+#if WinRT
+    using Windows.UI.Xaml.Media.Animation;
+#endif
+
     /// <summary>
     ///   Implemented by services that provide (<see cref="Uri" /> based) navigation.
     /// </summary>
@@ -70,6 +74,17 @@ namespace Caliburn.Micro {
         /// <param name="parameter">The object parameter to pass to the target.</param>
         /// <returns> Whether or not navigation succeeded. </returns>
         bool Navigate(Type sourcePageType, object parameter);
+
+#if WinRT81 || WP81
+        /// <summary>
+        ///   Navigates to the specified content.
+        /// </summary>
+        /// <param name="sourcePageType"> The <see cref="System.Type" /> to navigate to. </param>
+        /// <param name="parameter">The object parameter to pass to the target.</param>
+        /// <param name="infoOverride">Info about the animated transition.</param>
+        /// <returns> Whether or not navigation succeeded. </returns>
+        bool Navigate(Type sourcePageType, object parameter, NavigationTransitionInfo infoOverride);
+#endif
 
         /// <summary>
         ///   Navigates forward.
@@ -341,6 +356,20 @@ namespace Caliburn.Micro {
         public bool Navigate(Type sourcePageType, object parameter) {
             return frame.Navigate(sourcePageType, parameter);
         }
+
+#if WinRT81 || WP81
+        /// <summary>
+        ///   Navigates to the specified content.
+        /// </summary>
+        /// <param name="sourcePageType"> The <see cref="System.Type" /> to navigate to. </param>
+        /// <param name="parameter">The object parameter to pass to the target.</param>
+        /// <param name="infoOverride">Info about the animated transition.</param>
+        /// <returns> Whether or not navigation succeeded. </returns>
+        public bool Navigate(Type sourcePageType, object parameter, NavigationTransitionInfo infoOverride)
+        {
+            return frame.Navigate(sourcePageType, parameter, infoOverride);
+        }
+#endif
 
         /// <summary>
         ///   Navigates forward.
