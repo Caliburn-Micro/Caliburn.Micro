@@ -180,7 +180,7 @@
 #endif
             onLayoutUpdate = (s, e) => {
                 element.LayoutUpdated -= onLayoutUpdate;
-                handler(s, e);
+                handler(element, e);
             };
             element.LayoutUpdated += onLayoutUpdate;
         }
