@@ -225,6 +225,21 @@
             AddElementConvention<Slider>(Slider.ValueProperty, "Value", "ValueChanged");
             AddElementConvention<RichEditBox>(RichEditBox.DataContextProperty, "DataContext", "TextChanged");
 #endif
+#if WP81
+            AddElementConvention<Pivot>(Pivot.ItemsSourceProperty, "SelectedItem", "SelectionChanged")
+                .ApplyBinding = (viewModelType, path, property, element, convention) =>
+                {
+                    if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, ItemsControl.ItemsSourceProperty))
+                    {
+                        return false;
+                    }
+
+                    ConfigureSelectedItem(element, Pivot.SelectedItemProperty, viewModelType, path);
+                    ApplyItemTemplate((ItemsControl)element, property);
+
+                    return true;
+                };
+#endif
 #if SILVERLIGHT || WinRT
             AddElementConvention<HyperlinkButton>(HyperlinkButton.ContentProperty, "DataContext", "Click");
             AddElementConvention<PasswordBox>(PasswordBox.PasswordProperty, "Password", "PasswordChanged");
