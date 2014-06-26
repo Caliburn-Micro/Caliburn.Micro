@@ -353,31 +353,30 @@
         /// <remarks>Returns a value indicating whether or not the action is available.</remarks>
         public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context => {
 #if WINDOWS_PHONE
-            if (context.Message.applicationBarSource != null) {
-                if(context.CanExecute != null)
-                    context.Message.applicationBarSource.IsEnabled = context.CanExecute();
-                return context.Message.applicationBarSource.IsEnabled;
+            var message = context.Message;
+            if (message != null && message.applicationBarSource != null) {
+                if (context.CanExecute != null) {
+                    message.applicationBarSource.IsEnabled = context.CanExecute();
+                }
+                return message.applicationBarSource.IsEnabled;
             }
 #endif
 
 #if SILVERLIGHT || WinRT
-            if (!(context.Source is Control)) {
-                return true;
-            }
-#endif
-
-#if SILVERLIGHT || WinRT
-            var source = (Control)context.Source;
-            if (ConventionManager.HasBinding(source, Control.IsEnabledProperty)) {
-                return source.IsEnabled;
-            }
+            var source = context.Source as Control;
 #else
             var source = context.Source;
-            if (ConventionManager.HasBinding(source, UIElement.IsEnabledProperty)){
-                return source.IsEnabled;
-            }
 #endif
-            if (context.CanExecute != null) {
+            if (source == null) {
+                return true;
+            }
+
+#if SILVERLIGHT || WinRT
+            var hasBinding = ConventionManager.HasBinding(source, Control.IsEnabledProperty);
+#else
+            var hasBinding = ConventionManager.HasBinding(source, UIElement.IsEnabledProperty);
+#endif
+            if (!hasBinding && context.CanExecute != null) {
                 source.IsEnabled = context.CanExecute();
             }
 
