@@ -122,6 +122,13 @@
                     continue;
                 }
 
+                if (current.GetType() == typeof(DependencyObject)) {
+                    // Windows 8.1 ListViews can have direct DependencyObjects as children
+                    // Calling GetChildrenCount on DependencyObject instances throws an error.
+                    // Ignore DependencyObject items, they have no usable children
+                    continue;
+                }
+
 #if NET
                 var childCount = (current is UIElement || current is UIElement3D || current is ContainerVisual
                                         ? VisualTreeHelper.GetChildrenCount(current)
