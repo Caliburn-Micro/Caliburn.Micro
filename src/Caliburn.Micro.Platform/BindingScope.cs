@@ -12,6 +12,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
+    using System.Windows.Media.Media3D;
 #endif
 
     /// <summary>
@@ -123,11 +124,11 @@
                 }
 
 #if NET
-                var childCount = (current is UIElement || current is UIElement3D || current is ContainerVisual
-                                        ? VisualTreeHelper.GetChildrenCount(current)
-                                        : 0);
+                var childCount = (current is Visual || current is Visual3D)
+                    ? VisualTreeHelper.GetChildrenCount(current) : 0;
 #else
-                var childCount = VisualTreeHelper.GetChildrenCount(current);
+                var childCount = (current is UIElement)
+                    ? VisualTreeHelper.GetChildrenCount(current) : 0;
 #endif
                 if (childCount > 0) {
                     for (var i = 0; i < childCount; i++) {
