@@ -336,7 +336,7 @@
         public static Func<Type, DependencyObject, object, Type> LocateTypeForModelType = (modelType, displayLocation, context) => {
             var viewTypeName = modelType.FullName;
 
-            if (Execute.InDesignMode) {
+            if (View.InDesignMode) {
                 viewTypeName = ModifyModelTypeAtDesignTime(viewTypeName);
             }
 

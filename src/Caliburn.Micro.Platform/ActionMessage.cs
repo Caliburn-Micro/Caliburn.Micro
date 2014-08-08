@@ -135,7 +135,7 @@
         /// </summary>
 #if WinRT81
         protected override void OnAttached() {
-            if (!Caliburn.Micro.Execute.InDesignMode) {
+            if (!View.InDesignMode) {
                 Parameters.Attach(AssociatedObject);
                 Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
 
@@ -160,7 +160,7 @@
         }
 #else
         protected override void OnAttached() {
-            if (!Execute.InDesignMode) {
+            if (!View.InDesignMode) {
                 Parameters.Attach(AssociatedObject);
                 Parameters.Apply(x => x.MakeAwareOf(this));
 
@@ -184,7 +184,7 @@
         /// Called when the action is being detached from its AssociatedObject, but before it has actually occurred.
         /// </summary>
         protected override void OnDetaching() {
-            if (!Caliburn.Micro.Execute.InDesignMode) {
+            if (!View.InDesignMode) {
                 Detaching(this, EventArgs.Empty);
                 AssociatedObject.Loaded -= ElementLoaded;
                 Parameters.Detach();

@@ -78,7 +78,7 @@
         }
 
         static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (Execute.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
+            if (View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
                 return;
             }
 
@@ -105,7 +105,7 @@
         }
 
         static void ModelWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (Execute.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
+            if (View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
                 return;
             }
 
@@ -165,7 +165,7 @@
         }
 
         static void AtDesignTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (!Execute.InDesignMode)
+            if (!View.InDesignMode)
                 return;
 
             var atDesignTime = (bool) e.NewValue;
@@ -184,7 +184,7 @@
                 );
 
         static void DataContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (!Execute.InDesignMode)
+            if (!View.InDesignMode)
                 return;
 
             var enable = d.GetValue(AtDesignTimeProperty);

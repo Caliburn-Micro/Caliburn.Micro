@@ -3,11 +3,13 @@
     using System.Linq;
 #if WinRT
     using System.Reflection;
+    using Windows.ApplicationModel;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Markup;
     using Windows.UI.Xaml.Media;
 #else
+    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Markup;
@@ -358,5 +360,30 @@
             }
         }
 #endif
+
+        private static bool? inDesignMode;
+
+        /// <summary>
+        /// Gets a value that indicates whether the process is running in design mode.
+        /// </summary>
+        public static bool InDesignMode
+        {
+            get
+            {
+                if (inDesignMode == null)
+                {
+#if WinRT
+                    inDesignMode = DesignMode.DesignModeEnabled;
+#elif SILVERLIGHT
+                    inDesignMode = DesignerProperties.IsInDesignTool;
+#else
+                    var descriptor = DependencyPropertyDescriptor.FromProperty(DesignerProperties.IsInDesignModeProperty, typeof(FrameworkElement));
+                    inDesignMode = (bool)descriptor.Metadata.DefaultValue;
+#endif
+                }
+
+                return inDesignMode.GetValueOrDefault(false);
+            }
+        }
     }
 }

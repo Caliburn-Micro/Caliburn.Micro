@@ -1,15 +1,13 @@
 ﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Threading.Tasks;
-    using System.Windows;
 #if WinRT
     using System.Reflection;
-    using Windows.ApplicationModel;
     using Windows.UI.Core;
     using Windows.UI.Xaml;
 #else
+    using System.Windows;
     using System.Windows.Threading;
 #endif
 
@@ -17,7 +15,6 @@
     /// A <see cref="IPlatformProvider"/> implementation for the XAML platfrom.
     /// </summary>
     public class XamlPlatformProvider : IPlatformProvider {
-        private bool? inDesignMode;
 #if WinRT
         private CoreDispatcher dispatcher;
 #else
@@ -41,20 +38,7 @@
         /// Indicates whether or not the framework is in design-time mode.
         /// </summary>
         public bool InDesignMode {
-            get {
-                if (inDesignMode == null) {
-#if WinRT
-                    inDesignMode = DesignMode.DesignModeEnabled;
-#elif SILVERLIGHT
-                    inDesignMode = DesignerProperties.IsInDesignTool;
-#else
-                    var descriptor = DependencyPropertyDescriptor.FromProperty(DesignerProperties.IsInDesignModeProperty, typeof (FrameworkElement));
-                    inDesignMode = (bool)descriptor.Metadata.DefaultValue;
-#endif
-                }
-
-                return inDesignMode.GetValueOrDefault(false);
-            }
+            get { return View.InDesignMode; }
         }
 
         private void ValidateDispatcher() {
