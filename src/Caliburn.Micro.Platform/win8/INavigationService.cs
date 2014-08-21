@@ -169,7 +169,10 @@ namespace Caliburn.Micro {
 
             if (guard != null) {
                 var shouldCancel = false;
-                guard.CanClose(result => { shouldCancel = !result; });
+                var runningAsync = true;
+                guard.CanClose(result => { runningAsync = false; shouldCancel = !result; });
+                if (runningAsync)
+                    throw new NotSupportedException("Async CanClose is not supported.");
 
                 if (shouldCancel) {
                     e.Cancel = true;
