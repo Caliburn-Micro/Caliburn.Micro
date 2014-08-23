@@ -29,7 +29,7 @@
         /// <summary>
         /// Raises a change notification indicating that all bindings should be refreshed.
         /// </summary>
-        public void Refresh() {
+        public virtual void Refresh() {
             NotifyOfPropertyChange(string.Empty);
         }
 
