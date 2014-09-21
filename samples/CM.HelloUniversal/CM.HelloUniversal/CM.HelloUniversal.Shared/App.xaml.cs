@@ -35,6 +35,9 @@ namespace CM.HelloUniversal
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
+            if (args.PreviousExecutionState == ApplicationExecutionState.Running)
+                return;
+            
             DisplayRootView<MainView>();
         }
 
