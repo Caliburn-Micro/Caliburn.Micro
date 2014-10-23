@@ -46,7 +46,7 @@
         /// Called when an item is added from the collection.
         /// </summary>
         /// <param name="item">The item that was added.</param>
-        protected void OnItemAdded(DependencyObject item) {
+        protected virtual void OnItemAdded(DependencyObject item) {
             if (associatedObject != null) {
                 if (item is IAttachedObject)
                     ((IAttachedObject) item).Attach(associatedObject);
@@ -57,7 +57,7 @@
         /// Called when an item is removed from the collection.
         /// </summary>
         /// <param name="item">The item that was removed.</param>
-        protected void OnItemRemoved(DependencyObject item) {
+        protected virtual void OnItemRemoved(DependencyObject item) {
             if (item is IAttachedObject) {
                 if (((IAttachedObject) item).AssociatedObject != null)
                     ((IAttachedObject) item).Detach();
