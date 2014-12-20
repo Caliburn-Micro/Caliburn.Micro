@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Caliburn.Micro.Start</id>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
     <authors>Rob Eisenberg, Marco Amendola, Chin Bae, Ryan Cromwell, Nigel Sampson, Thomas Ibel, Matt Hidinger</authors>
     <description>A startup sample for Caliburn.Micro.</description>
     <language>en-US</language>
@@ -20,13 +20,13 @@
 
     <dependencies>
       <group>
-        <dependency id="Caliburn.Micro" version="[2.0.1]" />
+        <dependency id="Caliburn.Micro" version="[2.0.2]" />
       </group>
     </dependencies>
   </metadata>
 
   <files>
-    <file src="content\**" target="content" />
-    <file src="tools\**" target="tools" />
+    <file src="start\content\**" target="content" />
+    <file src="start\tools\**" target="tools" />
   </files>
 </package>
