@@ -16,6 +16,7 @@
 
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Windows.Controls" targetFramework="sl5" />
+      <frameworkAssembly assemblyName="System.Windows.Interactivity" targetFramework="net40,net45,sl5,wp8" />
     </frameworkAssemblies>
 
     <dependencies>
@@ -35,24 +36,12 @@
 
   <files>
     <file src="..\bin\net40\Release\Caliburn.Micro.*.*" target="lib\net40" />
-    <file src="..\bin\net40\Release\System.Windows.Interactivity.*" target="lib\net40" />
-
     <file src="..\bin\net45\Release\Caliburn.Micro.*.*" target="lib\net45" />
-    <file src="..\bin\net45\Release\System.Windows.Interactivity.*" target="lib\net45" />
-
     <file src="..\bin\sl5\Release\Caliburn.Micro.*.*" target="lib\sl5" />
-    <file src="..\bin\sl5\Release\System.Windows.Interactivity.*" target="lib\sl5" />
-
     <file src="..\bin\win8\Release\Caliburn.Micro.*.*" target="lib\win8" />
-
     <file src="..\bin\win81\Release\Caliburn.Micro.*.*" target="lib\win81" />
-    <file src="..\bin\win81\Release\Microsoft.Xaml.*.*" target="lib\win81" />
-
     <file src="..\bin\wp8\Release\Caliburn.Micro.*.*" target="lib\wp8" />
-    <file src="..\bin\wp8\Release\System.Windows.Interactivity.*" target="lib\wp8" />
-
-    <file src="..\bin\wpa81\Release\Caliburn.Micro.*.*" target="lib\wpa81" />    
-    <file src="..\bin\wpa81\Release\Microsoft.Xaml.*.*" target="lib\wpa81" />
+    <file src="..\bin\wpa81\Release\Caliburn.Micro.*.*" target="lib\wpa81" />
 	
     <file src="..\src\*.cs" target="src" />
     <file src="..\src\Caliburn.Micro.Platform*\**\*.cs" exclude="**\obj\**\*.*" target="src" />
