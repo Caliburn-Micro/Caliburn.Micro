@@ -287,9 +287,18 @@
 
             if (args.NewValue != null) {
                 var context = GetContext(targetLocation);
+                
                 var view = ViewLocator.LocateForModel(args.NewValue, targetLocation, context);
 
-                SetContentProperty(targetLocation, view);
+                if (!SetContentProperty(targetLocation, view)) {
+
+                    Log.Warn("SetContentProperty failed for ViewLocator.LocateForModel, falling back to LocateForModelType");
+
+                    view = ViewLocator.LocateForModelType(args.NewValue.GetType(), targetLocation, context);
+
+                    SetContentProperty(targetLocation, view);
+                }
+
                 ViewModelBinder.Bind(args.NewValue, view, context);
             }
             else {
@@ -309,30 +318,42 @@
 
             var view = ViewLocator.LocateForModel(model, targetLocation, e.NewValue);
 
-            SetContentProperty(targetLocation, view);
+            if (!SetContentProperty(targetLocation, view)) {
+
+                Log.Warn("SetContentProperty failed for ViewLocator.LocateForModel, falling back to LocateForModelType");
+
+                view = ViewLocator.LocateForModelType(model.GetType(), targetLocation, e.NewValue);
+
+                SetContentProperty(targetLocation, view);
+            }
+
             ViewModelBinder.Bind(model, view, e.NewValue);
         }
 
-        static void SetContentProperty(object targetLocation, object view) {
+        static bool SetContentProperty(object targetLocation, object view) {
             var fe = view as FrameworkElement;
             if (fe != null && fe.Parent != null) {
                 SetContentPropertyCore(fe.Parent, null);
             }
 
-            SetContentPropertyCore(targetLocation, view);
+            return SetContentPropertyCore(targetLocation, view);
         }
 
 #if WinRT
-        static void SetContentPropertyCore(object targetLocation, object view) {
+        static bool SetContentPropertyCore(object targetLocation, object view) {
             try {
                 var type = targetLocation.GetType();
                 var contentPropertyName = GetContentPropertyName(type);
 
                 type.GetRuntimeProperty(contentPropertyName)
                     .SetValue(targetLocation, view, null);
+
+                return true;
             }
             catch (Exception e) {
                 Log.Error(e);
+
+                return false;
             }
         }
 
@@ -346,7 +367,7 @@
                 contentProperty.NamedArguments[0].TypedValue.Value.ToString();
         }
 #else
-        static void SetContentPropertyCore(object targetLocation, object view) {
+        static bool SetContentPropertyCore(object targetLocation, object view) {
             try {
                 var type = targetLocation.GetType();
                 var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
@@ -354,9 +375,13 @@
 
                 type.GetProperty(contentProperty.Name)
                     .SetValue(targetLocation, view, null);
+
+                return true;
             }
             catch(Exception e) {
                 Log.Error(e);
+
+                return false;
             }
         }
 #endif
