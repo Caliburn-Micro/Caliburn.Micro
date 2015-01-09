@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Android.App;
+using Android.Runtime;
 
 namespace Caliburn.Micro
 {
@@ -12,6 +13,25 @@ namespace Caliburn.Micro
     public class CaliburnApplication : Application
     {
         private bool isInitialized;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public CaliburnApplication()
+        {
+            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="javaReference"></param>
+        /// <param name="transfer"></param>
+        public CaliburnApplication(IntPtr javaReference, JniHandleOwnership transfer)
+            : base(javaReference, transfer)
+        {
+            
+        }
 
         /// <summary>
         /// Called by the bootstrapper's constructor at design time to start the framework.
@@ -30,7 +50,7 @@ namespace Caliburn.Micro
 
         /// <summary>
         /// Called by the bootstrapper's constructor at runtime to start the framework.
-        /// </summary>
+        /// </summary>B
         protected virtual void StartRuntime()
         {
             EventAggregator.HandlerResultProcessing = (target, result) =>
