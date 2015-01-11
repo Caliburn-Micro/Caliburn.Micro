@@ -2,81 +2,91 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Android.App;
+using Foundation;
+using UIKit;
 
 namespace Caliburn.Micro
 {
     /// <summary>
-    /// A <see cref="IPlatformProvider"/> implementation for the Xamarin Android platfrom.
+    /// A <see cref="IPlatformProvider"/> implementation for the Xamarin iOS platfrom.
     /// </summary>
-    public class AndroidPlatformProvider : IPlatformProvider
+    public class IOSPlatformProvider : IPlatformProvider
     {
         private bool CheckAccess() {
-            return SynchronizationContext.Current != null;
+            return NSThread.IsMain;
         }
 
-        public bool InDesignMode {
+        public bool InDesignMode
+        {
             get { return false; }
         }
 
-        public void BeginOnUIThread(Action action) {
-
-            Application.SynchronizationContext.Post(s => action(), null);
+        public void BeginOnUIThread(Action action)
+        {
+            UIApplication.SharedApplication.InvokeOnMainThread(action);
         }
 
-        public Task OnUIThreadAsync(Action action) {
-
+        public Task OnUIThreadAsync(Action action)
+        {
             var completionSource = new TaskCompletionSource<bool>();
 
-            Application.SynchronizationContext.Post(s => {
+            UIApplication.SharedApplication.InvokeOnMainThread(() =>
+            {
 
-                try {
+                try
+                {
                     action();
 
                     completionSource.SetResult(true);
 
                 }
-                catch (TaskCanceledException) {
+                catch (TaskCanceledException)
+                {
                     completionSource.SetCanceled();
                 }
-                catch (Exception ex) {
+                catch (Exception ex)
+                {
                     completionSource.SetException(ex);
                 }
 
-            }, null);
-
+            });
 
             return completionSource.Task;
         }
 
         public void OnUIThread(Action action) {
-
             if (CheckAccess())
                 action();
             else
                 OnUIThreadAsync(action).Wait();
         }
 
-        public object GetFirstNonGeneratedView(object view) {
+        public object GetFirstNonGeneratedView(object view)
+        {
             return view;
         }
 
-        public void ExecuteOnFirstLoad(object view, Action<object> handler) {
-            
+        public void ExecuteOnFirstLoad(object view, Action<object> handler)
+        {
+
         }
 
-        public void ExecuteOnLayoutUpdated(object view, Action<object> handler) {
-            
+        public void ExecuteOnLayoutUpdated(object view, Action<object> handler)
+        {
+
         }
 
-        public Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult) {
+        public Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
+        {
 
             var child = viewModel as IChild;
 
-            if (child != null) {
+            if (child != null)
+            {
                 var conductor = child.Parent as IConductor;
 
-                if (conductor != null) {
+                if (conductor != null)
+                {
                     return () => conductor.CloseItem(viewModel);
                 }
             }
