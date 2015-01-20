@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Caliburn.Micro;
 using CM.HelloUniversal.Views;
 using CM.HelloUniversal.ViewModels;
@@ -26,6 +27,8 @@ namespace CM.HelloUniversal
             container.RegisterWinRTServices();
 
             container.PerRequest<MainViewModel>();
+
+            PrepareViewFirst();
         }
 
         protected override void PrepareViewFirst(Frame rootFrame)
@@ -35,10 +38,13 @@ namespace CM.HelloUniversal
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
+            Initialize();
+
             if (args.PreviousExecutionState == ApplicationExecutionState.Running)
                 return;
-            
-            DisplayRootView<MainView>();
+           
+            if (RootFrame.Content == null)
+                DisplayRootView<MainView>();
         }
 
         protected override object GetInstance(Type service, string key)
