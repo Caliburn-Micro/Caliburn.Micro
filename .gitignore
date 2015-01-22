@@ -1,43 +1,16 @@
-*.suo
-*.user
-*.FileListAbsolute.txt
-*\bin\*
-*\obj\*
-*.ncb
-*.nlb
-*.aps
-*.clw
-*.pdb
-*.obj
-*.exe
-*.pch
-*.vspscc
-*_i.c
-*_p.c
-*.tlb
-*.tlh
-*.bak
-*.cache
-*.Cache
-*.ilk
-*.log
-*.lib
-*.sbr
-*.scc
-*.sig
-*.xap
-_ReSharper*
-[Bb]in
-[Dd]ebug*/
-obj/
-[Rr]elease*/
-[Tt]est[Rr]esult*
-[Bb]uild[Ll]og.*
-*.[Pp]ublish.xml
-glob:desktop.ini
-generated-templates
-nuget/*.nupkg
-nuget/*/lib/
-*.*~
-*.vs10x
-*.docstates
+# Node rules:
+## Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+## Dependency directory
+## Commenting this out is preferred by some people, see
+## https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
+node_modules
+
+# Book build output
+_book
+
+# eBook build output
+*.epub
+*.mobi
+*.pdf
