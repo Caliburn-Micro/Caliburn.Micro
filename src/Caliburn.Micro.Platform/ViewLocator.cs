@@ -406,23 +406,23 @@
         public static Func<Type, Type, string> DeterminePackUriFromType = (viewModelType, viewType) => {
 #if !WinRT
             var assemblyName = viewType.Assembly.GetAssemblyName();
-            var uri = viewType.FullName.Replace(assemblyName, string.Empty).Replace(".", "/") + ".xaml";
-
-            if(!Application.Current.GetType().Assembly.GetAssemblyName().Equals(assemblyName)) {
-                return "/" + assemblyName + ";component" + uri;
-            }
-
-            return uri;
+            var applicationAssemblyName = Application.Current.GetType().Assembly.GetAssemblyName();
 #else
             var assemblyName = viewType.GetTypeInfo().Assembly.GetAssemblyName();
-            var uri = viewType.FullName.Replace(assemblyName, string.Empty).Replace(".", "/") + ".xaml";
+            var applicationAssemblyName = Application.Current.GetType().GetTypeInfo().Assembly.GetAssemblyName();
+#endif
+            var viewTypeName = viewType.FullName;
 
-            if (!Application.Current.GetType().GetTypeInfo().Assembly.GetAssemblyName().Equals(assemblyName)) {
+            if (viewTypeName.StartsWith(assemblyName))
+                viewTypeName = viewTypeName.Substring(assemblyName.Length);
+
+            var uri = viewTypeName.Replace(".", "/") + ".xaml";
+
+            if(!applicationAssemblyName.Equals(assemblyName)) {
                 return "/" + assemblyName + ";component" + uri;
             }
 
             return uri;
-#endif
         };
 
         /// <summary>
