@@ -231,8 +231,6 @@ namespace Caliburn.Micro {
             if (activator != null) {
                 activator.Activate();
             }
-
-            GC.Collect(); // Why?
         }
 
         /// <summary>
