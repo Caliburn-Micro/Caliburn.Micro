@@ -101,6 +101,9 @@
         ///<param name="eventArgs"> The event args. </param>
         ///<param name="parameters"> The method parameters. </param>
         public static void Invoke(object target, string methodName, DependencyObject view = null, FrameworkElement source = null, object eventArgs = null, object[] parameters = null) {
+
+            var message = new ActionMessage {MethodName = methodName};
+
             var context = new ActionExecutionContext {
                 Target = target,
 #if WinRT
@@ -108,7 +111,7 @@
 #else
                 Method = target.GetType().GetMethod(methodName),
 #endif
-                Message = new ActionMessage {MethodName = methodName},
+                Message = message,
                 View = view,
                 Source = source,
                 EventArgs = eventArgs
