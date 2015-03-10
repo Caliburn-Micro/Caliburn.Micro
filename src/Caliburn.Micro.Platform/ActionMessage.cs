@@ -288,7 +288,7 @@
         /// <summary>
         /// Forces an update of the UI's Enabled/Disabled state based on the the preconditions associated with the method.
         /// </summary>
-        public void UpdateAvailability() {
+        public virtual void UpdateAvailability() {
             if (context == null)
                 return;
 
