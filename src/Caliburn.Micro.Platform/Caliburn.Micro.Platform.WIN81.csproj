@@ -52,6 +52,7 @@
     <Compile Include="BooleanToVisibilityConverter.cs" />
     <Compile Include="StringSplitter.cs" />
     <Compile Include="win8\AttachedCollection.81.cs" />
+    <Compile Include="win8\CachingFrameAdapter.cs" />
     <Compile Include="win8\IAttachedObject.cs" />
     <Compile Include="win8\TriggerAction.cs" />
     <Compile Include="XamlPlatformProvider.cs" />
