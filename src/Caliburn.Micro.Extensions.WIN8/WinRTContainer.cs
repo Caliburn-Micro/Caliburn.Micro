@@ -23,14 +23,20 @@
         /// </summary>
         /// <param name="rootFrame">The application root frame.</param>
         /// <param name="treatViewAsLoaded">if set to <c>true</c> [treat view as loaded].</param>
-        public INavigationService RegisterNavigationService(Frame rootFrame, bool treatViewAsLoaded = false) {
+        /// <param name="cacheViewModels">if set to <c>true</c> then navigation service cache view models for resuse.</param>
+        public INavigationService RegisterNavigationService(Frame rootFrame, bool treatViewAsLoaded = false, bool cacheViewModels = false) {
             if (HasHandler(typeof (INavigationService), null))
                 return this.GetInstance<INavigationService>(null);
 
             if (rootFrame == null)
                 throw new ArgumentNullException("rootFrame");
-
+#if WinRT81
+            var frameAdapter = cacheViewModels ? (INavigationService)
+                new CachingFrameAdapter(rootFrame, treatViewAsLoaded) : 
+                new FrameAdapter(rootFrame, treatViewAsLoaded);
+#else
             var frameAdapter = new FrameAdapter(rootFrame, treatViewAsLoaded);
+#endif
 
             RegisterInstance(typeof (INavigationService), null, frameAdapter);
 

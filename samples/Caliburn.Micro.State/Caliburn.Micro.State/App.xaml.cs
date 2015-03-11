@@ -41,7 +41,7 @@ namespace Caliburn.Micro.State
         protected override void PrepareViewFirst(Frame rootFrame)
         {
             // Use the new caching frame adapter rather than the normal one
-            _container.Instance<INavigationService>(new CachingFrameAdapter(rootFrame));
+            _container.RegisterNavigationService(rootFrame, cacheViewModels: true);
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
