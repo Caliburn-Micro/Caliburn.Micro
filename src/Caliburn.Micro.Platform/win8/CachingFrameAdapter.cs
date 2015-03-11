@@ -1,4 +1,6 @@
-﻿using System;
+﻿using System.Collections.Specialized;
+using System.Collections.ObjectModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Foundation;
@@ -26,8 +28,8 @@ namespace Caliburn.Micro
         private readonly bool treatViewAsLoaded;
         private event NavigatingCancelEventHandler ExternalNavigatingHandler = delegate { };
 
-        private readonly Stack<object> viewModelBackStack = new Stack<object>();
-        private readonly Stack<object> viewModelForwardStack = new Stack<object>();
+        private readonly List<object> viewModelBackStack = new List<object>();
+        private readonly List<object> viewModelForwardStack = new List<object>();
 
         private object currentParameter;
 
@@ -98,20 +100,20 @@ namespace Caliburn.Micro
             {
                 case NavigationMode.Back:
 
-                    viewModelForwardStack.Push(view.DataContext);
+                    viewModelForwardStack.Add(view.DataContext);
 
                     break;
 
                 case NavigationMode.Forward:
                 case NavigationMode.Refresh:
 
-                    viewModelBackStack.Push(view.DataContext);
+                    viewModelBackStack.Add(view.DataContext);
 
                     break;
 
                 case NavigationMode.New:
 
-                    viewModelBackStack.Push(view.DataContext);
+                    viewModelBackStack.Add(view.DataContext);
                     viewModelForwardStack.Clear();
 
                     break;
@@ -142,7 +144,7 @@ namespace Caliburn.Micro
             {
                 case NavigationMode.Back:
                 {
-                    var viewModel = viewModelBackStack.Any() ? viewModelBackStack.Pop() : null;
+                    var viewModel = PopOffStack(viewModelBackStack);
 
                     BindViewModel(view, viewModel);
 
@@ -150,7 +152,7 @@ namespace Caliburn.Micro
                 }
                 case NavigationMode.Forward:
                 {
-                    var viewModel = viewModelForwardStack.Any() ? viewModelForwardStack.Pop() : null;
+                    var viewModel = PopOffStack(viewModelForwardStack);
 
                     BindViewModel(view, viewModel);
 
@@ -163,6 +165,18 @@ namespace Caliburn.Micro
 
                     break;
             }
+        }
+
+        private static T PopOffStack<T>(IList<T> stack) {
+            
+            if (!stack.Any())
+                return default(T);
+
+            var value = stack[stack.Count - 1];
+            
+            stack.RemoveAt(stack.Count - 1);
+
+            return value;
         }
 
         /// <summary>
@@ -357,7 +371,13 @@ namespace Caliburn.Micro
         /// </summary>
         public IList<PageStackEntry> BackStack
         {
-            get { return frame.BackStack; }
+            get {
+                var backStack = new ObservableCollection<PageStackEntry>(frame.BackStack);
+
+                backStack.CollectionChanged += (s, e) => ApplyCollectionChanges(e, viewModelBackStack, frame.ForwardStack);
+
+                return backStack;
+            }
         }
 
         /// <summary>
@@ -365,7 +385,81 @@ namespace Caliburn.Micro
         /// </summary>
         public IList<PageStackEntry> ForwardStack
         {
-            get { return frame.ForwardStack; }
+            get {
+
+                var forwardStack = new ObservableCollection<PageStackEntry>(frame.ForwardStack);
+
+                forwardStack.CollectionChanged += (s, e) => ApplyCollectionChanges(e, viewModelForwardStack, frame.ForwardStack); 
+
+                return forwardStack;
+            }
+        }
+
+        private static void ApplyCollectionChanges(NotifyCollectionChangedEventArgs e, IList<object> viewModels, IList<PageStackEntry> frameEntries) {
+
+            // We don't really care what the changes are, just the nature.
+            // For new items we don't want to create the view model itself,
+            // but just insert a null so the view model is created when get 
+            // get to this part of the stack
+
+            switch (e.Action) {
+                case NotifyCollectionChangedAction.Add:
+
+                    for (var i = 0; i < e.NewItems.Count; i++) {
+                        viewModels.Insert(e.NewStartingIndex + i, null);
+                        frameEntries.Insert(e.NewStartingIndex + i, (PageStackEntry) e.NewItems[i]);
+                    }
+
+                    break;
+                case NotifyCollectionChangedAction.Move:
+
+                    var viewModelItems = viewModels.Skip(e.OldStartingIndex).Take(e.OldItems.Count).ToList();
+                    var entryItems = frameEntries.Skip(e.OldStartingIndex).Take(e.OldItems.Count).ToList();
+
+                    for (var i = 0; i < e.OldItems.Count; i++) {
+                        viewModels.RemoveAt(e.OldStartingIndex);
+                        frameEntries.RemoveAt(e.OldStartingIndex);
+                    }
+
+                    for (var i = 0; i < viewModelItems.Count; i++) {
+                        viewModels.Insert(e.NewStartingIndex + i, viewModelItems[i]);
+                        frameEntries.Insert(e.NewStartingIndex + i, entryItems[i]);
+                    }
+
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+
+                    for (var i = 0; i < e.OldItems.Count; i++) {
+                        viewModels.RemoveAt(e.OldStartingIndex);
+                        frameEntries.RemoveAt(e.OldStartingIndex);
+                    }
+
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+
+                    for (var i = 0; i < e.OldItems.Count; i++) {
+                        viewModels.RemoveAt(e.OldStartingIndex);
+                        frameEntries.RemoveAt(e.OldStartingIndex);
+                    }
+
+                    for (var i = 0; i < e.NewItems.Count; i++) {
+                        viewModels.Insert(e.NewStartingIndex + i, null);
+                        frameEntries.Insert(e.NewStartingIndex + i, (PageStackEntry)e.NewItems[i]);
+                    }
+
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+
+                    viewModels.Clear();
+                    frameEntries.Clear();
+
+                    for (var i = 0; i < e.NewItems.Count; i++) {
+                        viewModels.Add(null);
+                        frameEntries.Add((PageStackEntry)e.NewItems[i]);
+                    }
+
+                    break;
+            }
         }
 #endif
 

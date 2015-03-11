@@ -8,13 +8,13 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Margin="24,0">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
-        <StackPanel>
+
+        <StackPanel Margin="24,0">
             <TextBlock x:Name="Repository_Name" Style="{StaticResource HeaderTextBlockStyle}"/>
         </StackPanel>
 

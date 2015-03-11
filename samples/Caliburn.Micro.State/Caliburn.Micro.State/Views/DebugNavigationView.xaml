@@ -9,7 +9,15 @@
     d:DesignWidth="400">
     
     <Grid Margin="24,0">
-        <Button x:Name="GoBack" Content="Back" HorizontalAlignment="Left"/>
-        <Button x:Name="GoForward" Content="Forward" HorizontalAlignment="Right"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="GoBack" Content="Back" Grid.Column="0"/>
+        <Button x:Name="Insert" Content="Add" Grid.Column="2"/>
+        <Button x:Name="GoForward" Content="Forward" Grid.Column="4"/>
     </Grid>
 </UserControl>

@@ -1,4 +1,6 @@
 ﻿using System;
+using Windows.UI.Xaml.Navigation;
+using Caliburn.Micro.State.Views;
 
 namespace Caliburn.Micro.State.ViewModels
 {
@@ -9,6 +11,20 @@ namespace Caliburn.Micro.State.ViewModels
         public DebugNavigationViewModel(INavigationService navigationService)
         {
             _navigationService = navigationService;
+        }
+
+        public void Insert()
+        {
+            var view = typeof (RepositoryDetailsView);
+            var parameter = _navigationService.UriFor<RepositoryDetailsViewModel>()
+                .WithParam(v => v.Owner, "caliburn-micro")
+                .WithParam(v => v.Name, "caliburn.micro")
+                .BuildUri()
+                .AbsoluteUri;
+
+            _navigationService.ForwardStack.Add(new PageStackEntry(view, parameter, null));
+
+            NotifyOfPropertyChange(() => CanGoForward);
         }
 
         public bool CanGoBack
