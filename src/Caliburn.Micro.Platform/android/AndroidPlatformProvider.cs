@@ -11,6 +11,13 @@ namespace Caliburn.Micro
     /// </summary>
     public class AndroidPlatformProvider : IPlatformProvider
     {
+        private readonly ActivityLifecycleCallbackHandler lifecycleHandler = new ActivityLifecycleCallbackHandler();
+
+        public AndroidPlatformProvider(Application application) {
+            application.RegisterActivityLifecycleCallbacks(lifecycleHandler);
+        }
+        
+
         private bool CheckAccess() {
             return SynchronizationContext.Current != null;
         }
@@ -62,11 +69,49 @@ namespace Caliburn.Micro
         }
 
         public void ExecuteOnFirstLoad(object view, Action<object> handler) {
-            
+
+            var activity = view as Activity;
+
+            if (activity != null) {
+                
+                EventHandler<ActivityEventArgs> created = null;
+
+                created = (s, e) => {
+                    if (e.Activity != activity)
+                        return;
+
+                    lifecycleHandler.ActivityCreated -= created;
+
+                    handler(view);
+                };
+
+                lifecycleHandler.ActivityCreated += created;
+            }
+
         }
 
         public void ExecuteOnLayoutUpdated(object view, Action<object> handler) {
-            
+            var activity = view as Activity;
+
+            if (activity != null)
+            {
+
+                activity.Application.RegisterActivityLifecycleCallbacks(lifecycleHandler);
+
+                EventHandler<ActivityEventArgs> resumed = null;
+
+                resumed = (s, e) =>
+                {
+                    if (e.Activity != activity)
+                        return;
+
+                    lifecycleHandler.ActivityResumed -= resumed;
+
+                    handler(view);
+                };
+
+                lifecycleHandler.ActivityResumed += resumed;
+            }
         }
 
         public Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult) {

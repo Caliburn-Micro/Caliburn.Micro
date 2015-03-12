@@ -94,7 +94,7 @@ namespace Caliburn.Micro
 
             isInitialized = true;
 
-            PlatformProvider.Current = new AndroidPlatformProvider();
+            PlatformProvider.Current = new AndroidPlatformProvider(this);
             if (Execute.InDesignMode)
             {
                 try

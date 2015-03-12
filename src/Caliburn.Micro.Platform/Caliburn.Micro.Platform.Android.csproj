@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="android\ActivityEventArgs.cs" />
+    <Compile Include="android\ActivityLifecycleCallbackHandler.cs" />
     <Compile Include="android\AndroidPlatformProvider.cs" />
     <Compile Include="android\CaliburnApplication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
