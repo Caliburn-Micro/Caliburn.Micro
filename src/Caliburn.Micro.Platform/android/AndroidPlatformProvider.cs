@@ -95,9 +95,6 @@ namespace Caliburn.Micro
 
             if (activity != null)
             {
-
-                activity.Application.RegisterActivityLifecycleCallbacks(lifecycleHandler);
-
                 EventHandler<ActivityEventArgs> resumed = null;
 
                 resumed = (s, e) =>
