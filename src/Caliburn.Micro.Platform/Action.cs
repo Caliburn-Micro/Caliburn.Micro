@@ -1,4 +1,6 @@
-﻿namespace Caliburn.Micro {
+﻿using System;
+
+namespace Caliburn.Micro {
 #if WinRT
     using System.Linq;
     using Windows.UI.Xaml;
@@ -122,6 +124,9 @@
             }
 
             ActionMessage.InvokeAction(context);
+
+            // This is a bit of hack but keeps message being garbage collected
+            Log.Info("Invoking action {0} on {1}.", message.MethodName, target);
         }
 
         static void OnTargetWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
