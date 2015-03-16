@@ -77,6 +77,7 @@
     <Compile Include="sl4\Parameter.cs" />
     <Compile Include="StringSplitter.cs" />
     <Compile Include="XamlPlatformProvider.cs" />
+    <None Include="packages.Caliburn.Micro.Platform.WP8.config" />
     <None Include="sl4\WindowManager.cs" />
     <Compile Include="TypeDescriptor.cs" />
     <Compile Include="TypeMappingConfiguration.cs" />

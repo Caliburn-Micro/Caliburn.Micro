@@ -66,6 +66,7 @@
     <Compile Include="UriBuilder.cs" />
     <Compile Include="UriSettingsCommand.cs" />
     <Compile Include="WinRTContainer.cs" />
+    <None Include="packages.Caliburn.Micro.Extensions.WIN8.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Callisto, Version=1.2.7.0, Culture=neutral, processorArchitecture=MSIL">
@@ -76,9 +77,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Windows.UI.Interactivity.1.3.0.0\lib\win8\Windows.UI.Interactivity.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
