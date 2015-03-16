@@ -37,7 +37,7 @@
     <DocumentationFile>..\..\bin\iOS\Release\Caliburn.Micro.Platform.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="iOS\CaliburnApplication.cs" />
+    <Compile Include="iOS\CaliburnApplicationDelegate.cs" />
     <Compile Include="iOS\iOSPlatformProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

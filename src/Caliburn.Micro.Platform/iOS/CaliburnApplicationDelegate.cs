@@ -10,14 +10,14 @@ namespace Caliburn.Micro
     /// <summary>
     /// 
     /// </summary>
-    public class CaliburnApplication : UIApplicationDelegate
+    public class CaliburnApplicationDelegate : UIApplicationDelegate
     {
         private bool isInitialized;
 
         /// <summary>
         /// 
         /// </summary>
-        public CaliburnApplication() {
+        public CaliburnApplicationDelegate() {
             
         }
 
@@ -25,7 +25,7 @@ namespace Caliburn.Micro
         /// 
         /// </summary>
         /// <param name="handle"></param>
-        public CaliburnApplication(IntPtr handle) : base(handle) {
+        public CaliburnApplicationDelegate(IntPtr handle) : base(handle) {
             
         }
 
@@ -33,7 +33,7 @@ namespace Caliburn.Micro
         /// 
         /// </summary>
         /// <param name="t"></param>
-        public CaliburnApplication(NSObjectFlag t)
+        public CaliburnApplicationDelegate(NSObjectFlag t)
             : base(t)
         {
             
