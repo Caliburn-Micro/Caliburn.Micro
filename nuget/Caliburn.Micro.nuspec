@@ -42,6 +42,8 @@
     <file src="..\bin\win81\Release\Caliburn.Micro.*.*" target="lib\win81" />
     <file src="..\bin\wp8\Release\Caliburn.Micro.*.*" target="lib\wp8" />
     <file src="..\bin\wpa81\Release\Caliburn.Micro.*.*" target="lib\wpa81" />
+    <file src="..\bin\android\Release\Caliburn.Micro.*.*" target="lib\MonoAndroid10" />
+    <file src="..\bin\iOS\Release\Caliburn.Micro.*.*" target="lib\Xamarin.iOS10" />
 	
 	<file src="tools\**" target="tools" />
 	
