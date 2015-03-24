@@ -73,15 +73,13 @@
     <Compile Include="win8\INavigationService.cs" />
     <Compile Include="win8\Parameter.cs" />
     <Compile Include="win8\XamlMetadataProvider.cs" />
+    <None Include="packages.Caliburn.Micro.Platform.WIN8.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Windows.UI.Interactivity, Version=1.2.0.0, Culture=neutral, PublicKeyToken=2f4cf195f2e6765d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Windows.UI.Interactivity.1.3.0.0\lib\win8\Windows.UI.Interactivity.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">

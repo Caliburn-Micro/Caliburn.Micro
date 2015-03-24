@@ -1,4 +1,6 @@
-﻿namespace Caliburn.Micro {
+﻿using System;
+
+namespace Caliburn.Micro {
 #if WinRT
     using System.Linq;
     using Windows.UI.Xaml;
@@ -101,6 +103,9 @@
         ///<param name="eventArgs"> The event args. </param>
         ///<param name="parameters"> The method parameters. </param>
         public static void Invoke(object target, string methodName, DependencyObject view = null, FrameworkElement source = null, object eventArgs = null, object[] parameters = null) {
+
+            var message = new ActionMessage {MethodName = methodName};
+
             var context = new ActionExecutionContext {
                 Target = target,
 #if WinRT
@@ -108,7 +113,7 @@
 #else
                 Method = target.GetType().GetMethod(methodName),
 #endif
-                Message = new ActionMessage {MethodName = methodName},
+                Message = message,
                 View = view,
                 Source = source,
                 EventArgs = eventArgs
@@ -119,6 +124,9 @@
             }
 
             ActionMessage.InvokeAction(context);
+
+            // This is a bit of hack but keeps message being garbage collected
+            Log.Info("Invoking action {0} on {1}.", message.MethodName, target);
         }
 
         static void OnTargetWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {

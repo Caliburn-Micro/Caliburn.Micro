@@ -108,6 +108,7 @@
     <None Include="..\Caliburn.snk">
       <Link>Caliburn.snk</Link>
     </None>
+    <None Include="packages.Caliburn.Micro.Platform.SL5.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.SL5.csproj">
