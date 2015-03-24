@@ -68,12 +68,40 @@ namespace Caliburn.Micro
 
         public void ExecuteOnFirstLoad(object view, Action<object> handler)
         {
+            var viewController = view as IUIViewController;
 
+            if (viewController != null) {
+
+                EventHandler created = null;
+
+                created = (s, e) =>
+                {
+                    viewController.ViewLoaded -= created;
+
+                    handler(view);
+                };
+
+                viewController.ViewLoaded += created;
+            }
         }
 
         public void ExecuteOnLayoutUpdated(object view, Action<object> handler)
         {
+            var viewController = view as IUIViewController;
 
+            if (viewController != null)
+            {
+                EventHandler appeared = null;
+
+                appeared = (s, e) =>
+                {
+                    viewController.ViewAppeared -= appeared;
+
+                    handler(view);
+                };
+
+                viewController.ViewAppeared += appeared;
+            }
         }
 
         public Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)

@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="iOS\CaliburnApplicationDelegate.cs" />
     <Compile Include="iOS\iOSPlatformProvider.cs" />
+    <Compile Include="iOS\IUIViewController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
