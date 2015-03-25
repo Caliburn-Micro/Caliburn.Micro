@@ -1,10 +1,10 @@
 ﻿namespace Caliburn.Micro {
-#if WinRT && !WinRT81
+#if WinRT && !WinRT81 && !WINDOWS_UAP
     using System.Linq;
     using Windows.UI.Xaml;
     using Windows.UI.Interactivity;
     using TriggerBase = Windows.UI.Interactivity.TriggerBase;
-#elif WinRT81
+#elif WinRT81 || WINDOWS_UAP
     using System.Linq;
     using Windows.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
@@ -91,7 +91,7 @@
 
             var messageTriggers = (TriggerBase[])d.GetValue(MessageTriggersProperty);
 
-#if WinRT81
+#if WinRT81 || WINDOWS_UAP
             var allTriggers = Interaction.GetBehaviors(d);
 
             if (messageTriggers != null)

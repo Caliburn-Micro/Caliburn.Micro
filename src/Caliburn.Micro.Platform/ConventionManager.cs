@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-#if WinRT && !WinRT81
+#if WinRT && !WinRT81 && !WINDOWS_UAP
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Controls.Primitives;
@@ -11,7 +11,7 @@
     using Windows.UI.Xaml.Markup;
     using EventTrigger = Windows.UI.Interactivity.EventTrigger;
     using Windows.UI.Xaml.Shapes;
-#elif WinRT81
+#elif WinRT81 || WINDOWS_UAP
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Controls.Primitives;

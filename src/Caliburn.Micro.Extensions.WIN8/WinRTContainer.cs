@@ -61,7 +61,7 @@
                 return this.GetInstance<ISettingsService>(null);
 
             if (!HasHandler(typeof (ISettingsWindowManager), null))
-#if WinRT81
+#if WinRT81 || WINDOWS_UAP
                 RegisterInstance(typeof (ISettingsWindowManager), null, new SettingsWindowManager());
 #else
                 RegisterInstance(typeof(ISettingsWindowManager), null, new CallistoSettingsWindowManager());

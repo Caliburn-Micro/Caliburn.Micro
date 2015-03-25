@@ -3,10 +3,10 @@ namespace Caliburn.Micro
 {
     using System;
     using System.Reflection;
-#if WinRT && !WinRT81
+#if WinRT && !WinRT81 && !WINDOWS_UAP
     using Windows.UI.Xaml;
     using TriggerBase = Windows.UI.Interactivity.TriggerBase;
-#elif WinRT81
+#elif WinRT81 || WINDOWS_UAP
     using Windows.UI.Xaml;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
 #else
