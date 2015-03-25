@@ -4,6 +4,10 @@
     using System.Linq;
     using Windows.UI.ApplicationSettings;
 
+#if WINDOWS_UAP
+    using Windows.Foundation.Metadata;
+#endif
+
     /// <summary>
     /// Serivce tha handles the settings charm
     /// </summary>
@@ -21,15 +25,29 @@
 
             commands = new List<SettingsCommandBase>();
 
+            
+#if WINDOWS_UAP
+            if (ApiInformation.IsTypePresent(typeof(SettingsPane).FullName)) {
+                settingsPane = SettingsPane.GetForCurrentView();
+                settingsPane.CommandsRequested += OnCommandsRequested;
+            }
+#else
             settingsPane = SettingsPane.GetForCurrentView();
             settingsPane.CommandsRequested += OnCommandsRequested;
+#endif
         }
 
         /// <summary>
         /// Displays the Settings Charm pane to the user.
         /// </summary>
         public void ShowSettingsUI() {
+#if WINDOWS_UAP
+            if (ApiInformation.IsTypePresent(typeof(SettingsPane).FullName))
+                SettingsPane.Show();
+#else
             SettingsPane.Show();
+#endif
+
         }
 
         /// <summary>
