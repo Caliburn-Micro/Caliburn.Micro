@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Caliburn.Micro</RootNamespace>
-    <AssemblyName>Caliburn.Micro.Platform</AssemblyName>
+    <AssemblyName>Caliburn.Micro.Platform.XamarinForms</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -21,22 +21,39 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\bin\xamarin-forms\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;XForms</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;XFORMS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\xamarin-forms\Debug\Caliburn.Micro.Platform.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\xamarin-forms\Debug\Caliburn.Micro.Platform.XamarinForms.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin\xamarin-forms\Release\</OutputPath>
-    <DefineConstants>TRACE;XForms</DefineConstants>
+    <DefineConstants>TRACE;XFORMS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\xamarin-forms\Release\Caliburn.Micro.Platform.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\xamarin-forms\Release\Caliburn.Micro.Platform.XamarinForms.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Action.cs" />
+    <Compile Include="Bind.cs" />
+    <Compile Include="DependencyPropertyHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ViewLocator.cs" />
+    <Compile Include="ViewModelBinder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ViewModelLocator.cs" />
+    <Compile Include="xforms\CaliburnFormsApplication.cs" />
+    <Compile Include="xforms\DependencyPropertyChangedEventArgs.cs" />
+    <Compile Include="xforms\PropertyChangedCallback.cs" />
+    <Compile Include="xforms\RoutedEventArgs.cs" />
+    <Compile Include="xforms\RoutedEventHandler.cs" />
+    <Compile Include="xforms\XamarinFormsPlatformProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core">
@@ -49,6 +66,17 @@
   <ItemGroup>
     <None Include="packages.Caliburn.Micro.Platform.XamarinForms.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">
+      <Project>{6d772b52-da8f-4784-971a-4bf50cb6d306}</Project>
+      <Name>Caliburn.Micro</Name>
+    </ProjectReference>
+    <ProjectReference Include="Caliburn.Micro.Platform.Xamarin.csproj">
+      <Project>{0ecbe3d9-aed4-419d-a6e3-c53d5ce2a02a}</Project>
+      <Name>Caliburn.Micro.Platform.Xamarin</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.1.3.1.6296\build\portable-win+net45+wp80+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.1.3.1.6296\build\portable-win+net45+wp80+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

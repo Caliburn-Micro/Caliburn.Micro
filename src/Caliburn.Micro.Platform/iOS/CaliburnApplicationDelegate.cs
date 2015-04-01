@@ -44,8 +44,8 @@ namespace Caliburn.Micro
         /// </summary>
         protected virtual void StartDesignTime()
         {
-            //AssemblySource.Instance.Clear();
-            //AssemblySource.Instance.AddRange(SelectAssemblies());
+            AssemblySource.Instance.Clear();
+            AssemblySource.Instance.AddRange(SelectAssemblies());
 
             Configure();
 
@@ -78,9 +78,9 @@ namespace Caliburn.Micro
                 }
             };
 
-            //AssemblySource.Instance.AddRange(SelectAssemblies());
+            AssemblySourceCache.Install();
+            AssemblySource.Instance.AddRange(SelectAssemblies());
 
-            PrepareApplication();
             Configure();
 
             IoC.GetInstance = GetInstance;
@@ -101,6 +101,7 @@ namespace Caliburn.Micro
             isInitialized = true;
 
             PlatformProvider.Current = new IOSPlatformProvider();
+
             if (Execute.InDesignMode)
             {
                 try
@@ -118,14 +119,6 @@ namespace Caliburn.Micro
             {
                 StartRuntime();
             }
-        }
-
-        /// <summary>
-        /// Provides an opportunity to hook into the application object.
-        /// </summary>
-        protected virtual void PrepareApplication()
-        {
-            
         }
 
         /// <summary>

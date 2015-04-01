@@ -1,4 +1,8 @@
-﻿namespace Caliburn.Micro
+﻿#if XFORMS
+namespace Caliburn.Micro.Xamarin.Forms
+#else
+namespace Caliburn.Micro
+#endif
 {
     using System;
     using System.Linq;
@@ -8,6 +12,10 @@
 
 #if WinRT
     using Windows.UI.Xaml;
+#endif
+
+#if XFORMS
+    using UIElement = global::Xamarin.Forms.Element;
 #endif
 
     /// <summary>
@@ -376,12 +384,19 @@
             {
                 return null;
             }
-
+#if XFORMS
+            var frameworkElement = view as UIElement;
+            if (frameworkElement != null && frameworkElement.BindingContext != null)
+            {
+                return frameworkElement.BindingContext;
+            }
+#else
             var frameworkElement = view as FrameworkElement;
             if (frameworkElement != null && frameworkElement.DataContext != null)
             {
                 return frameworkElement.DataContext;
             }
+#endif
 
             return LocateForViewType(view.GetType());
         };

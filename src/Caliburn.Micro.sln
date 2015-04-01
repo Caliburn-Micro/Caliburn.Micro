@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.iOS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.XamarinForms", "Caliburn.Micro.Platform\Caliburn.Micro.Platform.XamarinForms.csproj", "{67F9D3A8-F71E-4428-913F-C37AE82CDB24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.Xamarin", "Caliburn.Micro.Platform\Caliburn.Micro.Platform.Xamarin.csproj", "{0ECBE3D9-AED4-419D-A6E3-C53D5CE2A02A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +125,10 @@ Global
 		{67F9D3A8-F71E-4428-913F-C37AE82CDB24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67F9D3A8-F71E-4428-913F-C37AE82CDB24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67F9D3A8-F71E-4428-913F-C37AE82CDB24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ECBE3D9-AED4-419D-A6E3-C53D5CE2A02A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ECBE3D9-AED4-419D-A6E3-C53D5CE2A02A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ECBE3D9-AED4-419D-A6E3-C53D5CE2A02A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ECBE3D9-AED4-419D-A6E3-C53D5CE2A02A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -143,5 +149,6 @@ Global
 		{1647828F-AD5F-4CC3-8A27-11F06428B877} = {266A0FDB-CA59-4E27-B258-9552E368BE46}
 		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1} = {266A0FDB-CA59-4E27-B258-9552E368BE46}
 		{67F9D3A8-F71E-4428-913F-C37AE82CDB24} = {266A0FDB-CA59-4E27-B258-9552E368BE46}
+		{0ECBE3D9-AED4-419D-A6E3-C53D5CE2A02A} = {266A0FDB-CA59-4E27-B258-9552E368BE46}
 	EndGlobalSection
 EndGlobal
