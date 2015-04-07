@@ -41,6 +41,7 @@
     <Compile Include="iOS\iOSPlatformProvider.cs" />
     <Compile Include="iOS\IUIViewController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModelLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">

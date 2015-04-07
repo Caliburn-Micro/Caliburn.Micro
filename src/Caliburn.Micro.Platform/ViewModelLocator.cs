@@ -23,6 +23,14 @@ namespace Caliburn.Micro
     /// </summary>
     public static class ViewModelLocator
     {
+#if ANDROID
+        const string DefaultViewSuffix = "Activity";
+#elif IOS
+        const string DefaultViewSuffix = "ViewController";
+#else
+        const string DefaultViewSuffix = "View";
+#endif
+
         static readonly ILog Log = LogManager.GetLog(typeof(ViewModelLocator));
         //These fields are used for configuring the default type mappings. They can be changed using ConfigureTypeMappings().
         static string defaultSubNsViews;
@@ -43,9 +51,20 @@ namespace Caliburn.Micro
         /// </summary>
         public static string InterfaceCaptureGroupName = "isinterface";
 
-        static ViewModelLocator()
-        {
-            ConfigureTypeMappings(new TypeMappingConfiguration());
+        static ViewModelLocator() {
+            var configuration = new TypeMappingConfiguration();
+
+#if ANDROID
+            configuration.DefaultSubNamespaceForViews = "Activities";
+            configuration.ViewSuffixList.Add("Activity");
+            configuration.IncludeViewSuffixInViewModelNames = false;
+#elif IOS
+            configuration.DefaultSubNamespaceForViews = "ViewControllers";
+            configuration.ViewSuffixList.Add("ViewController");
+            configuration.IncludeViewSuffixInViewModelNames = false;
+#endif
+
+            ConfigureTypeMappings(configuration);
         }
 
         /// <summary>
@@ -102,7 +121,7 @@ namespace Caliburn.Micro
         /// Adds a default type mapping using the standard namespace mapping convention
         /// </summary>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddDefaultTypeMapping(string viewSuffix = "View")
+        public static void AddDefaultTypeMapping(string viewSuffix = DefaultViewSuffix)
         {
             if (!useNameSuffixesInMappings)
             {
@@ -123,7 +142,7 @@ namespace Caliburn.Micro
         /// <param name="nsSourceFilterRegEx">RegEx filter pattern for source namespace</param>
         /// <param name="nsTargetsRegEx">Array of RegEx replace values for target namespaces</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string[] nsTargetsRegEx, string viewSuffix = "View")
+        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string[] nsTargetsRegEx, string viewSuffix = DefaultViewSuffix)
         {
             var replist = new List<string>();
             Action<string> func;
@@ -189,7 +208,7 @@ namespace Caliburn.Micro
         /// <param name="nsSourceFilterRegEx">RegEx filter pattern for source namespace</param>
         /// <param name="nsTargetRegEx">RegEx replace value for target namespace</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string nsTargetRegEx, string viewSuffix = "View")
+        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string nsTargetRegEx, string viewSuffix = DefaultViewSuffix)
         {
             AddTypeMapping(nsSourceReplaceRegEx, nsSourceFilterRegEx, new[] { nsTargetRegEx }, viewSuffix);
         }
@@ -200,7 +219,7 @@ namespace Caliburn.Micro
         /// <param name="nsSource">Namespace of source type</param>
         /// <param name="nsTargets">Namespaces of target type as an array</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View")
+        public static void AddNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = DefaultViewSuffix)
         {
             //need to terminate with "." in order to concatenate with type name later
             var nsencoded = RegExHelper.NamespaceToRegEx(nsSource + ".");
@@ -225,7 +244,7 @@ namespace Caliburn.Micro
         /// <param name="nsSource">Namespace of source type</param>
         /// <param name="nsTarget">Namespace of target type</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View")
+        public static void AddNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = DefaultViewSuffix)
         {
             AddNamespaceMapping(nsSource, new[] { nsTarget }, viewSuffix);
         }
@@ -236,7 +255,7 @@ namespace Caliburn.Micro
         /// <param name="nsSource">Subnamespace of source type</param>
         /// <param name="nsTargets">Subnamespaces of target type as an array</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddSubNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View")
+        public static void AddSubNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = DefaultViewSuffix)
         {
             //need to terminate with "." in order to concatenate with type name later
             var nsencoded = RegExHelper.NamespaceToRegEx(nsSource + ".");
@@ -272,7 +291,7 @@ namespace Caliburn.Micro
         /// <param name="nsSource">Subnamespace of source type</param>
         /// <param name="nsTarget">Subnamespace of target type</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddSubNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View")
+        public static void AddSubNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = DefaultViewSuffix)
         {
             AddSubNamespaceMapping(nsSource, new[] { nsTarget }, viewSuffix);
         }
@@ -384,21 +403,26 @@ namespace Caliburn.Micro
             {
                 return null;
             }
-#if XFORMS
+
+#if ANDROID || IOS
+             return LocateForViewType(view.GetType());
+#elif XFORMS
             var frameworkElement = view as UIElement;
             if (frameworkElement != null && frameworkElement.BindingContext != null)
             {
                 return frameworkElement.BindingContext;
             }
+
+            return LocateForViewType(view.GetType());
 #else
             var frameworkElement = view as FrameworkElement;
             if (frameworkElement != null && frameworkElement.DataContext != null)
             {
                 return frameworkElement.DataContext;
             }
-#endif
 
             return LocateForViewType(view.GetType());
+#endif
         };
     }
 }
