@@ -4,11 +4,11 @@ using Xamarin.Forms;
 
 namespace Caliburn.Micro.Xamarin.Forms
 {
-    public class CaliburnFormsApplication : Application
+    public class FormsApplication : Application
     {
         private bool isInitialized;
 
-        public CaliburnFormsApplication() {
+        public FormsApplication() {
             Initialize();
         }
 
@@ -26,8 +26,10 @@ namespace Caliburn.Micro.Xamarin.Forms
 
             AssemblySourceCache.ExtractTypes = assembly => {
                 var baseTypes = baseExtractTypes(assembly);
+                var elementTypes = assembly.GetExportedTypes()
+                    .Where(t => typeof (Element).IsAssignableFrom(t));
 
-                return baseTypes.Where(t => typeof (Element).IsAssignableFrom(t));
+                return baseTypes.Union(elementTypes);
             };
 
             AssemblySource.Instance.Refresh();

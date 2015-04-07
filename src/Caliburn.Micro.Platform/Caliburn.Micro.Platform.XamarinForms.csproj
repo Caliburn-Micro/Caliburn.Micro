@@ -39,6 +39,7 @@
     <Compile Include="Action.cs" />
     <Compile Include="Bind.cs" />
     <Compile Include="DependencyPropertyHelper.cs" />
+    <Compile Include="NavigtionPageAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View.cs">
       <SubType>Code</SubType>
@@ -48,7 +49,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ViewModelLocator.cs" />
-    <Compile Include="xforms\CaliburnFormsApplication.cs" />
+    <Compile Include="xforms\FormsApplication.cs" />
     <Compile Include="xforms\DependencyPropertyChangedEventArgs.cs" />
     <Compile Include="xforms\PropertyChangedCallback.cs" />
     <Compile Include="xforms\RoutedEventArgs.cs" />
