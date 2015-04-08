@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-#if WinRT && !WinRT81
+#if WinRT && !WinRT81 && !WINDOWS_UAP
     using Windows.UI.Xaml;
     using Windows.UI.Interactivity;
     using TriggerBase = Windows.UI.Interactivity.TriggerBase;
@@ -12,7 +12,7 @@
     using System.Text;
     using System.Text.RegularExpressions;
     using Windows.UI.Xaml.Data;
-#elif WinRT81
+#elif WinRT81 || WINDOWS_UAP
     using System.Reflection;
     using Windows.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
@@ -71,7 +71,7 @@
                 var trigger = CreateTrigger(target, triggerPlusMessage.Length == 1 ? null : triggerPlusMessage[0]);
                 var message = CreateMessage(target, messageDetail);
 
-#if WinRT81
+#if WinRT81 || WINDOWS_UAP
                 AddActionToTrigger(target, message, trigger);
 #else
                 trigger.Actions.Add(message);
@@ -83,7 +83,7 @@
             return triggers;
         }
 
-#if WinRT81
+#if WinRT81 || WINDOWS_UAP
 
         private static void AddActionToTrigger(DependencyObject target, TriggerAction message, TriggerBase trigger)
         {

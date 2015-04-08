@@ -186,7 +186,17 @@
                             queue.Enqueue(listViewBase.Header as DependencyObject);
                     }
 #endif
-#if WinRT81
+#if WINDOWS_UAP
+                    var splitView = current as SplitView;
+                    if (splitView != null) {
+                        if (splitView.Content != null)
+                            queue.Enqueue(splitView.Content);
+
+                        if (splitView.Pane != null)
+                            queue.Enqueue(splitView.Pane);
+                    }
+#endif
+#if WinRT81 || WINDOWS_UAP
                     if (listViewBase != null) {
                         if (listViewBase.Footer is DependencyObject)
                             queue.Enqueue(listViewBase.Footer as DependencyObject);
@@ -268,7 +278,7 @@
             return descendants;
         };
 
-#if WinRT81
+#if WinRT81 || WINDOWS_UAP
         private static IEnumerable<DependencyObject> DecomposeFlyout(FlyoutBase flyoutBase) {
             var flyout = flyoutBase as Flyout;
 

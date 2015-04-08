@@ -8,8 +8,12 @@ namespace Caliburn.Micro {
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Navigation;
 
-#if WP81
+#if WP81 || WINDOWS_UAP
     using Windows.Phone.UI.Input;
+#endif
+
+#if WINDOWS_UAP
+    using Windows.Foundation.Metadata;
 #endif
 
     /// <summary>
@@ -81,7 +85,7 @@ namespace Caliburn.Micro {
         /// </summary>
         void GoBack();
 
-#if WinRT81
+#if WinRT81 || WINDOWS_UAP
         /// <summary>
         /// Gets a collection of PageStackEntry instances representing the backward navigation history of the Frame.
         /// </summary>
@@ -93,7 +97,7 @@ namespace Caliburn.Micro {
         IList<PageStackEntry> ForwardStack { get; }
 #endif
 
-#if WP81
+#if WP81 || WINDOWS_UAP
         /// <summary>
         /// Occurs when the user presses the hardware Back button.
         /// </summary>
@@ -142,13 +146,32 @@ namespace Caliburn.Micro {
 
             this.frame.Navigating += OnNavigating;
             this.frame.Navigated += OnNavigated;
-            
+
+            this.frame.Loaded += OnLoaded;
+            this.frame.Unloaded += OnUnloaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+#if WINDOWS_UAP
+            if (ApiInformation.IsTypePresent(typeof(HardwareButtons).FullName))
+                 HardwareButtons.BackPressed += OnHardwareBackPressed;
+#endif
 #if WP81
-            this.frame.Loaded += (sender, args) => { HardwareButtons.BackPressed += OnHardwareBackPressed; };
-            this.frame.Unloaded += (sender, args) => { HardwareButtons.BackPressed -= OnHardwareBackPressed; };
+            HardwareButtons.BackPressed += OnHardwareBackPressed;
 #endif
         }
 
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+#if WINDOWS_UAP
+            if (ApiInformation.IsTypePresent(typeof(HardwareButtons).FullName))
+                HardwareButtons.BackPressed -= OnHardwareBackPressed;
+#endif
+#if WP81
+            HardwareButtons.BackPressed -= OnHardwareBackPressed;
+#endif
+        }
         /// <summary>
         ///   Occurs before navigation
         /// </summary>
@@ -371,7 +394,7 @@ namespace Caliburn.Micro {
             get { return frame.CanGoBack; }
         }
 
-#if WinRT81
+#if WinRT81 || WINDOWS_UAP
         /// <summary>
         /// Gets a collection of PageStackEntry instances representing the backward navigation history of the Frame.
         /// </summary>
@@ -443,7 +466,7 @@ namespace Caliburn.Micro {
             return true;
         }
 
-#if WP81
+#if WP81 || WINDOWS_UAP
         /// <summary>
         /// Occurs when the user presses the hardware Back button.
         /// </summary>

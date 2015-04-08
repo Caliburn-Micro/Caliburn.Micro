@@ -4,7 +4,7 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
-#if WinRT && !WinRT81
+#if WinRT && !WinRT81 && !WINDOWS_UAP
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Data;
     using Windows.UI.Interactivity;
@@ -15,7 +15,7 @@
     using TriggerBase = Windows.UI.Interactivity.TriggerBase;
     using EventTrigger = Windows.UI.Interactivity.EventTrigger;
     using TriggerAction = Windows.UI.Interactivity.TriggerAction;
-#elif WinRT81
+#elif WinRT81 || WINDOWS_UAP
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Data;
     using Windows.UI.Xaml.Markup;
@@ -133,7 +133,7 @@
         /// <summary>
         /// Called after the action is attached to an AssociatedObject.
         /// </summary>
-#if WinRT81
+#if WinRT81 || WINDOWS_UAP
         protected override void OnAttached() {
             if (!View.InDesignMode) {
                 Parameters.Attach(AssociatedObject);

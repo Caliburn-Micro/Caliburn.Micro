@@ -6,7 +6,7 @@
     /// </summary>
     public interface ISettingsWindowManager {
 
-#if WinRT81 
+#if WinRT81 || WINDOWS_UAP
         /// <summary>
         /// Shows a settings flyout panel for the specified model.
         /// </summary>

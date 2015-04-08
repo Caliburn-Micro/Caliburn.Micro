@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-#if WinRT && !WinRT81
+#if WinRT && !WinRT81 && !WINDOWS_UAP
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Controls.Primitives;
@@ -11,7 +11,7 @@
     using Windows.UI.Xaml.Markup;
     using EventTrigger = Windows.UI.Interactivity.EventTrigger;
     using Windows.UI.Xaml.Shapes;
-#elif WinRT81
+#elif WinRT81 || WINDOWS_UAP
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Controls.Primitives;
@@ -199,7 +199,7 @@
                 info,
                 binding
                 );
-#elif !(WinRT && !WinRT81)
+#elif !(WinRT && !WinRT81 && !WINDOWS_UAP)
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
         };
@@ -216,7 +216,7 @@
             AddElementConvention<MenuFlyoutItem>(MenuFlyoutItem.TextProperty, "Text", "Click");
             AddElementConvention<ToggleMenuFlyoutItem>(ToggleMenuFlyoutItem.IsCheckedProperty, "IsChecked", "Click");
 #endif
-#if WinRT81 && !WP81
+#if (WinRT81 && !WP81) || WINDOWS_UAP
             AddElementConvention<SearchBox>(SearchBox.QueryTextProperty, "QueryText", "QuerySubmitted");
 #endif
 #if WinRT
@@ -225,7 +225,7 @@
             AddElementConvention<Slider>(Slider.ValueProperty, "Value", "ValueChanged");
             AddElementConvention<RichEditBox>(RichEditBox.DataContextProperty, "DataContext", "TextChanged");
 #endif
-#if WP81
+#if WP81 || WINDOWS_UAP
             AddElementConvention<Pivot>(Pivot.ItemsSourceProperty, "SelectedItem", "SelectionChanged")
                 .ApplyBinding = (viewModelType, path, property, element, convention) =>
                 {
