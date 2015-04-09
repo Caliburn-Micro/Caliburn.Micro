@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Caliburn.Micro</RootNamespace>
-    <AssemblyName>Caliburn.Micro.Platform.XamarinForms</AssemblyName>
+    <AssemblyName>Caliburn.Micro.Platform.Xamarin.Forms</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -24,7 +24,7 @@
     <DefineConstants>TRACE;DEBUG;XFORMS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\xamarin-forms\Debug\Caliburn.Micro.Platform.XamarinForms.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\xamarin-forms\Debug\Caliburn.Micro.Platform.Xamarin.Forms.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,7 +33,7 @@
     <DefineConstants>TRACE;XFORMS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\xamarin-forms\Release\Caliburn.Micro.Platform.XamarinForms.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\xamarin-forms\Release\Caliburn.Micro.Platform.Xamarin.Forms.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Action.cs" />
