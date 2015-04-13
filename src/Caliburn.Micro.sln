@@ -43,7 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.And
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.iOS", "Caliburn.Micro.Platform\Caliburn.Micro.Platform.iOS.csproj", "{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.XamarinForms", "Caliburn.Micro.Platform\Caliburn.Micro.Platform.XamarinForms.csproj", "{67F9D3A8-F71E-4428-913F-C37AE82CDB24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.Xamarin.Forms", "Caliburn.Micro.Platform\Caliburn.Micro.Platform.Xamarin.Forms.csproj", "{67F9D3A8-F71E-4428-913F-C37AE82CDB24}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.Xamarin", "Caliburn.Micro.Platform\Caliburn.Micro.Platform.Xamarin.csproj", "{0ECBE3D9-AED4-419D-A6E3-C53D5CE2A02A}"
 EndProject

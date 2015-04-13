@@ -1,4 +1,9 @@
-﻿namespace Caliburn.Micro {
+﻿#if XFORMS
+namespace Caliburn.Micro.Xamarin.Forms
+#else
+namespace Caliburn.Micro
+#endif
+{
     using System;
     using System.Globalization;
     using System.Linq;
@@ -12,6 +17,7 @@
     /// A service that is capable of properly binding values to a method's parameters and creating instances of <see cref="IResult"/>.
     /// </summary>
     public static class MessageBinder {
+#if !XFORMS
         /// <summary>
         /// The special parameter values recognized by the message binder along with their resolvers.
         /// </summary>
@@ -24,7 +30,7 @@
                 {"$executioncontext", c => c},
                 {"$view", c => c.View}
             };
-
+#endif
         /// <summary>
         /// Custom converters used by the framework registered by destination type for which they will be selected.
         /// The converter is passed the existing value to convert and a "context" object.
@@ -41,6 +47,7 @@
                 }
             };
 
+#if !XFORMS
         /// <summary>
         /// Determines the parameters that a method should be invoked with.
         /// </summary>
@@ -78,6 +85,7 @@
                 Func<ActionExecutionContext, object> resolver;
                 return SpecialValues.TryGetValue(lookup, out resolver) ? resolver(context) : text;
             };
+#endif
 
         /// <summary>
         /// Coerces the provided value to the destination type.
@@ -101,7 +109,7 @@
             }
 
             try {
-#if !WinRT
+#if !WinRT && !XFORMS
                 var converter = TypeDescriptor.GetConverter(destinationType);
 
                 if (converter.CanConvertFrom(providedType)) {
@@ -114,7 +122,7 @@
                     return converter.ConvertTo(providedValue, destinationType);
                 }
 #endif
-#if WinRT
+#if WinRT || XFORMS
                 if (destinationType.GetTypeInfo().IsEnum) {
 #else
                 if (destinationType.IsEnum) {
@@ -152,7 +160,7 @@
         /// <param name="type">The type.</param>
         /// <returns>The default value.</returns>
         public static object GetDefaultValue(Type type) {
-#if WinRT
+#if WinRT || XFORMS
             var typeInfo = type.GetTypeInfo();
             return typeInfo.IsClass || typeInfo.IsInterface ? null : System.Activator.CreateInstance(type);
 #else

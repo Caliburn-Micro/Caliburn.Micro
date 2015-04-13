@@ -78,14 +78,13 @@ namespace Caliburn.Micro.Xamarin.Forms
         {
             PrepareViewFirst();
 
-            var view = ViewLocator.GetOrCreateViewType(viewType);
+            // Normally we'd just do everything through NavigationPage
+            // and listen for events like all the other navigation services
+            // Xamarin Forms acts differentl
 
-            var page = view as Page;
+            var navigationService = IoC.Get<INavigtionService>();
 
-            if (page == null)
-                throw new NotSupportedException(String.Format("{0} does not inherit from {1}.", view.GetType(), typeof(Page)));
-
-            RootNavigationPage.PushAsync(page);
+            navigationService.PushViewAsync(viewType);
         }
 
         /// <summary>
