@@ -15,7 +15,7 @@
     /// Used to send a message from the UI to a presentation model class, indicating that a particular Action should be invoked.
     /// </summary>
     [ContentProperty("Parameters")]
-    public class ActionMessage : TriggerAction<VisualElement>, IHaveParameters
+    public class ActionMessage : TriggerActionBase<VisualElement>, IHaveParameters
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
         private ActionExecutionContext context;
@@ -78,7 +78,20 @@
                 Parameters.Attach(AssociatedObject);
                 Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
 
-                ElementLoaded(AssociatedObject, new RoutedEventArgs());
+                // This is a real hack, we don't have access to a Loaded event so
+                // working out when the "visual tree" is active doesn't really happen
+                // We don't have many events to choose from. Thankfully 
+
+                EventHandler bindingContextChanged = null;
+
+                bindingContextChanged = (s, e) => {
+                    AssociatedObject.BindingContextChanged -= bindingContextChanged;
+                    ElementLoaded(AssociatedObject, new RoutedEventArgs());
+                };
+
+                AssociatedObject.BindingContextChanged += bindingContextChanged;
+
+               
             }
 
             base.OnAttached();

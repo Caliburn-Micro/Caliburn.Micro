@@ -3,13 +3,13 @@ using Xamarin.Forms;
 
 namespace Caliburn.Micro.Xamarin.Forms
 {
-    public abstract class TriggerAction<T> : global::Xamarin.Forms.TriggerAction<T> 
+    public abstract class TriggerActionBase<T> : TriggerAction<T> 
         where T : BindableObject {
 
         private VisualElement associatedObject;
 
         /// <summary>
-        /// Gets or sets the object to which this <see cref="TriggerAction&lt;T&gt;"/> is attached. 
+        /// Gets or sets the object to which this <see cref="TriggerActionBase{T}"/> is attached. 
         /// </summary>
         public VisualElement AssociatedObject
         {

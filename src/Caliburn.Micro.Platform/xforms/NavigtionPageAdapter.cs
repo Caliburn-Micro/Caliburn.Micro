@@ -90,8 +90,6 @@ namespace Caliburn.Micro.Xamarin.Forms
             if (page == null)
                 throw new NotSupportedException(String.Format("{0} does not inherit from {1}.", view.GetType(), typeof(Page)));
 
-            ViewLocator.InitializeComponent(view);
-
             var viewModel = ViewModelLocator.LocateForView(view);
 
             if (viewModel != null) {

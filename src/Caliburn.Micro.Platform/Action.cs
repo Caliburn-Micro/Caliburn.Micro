@@ -163,18 +163,23 @@ namespace Caliburn.Micro
                 target = IoC.GetInstance(null, containerKey);
             }
 #if XFORMS
+            Log.Info("Attaching message handler {0} to {1}.", target, d);
+            Message.SetHandler(d, target);
+
             if (setContext && d is FrameworkElement) {
                 Log.Info("Setting DC of {0} to {1}.", d, target);
                 ((FrameworkElement)d).BindingContext = target;
             }
 #else
-             if (setContext && d is FrameworkElement) {
+            if (setContext && d is FrameworkElement) {
                 Log.Info("Setting DC of {0} to {1}.", d, target);
                 ((FrameworkElement)d).DataContext = target;
             }
+
+             Log.Info("Attaching message handler {0} to {1}.", target, d);
+             Message.SetHandler(d, target);
 #endif
-            Log.Info("Attaching message handler {0} to {1}.", target, d);
-            Message.SetHandler(d, target);
+            
 
         }
     }
