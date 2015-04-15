@@ -1,9 +1,19 @@
-﻿namespace Caliburn.Micro {
+﻿#if XFORMS
+namespace Caliburn.Micro.Xamarin.Forms
+#else
+namespace Caliburn.Micro
+#endif
+{
     using System;
     using System.Collections.Generic;
     using System.Reflection;
 #if WinRT
     using Windows.UI.Xaml;
+#elif XFORMS
+    using global::Xamarin.Forms;
+    using DependencyObject = global::Xamarin.Forms.BindableObject;
+    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
+    using FrameworkElement = global::Xamarin.Forms.VisualElement;
 #else
     using System.Windows;
 #endif

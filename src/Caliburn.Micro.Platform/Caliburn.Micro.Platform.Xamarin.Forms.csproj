@@ -37,11 +37,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Action.cs" />
+    <Compile Include="ActionExecutionContext.cs" />
     <Compile Include="Bind.cs" />
     <Compile Include="DependencyPropertyHelper.cs" />
+    <Compile Include="ElementConvention.cs" />
+    <Compile Include="IHaveParameters.cs" />
+    <Compile Include="Message.cs" />
     <Compile Include="MessageBinder.cs" />
+    <Compile Include="Parser.cs" />
+    <Compile Include="xforms\ActionMessage.cs" />
+    <Compile Include="xforms\AttachedCollection.cs" />
     <Compile Include="xforms\ConventionManager.cs" />
     <Compile Include="xforms\HttpUtility.cs" />
+    <Compile Include="xforms\IAttachedObject.cs" />
     <Compile Include="xforms\NavigtionPageAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View.cs">
@@ -54,9 +62,11 @@
     <Compile Include="ViewModelLocator.cs" />
     <Compile Include="xforms\FormsApplication.cs" />
     <Compile Include="xforms\DependencyPropertyChangedEventArgs.cs" />
+    <Compile Include="xforms\Parameter.cs" />
     <Compile Include="xforms\PropertyChangedCallback.cs" />
     <Compile Include="xforms\RoutedEventArgs.cs" />
     <Compile Include="xforms\RoutedEventHandler.cs" />
+    <Compile Include="xforms\TriggerAction.cs" />
     <Compile Include="xforms\XamarinFormsPlatformProvider.cs" />
   </ItemGroup>
   <ItemGroup>

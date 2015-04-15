@@ -10,28 +10,30 @@ using System.Windows;
 
 namespace Caliburn.Micro
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public static class DependencyPropertyHelper
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="propertyType"></param>
-        /// <param name="ownerType"></param>
-        /// <param name="defaultValue"></param>
-        /// <param name="propertyChangedCallback"></param>
-        /// <returns></returns>
+
         public static DependencyProperty RegisterAttached(string name, Type propertyType, Type ownerType, object defaultValue = null, PropertyChangedCallback propertyChangedCallback = null) {
 #if XFORMS
-            return DependencyProperty.Create(name, propertyType, ownerType, defaultValue, propertyChanged: (obj, oldValue, newValue) => {
+            return DependencyProperty.CreateAttached(name, propertyType, ownerType, defaultValue, propertyChanged: (obj, oldValue, newValue) => {
                 if (propertyChangedCallback != null)
                     propertyChangedCallback(obj, new DependencyPropertyChangedEventArgs(newValue, oldValue, null));
             });
 #else
             return DependencyProperty.RegisterAttached(name, propertyType, ownerType, new PropertyMetadata(defaultValue, propertyChangedCallback));
+#endif
+        }
+
+        public static DependencyProperty Register(string name, Type propertyType, Type ownerType, object defaultValue = null, PropertyChangedCallback propertyChangedCallback = null)
+        {
+#if XFORMS
+            return DependencyProperty.Create(name, propertyType, ownerType, defaultValue, propertyChanged: (obj, oldValue, newValue) =>
+            {
+                if (propertyChangedCallback != null)
+                    propertyChangedCallback(obj, new DependencyPropertyChangedEventArgs(newValue, oldValue, null));
+            });
+#else
+            return DependencyProperty.Register(name, propertyType, ownerType, new PropertyMetadata(defaultValue, propertyChangedCallback));
 #endif
         }
     }

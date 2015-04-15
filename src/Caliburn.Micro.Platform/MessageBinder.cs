@@ -17,7 +17,6 @@ namespace Caliburn.Micro
     /// A service that is capable of properly binding values to a method's parameters and creating instances of <see cref="IResult"/>.
     /// </summary>
     public static class MessageBinder {
-#if !XFORMS
         /// <summary>
         /// The special parameter values recognized by the message binder along with their resolvers.
         /// </summary>
@@ -25,12 +24,17 @@ namespace Caliburn.Micro
             new Dictionary<string, Func<ActionExecutionContext, object>>
             {
                 {"$eventargs", c => c.EventArgs},
+#if XFORMS
+                {"$datacontext", c => c.Source.BindingContext},
+                {"$bindingcontext", c => c.Source.BindingContext},
+#else
                 {"$datacontext", c => c.Source.DataContext},
+#endif
                 {"$source", c => c.Source},
                 {"$executioncontext", c => c},
                 {"$view", c => c.View}
             };
-#endif
+
         /// <summary>
         /// Custom converters used by the framework registered by destination type for which they will be selected.
         /// The converter is passed the existing value to convert and a "context" object.
@@ -47,7 +51,6 @@ namespace Caliburn.Micro
                 }
             };
 
-#if !XFORMS
         /// <summary>
         /// Determines the parameters that a method should be invoked with.
         /// </summary>
@@ -77,7 +80,7 @@ namespace Caliburn.Micro
         /// </summary>
         public static Func<string, Type, ActionExecutionContext, object> EvaluateParameter =
             (text, parameterType, context) => {
-#if WinRT
+#if WinRT || XFORMS
             var lookup = text.ToLower();
 #else
                 var lookup = text.ToLower(CultureInfo.InvariantCulture);
@@ -85,7 +88,6 @@ namespace Caliburn.Micro
                 Func<ActionExecutionContext, object> resolver;
                 return SpecialValues.TryGetValue(lookup, out resolver) ? resolver(context) : text;
             };
-#endif
 
         /// <summary>
         /// Coerces the provided value to the destination type.

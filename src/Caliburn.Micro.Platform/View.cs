@@ -113,7 +113,10 @@ namespace Caliburn.Micro
         /// <param name="handler">The handler.</param>
         /// <returns>true if the handler was executed immediately; false otherwise</returns>
         public static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler) {
-#if !XFORMS
+#if XFORMS
+            handler(element, new RoutedEventArgs());
+            return true;
+#else
 #if SILVERLIGHT
             if ((bool)element.GetValue(IsLoadedProperty)) {
 #elif WinRT
@@ -134,8 +137,6 @@ namespace Caliburn.Micro
                 handler(s, e);
             };
             element.Loaded += loaded;
-            return false;
-#else
             return false;
 #endif
 

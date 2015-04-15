@@ -172,10 +172,10 @@ namespace Caliburn.Micro
                 Log.Info("Setting DC of {0} to {1}.", d, target);
                 ((FrameworkElement)d).DataContext = target;
             }
-
+#endif
             Log.Info("Attaching message handler {0} to {1}.", target, d);
             Message.SetHandler(d, target);
-#endif
+
         }
     }
 }
