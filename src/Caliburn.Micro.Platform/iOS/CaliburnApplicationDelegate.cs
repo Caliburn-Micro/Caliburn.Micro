@@ -82,7 +82,6 @@ namespace Caliburn.Micro
             AssemblySource.Instance.AddRange(SelectAssemblies());
 
             Configure();
-
             IoC.GetInstance = GetInstance;
             IoC.GetAllInstances = GetAllInstances;
             IoC.BuildUp = BuildUp;

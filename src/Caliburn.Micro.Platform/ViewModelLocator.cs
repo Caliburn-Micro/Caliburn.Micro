@@ -351,7 +351,7 @@ namespace Caliburn.Micro
         {
             var typeName = viewType.FullName;
 
-            var viewModelTypeList = TransformName(typeName, searchForInterface);
+            var viewModelTypeList = TransformName(typeName, searchForInterface).ToList();
 
             var viewModelType = AssemblySource.FindTypeByNames(viewModelTypeList);
 
