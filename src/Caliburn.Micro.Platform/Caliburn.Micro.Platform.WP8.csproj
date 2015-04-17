@@ -57,7 +57,6 @@
     <Compile Include="Action.cs" />
     <Compile Include="ActionExecutionContext.cs" />
     <Compile Include="ActionMessage.cs" />
-    <Compile Include="AssemblySource.cs" />
     <Compile Include="Bind.cs" />
     <Compile Include="BindingScope.cs" />
     <Compile Include="BooleanToVisibilityConverter.cs" />
@@ -65,23 +64,18 @@
     <Compile Include="ConventionManager.cs" />
     <Compile Include="DependencyPropertyHelper.cs" />
     <Compile Include="ElementConvention.cs" />
-    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="IHaveParameters.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageBinder.cs" />
-    <Compile Include="NameTransformer.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegExHelper.cs" />
     <Compile Include="sl4\AttachedCollection.cs" />
     <Compile Include="sl4\Mouse.cs" />
     <Compile Include="sl4\Parameter.cs" />
-    <Compile Include="StringSplitter.cs" />
     <Compile Include="XamlPlatformProvider.cs" />
     <None Include="packages.Caliburn.Micro.Platform.WP8.config" />
     <None Include="sl4\WindowManager.cs" />
     <Compile Include="TypeDescriptor.cs" />
-    <Compile Include="TypeMappingConfiguration.cs" />
     <Compile Include="View.cs" />
     <Compile Include="ViewLocator.cs" />
     <Compile Include="ViewModelBinder.cs" />
@@ -102,6 +96,10 @@
     <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">
       <Project>{6D772B52-DA8F-4784-971A-4BF50CB6D306}</Project>
       <Name>Caliburn.Micro</Name>
+    </ProjectReference>
+    <ProjectReference Include="Caliburn.Micro.Platform.Mobile.csproj">
+      <Project>{0ecbe3d9-aed4-419d-a6e3-c53d5ce2a02a}</Project>
+      <Name>Caliburn.Micro.Platform.Mobile</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -78,6 +78,10 @@
     <Compile Include="WindowManagerExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.Platform.Mobile.csproj">
+      <Project>{0ecbe3d9-aed4-419d-a6e3-c53d5ce2a02a}</Project>
+      <Name>Caliburn.Micro.Platform.Mobile</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.Platform.WP8.csproj">
       <Project>{50DAA3F0-3BAD-433A-B4B2-4A38DEF9DFAF}</Project>
       <Name>Caliburn.Micro.Platform.WP8</Name>
