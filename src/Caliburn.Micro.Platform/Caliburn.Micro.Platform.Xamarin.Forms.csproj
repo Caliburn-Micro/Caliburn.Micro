@@ -85,9 +85,9 @@
       <Project>{6d772b52-da8f-4784-971a-4bf50cb6d306}</Project>
       <Name>Caliburn.Micro</Name>
     </ProjectReference>
-    <ProjectReference Include="Caliburn.Micro.Platform.Xamarin.csproj">
+    <ProjectReference Include="Caliburn.Micro.Platform.Mobile.csproj">
       <Project>{0ecbe3d9-aed4-419d-a6e3-c53d5ce2a02a}</Project>
-      <Name>Caliburn.Micro.Platform.Xamarin</Name>
+      <Name>Caliburn.Micro.Platform.Mobile</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
