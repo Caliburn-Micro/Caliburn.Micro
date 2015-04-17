@@ -45,8 +45,8 @@
     <Reference Include="Caliburn.Micro">
       <HintPath>..\..\..\..\bin\xamarin-forms\Debug\Caliburn.Micro.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro.Platform.Xamarin">
-      <HintPath>..\..\..\..\bin\xamarin-forms\Debug\Caliburn.Micro.Platform.Xamarin.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Platform.Mobile">
+      <HintPath>..\..\..\..\bin\xamarin-forms\Debug\Caliburn.Micro.Platform.Mobile.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.Platform.Xamarin.Forms">
       <HintPath>..\..\..\..\bin\xamarin-forms\Debug\Caliburn.Micro.Platform.Xamarin.Forms.dll</HintPath>

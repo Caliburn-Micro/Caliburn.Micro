@@ -47,8 +47,8 @@
     <Reference Include="Caliburn.Micro.Platform">
       <HintPath>..\..\..\bin\android\Debug\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro.Platform.Xamarin">
-      <HintPath>..\..\..\bin\android\Debug\Caliburn.Micro.Platform.Xamarin.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Platform.Mobile">
+      <HintPath>..\..\..\bin\android\Debug\Caliburn.Micro.Platform.Mobile.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
