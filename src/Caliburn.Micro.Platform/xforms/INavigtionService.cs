@@ -13,7 +13,7 @@ namespace Caliburn.Micro.Xamarin.Forms {
         /// </summary>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        Task PopAsync(bool animated = true);
+        Task GoBackAsync(bool animated = true);
 
         /// <summary>
         ///  A task for asynchronously pushing a view onto the navigation stack, with optional animation.
@@ -22,7 +22,7 @@ namespace Caliburn.Micro.Xamarin.Forms {
         /// <param name="parameter">The paramter to pass to the view model</param>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        Task PushViewAsync(Type viewType, object parameter = null, bool animated = true);
+        Task NavigateToViewAsync(Type viewType, object parameter = null, bool animated = true);
 
         /// <summary>
         ///  A task for asynchronously pushing a view onto the navigation stack, with optional animation.
@@ -31,7 +31,7 @@ namespace Caliburn.Micro.Xamarin.Forms {
         /// <param name="parameter">The paramter to pass to the view model</param>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>  
-        Task PushViewAsync<T>(object parameter = null, bool animated = true);
+        Task NavigateToViewAsync<T>(object parameter = null, bool animated = true);
 
         /// <summary>
         ///  A task for asynchronously pushing a view for the given view model onto the navigation stack, with optional animation.
@@ -40,7 +40,7 @@ namespace Caliburn.Micro.Xamarin.Forms {
         /// <param name="parameter">The paramter to pass to the view model</param>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        Task PushViewModelAsync(Type viewModelType, object parameter = null, bool animated = true);
+        Task NavigateToViewModelAsync(Type viewModelType, object parameter = null, bool animated = true);
 
         /// <summary>
         ///  A task for asynchronously pushing a page for the given view model onto the navigation stack, with optional animation.
@@ -49,13 +49,13 @@ namespace Caliburn.Micro.Xamarin.Forms {
         /// <param name="parameter">The paramter to pass to the view model</param>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        Task PushViewModelAsync<T>(object parameter = null, bool animated = true);
+        Task NavigateToViewModelAsync<T>(object parameter = null, bool animated = true);
 
         /// <summary>
         /// Pops all but the root <see cref="T:Xamarin.Forms.Page"/> off the navigation stack.
         /// </summary>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        Task PopToRootAsync(bool animated = true);
+        Task GoBackToRootAsync(bool animated = true);
     }
 }

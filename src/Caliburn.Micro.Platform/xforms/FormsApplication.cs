@@ -83,7 +83,7 @@ namespace Caliburn.Micro.Xamarin.Forms
 
             var navigationService = IoC.Get<INavigtionService>();
 
-            navigationService.PushViewAsync(viewType);
+            navigationService.NavigateToViewAsync(viewType);
         }
 
         /// <summary>

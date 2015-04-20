@@ -49,7 +49,7 @@
         /// </summary>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        public Task PopAsync(bool animated = true)
+        public Task GoBackAsync(bool animated = true)
         {
             return navigationPage.PopAsync(animated);
         }
@@ -59,7 +59,7 @@
         /// </summary>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        public Task PopToRootAsync(bool animated = true) 
+        public Task GoBackToRootAsync(bool animated = true) 
         {
             return navigationPage.PopToRootAsync(animated);
         }
@@ -71,7 +71,7 @@
         /// <param name="parameter">The paramter to pass to the view model</param>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        public Task PushViewModelAsync(Type viewModelType, object parameter = null, bool animated = true)
+        public Task NavigateToViewModelAsync(Type viewModelType, object parameter = null, bool animated = true)
         {
             var view = ViewLocator.LocateForModelType(viewModelType, null, null);
 
@@ -85,9 +85,9 @@
         /// <param name="parameter">The paramter to pass to the view model</param>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        public Task PushViewModelAsync<T>(object parameter = null, bool animated = true)
+        public Task NavigateToViewModelAsync<T>(object parameter = null, bool animated = true)
         {
-           return PushViewModelAsync(typeof(T), parameter, animated);
+           return NavigateToViewModelAsync(typeof(T), parameter, animated);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@
         /// <param name="parameter">The paramter to pass to the view model</param>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        public Task PushViewAsync(Type viewType, object parameter = null, bool animated = true)
+        public Task NavigateToViewAsync(Type viewType, object parameter = null, bool animated = true)
         {
             var view = ViewLocator.GetOrCreateViewType(viewType);
 
@@ -111,9 +111,9 @@
         /// <param name="parameter">The paramter to pass to the view model</param>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        public Task PushViewAsync<T>(object parameter = null, bool animated = true)
+        public Task NavigateToViewAsync<T>(object parameter = null, bool animated = true)
         {
-            return PushViewAsync(typeof(T), parameter, animated);
+            return NavigateToViewAsync(typeof(T), parameter, animated);
         }
 
         private Task PushAsync(Element view, object parameter, bool animated)
