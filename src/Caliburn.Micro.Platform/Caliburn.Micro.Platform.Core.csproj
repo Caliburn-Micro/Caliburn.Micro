@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Caliburn.Micro</RootNamespace>
-    <AssemblyName>Caliburn.Micro.Platform.Mobile</AssemblyName>
+    <AssemblyName>Caliburn.Micro.Platform.Core</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -20,20 +20,26 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\portable-mobile\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;MOBILE</DefineConstants>
+    <OutputPath>..\..\bin\portable-core\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\portable-mobile\Debug\Caliburn.Micro.Platform.Mobile.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\portable-mobile\Debug\Caliburn.Micro.Platform.Core.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\portable-mobile\Release\</OutputPath>
-    <DefineConstants>TRACE;MOBILE</DefineConstants>
+    <OutputPath>..\..\bin\portable-core\Release\</OutputPath>
+    <DefineConstants>TRACE;CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\portable-mobile\Release\Caliburn.Micro.Platform.Mobile.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\portable-mobile\Release\Caliburn.Micro.Platform.Core.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Caliburn.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
@@ -50,6 +56,9 @@
     <Compile Include="RegExHelper.cs" />
     <Compile Include="StringSplitter.cs" />
     <Compile Include="TypeMappingConfiguration.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Caliburn.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

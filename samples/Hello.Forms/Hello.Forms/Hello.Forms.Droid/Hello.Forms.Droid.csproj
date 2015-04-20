@@ -49,11 +49,12 @@
     <Reference Include="Caliburn.Micro">
       <HintPath>..\..\..\..\bin\android\Debug\Caliburn.Micro.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro.Platform">
+    <Reference Include="Caliburn.Micro.Platform, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\bin\android\Debug\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro.Platform.Mobile">
-      <HintPath>..\..\..\..\bin\xamarin-forms\Debug\Caliburn.Micro.Platform.Mobile.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Platform.Core">
+      <HintPath>..\..\..\..\bin\android\Debug\Caliburn.Micro.Platform.Core.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.Platform.Xamarin.Forms">
       <HintPath>..\..\..\..\bin\xamarin-forms\Debug\Caliburn.Micro.Platform.Xamarin.Forms.dll</HintPath>

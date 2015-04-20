@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using Windows.ApplicationModel;
     using Windows.UI.Xaml;
@@ -71,6 +72,21 @@
             isInitialized = true;
 
             PlatformProvider.Current = new XamlPlatformProvider();
+
+            var baseExtractTypes = AssemblySourceCache.ExtractTypes;
+
+            AssemblySourceCache.ExtractTypes = assembly =>
+            {
+                var baseTypes = baseExtractTypes(assembly);
+                var elementTypes = assembly.GetExportedTypes()
+                    .Where(t => typeof(UIElement).IsAssignableFrom(t));
+
+                return baseTypes.Union(elementTypes);
+            };
+
+            AssemblySource.Instance.Refresh();
+
+
             if (Execute.InDesignMode) {
                 try {
                     StartDesignTime();

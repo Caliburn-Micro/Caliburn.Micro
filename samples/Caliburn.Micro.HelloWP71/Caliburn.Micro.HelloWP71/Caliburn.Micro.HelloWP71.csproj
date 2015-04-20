@@ -110,6 +110,9 @@
     <Reference Include="Caliburn.Micro.Platform">
       <HintPath>..\..\..\bin\wp8\Debug\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
+    <Reference Include="Caliburn.Micro.Platform.Core">
+      <HintPath>..\..\..\bin\wp8\Debug\Caliburn.Micro.Platform.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Caliburn.Micro.Platform.Mobile">
       <HintPath>..\..\..\bin\wp8\Debug\Caliburn.Micro.Platform.Mobile.dll</HintPath>
     </Reference>

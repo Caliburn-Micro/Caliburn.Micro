@@ -116,6 +116,9 @@
     <Reference Include="Caliburn.Micro.Platform">
       <HintPath>..\..\..\bin\wpa81\Debug\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
+    <Reference Include="Caliburn.Micro.Platform.Core">
+      <HintPath>..\..\..\bin\wpa81\Debug\Caliburn.Micro.Platform.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">

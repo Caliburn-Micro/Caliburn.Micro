@@ -129,8 +129,8 @@
     <Reference Include="Caliburn.Micro.Platform">
       <HintPath>..\..\..\..\bin\iOS\Debug\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro.Platform.Mobile">
-      <HintPath>..\..\..\..\bin\xamarin-forms\Debug\Caliburn.Micro.Platform.Mobile.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Platform.Core">
+      <HintPath>..\..\..\..\bin\iOS\Debug\Caliburn.Micro.Platform.Core.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.Platform.Xamarin.Forms">
       <HintPath>..\..\..\..\bin\xamarin-forms\Debug\Caliburn.Micro.Platform.Xamarin.Forms.dll</HintPath>

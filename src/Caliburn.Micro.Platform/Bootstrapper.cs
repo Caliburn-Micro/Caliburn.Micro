@@ -38,7 +38,7 @@
 
             PlatformProvider.Current = new XamlPlatformProvider();
 
-#if WP8
+#if WP8 || NET45
             var baseExtractTypes = AssemblySourceCache.ExtractTypes;
 
             AssemblySourceCache.ExtractTypes = assembly =>
