@@ -50,6 +50,7 @@
     <Compile Include="xforms\ConventionManager.cs" />
     <Compile Include="xforms\HttpUtility.cs" />
     <Compile Include="xforms\IAttachedObject.cs" />
+    <Compile Include="xforms\INavigtionService.cs" />
     <Compile Include="xforms\NavigtionPageAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View.cs">
@@ -67,7 +68,6 @@
     <Compile Include="xforms\RoutedEventArgs.cs" />
     <Compile Include="xforms\RoutedEventHandler.cs" />
     <Compile Include="xforms\TriggerActionBase.cs" />
-    <Compile Include="xforms\XamarinFormsPlatformProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core">

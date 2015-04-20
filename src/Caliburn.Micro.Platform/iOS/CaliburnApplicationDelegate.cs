@@ -8,31 +8,31 @@ using UIKit;
 namespace Caliburn.Micro
 {
     /// <summary>
-    /// 
+    /// Encapsulates the app and its available services.
     /// </summary>
     public class CaliburnApplicationDelegate : UIApplicationDelegate
     {
         private bool isInitialized;
 
         /// <summary>
-        /// 
+        /// Creates an instance of <see cref="CaliburnApplicationDelegate"/>.
         /// </summary>
         public CaliburnApplicationDelegate() {
             
         }
 
         /// <summary>
-        /// 
+        /// Creates an instance of <see cref="CaliburnApplicationDelegate"/>.
         /// </summary>
-        /// <param name="handle"></param>
+        /// <param name="handle">/// The handle for this class</param>
         public CaliburnApplicationDelegate(IntPtr handle) : base(handle) {
             
         }
 
         /// <summary>
-        /// 
+        /// Creates an instance of <see cref="CaliburnApplicationDelegate"/>.
         /// </summary>
-        /// <param name="t"></param>
+        /// <param name="t">>Unused sentinel value, pass NSObjectFlag.Empty</param>
         public CaliburnApplicationDelegate(NSObjectFlag t)
             : base(t)
         {

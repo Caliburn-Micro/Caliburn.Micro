@@ -13,6 +13,10 @@ namespace Caliburn.Micro
     {
         private readonly ActivityLifecycleCallbackHandler lifecycleHandler = new ActivityLifecycleCallbackHandler();
 
+        /// <summary>
+        /// Creates an instance of <see cref="AndroidPlatformProvider"/>.
+        /// </summary>
+        /// <param name="application">The Android Application</param>
         public AndroidPlatformProvider(Application application) {
             application.RegisterActivityLifecycleCallbacks(lifecycleHandler);
         }

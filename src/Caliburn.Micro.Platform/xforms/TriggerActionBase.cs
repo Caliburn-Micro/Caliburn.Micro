@@ -3,6 +3,10 @@ using Xamarin.Forms;
 
 namespace Caliburn.Micro.Xamarin.Forms
 {
+    /// <summary>
+    /// Helper class to try and abtract the differences in TriggerAction across platforms
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class TriggerActionBase<T> : TriggerAction<T> 
         where T : BindableObject {
 

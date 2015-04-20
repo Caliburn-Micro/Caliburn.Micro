@@ -20,8 +20,6 @@
         private static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
         private ActionExecutionContext context;
         private object handler;
-        private AttachedCollection<Parameter> parameters;
-
 
         ///<summary>
         /// Causes the action invocation to "double check" if the action should be invoked by executing the guard immediately before hand.
@@ -49,10 +47,13 @@
         /// <value>The name of the method.</value>
         public string MethodName { get; set; }
 
+        /// <summary>
+        /// The handler for the action.
+        /// </summary>
         public object Handler
         {
             get { return handler; }
-            set
+            private set
             {
                 if (handler == value)
                     return;
@@ -86,7 +87,7 @@
 
                 bindingContextChanged = (s, e) => {
                     AssociatedObject.BindingContextChanged -= bindingContextChanged;
-                    ElementLoaded(AssociatedObject, new RoutedEventArgs());
+                    ElementLoaded();
                 };
 
                 AssociatedObject.BindingContextChanged += bindingContextChanged;
@@ -111,7 +112,7 @@
             base.OnDetaching();
         }
 
-        void ElementLoaded(object sender, RoutedEventArgs e)
+        private void ElementLoaded()
         {
             UpdateContext();
 
@@ -282,7 +283,7 @@
         /// <remarks>Returns a value indicating whether or not the action is available.</remarks>
         public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context =>
         {
-            var source = context.Source as VisualElement;
+            var source = context.Source;
 
             if (source == null)
             {
@@ -302,8 +303,8 @@
         /// <summary>
         /// Finds the method on the target matching the specified message.
         /// </summary>
-        /// <param name="target">The target.</param>
         /// <param name="message">The message.</param>
+        /// <param name="target">The target.</param>
         /// <returns>The matching method, if available.</returns>
         public static Func<ActionMessage, object, MethodInfo> GetTargetMethod = (message, target) =>
         {
@@ -394,7 +395,7 @@
                 {
                     if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == guardName)
                     {
-                        Caliburn.Micro.Execute.OnUIThread(() =>
+                        Execute.OnUIThread(() =>
                         {
                             var message = context.Message;
                             if (message == null)

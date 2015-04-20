@@ -3,6 +3,9 @@ using Android.App;
 
 namespace Caliburn.Micro
 {
+    /// <summary>
+    /// Arguments for activity events
+    /// </summary>
     public class ActivityEventArgs : EventArgs
     {
         private readonly Activity activity;

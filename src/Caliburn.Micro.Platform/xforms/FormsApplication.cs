@@ -4,13 +4,12 @@ using Xamarin.Forms;
 
 namespace Caliburn.Micro.Xamarin.Forms
 {
+    /// <summary>
+    /// A slimmed down version of the normal Caliburn Application for Xamarin Forms, used to register the navigation service and set up the initial view.
+    /// </summary>
     public class FormsApplication : Application
     {
         private bool isInitialized;
-
-        public FormsApplication() {
-            Initialize();
-        }
 
         /// <summary>
         /// Start the framework.

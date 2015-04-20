@@ -1,31 +1,24 @@
-﻿using System;
-using System.Threading.Tasks;
-using Xamarin.Forms;
+﻿namespace Caliburn.Micro.Xamarin.Forms {
 
-namespace Caliburn.Micro.Xamarin.Forms
-{
-    public interface INavigtionService {
+    using System;
+    using System.Threading.Tasks;
+    using global::Xamarin.Forms;
 
-        /// <summary>
-        ///   Navigates back.
-        /// </summary>
-        Task PopAsync(bool animated = true);
-
-        Task PushViewAsync(Type viewType, object parameter = null, bool animated = true);
-        Task PushViewAsync<T>(object parameter = null, bool animated = true);
-
-        Task PushViewModelAsync(Type viewModelType, object parameter = null, bool animated = true);
-        Task PushViewModelAsync<T>(object parameter = null, bool animated = true);
-    }
-
+    /// <summary>
+    /// Adapater around NavigationPage that implements INavigationService
+    /// </summary>
     public class NavigationPageAdapter : INavigtionService {
         private readonly NavigationPage navigationPage;
 
+        /// <summary>
+        /// Instantiates new instance of NavigationPageAdapter
+        /// </summary>
+        /// <param name="navigationPage">The navigation page to adapat</param>
         public NavigationPageAdapter(NavigationPage navigationPage) {
             this.navigationPage = navigationPage;
         }
 
-        private void DeactivateView(BindableObject view)
+        private static void DeactivateView(BindableObject view)
         {
             if (view == null)
                 return;
@@ -38,7 +31,7 @@ namespace Caliburn.Micro.Xamarin.Forms
             }
         }
 
-        private void ActivateView(BindableObject view)
+        private static void ActivateView(BindableObject view)
         {
             if (view == null)
                 return;
@@ -52,13 +45,32 @@ namespace Caliburn.Micro.Xamarin.Forms
         }
 
         /// <summary>
-        ///   Navigates back.
+        /// Asynchronously removes the top <see cref="T:Xamarin.Forms.Page"/> from the navigation stack, with optional animation.
         /// </summary>
+        /// <param name="animated">Animate the transition</param>
+        /// <returns>The asynchrous task representing the transition</returns>
         public Task PopAsync(bool animated = true)
         {
             return navigationPage.PopAsync(animated);
         }
 
+        /// <summary>
+        /// Pops all but the root <see cref="T:Xamarin.Forms.Page"/> off the navigation stack.
+        /// </summary>
+        /// <param name="animated">Animate the transition</param>
+        /// <returns>The asynchrous task representing the transition</returns>
+        public Task PopToRootAsync(bool animated = true) 
+        {
+            return navigationPage.PopToRootAsync(animated);
+        }
+
+        /// <summary>
+        ///  A task for asynchronously pushing a view for the given view model onto the navigation stack, with optional animation.
+        /// </summary>
+        /// <param name="viewModelType">The type of the view model</param>
+        /// <param name="parameter">The paramter to pass to the view model</param>
+        /// <param name="animated">Animate the transition</param>
+        /// <returns>The asynchrous task representing the transition</returns>
         public Task PushViewModelAsync(Type viewModelType, object parameter = null, bool animated = true)
         {
             var view = ViewLocator.LocateForModelType(viewModelType, null, null);
@@ -66,11 +78,25 @@ namespace Caliburn.Micro.Xamarin.Forms
             return PushAsync(view, parameter, animated);
         }
 
+        /// <summary>
+        ///  A task for asynchronously pushing a page for the given view model onto the navigation stack, with optional animation.
+        /// </summary>
+        /// <typeparam name="T">The type of the view model</typeparam>
+        /// <param name="parameter">The paramter to pass to the view model</param>
+        /// <param name="animated">Animate the transition</param>
+        /// <returns>The asynchrous task representing the transition</returns>
         public Task PushViewModelAsync<T>(object parameter = null, bool animated = true)
         {
            return PushViewModelAsync(typeof(T), parameter, animated);
         }
 
+        /// <summary>
+        ///  A task for asynchronously pushing a view onto the navigation stack, with optional animation.
+        /// </summary>
+        /// <param name="viewType">The type of the view</param>
+        /// <param name="parameter">The paramter to pass to the view model</param>
+        /// <param name="animated">Animate the transition</param>
+        /// <returns>The asynchrous task representing the transition</returns>
         public Task PushViewAsync(Type viewType, object parameter = null, bool animated = true)
         {
             var view = ViewLocator.GetOrCreateViewType(viewType);
@@ -78,6 +104,13 @@ namespace Caliburn.Micro.Xamarin.Forms
             return PushAsync(view, parameter, animated);
         }
 
+        /// <summary>
+        ///  A task for asynchronously pushing a view onto the navigation stack, with optional animation.
+        /// </summary>
+        /// <typeparam name="T">The type of the view</typeparam>
+        /// <param name="parameter">The paramter to pass to the view model</param>
+        /// <param name="animated">Animate the transition</param>
+        /// <returns>The asynchrous task representing the transition</returns>
         public Task PushViewAsync<T>(object parameter = null, bool animated = true)
         {
             return PushViewAsync(typeof(T), parameter, animated);
@@ -105,7 +138,7 @@ namespace Caliburn.Micro.Xamarin.Forms
         }
 
         /// <summary>
-        ///   Attempts to inject query string parameters from the view into the view model.
+        /// Attempts to inject query string parameters from the view into the view model.
         /// </summary>
         /// <param name="viewModel"> The view model.</param>
         /// <param name="parameter"> The parameter.</param>

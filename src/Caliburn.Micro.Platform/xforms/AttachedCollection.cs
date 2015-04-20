@@ -1,8 +1,7 @@
-﻿using System.Collections.Specialized;
-
-namespace Caliburn.Micro.Xamarin.Forms
+﻿namespace Caliburn.Micro.Xamarin.Forms
 {
     using System;
+    using System.Collections.Specialized;
     using System.Linq;
     using global::Xamarin.Forms;
 

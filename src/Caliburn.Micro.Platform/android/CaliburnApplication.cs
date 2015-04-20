@@ -8,25 +8,17 @@ using Android.Runtime;
 namespace Caliburn.Micro
 {
     /// <summary>
-    /// 
+    /// Encapsulates the app and its available services.
     /// </summary>
     public class CaliburnApplication : Application
     {
         private bool isInitialized;
 
         /// <summary>
-        /// 
+        /// Creates an instance of <see cref="CaliburnApplication"/>.
         /// </summary>
-        public CaliburnApplication()
-        {
-            
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="javaReference"></param>
-        /// <param name="transfer"></param>
+        /// <param name="javaReference">A <see cref="T:System.IntPtr"/> which contains the <c>java.lang.Class</c> JNI value corresponding to this type.</param>
+        /// <param name="transfer">How to handle ownership</param>
         public CaliburnApplication(IntPtr javaReference, JniHandleOwnership transfer)
             : base(javaReference, transfer)
         {

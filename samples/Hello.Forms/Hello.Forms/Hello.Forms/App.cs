@@ -14,6 +14,8 @@ namespace Hello.Forms
         {
             this.container = container;
 
+            Initialize();
+
             DisplayRootView<LoginView>();
         }
 

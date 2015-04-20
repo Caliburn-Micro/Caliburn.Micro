@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Foundation;
 using UIKit;
@@ -106,7 +105,6 @@ namespace Caliburn.Micro
 
         public Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
         {
-
             var child = viewModel as IChild;
 
             if (child != null)
