@@ -49,8 +49,11 @@
         /// </summary>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        public Task GoBackAsync(bool animated = true)
-        {
+        public Task GoBackAsync(bool animated = true) {
+            
+            if (!CanClose())
+                return Task.FromResult(false);
+
             return navigationPage.PopAsync(animated);
         }
 
@@ -61,6 +64,9 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public Task GoBackToRootAsync(bool animated = true) 
         {
+            if (!CanClose())
+                return Task.FromResult(false);
+
             return navigationPage.PopToRootAsync(animated);
         }
 
@@ -73,6 +79,9 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public Task NavigateToViewModelAsync(Type viewModelType, object parameter = null, bool animated = true)
         {
+            if (!CanClose())
+                return Task.FromResult(false);
+
             var view = ViewLocator.LocateForModelType(viewModelType, null, null);
 
             return PushAsync(view, parameter, animated);
@@ -87,6 +96,9 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public Task NavigateToViewModelAsync<T>(object parameter = null, bool animated = true)
         {
+            if (!CanClose())
+                return Task.FromResult(false);
+
            return NavigateToViewModelAsync(typeof(T), parameter, animated);
         }
 
@@ -99,6 +111,9 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public Task NavigateToViewAsync(Type viewType, object parameter = null, bool animated = true)
         {
+            if (!CanClose())
+                return Task.FromResult(false);
+
             var view = ViewLocator.GetOrCreateViewType(viewType);
 
             return PushAsync(view, parameter, animated);
@@ -113,6 +128,9 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public Task NavigateToViewAsync<T>(object parameter = null, bool animated = true)
         {
+            if (!CanClose())
+                return Task.FromResult(false);
+
             return NavigateToViewAsync(typeof(T), parameter, animated);
         }
 
@@ -176,6 +194,30 @@
 
                 property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, parameter, null));
             }
+        }
+
+        private bool CanClose() {
+            var view = navigationPage.CurrentPage;
+
+            if (view == null)
+                return true;
+
+            var guard = view.BindingContext as IGuardClose;
+
+            if (guard != null)
+            {
+                var shouldCancel = false;
+                var runningAsync = true;
+                guard.CanClose(result => { runningAsync = false; shouldCancel = !result; });
+                if (runningAsync)
+                    throw new NotSupportedException("Async CanClose is not supported.");
+
+                if (shouldCancel) {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
