@@ -16,7 +16,7 @@
 
     <dependencies>
       <group>
-        <dependency id="Caliburn.Micro" version="[3.0.0-alpha]" />
+        <dependency id="Caliburn.Micro.Core" version="[3.0.0-alpha]" />
         <dependency id="Xamarin.Forms" version="[1.4.2.6355]" />
       </group>
     </dependencies>
