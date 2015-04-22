@@ -81,7 +81,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.Caliburn.Micro.Platform.XamarinForms.config" />
+    <None Include="packages.Caliburn.Micro.Platform.Xamarin.Forms.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">
