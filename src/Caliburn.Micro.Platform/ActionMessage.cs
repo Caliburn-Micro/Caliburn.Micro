@@ -453,26 +453,29 @@
             if (context.Target == null || context.Method == null) {
                 return;
             }
+            IEnumerable<string> possibleGuardNames = BuildPossibleGuardNames(context);
 
-            var guardName = "Can" + context.Method.Name;
-            var targetType = context.Target.GetType();
-            var guard = TryFindGuardMethod(context);
+            var guard = TryFindGuardMethod(context, possibleGuardNames);
 
             if (guard == null) {
                 var inpc = context.Target as INotifyPropertyChanged;
                 if (inpc == null)
                     return;
-#if WinRT
-                guard = targetType.GetRuntimeMethods().SingleOrDefault(m => m.Name == "get_" + guardName);
-#else
-                guard = targetType.GetMethod("get_" + guardName);
-#endif
+
+                Type targetType = context.Target.GetType();
+                string matchingGuardName = null;
+                foreach (string possibleGuardName in possibleGuardNames) {
+                    matchingGuardName = possibleGuardName;
+                    guard = GetMethodInfo(targetType, "get_" + matchingGuardName);
+                    if (guard != null) break;
+                }
+
                 if (guard == null)
                     return;
 
                 PropertyChangedEventHandler handler = null;
                 handler = (s, e) => {
-                    if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == guardName) {
+                    if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == matchingGuardName) {
                         Caliburn.Micro.Execute.OnUIThread(() => {
                             var message = context.Message;
                             if (message == null) {
@@ -491,8 +494,7 @@
 
             context.CanExecute = () => (bool)guard.Invoke(
                 context.Target,
-                MessageBinder.DetermineParameters(context, guard.GetParameters())
-                );
+                MessageBinder.DetermineParameters(context, guard.GetParameters()));
         };
 
         /// <summary>
@@ -504,39 +506,17 @@
         /// </summary>
         /// <param name="context">The execution context</param>
         /// <returns>A MethodInfo, if found; null otherwise</returns>
-        static MethodInfo TryFindGuardMethod(ActionExecutionContext context) {
-#if WinRT
-            var guardName = "Can" + context.Method.Name;
-            var targetType = context.Target.GetType();
-            var guard = targetType.GetRuntimeMethods().SingleOrDefault(m => m.Name == guardName);
-
-            if (guard == null) return null;
-            if (guard.ContainsGenericParameters) return null;
-            if (!typeof(bool).Equals(guard.ReturnType)) return null;
-
-            var guardPars = guard.GetParameters();
-            var actionPars = context.Method.GetParameters();
-            if (guardPars.Length == 0) return guard;
-            if (guardPars.Length != actionPars.Length) return null;
-
-            var comparisons = guardPars.Zip(
-                context.Method.GetParameters(),
-                (x, y) => x.ParameterType.Equals(y.ParameterType)
-                );
-
-            if (comparisons.Any(x => !x)) {
-                return null;
+        static MethodInfo TryFindGuardMethod(ActionExecutionContext context, IEnumerable<string> possibleGuardNames) {
+			var targetType = context.Target.GetType();
+            MethodInfo guard = null;
+            foreach (string possibleGuardName in possibleGuardNames) {
+                guard = GetMethodInfo(targetType, possibleGuardName);
+                if (guard != null) break;
             }
-
-            return guard;
-#else
-			var guardName = "Can" + context.Method.Name;
-            var targetType = context.Target.GetType();
-            var guard = targetType.GetMethod(guardName);
 
 			if (guard ==null) return null;
 			if (guard.ContainsGenericParameters) return null;
-			if (typeof(bool) != guard.ReturnType) return null;
+            if (!typeof(bool).Equals(guard.ReturnType)) return null;
 
 			var guardPars = guard.GetParameters();
 			var actionPars = context.Method.GetParameters();
@@ -553,6 +533,26 @@
 			}
 
 			return guard;
+        }
+
+        static IEnumerable<string> BuildPossibleGuardNames(ActionExecutionContext context) {
+
+            const string GuardPrefix = "Can";
+            
+            string methodName = context.Method.Name;
+            yield return GuardPrefix + methodName;
+
+            const string AsyncMethodSuffix = "Async";
+            if (methodName.EndsWith(AsyncMethodSuffix, StringComparison.OrdinalIgnoreCase)) {
+                yield return GuardPrefix + methodName.Substring(0, methodName.Length - AsyncMethodSuffix.Length);
+            }
+        }
+
+        static MethodInfo GetMethodInfo(Type t, string methodName) {
+#if WinRT
+            return t.GetRuntimeMethods().SingleOrDefault(m => m.Name == methodName);
+#else
+            return t.GetMethod(methodName);
 #endif
         }
     }
