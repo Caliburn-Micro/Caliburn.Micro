@@ -79,7 +79,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
         }
 
         // Notice that the guard method is sync and is missing the Async suffix.
-        public bool CanSayHello2Async(string name)
+        public bool CanSayHello2(string name)
         {
             return !String.IsNullOrEmpty(name);
         }
