@@ -25,6 +25,18 @@ namespace Caliburn.Micro
 {
     internal class AppManifestHelper
     {
+        private const string DisplayNameAttributeName = "DisplayName";
+        private const string DescriptionAttributeName = "Description";
+        private const string LogoAttributeName = "Square150x150Logo";
+        private const string BackgroundColorAttributeName = "BackgroundColor";
+#if WINDOWS_UAP
+        private const string SmallLogoAttributeName = "Square44x44Logo";
+        private const string VisualElementsNamespaceName = "http://schemas.microsoft.com/appx/manifest/uap/windows10";
+#else
+        private const string SmallLogoAttributeName = "Square30x30Logo";
+        private const string VisualElementsNamespaceName = "http://schemas.microsoft.com/appx/2013/manifest";
+#endif
+
         public async static Task<VisualElement> GetManifestVisualElementsAsync()
         {
             // the path for the manifest
@@ -35,7 +47,7 @@ namespace Caliburn.Micro
             }
 
             // set the XNamespace and name for the VisualElements node we want
-            var xn = XName.Get("VisualElements", "http://schemas.microsoft.com/appx/manifest/uap/windows10");
+            var xn = XName.Get("VisualElements", VisualElementsNamespaceName);
 
             // parse the VisualElements node only, pulling out what we need
             // NOTE: This will get only the first Application (which is the mainstream case)
@@ -43,11 +55,11 @@ namespace Caliburn.Micro
             var visualElementNode = (from vel in xmldoc.Descendants(xn)
                                      select new VisualElement
                                      {
-                                         DisplayName = vel.Attribute("DisplayName").Value,
-                                         Description = vel.Attribute("Description").Value,
-                                         LogoUri = new Uri(string.Format("ms-appx:///{0}", vel.Attribute("Square150x150Logo").Value.Replace(@"\", @"/"))),
-                                         SmallLogoUri = new Uri(string.Format("ms-appx:///{0}", vel.Attribute("Square44x44Logo").Value.Replace(@"\", @"/"))),
-                                         BackgroundColorAsString = vel.Attribute("BackgroundColor").Value
+                                         DisplayName = vel.Attribute(DisplayNameAttributeName).Value,
+                                         Description = vel.Attribute(DescriptionAttributeName).Value,
+                                         LogoUri = new Uri(string.Format("ms-appx:///{0}", vel.Attribute(LogoAttributeName).Value.Replace(@"\", @"/"))),
+                                         SmallLogoUri = new Uri(string.Format("ms-appx:///{0}", vel.Attribute(SmallLogoAttributeName).Value.Replace(@"\", @"/"))),
+                                         BackgroundColorAsString = vel.Attribute(BackgroundColorAttributeName).Value
                                      }).FirstOrDefault();
             
             if (visualElementNode == null) 
