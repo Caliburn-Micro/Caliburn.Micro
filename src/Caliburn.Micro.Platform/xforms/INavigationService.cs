@@ -6,7 +6,7 @@ namespace Caliburn.Micro.Xamarin.Forms {
     /// <summary>
     /// Implemented by services that provide view & view model based navigation
     /// </summary>
-    public interface INavigtionService {
+    public interface INavigationService {
 
         /// <summary>
         /// Asynchronously removes the top <see cref="T:Xamarin.Forms.Page"/> from the navigation stack, with optional animation.

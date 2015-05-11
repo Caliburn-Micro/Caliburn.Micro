@@ -50,8 +50,8 @@
     <Compile Include="xforms\ConventionManager.cs" />
     <Compile Include="xforms\HttpUtility.cs" />
     <Compile Include="xforms\IAttachedObject.cs" />
-    <Compile Include="xforms\INavigtionService.cs" />
-    <Compile Include="xforms\NavigtionPageAdapter.cs" />
+    <Compile Include="xforms\INavigationService.cs" />
+    <Compile Include="xforms\NavigationPageAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View.cs">
       <SubType>Code</SubType>

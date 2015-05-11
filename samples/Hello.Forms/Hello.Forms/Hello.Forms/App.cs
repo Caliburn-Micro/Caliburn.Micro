@@ -21,7 +21,7 @@ namespace Hello.Forms
 
         protected override void PrepareViewFirst(NavigationPage navigationPage)
         {
-            container.Instance<INavigtionService>(new NavigationPageAdapter(navigationPage));
+            container.Instance<INavigationService>(new NavigationPageAdapter(navigationPage));
         }
     }
 }
