@@ -81,7 +81,7 @@ namespace Caliburn.Micro.Xamarin.Forms
             // and listen for events like all the other navigation services
             // Xamarin Forms acts differentl
 
-            var navigationService = IoC.Get<INavigtionService>();
+            var navigationService = IoC.Get<INavigationService>();
 
             navigationService.NavigateToViewAsync(viewType);
         }

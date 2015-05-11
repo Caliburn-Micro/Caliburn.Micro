@@ -7,7 +7,7 @@
     /// <summary>
     /// Adapater around NavigationPage that implements INavigationService
     /// </summary>
-    public class NavigationPageAdapter : INavigtionService {
+    public class NavigationPageAdapter : INavigationService {
         private readonly NavigationPage navigationPage;
 
         /// <summary>
