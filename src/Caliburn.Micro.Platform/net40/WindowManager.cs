@@ -203,7 +203,7 @@
             }
 
             var active = application.Windows.OfType<Window>().FirstOrDefault(x => x.IsActive);
-            active = active ?? application.MainWindow;
+            active = active ?? (PresentationSource.FromVisual(application.MainWindow) == null ? null : application.MainWindow);
             return active == window ? null : active;
         }
 
