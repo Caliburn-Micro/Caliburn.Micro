@@ -24,7 +24,9 @@
         /// <param name="callback">The action to call when all enumeration is complete and the close results are aggregated.
         /// The bool indicates whether close can occur. The enumerable indicates which children should close if the parent cannot.</param>
         public void Execute(IEnumerable<T> toClose, Action<bool, IEnumerable<T>> callback) {
-            Evaluate(new EvaluationState(), toClose.GetEnumerator(), callback);
+            using (var enumerator = toClose.GetEnumerator()) {
+                Evaluate(new EvaluationState(), enumerator, callback);
+            }
         }
 
         void Evaluate(EvaluationState state, IEnumerator<T> enumerator, Action<bool, IEnumerable<T>> callback) {
