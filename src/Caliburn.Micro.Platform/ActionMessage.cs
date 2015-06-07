@@ -508,32 +508,32 @@
         /// <param name="possibleGuardNames">Method names to look for.</param>
         ///<returns>A MethodInfo, if found; null otherwise</returns>
         static MethodInfo TryFindGuardMethod(ActionExecutionContext context, IEnumerable<string> possibleGuardNames) {
-			var targetType = context.Target.GetType();
+            var targetType = context.Target.GetType();
             MethodInfo guard = null;
             foreach (string possibleGuardName in possibleGuardNames) {
                 guard = GetMethodInfo(targetType, possibleGuardName);
                 if (guard != null) break;
             }
 
-			if (guard ==null) return null;
-			if (guard.ContainsGenericParameters) return null;
+            if (guard == null) return null;
+            if (guard.ContainsGenericParameters) return null;
             if (!typeof(bool).Equals(guard.ReturnType)) return null;
 
-			var guardPars = guard.GetParameters();
-			var actionPars = context.Method.GetParameters();
-			if (guardPars.Length == 0) return guard;
-			if (guardPars.Length != actionPars.Length) return null;
+            var guardPars = guard.GetParameters();
+            var actionPars = context.Method.GetParameters();
+            if (guardPars.Length == 0) return guard;
+            if (guardPars.Length != actionPars.Length) return null;
 
-		    var comparisons = guardPars.Zip(
-		        context.Method.GetParameters(),
-		        (x, y) => x.ParameterType == y.ParameterType
-		        );
+            var comparisons = guardPars.Zip(
+                context.Method.GetParameters(),
+                (x, y) => x.ParameterType == y.ParameterType
+                );
 
-			if (comparisons.Any(x => !x)) {
-			    return null;
-			}
+            if (comparisons.Any(x => !x)) {
+                return null;
+            }
 
-			return guard;
+            return guard;
         }
 
         static IEnumerable<string> BuildPossibleGuardNames(ActionExecutionContext context) {
