@@ -453,7 +453,7 @@
             if (context.Target == null || context.Method == null) {
                 return;
             }
-            IEnumerable<string> possibleGuardNames = BuildPossibleGuardNames(context);
+            var possibleGuardNames = BuildPossibleGuardNames(context);
 
             var guard = TryFindGuardMethod(context, possibleGuardNames);
 
@@ -462,7 +462,7 @@
                 if (inpc == null)
                     return;
 
-                Type targetType = context.Target.GetType();
+                var targetType = context.Target.GetType();
                 string matchingGuardName = null;
                 foreach (string possibleGuardName in possibleGuardNames) {
                     matchingGuardName = possibleGuardName;
@@ -498,14 +498,15 @@
         };
 
         /// <summary>
-        /// Try to find a candidate for guard function, having:
-        ///		- a name in the form "CanXXX"
-        ///		- no generic parameters
-        ///		- a bool return type
-        ///		- no parameters or a set of parameters corresponding to the action method
+        /// Try to find a candidate for guard function, having: 
+        ///    - a name matching any of <paramref name="possibleGuardNames"/>
+        ///    - no generic parameters
+        ///    - a bool return type
+        ///    - no parameters or a set of parameters corresponding to the action method
         /// </summary>
         /// <param name="context">The execution context</param>
-        /// <returns>A MethodInfo, if found; null otherwise</returns>
+        /// <param name="possibleGuardNames">Method names to look for.</param>
+        ///<returns>A MethodInfo, if found; null otherwise</returns>
         static MethodInfo TryFindGuardMethod(ActionExecutionContext context, IEnumerable<string> possibleGuardNames) {
 			var targetType = context.Target.GetType();
             MethodInfo guard = null;
@@ -539,7 +540,7 @@
 
             const string GuardPrefix = "Can";
             
-            string methodName = context.Method.Name;
+            var methodName = context.Method.Name;
             yield return GuardPrefix + methodName;
 
             const string AsyncMethodSuffix = "Async";

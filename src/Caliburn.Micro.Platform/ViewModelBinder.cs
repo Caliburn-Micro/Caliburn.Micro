@@ -123,7 +123,7 @@
             foreach (var method in methods) {
                 var foundControl = unmatchedElements.FindName(method.Name);
                 if (foundControl == null && IsAsyncMethod(method)) {
-                    string methodNameWithoutAsyncSuffix = method.Name.Substring(0, method.Name.Length - AsyncSuffix.Length);
+                    var methodNameWithoutAsyncSuffix = method.Name.Substring(0, method.Name.Length - AsyncSuffix.Length);
                     foundControl = unmatchedElements.FindName(methodNameWithoutAsyncSuffix);
                 }
 
@@ -176,7 +176,7 @@
             return unmatchedElements;
         };
 
-        private static bool IsAsyncMethod(MethodInfo method) {
+        static bool IsAsyncMethod(MethodInfo method) {
             return typeof(Task).IsAssignableFrom(method.ReturnType) &&
                    method.Name.EndsWith(AsyncSuffix, StringComparison.OrdinalIgnoreCase);
         }
