@@ -5,9 +5,9 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
 {
     public class ActionsViewModel : ViewModelBase
     {
-        private string input;
-        private string input2;
-        private string output;
+        string input;
+        string input2;
+        string output;
 
         public ActionsViewModel(INavigationService navigationService)
             : base(navigationService)
