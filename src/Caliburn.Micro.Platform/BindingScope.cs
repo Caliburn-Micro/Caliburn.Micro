@@ -354,10 +354,6 @@
             public DependencyObject Root {
                 get { return root; }
                 set {
-                    if (path.Count > 0 && !path.ContainsKey(value)) {
-                        throw new ArgumentException("Value is not a hop source in the route.");
-                    }
-
                     if (path.ContainsValue(value)) {
                         throw new ArgumentException("Value is a target of some route hop; cannot be a root.");
                     }
