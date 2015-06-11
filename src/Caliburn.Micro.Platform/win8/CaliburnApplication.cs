@@ -233,6 +233,7 @@
         /// <param name="viewModelType">The view model type.</param>
         protected void DisplayRootViewFor(Type viewModelType) {
             Initialize();
+            PrepareViewFirst();
 
             var viewModel = IoC.GetInstance(viewModelType, null);
             var view = ViewLocator.LocateForModel(viewModel, null, null);
