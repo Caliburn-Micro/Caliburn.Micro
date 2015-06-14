@@ -246,20 +246,18 @@
                     }
 
 #endif
-                    else {
-                        var currentType = current.GetType();
+                    var currentType = current.GetType();
 
-                        if (!NonResolvableChildTypes.ContainsKey(currentType)) {
-                            var canResolve = ChildResolverFilters.Any(f => f(currentType));
+                    if (!NonResolvableChildTypes.ContainsKey(currentType)) {
+                        var canResolve = ChildResolverFilters.Any(f => f(currentType));
 
-                            if (!canResolve) {
-                                NonResolvableChildTypes[currentType] = null;
-                            }
-                            else {
-                                ChildResolvers.SelectMany(r => r(current) ?? Enumerable.Empty<DependencyObject>())
-                                              .Where(c => c != null)
-                                              .Apply(queue.Enqueue);
-                            }
+                        if (!canResolve) {
+                            NonResolvableChildTypes[currentType] = null;
+                        }
+                        else {
+                            ChildResolvers.SelectMany(r => r(current) ?? Enumerable.Empty<DependencyObject>())
+                                .Where(c => c != null)
+                                .Apply(queue.Enqueue);
                         }
                     }
                 }
