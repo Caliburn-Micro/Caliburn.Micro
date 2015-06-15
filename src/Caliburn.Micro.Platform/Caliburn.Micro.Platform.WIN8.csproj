@@ -47,6 +47,7 @@
     <Compile Include="Bind.cs" />
     <Compile Include="BindingScope.cs" />
     <Compile Include="BooleanToVisibilityConverter.cs" />
+    <Compile Include="ChildResolver.cs" />
     <Compile Include="StringSplitter.cs" />
     <Compile Include="XamlPlatformProvider.cs" />
     <None Include="..\Caliburn.snk">
