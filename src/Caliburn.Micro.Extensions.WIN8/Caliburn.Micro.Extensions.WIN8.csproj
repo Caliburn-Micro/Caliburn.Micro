@@ -63,7 +63,7 @@
     <Compile Include="SettingsCommandBase.cs" />
     <Compile Include="SettingsService.cs" />
     <Compile Include="SharingService.cs" />
-    <Compile Include="UriBuilder.cs" />
+    <Compile Include="NavigateHelper.cs" />
     <Compile Include="UriSettingsCommand.cs" />
     <Compile Include="WinRTContainer.cs" />
     <None Include="packages.Caliburn.Micro.Extensions.WIN8.config" />

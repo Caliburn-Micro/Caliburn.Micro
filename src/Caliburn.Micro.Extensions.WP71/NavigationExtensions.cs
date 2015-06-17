@@ -12,7 +12,7 @@ namespace Caliburn.Micro {
         /// <param name="navigationService">The navigation service.</param>
         /// <returns>The builder.</returns>
         [Obsolete("Use For instead of UriFor")]
-        public static UriBuilder<TViewModel> UriFor<TViewModel>(this INavigationService navigationService) {
+        public static NavigationHelper<TViewModel> UriFor<TViewModel>(this INavigationService navigationService) {
             return navigationService.For<TViewModel>();
         }
 
@@ -22,8 +22,8 @@ namespace Caliburn.Micro {
         /// <typeparam name="TViewModel">The type of the view model.</typeparam>
         /// <param name="navigationService">The navigation service.</param>
         /// <returns>The builder.</returns>
-        public static UriBuilder<TViewModel> For<TViewModel>(this INavigationService navigationService) {
-            return new UriBuilder<TViewModel>().AttachTo(navigationService);
+        public static NavigationHelper<TViewModel> For<TViewModel>(this INavigationService navigationService) {
+            return new NavigationHelper<TViewModel>().AttachTo(navigationService);
         }
     }
 }
