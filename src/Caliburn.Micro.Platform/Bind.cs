@@ -100,11 +100,6 @@ namespace Caliburn.Micro
 
             View.ExecuteOnLoad(fe, delegate {
                 var target = e.NewValue;
-                var containerKey = e.NewValue as string;
-                if (containerKey != null) {
-                    LogManager.GetLog(typeof(Bind)).Info("Using IoC is deprecated and will be removed in v3.0");
-                    target = IoC.GetInstance(null, containerKey);
-                }
 
                 d.SetValue(View.IsScopeRootProperty, true);
 

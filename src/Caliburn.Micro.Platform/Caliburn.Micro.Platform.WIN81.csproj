@@ -50,6 +50,8 @@
     <Compile Include="BindingScope.cs" />
     <Compile Include="BooleanToVisibilityConverter.cs" />
     <Compile Include="DependencyPropertyHelper.cs" />
+    <Compile Include="ChildResolver.cs" />
+    <Compile Include="StringSplitter.cs" />
     <Compile Include="win8\AttachedCollection.81.cs" />
     <Compile Include="win8\IAttachedObject.cs" />
     <Compile Include="win8\TriggerAction.cs" />

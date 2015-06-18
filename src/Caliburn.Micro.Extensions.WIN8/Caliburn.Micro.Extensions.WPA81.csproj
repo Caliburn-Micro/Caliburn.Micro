@@ -55,10 +55,10 @@
     <Compile Include="AppManifestHelper.cs" />
     <Compile Include="ISharingService.cs" />
     <Compile Include="ISupportSharing.cs" />
+    <Compile Include="NavigateHelper.cs" />
     <Compile Include="NavigationExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharingService.cs" />
-    <Compile Include="UriBuilder.cs" />
     <Compile Include="WinRTContainer.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -27,7 +27,12 @@
                     var key = (Key)Enum.Parse(typeof(Key), splits[1], true);
                     return new KeyTrigger { Key = key };
                 }
-
+                else if (splits[0] == "Gesture")
+                {
+                   var mkg = (MultiKeyGesture)(new MultiKeyGestureConverter()).ConvertFrom(splits[1]);
+                   return new KeyTrigger { Modifiers = mkg.KeySequences[0].Modifiers, Key = mkg.KeySequences[0].Keys[0] };
+                }
+                
                 return trigger(target, triggerText);
             };
         }

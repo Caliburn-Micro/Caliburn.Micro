@@ -73,7 +73,7 @@
     <Compile Include="TaskController.cs" />
     <Compile Include="TaskExecutionRequested.cs" />
     <Compile Include="TaskExtensionMethods.cs" />
-    <Compile Include="UriBuilder.cs" />
+    <Compile Include="NavigationHelper.cs" />
     <Compile Include="VibrateController.cs" />
     <Compile Include="WindowManagerExtensions.cs" />
   </ItemGroup>

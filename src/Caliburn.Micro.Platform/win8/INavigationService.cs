@@ -241,8 +241,11 @@ namespace Caliburn.Micro {
         protected virtual void TryInjectParameters(object viewModel, object parameter) {
             var viewModelType = viewModel.GetType();
 
-            if (parameter is string && ((string) parameter).StartsWith("caliburn://")) {
-                var uri = new Uri((string) parameter);
+            var stringParameter = parameter as string;
+            var dictionaryParameter = parameter as IDictionary<string, object>;
+
+            if (stringParameter != null && stringParameter.StartsWith("caliburn://")) {
+                var uri = new Uri(stringParameter);
 
                 if (!String.IsNullOrEmpty(uri.Query)) {
                     var decorder = new WwwFormUrlDecoder(uri.Query);
@@ -256,6 +259,18 @@ namespace Caliburn.Micro {
 
                         property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, pair.Value, null));
                     }
+                }
+            }
+            else if (dictionaryParameter != null) {
+                foreach (var pair in dictionaryParameter) {
+                    var property = viewModelType.GetPropertyCaseInsensitive(pair.Key);
+
+                    if (property == null)
+                    {
+                        continue;
+                    }
+
+                    property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, pair.Value, null));
                 }
             }
             else {

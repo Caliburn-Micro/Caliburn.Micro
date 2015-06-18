@@ -12,7 +12,7 @@
     <TextBlock />
     <TextBox HorizontalAlignment="Left"
              Width="278"
-             cal:Message.Attach="[Key Enter] = [EnterPressed]">
+             cal:Message.Attach="[Key Enter] = [EnterPressed]; [Gesture Ctrl+Enter] = [CtrlEnterPressed]">
     </TextBox>
     <TextBlock />
     <TextBlock x:Name="EnterMessage"

@@ -8,7 +8,7 @@
     /// Builds a Uri in a strongly typed fashion, based on a ViewModel.
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
-    public class UriBuilder<TViewModel> {
+    public class NavigateHelper<TViewModel> {
         readonly Dictionary<string, string> queryString = new Dictionary<string, string>();
         INavigationService navigationService;
 
@@ -19,7 +19,7 @@
         /// <param name="property">The property.</param>
         /// <param name="value">The property value.</param>
         /// <returns>Itself</returns>
-        public UriBuilder<TViewModel> WithParam<TValue>(Expression<Func<TViewModel, TValue>> property, TValue value) {
+        public NavigateHelper<TViewModel> WithParam<TValue>(Expression<Func<TViewModel, TValue>> property, TValue value) {
             if (value is ValueType || !ReferenceEquals(null, value)) {
                 queryString[property.GetMemberInfo().Name] = value.ToString();
             }
@@ -32,7 +32,7 @@
         /// </summary>
         /// <param name="navigationService">The navigation service.</param>
         /// <returns>Itself</returns>
-        public UriBuilder<TViewModel> AttachTo(INavigationService navigationService) {
+        public NavigateHelper<TViewModel> AttachTo(INavigationService navigationService) {
             this.navigationService = navigationService;
             return this;
         }
