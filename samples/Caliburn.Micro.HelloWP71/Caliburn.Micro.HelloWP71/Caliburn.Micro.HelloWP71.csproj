@@ -103,10 +103,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\bin\wp8\Debug\Caliburn.Micro.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro.Extensions, Version=2.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\wp8\Debug\Caliburn.Micro.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="Caliburn.Micro.Platform">
       <HintPath>..\..\..\bin\wp8\Debug\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>

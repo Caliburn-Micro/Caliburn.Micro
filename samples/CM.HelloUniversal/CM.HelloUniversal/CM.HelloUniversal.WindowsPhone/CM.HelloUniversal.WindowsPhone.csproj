@@ -102,9 +102,6 @@
     <Reference Include="Caliburn.Micro">
       <HintPath>..\..\..\..\bin\wpa81\Debug\Caliburn.Micro.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro.Extensions">
-      <HintPath>..\..\..\..\bin\wpa81\Debug\Caliburn.Micro.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="Caliburn.Micro.Platform">
       <HintPath>..\..\..\..\bin\wpa81\Debug\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>

@@ -52,9 +52,23 @@
     <Compile Include="BooleanToVisibilityConverter.cs" />
     <Compile Include="ChildResolver.cs" />
     <Compile Include="StringSplitter.cs" />
+    <Compile Include="win8\AppManifestHelper.cs" />
     <Compile Include="win8\AttachedCollection.81.cs" />
+    <Compile Include="win8\FlyoutSettingsCommand.cs" />
     <Compile Include="win8\IAttachedObject.cs" />
+    <Compile Include="win8\ISettingsService.cs" />
+    <Compile Include="win8\ISettingsWindowManager.cs" />
+    <Compile Include="win8\ISharingService.cs" />
+    <Compile Include="win8\ISupportSharing.cs" />
+    <Compile Include="win8\NavigateHelper.cs" />
+    <Compile Include="win8\NavigationExtensions.cs" />
+    <Compile Include="win8\SettingsCommandBase.cs" />
+    <Compile Include="win8\SettingsService.cs" />
+    <Compile Include="win8\SettingsWindowManager.cs" />
+    <Compile Include="win8\SharingService.cs" />
     <Compile Include="win8\TriggerAction.cs" />
+    <Compile Include="win8\UriSettingsCommand.cs" />
+    <Compile Include="win8\WinRTContainer.cs" />
     <Compile Include="XamlPlatformProvider.cs" />
     <None Include="..\Caliburn.snk">
       <Link>Caliburn.snk</Link>

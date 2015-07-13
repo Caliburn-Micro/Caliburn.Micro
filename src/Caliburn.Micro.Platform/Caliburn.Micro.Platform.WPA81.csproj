@@ -79,8 +79,14 @@
     <Compile Include="win8\CaliburnApplication.cs" />
     <Compile Include="win8\IAttachedObject.cs" />
     <Compile Include="win8\INavigationService.cs" />
+    <Compile Include="win8\ISharingService.cs" />
+    <Compile Include="win8\ISupportSharing.cs" />
+    <Compile Include="win8\NavigateHelper.cs" />
+    <Compile Include="win8\NavigationExtensions.cs" />
     <Compile Include="win8\Parameter.cs" />
+    <Compile Include="win8\SharingService.cs" />
     <Compile Include="win8\TriggerAction.cs" />
+    <Compile Include="win8\WinRTContainer.cs" />
     <Compile Include="win8\XamlMetadataProvider.cs" />
     <Compile Include="XamlPlatformProvider.cs" />
   </ItemGroup>
