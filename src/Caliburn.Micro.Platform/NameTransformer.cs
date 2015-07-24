@@ -9,7 +9,7 @@
     /// </summary>
     public class NameTransformer : BindableCollection<NameTransformer.Rule> {
         bool useEagerRuleSelection = true;
-        
+
         /// <summary>
         /// Flag to indicate if transformations from all matched rules are returned. Otherwise, transformations from only the first matched rule are returned.
         /// </summary>
@@ -62,18 +62,18 @@
             var rules = this.Reverse();
 
             foreach(var rule in rules) {
-                if(!string.IsNullOrEmpty(rule.GlobalFilterPattern) && !Regex.IsMatch(source, rule.GlobalFilterPattern)) {
+                if(!string.IsNullOrEmpty(rule.GlobalFilterPattern) && !rule.GlobalFilterPatternRegex.IsMatch(source)) {
                     continue;
                 }
 
-                if(!Regex.IsMatch(source, rule.ReplacePattern)) {
+                if(!rule.ReplacePatternRegex.IsMatch(source)) {
                     continue;
                 }
 
                 nameList.AddRange(
                     rule.ReplacementValues
                         .Select(getReplaceString)
-                        .Select(repString => Regex.Replace(source, rule.ReplacePattern, repString))
+                        .Select(repString => rule.ReplacePatternRegex.Replace(source, repString))
                     );
 
                 if (!useEagerRuleSelection) {
@@ -88,6 +88,9 @@
         /// A rule that describes a name transform.
         ///</summary>
         public class Rule {
+            private Regex replacePatternRegex;
+            private Regex globalFilterPatternRegex;
+
             /// <summary>
             /// Regular expression pattern for global filtering
             /// </summary>
@@ -102,6 +105,24 @@
             /// The list of replacement values
             /// </summary>
             public IEnumerable<string> ReplacementValues;
+
+            /// <summary>
+            /// Regular expression for global filtering
+            /// </summary>
+            public Regex GlobalFilterPatternRegex {
+                get {
+                    return globalFilterPatternRegex ?? (globalFilterPatternRegex = new Regex(GlobalFilterPattern, RegexOptions.Compiled));
+                }
+            }
+
+            /// <summary>
+            /// Regular expression for replacing text
+            /// </summary>
+            public Regex ReplacePatternRegex {
+                get {
+                    return replacePatternRegex ?? (replacePatternRegex = new Regex(ReplacePattern, RegexOptions.Compiled));
+                }
+            }
         }
     }
 }
