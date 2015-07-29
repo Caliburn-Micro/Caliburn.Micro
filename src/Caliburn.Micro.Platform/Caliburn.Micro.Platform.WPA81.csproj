@@ -76,6 +76,7 @@
     <Compile Include="ViewModelBinder.cs" />
     <Compile Include="ViewModelLocator.cs" />
     <Compile Include="win8\AttachedCollection.81.cs" />
+    <Compile Include="win8\CachingFrameAdapter.cs" />
     <Compile Include="win8\CaliburnApplication.cs" />
     <Compile Include="win8\IAttachedObject.cs" />
     <Compile Include="win8\INavigationService.cs" />

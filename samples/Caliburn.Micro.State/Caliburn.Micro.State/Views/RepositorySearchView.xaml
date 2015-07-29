@@ -1,0 +1,45 @@
+﻿<Page
+    x:Class="Caliburn.Micro.State.Views.RepositorySearchView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Caliburn.Micro.State.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cm="using:Caliburn.Micro"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Margin="24,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+        
+            <TextBox x:Name="Term" PlaceholderText="Search GitHub repositories" Grid.Column="0" Grid.Row="0" />
+        
+            <Button x:Name="Search" Content="Search" Grid.Column="1" Grid.Row="0" Margin="24,0,0,0" />
+        </Grid>
+
+        <ListView x:Name="Repositories" Grid.Column="0" Grid.Row="1" Margin="0,24,0,0" Padding="24,0"
+                  SelectionMode="None" IsItemClickEnabled="True" cm:Message.Attach="[ItemClick] = [RepositorySelected($clickedItem)]">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel cm:Bind.Model="{Binding}" Margin="0,0,0,12">
+                        <TextBlock x:Name="Name" Style="{StaticResource ListViewItemTextBlockStyle}" />
+                        <TextBlock x:Name="Description" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
+        <ContentControl x:Name="Navigation" Grid.Column="0" Grid.Row="2" HorizontalContentAlignment="Stretch"/>
+        
+    </Grid>
+</Page>

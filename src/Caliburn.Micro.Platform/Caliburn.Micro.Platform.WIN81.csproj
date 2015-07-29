@@ -55,6 +55,7 @@
     <Compile Include="win8\AppManifestHelper.cs" />
     <Compile Include="win8\AttachedCollection.81.cs" />
     <Compile Include="win8\FlyoutSettingsCommand.cs" />
+    <Compile Include="win8\CachingFrameAdapter.cs" />
     <Compile Include="win8\IAttachedObject.cs" />
     <Compile Include="win8\ISettingsService.cs" />
     <Compile Include="win8\ISettingsWindowManager.cs" />
