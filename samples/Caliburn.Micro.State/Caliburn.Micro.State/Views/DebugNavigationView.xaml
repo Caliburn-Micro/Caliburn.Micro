@@ -16,8 +16,13 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="GoBack" Content="Back" Grid.Column="0"/>
-        <Button x:Name="Insert" Content="Add" Grid.Column="2"/>
-        <Button x:Name="GoForward" Content="Forward" Grid.Column="4"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Button x:Name="GoBack" Content="Back" Grid.Column="0" Grid.Row="0"/>
+        <Button x:Name="Insert" Content="Add" Grid.Column="2" Grid.Row="0"/>
+        <Button x:Name="GoForward" Content="Forward" Grid.Column="4" Grid.Row="0"/>
+        <Button x:Name="Clear" Content="Clear" Grid.Column="0" Grid.Row="1"/>
     </Grid>
 </UserControl>

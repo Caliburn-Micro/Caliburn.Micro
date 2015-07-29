@@ -46,5 +46,14 @@ namespace Caliburn.Micro.State.ViewModels
         {
             _navigationService.GoForward();
         }
+
+        public void Clear()
+        {
+            _navigationService.BackStack.Clear();
+            _navigationService.ForwardStack.Clear();
+
+            NotifyOfPropertyChange(() => CanGoBack);
+            NotifyOfPropertyChange(() => CanGoForward);
+        }
     }
 }

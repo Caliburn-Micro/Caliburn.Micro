@@ -374,7 +374,7 @@ namespace Caliburn.Micro
             get {
                 var backStack = new ObservableCollection<PageStackEntry>(frame.BackStack);
 
-                backStack.CollectionChanged += (s, e) => ApplyCollectionChanges(e, viewModelBackStack, frame.ForwardStack);
+                backStack.CollectionChanged += (s, e) => ApplyCollectionChanges(e, viewModelBackStack, frame.BackStack);
 
                 return backStack;
             }
@@ -452,11 +452,6 @@ namespace Caliburn.Micro
 
                     viewModels.Clear();
                     frameEntries.Clear();
-
-                    for (var i = 0; i < e.NewItems.Count; i++) {
-                        viewModels.Add(null);
-                        frameEntries.Add((PageStackEntry)e.NewItems[i]);
-                    }
 
                     break;
             }
