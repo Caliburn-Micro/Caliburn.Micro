@@ -8,6 +8,13 @@
     ///  Class for managing the list of rules for doing name transformation.
     /// </summary>
     public class NameTransformer : BindableCollection<NameTransformer.Rule> {
+
+#if NET
+        private const RegexOptions options = RegexOptions.Compiled;
+#else
+        private const RegexOptions options = RegexOptions.None;
+#endif
+
         bool useEagerRuleSelection = true;
 
         /// <summary>
@@ -111,7 +118,7 @@
             /// </summary>
             public Regex GlobalFilterPatternRegex {
                 get {
-                    return globalFilterPatternRegex ?? (globalFilterPatternRegex = new Regex(GlobalFilterPattern, RegexOptions.Compiled));
+                    return globalFilterPatternRegex ?? (globalFilterPatternRegex = new Regex(GlobalFilterPattern, options));
                 }
             }
 
@@ -120,7 +127,7 @@
             /// </summary>
             public Regex ReplacePatternRegex {
                 get {
-                    return replacePatternRegex ?? (replacePatternRegex = new Regex(ReplacePattern, RegexOptions.Compiled));
+                    return replacePatternRegex ?? (replacePatternRegex = new Regex(ReplacePattern, options));
                 }
             }
         }
