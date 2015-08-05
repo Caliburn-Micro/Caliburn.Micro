@@ -1,4 +1,6 @@
-﻿namespace Caliburn.Micro.HelloWindowManagerWP71 {
+﻿using System.Linq;
+
+namespace Caliburn.Micro.HelloWindowManagerWP71 {
     using System;
     using System.Collections.Generic;
     using System.Windows.Controls;
@@ -18,6 +20,7 @@
             if (!Execute.InDesignMode)
                 container.RegisterPhoneServices(RootFrame);
 
+            container.Instance<Func<MessageViewModel>>(() => new MessageViewModel());
             container.PerRequest<MainPageViewModel>();
             container.PerRequest<MessageViewModel, MessageViewModel>();
             container.PerRequest<DialogViewModel, DialogViewModel>();

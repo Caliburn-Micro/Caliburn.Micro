@@ -1,4 +1,9 @@
-﻿namespace Caliburn.Micro {
+﻿#if XFORMS
+namespace Caliburn.Micro.Xamarin.Forms
+#else
+namespace Caliburn.Micro
+#endif
+{
     using System;
     using System.Globalization;
     using System.Linq;
@@ -19,7 +24,12 @@
             new Dictionary<string, Func<ActionExecutionContext, object>>
             {
                 {"$eventargs", c => c.EventArgs},
+#if XFORMS
+                {"$datacontext", c => c.Source.BindingContext},
+                {"$bindingcontext", c => c.Source.BindingContext},
+#else
                 {"$datacontext", c => c.Source.DataContext},
+#endif
                 {"$source", c => c.Source},
                 {"$executioncontext", c => c},
                 {"$view", c => c.View}
@@ -70,7 +80,7 @@
         /// </summary>
         public static Func<string, Type, ActionExecutionContext, object> EvaluateParameter =
             (text, parameterType, context) => {
-#if WinRT
+#if WinRT || XFORMS
             var lookup = text.ToLower();
 #else
                 var lookup = text.ToLower(CultureInfo.InvariantCulture);
@@ -101,7 +111,7 @@
             }
 
             try {
-#if !WinRT
+#if !WinRT && !XFORMS
                 var converter = TypeDescriptor.GetConverter(destinationType);
 
                 if (converter.CanConvertFrom(providedType)) {
@@ -114,7 +124,7 @@
                     return converter.ConvertTo(providedValue, destinationType);
                 }
 #endif
-#if WinRT
+#if WinRT || XFORMS
                 if (destinationType.GetTypeInfo().IsEnum) {
 #else
                 if (destinationType.IsEnum) {
@@ -152,7 +162,7 @@
         /// <param name="type">The type.</param>
         /// <returns>The default value.</returns>
         public static object GetDefaultValue(Type type) {
-#if WinRT
+#if WinRT || XFORMS
             var typeInfo = type.GetTypeInfo();
             return typeInfo.IsClass || typeInfo.IsInterface ? null : System.Activator.CreateInstance(type);
 #else

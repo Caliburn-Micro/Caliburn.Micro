@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Windows;
 
-    public class MainPageViewModel {
+    public class MainPageViewModel : Screen {
         readonly IWindowManager windowManager;
         readonly Func<MessageViewModel> messageViewModelFactory;
 

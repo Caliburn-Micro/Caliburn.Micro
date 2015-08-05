@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Hello.Forms.Views.LoginView"
+             xmlns:cm="clr-namespace:Caliburn.Micro.Xamarin.Forms;assembly=Caliburn.Micro.Platform.Xamarin.Forms">
+	<StackLayout Padding="20">
+    <Label Text="Hello Xamarin Forms" FontSize="24"/>
+    <Entry Placeholder="Username" Text="{Binding Username, Mode=TwoWay}"/>
+    <Entry Placeholder="Password" IsPassword="True" Text="{Binding Password, Mode=TwoWay}"/>
+    <Button cm:Message.Attach="Login" Text="Sign In" />
+    <Label Text="{Binding Feedback}" TextColor="#FFE74C3C"/>
+  </StackLayout>
+</ContentPage>

@@ -1,0 +1,27 @@
+﻿<Page
+    x:Class="Hello.Xamarin.Windows.Views.LoginView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Hello.Xamarin.Windows.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Margin="0,24,0,0">
+        <StackPanel Margin="24,0">
+            <TextBlock Text="Hello Xamarin" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBox x:Name="Username" Header="Username"/>
+            <PasswordBox x:Name="Password" Header="Password"/>
+            <TextBlock x:Name="Feedback" Style="{StaticResource BodyTextBlockStyle}" Foreground="#FFE74C3C" />
+        </StackPanel>
+    </Grid>
+
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton x:Name="Login" Label="sign in" Icon="Accept" />
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+</Page>
