@@ -4,18 +4,7 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
-#if WinRT && !WinRT81
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Data;
-    using Windows.UI.Interactivity;
-    using Windows.UI.Xaml.Markup;
-    using Windows.UI.Xaml.Media;
-    using Windows.UI.Xaml.Controls.Primitives;
-    using Windows.UI.Xaml.Controls;
-    using TriggerBase = Windows.UI.Interactivity.TriggerBase;
-    using EventTrigger = Windows.UI.Interactivity.EventTrigger;
-    using TriggerAction = Windows.UI.Interactivity.TriggerAction;
-#elif WinRT81
+#if WinRT81
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Data;
     using Windows.UI.Xaml.Markup;

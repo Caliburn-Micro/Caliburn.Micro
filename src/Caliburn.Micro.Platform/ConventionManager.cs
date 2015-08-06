@@ -3,15 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-#if WinRT && !WinRT81
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
-    using Windows.UI.Xaml.Controls.Primitives;
-    using Windows.UI.Xaml.Data;
-    using Windows.UI.Xaml.Markup;
-    using EventTrigger = Windows.UI.Interactivity.EventTrigger;
-    using Windows.UI.Xaml.Shapes;
-#elif WinRT81
+#if WinRT81
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Controls.Primitives;
@@ -199,7 +191,7 @@
                 info,
                 binding
                 );
-#elif !(WinRT && !WinRT81)
+#elif WinRT81
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
         };
@@ -383,13 +375,6 @@
         public static bool HasBinding(FrameworkElement element, DependencyProperty property) {
 #if NET
             return BindingOperations.GetBindingBase(element, property) != null;
-#elif WinRT && !WinRT81
-            var localValue = element.ReadLocalValue(property);
-
-            if (localValue == DependencyProperty.UnsetValue)
-                return false;
-
-            return localValue.GetType().FullName == "System.__ComObject";
 #else
             return element.GetBindingExpression(property) != null;
 #endif

@@ -13,9 +13,6 @@ namespace Caliburn.Micro
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
-#elif WinRT && !WinRT81
-    using Windows.UI.Xaml;
-    using Windows.UI.Interactivity;
 #elif WinRT81
     using Windows.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
@@ -141,13 +138,7 @@ namespace Caliburn.Micro
 
                 unmatchedElements.Remove(foundControl);
 
-#if WinRT && !WinRT81
-                var triggers = Interaction.GetTriggers(foundControl);
-                if (triggers != null && triggers.Count > 0) {
-                    Log.Info("Action Convention Not Applied: Interaction.Triggers already set on {0}.", foundControl.Name);
-                    continue;
-                }
-#elif WinRT81
+#if WinRT81
                 var triggers = Interaction.GetBehaviors(foundControl);
                 if (triggers != null && triggers.Count > 0)
                 {

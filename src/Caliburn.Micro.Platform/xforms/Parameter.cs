@@ -13,9 +13,6 @@ namespace Caliburn.Micro
 #else
     using Windows.UI.Xaml;
 #endif
-#if WinRT && !WinRT81
-    using Windows.UI.Interactivity;
-#endif
 
     /// <summary>
     /// Represents a parameter of an <see cref="ActionMessage"/>.
