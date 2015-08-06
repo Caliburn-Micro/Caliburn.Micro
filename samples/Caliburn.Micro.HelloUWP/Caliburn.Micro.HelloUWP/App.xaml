@@ -1,0 +1,8 @@
+﻿<cm:CaliburnApplication
+    x:Class="Caliburn.Micro.HelloUWP.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cm="using:Caliburn.Micro"
+    RequestedTheme="Light">
+
+</cm:CaliburnApplication>
