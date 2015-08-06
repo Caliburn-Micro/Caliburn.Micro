@@ -73,7 +73,6 @@
     <Compile Include="sl4\AttachedCollection.cs" />
     <Compile Include="sl4\Mouse.cs" />
     <Compile Include="sl4\Parameter.cs" />
-    <Compile Include="StringSplitter.cs" />
     <Compile Include="wp71\AppSettingsStorageMechanism.cs" />
     <Compile Include="wp71\IPhoneContainer.cs" />
     <Compile Include="wp71\IStorageHandler.cs" />
