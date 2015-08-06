@@ -22,11 +22,6 @@
       <group>
         <dependency id="Caliburn.Micro.Core" version="[3.0.0-alpha]" />
       </group>
-      <group targetFramework="win8">
-        <dependency id="Caliburn.Micro.Core" version="[3.0.0-alpha]" />
-        <dependency id="Windows.UI.Interactivity" version="[1.3.0]" />
-        <dependency id="Callisto" version="[1.3.1]" />
-      </group>
       <group targetFramework="win81">
         <dependency id="Caliburn.Micro.Core" version="[3.0.0-alpha]" />
       </group>
@@ -42,8 +37,6 @@
 
     <file src="..\bin\sl5\Release\Caliburn.Micro.*.*" target="lib\sl5" />
     <file src="..\bin\sl5\Release\System.Windows.Interactivity.*" target="lib\sl5" />
-
-    <file src="..\bin\win8\Release\Caliburn.Micro.*.*" target="lib\win8" />
 
     <file src="..\bin\win81\Release\Caliburn.Micro.*.*" target="lib\win81" />
     <file src="..\bin\win81\Release\Microsoft.Xaml.*.*" target="lib\win81" />

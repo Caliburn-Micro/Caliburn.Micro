@@ -16,7 +16,7 @@
   </metadata>
 
   <files>
-    <file src="..\bin\portable\Release\Caliburn.Micro.*" target="lib\portable-net45+win8+wp8+wpa81+MonoAndroid10+Xamarin.iOS10+MonoTouch10" />
+    <file src="..\bin\portable\Release\Caliburn.Micro.*" target="lib\portable-net45+win81+wp8+wpa81+MonoAndroid10+Xamarin.iOS10+MonoTouch10" />
 
     <file src="..\bin\sl5\Release\Caliburn.Micro.*" exclude="**\Caliburn.Micro.*.*" target="lib\sl5" />
     <file src="..\bin\net40\Release\Caliburn.Micro.*" exclude="**\Caliburn.Micro.*.*" target="lib\net40" />
