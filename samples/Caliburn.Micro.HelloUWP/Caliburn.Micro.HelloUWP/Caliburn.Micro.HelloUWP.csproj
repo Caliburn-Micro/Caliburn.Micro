@@ -146,10 +146,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\DeviceView.DeviceFamily-Phone.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\DeviceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
