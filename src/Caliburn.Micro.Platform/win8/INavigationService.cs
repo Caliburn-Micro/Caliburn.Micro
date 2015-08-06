@@ -126,8 +126,6 @@ namespace Caliburn.Micro {
         private readonly bool treatViewAsLoaded;
         private event NavigatingCancelEventHandler ExternalNavigatingHandler = delegate { };
 
-        private object currentParameter;
-
         /// <summary>
         /// Creates an instance of <see cref="FrameAdapter" />.
         /// </summary>
@@ -147,6 +145,14 @@ namespace Caliburn.Micro {
             this.frame.Loaded += (sender, args) => { HardwareButtons.BackPressed += OnHardwareBackPressed; };
             this.frame.Unloaded += (sender, args) => { HardwareButtons.BackPressed -= OnHardwareBackPressed; };
 #endif
+        }
+
+        /// <summary>
+        /// The parameter to the current view
+        /// </summary>
+        protected object CurrentParameter
+        {
+            get; set;
         }
 
         /// <summary>
@@ -197,7 +203,7 @@ namespace Caliburn.Micro {
             if (e.Content == null)
                 return;
 
-            currentParameter = e.Parameter;
+            CurrentParameter = e.Parameter;
 
             var view = e.Content as Page;
 
@@ -213,22 +219,27 @@ namespace Caliburn.Micro {
         /// Binds the view model.
         /// </summary>
         /// <param name="view">The view.</param>
-        protected virtual void BindViewModel(DependencyObject view) {
+        /// <param name="viewModel">The view model.</param>
+        protected virtual void BindViewModel(DependencyObject view, object viewModel = null)
+        {
             ViewLocator.InitializeComponent(view);
 
-            var viewModel = ViewModelLocator.LocateForView(view);
+            viewModel = viewModel ?? ViewModelLocator.LocateForView(view);
+
             if (viewModel == null)
                 return;
 
-            if (treatViewAsLoaded) {
+            if (treatViewAsLoaded)
+            {
                 view.SetValue(View.IsLoadedProperty, true);
             }
 
-            TryInjectParameters(viewModel, currentParameter);
+            TryInjectParameters(viewModel, CurrentParameter);
             ViewModelBinder.Bind(viewModel, view, null);
 
             var activator = viewModel as IActivate;
-            if (activator != null) {
+            if (activator != null)
+            {
                 activator.Activate();
             }
         }
@@ -411,7 +422,7 @@ namespace Caliburn.Micro {
                 var container = GetSettingsContainer();
 
                 container.Values[FrameStateKey] = frame.GetNavigationState();
-                container.Values[ParameterKey] = currentParameter;
+                container.Values[ParameterKey] = CurrentParameter;
 
                 return true;
             }
@@ -434,7 +445,7 @@ namespace Caliburn.Micro {
 
             var frameState = (string) container.Values[FrameStateKey];
 
-            currentParameter = container.Values.ContainsKey(ParameterKey) ?
+            CurrentParameter = container.Values.ContainsKey(ParameterKey) ?
                 container.Values[ParameterKey] :
                 null;
 
