@@ -327,7 +327,7 @@ namespace Caliburn.Micro {
         /// <summary>
         /// Gets or sets the data type of the current content, or the content that should be navigated to.
         /// </summary>
-        public Type SourcePageType {
+        public virtual Type SourcePageType {
             get { return frame.SourcePageType; }
             set { frame.SourcePageType = value; }
         }
@@ -335,7 +335,7 @@ namespace Caliburn.Micro {
         /// <summary>
         /// Gets the data type of the content that is currently displayed.
         /// </summary>
-        public Type CurrentSourcePageType {
+        public virtual Type CurrentSourcePageType {
             get { return frame.CurrentSourcePageType; }
         }
 
@@ -344,7 +344,7 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name="sourcePageType"> The <see cref="System.Type" /> to navigate to. </param>
         /// <returns> Whether or not navigation succeeded. </returns>
-        public bool Navigate(Type sourcePageType) {
+        public virtual bool Navigate(Type sourcePageType) {
             return frame.Navigate(sourcePageType);
         }
 
@@ -354,35 +354,35 @@ namespace Caliburn.Micro {
         /// <param name="sourcePageType"> The <see cref="System.Type" /> to navigate to. </param>
         /// <param name="parameter">The object parameter to pass to the target.</param>
         /// <returns> Whether or not navigation succeeded. </returns>
-        public bool Navigate(Type sourcePageType, object parameter) {
+        public virtual bool Navigate(Type sourcePageType, object parameter) {
             return frame.Navigate(sourcePageType, parameter);
         }
 
         /// <summary>
         ///   Navigates forward.
         /// </summary>
-        public void GoForward() {
+        public virtual void GoForward() {
             frame.GoForward();
         }
 
         /// <summary>
         ///   Navigates back.
         /// </summary>
-        public void GoBack() {
+        public virtual void GoBack() {
             frame.GoBack();
         }
 
         /// <summary>
         ///   Indicates whether the navigator can navigate forward.
         /// </summary>
-        public bool CanGoForward {
+        public virtual bool CanGoForward {
             get { return frame.CanGoForward; }
         }
 
         /// <summary>
         ///   Indicates whether the navigator can navigate back.
         /// </summary>
-        public bool CanGoBack {
+        public virtual bool CanGoBack {
             get { return frame.CanGoBack; }
         }
 
@@ -390,14 +390,14 @@ namespace Caliburn.Micro {
         /// <summary>
         /// Gets a collection of PageStackEntry instances representing the backward navigation history of the Frame.
         /// </summary>
-        public IList<PageStackEntry> BackStack {
+        public virtual IList<PageStackEntry> BackStack {
             get { return frame.BackStack; }
         }
 
         /// <summary>
         /// Gets a collection of PageStackEntry instances representing the forward navigation history of the Frame.
         /// </summary>
-        public IList<PageStackEntry> ForwardStack {
+        public virtual IList<PageStackEntry> ForwardStack {
             get { return frame.ForwardStack; }
         }
 #endif
@@ -406,7 +406,7 @@ namespace Caliburn.Micro {
         /// Stores the frame navigation state in local settings if it can.
         /// </summary>
         /// <returns>Whether the suspension was sucessful</returns>
-        public bool SuspendState() {
+        public virtual bool SuspendState() {
             try {
                 var container = GetSettingsContainer();
 
@@ -426,7 +426,7 @@ namespace Caliburn.Micro {
         /// Tries to restore the frame navigation state from local settings.
         /// </summary>
         /// <returns>Whether the restoration of successful.</returns>
-        public bool ResumeState() {
+        public virtual bool ResumeState() {
             var container = GetSettingsContainer();
 
             if (!container.Values.ContainsKey(FrameStateKey))
