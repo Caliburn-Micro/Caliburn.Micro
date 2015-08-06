@@ -42,6 +42,9 @@
             AddChildResolver<Button>(e => ResolveFlyoutBase(e.Flyout));
             AddChildResolver<FrameworkElement>(e => ResolveFlyoutBase(FlyoutBase.GetAttachedFlyout(e)));
 #endif
+#if WINDOWS_UWP
+            AddChildResolver<SplitView>(e => new[] { e.Pane as DependencyObject, e.Content as DependencyObject });
+#endif
         }
 
         /// <summary>

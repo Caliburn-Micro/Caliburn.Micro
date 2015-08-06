@@ -1,0 +1,267 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{94D9A9C6-44C1-4E5A-877B-5761C963B2F6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Caliburn.Micro.Platform.UWP</RootNamespace>
+    <AssemblyName>Caliburn.Micro.Platform.UWP</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion>10.0.10240.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <BaseIntermediateOutputPath>..\..\obj\uwp\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\uwp\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;WinRT;WinRT81</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\bin\uwp\Debug\Caliburn.Micro.Platform.UWP.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\uwp\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;WinRT;WinRT81</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\bin\uwp\Release\Caliburn.Micro.Platform.UWP.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <PlatformTarget>ARM</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <PlatformTarget>ARM</PlatformTarget>
+    <OutputPath>bin\ARM\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <None Include="project.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Caliburn.Micro.Platform\Action.cs">
+      <Link>Action.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\ActionExecutionContext.cs">
+      <Link>ActionExecutionContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\ActionMessage.cs">
+      <Link>ActionMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\Bind.cs">
+      <Link>Bind.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\BindingScope.cs">
+      <Link>BindingScope.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\BooleanToVisibilityConverter.cs">
+      <Link>BooleanToVisibilityConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\ChildResolver.cs">
+      <Link>ChildResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\ConventionManager.cs">
+      <Link>ConventionManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\DependencyPropertyHelper.cs">
+      <Link>DependencyPropertyHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\ElementConvention.cs">
+      <Link>ElementConvention.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\IHaveParameters.cs">
+      <Link>IHaveParameters.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\Message.cs">
+      <Link>Message.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\MessageBinder.cs">
+      <Link>MessageBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\Parser.cs">
+      <Link>Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\TypeDescriptor.cs">
+      <Link>TypeDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\View.cs">
+      <Link>View.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\ViewLocator.cs">
+      <Link>ViewLocator.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\ViewModelBinder.cs">
+      <Link>ViewModelBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\ViewModelLocator.cs">
+      <Link>ViewModelLocator.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\win8\AppManifestHelper.cs">
+      <Link>win8\AppManifestHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\win8\AttachedCollection.81.cs">
+      <Link>win8\AttachedCollection.81.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\win8\CachingFrameAdapter.cs">
+      <Link>win8\CachingFrameAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\win8\CaliburnApplication.cs">
+      <Link>win8\CaliburnApplication.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\win8\IAttachedObject.cs">
+      <Link>win8\IAttachedObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\win8\INavigationService.cs">
+      <Link>win8\INavigationService.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\win8\ISharingService.cs">
+      <Link>win8\ISharingService.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\win8\ISupportSharing.cs">
+      <Link>win8\ISupportSharing.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\win8\NavigateHelper.cs">
+      <Link>win8\NavigateHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\win8\NavigationExtensions.cs">
+      <Link>win8\NavigationExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\win8\Parameter.cs">
+      <Link>win8\Parameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\win8\SharingService.cs">
+      <Link>win8\SharingService.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\win8\TriggerAction.cs">
+      <Link>win8\TriggerAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\win8\WinRTContainer.cs">
+      <Link>win8\WinRTContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\win8\XamlMetadataProvider.cs">
+      <Link>win8\XamlMetadataProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\XamlPlatformProvider.cs">
+      <Link>XamlPlatformProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <None Include="..\Caliburn.snk">
+      <Link>Caliburn.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Properties\Caliburn.Micro.Platform.UWP.rd.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.Platform.Core.csproj">
+      <Project>{0ecbe3d9-aed4-419d-a6e3-c53d5ce2a02a}</Project>
+      <Name>Caliburn.Micro.Platform.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">
+      <Project>{6d772b52-da8f-4784-971a-4bf50cb6d306}</Project>
+      <Name>Caliburn.Micro</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
+      <Name>Behaviors SDK %28XAML%29</Name>
+    </SDKReference>
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+    <VisualStudioVersion>14.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Caliburn.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
