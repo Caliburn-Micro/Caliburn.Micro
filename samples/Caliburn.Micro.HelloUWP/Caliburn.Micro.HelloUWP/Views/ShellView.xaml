@@ -12,7 +12,7 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <SplitView x:Name="NavigationView" DisplayMode="Overlay">
+        <SplitView x:Name="NavigationView" DisplayMode="Overlay" OpenPaneLength="120">
             <SplitView.Pane>
                 <StackPanel Background="{ThemeResource AccentBrush}">
                     <Button x:Name="ShowDevices" Content="Device Specific Views" Margin="24" />

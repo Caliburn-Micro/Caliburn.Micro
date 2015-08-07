@@ -1,4 +1,6 @@
 ﻿
+using Windows.UI.Core;
+
 namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
@@ -97,7 +99,12 @@ namespace Caliburn.Micro {
         /// <summary>
         /// Occurs when the user presses the hardware Back button.
         /// </summary>
-        event EventHandler<BackPressedEventArgs> BackPressed;
+        event EventHandler<BackPressedEventArgs> BackRequested;
+#elif WINDOWS_UWP
+        /// <summary>
+        /// Occurs when the user requests a back navigation via hardware back button or gesture or voice.
+        /// </summary>
+        event EventHandler<BackRequestedEventArgs> BackRequested;
 #endif
 
         /// <summary>
@@ -140,10 +147,21 @@ namespace Caliburn.Micro {
 
             this.frame.Navigating += OnNavigating;
             this.frame.Navigated += OnNavigated;
-            
+
 #if WP81
-            this.frame.Loaded += (sender, args) => { HardwareButtons.BackPressed += OnHardwareBackPressed; };
-            this.frame.Unloaded += (sender, args) => { HardwareButtons.BackPressed -= OnHardwareBackPressed; };
+            // This could be a potential bug if we're registering the navigation service
+            // after the frame is loaded. Unlikely scenario given normal WP8.1 app structure
+
+            this.frame.Loaded += (sender, args) => { HardwareButtons.BackPressed += OnBackRequested; };
+            this.frame.Unloaded += (sender, args) => { HardwareButtons.BackPressed -= OnBackRequested; };
+#elif WINDOWS_UWP
+
+            // This could leak memory if we're creating and destorying navigation services regularly.
+            // Another unlikely scenario though
+
+            var navigationManager = SystemNavigationManager.GetForCurrentView();
+
+            navigationManager.BackRequested += OnBackRequested;
 #endif
         }
 
@@ -473,18 +491,18 @@ namespace Caliburn.Micro {
         /// <summary>
         /// Occurs when the user presses the hardware Back button.
         /// </summary>
-        public event EventHandler<BackPressedEventArgs> BackPressed = delegate { };
+        public event EventHandler<BackPressedEventArgs> BackRequested = delegate { };
 
         /// <summary>
         ///  Occurs when the user presses the hardware Back button. Allows the handlers to cancel the default behavior.
         /// </summary>
         /// <param name="e">The event arguments</param>
-        protected virtual void OnBackPressed(BackPressedEventArgs e) {
-            BackPressed(this, e);
+        protected virtual void OnBackRequested(BackPressedEventArgs e) {
+            BackRequested(this, e);
         }
 
-        private void OnHardwareBackPressed(object sender, BackPressedEventArgs e) {
-            OnBackPressed(e);
+        private void OnBackRequested(object sender, BackPressedEventArgs e) {
+            OnBackRequested(e);
 
             if (e.Handled)
                 return;
@@ -494,6 +512,35 @@ namespace Caliburn.Micro {
                 GoBack();
             }
         }
+#elif WINDOWS_UWP
+        /// <summary>
+        /// Occurs when the user presses the hardware Back button.
+        /// </summary>
+        public event EventHandler<BackRequestedEventArgs> BackRequested = delegate { };
+
+        /// <summary>
+        ///  Occurs when the user presses the hardware Back button. Allows the handlers to cancel the default behavior.
+        /// </summary>
+        /// <param name="e">The event arguments</param>
+        protected virtual void OnBackRequested(BackRequestedEventArgs e)
+        {
+            BackRequested(this, e);
+        }
+
+        private void OnBackRequested(object sender, BackRequestedEventArgs e)
+        {
+            OnBackRequested(e);
+
+            if (e.Handled)
+                return;
+
+            if (CanGoBack)
+            {
+                e.Handled = true;
+                GoBack();
+            }
+        }
+
 #endif
 
         private static ApplicationDataContainer GetSettingsContainer() {

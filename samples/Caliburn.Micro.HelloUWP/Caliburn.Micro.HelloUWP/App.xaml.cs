@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel.Activation;
+using Windows.UI.Core;
 using Caliburn.Micro.HelloUWP.ViewModels;
 
 namespace Caliburn.Micro.HelloUWP
@@ -22,6 +23,11 @@ namespace Caliburn.Micro.HelloUWP
             _container
                 .PerRequest<ShellViewModel>()
                 .PerRequest<DeviceViewModel>();
+
+            var navigationManager = SystemNavigationManager.GetForCurrentView();
+
+            navigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+            ;
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
