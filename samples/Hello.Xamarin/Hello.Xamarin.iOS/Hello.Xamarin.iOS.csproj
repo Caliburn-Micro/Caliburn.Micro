@@ -109,6 +109,9 @@
       <HintPath>..\..\..\bin\iOS\Debug\Caliburn.Micro.Platform.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Linq.Expressions" />
+    <Reference Include="System.ObjectModel" />
+    <Reference Include="System.Runtime" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
