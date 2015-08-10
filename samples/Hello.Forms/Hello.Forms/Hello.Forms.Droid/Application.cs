@@ -30,9 +30,6 @@ namespace Hello.Forms.Droid
         {
             container = new SimpleContainer();
             container.Instance(container);
-
-            container
-                .PerRequest<LoginViewModel>();
         }
 
         protected override IEnumerable<Assembly> SelectAssemblies()

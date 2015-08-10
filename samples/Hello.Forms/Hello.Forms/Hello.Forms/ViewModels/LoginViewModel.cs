@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Diagnostics;
 using Caliburn.Micro;
+using Caliburn.Micro.Xamarin.Forms;
 
 namespace Hello.Forms.ViewModels
 {
     public class LoginViewModel : Screen
     {
+        private readonly INavigationService navigationService;
+
         private string username;
         private string password;
         private string feedback;
 
-        public LoginViewModel()
+        public LoginViewModel(INavigationService navigationService)
         {
-            Debug.WriteLine("Test");
+            this.navigationService = navigationService;
         }
 
         public string Username
@@ -57,6 +60,10 @@ namespace Hello.Forms.ViewModels
             if (Username == "fail")
             {
                 Feedback = "Your details were incorrect";
+            }
+            else
+            {
+                navigationService.For<FeaturesViewModel>().Navigate();
             }
         }
     }

@@ -20,9 +20,6 @@ namespace Hello.Forms.iOS
         {
             container = new SimpleContainer();
             container.Instance(container);
-
-            container
-                .PerRequest<LoginViewModel>();
         }
 
         protected override void BuildUp(object instance)

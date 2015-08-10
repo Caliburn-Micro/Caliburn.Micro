@@ -1,6 +1,7 @@
 ﻿using System;
 using Caliburn.Micro;
 using Caliburn.Micro.Xamarin.Forms;
+using Hello.Forms.ViewModels;
 using Hello.Forms.Views;
 using Xamarin.Forms;
 
@@ -13,6 +14,10 @@ namespace Hello.Forms
         public App(SimpleContainer container)
         {
             this.container = container;
+
+            container
+                .PerRequest<LoginViewModel>()
+                .PerRequest<FeaturesViewModel>();
 
             Initialize();
 
