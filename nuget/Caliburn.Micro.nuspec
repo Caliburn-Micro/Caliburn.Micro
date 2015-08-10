@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Caliburn.Micro</id>
-    <version>3.0.0-alpha</version>
+    <version>3.0.0-beta1</version>
     <authors>Rob Eisenberg, Marco Amendola, Chin Bae, Ryan Cromwell, Nigel Sampson, Thomas Ibel, Matt Hidinger</authors>
     <description>A small, yet powerful framework designed for Xaml platforms, Caliburn.Micro implements a variety of UI patterns for solving real-world problems. Patterns that are highlighted include MVVM (Presentation Model), MVP and MVC.</description>
     <language>en-US</language>
@@ -20,10 +20,7 @@
 
     <dependencies>
       <group>
-        <dependency id="Caliburn.Micro.Core" version="[3.0.0-alpha]" />
-      </group>
-      <group targetFramework="win81">
-        <dependency id="Caliburn.Micro.Core" version="[3.0.0-alpha]" />
+        <dependency id="Caliburn.Micro.Core" version="[3.0.0-beta1]" />
       </group>
     </dependencies>
   </metadata>
@@ -47,13 +44,15 @@
     <file src="..\bin\wpa81\Release\Caliburn.Micro.*.*" target="lib\wpa81" />    
     <file src="..\bin\wpa81\Release\Microsoft.Xaml.*.*" target="lib\wpa81" />
 
-    <file src="..\bin\wpa81\Release\Caliburn.Micro.*.*" target="lib\wpa81" />
     <file src="..\bin\android\Release\Caliburn.Micro.*.*" target="lib\MonoAndroid10" />
+    
     <file src="..\bin\iOS\Release\Caliburn.Micro.*.*" target="lib\Xamarin.iOS10" />
     <file src="..\bin\iOS\Release\Caliburn.Micro.*.*" target="lib\MonoTouch10" />
-	
-	  <file src="tools\**" target="tools" />
-	
+
+    <file src="..\bin\uwp\Release\Caliburn.Micro.*.*" target="lib\uap10.0" />
+    <file src="..\bin\uwp\Release\Microsoft.Xaml.*.*" target="lib\uap10.0" />
+    <file src="..\bin\uwp\Release\Caliburn.Micro.Platform.UWP\Properties\Caliburn.Micro.Platform.UWP.rd.xml" target="lib\uap10.0\Caliburn.Micro.Platform.UWP\Properties\Caliburn.Micro.Platform.UWP.rd.xml" />
+    
     <file src="..\src\*.cs" target="src" />
     <file src="..\src\Caliburn.Micro.Platform*\**\*.cs" exclude="**\obj\**\*.*" target="src" />
     <file src="..\src\Caliburn.Micro.Extensions*\**\*.cs" exclude="**\obj\**\*.*" target="src" />

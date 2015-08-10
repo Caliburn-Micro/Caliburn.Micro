@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Caliburn.Micro.Xamarin.Forms</id>
-    <version>3.0.0-alpha</version>
+    <version>3.0.0-beta1</version>
     <authors>Rob Eisenberg, Marco Amendola, Chin Bae, Ryan Cromwell, Nigel Sampson, Thomas Ibel, Matt Hidinger</authors>
     <description>A small, yet powerful framework designed for Xaml platforms, Caliburn.Micro implements a variety of UI patterns for solving real-world problems. Patterns that are highlighted include MVVM (Presentation Model), MVP and MVC.</description>
     <language>en-US</language>
@@ -16,14 +16,14 @@
 
     <dependencies>
       <group>
-        <dependency id="Caliburn.Micro.Core" version="[3.0.0-alpha]" />
+        <dependency id="Caliburn.Micro.Core" version="[3.0.0-beta1]" />
         <dependency id="Xamarin.Forms" version="1.4.2.6355" />
       </group>
     </dependencies>
   </metadata>
 
   <files>
-    <file src="..\bin\xamarin-forms\Release\Caliburn.Micro.Platform.Xamarin.Forms.*" target="lib\portable-win+net45+wp80+MonoAndroid10+MonoTouch10+Xamarin.iOS10" />
+    <file src="..\bin\xamarin-forms\Release\Caliburn.Micro.Platform.Xamarin.Forms.*" target="lib\portable-net45+win8+wp8+wpa81+MonoAndroid10+Xamarin.iOS10+MonoTouch10" />
 	
     <file src="..\src\*.cs" target="src" />
     <file src="..\src\Caliburn.Micro.Platform*\**\*.cs" exclude="**\obj\**\*.*" target="src" />
