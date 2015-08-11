@@ -197,6 +197,19 @@
         };
 
         static ConventionManager() {
+#if WINDOWS_UWP
+            AddElementConvention<SplitView>(SplitView.ContentProperty, "IsPaneOpen", "PaneClosing").GetBindableProperty =
+                delegate (DependencyObject foundControl)
+                {
+                    var element = (SplitView)foundControl;
+
+                    if (!OverwriteContent)
+                       return null;
+
+                    Log.Info("ViewModel bound on {0}.", element.Name);
+                    return View.ModelProperty;
+               };
+#endif
 #if !WINDOWS_PHONE && !WinRT
             AddElementConvention<DatePicker>(DatePicker.SelectedDateProperty, "SelectedDate", "SelectedDateChanged");
 #endif
