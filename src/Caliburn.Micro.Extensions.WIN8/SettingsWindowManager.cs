@@ -17,8 +17,9 @@
         /// <param name="viewModel">The settings view model.</param>
         /// <param name="commandLabel">The settings command label.</param>
         /// <param name="viewSettings">The optional dialog settings.</param>
+        /// <param name="independent">Show settings independent from <seealso cref="Windows.UI.ApplicationSettings.SettingsPane"/>.</param>
         public async void ShowSettingsFlyout(object viewModel, string commandLabel,
-            IDictionary<string, object> viewSettings = null) {
+            IDictionary<string, object> viewSettings = null, bool independent = false) {
             var view = ViewLocator.LocateForModel(viewModel, null, null);
             ViewModelBinder.Bind(viewModel, view, null);
 
@@ -70,7 +71,10 @@
                 activator.Activate();
             }
 
-            settingsFlyout.Show();
+            if (independent)
+                settingsFlyout.ShowIndependent();
+            else
+                settingsFlyout.Show();
         }
 
         private static bool ApplySettings(object target, IEnumerable<KeyValuePair<string, object>> settings) {

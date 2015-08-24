@@ -41,6 +41,12 @@
         /// Returns the result of the action.
         /// </returns>
         public virtual object Execute(object sender, object parameter) {
+
+            if (AssociatedObject == null && sender is FrameworkElement)
+            {
+                AssociatedObject = (FrameworkElement) sender;
+            }
+
             Invoke(parameter);
             return null;
         }

@@ -64,9 +64,7 @@
     <Reference Include="System.Windows.Controls, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Windows.Interactivity">
-      <HintPath>..\..\lib\sl5\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Windows.Interactivity, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
     <Reference Include="System.Windows.Browser" />
@@ -110,6 +108,7 @@
     <None Include="..\Caliburn.snk">
       <Link>Caliburn.snk</Link>
     </None>
+    <None Include="packages.Caliburn.Micro.Platform.SL5.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.SL5.csproj">

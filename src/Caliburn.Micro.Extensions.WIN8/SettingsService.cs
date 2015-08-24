@@ -65,7 +65,7 @@
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="SettingsPaneCommandsRequestedEventArgs" /> instance containing the event data.</param>
         protected virtual void OnCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args) {
-            var settingsCommands = commands.Select((c, i) => new SettingsCommand(i, c.Label, h => OnCommandSelected(c)));
+            var settingsCommands = commands.Select(c => new SettingsCommand(Guid.NewGuid(), c.Label, h => OnCommandSelected(c)));
 
             settingsCommands.Apply(args.Request.ApplicationCommands.Add);
         }

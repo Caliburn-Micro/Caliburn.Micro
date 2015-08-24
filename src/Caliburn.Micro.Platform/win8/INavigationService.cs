@@ -8,6 +8,10 @@ namespace Caliburn.Micro {
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Navigation;
 
+#if WP81
+    using Windows.Phone.UI.Input;
+#endif
+
     /// <summary>
     ///   Implemented by services that provide (<see cref="Uri" /> based) navigation.
     /// </summary>
@@ -89,6 +93,13 @@ namespace Caliburn.Micro {
         IList<PageStackEntry> ForwardStack { get; }
 #endif
 
+#if WP81
+        /// <summary>
+        /// Occurs when the user presses the hardware Back button.
+        /// </summary>
+        event EventHandler<BackPressedEventArgs> BackPressed;
+#endif
+
         /// <summary>
         /// Stores the frame navigation state in local settings if it can.
         /// </summary>
@@ -133,8 +144,8 @@ namespace Caliburn.Micro {
             this.frame.Navigated += OnNavigated;
             
 #if WP81
-            this.frame.Loaded += (sender, args) => { Windows.Phone.UI.Input.HardwareButtons.BackPressed += OnHardwareBackPressed; };
-            this.frame.Unloaded += (sender, args) => { Windows.Phone.UI.Input.HardwareButtons.BackPressed -= OnHardwareBackPressed; };
+            this.frame.Loaded += (sender, args) => { HardwareButtons.BackPressed += OnHardwareBackPressed; };
+            this.frame.Unloaded += (sender, args) => { HardwareButtons.BackPressed -= OnHardwareBackPressed; };
 #endif
         }
 
@@ -158,7 +169,10 @@ namespace Caliburn.Micro {
 
             if (guard != null) {
                 var shouldCancel = false;
-                guard.CanClose(result => { shouldCancel = !result; });
+                var runningAsync = true;
+                guard.CanClose(result => { runningAsync = false; shouldCancel = !result; });
+                if (runningAsync)
+                    throw new NotSupportedException("Async CanClose is not supported.");
 
                 if (shouldCancel) {
                     e.Cancel = true;
@@ -217,8 +231,6 @@ namespace Caliburn.Micro {
             if (activator != null) {
                 activator.Activate();
             }
-
-            GC.Collect(); // Why?
         }
 
         /// <summary>
@@ -432,10 +444,26 @@ namespace Caliburn.Micro {
         }
 
 #if WP81
-        private void OnHardwareBackPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
-        {
-            if (CanGoBack)
-            {
+        /// <summary>
+        /// Occurs when the user presses the hardware Back button.
+        /// </summary>
+        public event EventHandler<BackPressedEventArgs> BackPressed = delegate { };
+
+        /// <summary>
+        ///  Occurs when the user presses the hardware Back button. Allows the handlers to cancel the default behavior.
+        /// </summary>
+        /// <param name="e">The event arguments</param>
+        protected virtual void OnBackPressed(BackPressedEventArgs e) {
+            BackPressed(this, e);
+        }
+
+        private void OnHardwareBackPressed(object sender, BackPressedEventArgs e) {
+            OnBackPressed(e);
+
+            if (e.Handled)
+                return;
+
+            if (CanGoBack) {
                 e.Handled = true;
                 GoBack();
             }

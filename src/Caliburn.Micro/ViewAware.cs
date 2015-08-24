@@ -6,18 +6,12 @@
     /// A base implementation of <see cref = "IViewAware" /> which is capable of caching views by context.
     /// </summary>
     public class ViewAware : PropertyChangedBase, IViewAware {
-        bool cacheViews;
         readonly IDictionary<object, object> views;
 
         /// <summary>
         /// The default view context.
         /// </summary>
         public static readonly object DefaultContext = new object();
-
-        /// <summary>
-        /// Indicates whether or not implementors of <see cref="IViewAware"/> should cache their views by default.
-        /// </summary>
-        public static bool CacheViewsByDefault = true;
 
         /// <summary>
         /// The view chache for this instance.
@@ -29,17 +23,8 @@
         /// <summary>
         /// Creates an instance of <see cref="ViewAware"/>.
         /// </summary>
-        public ViewAware()
-            : this(CacheViewsByDefault) {
-        }
-
-        /// <summary>
-        /// Creates an instance of <see cref="ViewAware"/>.
-        /// </summary>
-        /// <param name="cacheViews">Indicates whether or not this instance maintains a view cache.</param>
-        public ViewAware(bool cacheViews) {
-            this.cacheViews = cacheViews;
-            views = new Dictionary<object, object>();
+        public ViewAware() {
+            views = new WeakValueDictionary<object, object>();
         }
 
         /// <summary>
@@ -47,22 +32,8 @@
         /// </summary>
         public event EventHandler<ViewAttachedEventArgs> ViewAttached = delegate { };
 
-        /// <summary>
-        /// Indicates whether or not this instance maintains a view cache.
-        /// </summary>
-        protected bool CacheViews {
-            get { return cacheViews; }
-            set {
-                cacheViews = value;
-                if (!cacheViews)
-                    Views.Clear();
-            }
-        }
-
         void IViewAware.AttachView(object view, object context) {
-            if (CacheViews) {
-                Views[context ?? DefaultContext] = view;
-            }
+            Views[context ?? DefaultContext] = view;
 
             var nonGeneratedView = PlatformProvider.Current.GetFirstNonGeneratedView(view);
             PlatformProvider.Current.ExecuteOnFirstLoad(nonGeneratedView, OnViewLoaded);
@@ -118,7 +89,7 @@
         /// </summary>
         /// <param name = "context">The context denoting which view to retrieve.</param>
         /// <returns>The view.</returns>
-        public object GetView(object context = null) {
+        public virtual object GetView(object context = null) {
             object view;
             Views.TryGetValue(context ?? DefaultContext, out view);
             return view;

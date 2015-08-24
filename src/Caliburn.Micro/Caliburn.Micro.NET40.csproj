@@ -41,6 +41,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
@@ -114,6 +115,7 @@
     <Compile Include="TaskResult.cs" />
     <Compile Include="ViewAttachedEventArgs.cs" />
     <Compile Include="ViewAware.cs" />
+    <Compile Include="WeakValueDictionary.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Caliburn.snk">

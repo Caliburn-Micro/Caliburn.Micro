@@ -135,7 +135,7 @@
         /// </summary>
 #if WinRT81
         protected override void OnAttached() {
-            if (!Caliburn.Micro.Execute.InDesignMode) {
+            if (!View.InDesignMode) {
                 Parameters.Attach(AssociatedObject);
                 Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
 
@@ -160,7 +160,7 @@
         }
 #else
         protected override void OnAttached() {
-            if (!Execute.InDesignMode) {
+            if (!View.InDesignMode) {
                 Parameters.Attach(AssociatedObject);
                 Parameters.Apply(x => x.MakeAwareOf(this));
 
@@ -184,7 +184,7 @@
         /// Called when the action is being detached from its AssociatedObject, but before it has actually occurred.
         /// </summary>
         protected override void OnDetaching() {
-            if (!Caliburn.Micro.Execute.InDesignMode) {
+            if (!View.InDesignMode) {
                 Detaching(this, EventArgs.Empty);
                 AssociatedObject.Loaded -= ElementLoaded;
                 Parameters.Detach();
@@ -288,7 +288,7 @@
         /// <summary>
         /// Forces an update of the UI's Enabled/Disabled state based on the the preconditions associated with the method.
         /// </summary>
-        public void UpdateAvailability() {
+        public virtual void UpdateAvailability() {
             if (context == null)
                 return;
 
@@ -353,31 +353,30 @@
         /// <remarks>Returns a value indicating whether or not the action is available.</remarks>
         public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context => {
 #if WINDOWS_PHONE
-            if (context.Message.applicationBarSource != null) {
-                if(context.CanExecute != null)
-                    context.Message.applicationBarSource.IsEnabled = context.CanExecute();
-                return context.Message.applicationBarSource.IsEnabled;
+            var message = context.Message;
+            if (message != null && message.applicationBarSource != null) {
+                if (context.CanExecute != null) {
+                    message.applicationBarSource.IsEnabled = context.CanExecute();
+                }
+                return message.applicationBarSource.IsEnabled;
             }
 #endif
 
 #if SILVERLIGHT || WinRT
-            if (!(context.Source is Control)) {
-                return true;
-            }
-#endif
-
-#if SILVERLIGHT || WinRT
-            var source = (Control)context.Source;
-            if (ConventionManager.HasBinding(source, Control.IsEnabledProperty)) {
-                return source.IsEnabled;
-            }
+            var source = context.Source as Control;
 #else
             var source = context.Source;
-            if (ConventionManager.HasBinding(source, UIElement.IsEnabledProperty)){
-                return source.IsEnabled;
-            }
 #endif
-            if (context.CanExecute != null) {
+            if (source == null) {
+                return true;
+            }
+
+#if SILVERLIGHT || WinRT
+            var hasBinding = ConventionManager.HasBinding(source, Control.IsEnabledProperty);
+#else
+            var hasBinding = ConventionManager.HasBinding(source, UIElement.IsEnabledProperty);
+#endif
+            if (!hasBinding && context.CanExecute != null) {
                 source.IsEnabled = context.CanExecute();
             }
 

@@ -78,9 +78,7 @@
     <Compile Include="win8\INavigationService.cs" />
     <Compile Include="win8\Parameter.cs" />
     <Compile Include="win8\XamlMetadataProvider.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.Caliburn.Micro.Platform.WIN81.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">

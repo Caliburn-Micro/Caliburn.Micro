@@ -35,6 +35,7 @@
 
             <StackPanel Grid.Column="1">
                 <Button x:Name="Open" Content="Open Settings"/>
+                <Button x:Name="ShowIndependent" Content="Open Independent Settings"/>
             </StackPanel>
 
         </Grid>

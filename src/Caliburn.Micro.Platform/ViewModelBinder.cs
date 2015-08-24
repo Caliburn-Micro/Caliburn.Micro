@@ -181,7 +181,7 @@
 #if !WinRT
             // when using d:DesignInstance, Blend tries to assign the DesignInstanceExtension class as the DataContext,
             // so here we get the actual ViewModel which is in the Instance property of DesignInstanceExtension
-            if (Execute.InDesignMode) {
+            if (View.InDesignMode) {
                 var vmType = viewModel.GetType();
                 if (vmType.FullName == "Microsoft.Expression.DesignModel.InstanceBuilders.DesignInstanceExtension") {
                     var propInfo = vmType.GetProperty("Instance", BindingFlags.Instance | BindingFlags.NonPublic);

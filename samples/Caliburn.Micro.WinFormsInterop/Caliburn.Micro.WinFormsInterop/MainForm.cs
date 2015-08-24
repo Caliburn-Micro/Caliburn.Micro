@@ -13,7 +13,7 @@ namespace Caliburn.Micro.WinFormsInterop
         protected override void OnLoad(EventArgs e)
         {
             var bootstrapper = new InteropBootstrapper(elementHost1);
-            bootstrapper.Start();
+            bootstrapper.Initialize();
 
             base.OnLoad(e);
         }

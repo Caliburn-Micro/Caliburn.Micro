@@ -177,7 +177,9 @@ The back button is bound through Action conventions to the method GoBack and pro
 
 This method returns a settings service interface that you can use register commands with, the generic paramter is the type of the view model you wish to display. The second is the label of the settings section to be used in the charm.
 
-Caliburn will then use it's default behavior to locate the view for your view model and display it as a settings flyout.</value>
+Caliburn will then use it's default behavior to locate the view for your view model and display it as a settings flyout.
+
+If you want you can also trigger the flyout directly using the SettingWindowManager and the independent parameter.</value>
   </data>
   <data name="SetupExplanation.Text" xml:space="preserve">
     <value>Unlike other versions of Caliburn Micro the WinRT version doesn't use a Bootstrapper, the non ranty reason for this is that Windows.UI.Xaml.Application exposes most of it's functionality through method overrides and not events. Therefore it makes sense to have a custom Application rather than forcing the developer to wire the application to the bootstrapper.

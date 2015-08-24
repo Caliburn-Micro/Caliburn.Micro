@@ -17,6 +17,7 @@
     <SilverlightApplication>false</SilverlightApplication>
     <ValidateXaml>true</ValidateXaml>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <BaseIntermediateOutputPath>..\..\obj\sl5\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <!-- This property group is only here to support building this project using the 
        MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
@@ -55,6 +56,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core">
@@ -131,6 +133,7 @@
     <Compile Include="TaskResult.cs" />
     <Compile Include="ViewAttachedEventArgs.cs" />
     <Compile Include="ViewAware.cs" />
+    <Compile Include="WeakValueDictionary.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Caliburn.snk">

@@ -2,10 +2,12 @@
     using System;
     using System.ComponentModel;
     using System.Linq.Expressions;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// A base class that implements the infrastructure for property change notification and automatically performs UI thread marshalling.
     /// </summary>
+    [DataContract]
     public class PropertyChangedBase : INotifyPropertyChangedEx {
         /// <summary>
         /// Creates an instance of <see cref = "PropertyChangedBase" />.
@@ -27,7 +29,7 @@
         /// <summary>
         /// Raises a change notification indicating that all bindings should be refreshed.
         /// </summary>
-        public void Refresh() {
+        public virtual void Refresh() {
             NotifyOfPropertyChange(string.Empty);
         }
 
@@ -35,7 +37,11 @@
         /// Notifies subscribers of the property change.
         /// </summary>
         /// <param name = "propertyName">Name of the property.</param>
+#if NET || SILVERLIGHT
         public virtual void NotifyOfPropertyChange(string propertyName) {
+#else
+        public virtual void NotifyOfPropertyChange([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null) {
+#endif
             if (IsNotifying) {
                 Execute.OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
             }

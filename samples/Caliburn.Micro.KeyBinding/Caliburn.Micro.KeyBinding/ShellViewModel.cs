@@ -20,5 +20,10 @@
         public void EnterPressed() {
             EnterMessage = "Enter has been pressed";
         }
+
+        public void CtrlEnterPressed()
+        {
+           EnterMessage = "Ctrl+Enter has been pressed";
+        }
     }
 }

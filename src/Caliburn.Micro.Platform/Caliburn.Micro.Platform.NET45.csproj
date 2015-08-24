@@ -46,10 +46,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\net45\System.Windows.Interactivity.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -98,6 +95,7 @@
     <None Include="..\Caliburn.snk">
       <Link>Caliburn.snk</Link>
     </None>
+    <None Include="packages.Caliburn.Micro.Platform.NET45.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">
