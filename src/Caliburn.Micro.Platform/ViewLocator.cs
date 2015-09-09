@@ -438,7 +438,7 @@ namespace Caliburn.Micro
         };
 
         /// <summary>
-        ///   When a view does not contain a code-behind file, we need to automatically call InitializeCompoent.
+        ///   When a view does not contain a code-behind file, we need to automatically call InitializeComponent.
         /// </summary>
         /// <param name = "element">The element to initialize</param>
         public static void InitializeComponent(object element) {
@@ -447,7 +447,7 @@ namespace Caliburn.Micro
                 .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
 #else
             var method = element.GetType().GetTypeInfo()
-                .GetDeclaredMethod("InitializeComponent");
+                .GetDeclaredMethods("InitializeComponent").FirstOrDefault();
 #endif
 
             if (method == null)
