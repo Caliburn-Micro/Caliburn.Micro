@@ -447,7 +447,8 @@ namespace Caliburn.Micro
                 .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
 #else
             var method = element.GetType().GetTypeInfo()
-                .GetDeclaredMethod("InitializeComponent");
+                .GetDeclaredMethods("InitializeComponent")
+                .SingleOrDefault(m => m.GetParameters().Length == 0);
 #endif
 
             if (method == null)
