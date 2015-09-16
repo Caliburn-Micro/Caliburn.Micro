@@ -43,3 +43,4 @@ nuget/*/lib/
 *.docstates
 packages/
 project.lock.json
+.vs
