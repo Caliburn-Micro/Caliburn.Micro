@@ -191,7 +191,7 @@
                 info,
                 binding
                 );
-#elif WinRT81
+#elif WinRT81 || NET
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
         };
