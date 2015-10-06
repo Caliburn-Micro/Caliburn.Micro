@@ -77,7 +77,7 @@ namespace Caliburn.Micro
         {
             // if 'transparent' is entered in the app manifest, return Windows.UI.Colors.Transparent
             // in order to prevent parsing failures
-            if (hexValue == "transparent")
+            if (String.Equals(hexValue, "transparent", StringComparison.OrdinalIgnoreCase))
                 return Windows.UI.Colors.Transparent;
                 
             hexValue = hexValue.Replace("#", string.Empty);
