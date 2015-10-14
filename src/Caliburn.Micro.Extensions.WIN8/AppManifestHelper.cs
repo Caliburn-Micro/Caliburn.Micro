@@ -75,6 +75,11 @@ namespace Caliburn.Micro
 
         private static Windows.UI.Color ToColor(string hexValue)
         {
+            // if 'transparent' is entered in the app manifest, return Windows.UI.Colors.Transparent
+            // in order to prevent parsing failures
+            if (String.Equals(hexValue, "transparent", StringComparison.OrdinalIgnoreCase))
+                return Windows.UI.Colors.Transparent;
+                
             hexValue = hexValue.Replace("#", string.Empty);
 
             // some loose validation (not bullet-proof)
