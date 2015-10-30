@@ -23,8 +23,17 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name="format">A formatted message.</param>
         /// <param name="args">Parameters to be injected into the formatted message.</param>
+        public void Debug(string format, params object[] args) {
+            System.Diagnostics.Debug.WriteLine("[{1}] DEBUG: {0}", string.Format(format, args), typeName);
+        }
+
+        /// <summary>
+        /// Logs the message as info.
+        /// </summary>
+        /// <param name="format">A formatted message.</param>
+        /// <param name="args">Parameters to be injected into the formatted message.</param>
         public void Info(string format, params object[] args) {
-            Debug.WriteLine("[{1}] INFO: {0}", string.Format(format, args), typeName);
+            System.Diagnostics.Debug.WriteLine("[{1}] INFO: {0}", string.Format(format, args), typeName);
         }
 
         /// <summary>
@@ -33,7 +42,7 @@ namespace Caliburn.Micro {
         /// <param name="format">A formatted message.</param>
         /// <param name="args">Parameters to be injected into the formatted message.</param>
         public void Warn(string format, params object[] args) {
-            Debug.WriteLine("[{1}] WARN: {0}", string.Format(format, args), typeName);
+            System.Diagnostics.Debug.WriteLine("[{1}] WARN: {0}", string.Format(format, args), typeName);
         }
 
         /// <summary>
@@ -41,7 +50,27 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name="exception">The exception.</param>
         public void Error(Exception exception) {
-            Debug.WriteLine("[{1}] ERROR: {0}", exception, typeName);
+            System.Diagnostics.Debug.WriteLine("[{1}] ERROR: {0}", exception, typeName);
+        }
+
+        /// <summary>
+        /// Logs the exception.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <param name="format">A formatted message.</param>
+        /// <param name="args">Parameters to be injected into the formatted message.</param>
+        public void Error(Exception exception, string format, params object[] args) {
+            System.Diagnostics.Debug.WriteLine("[{1}] ERROR: {0}", string.Format(format, args), typeName);
+            System.Diagnostics.Debug.WriteLine("{0}", exception);
+        }
+
+        /// <summary>
+        /// Logs the message as error.
+        /// </summary>
+        /// <param name="format">A formatted message.</param>
+        /// <param name="args">Parameters to be injected into the formatted message.</param>
+        public void Error(string format, params object[] args) {
+            System.Diagnostics.Debug.WriteLine("[{1}] ERROR: {0}", string.Format(format, args), typeName);
         }
     }
 }
