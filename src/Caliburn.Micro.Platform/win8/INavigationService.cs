@@ -479,7 +479,7 @@ namespace Caliburn.Micro {
 
             BindViewModel(view);
 
-            if (Window.Current.Content != frame)
+            if (Window.Current.Content == null)
                 Window.Current.Content = frame;
 
             Window.Current.Activate();

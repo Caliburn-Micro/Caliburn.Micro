@@ -229,7 +229,7 @@
             RootFrame.Navigate(viewType, paramter);
 
             // Seems stupid but observed weird behaviour when resetting the Content
-            if (Window.Current.Content != RootFrame)
+            if (Window.Current.Content == null)
                 Window.Current.Content = RootFrame;
 
             Window.Current.Activate();
