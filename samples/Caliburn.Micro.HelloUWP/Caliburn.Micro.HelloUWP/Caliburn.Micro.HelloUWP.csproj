@@ -140,12 +140,6 @@
     <Reference Include="Caliburn.Micro.Platform.UWP">
       <HintPath>..\..\..\bin\uwp\Debug\Caliburn.Micro.Platform.UWP.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Xaml.Interactions">
-      <HintPath>..\..\..\bin\uwp\Debug\Microsoft.Xaml.Interactions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Xaml.Interactivity">
-      <HintPath>..\..\..\bin\uwp\Debug\Microsoft.Xaml.Interactivity.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\DeviceView.DeviceFamily-Mobile.xaml">

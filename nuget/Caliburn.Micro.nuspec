@@ -22,6 +22,9 @@
       <group>
         <dependency id="Caliburn.Micro.Core" version="[3.0.0-beta1]" />
       </group>
+      <group targetFramework="uap10.0">
+        <dependency id="Microsoft.Xaml.Behaviors.Uwp.Managed" version="1.0.0" />
+      </group>
     </dependencies>
   </metadata>
 
@@ -50,7 +53,6 @@
     <file src="..\bin\iOS\Release\Caliburn.Micro.*.*" target="lib\MonoTouch10" />
 
     <file src="..\bin\uwp\Release\Caliburn.Micro.*.*" target="lib\uap10.0" />
-    <file src="..\bin\uwp\Release\Microsoft.Xaml.*.*" target="lib\uap10.0" />
     <file src="..\bin\uwp\Release\Caliburn.Micro.Platform.UWP\Properties\Caliburn.Micro.Platform.UWP.rd.xml" target="lib\uap10.0\Caliburn.Micro.Platform.UWP\Properties\Caliburn.Micro.Platform.UWP.rd.xml" />
     
     <file src="..\src\*.cs" target="src" />
