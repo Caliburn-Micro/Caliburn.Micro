@@ -42,3 +42,4 @@ nuget/*/lib/
 *.vs10x
 *.docstates
 packages/
+.vs
