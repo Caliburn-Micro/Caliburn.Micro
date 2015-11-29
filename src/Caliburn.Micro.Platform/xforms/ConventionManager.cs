@@ -26,7 +26,7 @@
         public static bool OverwriteContent = false;
 
         private static readonly Func<object> CreateDefaultItemTemplate = () => {
-            
+
             var content = new ContentView
             {
                 HorizontalOptions = LayoutOptions.FillAndExpand,
@@ -35,7 +35,12 @@
 
             content.SetBinding(View.ModelProperty, new Binding());
 
-            return content;
+            var cell = new ViewCell
+            {
+                View = content
+            };
+
+            return cell;
         };
 
         /// <summary>
