@@ -20,7 +20,7 @@
 
     <dependencies>
       <group>
-        <dependency id="Caliburn.Micro" version="[3.0.0-beta1]" />
+        <dependency id="Caliburn.Micro" version="[3.0.0-beta2]" />
       </group>
     </dependencies>
   </metadata>
