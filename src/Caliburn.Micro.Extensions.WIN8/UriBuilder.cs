@@ -4,6 +4,10 @@
     using System.Linq;
     using System.Linq.Expressions;
 
+#if WinRT81 || WP81
+    using Windows.UI.Xaml.Media.Animation;
+#endif
+
     /// <summary>
     /// Builds a Uri in a strongly typed fashion, based on a ViewModel.
     /// </summary>
@@ -11,6 +15,10 @@
     public class UriBuilder<TViewModel> {
         readonly Dictionary<string, string> queryString = new Dictionary<string, string>();
         INavigationService navigationService;
+
+#if WinRT81 || WP81
+        NavigationTransitionInfo infoOverride;
+#endif
 
         /// <summary>
         /// Adds a query string parameter to the Uri.
@@ -26,6 +34,18 @@
 
             return this;
         }
+
+#if WinRT81 || WP81
+        /// <summary>
+        /// Overrides the animated transition defined in the page.
+        /// </summary>
+        /// <param name="infoOverride">Info about the animated transition.</param>
+        /// <returns>Itself</returns>
+        public UriBuilder<TViewModel> WithTransition(NavigationTransitionInfo infoOverride) {
+            this.infoOverride = infoOverride;
+            return this;
+        }
+#endif
 
         /// <summary>
         /// Attaches a navigation servies to this builder.
@@ -46,7 +66,9 @@
             if (navigationService == null) {
                 throw new InvalidOperationException("Cannot navigate without attaching an INavigationService. Call AttachTo first.");
             }
-#if WinRT
+#if WinRT81 || WP81
+            navigationService.NavigateToViewModel<TViewModel>(uri.AbsoluteUri, infoOverride);
+#elif WinRT
             navigationService.NavigateToViewModel<TViewModel>(uri.AbsoluteUri);
 #else
             navigationService.Navigate(uri);
