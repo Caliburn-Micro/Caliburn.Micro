@@ -26,36 +26,12 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
             }
         }
 
-        public string Input
-        {
-            get
-            {
-                return input;
-            }
-            set
-            {
-                this.Set(ref input, value);
-            }
-        }
-
-        public string Input2
-        {
-            get
-            {
-                return input2;
-            }
-            set
-            {
-                this.Set(ref input2, value);
-            }
-        }
-
         public void SimpleSayHello()
         {
             Output = "Hello from Caliburn.Micro";
         }
 
-        public async Task SimpleSayHelloAsync()
+        public async Task AsyncSayHelloAsync()
         {
             await Task.Delay(0);
 
@@ -64,7 +40,7 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
 
         public void SayHello(string name)
         {
-            Output = String.Format("Hello {0} from Caliburn.Micro", Input);
+            Output = String.Format("Hello {0} from Caliburn.Micro", name);
         }
 
         public bool CanSayHello(string name)
@@ -75,7 +51,8 @@ namespace Caliburn.Micro.WinRT.Sample.ViewModels
         public async Task SayHello2Async(string name)
         {
             await Task.Delay(0);
-            Output = String.Format("Hello {0} from Caliburn.Micro (async)", Input);
+
+            Output = String.Format("Hello {0} from Caliburn.Micro (async)", name);
         }
 
         // Notice that the guard method is sync and is missing the Async suffix.
