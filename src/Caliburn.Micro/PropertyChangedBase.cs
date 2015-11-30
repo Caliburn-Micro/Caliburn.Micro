@@ -10,21 +10,44 @@
     [DataContract]
     public class PropertyChangedBase : INotifyPropertyChangedEx {
         /// <summary>
+        /// Store for the <see cref="IsNotifying"/> property.
+        /// </summary>
+        private bool? isNotifying = null;
+        
+        /// <summary>
         /// Creates an instance of <see cref = "PropertyChangedBase" />.
         /// </summary>
         public PropertyChangedBase() {
-            IsNotifying = true;
+            InitialIsNotifying = true;
         }
 
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        
+        /// <summary>
+        /// The initial value of the <see cref="IsNotifying"/> property.
+        /// </summary>
+        /// <remarks>
+        /// <para>Use only in constructors.</para>
+        /// <para>As setting a value to the <see cref="IsNotifying"/> property in constructors is not recommended 
+        /// as the property is virtual and might call overriden getters and setters before the respective 
+        /// constructor in the derived class is called, this property should be used instead.</para>
+        /// </remarks>
+        protected bool InitialIsNotifying { get; set; }
 
         /// <summary>
         /// Enables/Disables property change notification.
         /// </summary>
-        public bool IsNotifying { get; set; }
+        /// <remarks>
+        /// Do not set a value of this property in constructors. 
+        /// In this case, use <see cref="InitialIsNotifying"/> property instead.
+        /// </remarks>
+        public virtual bool IsNotifying { 
+            get { return isNotifying.HasValue ? isNotifying.Value : InitialIsNotifying; }
+            set { isNotifying = value; }
+        }
 
         /// <summary>
         /// Raises a change notification indicating that all bindings should be refreshed.
