@@ -7,7 +7,7 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock x:Name="Title" Text="Default device view" Style="{StaticResource SubheaderTextBlockStyle}" Margin="24,48,24,24" />
+        <TextBlock x:Name="Title" Text="Default device view" Style="{StaticResource SubheaderTextBlockStyle}" Margin="24,0,24,24" />
         <Button Content="Test" Click="Test" />
     </Grid>
 </Page>

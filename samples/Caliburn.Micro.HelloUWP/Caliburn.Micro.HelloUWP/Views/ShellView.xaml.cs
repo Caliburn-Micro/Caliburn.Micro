@@ -9,10 +9,6 @@ namespace Caliburn.Micro.HelloUWP.Views
         {
             InitializeComponent();
         }
-
-        private void OpenNavigationView(object sender, RoutedEventArgs e)
-        {
-            NavigationView.IsPaneOpen = true;
-        }
+     
     }
 }

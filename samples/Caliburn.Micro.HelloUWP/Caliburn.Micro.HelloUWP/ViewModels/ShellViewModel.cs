@@ -11,6 +11,19 @@ namespace Caliburn.Micro.HelloUWP.ViewModels
         private INavigationService _navigationService;
         private bool _resume;
 
+        private bool _isPaneOpen=true;
+        public bool IsPaneOpen
+        {
+            get
+            {
+                return _isPaneOpen;
+            }
+            set
+            {
+                _isPaneOpen = value;
+                NotifyOfPropertyChange(() => IsPaneOpen);
+            }
+        }
         public ShellViewModel(WinRTContainer container, IEventAggregator eventAggregator)
         {
             _container = container;
@@ -38,13 +51,22 @@ namespace Caliburn.Micro.HelloUWP.ViewModels
         public void ShowDevices()
         {
             _navigationService.For<DeviceViewModel>().Navigate();
+            IsPaneOpen = false;
         }
-
+        public void ShowBindings()
+        {
+            _navigationService.For<BindingsViewModel>().Navigate();
+            IsPaneOpen = false;
+        }
         public void Handle(SuspendStateMessage message)
         {
             _navigationService.SuspendState();
         }
 
+        public void OpenClosePane()
+        {
+            IsPaneOpen=!IsPaneOpen;
+        }
         public void Handle(ResumeStateMessage message)
         {
             _resume = true;

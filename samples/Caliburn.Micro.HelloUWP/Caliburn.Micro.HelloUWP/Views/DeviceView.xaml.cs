@@ -12,7 +12,7 @@ namespace Caliburn.Micro.HelloUWP.Views
 
         private void Test(object sender, RoutedEventArgs e)
         {
-            Title.Text = "Cliced";
+            Title.Text = "Clicked";
         }
     }
 }
