@@ -443,7 +443,7 @@
             {
                 return;
             }
-            var possibleGuardNames = BuildPossibleGuardNames(context).ToList();
+            var possibleGuardNames = BuildPossibleGuardNames(context.Method).ToList();
 
             var guard = TryFindGuardMethod(context, possibleGuardNames);
 
@@ -532,19 +532,27 @@
             return guard;
         }
 
-        static IEnumerable<string> BuildPossibleGuardNames(ActionExecutionContext context) {
+        /// <summary>
+        /// Returns the list of possible names of guard methods / properties for the given method.
+        /// </summary>
+        public static Func<MethodInfo, IEnumerable<string>> BuildPossibleGuardNames = method => {
+
+            var guardNames = new List<string>();
 
             const string GuardPrefix = "Can";
 
-            var methodName = context.Method.Name;
-            yield return GuardPrefix + methodName;
+            var methodName = method.Name;
+
+            guardNames.Add(GuardPrefix + methodName);
 
             const string AsyncMethodSuffix = "Async";
-            if (methodName.EndsWith(AsyncMethodSuffix, StringComparison.OrdinalIgnoreCase))
-            {
-                yield return GuardPrefix + methodName.Substring(0, methodName.Length - AsyncMethodSuffix.Length);
+
+            if (methodName.EndsWith(AsyncMethodSuffix, StringComparison.OrdinalIgnoreCase)) {
+                guardNames.Add(GuardPrefix + methodName.Substring(0, methodName.Length - AsyncMethodSuffix.Length));
             }
-        }
+
+            return guardNames;
+        };
 
         static MethodInfo GetMethodInfo(Type t, string methodName)
         {
