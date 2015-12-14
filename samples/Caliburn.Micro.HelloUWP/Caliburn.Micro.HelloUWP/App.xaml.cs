@@ -25,7 +25,8 @@ namespace Caliburn.Micro.HelloUWP
             _container
                 .PerRequest<ShellViewModel>()
                 .PerRequest<DeviceViewModel>()
-                .PerRequest<BindingsViewModel>();
+                .PerRequest<BindingItemTemplatesViewModel>()
+                .PerRequest<BindingConventionsViewModel>();
 
             _eventAggregator = _container.GetInstance<IEventAggregator>();
         }

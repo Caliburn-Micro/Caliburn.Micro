@@ -101,11 +101,16 @@
     <Compile Include="Messages\SuspendStateMessage.cs" />
     <Compile Include="Models\DeveloperViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\BindingsViewModel.cs" />
+    <Compile Include="ViewModels\BindingConventionsViewModel.cs" />
+    <Compile Include="ViewModels\BindingItemTemplatesViewModel.cs" />
     <Compile Include="ViewModels\DeviceViewModel.cs" />
+    <Compile Include="ViewModels\SampleViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
-    <Compile Include="Views\BindingsView.xaml.cs">
-      <DependentUpon>BindingsView.xaml</DependentUpon>
+    <Compile Include="Views\BindingConventionsView.xaml.cs">
+      <DependentUpon>BindingConventionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BindingItemTemplatesView.xaml.cs">
+      <DependentUpon>BindingItemTemplatesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DeviceView.xaml.cs">
       <DependentUpon>DeviceView.xaml</DependentUpon>
@@ -138,11 +143,18 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Resources\StandardStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\BindingConventionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
-    <Page Include="Views\BindingsView.xaml">
+    <Page Include="Views\BindingItemTemplatesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DeveloperView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -153,6 +165,10 @@
     <Page Include="Views\DeviceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SampleView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ShellView.xaml">
       <SubType>Designer</SubType>

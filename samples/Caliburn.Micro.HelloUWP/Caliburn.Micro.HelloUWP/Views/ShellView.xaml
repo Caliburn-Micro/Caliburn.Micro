@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    
+
     <Page.Resources>
         <SolidColorBrush x:Key="AccentBrush" Color="#FF34495E" />
     </Page.Resources>
@@ -18,13 +18,17 @@
         </Grid.RowDefinitions>
         <SplitView x:Name="NavigationView" IsPaneOpen="{Binding IsPaneOpen}" Grid.Column="1" DisplayMode="Inline" Grid.Row="1">
             <SplitView.Pane>
-                <RelativePanel Margin="10,0,0,0">
-                    <StackPanel Margin="4,4,0,0">
-                         <Button x:Name="ShowDevices" Content="Device Specific Views" Margin="4" />
-                         <Button x:Name="ShowBindings" Content="Bindings ItemTemplate" Margin="4"/>
-                    </StackPanel>
+                <ListBox x:Name="Samples" 
+                 SelectionMode="Single" HorizontalAlignment="Left" Background="Transparent" BorderThickness="0"
+                 VerticalAlignment="Top"  Margin="0,10,0,0" >
 
-                </RelativePanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Title}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
             </SplitView.Pane>
             <SplitView.Content>
                 <Grid>
