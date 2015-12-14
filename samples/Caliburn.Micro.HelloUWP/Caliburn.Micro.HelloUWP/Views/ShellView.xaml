@@ -6,24 +6,45 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    
+
     <Page.Resources>
         <SolidColorBrush x:Key="AccentBrush" Color="#FF34495E" />
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <SplitView x:Name="NavigationView" DisplayMode="Overlay" OpenPaneLength="120">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <SplitView x:Name="NavigationView" IsPaneOpen="{Binding IsPaneOpen}" Grid.Column="1" DisplayMode="Inline" Grid.Row="1">
             <SplitView.Pane>
-                <StackPanel Background="{ThemeResource AccentBrush}">
-                    <Button x:Name="ShowDevices" Content="Device Specific Views" Margin="24" />
-                </StackPanel>
+                <ListBox x:Name="Samples" 
+                 SelectionMode="Single" HorizontalAlignment="Left" Background="Transparent" BorderThickness="0"
+                 VerticalAlignment="Top"  Margin="0,10,0,0" >
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Title}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
             </SplitView.Pane>
             <SplitView.Content>
                 <Grid>
                     <Frame cm:Message.Attach="[Event Loaded] = [SetupNavigationService($source)]" DataContext="{x:Null}" />
-                    <Button Click="OpenNavigationView" Content="&#xE700;" FontFamily="{ThemeResource SymbolThemeFontFamily}" VerticalAlignment="Top" Margin="24" />
                 </Grid>
             </SplitView.Content>
         </SplitView>
+        <StackPanel x:Name="HeaderPanel" Orientation="Horizontal">
+            <Border Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}" Grid.Row="0">
+                <ToggleButton x:Name="OpenClosePane"   VerticalAlignment="Top" Foreground="{ThemeResource ApplicationForegroundThemeBrush}">
+                    <ToggleButton.Content>
+                        <FontIcon x:Name="Hamburger" FontFamily="Segoe MDL2 Assets" Glyph="&#xE700;" Margin="0,4,4,4"/>
+                    </ToggleButton.Content>
+                </ToggleButton>
+            </Border>
+            <TextBlock x:Name="Header" Text="Caliburn Micro UWP" Style="{StaticResource SubtitleTextBlockStyle}" Margin="12,12,0,0" />
+        </StackPanel>
     </Grid>
 </Page>
