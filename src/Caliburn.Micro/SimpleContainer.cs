@@ -223,7 +223,7 @@
         }
 
         static ConstructorInfo SelectEligibleConstructor(Type type) {
-            return (from c in type.GetConstructors()
+            return (from c in type.GetConstructors().Where(c => c.IsPublic)
                     orderby c.GetParameters().Length descending
                     select c).FirstOrDefault();
         }

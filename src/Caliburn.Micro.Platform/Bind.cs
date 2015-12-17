@@ -78,7 +78,7 @@
         }
 
         static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (Execute.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
+            if (View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
                 return;
             }
 
@@ -91,6 +91,7 @@
                 var target = e.NewValue;
                 var containerKey = e.NewValue as string;
                 if (containerKey != null) {
+                    LogManager.GetLog(typeof(Bind)).Info("Using IoC is deprecated and will be removed in v3.0");
                     target = IoC.GetInstance(null, containerKey);
                 }
 
@@ -105,7 +106,7 @@
         }
 
         static void ModelWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (Execute.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
+            if (View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
                 return;
             }
 
@@ -118,6 +119,7 @@
                 var target = e.NewValue;
                 var containerKey = e.NewValue as string;
                 if (containerKey != null) {
+                    LogManager.GetLog(typeof(Bind)).Info("Using IoC is deprecated and will be removed in v3.0");
                     target = IoC.GetInstance(null, containerKey);
                 }
 
@@ -165,7 +167,7 @@
         }
 
         static void AtDesignTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (!Execute.InDesignMode)
+            if (!View.InDesignMode)
                 return;
 
             var atDesignTime = (bool) e.NewValue;
@@ -184,7 +186,7 @@
                 );
 
         static void DataContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (!Execute.InDesignMode)
+            if (!View.InDesignMode)
                 return;
 
             var enable = d.GetValue(AtDesignTimeProperty);

@@ -12,6 +12,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
+    using System.Windows.Media.Media3D;
 #endif
 
     /// <summary>
@@ -123,11 +124,11 @@
                 }
 
 #if NET
-                var childCount = (current is UIElement || current is UIElement3D || current is ContainerVisual
-                                        ? VisualTreeHelper.GetChildrenCount(current)
-                                        : 0);
+                var childCount = (current is Visual || current is Visual3D)
+                    ? VisualTreeHelper.GetChildrenCount(current) : 0;
 #else
-                var childCount = VisualTreeHelper.GetChildrenCount(current);
+                var childCount = (current is UIElement)
+                    ? VisualTreeHelper.GetChildrenCount(current) : 0;
 #endif
                 if (childCount > 0) {
                     for (var i = 0; i < childCount; i++) {
@@ -245,20 +246,18 @@
                     }
 
 #endif
-                    else {
-                        var currentType = current.GetType();
+                    var currentType = current.GetType();
 
-                        if (!NonResolvableChildTypes.ContainsKey(currentType)) {
-                            var canResolve = ChildResolverFilters.Any(f => f(currentType));
+                    if (!NonResolvableChildTypes.ContainsKey(currentType)) {
+                        var canResolve = ChildResolverFilters.Any(f => f(currentType));
 
-                            if (!canResolve) {
-                                NonResolvableChildTypes[currentType] = null;
-                            }
-                            else {
-                                ChildResolvers.SelectMany(r => r(current) ?? Enumerable.Empty<DependencyObject>())
-                                              .Where(c => c != null)
-                                              .Apply(queue.Enqueue);
-                            }
+                        if (!canResolve) {
+                            NonResolvableChildTypes[currentType] = null;
+                        }
+                        else {
+                            ChildResolvers.SelectMany(r => r(current) ?? Enumerable.Empty<DependencyObject>())
+                                .Where(c => c != null)
+                                .Apply(queue.Enqueue);
                         }
                     }
                 }
@@ -353,10 +352,6 @@
             public DependencyObject Root {
                 get { return root; }
                 set {
-                    if (path.Count > 0 && !path.ContainsKey(value)) {
-                        throw new ArgumentException("Value is not a hop source in the route.");
-                    }
-
                     if (path.ContainsValue(value)) {
                         throw new ArgumentException("Value is a target of some route hop; cannot be a root.");
                     }

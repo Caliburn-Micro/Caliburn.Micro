@@ -89,7 +89,7 @@
         /// </summary>
         /// <param name = "context">The context denoting which view to retrieve.</param>
         /// <returns>The view.</returns>
-        public object GetView(object context = null) {
+        public virtual object GetView(object context = null) {
             object view;
             Views.TryGetValue(context ?? DefaultContext, out view);
             return view;

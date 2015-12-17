@@ -3,6 +3,7 @@
     using System.Linq;
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Threading.Tasks;
 #if WinRT && !WinRT81
     using Windows.UI.Xaml;
     using Windows.UI.Interactivity;
@@ -22,6 +23,8 @@
     /// Binds a view to a view model.
     /// </summary>
     public static class ViewModelBinder {
+        const string AsyncSuffix = "Async";
+
         static readonly ILog Log = LogManager.GetLog(typeof(ViewModelBinder));
 
         /// <summary>
@@ -119,7 +122,12 @@
 
             foreach (var method in methods) {
                 var foundControl = unmatchedElements.FindName(method.Name);
-                if (foundControl == null) {
+                if (foundControl == null && IsAsyncMethod(method)) {
+                    var methodNameWithoutAsyncSuffix = method.Name.Substring(0, method.Name.Length - AsyncSuffix.Length);
+                    foundControl = unmatchedElements.FindName(methodNameWithoutAsyncSuffix);
+                }
+
+                if(foundControl == null) {
                     Log.Info("Action Convention Not Applied: No actionable element for {0}.", method.Name);
                     continue;
                 }
@@ -168,6 +176,11 @@
             return unmatchedElements;
         };
 
+        static bool IsAsyncMethod(MethodInfo method) {
+            return typeof(Task).IsAssignableFrom(method.ReturnType) &&
+                   method.Name.EndsWith(AsyncSuffix, StringComparison.OrdinalIgnoreCase);
+        }
+
         /// <summary>
         /// Allows the developer to add custom handling of named elements which were not matched by any default conventions.
         /// </summary>
@@ -181,7 +194,7 @@
 #if !WinRT
             // when using d:DesignInstance, Blend tries to assign the DesignInstanceExtension class as the DataContext,
             // so here we get the actual ViewModel which is in the Instance property of DesignInstanceExtension
-            if (Execute.InDesignMode) {
+            if (View.InDesignMode) {
                 var vmType = viewModel.GetType();
                 if (vmType.FullName == "Microsoft.Expression.DesignModel.InstanceBuilders.DesignInstanceExtension") {
                     var propInfo = vmType.GetProperty("Instance", BindingFlags.Instance | BindingFlags.NonPublic);

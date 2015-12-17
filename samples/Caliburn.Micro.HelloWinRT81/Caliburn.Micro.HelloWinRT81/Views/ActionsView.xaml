@@ -48,9 +48,14 @@
                     <TextBlock x:Name="Output" Style="{StaticResource ItemTextStyle}"/>
                 </StackPanel>
                 <Button x:Name="SimpleSayHello" Content="Simple Say Hello" Margin="-3,0,0,0" />
-                <StackPanel Orientation="Horizontal" Margin="0,20">
+                <Button x:Name="AsyncSayHello" Content="Simple Say Hello (async)" Margin="-3,0,0,0" />
+                <StackPanel Margin="0,10" Orientation="Horizontal">
                     <TextBox x:Name="Input" Width="150" />
                     <Button Content="Say Hello with Parameter" caliburn:Message.Attach="SayHello(Input.Text)"/>
+                </StackPanel>
+                <StackPanel Margin="0,20" Orientation="Horizontal">
+                    <TextBox x:Name="AsyncInput" Width="150" />
+                    <Button Content="Say Hello with Parameter (async)" caliburn:Message.Attach="SayHello2Async(AsyncInput.Text)" />
                 </StackPanel>
                 <Rectangle Fill="{StaticResource MetroOrangeBrush}" Width="100" Height="100" HorizontalAlignment="Left"
                            caliburn:Message.Attach="[Event DoubleTapped] = [Action SimpleSayHello]"/>

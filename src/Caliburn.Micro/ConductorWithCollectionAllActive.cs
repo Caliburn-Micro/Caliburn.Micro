@@ -156,7 +156,7 @@
                 /// <summary>
                 /// Ensures that an item is ready to be activated.
                 /// </summary>
-                /// <param name="newItem"></param>
+                /// <param name="newItem">The item that is about to be activated.</param>
                 /// <returns>The item to be activated.</returns>
                 protected override T EnsureItem(T newItem) {
                     var index = items.IndexOf(newItem);

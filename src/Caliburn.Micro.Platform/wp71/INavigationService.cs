@@ -127,7 +127,10 @@
             var guard = fe.DataContext as IGuardClose;
             if(guard != null && !e.Uri.IsAbsoluteUri) {
                 var shouldCancel = false;
-                guard.CanClose(result => { shouldCancel = !result; });
+                var runningAsync = true;
+                guard.CanClose(result => { runningAsync = false; shouldCancel = !result; });
+                if (runningAsync)
+                    throw new NotSupportedException("Async CanClose is not supported.");
 
                 if(shouldCancel) {
                     e.Cancel = true;
