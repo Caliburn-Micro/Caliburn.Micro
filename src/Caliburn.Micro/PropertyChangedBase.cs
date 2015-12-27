@@ -23,8 +23,9 @@
 
         /// <summary>
         /// Enables/Disables property change notification.
+        /// Virtualized in order to help with document oriented view models.
         /// </summary>
-        public bool IsNotifying { get; set; }
+        public virtual bool IsNotifying { get; set; }
 
         /// <summary>
         /// Raises a change notification indicating that all bindings should be refreshed.

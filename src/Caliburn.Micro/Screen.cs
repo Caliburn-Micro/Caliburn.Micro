@@ -43,8 +43,9 @@
 
         /// <summary>
         /// Indicates whether or not this instance is currently active.
+        /// Virtualized in order to help with document oriented view models.
         /// </summary>
-        public bool IsActive {
+        public virtual bool IsActive {
             get { return isActive; }
             private set {
                 isActive = value;
@@ -54,8 +55,9 @@
 
         /// <summary>
         /// Indicates whether or not this instance is currently initialized.
+        /// Virtualized in order to help with document oriented view models.
         /// </summary>
-        public bool IsInitialized {
+        public virtual bool IsInitialized {
             get { return isInitialized; }
             private set {
                 isInitialized = value;
