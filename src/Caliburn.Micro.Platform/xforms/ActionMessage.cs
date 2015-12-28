@@ -74,6 +74,9 @@
         /// </summary>
         public event EventHandler Detaching = delegate { };
 
+        /// <summary>
+        ///  Called after the action is attached to an AssociatedObject.
+        /// </summary>
         protected override void OnAttached() {
             if (!View.InDesignMode) {
                 Parameters.Attach(AssociatedObject);

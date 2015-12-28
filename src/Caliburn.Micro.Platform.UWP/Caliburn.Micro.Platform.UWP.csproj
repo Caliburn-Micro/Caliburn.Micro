@@ -160,6 +160,9 @@
     <Compile Include="..\Caliburn.Micro.Platform\Parser.cs">
       <Link>Parser.cs</Link>
     </Compile>
+    <Compile Include="..\Caliburn.Micro.Platform\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Platform\TypeDescriptor.cs">
       <Link>TypeDescriptor.cs</Link>
     </Compile>
@@ -231,7 +234,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Properties\Caliburn.Micro.Platform.UWP.rd.xml" />
   </ItemGroup>
   <ItemGroup>
