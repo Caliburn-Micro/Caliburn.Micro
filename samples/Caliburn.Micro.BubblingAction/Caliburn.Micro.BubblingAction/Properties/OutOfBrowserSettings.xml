@@ -1,7 +1,0 @@
-<OutOfBrowserSettings ShortName="Caliburn.Micro.BubblingAction Application" EnableGPUAcceleration="False" ShowInstallMenuItem="True">
-  <OutOfBrowserSettings.Blurb>Caliburn.Micro.BubblingAction Application on your desktop; at home, at work or on the go.</OutOfBrowserSettings.Blurb>
-  <OutOfBrowserSettings.WindowSettings>
-    <WindowSettings Title="Caliburn.Micro.BubblingAction Application" />
-  </OutOfBrowserSettings.WindowSettings>
-  <OutOfBrowserSettings.Icons />
-</OutOfBrowserSettings>
