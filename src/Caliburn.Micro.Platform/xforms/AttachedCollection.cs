@@ -61,6 +61,10 @@
             }
         }
 
+        /// <summary>
+        /// Raises the <see cref = "E:System.Collections.ObjectModel.ObservableCollection`1.CollectionChanged" /> event with the provided arguments.
+        /// </summary>
+        /// <param name = "e">Arguments of the event being raised.</param>
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e) {
             base.OnCollectionChanged(e);
 

@@ -15,16 +15,27 @@ namespace Caliburn.Micro
             return NSThread.IsMain;
         }
 
+        /// <summary>
+        ///   Indicates whether or not the framework is in design-time mode.
+        /// </summary>
         public bool InDesignMode
         {
             get { return false; }
         }
 
+        /// <summary>
+        ///   Executes the action on the UI thread asynchronously.
+        /// </summary>
+        /// <param name="action">The action to execute.</param>
         public void BeginOnUIThread(Action action)
         {
             UIApplication.SharedApplication.InvokeOnMainThread(action);
         }
 
+        /// <summary>
+        ///   Executes the action on the UI thread asynchronously.
+        /// </summary>
+        /// <param name = "action">The action to execute.</param>
         public Task OnUIThreadAsync(Action action)
         {
             var completionSource = new TaskCompletionSource<bool>();
@@ -53,6 +64,10 @@ namespace Caliburn.Micro
             return completionSource.Task;
         }
 
+        /// <summary>
+        ///   Executes the action on the UI thread.
+        /// </summary>
+        /// <param name = "action">The action to execute.</param>
         public void OnUIThread(Action action) {
             if (CheckAccess())
                 action();
@@ -60,11 +75,26 @@ namespace Caliburn.Micro
                 OnUIThreadAsync(action).Wait();
         }
 
+        /// <summary>
+        /// Used to retrieve the root, non-framework-created view.
+        /// </summary>
+        /// <param name="view">The view to search.</param>
+        /// <returns>The root element that was not created by the framework.</returns>
+        /// <remarks>In certain instances the services create UI elements.
+        /// For example, if you ask the window manager to show a UserControl as a dialog, it creates a window to host the UserControl in.
+        /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
+        /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was. 
+        /// </remarks>
         public object GetFirstNonGeneratedView(object view)
         {
             return view;
         }
 
+        /// <summary>
+        /// Executes the handler the fist time the view is loaded.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <param name="handler">The handler.</param>
         public void ExecuteOnFirstLoad(object view, Action<object> handler)
         {
             var viewController = view as IUIViewController;
@@ -84,6 +114,11 @@ namespace Caliburn.Micro
             }
         }
 
+        /// <summary>
+        /// Executes the handler the next time the view's LayoutUpdated event fires.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <param name="handler">The handler.</param>
         public void ExecuteOnLayoutUpdated(object view, Action<object> handler)
         {
             var viewController = view as IUIViewController;
@@ -103,6 +138,13 @@ namespace Caliburn.Micro
             }
         }
 
+        /// <summary>
+        /// Get the close action for the specified view model.
+        /// </summary>
+        /// <param name="viewModel">The view model to close.</param>
+        /// <param name="views">The associated views.</param>
+        /// <param name="dialogResult">The dialog result.</param>
+        /// <returns>An <see cref="Action"/> to close the view model.</returns>
         public Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
         {
             var child = viewModel as IChild;

@@ -15,7 +15,7 @@ namespace Caliburn.Micro {
 #endif
 
     /// <summary>
-    ///   Implemented by services that provide (<see cref="Uri" /> based) navigation.
+    ///   Implemented by services that provide (<see cref="System.Uri" /> based) navigation.
     /// </summary>
     public interface INavigationService {
         /// <summary>
