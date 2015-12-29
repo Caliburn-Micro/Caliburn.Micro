@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Setup.Silverlight
+namespace Setup.WindowsPhone
 {
     public partial class App
     {
