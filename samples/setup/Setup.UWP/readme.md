@@ -1,5 +1,5 @@
 
-1. New Blank App (Windows 8.1)
+1. New Blank App (Universal Windows)
 2. Add nuget package Caliburn.Micro.
 3. Delete MainPage.xaml.
 4. Add the Views and ViewModels folders.
