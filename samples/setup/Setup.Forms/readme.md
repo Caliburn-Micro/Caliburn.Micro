@@ -10,4 +10,5 @@
 9. Replace LoadApplication all in MainPage.xaml
 10. Remove code from App.xaml and App.xaml.cs
 11. Add Bootstrapper class with SelectAssemblies
-12. Add 
+12. Add bootstrapper to app.xaml
+13. Add Application class to droid

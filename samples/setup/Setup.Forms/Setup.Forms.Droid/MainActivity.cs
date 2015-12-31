@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Caliburn.Micro;
 
 namespace Setup.Forms.Droid
 {
@@ -17,7 +18,7 @@ namespace Setup.Forms.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
-           LoadApplication(new App());
+            LoadApplication(new Setup.Forms.App(IoC.Get<SimpleContainer>()));
         }
     }
 }

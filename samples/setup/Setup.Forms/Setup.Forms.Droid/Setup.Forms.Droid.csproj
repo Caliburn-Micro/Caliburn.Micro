@@ -57,6 +57,9 @@
     <Reference Include="Caliburn.Micro.Platform.Core">
       <HintPath>..\..\..\..\bin\android\Debug\Caliburn.Micro.Platform.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Caliburn.Micro.Platform.Xamarin.Forms">
+      <HintPath>..\..\..\..\bin\xamarin-forms\Debug\Caliburn.Micro.Platform.Xamarin.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="FormsViewGroup, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xamarin.Forms.1.4.2.6355\lib\MonoAndroid10\FormsViewGroup.dll</HintPath>
       <Private>True</Private>
@@ -89,6 +92,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
