@@ -1,45 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+using Caliburn.Micro;
+using Caliburn.Micro.Xamarin.Forms;
+using Setup.Forms.ViewModels;
+using Setup.Forms.Views;
 using Xamarin.Forms;
 
 namespace Setup.Forms
 {
-    public class App : Application
+    public class App : FormsApplication
     {
-        public App()
+        private readonly SimpleContainer container;
+
+        public App(SimpleContainer container)
         {
-            // The root page of your application
-            MainPage = new ContentPage
-            {
-                Content = new StackLayout
-                {
-                    VerticalOptions = LayoutOptions.Center,
-                    Children = {
-                        new Label {
-                            XAlign = TextAlignment.Center,
-                            Text = "Welcome to Xamarin Forms!"
-                        }
-                    }
-                }
-            };
+            this.container = container;
+
+            container.PerRequest<HomeViewModel>();
+
+            DisplayRootView<HomeView>();
         }
 
-        protected override void OnStart()
+        protected override void PrepareViewFirst(NavigationPage navigationPage)
         {
-            // Handle when your app starts
-        }
-
-        protected override void OnSleep()
-        {
-            // Handle when your app sleeps
-        }
-
-        protected override void OnResume()
-        {
-            // Handle when your app resumes
+            container.Instance<INavigationService>(new NavigationPageAdapter(navigationPage));
         }
     }
 }
