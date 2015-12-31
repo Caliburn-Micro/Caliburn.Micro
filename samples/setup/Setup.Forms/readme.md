@@ -12,3 +12,6 @@
 11. Add Bootstrapper class with SelectAssemblies
 12. Add bootstrapper to app.xaml
 13. Add Application class to droid
+14. Replace LoadingApplication in MainActivity
+15. Create CaliburnAppDelegate
+16. Modify app deletegate
