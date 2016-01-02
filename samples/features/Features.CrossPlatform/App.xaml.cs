@@ -25,13 +25,15 @@ namespace Features.CrossPlatform
             MessageBinder.SpecialValues.Add("$clickeditem", c => ((ItemClickEventArgs)c.EventArgs).ClickedItem);
 
             container = new WinRTContainer();
+            container.RegisterWinRTServices();
 
             container
                 .PerRequest<MenuViewModel>()
                 .PerRequest<BindingsViewModel>()
                 .PerRequest<ActionsViewModel>()
                 .PerRequest<CoroutineViewModel>()
-                .PerRequest<ExecuteViewModel>();
+                .PerRequest<ExecuteViewModel>()
+                .PerRequest<EventAggregationViewModel>();
         }
 
         protected override void PrepareViewFirst(Frame rootFrame)
