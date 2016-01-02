@@ -15,8 +15,8 @@ namespace Features.CrossPlatform.ViewModels
             {
                 new FeatureViewModel("Binding Conventions", "Binding view model properties to your view.", typeof(BindingsViewModel)),
                 new FeatureViewModel("Action Conventions", "Wiring view events to view model methods.", typeof(ActionsViewModel)),
-                //new FeatureViewModel("Coroutines", "Mix IResult and Async / Await", typeof(CoroutineViewModel),
-                //new FeatureViewModel("Execute", "Using Execute to execute code on the UI thread.", typeof(ExecuteViewModel),
+                new FeatureViewModel("Coroutines", "Using IEnumerable<IResult>", typeof(CoroutineViewModel)),
+                new FeatureViewModel("Execute", "Using Execute to execute code on the UI thread.", typeof(ExecuteViewModel))
                 
             };
         }

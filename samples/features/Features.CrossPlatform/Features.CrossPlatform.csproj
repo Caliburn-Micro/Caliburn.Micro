@@ -97,11 +97,16 @@
     </Compile>
     <Compile Include="Lipsum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Results\MessageDialogResult.cs" />
+    <Compile Include="Results\ResultBase.cs" />
+    <Compile Include="Results\VisualStateResult.cs" />
     <Compile Include="ViewModels\ActionsViewModel.cs" />
     <Compile Include="ViewModels\Activity\ActivityBaseViewModel.cs" />
     <Compile Include="ViewModels\Activity\MessageActivityViewModel.cs" />
     <Compile Include="ViewModels\Activity\PhotoActivityViewModel.cs" />
     <Compile Include="ViewModels\BindingsViewModel.cs" />
+    <Compile Include="ViewModels\CoroutineViewModel.cs" />
+    <Compile Include="ViewModels\ExecuteViewModel.cs" />
     <Compile Include="ViewModels\FeatureViewModel.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="ViewModels\ViewModelExtensions.cs" />
@@ -116,6 +121,12 @@
     </Compile>
     <Compile Include="Views\BindingsView.xaml.cs">
       <DependentUpon>BindingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CoroutineView.xaml.cs">
+      <DependentUpon>CoroutineView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ExecuteView.xaml.cs">
+      <DependentUpon>ExecuteView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FeatureView.xaml.cs">
       <DependentUpon>FeatureView.xaml</DependentUpon>
@@ -172,6 +183,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BindingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CoroutineView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExecuteView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

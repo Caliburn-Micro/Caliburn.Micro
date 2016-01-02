@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
+using Windows.UI.Popups;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Caliburn.Micro;
 using Features.CrossPlatform.ViewModels;
@@ -28,7 +29,9 @@ namespace Features.CrossPlatform
             container
                 .PerRequest<MenuViewModel>()
                 .PerRequest<BindingsViewModel>()
-                .PerRequest<ActionsViewModel>();
+                .PerRequest<ActionsViewModel>()
+                .PerRequest<CoroutineViewModel>()
+                .PerRequest<ExecuteViewModel>();
         }
 
         protected override void PrepareViewFirst(Frame rootFrame)
@@ -65,6 +68,15 @@ namespace Features.CrossPlatform
         protected override void BuildUp(object instance)
         {
             container.BuildUp(instance);
+        }
+
+        protected override async void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+
+            var dialog = new MessageDialog(e.Message, "An error has occurred");
+
+            await dialog.ShowAsync();
         }
     }
 }
