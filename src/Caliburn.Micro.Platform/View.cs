@@ -383,16 +383,9 @@ namespace Caliburn.Micro
 
         private static string GetContentPropertyName(Type type) {
             var typeInfo = type.GetTypeInfo();
-            var contentProperty = typeInfo.CustomAttributes
-                .FirstOrDefault(a => a.AttributeType == typeof(ContentPropertyAttribute));
+            var contentProperty = typeInfo.GetCustomAttribute<ContentPropertyAttribute>();
 
-            return contentProperty == null ?
-                DefaultContentPropertyName :
-#if XFORMS
-                contentProperty.ConstructorArguments[0].Value.ToString();
-#else
-                contentProperty.NamedArguments[0].TypedValue.Value.ToString();
-#endif
+            return contentProperty == null ? DefaultContentPropertyName : contentProperty.Name;
         }
 #else
         static bool SetContentPropertyCore(object targetLocation, object view) {
