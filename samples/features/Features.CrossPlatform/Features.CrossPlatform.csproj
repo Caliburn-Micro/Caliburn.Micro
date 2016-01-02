@@ -97,6 +97,7 @@
     </Compile>
     <Compile Include="Lipsum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\ActionsViewModel.cs" />
     <Compile Include="ViewModels\Activity\ActivityBaseViewModel.cs" />
     <Compile Include="ViewModels\Activity\MessageActivityViewModel.cs" />
     <Compile Include="ViewModels\Activity\PhotoActivityViewModel.cs" />
@@ -104,6 +105,9 @@
     <Compile Include="ViewModels\FeatureViewModel.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="ViewModels\ViewModelExtensions.cs" />
+    <Compile Include="Views\ActionsView.xaml.cs">
+      <DependentUpon>ActionsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Activity\MessageActivityView.xaml.cs">
       <DependentUpon>MessageActivityView.xaml</DependentUpon>
     </Compile>
@@ -155,6 +159,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Page Include="Views\ActionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Activity\MessageActivityView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

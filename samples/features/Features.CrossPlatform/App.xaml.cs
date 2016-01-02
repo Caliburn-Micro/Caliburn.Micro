@@ -27,7 +27,8 @@ namespace Features.CrossPlatform
 
             container
                 .PerRequest<MenuViewModel>()
-                .PerRequest<BindingsViewModel>();
+                .PerRequest<BindingsViewModel>()
+                .PerRequest<ActionsViewModel>();
         }
 
         protected override void PrepareViewFirst(Frame rootFrame)
