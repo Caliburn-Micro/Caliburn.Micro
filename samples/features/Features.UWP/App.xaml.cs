@@ -33,7 +33,9 @@ namespace Features.CrossPlatform
                 .PerRequest<ActionsViewModel>()
                 .PerRequest<CoroutineViewModel>()
                 .PerRequest<ExecuteViewModel>()
-                .PerRequest<EventAggregationViewModel>();
+                .PerRequest<EventAggregationViewModel>()
+                .PerRequest<DesignTimeViewModel>()
+                .PerRequest<ConductorViewModel>();
         }
 
         protected override void PrepareViewFirst(Frame rootFrame)

@@ -8,7 +8,7 @@
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Features.CrossPlatform</RootNamespace>
-    <AssemblyName>Features.CrossPlatform</AssemblyName>
+    <AssemblyName>Features.UWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
@@ -95,25 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Lipsum.cs" />
-    <Compile Include="Messages\SimpleMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Results\MessageDialogResult.cs" />
-    <Compile Include="Results\ResultBase.cs" />
-    <Compile Include="Results\VisualStateResult.cs" />
-    <Compile Include="ViewModels\ActionsViewModel.cs" />
-    <Compile Include="ViewModels\Activity\ActivityBaseViewModel.cs" />
-    <Compile Include="ViewModels\Activity\MessageActivityViewModel.cs" />
-    <Compile Include="ViewModels\Activity\PhotoActivityViewModel.cs" />
-    <Compile Include="ViewModels\BindingsViewModel.cs" />
-    <Compile Include="ViewModels\CoroutineViewModel.cs" />
-    <Compile Include="ViewModels\EventAggregationViewModel.cs" />
-    <Compile Include="ViewModels\Events\EventDestinationViewModel.cs" />
-    <Compile Include="ViewModels\Events\EventSourceViewModel.cs" />
-    <Compile Include="ViewModels\ExecuteViewModel.cs" />
-    <Compile Include="ViewModels\FeatureViewModel.cs" />
-    <Compile Include="ViewModels\MenuViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelExtensions.cs" />
     <Compile Include="Views\ActionsView.xaml.cs">
       <DependentUpon>ActionsView.xaml</DependentUpon>
     </Compile>
@@ -126,8 +108,14 @@
     <Compile Include="Views\BindingsView.xaml.cs">
       <DependentUpon>BindingsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ConductorView.xaml.cs">
+      <DependentUpon>ConductorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CoroutineView.xaml.cs">
       <DependentUpon>CoroutineView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DesignTimeView.xaml.cs">
+      <DependentUpon>DesignTimeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EventAggregationView.xaml.cs">
       <DependentUpon>EventAggregationView.xaml</DependentUpon>
@@ -147,12 +135,15 @@
     <Compile Include="Views\MenuView.xaml.cs">
       <DependentUpon>MenuView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\TabView.xaml.cs">
+      <DependentUpon>TabView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="Features.CrossPlatform_TemporaryKey.pfx" />
+    <None Include="Features.UWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />
@@ -199,7 +190,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ConductorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CoroutineView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DesignTimeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -227,7 +226,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\TabView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
+  <Import Project="..\Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

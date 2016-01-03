@@ -3,9 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Features.CrossPlatform", "Features.CrossPlatform\Features.CrossPlatform.csproj", "{FFAC51BE-42E4-4BD3-96AA-96FE2A7853AC}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Features.CrossPlatform.Shared", "Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.shproj", "{7BDAB9D6-294B-4AA5-A7F5-3B2992E1D5D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Features.UWP", "Features.UWP\Features.UWP.csproj", "{FFAC51BE-42E4-4BD3-96AA-96FE2A7853AC}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems*{ffac51be-42e4-4bd3-96aa-96fe2a7853ac}*SharedItemsImports = 4
+		Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems*{7bdab9d6-294b-4aa5-a7f5-3b2992e1d5d2}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
 		Debug|x64 = Debug|x64
