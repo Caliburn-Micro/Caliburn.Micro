@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="Features.CrossPlatform.Views.EventAggregationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Features.CrossPlatform.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cm="using:Caliburn.Micro"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ContentControl cm:View.Model="{Binding Source}" Grid.Row="0" HorizontalContentAlignment="Stretch"/>
+        <ContentControl cm:View.Model="{Binding Destination}" Grid.Row="1" HorizontalContentAlignment="Stretch"/>
+
+    </Grid>
+</Page>

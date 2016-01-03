@@ -9,7 +9,7 @@ namespace Features.CrossPlatform.ViewModels.Activity
             Message = message;
         }
 
-        public override string Title => "Title";
+        public override string Title => "Message";
         public string Message { get; }
     }
 }
