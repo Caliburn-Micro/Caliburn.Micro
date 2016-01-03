@@ -6,7 +6,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Caliburn.Micro;
 using Features.CrossPlatform.ViewModels;
-using Features.CrossPlatform.Views;
 
 namespace Features.CrossPlatform
 {
@@ -27,6 +26,7 @@ namespace Features.CrossPlatform
             container.RegisterWinRTServices();
 
             container
+                .PerRequest<ShellViewModel>()
                 .PerRequest<MenuViewModel>()
                 .PerRequest<BindingsViewModel>()
                 .PerRequest<ActionsViewModel>()
@@ -37,17 +37,12 @@ namespace Features.CrossPlatform
                 .PerRequest<ConductorViewModel>();
         }
 
-        protected override void PrepareViewFirst(Frame rootFrame)
-        {
-            container.RegisterNavigationService(rootFrame);
-        }
-
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             if (args.PreviousExecutionState == ApplicationExecutionState.Running)
                 return;
 
-            DisplayRootView<MenuView>();
+            DisplayRootViewFor<ShellViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)
