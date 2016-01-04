@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
 using Caliburn.Micro;
 
 namespace Features.CrossPlatform.ViewModels

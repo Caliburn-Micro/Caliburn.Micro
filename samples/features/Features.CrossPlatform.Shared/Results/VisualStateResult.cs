@@ -1,7 +1,13 @@
 ﻿using System;
+using Caliburn.Micro;
+
+#if SILVERLIGHT
+using System.Windows;
+using System.Windows.Controls;
+#else
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Caliburn.Micro;
+#endif
 
 namespace Features.CrossPlatform.Results
 {

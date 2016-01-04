@@ -1,0 +1,36 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="Features.CrossPlatform.Views.ConductorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:cm="http://www.caliburnproject.org"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait"  Orientation="Portrait"
+    shell:SystemTray.IsVisible="True">
+
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar>
+            <shell:ApplicationBar.Buttons>
+                <cm:AppBarButton IconUri="Assets/ApplicationBar.Add.png" Text="add" Message="AddTab"/>
+                <cm:AppBarButton IconUri="Assets/ApplicationBar.Cancel.png" Text="close" Message="CloseTab"/>
+            </shell:ApplicationBar.Buttons>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <phone:Pivot Title="{StaticResource ApplicationTitle}" x:Name="Items" SelectedItem="{Binding ActiveItem, Mode=TwoWay}">
+            <phone:Pivot.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding DisplayName}"/>
+                </DataTemplate>
+            </phone:Pivot.HeaderTemplate>
+        </phone:Pivot>
+    </Grid>
+    
+</phone:PhoneApplicationPage>
