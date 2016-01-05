@@ -20,7 +20,7 @@ namespace Features.CrossPlatform.ViewModels
         {
             Output = $"Goodbye {name}";
 
-            return Task.FromResult(true);
+            return TaskHelper.FromResult(true);
         }
         
         public bool CanSayGoodbye(string name) => !String.IsNullOrEmpty(name);

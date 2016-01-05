@@ -15,9 +15,9 @@ namespace Features.CrossPlatform.ViewModels
             set { this.Set(ref safe, value); }
         }
 
-        public async void StartBackgroundWork()
+        public void StartBackgroundWork()
         {
-            await Task.Factory.StartNew(BackgroundWork);
+            Task.Factory.StartNew(BackgroundWork);
         }
 
         private void BackgroundWork()

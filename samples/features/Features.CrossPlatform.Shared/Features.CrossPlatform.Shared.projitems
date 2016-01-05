@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Results\MessageDialogResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Results\ResultBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Results\VisualStateResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TaskHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ActionsViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\Activity\ActivityBaseViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\Activity\MessageActivityViewModel.cs" />

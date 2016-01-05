@@ -19,17 +19,22 @@ namespace Features.CrossPlatform.Results
             this.content = content;
             this.title = title;
         }
-
-        public override async void Execute(CoroutineExecutionContext context)
-        {
 #if SILVERLIGHT
+        public override void Execute(CoroutineExecutionContext context)
+        {
             MessageBox.Show(title, content, MessageBoxButton.OK);
+
+            OnCompleted();
+        }
 #else
+        public override async void Execute(CoroutineExecutionContext context)
+        { 
             var dialog = new MessageDialog(content, title);
 
             await dialog.ShowAsync();
-#endif
+
             OnCompleted();
         }
+#endif
     }
 }

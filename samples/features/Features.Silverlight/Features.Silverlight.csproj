@@ -5,12 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E6881290-8CFB-4626-A62C-731D4B3D5A19}</ProjectGuid>
+    <ProjectGuid>{1EE577B7-EFBB-4181-8E36-0AACC4AC74A2}</ProjectGuid>
     <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Setup.Silverlight</RootNamespace>
-    <AssemblyName>Setup.Silverlight</AssemblyName>
+    <RootNamespace>Features.CrossPlatform</RootNamespace>
+    <AssemblyName>Features.CrossPlatform</AssemblyName>
     <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
@@ -19,10 +19,10 @@
     </SupportedCultures>
     <XapOutputs>true</XapOutputs>
     <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
-    <XapFilename>Setup.Silverlight.xap</XapFilename>
+    <XapFilename>Features.Silverlight.xap</XapFilename>
     <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
-    <SilverlightAppEntry>Setup.Silverlight.App</SilverlightAppEntry>
-    <TestPageFileName>Setup.SilverlightTestPage.html</TestPageFileName>
+    <SilverlightAppEntry>Features.CrossPlatform.App</SilverlightAppEntry>
+    <TestPageFileName>Features.SilverlightTestPage.html</TestPageFileName>
     <CreateTestPage>true</CreateTestPage>
     <ValidateXaml>true</ValidateXaml>
     <EnableOutOfBrowser>false</EnableOutOfBrowser>
@@ -73,6 +73,7 @@
       <HintPath>$(TargetFrameworkDirectory)System.Core.dll</HintPath>
     </Reference>
     <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Controls.Navigation, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Interactivity, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\bin\sl5\Debug\System.Windows.Interactivity.dll</HintPath>
@@ -85,9 +86,23 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="CallerMemberName.cs" />
+    <Compile Include="FrameAdapter.cs" />
+    <Compile Include="INavigationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Task.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
+    <Compile Include="Views\BindingsView.xaml.cs">
+      <DependentUpon>BindingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ExecuteView.xaml.cs">
+      <DependentUpon>ExecuteView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FeatureView.xaml.cs">
+      <DependentUpon>FeatureView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MenuView.xaml.cs">
+      <DependentUpon>MenuView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
@@ -101,12 +116,30 @@
   <ItemGroup>
     <None Include="Properties\AppManifest.xml" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
+    <Page Include="Views\BindingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExecuteView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FeatureView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ShellView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <Import Project="..\Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
