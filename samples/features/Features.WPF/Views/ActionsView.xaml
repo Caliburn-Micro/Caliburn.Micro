@@ -1,0 +1,48 @@
+﻿<Page x:Class="Features.CrossPlatform.Views.ActionsView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Features.CrossPlatform.Views"
+      xmlns:cal="http://www.caliburnproject.org"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="ActionsView">
+
+    <Page.Resources>
+        <Style x:Key="ActionButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="0,10,0,0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+    </Page.Resources>
+    
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Margin="24,12">
+                <TextBlock>
+                        <Run Text="Output:" FontWeight="Bold"/>
+                        <Run Text="{Binding Output}"/>
+                </TextBlock>
+
+                <TextBlock Text="Name"/>
+                <TextBox x:Name="Name" Margin="0,10,0,0" HorizontalAlignment="Stretch"/>
+
+                <Button x:Name="Clear" Content="Clear" Style="{StaticResource ActionButtonStyle}"/>
+                <Button x:Name="SimpleSayHello" Content="Simple Say Hello" Style="{StaticResource ActionButtonStyle}"/>
+                <Button cal:Message.Attach="SimpleSayHello" Content="Simple Say Hello (using Message.Attach)" Style="{StaticResource ActionButtonStyle}"/>
+                <Button cal:Message.Attach="[Event DoubleTapped] = [SimpleSayHello]" Content="Simple Say Hello (Custom Event - Double Tapped)" Style="{StaticResource ActionButtonStyle}"/>
+                <Button x:Name="FullSyntax" Content="Simple Say Hello (Full Behaviour Syntax)" Style="{StaticResource ActionButtonStyle}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="SimpleSayHello" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button x:Name="SayHello" Content="Say Hello (with parameter)" Style="{StaticResource ActionButtonStyle}"/>
+                <Button cal:Message.Attach="SayHello(Name)" Content="Say Hello (with parameter and Message.Attach)" Style="{StaticResource ActionButtonStyle}"/>
+                <Button x:Name="SayGoodbye" Content="Say Goodbye (async method)" Style="{StaticResource ActionButtonStyle}"/>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

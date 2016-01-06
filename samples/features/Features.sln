@@ -15,9 +15,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Features.WindowsPhone.Silve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Features.Silverlight", "Features.Silverlight\Features.Silverlight.csproj", "{1EE577B7-EFBB-4181-8E36-0AACC4AC74A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Features.WPF", "Features.WPF\Features.WPF.csproj", "{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems*{c8659afd-a409-42c0-ae82-edf2c4be75d8}*SharedItemsImports = 4
+		Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems*{3bae54c3-20a6-40a8-93be-b324fed7d3fc}*SharedItemsImports = 4
 		Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems*{25a8ff89-51d1-45ef-be87-da8c0a47b968}*SharedItemsImports = 4
 		Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems*{1ee577b7-efbb-4181-8e36-0aacc4ac74a2}*SharedItemsImports = 4
 		Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems*{ffac51be-42e4-4bd3-96aa-96fe2a7853ac}*SharedItemsImports = 4
@@ -127,6 +130,7 @@ Global
 		{C06D7F16-2437-4B5F-AD2D-DB6557F274F8}.Release|x86.ActiveCfg = Release|x86
 		{C06D7F16-2437-4B5F-AD2D-DB6557F274F8}.Release|x86.Build.0 = Release|x86
 		{C06D7F16-2437-4B5F-AD2D-DB6557F274F8}.Release|x86.Deploy.0 = Release|x86
+<<<<<<< 46b880b9da4e7f9b473d12248dc703445deb7acb
 		{1EE577B7-EFBB-4181-8E36-0AACC4AC74A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1EE577B7-EFBB-4181-8E36-0AACC4AC74A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1EE577B7-EFBB-4181-8E36-0AACC4AC74A2}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -143,6 +147,24 @@ Global
 		{1EE577B7-EFBB-4181-8E36-0AACC4AC74A2}.Release|x64.Build.0 = Release|Any CPU
 		{1EE577B7-EFBB-4181-8E36-0AACC4AC74A2}.Release|x86.ActiveCfg = Release|Any CPU
 		{1EE577B7-EFBB-4181-8E36-0AACC4AC74A2}.Release|x86.Build.0 = Release|Any CPU
+=======
+		{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}.Debug|ARM.Build.0 = Debug|Any CPU
+		{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}.Debug|x64.Build.0 = Debug|Any CPU
+		{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}.Debug|x86.Build.0 = Debug|Any CPU
+		{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}.Release|ARM.ActiveCfg = Release|Any CPU
+		{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}.Release|ARM.Build.0 = Release|Any CPU
+		{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}.Release|x64.ActiveCfg = Release|Any CPU
+		{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}.Release|x64.Build.0 = Release|Any CPU
+		{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}.Release|x86.ActiveCfg = Release|Any CPU
+		{3BAE54C3-20A6-40A8-93BE-B324FED7D3FC}.Release|x86.Build.0 = Release|Any CPU
+>>>>>>> WPF Sample
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

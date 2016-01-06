@@ -1,7 +1,7 @@
 ﻿using System;
 using Caliburn.Micro;
 
-#if SILVERLIGHT
+#if SILVERLIGHT || WPF
 using System.Windows;
 #else
 using Windows.UI.Popups;
@@ -19,7 +19,8 @@ namespace Features.CrossPlatform.Results
             this.content = content;
             this.title = title;
         }
-#if SILVERLIGHT
+
+#if SILVERLIGHT || WPF
         public override void Execute(CoroutineExecutionContext context)
         {
             MessageBox.Show(title, content, MessageBoxButton.OK);
