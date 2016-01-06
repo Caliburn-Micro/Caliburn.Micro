@@ -11,7 +11,7 @@ namespace Features.CrossPlatform.Views
 
         public void UpdateView()
         {
-            
+            Output.Text = "View Updated";
         }
     }
 }

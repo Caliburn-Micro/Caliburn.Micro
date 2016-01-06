@@ -91,8 +91,35 @@
     <Compile Include="INavigationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
+    <Compile Include="Views\ActionsView.xaml.cs">
+      <DependentUpon>ActionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Activity\MessageActivityView.xaml.cs">
+      <DependentUpon>MessageActivityView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Activity\PhotoActivityView.xaml.cs">
+      <DependentUpon>PhotoActivityView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BindingsView.xaml.cs">
       <DependentUpon>BindingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ConductorView.xaml.cs">
+      <DependentUpon>ConductorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CoroutineView.xaml.cs">
+      <DependentUpon>CoroutineView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DesignTimeView.xaml.cs">
+      <DependentUpon>DesignTimeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EventAggregationView.xaml.cs">
+      <DependentUpon>EventAggregationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Events\EventDestinationView.xaml.cs">
+      <DependentUpon>EventDestinationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Events\EventSourceView.xaml.cs">
+      <DependentUpon>EventSourceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ExecuteView.xaml.cs">
       <DependentUpon>ExecuteView.xaml</DependentUpon>
@@ -106,6 +133,9 @@
     <Compile Include="Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\TabView.xaml.cs">
+      <DependentUpon>TabView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -118,7 +148,43 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Page Include="Views\ActionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Activity\MessageActivityView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Activity\PhotoActivityView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\BindingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ConductorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CoroutineView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DesignTimeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EventAggregationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Events\EventDestinationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Events\EventSourceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -135,6 +201,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TabView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

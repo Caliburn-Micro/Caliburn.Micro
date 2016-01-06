@@ -1,17 +1,17 @@
-﻿<navigation:Page x:Class="Features.CrossPlatform.Views.ExecuteView" 
+﻿<navigation:Page x:Class="Features.CrossPlatform.Views.DesignTimeView" 
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
            mc:Ignorable="d"
            xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+           xmlns:cal="http://www.caliburnproject.org"
+           xmlns:viewModels="clr-namespace:Features.CrossPlatform.ViewModels"
            d:DesignWidth="640" d:DesignHeight="480"
-           Title="ExecuteView Page">
+           d:DataContext="{d:DesignInstance viewModels:DesignTimeViewModel}"
+           cal:Bind.AtDesignTime="True"
+           Title="DesignTimeView Page">
     <Grid x:Name="LayoutRoot">
-        <StackPanel Margin="40,20">
-            <CheckBox x:Name="Safe" Content="Safe (use Execute.OnUIThread)"/>
-            <Button x:Name="StartBackgroundWork" Content="Start background work"/>
-            <TextBlock x:Name="Output"/>
-        </StackPanel>
+        <TextBlock x:Name="Text" Margin="20" />
     </Grid>
 </navigation:Page>
