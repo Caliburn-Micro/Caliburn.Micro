@@ -18,7 +18,10 @@
 
     <Grid>
         <ScrollViewer>
-            <StackPanel Margin="24,12">
+            <StackPanel Margin="20,0" Width="600" HorizontalAlignment="Left">
+
+                <TextBlock Text="actions" FontSize="24" Margin="20"/>
+
                 <TextBlock>
                         <Run Text="Output:" FontWeight="Bold"/>
                         <Run Text="{Binding Output}"/>

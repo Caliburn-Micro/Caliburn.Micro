@@ -8,7 +8,7 @@
            d:DesignWidth="640" d:DesignHeight="480"
            Title="ExecuteView Page">
     <Grid x:Name="LayoutRoot">
-        <StackPanel Margin="40,20">
+        <StackPanel Margin="40,20" Width="600" HorizontalAlignment="Left">
             <CheckBox x:Name="Safe" Content="Safe (use Execute.OnUIThread)"/>
             <Button x:Name="StartBackgroundWork" Content="Start background work"/>
             <TextBlock x:Name="Output"/>

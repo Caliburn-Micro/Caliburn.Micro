@@ -13,7 +13,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <TextBlock Text="menu" FontSize="24" Margin="24"/>
+        <TextBlock Text="menu" FontSize="24" Margin="20"/>
         
         <ScrollViewer Grid.Row="1">
             <ItemsControl x:Name="Features" />

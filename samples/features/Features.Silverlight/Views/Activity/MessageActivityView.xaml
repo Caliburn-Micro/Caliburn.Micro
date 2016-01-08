@@ -16,7 +16,7 @@
 
         <StackPanel Grid.Column="1">
             <TextBlock x:Name="Title" FontSize="16" FontWeight="SemiBold" />
-            <TextBlock x:Name="Message"/>
+            <TextBlock x:Name="Message" TextWrapping="Wrap" Width="400"/>
         </StackPanel>
 
     </Grid>

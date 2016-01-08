@@ -12,16 +12,19 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Margin="40,20">
+        <TextBlock Grid.Row="0" Text="conductors" FontSize="24" Margin="40,20,40,0"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="40,20">
             <Button x:Name="AddTab" Content="Add Tab" Margin="0,0,10,0" />
             <Button x:Name="CloseTab" Content="Close Tab" />
         </StackPanel>
 
 
-        <ListBox x:Name="Items" Grid.Row="1" DisplayMemberPath="DisplayName" Margin="40,0">
+        <ListBox x:Name="Items" Grid.Row="2" DisplayMemberPath="DisplayName" Margin="40,0">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel Orientation="Horizontal"/>
@@ -29,7 +32,9 @@
             </ListBox.ItemsPanel>
         </ListBox>
 
-        <ContentControl cal:View.Model="{Binding ActiveItem}" Grid.Row="2" Margin="40,20"/>
+        <Border BorderBrush="#FF000000" BorderThickness="1" Padding="5" Grid.Row="3" Margin="40,20">
+            <ContentControl cal:View.Model="{Binding ActiveItem}"/>    
+        </Border>
 
     </Grid>
 </navigation:Page>

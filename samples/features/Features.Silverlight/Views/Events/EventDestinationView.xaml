@@ -8,6 +8,7 @@
 
     <Grid>
         <StackPanel Margin="20">
+            <TextBlock Text="events destination" FontSize="24" Margin="0,20"/>
             <Button x:Name="Subscribe" Content="Subscribe" />
             <Button x:Name="Unsubscribe" Content="Unsubscribe" Margin="0,10" />
             <ItemsControl x:Name="Messages">

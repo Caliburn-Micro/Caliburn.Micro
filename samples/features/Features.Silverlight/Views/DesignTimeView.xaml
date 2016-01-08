@@ -11,7 +11,8 @@
            d:DataContext="{d:DesignInstance viewModels:DesignTimeViewModel}"
            cal:Bind.AtDesignTime="True"
            Title="DesignTimeView Page">
-    <Grid x:Name="LayoutRoot">
+    <StackPanel x:Name="LayoutRoot">
+        <TextBlock Text="design time" FontSize="24" Margin="20,20,20,0"/>
         <TextBlock x:Name="Text" Margin="20" />
-    </Grid>
+    </StackPanel>
 </navigation:Page>

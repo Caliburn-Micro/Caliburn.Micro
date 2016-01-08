@@ -22,7 +22,7 @@
             <Rectangle Style="{StaticResource PhotoRectStyle}" />
         </StackPanel>
 
-        <TextBlock x:Name="Caption"/>
+        <TextBlock x:Name="Caption" TextWrapping="Wrap" Width="500"/>
 
     </StackPanel>
 </UserControl>

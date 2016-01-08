@@ -13,9 +13,9 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="bindings" FontSize="24" Margin="24"/>
+        <TextBlock Text="bindings" FontSize="24" Margin="20"/>
 
-        <Grid Grid.Row="1" Margin="24,0,24,0">
+        <Grid Grid.Row="1" Margin="20,0" Width="600" HorizontalAlignment="Left">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>

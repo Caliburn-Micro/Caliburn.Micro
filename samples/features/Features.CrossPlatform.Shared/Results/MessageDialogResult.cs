@@ -23,7 +23,7 @@ namespace Features.CrossPlatform.Results
 #if SILVERLIGHT || WPF
         public override void Execute(CoroutineExecutionContext context)
         {
-            MessageBox.Show(title, content, MessageBoxButton.OK);
+            MessageBox.Show(content, title, MessageBoxButton.OK);
 
             OnCompleted();
         }

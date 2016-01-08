@@ -7,9 +7,9 @@
     mc:Ignorable="d"
     d:DesignHeight="300" d:DesignWidth="400">
     
-    <Grid x:Name="LayoutRoot" Background="White">
+    <Grid x:Name="LayoutRoot" Background="White" Margin="20,10">
         <Button cm:Message.Attach="ShowFeature($dataContext)"  HorizontalContentAlignment="Left">
-            <StackPanel>
+            <StackPanel Margin="5">
                 <TextBlock x:Name="Title" FontSize="16"/>
                 <TextBlock x:Name="Description" FontSize="12"/>
             </StackPanel>

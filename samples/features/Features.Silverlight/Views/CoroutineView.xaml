@@ -7,11 +7,13 @@
            xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
            d:DesignWidth="640" d:DesignHeight="480"
            Title="CoroutineView Page">
-    <StackPanel>
-        <ProgressBar x:Name="LoadingBar" Minimum="0" Maximum="100" IsIndeterminate="True" Height="20" Visibility="Collapsed" />
+    <Grid>
+        <StackPanel Width="600" HorizontalAlignment="Left">
+            <ProgressBar x:Name="LoadingBar" Minimum="0" Maximum="100" IsIndeterminate="True" Height="20" Visibility="Collapsed" />
 
-        <Button x:Name="Execute" Content="Execute Coroutine" Margin="40,20"/>
-
+            <Button x:Name="Execute" Content="Execute Coroutine" Margin="40,20"/>
+        </StackPanel>
+        
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="LoadingStateGroup">
                 <VisualState x:Name="Loading">
@@ -25,7 +27,7 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-    </StackPanel>
+    </Grid>
 
     
 </navigation:Page>

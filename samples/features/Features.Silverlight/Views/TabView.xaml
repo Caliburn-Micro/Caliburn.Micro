@@ -6,7 +6,8 @@
     mc:Ignorable="d"
     d:DesignHeight="300" d:DesignWidth="400">
 
-    <Grid>
+    <StackPanel>
+        <TextBlock Text="tab events" FontWeight="Bold"/>
         <ItemsControl x:Name="Messages">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -14,5 +15,5 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-    </Grid>
+    </StackPanel>
 </UserControl>
