@@ -8,8 +8,10 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-        <Button x:Name="Execute" Content="Execute Coroutine" Margin="40,20" VerticalAlignment="Top"/>
+        <StackPanel VerticalAlignment="Top">
+            <TextBlock Text="coroutines" Style="{StaticResource SubheaderTextBlockStyle}" Margin="40,10,40,0" />
+            <Button x:Name="Execute" Content="Execute Coroutine" Margin="40,20"/>
+        </StackPanel>
         
         <ProgressRing x:Name="LoadingRing" Width="40" Height="40"/>
         

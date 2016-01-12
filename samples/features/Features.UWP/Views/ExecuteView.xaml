@@ -7,11 +7,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBlock Text="execute" Style="{StaticResource SubheaderTextBlockStyle}" Margin="40,10,40,0"/>
         <StackPanel Margin="40,20">
             <CheckBox x:Name="Safe" Content="Safe (use Execute.OnUIThread)"/>
             <Button x:Name="StartBackgroundWork" Content="Start background work"/>
             <TextBlock x:Name="Output" Style="{StaticResource BodyTextBlockStyle}"/>
         </StackPanel>
-    </Grid>
+    </StackPanel>
 </Page>

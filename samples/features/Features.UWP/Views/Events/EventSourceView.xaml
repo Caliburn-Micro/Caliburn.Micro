@@ -7,10 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBlock Text="events source" Style="{StaticResource SubheaderTextBlockStyle}" Margin="40,10,40,0"/>
         <StackPanel Margin="40,20">
             <TextBox x:Name="Text" Header="Text" Width="300"/>
             <Button x:Name="Publish" Content="Publish" Margin="0,10"/>
         </StackPanel>
-    </Grid>
+    </StackPanel>
 </Page>

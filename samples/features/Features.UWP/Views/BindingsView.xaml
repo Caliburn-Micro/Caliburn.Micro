@@ -6,7 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBlock Text="bindings" Style="{StaticResource SubheaderTextBlockStyle}" Margin="40,10,40,0"/>
         <ListView x:Name="Activities" Padding="40,20">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
@@ -21,5 +22,5 @@
                 </StackPanel>
             </ListView.Footer>
         </ListView>
-    </Grid>
+    </StackPanel>
 </Page>

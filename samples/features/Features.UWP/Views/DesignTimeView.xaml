@@ -10,7 +10,8 @@
     d:DataContext="{d:DesignInstance viewModels:DesignTimeViewModel}"
     cm:Bind.AtDesignTime="True">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBlock Text="design time" Style="{StaticResource SubheaderTextBlockStyle}" Margin="40,10,40,0"/>
         <TextBlock x:Name="Text" Margin="40,20" />
-    </Grid>
+    </StackPanel>
 </Page>

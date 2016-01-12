@@ -28,7 +28,7 @@
                 HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
 
             <ProgressBar x:Name="LoadingBar" IsIndeterminate="True" Visibility="Visible"/>
-           
+
         </Grid>
 
         <VisualStateManager.VisualStateGroups>

@@ -7,7 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ItemsControl x:Name="Messages" Margin="40,20"/>
-    </Grid>
+    <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBlock Text="tab events" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0"/>
+        <ItemsControl x:Name="Messages" Margin="0,20"/>
+    </StackPanel>
 </Page>

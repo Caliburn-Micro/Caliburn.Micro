@@ -10,16 +10,18 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Margin="40,20">
+        <TextBlock Text="conductors" Style="{StaticResource SubheaderTextBlockStyle}" Margin="40,10,40,0"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="40,20">
             <Button x:Name="AddTab" Content="Add Tab" Margin="0,0,10,0" />
             <Button x:Name="CloseTab" Content="Close Tab" />
         </StackPanel>
         
-
-        <Pivot x:Name="Items" Grid.Row="1">
+        <Pivot x:Name="Items" Grid.Row="2" Margin="40,0">
             <Pivot.HeaderTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding DisplayName}"/>

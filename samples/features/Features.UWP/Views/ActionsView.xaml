@@ -17,7 +17,8 @@
         </Style>
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBlock Text="actions" Style="{StaticResource SubheaderTextBlockStyle}" Margin="40,10,40,0"/>
         <StackPanel Margin="40,20">
             <TextBlock>
                 <Run Text="Output:" FontWeight="Bold"/>
@@ -41,5 +42,5 @@
             <Button cm:Message.Attach="SayHello(Name)" Content="Say Hello (with parameter and Message.Attach)" Style="{StaticResource ActionButtonStyle}"/>
             <Button x:Name="SayGoodbye" Content="Say Goodbye (async method)" Style="{StaticResource ActionButtonStyle}"/>
         </StackPanel>
-    </Grid>
+    </StackPanel>
 </Page>
