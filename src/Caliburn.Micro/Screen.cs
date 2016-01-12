@@ -5,7 +5,7 @@
     /// A base implementation of <see cref = "IScreen" />.
     /// </summary>
     public class Screen : ViewAware, IScreen, IChild {
-        static readonly ILog Log = LogManager.GetLog(typeof(Screen));
+        static readonly ILog Log = LogManager.GetLog(typeof (Screen));
 
         bool isActive;
         bool isInitialized;
@@ -22,9 +22,11 @@
         /// <summary>
         /// Gets or Sets the Parent <see cref = "IConductor" />
         /// </summary>
-        public virtual object Parent {
+        public virtual object Parent
+        {
             get { return parent; }
-            set {
+            set
+            {
                 parent = value;
                 NotifyOfPropertyChange("Parent");
             }
@@ -33,9 +35,11 @@
         /// <summary>
         /// Gets or Sets the Display Name
         /// </summary>
-        public virtual string DisplayName {
+        public virtual string DisplayName
+        {
             get { return displayName; }
-            set {
+            set
+            {
                 displayName = value;
                 NotifyOfPropertyChange("DisplayName");
             }
@@ -45,9 +49,11 @@
         /// Indicates whether or not this instance is currently active.
         /// Virtualized in order to help with document oriented view models.
         /// </summary>
-        public virtual bool IsActive {
+        public virtual bool IsActive
+        {
             get { return isActive; }
-            private set {
+            private set
+            {
                 isActive = value;
                 NotifyOfPropertyChange("IsActive");
             }
@@ -57,9 +63,11 @@
         /// Indicates whether or not this instance is currently initialized.
         /// Virtualized in order to help with document oriented view models.
         /// </summary>
-        public virtual bool IsInitialized {
+        public virtual bool IsInitialized
+        {
             get { return isInitialized; }
-            private set {
+            private set
+            {
                 isInitialized = value;
                 NotifyOfPropertyChange("IsInitialized");
             }
@@ -96,45 +104,50 @@
             Log.Info("Activating {0}.", this);
             OnActivate();
 
-	        var handler = Activated;
-			if (handler != null) {
-				handler(this, new ActivationEventArgs {
-					WasInitialized = initialized
-				});
-			}
+            var handler = Activated;
+            if (handler != null) {
+                handler(this, new ActivationEventArgs
+                {
+                    WasInitialized = initialized
+                });
+            }
         }
 
         /// <summary>
         /// Called when initializing.
         /// </summary>
-        protected virtual void OnInitialize() { }
+        protected virtual void OnInitialize() {
+        }
 
         /// <summary>
         /// Called when activating.
         /// </summary>
-        protected virtual void OnActivate() { }
+        protected virtual void OnActivate() {
+        }
 
         void IDeactivate.Deactivate(bool close) {
-            if(IsActive || (IsInitialized && close)) {
-	            var attemptingDeactivationHandler = AttemptingDeactivation;
-	            if (attemptingDeactivationHandler != null) {
-					attemptingDeactivationHandler(this, new DeactivationEventArgs {
-						WasClosed = close
-					});
-				}
+            if (IsActive || (IsInitialized && close)) {
+                var attemptingDeactivationHandler = AttemptingDeactivation;
+                if (attemptingDeactivationHandler != null) {
+                    attemptingDeactivationHandler(this, new DeactivationEventArgs
+                    {
+                        WasClosed = close
+                    });
+                }
 
                 IsActive = false;
                 Log.Info("Deactivating {0}.", this);
                 OnDeactivate(close);
 
-	            var deactivatedHandler = Deactivated;
-	            if (deactivatedHandler != null) {
-		            deactivatedHandler(this, new DeactivationEventArgs {
-			            WasClosed = close
-		            });
-	            }
+                var deactivatedHandler = Deactivated;
+                if (deactivatedHandler != null) {
+                    deactivatedHandler(this, new DeactivationEventArgs
+                    {
+                        WasClosed = close
+                    });
+                }
 
-                if(close) {
+                if (close) {
                     Views.Clear();
                     Log.Info("Closed {0}.", this);
                 }
@@ -145,7 +158,8 @@
         /// Called when deactivating.
         /// </summary>
         /// <param name = "close">Inidicates whether this instance will be closed.</param>
-        protected virtual void OnDeactivate(bool close) { }
+        protected virtual void OnDeactivate(bool close) {
+        }
 
         /// <summary>
         /// Called to check whether or not this instance can close.
