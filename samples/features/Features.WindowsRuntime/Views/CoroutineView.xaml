@@ -8,10 +8,16 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <Button x:Name="Execute" Content="Execute Coroutine" Margin="40,20" VerticalAlignment="Top"/>
+        <TextBlock Text="coroutines" Style="{StaticResource SubheaderTextBlockStyle}" Margin="0,20,0,0"/>
+
+        <Button x:Name="Execute" Content="Execute Coroutine" Margin="0,20" VerticalAlignment="Top" Grid.Row="1"/>
         
-        <ProgressRing x:Name="LoadingRing" Width="40" Height="40"/>
+        <ProgressRing x:Name="LoadingRing" Width="40" Height="40" Grid.Row="1"/>
         
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="LoadingStateGroup">

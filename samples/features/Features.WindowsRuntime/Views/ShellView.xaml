@@ -16,7 +16,7 @@
         
         <Button x:Name="GoBack" Style="{StaticResource NavigationBackButtonNormalStyle}" Margin="20"/>
 
-        <Frame x:Name="RootFrame" Grid.Row="0" Grid.Column="1" cm:Message.Attach="RegisterFrame($source)" DataContext="{x:Null}" />
+        <Frame x:Name="RootFrame" Grid.Row="0" Grid.Column="1" cm:Message.Attach="RegisterFrame($source)" DataContext="{x:Null}"/>
 
     </Grid>
 </Page>

@@ -7,7 +7,14 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListView x:Name="Activities" Padding="40,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="bindings" Style="{StaticResource SubheaderTextBlockStyle}" Margin="0,20,0,0"/>
+
+        <ListView x:Name="Activities" Padding="0,20" Grid.Row="1">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="Margin" Value="0,0,0,10"/>

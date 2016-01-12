@@ -8,7 +8,14 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel Margin="40,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="events source" Style="{StaticResource SubheaderTextBlockStyle}" Margin="0,20,0,0"/>
+        
+        <StackPanel Margin="0,20" Grid.Row="1">
             <TextBox x:Name="Text" Header="Text" Width="300"/>
             <Button x:Name="Publish" Content="Publish" Margin="0,10"/>
         </StackPanel>
