@@ -34,7 +34,7 @@
         /// <summary>
         /// Occurs when an activation request is processed.
         /// </summary>
-        public event EventHandler<ActivationProcessedEventArgs> ActivationProcessed = delegate { };
+        public virtual event EventHandler<ActivationProcessedEventArgs> ActivationProcessed = delegate { };
 
         /// <summary>
         /// Gets the children.
@@ -61,17 +61,22 @@
         /// <param name="item">The item on which activation was attempted.</param>
         /// <param name="success">if set to <c>true</c> activation was successful.</param>
         protected virtual void OnActivationProcessed(T item, bool success) {
-            if (item == null) {
+	        if (item == null) {
                 return;
             }
 
-            ActivationProcessed(this, new ActivationProcessedEventArgs {
-                Item = item,
-                Success = success
-            });
+	        var handler = ActivationProcessed;
+	        if (handler != null)
+			{
+				handler(this, new ActivationProcessedEventArgs
+				{
+					Item = item,
+					Success = success
+				});
+			}
         }
 
-        /// <summary>
+	    /// <summary>
         /// Ensures that an item is ready to be activated.
         /// </summary>
         /// <param name="newItem">The item that is about to be activated.</param>
