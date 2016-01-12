@@ -9,10 +9,17 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <ListView x:Name="Activities" Padding="24,12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="bindings" Style="{StaticResource SubheaderTextBlockStyle}" Margin="24,12,24,0"/>
+        
+        <ListView x:Name="Activities" Padding="24,12" Grid.Row="1">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
-                    <Setter Property="Margin" Value="0,0,0,12"/>
+                    <Setter Property="Margin" Value="0,0,0,24"/>
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.Header>

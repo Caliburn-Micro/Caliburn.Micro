@@ -9,12 +9,19 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <ListView x:Name="Features" Padding="24,12" SelectionMode="None" IsItemClickEnabled="True"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="features" Style="{StaticResource SubheaderTextBlockStyle}" Margin="24,12,24,0"/>
+
+        <ListView x:Name="Features" Padding="24,12" SelectionMode="None" IsItemClickEnabled="True" Grid.Row="1"
                   cm:Message.Attach="[Event ItemClick] = [ShowFeature($clickedItem)]" >
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
-                    <Setter Property="Margin" Value="0,0,0,12"/>
-                    <Setter Property="Padding" Value="12"/>
+                    <Setter Property="Margin" Value="0,12"/>
+                    
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>

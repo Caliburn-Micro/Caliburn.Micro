@@ -27,7 +27,7 @@
             <Button x:Name="Execute" Content="Execute Coroutine"
                 HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
 
-            <ProgressBar x:Name="LoadingBar" IsIndeterminate="True" Visibility="Visible"/>
+            <ProgressBar x:Name="LoadingBar" IsIndeterminate="True" Visibility="Collapsed"/>
 
         </Grid>
 

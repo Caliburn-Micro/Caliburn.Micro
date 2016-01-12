@@ -10,8 +10,8 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="480" d:DesignWidth="480">
     
-    <Grid x:Name="LayoutRoot" Background="{StaticResource PhoneChromeBrush}">
-        <Button cm:Message.Attach="ShowFeature($dataContext)"  HorizontalContentAlignment="Left">
+    <Grid x:Name="LayoutRoot">
+        <Button cm:Message.Attach="ShowFeature($dataContext)"  HorizontalContentAlignment="Left" Margin="0,0,0,12">
             <StackPanel>
                 <TextBlock x:Name="Title" Style="{StaticResource PhoneTextNormalStyle}"/>
                 <TextBlock x:Name="Description" Style="{StaticResource PhoneTextSubtleStyle}"/>

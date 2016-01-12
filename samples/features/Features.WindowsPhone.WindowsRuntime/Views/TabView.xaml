@@ -8,8 +8,9 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    
-    <Grid>
+
+    <StackPanel>
+        <TextBlock Text="tab events" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,12"/>
         <ItemsControl x:Name="Messages">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -17,5 +18,5 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-    </Grid>
+    </StackPanel>
 </UserControl>

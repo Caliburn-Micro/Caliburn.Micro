@@ -12,6 +12,7 @@
     <Grid x:Name="LayoutRoot">
         <ScrollViewer>
             <StackPanel Margin="0,12">
+                <TextBlock Text="destination" Style="{StaticResource PhoneTextLargeStyle}"/>
                 <Button x:Name="Subscribe" Content="Subscribe" HorizontalAlignment="Stretch" />
                 <Button x:Name="Unsubscribe" Content="Unsubscribe" HorizontalAlignment="Stretch" Margin="0,12" />
                 <ItemsControl x:Name="Messages">

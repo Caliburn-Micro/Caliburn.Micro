@@ -9,7 +9,14 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <StackPanel Margin="24,12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="execute" Style="{StaticResource SubheaderTextBlockStyle}" Margin="24,12,24,0"/>
+        
+        <StackPanel Grid.Row="1" Margin="24,12">
             <CheckBox x:Name="Safe" Content="Safe (use Execute.OnUIThread)"/>
             <Button x:Name="StartBackgroundWork" Content="Start background work"/>
             <TextBlock x:Name="Output"/>

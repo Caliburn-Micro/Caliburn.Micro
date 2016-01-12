@@ -11,6 +11,7 @@
     
     <Grid x:Name="LayoutRoot">
         <StackPanel>
+            <TextBlock Text="source" Style="{StaticResource PhoneTextLargeStyle}"/>
             <TextBlock Text="Name" Style="{StaticResource PhoneTextSubtleStyle}"/>
             <TextBox x:Name="Text" HorizontalAlignment="Stretch"/>
             <Button x:Name="Publish" Content="Publish" Margin="0,12" HorizontalAlignment="Stretch"/>

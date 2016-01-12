@@ -9,7 +9,8 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="480" d:DesignWidth="480">
     
-    <Grid x:Name="LayoutRoot">
+    <StackPanel x:Name="LayoutRoot">
+        <TextBlock Text="tab events" Style="{StaticResource PhoneTextNormalStyle}" FontWeight="Bold"/>
         <ItemsControl x:Name="Messages">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -17,5 +18,5 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-    </Grid>
+    </StackPanel>
 </UserControl>

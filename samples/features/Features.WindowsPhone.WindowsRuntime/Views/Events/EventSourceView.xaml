@@ -11,6 +11,7 @@
     
     <Grid>
         <StackPanel Margin="24,12">
+            <TextBlock Text="events source" Style="{StaticResource SubheaderTextBlockStyle}" Margin="0"/>
             <TextBox x:Name="Text" Header="Text" HorizontalAlignment="Stretch"/>
             <Button x:Name="Publish" Content="Publish" Margin="0,12" HorizontalAlignment="Stretch"/>
         </StackPanel>

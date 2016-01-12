@@ -28,8 +28,8 @@
             <TextBlock Text="design time" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <TextBlock x:Name="Text" Margin="24,12" Style="{StaticResource PhoneTextNormalStyle}" />
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0">
+            <TextBlock x:Name="Text" Margin="12" Style="{StaticResource PhoneTextNormalStyle}" />
         </Grid>
     </Grid>
 

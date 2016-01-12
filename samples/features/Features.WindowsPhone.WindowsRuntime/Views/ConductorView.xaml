@@ -18,7 +18,14 @@
     </Page.BottomAppBar>
 
     <Grid>
-        <Pivot x:Name="Items">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="conductors" Style="{StaticResource SubheaderTextBlockStyle}" Margin="24,12,24,0"/>
+
+        <Pivot x:Name="Items" Grid.Row="1">
             <Pivot.HeaderTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding DisplayName}"/>

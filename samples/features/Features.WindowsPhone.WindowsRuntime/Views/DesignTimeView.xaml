@@ -12,7 +12,8 @@
     cm:Bind.AtDesignTime="True"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <StackPanel>
+        <TextBlock Text="design time" Style="{StaticResource SubheaderTextBlockStyle}" Margin="24,12,24,0"/>
         <TextBlock x:Name="Text" Margin="24,12" Style="{StaticResource BodyTextBlockStyle}" />
-    </Grid>
+    </StackPanel>
 </Page>

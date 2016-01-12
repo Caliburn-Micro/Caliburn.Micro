@@ -12,6 +12,7 @@
     <Grid>
         <ScrollViewer>
             <StackPanel Margin="24,12">
+                <TextBlock Text="events destination" Style="{StaticResource SubheaderTextBlockStyle}" Margin="0"/>
                 <Button x:Name="Subscribe" Content="Subscribe" HorizontalAlignment="Stretch" />
                 <Button x:Name="Unsubscribe" Content="Unsubscribe" HorizontalAlignment="Stretch" Margin="0,12" />
                 <ItemsControl x:Name="Messages">
