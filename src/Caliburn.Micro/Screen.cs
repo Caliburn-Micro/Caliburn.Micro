@@ -97,10 +97,8 @@
             OnActivate();
 
 	        var handler = Activated;
-			if (handler != null)
-			{
-				handler(this, new ActivationEventArgs
-				{
+			if (handler != null) {
+				handler(this, new ActivationEventArgs {
 					WasInitialized = initialized
 				});
 			}
@@ -120,8 +118,7 @@
             if(IsActive || (IsInitialized && close)) {
 	            var attemptingDeactivationHandler = AttemptingDeactivation;
 	            if (attemptingDeactivationHandler != null) {
-					attemptingDeactivationHandler(this, new DeactivationEventArgs
-					{
+					attemptingDeactivationHandler(this, new DeactivationEventArgs {
 						WasClosed = close
 					});
 				}
@@ -132,8 +129,7 @@
 
 	            var deactivatedHandler = Deactivated;
 	            if (deactivatedHandler != null) {
-		            deactivatedHandler(this, new DeactivationEventArgs
-		            {
+		            deactivatedHandler(this, new DeactivationEventArgs {
 			            WasClosed = close
 		            });
 	            }

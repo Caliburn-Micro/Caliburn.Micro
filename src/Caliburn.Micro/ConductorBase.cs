@@ -65,11 +65,9 @@
                 return;
             }
 
-	        var handler = ActivationProcessed;
-	        if (handler != null)
-			{
-				handler(this, new ActivationProcessedEventArgs
-				{
+			var handler = ActivationProcessed;
+	        if (handler != null) {
+				handler(this, new ActivationProcessedEventArgs {
 					Item = item,
 					Success = success
 				});
