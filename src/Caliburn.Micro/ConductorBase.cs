@@ -14,8 +14,7 @@
         /// Gets or sets the close strategy.
         /// </summary>
         /// <value>The close strategy.</value>
-        public ICloseStrategy<T> CloseStrategy
-        {
+        public ICloseStrategy<T> CloseStrategy {
             get { return closeStrategy ?? (closeStrategy = new DefaultCloseStrategy<T>()); }
             set { closeStrategy = value; }
         }
