@@ -5,7 +5,7 @@
     /// A base implementation of <see cref = "IScreen" />.
     /// </summary>
     public class Screen : ViewAware, IScreen, IChild {
-        static readonly ILog Log = LogManager.GetLog(typeof(Screen));
+        static readonly ILog Log = LogManager.GetLog(typeof (Screen));
 
         bool isActive;
         bool isInitialized;
@@ -68,17 +68,17 @@
         /// <summary>
         /// Raised after activation occurs.
         /// </summary>
-        public event EventHandler<ActivationEventArgs> Activated = delegate { };
+        public virtual event EventHandler<ActivationEventArgs> Activated = delegate { };
 
         /// <summary>
         /// Raised before deactivation.
         /// </summary>
-        public event EventHandler<DeactivationEventArgs> AttemptingDeactivation = delegate { };
+        public virtual event EventHandler<DeactivationEventArgs> AttemptingDeactivation = delegate { };
 
         /// <summary>
         /// Raised after deactivation.
         /// </summary>
-        public event EventHandler<DeactivationEventArgs> Deactivated = delegate { };
+        public virtual event EventHandler<DeactivationEventArgs> Deactivated = delegate { };
 
         void IActivate.Activate() {
             if (IsActive) {
@@ -96,36 +96,48 @@
             Log.Info("Activating {0}.", this);
             OnActivate();
 
-            Activated(this, new ActivationEventArgs {
-                WasInitialized = initialized
-            });
+            var handler = Activated;
+            if (handler != null) {
+                handler(this, new ActivationEventArgs
+                {
+                    WasInitialized = initialized
+                });
+            }
         }
 
         /// <summary>
         /// Called when initializing.
         /// </summary>
-        protected virtual void OnInitialize() { }
+        protected virtual void OnInitialize() {}
 
         /// <summary>
         /// Called when activating.
         /// </summary>
-        protected virtual void OnActivate() { }
+        protected virtual void OnActivate() {}
 
         void IDeactivate.Deactivate(bool close) {
-            if(IsActive || (IsInitialized && close)) {
-                AttemptingDeactivation(this, new DeactivationEventArgs {
-                    WasClosed = close
-                });
+            if (IsActive || (IsInitialized && close)) {
+                var attemptingDeactivationHandler = AttemptingDeactivation;
+                if (attemptingDeactivationHandler != null) {
+                    attemptingDeactivationHandler(this, new DeactivationEventArgs
+                    {
+                        WasClosed = close
+                    });
+                }
 
                 IsActive = false;
                 Log.Info("Deactivating {0}.", this);
                 OnDeactivate(close);
 
-                Deactivated(this, new DeactivationEventArgs {
-                    WasClosed = close
-                });
+                var deactivatedHandler = Deactivated;
+                if (deactivatedHandler != null) {
+                    deactivatedHandler(this, new DeactivationEventArgs
+                    {
+                        WasClosed = close
+                    });
+                }
 
-                if(close) {
+                if (close) {
                     Views.Clear();
                     Log.Info("Closed {0}.", this);
                 }
@@ -136,7 +148,7 @@
         /// Called when deactivating.
         /// </summary>
         /// <param name = "close">Inidicates whether this instance will be closed.</param>
-        protected virtual void OnDeactivate(bool close) { }
+        protected virtual void OnDeactivate(bool close) {}
 
         /// <summary>
         /// Called to check whether or not this instance can close.

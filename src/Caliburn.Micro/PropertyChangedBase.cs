@@ -19,7 +19,7 @@
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public virtual event PropertyChangedEventHandler PropertyChanged = delegate { };
 
         /// <summary>
         /// Enables/Disables property change notification.
