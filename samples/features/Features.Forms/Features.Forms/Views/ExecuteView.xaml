@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cm="clr-namespace:Caliburn.Micro.Xamarin.Forms;assembly=Caliburn.Micro.Platform.Xamarin.Forms"
+             x:Class="Features.CrossPlatform.Views.ExecuteView">
+    <StackLayout>
+        <Frame HorizontalOptions="End" Padding="15">
+            <Label Text="Safe"/>    
+        </Frame>
+        
+        <Switch IsToggled="{Binding Safe, Mode=TwoWay}" />
+        <Button cm:Message.Attach="StartBackgroundWork" Text="Start background work"/>
+        <Label x:Name="Output"/>
+    </StackLayout>
+</ContentPage>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Features.CrossPlatform.Views.Activity.PhotoActivityView">
+
+    <StackLayout Padding="12" Orientation="Horizontal">
+        <BoxView Color="#FF225378" WidthRequest="60" HeightRequest="60" />
+        <BoxView Color="#FF225378" WidthRequest="60" HeightRequest="60" />
+        <BoxView Color="#FF225378" WidthRequest="60" HeightRequest="60" />
+
+        <Label Text="{Binding Caption}"/>
+        
+    </StackLayout>
+    
+</ContentView>

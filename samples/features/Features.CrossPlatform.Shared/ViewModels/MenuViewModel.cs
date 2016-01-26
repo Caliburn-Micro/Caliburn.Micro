@@ -1,5 +1,8 @@
 ﻿using System;
 using Caliburn.Micro;
+#if XAMARINFORMS
+using INavigationService = Caliburn.Micro.Xamarin.Forms.INavigationService;
+#endif
 
 namespace Features.CrossPlatform.ViewModels
 {
@@ -18,7 +21,9 @@ namespace Features.CrossPlatform.ViewModels
                 new FeatureViewModel("Coroutines", "Using IEnumerable<IResult>", typeof(CoroutineViewModel)),
                 new FeatureViewModel("Execute", "Using Execute to execute code on the UI thread.", typeof(ExecuteViewModel)),
                 new FeatureViewModel("Event Aggregator", "Send events between uncoupled view models.", typeof(EventAggregationViewModel)),
+#if !XAMARINFORMS
                 new FeatureViewModel("Design Time", "Conventions in the xaml desginer and design mode detection.", typeof(DesignTimeViewModel)),
+#endif
                 new FeatureViewModel("Conductors", "Composing view models together with lifecycle events", typeof(ConductorViewModel))
                 // Simple Container
                 // Conductors

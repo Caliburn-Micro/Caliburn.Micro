@@ -1,0 +1,11 @@
+﻿<Application
+    x:Class="Features.CrossPlatform.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:crossPlatform="clr-namespace:Features.CrossPlatform">
+
+    <Application.Resources>
+        <crossPlatform:Bootstrapper x:Key="Bootstrapper" />
+    </Application.Resources>
+
+</Application>
