@@ -1,8 +1,8 @@
-﻿#if !XAMARINFORMS
-using System;
+﻿using System;
 using Caliburn.Micro;
-
-#if SILVERLIGHT || WPF
+#if XAMARINFORMS
+using Xamarin.Forms;
+#elif SILVERLIGHT || WPF
 using System.Windows;
 #else
 using Windows.UI.Popups;
@@ -20,8 +20,20 @@ namespace Features.CrossPlatform.Results
             this.content = content;
             this.title = title;
         }
+#if XAMARINFORMS
+        public override async void Execute(CoroutineExecutionContext context)
+        {
+            if (!(context.View is Page))
+                throw new InvalidOperationException("View must be a Page to use MessageDialogResult");
 
-#if SILVERLIGHT || WPF
+            var page = (Page) context.View;
+
+            await page.DisplayAlert(title, content, "Ok");
+
+            OnCompleted();
+        }
+
+#elif SILVERLIGHT || WPF
         public override void Execute(CoroutineExecutionContext context)
         {
             MessageBox.Show(content, title, MessageBoxButton.OK);
@@ -40,4 +52,3 @@ namespace Features.CrossPlatform.Results
 #endif
     }
 }
-#endif
