@@ -4,7 +4,8 @@
              x:Class="Features.CrossPlatform.Views.ConductorView"
             xmlns:cm="clr-namespace:Caliburn.Micro.Xamarin.Forms;assembly=Caliburn.Micro.Platform.Xamarin.Forms"
             ItemsSource="{Binding Items}"
-            SelectedItem="{Binding ActiveItem, Mode=TwoWay}">
+            SelectedItem="{Binding ActiveItem, Mode=TwoWay}"
+            Title ="conductor">
     <TabbedPage.ItemTemplate>
         <DataTemplate>
             <ContentPage Title="{Binding DisplayName}" cm:View.Model="{Binding}" />

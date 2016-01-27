@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !XAMARINFORMS
+using System;
 using Caliburn.Micro;
 
 #if SILVERLIGHT || WPF
@@ -39,3 +40,4 @@ namespace Features.CrossPlatform.Results
 #endif
     }
 }
+#endif

@@ -2,14 +2,15 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cm="clr-namespace:Caliburn.Micro.Xamarin.Forms;assembly=Caliburn.Micro.Platform.Xamarin.Forms"
-             x:Class="Features.CrossPlatform.Views.MenuView">
+             x:Class="Features.CrossPlatform.Views.MenuView"
+             Title="features">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ListView ItemsSource="{Binding Features}" Grid.Row="1"
+        <ListView ItemsSource="{Binding Features}" Grid.Row="1" HasUnevenRows="True"
                   cm:Message.Attach="[Event ItemSelected] = [ShowFeature($selectedItem)]">
             <ListView.ItemTemplate>
                 <DataTemplate>

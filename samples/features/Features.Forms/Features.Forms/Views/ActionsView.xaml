@@ -2,14 +2,15 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cm="clr-namespace:Caliburn.Micro.Xamarin.Forms;assembly=Caliburn.Micro.Platform.Xamarin.Forms"
-             x:Class="Features.CrossPlatform.Views.ActionsView">
+             x:Class="Features.CrossPlatform.Views.ActionsView"
+             Title="actions">
 
     <StackLayout>
         <StackLayout Orientation="Horizontal" Padding="6">
             <Label Text="Output:" FontAttributes="Bold"/>
             <Label Text="{Binding Output}"/>
         </StackLayout>
-        <Entry Placeholder="Name" Text="test"/>
+        <Entry Placeholder="Name"/>
         <Button cm:Message.Attach="Clear" Text="Clear"/>
         <Button cm:Message.Attach="SimpleSayHello" Text="Simple Say Hello"/>
         <Button x:Name="FullSyntax"  Text="Simple Say Hello (Full Behaviour Syntax)">
