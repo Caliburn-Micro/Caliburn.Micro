@@ -6,6 +6,10 @@
             ItemsSource="{Binding Items}"
             SelectedItem="{Binding ActiveItem, Mode=TwoWay}"
             Title ="conductor">
+    <TabbedPage.ToolbarItems>
+      <ToolbarItem Text="Add" Clicked="OnAddTab" />
+      <ToolbarItem Text="Close" Clicked="OnCloseTab" />
+    </TabbedPage.ToolbarItems>
     <TabbedPage.ItemTemplate>
         <DataTemplate>
             <ContentPage Title="{Binding DisplayName}" cm:View.Model="{Binding}" />
