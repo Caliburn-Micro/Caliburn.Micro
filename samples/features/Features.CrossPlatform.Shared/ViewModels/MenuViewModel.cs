@@ -25,12 +25,11 @@ namespace Features.CrossPlatform.ViewModels
                 new FeatureViewModel("Design Time", "Conventions in the xaml desginer and design mode detection.", typeof(DesignTimeViewModel)),
 #endif
                 new FeatureViewModel("Conductors", "Composing view models together with lifecycle events", typeof(ConductorViewModel))
-                // Simple Container
-                // Conductors
-                // View location
                 // Key binding
                 // Action bubbling
-
+                // Context Menus
+                // Navigation
+                // Platform specific features
             };
         }
 
