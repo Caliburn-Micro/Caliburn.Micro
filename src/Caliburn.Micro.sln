@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.WIN81", "Caliburn.Micro.Platform\Caliburn.Micro.Platform.WIN81.csproj", "{73A34351-FB6A-489E-82DC-5790AF7693E3}"
 EndProject
@@ -35,7 +35,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.Xam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.Core", "Caliburn.Micro.Platform\Caliburn.Micro.Platform.Core.csproj", "{0ECBE3D9-AED4-419D-A6E3-C53D5CE2A02A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.UWP", "Caliburn.Micro.Platform.UWP\Caliburn.Micro.Platform.UWP.csproj", "{94D9A9C6-44C1-4E5A-877B-5761C963B2F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.UWP", "Caliburn.Micro.Platform\Caliburn.Micro.Platform.UWP.csproj", "{94D9A9C6-44C1-4E5A-877B-5761C963B2F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
