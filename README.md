@@ -1,5 +1,7 @@
 # Caliburn.Micro
 
+[![Join the chat at https://gitter.im/Caliburn-Micro/Caliburn.Micro](https://badges.gitter.im/Caliburn-Micro/Caliburn.Micro.svg)](https://gitter.im/Caliburn-Micro/Caliburn.Micro?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Caliburn.Micro is a small, yet powerful framework, designed for building applications across all XAML platforms. With strong support for MVVM and other proven UI patterns, Caliburn.Micro will enable you to build your solution quickly, without the need to sacrifice code quality or testability.
 
 ## Packages are available on Nuget
