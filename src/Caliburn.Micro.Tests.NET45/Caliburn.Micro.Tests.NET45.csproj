@@ -59,6 +59,7 @@
     <Compile Include="BindingScopeTests.cs" />
     <Compile Include="EventAggregatorTests.cs" />
     <Compile Include="IoCTests.cs" />
+    <Compile Include="MessageBinderTests.cs" />
     <Compile Include="RegExHelperTests.cs" />
     <Compile Include="ScopeNamingRouteTests.cs" />
     <Compile Include="ConductorWithCollectionOneActiveTests.cs" />
