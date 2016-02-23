@@ -19,7 +19,7 @@
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
-        public virtual event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public virtual event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Enables/Disables property change notification.
@@ -43,7 +43,7 @@
 #else
         public virtual void NotifyOfPropertyChange([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null) {
 #endif
-            if (IsNotifying) {
+            if (IsNotifying && PropertyChanged != null) {
                 Execute.OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
             }
         }
