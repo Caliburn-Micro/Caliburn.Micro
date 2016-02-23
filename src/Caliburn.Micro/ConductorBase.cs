@@ -7,7 +7,7 @@
     /// A base class for various implementations of <see cref="IConductor"/>.
     /// </summary>
     /// <typeparam name="T">The type that is being conducted.</typeparam>
-    public abstract class ConductorBase<T> : Screen, IConductor, IParent<T> where T: class {
+    public abstract class ConductorBase<T> : Screen, IConductor, IParent<T> where T : class {
         ICloseStrategy<T> closeStrategy;
 
         /// <summary>
@@ -20,11 +20,11 @@
         }
 
         void IConductor.ActivateItem(object item) {
-            ActivateItem((T)item);
+            ActivateItem((T) item);
         }
 
         void IConductor.DeactivateItem(object item, bool close) {
-            DeactivateItem((T)item, close);
+            DeactivateItem((T) item, close);
         }
 
         IEnumerable IParent.GetChildren() {
@@ -34,7 +34,7 @@
         /// <summary>
         /// Occurs when an activation request is processed.
         /// </summary>
-        public event EventHandler<ActivationProcessedEventArgs> ActivationProcessed = delegate { };
+        public virtual event EventHandler<ActivationProcessedEventArgs> ActivationProcessed = delegate { };
 
         /// <summary>
         /// Gets the children.
@@ -65,10 +65,14 @@
                 return;
             }
 
-            ActivationProcessed(this, new ActivationProcessedEventArgs {
-                Item = item,
-                Success = success
-            });
+            var handler = ActivationProcessed;
+            if (handler != null) {
+                handler(this, new ActivationProcessedEventArgs
+                {
+                    Item = item,
+                    Success = success
+                });
+            }
         }
 
         /// <summary>
@@ -78,7 +82,7 @@
         /// <returns>The item to be activated.</returns>
         protected virtual T EnsureItem(T newItem) {
             var node = newItem as IChild;
-            if(node != null && node.Parent != this)
+            if (node != null && node.Parent != this)
                 node.Parent = this;
 
             return newItem;

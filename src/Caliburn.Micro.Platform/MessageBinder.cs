@@ -19,9 +19,10 @@ namespace Caliburn.Micro
     public static class MessageBinder {
         /// <summary>
         /// The special parameter values recognized by the message binder along with their resolvers.
+        /// Parameter names are case insensitive so the specified names are unique and can be used with different case variations
         /// </summary>
         public static readonly Dictionary<string, Func<ActionExecutionContext, object>> SpecialValues =
-            new Dictionary<string, Func<ActionExecutionContext, object>>
+            new Dictionary<string, Func<ActionExecutionContext, object>>(StringComparer.OrdinalIgnoreCase)
             {
                 {"$eventargs", c => c.EventArgs},
 #if XFORMS
@@ -80,13 +81,8 @@ namespace Caliburn.Micro
         /// </summary>
         public static Func<string, Type, ActionExecutionContext, object> EvaluateParameter =
             (text, parameterType, context) => {
-#if WinRT || XFORMS
-            var lookup = text.ToLower();
-#else
-                var lookup = text.ToLower(CultureInfo.InvariantCulture);
-#endif
                 Func<ActionExecutionContext, object> resolver;
-                return SpecialValues.TryGetValue(lookup, out resolver) ? resolver(context) : text;
+                return SpecialValues.TryGetValue(text, out resolver) ? resolver(context) : text;
             };
 
         /// <summary>
