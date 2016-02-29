@@ -4,18 +4,7 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
-#if WinRT && !WinRT81
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Data;
-    using Windows.UI.Interactivity;
-    using Windows.UI.Xaml.Markup;
-    using Windows.UI.Xaml.Media;
-    using Windows.UI.Xaml.Controls.Primitives;
-    using Windows.UI.Xaml.Controls;
-    using TriggerBase = Windows.UI.Interactivity.TriggerBase;
-    using EventTrigger = Windows.UI.Interactivity.EventTrigger;
-    using TriggerAction = Windows.UI.Interactivity.TriggerAction;
-#elif WinRT81
+#if WinRT81
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Data;
     using Windows.UI.Xaml.Markup;
@@ -450,21 +439,24 @@
         /// </summary>
         public static Action<ActionExecutionContext> PrepareContext = context => {
             SetMethodBinding(context);
-            if (context.Target == null || context.Method == null) {
+            if (context.Target == null || context.Method == null)
+            {
                 return;
             }
-            var possibleGuardNames = BuildPossibleGuardNames(context);
+            var possibleGuardNames = BuildPossibleGuardNames(context.Method).ToList();
 
             var guard = TryFindGuardMethod(context, possibleGuardNames);
 
-            if (guard == null) {
+            if (guard == null)
+            {
                 var inpc = context.Target as INotifyPropertyChanged;
                 if (inpc == null)
                     return;
 
                 var targetType = context.Target.GetType();
                 string matchingGuardName = null;
-                foreach (string possibleGuardName in possibleGuardNames) {
+                foreach (string possibleGuardName in possibleGuardNames)
+                {
                     matchingGuardName = possibleGuardName;
                     guard = GetMethodInfo(targetType, "get_" + matchingGuardName);
                     if (guard != null) break;
@@ -475,10 +467,12 @@
 
                 PropertyChangedEventHandler handler = null;
                 handler = (s, e) => {
-                    if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == matchingGuardName) {
+                    if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == matchingGuardName)
+                    {
                         Caliburn.Micro.Execute.OnUIThread(() => {
                             var message = context.Message;
-                            if (message == null) {
+                            if (message == null)
+                            {
                                 inpc.PropertyChanged -= handler;
                                 return;
                             }
@@ -510,7 +504,8 @@
         static MethodInfo TryFindGuardMethod(ActionExecutionContext context, IEnumerable<string> possibleGuardNames) {
             var targetType = context.Target.GetType();
             MethodInfo guard = null;
-            foreach (string possibleGuardName in possibleGuardNames) {
+            foreach (string possibleGuardName in possibleGuardNames)
+            {
                 guard = GetMethodInfo(targetType, possibleGuardName);
                 if (guard != null) break;
             }
@@ -529,27 +524,38 @@
                 (x, y) => x.ParameterType == y.ParameterType
                 );
 
-            if (comparisons.Any(x => !x)) {
+            if (comparisons.Any(x => !x))
+            {
                 return null;
             }
 
             return guard;
         }
 
-        static IEnumerable<string> BuildPossibleGuardNames(ActionExecutionContext context) {
+        /// <summary>
+        /// Returns the list of possible names of guard methods / properties for the given method.
+        /// </summary>
+        public static Func<MethodInfo, IEnumerable<string>> BuildPossibleGuardNames = method => {
+
+            var guardNames = new List<string>();
 
             const string GuardPrefix = "Can";
-            
-            var methodName = context.Method.Name;
-            yield return GuardPrefix + methodName;
+
+            var methodName = method.Name;
+
+            guardNames.Add(GuardPrefix + methodName);
 
             const string AsyncMethodSuffix = "Async";
-            if (methodName.EndsWith(AsyncMethodSuffix, StringComparison.OrdinalIgnoreCase)) {
-                yield return GuardPrefix + methodName.Substring(0, methodName.Length - AsyncMethodSuffix.Length);
-            }
-        }
 
-        static MethodInfo GetMethodInfo(Type t, string methodName) {
+            if (methodName.EndsWith(AsyncMethodSuffix, StringComparison.OrdinalIgnoreCase)) {
+                guardNames.Add(GuardPrefix + methodName.Substring(0, methodName.Length - AsyncMethodSuffix.Length));
+            }
+
+            return guardNames;
+        };
+
+        static MethodInfo GetMethodInfo(Type t, string methodName)
+        {
 #if WinRT
             return t.GetRuntimeMethods().SingleOrDefault(m => m.Name == methodName);
 #else

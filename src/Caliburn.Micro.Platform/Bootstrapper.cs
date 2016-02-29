@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Threading;
@@ -36,6 +37,22 @@
             isInitialized = true;
 
             PlatformProvider.Current = new XamlPlatformProvider();
+
+#if WP8 || NET45
+            var baseExtractTypes = AssemblySourceCache.ExtractTypes;
+
+            AssemblySourceCache.ExtractTypes = assembly =>
+            {
+                var baseTypes = baseExtractTypes(assembly);
+                var elementTypes = assembly.GetExportedTypes()
+                    .Where(t => typeof(UIElement).IsAssignableFrom(t));
+
+                return baseTypes.Union(elementTypes);
+            };
+
+            AssemblySource.Instance.Refresh();
+#endif
+
             if(Execute.InDesignMode) {
                 try {
                     StartDesignTime();

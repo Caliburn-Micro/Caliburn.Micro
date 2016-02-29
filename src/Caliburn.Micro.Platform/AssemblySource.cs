@@ -48,7 +48,9 @@
         public static Func<Assembly, IEnumerable<Type>> ExtractTypes = assembly =>
             assembly.GetExportedTypes()
                 .Where(t =>
+#if !CORE
                     typeof(UIElement).IsAssignableFrom(t) ||
+#endif
                     typeof(INotifyPropertyChanged).IsAssignableFrom(t));
 
         /// <summary>

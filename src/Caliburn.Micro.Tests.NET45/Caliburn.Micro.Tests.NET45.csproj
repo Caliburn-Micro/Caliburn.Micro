@@ -73,6 +73,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.Platform.Core.csproj">
+      <Project>{0ecbe3d9-aed4-419d-a6e3-c53d5ce2a02a}</Project>
+      <Name>Caliburn.Micro.Platform.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.Platform.NET45.csproj">
       <Project>{ef2c0c7d-3ffe-4884-9aac-7622fee66809}</Project>
       <Name>Caliburn.Micro.Platform.NET45</Name>

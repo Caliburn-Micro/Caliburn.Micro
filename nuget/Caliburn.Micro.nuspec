@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Caliburn.Micro</id>
-    <version>2.0.2</version>
+    <version>3.0.0</version>
     <authors>Rob Eisenberg, Marco Amendola, Chin Bae, Ryan Cromwell, Nigel Sampson, Thomas Ibel, Matt Hidinger</authors>
     <description>A small, yet powerful framework designed for Xaml platforms, Caliburn.Micro implements a variety of UI patterns for solving real-world problems. Patterns that are highlighted include MVVM (Presentation Model), MVP and MVC.</description>
     <language>en-US</language>
@@ -20,15 +20,11 @@
 
     <dependencies>
       <group>
-        <dependency id="Caliburn.Micro.Core" version="[2.0.2]" />
+        <dependency id="Caliburn.Micro.Core" version="[3.0.0]" />
       </group>
-      <group targetFramework="win8">
-        <dependency id="Caliburn.Micro.Core" version="[2.0.2]" />
-        <dependency id="Windows.UI.Interactivity" version="[1.3.0]" />
-        <dependency id="Callisto" version="[1.3.1]" />
-      </group>
-      <group targetFramework="win81">
-        <dependency id="Caliburn.Micro.Core" version="[2.0.2]" />
+      <group targetFramework="uap10.0">
+        <dependency id="Caliburn.Micro.Core" version="[3.0.0]" />
+        <dependency id="Microsoft.Xaml.Behaviors.Uwp.Managed" version="1.1.0" />
       </group>
     </dependencies>
   </metadata>
@@ -43,8 +39,6 @@
     <file src="..\bin\sl5\Release\Caliburn.Micro.*.*" target="lib\sl5" />
     <file src="..\bin\sl5\Release\System.Windows.Interactivity.*" target="lib\sl5" />
 
-    <file src="..\bin\win8\Release\Caliburn.Micro.*.*" target="lib\win8" />
-
     <file src="..\bin\win81\Release\Caliburn.Micro.*.*" target="lib\win81" />
     <file src="..\bin\win81\Release\Microsoft.Xaml.*.*" target="lib\win81" />
 
@@ -53,9 +47,15 @@
 
     <file src="..\bin\wpa81\Release\Caliburn.Micro.*.*" target="lib\wpa81" />    
     <file src="..\bin\wpa81\Release\Microsoft.Xaml.*.*" target="lib\wpa81" />
-	
-	<file src="tools\**" target="tools" />
-	
+
+    <file src="..\bin\android\Release\Caliburn.Micro.*.*" target="lib\MonoAndroid10" />
+    
+    <file src="..\bin\iOS\Release\Caliburn.Micro.*.*" target="lib\Xamarin.iOS10" />
+    <file src="..\bin\iOS\Release\Caliburn.Micro.*.*" target="lib\MonoTouch10" />
+
+    <file src="..\bin\uwp\Release\Caliburn.Micro.*.*" target="lib\uap10.0" />
+    <file src="..\bin\uwp\Release\Caliburn.Micro.Platform.UWP\Properties\Caliburn.Micro.Platform.UWP.rd.xml" target="lib\uap10.0\Caliburn.Micro.Platform.UWP\Properties\Caliburn.Micro.Platform.UWP.rd.xml" />
+    
     <file src="..\src\*.cs" target="src" />
     <file src="..\src\Caliburn.Micro.Platform*\**\*.cs" exclude="**\obj\**\*.*" target="src" />
     <file src="..\src\Caliburn.Micro.Extensions*\**\*.cs" exclude="**\obj\**\*.*" target="src" />

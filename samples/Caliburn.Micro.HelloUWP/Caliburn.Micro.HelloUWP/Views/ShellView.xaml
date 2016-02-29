@@ -1,0 +1,29 @@
+﻿<Page
+    x:Class="Caliburn.Micro.HelloUWP.Views.ShellView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cm="using:Caliburn.Micro"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    
+    <Page.Resources>
+        <SolidColorBrush x:Key="AccentBrush" Color="#FF34495E" />
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <SplitView x:Name="NavigationView" DisplayMode="Overlay" OpenPaneLength="120">
+            <SplitView.Pane>
+                <StackPanel Background="{ThemeResource AccentBrush}">
+                    <Button x:Name="ShowDevices" Content="Device Specific Views" Margin="24" />
+                </StackPanel>
+            </SplitView.Pane>
+            <SplitView.Content>
+                <Grid>
+                    <Frame cm:Message.Attach="[Event Loaded] = [SetupNavigationService($source)]" DataContext="{x:Null}" />
+                    <Button Click="OpenNavigationView" Content="&#xE700;" FontFamily="{ThemeResource SymbolThemeFontFamily}" VerticalAlignment="Top" Margin="24" />
+                </Grid>
+            </SplitView.Content>
+        </SplitView>
+    </Grid>
+</Page>

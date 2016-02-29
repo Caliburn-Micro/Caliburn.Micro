@@ -1,14 +1,19 @@
-﻿
+﻿#if XFORMS
+namespace Caliburn.Micro.Xamarin.Forms
+#else
 namespace Caliburn.Micro
+#endif
 {
     using System;
     using System.Reflection;
-#if WinRT && !WinRT81
-    using Windows.UI.Xaml;
-    using TriggerBase = Windows.UI.Interactivity.TriggerBase;
-#elif WinRT81
+#if WinRT81
     using Windows.UI.Xaml;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
+#elif XFORMS
+    using global::Xamarin.Forms;
+    using DependencyObject = global::Xamarin.Forms.BindableObject;
+    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
+    using FrameworkElement = global::Xamarin.Forms.VisualElement;
 #else
     using System.Windows;
     using TriggerBase = System.Windows.Interactivity.TriggerBase;

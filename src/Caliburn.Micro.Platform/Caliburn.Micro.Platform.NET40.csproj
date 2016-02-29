@@ -63,7 +63,9 @@
     <Compile Include="BindingScope.cs" />
     <Compile Include="BooleanToVisibilityConverter.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="ChildResolver.cs" />
     <Compile Include="ConventionManager.cs" />
+    <Compile Include="DependencyPropertyHelper.cs" />
     <Compile Include="ElementConvention.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="IHaveParameters.cs" />

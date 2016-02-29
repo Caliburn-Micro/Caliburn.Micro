@@ -1,4 +1,9 @@
-﻿namespace Caliburn.Micro {
+﻿#if XFORMS
+namespace Caliburn.Micro.Xamarin.Forms
+#else
+namespace Caliburn.Micro
+#endif 
+{
     using System;
     using System.Linq;
 #if WinRT
@@ -8,6 +13,14 @@
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Markup;
     using Windows.UI.Xaml.Media;
+#elif XFORMS
+    using System.Reflection;
+    using global::Xamarin.Forms;
+    using UIElement = global::Xamarin.Forms.Element;
+    using FrameworkElement = global::Xamarin.Forms.VisualElement;
+    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
+    using DependencyObject = global::Xamarin.Forms.BindableObject;
+    using ContentControl = global::Xamarin.Forms.ContentView;
 #else
     using System.ComponentModel;
     using System.Windows;
@@ -20,7 +33,7 @@
     /// </summary>
     public static class View {
         static readonly ILog Log = LogManager.GetLog(typeof(View));
-#if WinRT
+#if WinRT || XFORMS
         const string DefaultContentPropertyName = "Content";
 #else
         static readonly ContentPropertyAttribute DefaultContentProperty = new ContentPropertyAttribute("Content");
@@ -30,66 +43,67 @@
         /// A dependency property which allows the framework to track whether a certain element has already been loaded in certain scenarios.
         /// </summary>
         public static readonly DependencyProperty IsLoadedProperty =
-            DependencyProperty.RegisterAttached(
+            DependencyPropertyHelper.RegisterAttached(
                 "IsLoaded",
                 typeof(bool),
                 typeof(View),
-                new PropertyMetadata(false)
+                false
                 );
 
         /// <summary>
         /// A dependency property which marks an element as a name scope root.
         /// </summary>
         public static readonly DependencyProperty IsScopeRootProperty =
-            DependencyProperty.RegisterAttached(
+            DependencyPropertyHelper.RegisterAttached(
                 "IsScopeRoot",
                 typeof(bool),
                 typeof(View),
-                new PropertyMetadata(false)
+                false
                 );
 
         /// <summary>
         /// A dependency property which allows the override of convention application behavior.
         /// </summary>
         public static readonly DependencyProperty ApplyConventionsProperty =
-            DependencyProperty.RegisterAttached(
+            DependencyPropertyHelper.RegisterAttached(
                 "ApplyConventions",
                 typeof(bool?),
-                typeof(View),
-                null
+                typeof(View)
                 );
 
         /// <summary>
         /// A dependency property for assigning a context to a particular portion of the UI.
         /// </summary>
         public static readonly DependencyProperty ContextProperty =
-            DependencyProperty.RegisterAttached(
+            DependencyPropertyHelper.RegisterAttached(
                 "Context",
                 typeof(object),
                 typeof(View),
-                new PropertyMetadata(null, OnContextChanged)
+                null, 
+                OnContextChanged
                 );
 
         /// <summary>
         /// A dependency property for attaching a model to the UI.
         /// </summary>
         public static DependencyProperty ModelProperty =
-            DependencyProperty.RegisterAttached(
+            DependencyPropertyHelper.RegisterAttached(
                 "Model",
                 typeof(object),
                 typeof(View),
-                new PropertyMetadata(null, OnModelChanged)
+                null, 
+                OnModelChanged
                 );
 
         /// <summary>
         /// Used by the framework to indicate that this element was generated.
         /// </summary>
         public static readonly DependencyProperty IsGeneratedProperty =
-            DependencyProperty.RegisterAttached(
+            DependencyPropertyHelper.RegisterAttached(
                 "IsGenerated",
                 typeof(bool),
                 typeof(View),
-                new PropertyMetadata(false)
+                false
                 );
 
         /// <summary>
@@ -99,6 +113,10 @@
         /// <param name="handler">The handler.</param>
         /// <returns>true if the handler was executed immediately; false otherwise</returns>
         public static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler) {
+#if XFORMS
+            handler(element, new RoutedEventArgs());
+            return true;
+#else
 #if SILVERLIGHT
             if ((bool)element.GetValue(IsLoadedProperty)) {
 #elif WinRT
@@ -120,6 +138,8 @@
             };
             element.Loaded += loaded;
             return false;
+#endif
+
         }
 
         /// <summary>
@@ -128,12 +148,14 @@
         /// <param name="element">The element.</param>
         /// <param name="handler">The handler.</param>
         public static void ExecuteOnUnload(FrameworkElement element, RoutedEventHandler handler) {
+#if !XFORMS
             RoutedEventHandler unloaded = null;
             unloaded = (s, e) => {
                 element.Unloaded -= unloaded;
                 handler(s, e);
             };
             element.Unloaded += unloaded;
+#endif
         }
 
 #if WinRT
@@ -180,11 +202,13 @@
         public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler handler) {
             EventHandler onLayoutUpdate = null;
 #endif
+#if !XFORMS
             onLayoutUpdate = (s, e) => {
                 element.LayoutUpdated -= onLayoutUpdate;
                 handler(element, e);
             };
             element.LayoutUpdated += onLayoutUpdate;
+#endif
         }
 
         /// <summary>
@@ -207,7 +231,7 @@
                 if (dependencyObject is ContentControl) {
                     return ((ContentControl)dependencyObject).Content;
                 }
-#if WinRT
+#if WinRT || XFORMS
                 var type = dependencyObject.GetType();
                 var contentPropertyName = GetContentPropertyName(type);
 
@@ -339,7 +363,7 @@
             return SetContentPropertyCore(targetLocation, view);
         }
 
-#if WinRT
+#if WinRT || XFORMS
         static bool SetContentPropertyCore(object targetLocation, object view) {
             try {
                 var type = targetLocation.GetType();
@@ -359,12 +383,9 @@
 
         private static string GetContentPropertyName(Type type) {
             var typeInfo = type.GetTypeInfo();
-            var contentProperty = typeInfo.CustomAttributes
-                .FirstOrDefault(a => a.AttributeType == typeof(ContentPropertyAttribute));
+            var contentProperty = typeInfo.GetCustomAttribute<ContentPropertyAttribute>();
 
-            return contentProperty == null ?
-                DefaultContentPropertyName :
-                contentProperty.NamedArguments[0].TypedValue.Value.ToString();
+            return contentProperty == null ? DefaultContentPropertyName : contentProperty.Name;
         }
 #else
         static bool SetContentPropertyCore(object targetLocation, object view) {
@@ -397,7 +418,9 @@
             {
                 if (inDesignMode == null)
                 {
-#if WinRT
+#if XFORMS
+                    inDesignMode = false;
+#elif WinRT
                     inDesignMode = DesignMode.DesignModeEnabled;
 #elif SILVERLIGHT
                     inDesignMode = DesignerProperties.IsInDesignTool;

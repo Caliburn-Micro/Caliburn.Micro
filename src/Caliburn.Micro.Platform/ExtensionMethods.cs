@@ -25,14 +25,14 @@
         /// <param name="inherit">Whether or not to search for inherited attributes.</param>
         /// <returns>The list of attributes found.</returns>
         public static IEnumerable<T> GetAttributes<T>(this MemberInfo member, bool inherit) {
-#if WinRT
+#if WinRT || CORE
             return member.GetCustomAttributes(inherit).OfType<T>();
 #else
             return Attribute.GetCustomAttributes(member, inherit).OfType<T>();
 #endif
         }
 
-#if WinRT
+#if WinRT || CORE
         /// <summary>
         /// Gets a collection of the public types defined in this assembly that are visible outside the assembly.
         /// </summary>

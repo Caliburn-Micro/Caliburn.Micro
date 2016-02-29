@@ -90,11 +90,12 @@
     <Reference Include="Caliburn.Micro">
       <HintPath>..\..\..\..\bin\wpa81\Debug\Caliburn.Micro.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro.Extensions">
-      <HintPath>..\..\..\..\bin\wpa81\Debug\Caliburn.Micro.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="Caliburn.Micro.Platform">
       <HintPath>..\..\..\..\bin\wpa81\Debug\Caliburn.Micro.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\bin\wpa81\Debug\Caliburn.Micro.Platform.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xaml.Interactions">
       <HintPath>..\..\..\..\bin\wpa81\Debug\Microsoft.Xaml.Interactions.dll</HintPath>

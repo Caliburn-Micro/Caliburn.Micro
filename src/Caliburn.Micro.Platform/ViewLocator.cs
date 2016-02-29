@@ -1,10 +1,20 @@
-﻿namespace Caliburn.Micro {
+﻿#if XFORMS
+namespace Caliburn.Micro.Xamarin.Forms
+#else
+namespace Caliburn.Micro
+#endif
+{
     using System;
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
     using System.Collections.Generic;
-#if !WinRT
+#if XFORMS
+    using global::Xamarin.Forms;
+    using UIElement = global::Xamarin.Forms.Element;
+    using TextBlock = global::Xamarin.Forms.Label;
+    using DependencyObject = global::Xamarin.Forms.BindableObject;
+#elif !WinRT
     using System.Windows;
     using System.Windows.Controls;
 #else
@@ -12,7 +22,7 @@
     using Windows.UI.Xaml.Controls;
 #endif
 
-#if !SILVERLIGHT && !WinRT
+#if !SILVERLIGHT && !WinRT && !XFORMS
     using System.Windows.Interop;
 #endif
 
@@ -258,7 +268,7 @@
                 return view;
             }
 
-#if !WinRT
+#if !WinRT && !XFORMS
             if(viewType.IsInterface || viewType.IsAbstract || !typeof(UIElement).IsAssignableFrom(viewType))
                 return new TextBlock { Text = string.Format("Cannot create {0}.", viewType.FullName) };
 #else
@@ -270,7 +280,9 @@
 #endif
 
             view = (UIElement)System.Activator.CreateInstance(viewType);
+#if !XFORMS
             InitializeComponent(view);
+#endif
             return view;
         };
 
@@ -384,7 +396,7 @@
             if (viewAware != null) {
                 var view = viewAware.GetView(context) as UIElement;
                 if (view != null) {
-#if !SILVERLIGHT && !WinRT
+#if !SILVERLIGHT && !WinRT && !XFORMS
                     var windowCheck = view as Window;
                     if (windowCheck == null || (!windowCheck.IsLoaded && !(new WindowInteropHelper(windowCheck).Handle == IntPtr.Zero))) {
                         Log.Info("Using cached view for {0}.", model);
@@ -404,7 +416,7 @@
         /// Transforms a view type into a pack uri.
         /// </summary>
         public static Func<Type, Type, string> DeterminePackUriFromType = (viewModelType, viewType) => {
-#if !WinRT
+#if !WinRT && !XFORMS
             var assemblyName = viewType.Assembly.GetAssemblyName();
             var applicationAssemblyName = Application.Current.GetType().Assembly.GetAssemblyName();
 #else
@@ -430,12 +442,13 @@
         /// </summary>
         /// <param name = "element">The element to initialize</param>
         public static void InitializeComponent(object element) {
-#if !WinRT
+#if !WinRT && !XFORMS
             var method = element.GetType()
                 .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
 #else
             var method = element.GetType().GetTypeInfo()
-                .GetDeclaredMethod("InitializeComponent");
+                .GetDeclaredMethods("InitializeComponent")
+                .SingleOrDefault(m => m.GetParameters().Length == 0);
 #endif
 
             if (method == null)

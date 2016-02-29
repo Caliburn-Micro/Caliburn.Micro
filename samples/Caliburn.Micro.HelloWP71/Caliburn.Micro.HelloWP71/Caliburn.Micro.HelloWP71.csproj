@@ -103,12 +103,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\bin\wp8\Debug\Caliburn.Micro.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro.Extensions, Version=2.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\wp8\Debug\Caliburn.Micro.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="Caliburn.Micro.Platform">
       <HintPath>..\..\..\bin\wp8\Debug\Caliburn.Micro.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform.Core">
+      <HintPath>..\..\..\bin\wp8\Debug\Caliburn.Micro.Platform.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform.Mobile">
+      <HintPath>..\..\..\bin\wp8\Debug\Caliburn.Micro.Platform.Mobile.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Phone.Controls, Version=8.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Interactivity, Version=3.9.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />

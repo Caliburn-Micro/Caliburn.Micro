@@ -1,16 +1,23 @@
-﻿namespace Caliburn.Micro {
-#if WinRT && !WinRT81
+﻿#if XFORMS
+namespace Caliburn.Micro.Xamarin.Forms
+#else
+namespace Caliburn.Micro
+#endif 
+{
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
-    using Windows.UI.Xaml;
-    using Windows.UI.Interactivity;
-    using TriggerBase = Windows.UI.Interactivity.TriggerBase;
-#elif WinRT81
-    using System.Linq;
+#if WinRT81
     using Windows.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
+#elif XFORMS
+    using global::Xamarin.Forms;
+    using UIElement = global::Xamarin.Forms.Element;
+    using FrameworkElement = global::Xamarin.Forms.VisualElement;
+    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
+    using DependencyObject = global::Xamarin.Forms.BindableObject;
 #else
-    using System.Linq;
     using System.Windows;
     using System.Windows.Interactivity;
     using TriggerBase = System.Windows.Interactivity.TriggerBase;
@@ -22,7 +29,7 @@
     /// </summary>
     public static class Message {
         internal static readonly DependencyProperty HandlerProperty =
-            DependencyProperty.RegisterAttached(
+            DependencyPropertyHelper.RegisterAttached(
                 "Handler",
                 typeof(object),
                 typeof(Message),
@@ -30,7 +37,7 @@
                 );
 
         static readonly DependencyProperty MessageTriggersProperty =
-            DependencyProperty.RegisterAttached(
+            DependencyPropertyHelper.RegisterAttached(
                 "MessageTriggers",
                 typeof(TriggerBase[]),
                 typeof(Message),
@@ -59,11 +66,12 @@
         ///   A property definition representing attached triggers and messages.
         /// </summary>
         public static readonly DependencyProperty AttachProperty =
-            DependencyProperty.RegisterAttached(
+            DependencyPropertyHelper.RegisterAttached(
                 "Attach",
                 typeof(string),
                 typeof(Message),
-                new PropertyMetadata(null, OnAttachChanged)
+                null, 
+                OnAttachChanged
                 );
 
         /// <summary>
@@ -101,6 +109,18 @@
 
             var newTriggers = Parser.Parse(d, e.NewValue as string).ToArray();
             newTriggers.OfType<DependencyObject>().Apply(allTriggers.Add);
+#elif XFORMS
+            var visualElement = d as VisualElement;
+
+            var allTriggers = visualElement != null ? visualElement.Triggers : new List<TriggerBase>();
+
+            if (messageTriggers != null) {
+                messageTriggers.Apply(x => allTriggers.Remove(x));
+            }
+
+            var newTriggers = Parser.Parse(d, e.NewValue as string).ToArray();
+            newTriggers.Apply(allTriggers.Add);
+
 #else
             var allTriggers = Interaction.GetTriggers(d);
 

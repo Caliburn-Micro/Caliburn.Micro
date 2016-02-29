@@ -1,4 +1,6 @@
 ﻿
+using Windows.UI.Core;
+
 namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
@@ -13,7 +15,7 @@ namespace Caliburn.Micro {
 #endif
 
     /// <summary>
-    ///   Implemented by services that provide (<see cref="Uri" /> based) navigation.
+    ///   Implemented by services that provide (<see cref="System.Uri" /> based) navigation.
     /// </summary>
     public interface INavigationService {
         /// <summary>
@@ -97,7 +99,12 @@ namespace Caliburn.Micro {
         /// <summary>
         /// Occurs when the user presses the hardware Back button.
         /// </summary>
-        event EventHandler<BackPressedEventArgs> BackPressed;
+        event EventHandler<BackPressedEventArgs> BackRequested;
+#elif WINDOWS_UWP
+        /// <summary>
+        /// Occurs when the user requests a back navigation via hardware back button or gesture or voice.
+        /// </summary>
+        event EventHandler<BackRequestedEventArgs> BackRequested;
 #endif
 
         /// <summary>
@@ -126,8 +133,6 @@ namespace Caliburn.Micro {
         private readonly bool treatViewAsLoaded;
         private event NavigatingCancelEventHandler ExternalNavigatingHandler = delegate { };
 
-        private object currentParameter;
-
         /// <summary>
         /// Creates an instance of <see cref="FrameAdapter" />.
         /// </summary>
@@ -142,11 +147,30 @@ namespace Caliburn.Micro {
 
             this.frame.Navigating += OnNavigating;
             this.frame.Navigated += OnNavigated;
-            
+
 #if WP81
-            this.frame.Loaded += (sender, args) => { HardwareButtons.BackPressed += OnHardwareBackPressed; };
-            this.frame.Unloaded += (sender, args) => { HardwareButtons.BackPressed -= OnHardwareBackPressed; };
+            // This could be a potential bug if we're registering the navigation service
+            // after the frame is loaded. Unlikely scenario given normal WP8.1 app structure
+
+            this.frame.Loaded += (sender, args) => { HardwareButtons.BackPressed += OnBackRequested; };
+            this.frame.Unloaded += (sender, args) => { HardwareButtons.BackPressed -= OnBackRequested; };
+#elif WINDOWS_UWP
+
+            // This could leak memory if we're creating and destorying navigation services regularly.
+            // Another unlikely scenario though
+
+            var navigationManager = SystemNavigationManager.GetForCurrentView();
+
+            navigationManager.BackRequested += OnBackRequested;
 #endif
+        }
+
+        /// <summary>
+        /// The parameter to the current view
+        /// </summary>
+        protected object CurrentParameter
+        {
+            get; set;
         }
 
         /// <summary>
@@ -197,7 +221,7 @@ namespace Caliburn.Micro {
             if (e.Content == null)
                 return;
 
-            currentParameter = e.Parameter;
+            CurrentParameter = e.Parameter;
 
             var view = e.Content as Page;
 
@@ -213,22 +237,27 @@ namespace Caliburn.Micro {
         /// Binds the view model.
         /// </summary>
         /// <param name="view">The view.</param>
-        protected virtual void BindViewModel(DependencyObject view) {
+        /// <param name="viewModel">The view model.</param>
+        protected virtual void BindViewModel(DependencyObject view, object viewModel = null)
+        {
             ViewLocator.InitializeComponent(view);
 
-            var viewModel = ViewModelLocator.LocateForView(view);
+            viewModel = viewModel ?? ViewModelLocator.LocateForView(view);
+
             if (viewModel == null)
                 return;
 
-            if (treatViewAsLoaded) {
+            if (treatViewAsLoaded)
+            {
                 view.SetValue(View.IsLoadedProperty, true);
             }
 
-            TryInjectParameters(viewModel, currentParameter);
+            TryInjectParameters(viewModel, CurrentParameter);
             ViewModelBinder.Bind(viewModel, view, null);
 
             var activator = viewModel as IActivate;
-            if (activator != null) {
+            if (activator != null)
+            {
                 activator.Activate();
             }
         }
@@ -241,8 +270,11 @@ namespace Caliburn.Micro {
         protected virtual void TryInjectParameters(object viewModel, object parameter) {
             var viewModelType = viewModel.GetType();
 
-            if (parameter is string && ((string) parameter).StartsWith("caliburn://")) {
-                var uri = new Uri((string) parameter);
+            var stringParameter = parameter as string;
+            var dictionaryParameter = parameter as IDictionary<string, object>;
+
+            if (stringParameter != null && stringParameter.StartsWith("caliburn://")) {
+                var uri = new Uri(stringParameter);
 
                 if (!String.IsNullOrEmpty(uri.Query)) {
                     var decorder = new WwwFormUrlDecoder(uri.Query);
@@ -256,6 +288,18 @@ namespace Caliburn.Micro {
 
                         property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, pair.Value, null));
                     }
+                }
+            }
+            else if (dictionaryParameter != null) {
+                foreach (var pair in dictionaryParameter) {
+                    var property = viewModelType.GetPropertyCaseInsensitive(pair.Key);
+
+                    if (property == null)
+                    {
+                        continue;
+                    }
+
+                    property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, pair.Value, null));
                 }
             }
             else {
@@ -312,7 +356,7 @@ namespace Caliburn.Micro {
         /// <summary>
         /// Gets or sets the data type of the current content, or the content that should be navigated to.
         /// </summary>
-        public Type SourcePageType {
+        public virtual Type SourcePageType {
             get { return frame.SourcePageType; }
             set { frame.SourcePageType = value; }
         }
@@ -320,7 +364,7 @@ namespace Caliburn.Micro {
         /// <summary>
         /// Gets the data type of the content that is currently displayed.
         /// </summary>
-        public Type CurrentSourcePageType {
+        public virtual Type CurrentSourcePageType {
             get { return frame.CurrentSourcePageType; }
         }
 
@@ -329,7 +373,7 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name="sourcePageType"> The <see cref="System.Type" /> to navigate to. </param>
         /// <returns> Whether or not navigation succeeded. </returns>
-        public bool Navigate(Type sourcePageType) {
+        public virtual bool Navigate(Type sourcePageType) {
             return frame.Navigate(sourcePageType);
         }
 
@@ -339,35 +383,35 @@ namespace Caliburn.Micro {
         /// <param name="sourcePageType"> The <see cref="System.Type" /> to navigate to. </param>
         /// <param name="parameter">The object parameter to pass to the target.</param>
         /// <returns> Whether or not navigation succeeded. </returns>
-        public bool Navigate(Type sourcePageType, object parameter) {
+        public virtual bool Navigate(Type sourcePageType, object parameter) {
             return frame.Navigate(sourcePageType, parameter);
         }
 
         /// <summary>
         ///   Navigates forward.
         /// </summary>
-        public void GoForward() {
+        public virtual void GoForward() {
             frame.GoForward();
         }
 
         /// <summary>
         ///   Navigates back.
         /// </summary>
-        public void GoBack() {
+        public virtual void GoBack() {
             frame.GoBack();
         }
 
         /// <summary>
         ///   Indicates whether the navigator can navigate forward.
         /// </summary>
-        public bool CanGoForward {
+        public virtual bool CanGoForward {
             get { return frame.CanGoForward; }
         }
 
         /// <summary>
         ///   Indicates whether the navigator can navigate back.
         /// </summary>
-        public bool CanGoBack {
+        public virtual bool CanGoBack {
             get { return frame.CanGoBack; }
         }
 
@@ -375,14 +419,14 @@ namespace Caliburn.Micro {
         /// <summary>
         /// Gets a collection of PageStackEntry instances representing the backward navigation history of the Frame.
         /// </summary>
-        public IList<PageStackEntry> BackStack {
+        public virtual IList<PageStackEntry> BackStack {
             get { return frame.BackStack; }
         }
 
         /// <summary>
         /// Gets a collection of PageStackEntry instances representing the forward navigation history of the Frame.
         /// </summary>
-        public IList<PageStackEntry> ForwardStack {
+        public virtual IList<PageStackEntry> ForwardStack {
             get { return frame.ForwardStack; }
         }
 #endif
@@ -391,12 +435,12 @@ namespace Caliburn.Micro {
         /// Stores the frame navigation state in local settings if it can.
         /// </summary>
         /// <returns>Whether the suspension was sucessful</returns>
-        public bool SuspendState() {
+        public virtual bool SuspendState() {
             try {
                 var container = GetSettingsContainer();
 
                 container.Values[FrameStateKey] = frame.GetNavigationState();
-                container.Values[ParameterKey] = currentParameter;
+                container.Values[ParameterKey] = CurrentParameter;
 
                 return true;
             }
@@ -411,7 +455,7 @@ namespace Caliburn.Micro {
         /// Tries to restore the frame navigation state from local settings.
         /// </summary>
         /// <returns>Whether the restoration of successful.</returns>
-        public bool ResumeState() {
+        public virtual bool ResumeState() {
             var container = GetSettingsContainer();
 
             if (!container.Values.ContainsKey(FrameStateKey))
@@ -419,7 +463,7 @@ namespace Caliburn.Micro {
 
             var frameState = (string) container.Values[FrameStateKey];
 
-            currentParameter = container.Values.ContainsKey(ParameterKey) ?
+            CurrentParameter = container.Values.ContainsKey(ParameterKey) ?
                 container.Values[ParameterKey] :
                 null;
 
@@ -435,7 +479,7 @@ namespace Caliburn.Micro {
 
             BindViewModel(view);
 
-            if (Window.Current.Content != frame)
+            if (Window.Current.Content == null)
                 Window.Current.Content = frame;
 
             Window.Current.Activate();
@@ -447,18 +491,18 @@ namespace Caliburn.Micro {
         /// <summary>
         /// Occurs when the user presses the hardware Back button.
         /// </summary>
-        public event EventHandler<BackPressedEventArgs> BackPressed = delegate { };
+        public event EventHandler<BackPressedEventArgs> BackRequested = delegate { };
 
         /// <summary>
         ///  Occurs when the user presses the hardware Back button. Allows the handlers to cancel the default behavior.
         /// </summary>
         /// <param name="e">The event arguments</param>
-        protected virtual void OnBackPressed(BackPressedEventArgs e) {
-            BackPressed(this, e);
+        protected virtual void OnBackRequested(BackPressedEventArgs e) {
+            BackRequested(this, e);
         }
 
-        private void OnHardwareBackPressed(object sender, BackPressedEventArgs e) {
-            OnBackPressed(e);
+        private void OnBackRequested(object sender, BackPressedEventArgs e) {
+            OnBackRequested(e);
 
             if (e.Handled)
                 return;
@@ -468,6 +512,35 @@ namespace Caliburn.Micro {
                 GoBack();
             }
         }
+#elif WINDOWS_UWP
+        /// <summary>
+        /// Occurs when the user presses the hardware Back button.
+        /// </summary>
+        public event EventHandler<BackRequestedEventArgs> BackRequested = delegate { };
+
+        /// <summary>
+        ///  Occurs when the user presses the hardware Back button. Allows the handlers to cancel the default behavior.
+        /// </summary>
+        /// <param name="e">The event arguments</param>
+        protected virtual void OnBackRequested(BackRequestedEventArgs e)
+        {
+            BackRequested(this, e);
+        }
+
+        private void OnBackRequested(object sender, BackRequestedEventArgs e)
+        {
+            OnBackRequested(e);
+
+            if (e.Handled)
+                return;
+
+            if (CanGoBack)
+            {
+                e.Handled = true;
+                GoBack();
+            }
+        }
+
 #endif
 
         private static ApplicationDataContainer GetSettingsContainer() {

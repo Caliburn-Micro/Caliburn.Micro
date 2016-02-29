@@ -3,15 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-#if WinRT && !WinRT81
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
-    using Windows.UI.Xaml.Controls.Primitives;
-    using Windows.UI.Xaml.Data;
-    using Windows.UI.Xaml.Markup;
-    using EventTrigger = Windows.UI.Interactivity.EventTrigger;
-    using Windows.UI.Xaml.Shapes;
-#elif WinRT81
+#if WinRT81
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Controls.Primitives;
@@ -199,12 +191,25 @@
                 info,
                 binding
                 );
-#elif !(WinRT && !WinRT81)
+#elif WinRT81 || NET
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
         };
 
         static ConventionManager() {
+#if WINDOWS_UWP
+            AddElementConvention<SplitView>(SplitView.ContentProperty, "IsPaneOpen", "PaneClosing").GetBindableProperty =
+                delegate (DependencyObject foundControl)
+                {
+                    var element = (SplitView)foundControl;
+
+                    if (!OverwriteContent)
+                       return null;
+
+                    Log.Info("ViewModel bound on {0}.", element.Name);
+                    return View.ModelProperty;
+               };
+#endif
 #if !WINDOWS_PHONE && !WinRT
             AddElementConvention<DatePicker>(DatePicker.SelectedDateProperty, "SelectedDate", "SelectedDateChanged");
 #endif
@@ -225,7 +230,7 @@
             AddElementConvention<Slider>(Slider.ValueProperty, "Value", "ValueChanged");
             AddElementConvention<RichEditBox>(RichEditBox.DataContextProperty, "DataContext", "TextChanged");
 #endif
-#if WP81
+#if WP81 || WINDOWS_UWP
             AddElementConvention<Pivot>(Pivot.ItemsSourceProperty, "SelectedItem", "SelectionChanged")
                 .ApplyBinding = (viewModelType, path, property, element, convention) =>
                 {
@@ -383,13 +388,6 @@
         public static bool HasBinding(FrameworkElement element, DependencyProperty property) {
 #if NET
             return BindingOperations.GetBindingBase(element, property) != null;
-#elif WinRT && !WinRT81
-            var localValue = element.ReadLocalValue(property);
-
-            if (localValue == DependencyProperty.UnsetValue)
-                return false;
-
-            return localValue.GetType().FullName == "System.__ComObject";
 #else
             return element.GetBindingExpression(property) != null;
 #endif

@@ -263,12 +263,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\bin\win8\Debug\Caliburn.Micro.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro.Extensions, Version=1.5.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\win8\Debug\Caliburn.Micro.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="Caliburn.Micro.Platform">
       <HintPath>..\..\..\bin\win8\Debug\Caliburn.Micro.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform.Core">
+      <HintPath>..\..\..\bin\win8\Debug\Caliburn.Micro.Platform.Core.dll</HintPath>
     </Reference>
     <Reference Include="Callisto, Version=1.2.7.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

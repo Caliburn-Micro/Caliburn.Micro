@@ -61,18 +61,17 @@
     <Compile Include="Action.cs" />
     <Compile Include="ActionExecutionContext.cs" />
     <Compile Include="ActionMessage.cs" />
-    <Compile Include="AssemblySource.cs" />
     <Compile Include="Bind.cs" />
     <Compile Include="BindingScope.cs" />
     <Compile Include="BooleanToVisibilityConverter.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="ChildResolver.cs" />
     <Compile Include="ConventionManager.cs" />
+    <Compile Include="DependencyPropertyHelper.cs" />
     <Compile Include="ElementConvention.cs" />
-    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="IHaveParameters.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageBinder.cs" />
-    <Compile Include="NameTransformer.cs" />
     <Compile Include="net40\AttachedCollection.cs" />
     <Compile Include="net40\Parameter.cs" />
     <Compile Include="net40\WindowManager.cs" />
@@ -81,10 +80,7 @@
       <SubType>Code</SubType>
     </Compile>
     <AppDesigner Include="Properties\" />
-    <Compile Include="RegExHelper.cs" />
-    <Compile Include="StringSplitter.cs" />
     <Compile Include="TypeDescriptor.cs" />
-    <Compile Include="TypeMappingConfiguration.cs" />
     <Compile Include="View.cs" />
     <Compile Include="ViewLocator.cs" />
     <Compile Include="ViewModelBinder.cs" />
@@ -101,6 +97,10 @@
     <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">
       <Project>{6d772b52-da8f-4784-971a-4bf50cb6d306}</Project>
       <Name>Caliburn.Micro</Name>
+    </ProjectReference>
+    <ProjectReference Include="Caliburn.Micro.Platform.Core.csproj">
+      <Project>{0ecbe3d9-aed4-419d-a6e3-c53d5ce2a02a}</Project>
+      <Name>Caliburn.Micro.Platform.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
