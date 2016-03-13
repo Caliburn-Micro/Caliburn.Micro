@@ -9,7 +9,7 @@ Caliburn.Micro is a small, yet powerful framework, designed for building applica
 
 ## Build
 
-![Build Status](https://caliburn-micro.visualstudio.com/DefaultCollection/_apis/public/build/definitions/3d583f9b-1c37-46a7-b7c0-0fcc7bcff450/1/badge)
+Visual Studio Team Services ![Build Status](https://caliburn-micro.visualstudio.com/DefaultCollection/_apis/public/build/definitions/3d583f9b-1c37-46a7-b7c0-0fcc7bcff450/1/badge)
 
 ## Questions
 - use [Stack Overflow](http://stackoverflow.com/questions/tagged/caliburn.micro)
