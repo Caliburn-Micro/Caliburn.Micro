@@ -7,6 +7,10 @@ Caliburn.Micro is a small, yet powerful framework, designed for building applica
 - [Caliburn.Micro](http://www.nuget.org/packages/Caliburn.Micro/) - The platform-specific adapters for Caliburn.Micro.
 - [Caliburn.Micro.Start](http://www.nuget.org/packages/Caliburn.Micro.Start/) - Includes a starting bootstrapper, view model and view.
 
+## Build
+
+![Build Status](https://caliburn-micro.visualstudio.com/DefaultCollection/_apis/public/build/definitions/3d583f9b-1c37-46a7-b7c0-0fcc7bcff450/1/badge)
+
 ## Questions
 - use [Stack Overflow](http://stackoverflow.com/questions/tagged/caliburn.micro)
 
