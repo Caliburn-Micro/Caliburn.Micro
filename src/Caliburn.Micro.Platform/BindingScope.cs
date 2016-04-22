@@ -225,9 +225,24 @@
 
             if (menuFlyout != null && menuFlyout.Items != null) {
                 foreach (var item in menuFlyout.Items) {
-                    yield return item;
+                    foreach (var subItem in ResolveMenuFlyoutItems(item)) {
+                        yield return subItem;
+                    }
                 }
             }
+        }
+
+        private static IEnumerable<DependencyObject> ResolveMenuFlyoutItems(MenuFlyoutItemBase item) {
+            yield return item;
+#if WINDOWS_UWP
+            var subItem = item as MenuFlyoutSubItem;
+
+            if (subItem != null && subItem.Items != null) {
+                foreach (var subSubItem in subItem.Items) {
+                    yield return subSubItem;
+                }
+            }
+#endif
         }
 
         private static IEnumerable<DependencyObject> ResolveCommandBar(CommandBar commandBar) {
