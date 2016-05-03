@@ -29,6 +29,9 @@ namespace Caliburn.Micro.HelloUWP.ViewModels
 
         public void SetupNavigationService(Frame frame)
         {
+            if (_container.HasHandler(typeof(INavigationService), null))
+                _container.UnregisterHandler(typeof(INavigationService), null);
+
             _navigationService = _container.RegisterNavigationService(frame);
 
             if (_resume)
