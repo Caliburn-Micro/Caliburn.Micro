@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Caliburn.Micro.Xamarin.Forms</id>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <authors>Rob Eisenberg, Marco Amendola, Chin Bae, Ryan Cromwell, Nigel Sampson, Thomas Ibel, Matt Hidinger</authors>
     <description>A small, yet powerful framework designed for Xaml platforms, Caliburn.Micro implements a variety of UI patterns for solving real-world problems. Patterns that are highlighted include MVVM (Presentation Model), MVP and MVC.</description>
     <language>en-US</language>
@@ -16,7 +16,7 @@
 
     <dependencies>
       <group>
-        <dependency id="Caliburn.Micro.Core" version="[3.0.0]" />
+        <dependency id="Caliburn.Micro.Core" version="[3.0.1]" />
         <dependency id="Xamarin.Forms" version="2.0.1.6505" />
       </group>
     </dependencies>
