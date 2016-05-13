@@ -15,7 +15,7 @@ namespace Hello.Forms.iOS
         {
             Xamarin.Forms.Forms.Init();
 
-            LoadApplication(new App(IoC.Get<SimpleContainer>()));
+            LoadApplication(IoC.Get<App>());
 
             return base.FinishedLaunching(app, options);
         }

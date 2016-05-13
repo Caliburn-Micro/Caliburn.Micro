@@ -16,7 +16,7 @@ namespace Hello.Forms.Droid.Activities
 
             Xamarin.Forms.Forms.Init(this, bundle);
 
-            LoadApplication(new App(IoC.Get<SimpleContainer>()));
+            LoadApplication(IoC.Get<App>());
         }
     }
 }

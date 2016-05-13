@@ -19,6 +19,8 @@ namespace Hello.Forms.WinPhone
         {
             container = new PhoneContainer();
             container.RegisterPhoneServices(RootFrame);
+
+            container.Singleton<App>();
         }
 
         protected override IEnumerable<Assembly> SelectAssemblies()

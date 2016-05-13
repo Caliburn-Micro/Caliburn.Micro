@@ -20,6 +20,8 @@ namespace Hello.Forms.iOS
         {
             container = new SimpleContainer();
             container.Instance(container);
+
+            container.Singleton<App>();
         }
 
         protected override void BuildUp(object instance)

@@ -13,7 +13,7 @@ namespace Hello.Forms.WinPhone.Views
 
             Xamarin.Forms.Forms.Init();
 
-            LoadApplication(new Forms.App(IoC.Get<PhoneContainer>()));
+            LoadApplication(IoC.Get<Forms.App>());
         }
     }
 }

@@ -30,6 +30,8 @@ namespace Hello.Forms.Droid
         {
             container = new SimpleContainer();
             container.Instance(container);
+
+            container.Singleton<App>();
         }
 
         protected override IEnumerable<Assembly> SelectAssemblies()
