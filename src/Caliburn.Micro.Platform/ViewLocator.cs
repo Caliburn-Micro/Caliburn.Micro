@@ -280,9 +280,9 @@ namespace Caliburn.Micro
 #endif
 
             view = (UIElement)System.Activator.CreateInstance(viewType);
-#if !XFORMS
+
             InitializeComponent(view);
-#endif
+
             return view;
         };
 
