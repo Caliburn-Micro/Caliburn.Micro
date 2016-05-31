@@ -31,10 +31,13 @@ namespace Caliburn.Micro.HelloUWP
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
+            if (args.PreviousExecutionState == ApplicationExecutionState.Running)
+                return;
+
             // Note we're using DisplayRootViewFor (which is view model first)
             // this means we're not creating a root frame and just directly
             // inserting ShellView as the Window.Content
-
+            
             DisplayRootViewFor<ShellViewModel>();
 
             // It's kinda of weird having to use the event aggregator to pass 
