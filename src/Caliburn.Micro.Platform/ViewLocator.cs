@@ -260,8 +260,9 @@ namespace Caliburn.Micro
         ///   Pass the type of view as a parameter and recieve an instance of the view.
         /// </remarks>
         public static Func<Type, UIElement> GetOrCreateViewType = viewType => {
-            var view = IoC.GetAllInstances(viewType)
-                           .FirstOrDefault() as UIElement;
+            var view =
+            (IoC.GetAllInstances(viewType).FirstOrDefault() as UIElement) ??
+            (IoC.GetInstance(viewType, null) as UIElement);
 
             if (view != null) {
                 InitializeComponent(view);
