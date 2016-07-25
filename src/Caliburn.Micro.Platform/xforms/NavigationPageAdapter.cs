@@ -139,8 +139,8 @@
         {
             var page = view as Page;
 
-            if (page == null)
-                throw new NotSupportedException(String.Format("{0} does not inherit from {1}.", view.GetType(), typeof(Page)));
+            if (page == null && !(view is ContentView))
+                throw new NotSupportedException(String.Format("{0} does not inherit from either {1} or {2}.", view.GetType(), typeof(Page), typeof(ContentView)));
 
             var viewModel = ViewModelLocator.LocateForView(view);
 
@@ -148,6 +148,11 @@
                 TryInjectParameters(viewModel, parameter);
 
                 ViewModelBinder.Bind(viewModel, view, null);
+            }
+
+            if (view is ContentView)
+            {
+                page = new ContentPage { Content = (ContentView)view };
             }
 
             page.Appearing += (s, e) => ActivateView(page);
