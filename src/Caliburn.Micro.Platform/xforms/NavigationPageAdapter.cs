@@ -1,4 +1,6 @@
-﻿namespace Caliburn.Micro.Xamarin.Forms {
+﻿using System.Reflection;
+
+namespace Caliburn.Micro.Xamarin.Forms {
 
     using System;
     using System.Collections.Generic;
@@ -33,7 +35,12 @@
 
             var hasDiplayName = viewModel as IHaveDisplayName;
             if (hasDiplayName != null) {
-                page.Title = hasDiplayName.DisplayName;
+
+                var path = "DisplayName";
+                var property = typeof(IHaveDisplayName).GetRuntimeProperty(path);
+                ConventionManager.SetBinding(viewModel.GetType(), path, property, page, null, Page.TitleProperty);
+
+                page.BindingContext = viewModel;
             }
 
             return page;
