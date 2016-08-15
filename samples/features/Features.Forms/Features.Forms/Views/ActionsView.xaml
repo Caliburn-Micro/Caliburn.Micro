@@ -13,6 +13,7 @@
         <Entry Placeholder="Name"/>
         <Button cm:Message.Attach="Clear" Text="Clear"/>
         <Button cm:Message.Attach="SimpleSayHello" Text="Simple Say Hello"/>
+        <Button cm:Message.Attach="[Event Clicked] = [Action SimpleSayHello()]" Text="Simple Say Hello (Full Attach Syntax)"/>  
         <Button x:Name="FullSyntax"  Text="Simple Say Hello (Full Behaviour Syntax)">
             <Button.Triggers>
                 <EventTrigger Event="Clicked">
