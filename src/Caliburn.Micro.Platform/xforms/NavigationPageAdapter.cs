@@ -1,4 +1,6 @@
-﻿namespace Caliburn.Micro.Xamarin.Forms {
+﻿using System.Reflection;
+
+namespace Caliburn.Micro.Xamarin.Forms {
 
     using System;
     using System.Collections.Generic;
@@ -17,6 +19,31 @@
         /// <param name="navigationPage">The navigation page to adapat</param>
         public NavigationPageAdapter(NavigationPage navigationPage) {
             this.navigationPage = navigationPage;
+        }
+
+
+        /// <summary>
+        /// Allow Xamarin to navigate to a ViewModel backed by a view which is of type <see cref="T:Xamarin.Forms.ContentView"/> by adapting the result
+        /// to a <see cref="T:Xamarin.Forms.ContentPage"/>.
+        /// </summary>
+        /// <param name="view">The view to be adapted</param>
+        /// <param name="viewModel">The view model which is bound to the view</param>
+        /// <returns>The adapted ContentPage</returns>
+        protected virtual ContentPage CreateContentPage(ContentView view, object viewModel)
+        {
+            var page = new ContentPage { Content = view };
+
+            var hasDiplayName = viewModel as IHaveDisplayName;
+            if (hasDiplayName != null) {
+
+                var path = "DisplayName";
+                var property = typeof(IHaveDisplayName).GetRuntimeProperty(path);
+                ConventionManager.SetBinding(viewModel.GetType(), path, property, page, null, Page.TitleProperty);
+
+                page.BindingContext = viewModel;
+            }
+
+            return page;
         }
 
         private static void DeactivateView(BindableObject view)
@@ -139,8 +166,8 @@
         {
             var page = view as Page;
 
-            if (page == null)
-                throw new NotSupportedException(String.Format("{0} does not inherit from {1}.", view.GetType(), typeof(Page)));
+            if (page == null && !(view is ContentView))
+                throw new NotSupportedException(String.Format("{0} does not inherit from either {1} or {2}.", view.GetType(), typeof(Page), typeof(ContentView)));
 
             var viewModel = ViewModelLocator.LocateForView(view);
 
@@ -148,6 +175,11 @@
                 TryInjectParameters(viewModel, parameter);
 
                 ViewModelBinder.Bind(viewModel, view, null);
+            }
+
+            var contentView = view as ContentView;
+            if (contentView != null) {
+                page = CreateContentPage(contentView, viewModel);
             }
 
             page.Appearing += (s, e) => ActivateView(page);
