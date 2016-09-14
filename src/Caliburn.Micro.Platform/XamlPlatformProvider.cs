@@ -19,25 +19,39 @@
         private CoreDispatcher dispatcher;
 #else
         private Dispatcher dispatcher;
+#if !NET45
+        private static TaskCompletionSource<object> taskForce;
+#endif
 #endif
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XamlPlatformProvider"/> class.
-        /// </summary>
-        public XamlPlatformProvider() {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="XamlPlatformProvider"/> class.
+    /// </summary>
+    public XamlPlatformProvider() {
 #if SILVERLIGHT
             dispatcher = System.Windows.Deployment.Current.Dispatcher;
 #elif WinRT
             dispatcher = Window.Current.Dispatcher;
 #else
             dispatcher = Dispatcher.CurrentDispatcher;
+#if !NET45
+            dispatcher.ShutdownFinished += (sender, args) =>
+            {
+                var taskSource = taskForce;
+                if (taskSource != null)
+                {
+                    taskForce = null;
+                    taskSource.SetResult(null);
+                }
+            };
 #endif
-        }
+#endif
+    }
 
-        /// <summary>
-        /// Indicates whether or not the framework is in design-time mode.
-        /// </summary>
-        public bool InDesignMode {
+    /// <summary>
+    /// Indicates whether or not the framework is in design-time mode.
+    /// </summary>
+    public bool InDesignMode {
             get { return View.InDesignMode; }
         }
 
@@ -80,16 +94,29 @@
             return dispatcher.InvokeAsync(action).Task;
 #else
             var taskSource = new TaskCompletionSource<object>();
+            taskForce = taskSource;
             System.Action method = () => {
                 try {
                     action();
+                    taskForce = null;
                     taskSource.SetResult(null);
                 }
                 catch(Exception ex) {
+                    taskForce = null;
                     taskSource.SetException(ex);
                 }
             };
+
+#if SILVERLIGHT
             dispatcher.BeginInvoke(method);
+#else
+            if (dispatcher.BeginInvoke(method).Status == DispatcherOperationStatus.Aborted)
+            {
+                taskForce = null;
+                taskSource.SetResult(null);
+            }
+#endif
+
             return taskSource.Task;
 #endif
         }
