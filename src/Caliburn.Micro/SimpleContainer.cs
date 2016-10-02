@@ -222,10 +222,45 @@
             return args.ToArray();
         }
 
-        static ConstructorInfo SelectEligibleConstructor(Type type) {
-            return (from c in type.GetConstructors().Where(c => c.IsPublic)
-                    orderby c.GetParameters().Length descending
-                    select c).FirstOrDefault();
+        /// <summary>
+        /// select the constructor that has the maximum number of registered constructor arguments, but the minimum number of unknown ones.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        ConstructorInfo SelectEligibleConstructor(Type type) {
+            var publicConstructors = type.GetConstructors().Where(c => c.IsPublic);
+
+            double currentParameterCount = -1;
+            double maxResolvable = -1;
+            ConstructorInfo candidate = null;
+
+            foreach (var constructor in publicConstructors) {
+                var allParametersCount = 0;
+                var resolvableParameters = 0;
+
+                foreach (var parameter in constructor.GetParameters()) {
+                    allParametersCount++;
+
+                    // TODO: prefer the parameter name as key? require that for multiple parameters of the same type instead of using the same value more than once?
+                    if (this.HasHandler(parameter.ParameterType, null)) {
+                        resolvableParameters++;
+                    }
+                }
+
+                var resolvableRatio = allParametersCount == 0 ? (allParametersCount == 0 ? 1 : 0) : resolvableParameters/(double) allParametersCount;
+
+                if (resolvableRatio > maxResolvable) {
+                    maxResolvable = resolvableRatio;
+                    candidate = constructor;
+                    currentParameterCount = allParametersCount;
+                }
+                else if (resolvableRatio == maxResolvable && currentParameterCount < allParametersCount) {
+                    candidate = constructor;
+                    currentParameterCount = allParametersCount;
+                }
+            }
+
+            return candidate;
         }
 
         class ContainerEntry : List<Func<SimpleContainer, object>> {
