@@ -33,6 +33,32 @@
         }
     }
 
+    public class SimpleContainer_Find_Constructor {
+
+        public class SingleEmptyConstructorType {
+            public SingleEmptyConstructorType() {
+                
+            }
+        }
+
+        [Fact]
+        public void Container_Finds_Single_Constructor() {
+            var container = new SimpleContainer();
+            container.Singleton<SingleEmptyConstructorType>();
+            container.GetInstance(typeof(SingleEmptyConstructorType), null);
+        }
+
+        public class SingleNonEmptyConstructorType {
+            public SingleNonEmptyConstructorType(SimpleContainer_Find_Constructor.SingleEmptyConstructorType type) {       
+            }
+        }
+
+        [Fact]
+        public void Container_No_EmptyConstructor() {
+            var container = new SimpleContainer();
+            container.Singleton<SingleNonEmptyConstructorType>();
+            container.GetInstance(typeof(SingleNonEmptyConstructorType), null);
+        }
     public class SimpleContainer_Checking_for_Handler {
         [Fact]
         public void HasHandler_returns_true_when_handler_exists() {
