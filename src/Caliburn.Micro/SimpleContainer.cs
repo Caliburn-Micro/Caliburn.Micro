@@ -122,7 +122,7 @@
         /// </summary>
         /// <param name="service">The service.</param>
         /// <param name="key">The key.</param>
-        /// <returns>True if a handler is registere; false otherwise.</returns>
+        /// <returns>True if a handler is registered; false otherwise.</returns>
         public bool HasHandler(Type service, string key) {
             return GetEntry(service, key) != null;
         }
