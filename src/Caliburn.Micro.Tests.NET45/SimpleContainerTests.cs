@@ -59,6 +59,24 @@
             container.Singleton<SingleNonEmptyConstructorType>();
             container.GetInstance(typeof(SingleNonEmptyConstructorType), null);
         }
+
+        public class SingleIntConstructor {
+            public int Value { get; private set; }
+
+            public SingleIntConstructor(int x) {
+                this.Value = x;
+            }
+        }
+
+        [Fact]
+        public void Container_SingleIntConstructor() {
+            var container = new SimpleContainer();
+            container.Singleton<SingleIntConstructor>();
+            container.RegisterInstance(typeof(int), "x", 4);
+            var inst = (SingleIntConstructor)container.GetInstance(typeof(SingleIntConstructor), null);
+            Assert.Equal(4, inst.Value);
+        }
+
     public class SimpleContainer_Checking_for_Handler {
         [Fact]
         public void HasHandler_returns_true_when_handler_exists() {
