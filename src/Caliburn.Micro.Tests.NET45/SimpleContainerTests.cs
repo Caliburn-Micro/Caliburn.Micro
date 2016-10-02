@@ -77,6 +77,36 @@
             Assert.Equal(4, inst.Value);
         }
 
+        public class TwoConstructors {
+            public int Value { get; set; }
+
+            public TwoConstructors() {
+                this.Value = 42;
+            }
+
+            public TwoConstructors(int value) {
+                Value = value;
+            }
+        }
+
+        [Fact]
+        public void Container_ChooseConstructorWithRegisteredParameter() {
+            var container = new SimpleContainer();
+            container.Singleton<TwoConstructors>();
+            container.RegisterInstance(typeof(int), null, 23);
+            var inst = (TwoConstructors) container.GetInstance(typeof(TwoConstructors), null);
+            Assert.Equal(23, inst.Value);
+        }
+
+        [Fact]
+        public void Container_ChooseEmptyConstructorWithoutRegisteredParameter() {
+            var container = new SimpleContainer();
+            container.Singleton<TwoConstructors>();
+            var inst = (TwoConstructors) container.GetInstance(typeof(TwoConstructors), null);
+            Assert.Equal(42, inst.Value);
+        }
+    }
+
     public class SimpleContainer_Checking_for_Handler {
         [Fact]
         public void HasHandler_returns_true_when_handler_exists() {
