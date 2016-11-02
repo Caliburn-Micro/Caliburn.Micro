@@ -48,28 +48,14 @@ namespace Caliburn.Micro.Xamarin.Forms {
 
         private static void DeactivateView(BindableObject view)
         {
-            if (view == null)
-                return;
-
-            var deactivate = view.BindingContext as IDeactivate;
-
-            if (deactivate != null)
-            {
-                deactivate.Deactivate(false);
-            }
+            var deactivate = view?.BindingContext as IDeactivate;
+            deactivate?.Deactivate(false);
         }
 
         private static void ActivateView(BindableObject view)
         {
-            if (view == null)
-                return;
-
-            var activator = view.BindingContext as IActivate;
-
-            if (activator != null)
-            {
-                activator.Activate();
-            }
+            var activate = view?.BindingContext as IActivate;
+            activate?.Activate();
         }
 
         /// <summary>
@@ -246,10 +232,7 @@ namespace Caliburn.Micro.Xamarin.Forms {
         private bool CanClose() {
             var view = navigationPage.CurrentPage;
 
-            if (view == null)
-                return true;
-
-            var guard = view.BindingContext as IGuardClose;
+            var guard = view?.BindingContext as IGuardClose;
 
             if (guard != null)
             {
