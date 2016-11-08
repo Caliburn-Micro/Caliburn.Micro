@@ -19,6 +19,34 @@
         <dependency id="Caliburn.Micro.Core" version="[3.0.1]" />
         <dependency id="Xamarin.Forms" version="2.0.1.6505" />
       </group>
+      <group targetFramework="net45">
+        <dependency id="Caliburn.Micro" version="[3.0.1]" />
+        <dependency id="Xamarin.Forms" version="2.0.1.6505" />
+      </group>
+      <group targetFramework="win8">
+        <dependency id="Caliburn.Micro" version="[3.0.1]" />
+        <dependency id="Xamarin.Forms" version="2.0.1.6505" />
+      </group>
+      <group targetFramework="wp8">
+        <dependency id="Caliburn.Micro" version="[3.0.1]" />
+        <dependency id="Xamarin.Forms" version="2.0.1.6505" />
+      </group>
+      <group targetFramework="wpa81">
+        <dependency id="Caliburn.Micro" version="[3.0.1]" />
+        <dependency id="Xamarin.Forms" version="2.0.1.6505" />
+      </group>
+      <group targetFramework="MonoAndroid10">
+        <dependency id="Caliburn.Micro" version="[3.0.1]" />
+        <dependency id="Xamarin.Forms" version="2.0.1.6505" />
+      </group>
+      <group targetFramework="Xamarin.iOS10">
+        <dependency id="Caliburn.Micro" version="[3.0.1]" />
+        <dependency id="Xamarin.Forms" version="2.0.1.6505" />
+      </group>
+      <group targetFramework="MonoTouch10">
+        <dependency id="Caliburn.Micro" version="[3.0.1]" />
+        <dependency id="Xamarin.Forms" version="2.0.1.6505" />
+      </group>
     </dependencies>
   </metadata>
 
