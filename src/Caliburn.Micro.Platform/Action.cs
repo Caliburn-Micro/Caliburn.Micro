@@ -153,7 +153,7 @@ namespace Caliburn.Micro
         }
 
         static void SetTargetCore(DependencyPropertyChangedEventArgs e, DependencyObject d, bool setContext) {
-            if (e.NewValue == e.OldValue || Execute.InDesignMode) {
+            if (e.NewValue == e.OldValue || (Execute.InDesignMode && e.NewValue is string)) {
                 return;
             }
 
