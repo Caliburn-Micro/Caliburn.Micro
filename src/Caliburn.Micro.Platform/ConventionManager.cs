@@ -249,6 +249,7 @@
             AddElementConvention<HyperlinkButton>(HyperlinkButton.ContentProperty, "DataContext", "Click");
             AddElementConvention<PasswordBox>(PasswordBox.PasswordProperty, "Password", "PasswordChanged");
 #else
+            AddElementConvention<DocumentViewer>(DocumentViewer.DocumentProperty, "DataContext", "Loaded");
             AddElementConvention<PasswordBox>(null, "Password", "PasswordChanged");
             AddElementConvention<Hyperlink>(Hyperlink.DataContextProperty, "DataContext", "Click");
             AddElementConvention<RichTextBox>(RichTextBox.DataContextProperty, "DataContext", "TextChanged");
