@@ -131,5 +131,26 @@
         public static IEnumerable<TService> GetAllInstances<TService>(this SimpleContainer container) {
             return container.GetAllInstances(typeof (TService)).Cast<TService>();
         }
+
+        /// <summary>
+        /// Determines if a handler for the service/key has previously been registered.
+        /// </summary>
+        /// <typeparam name="TService">The service type.</typeparam>
+        /// <param name="container">The container.</param>
+        /// <param name="key">The key.</param>
+        /// <returns>True if a handler is registere; false otherwise.</returns>
+        public static bool HasHandler<TService>(this SimpleContainer container, string key = null) {
+            return container.HasHandler(typeof (TService), key);
+        }
+
+        /// <summary>
+        ///   Unregisters any handlers for the service/key that have previously been registered.
+        /// </summary>
+        /// <typeparam name="TService">The service type.</typeparam>
+        /// <param name="container">The container.</param>
+        /// <param name = "key">The key.</param>
+        public static void UnregisterHandler<TService>(this SimpleContainer container, string key = null) {
+            container.UnregisterHandler(typeof(TService), key);
+        }
     }
 }
