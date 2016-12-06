@@ -36,6 +36,10 @@
 
         protected override object GetInstance(Type serviceType, string key)
         {
+            // Skip trying to instantiate views since MEF will throw an exception
+            if (typeof(UIElement).IsAssignableFrom(serviceType))
+				return null;
+                
             var contract = string.IsNullOrEmpty(key) ? AttributedModelServices.GetContractName(serviceType) : key;
             var exports = container.GetExportedValues<object>(contract);
 
