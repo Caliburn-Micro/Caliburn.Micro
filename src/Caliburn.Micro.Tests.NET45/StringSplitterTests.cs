@@ -29,7 +29,7 @@
         }
 
         [Fact]
-        public void ShouldSplitParametersOnComman()
+        public void ShouldSplitParametersOnComma()
         {
             var message = "message, string, for, testing";
 

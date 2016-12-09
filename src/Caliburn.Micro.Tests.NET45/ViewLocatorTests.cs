@@ -6,7 +6,7 @@ namespace Caliburn.Micro.WPF.Tests
     public class ViewLocatorTests
     {
         [Fact]
-        public void COnfigureTypeMappingsWithDefaultValuesShouldNotThrow()
+        public void ConfigureTypeMappingsWithDefaultValuesShouldNotThrow()
         {
             var typeMappingConfiguration = new TypeMappingConfiguration();
 
