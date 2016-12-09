@@ -6,7 +6,7 @@ namespace Caliburn.Micro.WPF.Tests {
 
     public class RegExHelperTests {
         [Fact]
-        public void GetCaptureGroupReturnesGroupNameAndRegex() {
+        public void GetCaptureGroupReturnsGroupNameAndRegex() {
             var groupName = "group";
             var regex = ".*";
 
