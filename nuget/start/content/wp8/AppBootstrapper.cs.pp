@@ -23,11 +23,7 @@
         }
 
         protected override object GetInstance(Type service, string key) {
-            var instance = container.GetInstance(service, key);
-            if (instance != null)
-                return instance;
-
-            throw new InvalidOperationException("Could not locate any instances.");
+            return container.GetInstance(service, key);
         }
 
         protected override IEnumerable<object> GetAllInstances(Type service) {
