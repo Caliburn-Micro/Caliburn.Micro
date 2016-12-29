@@ -49,6 +49,7 @@
     <Compile Include="Parser.cs" />
     <Compile Include="xforms\ActionMessage.cs" />
     <Compile Include="xforms\AttachedCollection.cs" />
+    <Compile Include="xforms\ContextAwareDataTemplateSelector.cs" />
     <Compile Include="xforms\ConventionManager.cs" />
     <Compile Include="xforms\HttpUtility.cs" />
     <Compile Include="xforms\IAttachedObject.cs" />
