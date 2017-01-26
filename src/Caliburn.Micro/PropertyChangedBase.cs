@@ -10,6 +10,11 @@
     [DataContract]
     public class PropertyChangedBase : INotifyPropertyChangedEx {
         /// <summary>
+        /// True to marshal NotifyOfPropertyChange calls to the UI thread
+        /// </summary>
+        public static bool MarshalOnUIThread = true;
+        
+        /// <summary>
         /// Creates an instance of <see cref = "PropertyChangedBase" />.
         /// </summary>
         public PropertyChangedBase() {
@@ -44,7 +49,10 @@
         public virtual void NotifyOfPropertyChange([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null) {
 #endif
             if (IsNotifying && PropertyChanged != null) {
-                Execute.OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
+                if(MarshalOnUIThread)
+                    Execute.OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
+                else
+                    OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
             }
         }
 
