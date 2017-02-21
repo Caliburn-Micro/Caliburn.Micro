@@ -4,6 +4,8 @@ Thanks for wanting to contribute to Caliburn.Micro. Contributions don't need to 
 
 ## Raising Issues
 
+Basic support is provided by the community on [Stack Overflow][http://stackoverflow.com/questions/tagged/caliburn.micro] including the core contributors.
+
 The following information is incredibly helpful when raising issues:
 
  - **Platform(s)** - Caliburn.Micro runs on a lot of platforms and is tightly coupled with their UI stacks, knowing which platform or platforms you're experiencing the issue on helps immensely.
@@ -29,7 +31,6 @@ The Caliburn.Micro is broken up into three groups of assemblies.
 
  - **Core** - This contains the building blocks of any MVVM solution such `PropertyChangedBase`, `Screen` & `EventAggregator`. It's a [Portable Class Library](http://msdn.microsoft.com/en-us/library/gg597391.aspx) designed to work on as many platforms as possible. However due to some limitations we create the Core assembly for Silverlight 5 and .NET 4.0 separately although they share code using linked files and compilation symbols.
  - **Platform** - For each platform Caliburn.Micro runs on we have a platform assembly, this contains the code that makes direct use of the appropriate UI stack and any code that could not be made portable. Most of the code is shared between the various platform projects using linked files and compilation symbols.
- - **Extensions** - For some platforms we have some special features to help development on that particular platform, these features live in the Extensions assembly for any applicable platforms.
 
 ## Making Changes
 
@@ -77,3 +78,4 @@ Some things that will increase the chance that your pull request is accepted.
 
 * [Caliburn.Micro documentation](http://caliburnmicro.com/documentation/)
 * [General GitHub documentation](http://help.github.com/)
+* [Stack Overflow](http://stackoverflow.com/questions/tagged/caliburn.micro)
