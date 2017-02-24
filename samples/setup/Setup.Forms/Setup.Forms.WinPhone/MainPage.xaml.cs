@@ -11,8 +11,8 @@ namespace Setup.Forms.WinPhone
             InitializeComponent();
             SupportedOrientations = SupportedPageOrientation.PortraitOrLandscape;
 
-            global::Xamarin.Forms.Forms.Init();
-            LoadApplication(new Setup.Forms.App(IoC.Get<PhoneContainer>()));
+            Xamarin.Forms.Forms.Init();
+            LoadApplication(IoC.Get<Forms.App>());
         }
     }
 }

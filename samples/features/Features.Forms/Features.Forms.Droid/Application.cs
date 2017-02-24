@@ -29,6 +29,7 @@ namespace Features.CrossPlatform
             container = new SimpleContainer();
 
             container.Instance(container);
+            container.Singleton<FormsApp>();
             container.Singleton<IEventAggregator, EventAggregator>();
         }
 

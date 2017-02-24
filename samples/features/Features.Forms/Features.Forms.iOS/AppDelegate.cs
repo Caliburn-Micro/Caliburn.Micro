@@ -14,7 +14,7 @@ namespace Features.CrossPlatform
         {
             Xamarin.Forms.Forms.Init();
 
-            LoadApplication(new FormsApp(IoC.Get<SimpleContainer>()));
+            LoadApplication(IoC.Get<FormsApp>());
 
             return base.FinishedLaunching(app, options);
         }

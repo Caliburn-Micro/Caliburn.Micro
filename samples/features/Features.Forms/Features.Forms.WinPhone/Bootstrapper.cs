@@ -19,8 +19,8 @@ namespace Features.CrossPlatform
         {
             container = new PhoneContainer();
 
-            if (!Execute.InDesignMode)
-                container.RegisterPhoneServices(RootFrame);
+            container.RegisterPhoneServices(RootFrame);
+            container.Singleton<FormsApp>();
         }
 
         protected override void BuildUp(object instance)

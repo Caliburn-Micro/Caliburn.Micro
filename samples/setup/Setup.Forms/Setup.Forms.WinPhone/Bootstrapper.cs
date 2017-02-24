@@ -19,6 +19,7 @@ namespace Setup.Forms.WinPhone
         {
             container = new PhoneContainer();
             container.RegisterPhoneServices(RootFrame);
+            container.Singleton<Forms.App>();
         }
 
         protected override IEnumerable<Assembly> SelectAssemblies()

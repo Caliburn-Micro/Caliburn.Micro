@@ -12,8 +12,8 @@ namespace Features.CrossPlatform
 
 			SupportedOrientations = SupportedPageOrientation.PortraitOrLandscape;
 
-			global::Xamarin.Forms.Forms.Init ();
-            LoadApplication(new FormsApp(IoC.Get<PhoneContainer>()));
+			Xamarin.Forms.Forms.Init ();
+            LoadApplication(IoC.Get<FormsApp>());
         }
 	}
 }
