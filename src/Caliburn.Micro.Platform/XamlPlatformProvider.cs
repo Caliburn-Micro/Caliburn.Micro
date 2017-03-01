@@ -20,7 +20,7 @@
 #else
         private Dispatcher dispatcher;
 #if !NET45
-        private static TaskCompletionSource<object> taskForce;
+        private TaskCompletionSource<object> taskSource;
 #endif
 #endif
 
@@ -37,21 +37,21 @@
 #if !NET45
             dispatcher.ShutdownFinished += (sender, args) =>
             {
-                var taskSource = taskForce;
-                if (taskSource != null)
+                var ts = taskSource;
+                if (ts != null)
                 {
-                    taskForce = null;
-                    taskSource.SetResult(null);
+                    taskSource = null;
+                    ts.SetResult(null);
                 }
             };
 #endif
 #endif
     }
 
-    /// <summary>
-    /// Indicates whether or not the framework is in design-time mode.
-    /// </summary>
-    public bool InDesignMode {
+        /// <summary>
+        /// Indicates whether or not the framework is in design-time mode.
+        /// </summary>
+        public bool InDesignMode {
             get { return View.InDesignMode; }
         }
 
@@ -93,17 +93,17 @@
 #elif NET45
             return dispatcher.InvokeAsync(action).Task;
 #else
-            var taskSource = new TaskCompletionSource<object>();
-            taskForce = taskSource;
+            var ts = new TaskCompletionSource<object>();
+            taskSource = ts;
             System.Action method = () => {
                 try {
                     action();
-                    taskForce = null;
-                    taskSource.SetResult(null);
+                    taskSource = null;
+                    ts.SetResult(null);
                 }
                 catch(Exception ex) {
-                    taskForce = null;
-                    taskSource.SetException(ex);
+                    taskSource = null;
+                    ts.SetException(ex);
                 }
             };
 
@@ -112,12 +112,12 @@
 #else
             if (dispatcher.BeginInvoke(method).Status == DispatcherOperationStatus.Aborted)
             {
-                taskForce = null;
-                taskSource.SetResult(null);
+                taskSource = null;
+                ts.SetResult(null);
             }
 #endif
 
-            return taskSource.Task;
+            return ts.Task;
 #endif
         }
 
