@@ -123,17 +123,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Caliburn.Micro">
-      <HintPath>..\..\..\bin\uwp\Debug\Caliburn.Micro.dll</HintPath>
-    </Reference>
-    <Reference Include="Caliburn.Micro.Platform.Core">
-      <HintPath>..\..\..\bin\uwp\Debug\Caliburn.Micro.Platform.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Caliburn.Micro.Platform.UWP">
-      <HintPath>..\..\..\bin\uwp\Debug\Caliburn.Micro.Platform.UWP.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <Page Include="Views\HomeView.xaml">
