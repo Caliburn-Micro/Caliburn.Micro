@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\Activity\MessageActivityViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\Activity\PhotoActivityViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\BindingsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\BubblingViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConductorViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\CoroutineViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\DesignTimeViewModel.cs" />

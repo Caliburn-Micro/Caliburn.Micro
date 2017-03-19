@@ -31,7 +31,8 @@ namespace Features.CrossPlatform
                .PerRequest<ExecuteViewModel>()
                .PerRequest<EventAggregationViewModel>()
                .PerRequest<DesignTimeViewModel>()
-               .PerRequest<ConductorViewModel>();
+               .PerRequest<ConductorViewModel>()
+               .PerRequest<BubblingViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)

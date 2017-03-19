@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cm="clr-namespace:Caliburn.Micro.Xamarin.Forms;assembly=Caliburn.Micro.Platform.Xamarin.Forms"
+             x:Class="Features.CrossPlatform.Views.BubblingView">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <ListView ItemsSource="{Binding Phrases}" HasUnevenRows="True">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <ViewCell>
+            <Button Text="{Binding Message}" cm:Message.Attach="SelectPhrase($bindingContext)" />
+          </ViewCell>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+  </Grid>
+</ContentPage>

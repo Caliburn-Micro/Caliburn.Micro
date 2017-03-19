@@ -24,12 +24,11 @@ namespace Features.CrossPlatform.ViewModels
 #if !XAMARINFORMS
                 new FeatureViewModel("Design Time", "Conventions in the xaml desginer and design mode detection.", typeof(DesignTimeViewModel)),
 #endif
-                new FeatureViewModel("Conductors", "Composing view models together with lifecycle events", typeof(ConductorViewModel))
-                // Key binding
-                // Action bubbling
+                new FeatureViewModel("Conductors", "Composing view models together with lifecycle events", typeof(ConductorViewModel)),
+                new FeatureViewModel("Bubbling Actions", "How to bubble actions from a child view model to a parent", typeof(BubblingViewModel))
                 // Context Menus
                 // Navigation
-                // Platform specific features
+                // Window Manager
             };
         }
 

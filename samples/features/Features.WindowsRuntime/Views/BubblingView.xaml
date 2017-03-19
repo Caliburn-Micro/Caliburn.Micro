@@ -1,0 +1,28 @@
+﻿<Page
+    x:Class="Features.CrossPlatform.Views.BubblingView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cm="using:Caliburn.Micro"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="bubbling actions" Style="{StaticResource SubheaderTextBlockStyle}" Margin="0,20,0,0"/>
+
+        <ItemsControl x:Name="Phrases" Grid.Row="1">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid cm:Bind.Model="{Binding}">
+                        <Button x:Name="Message" cm:Message.Attach="SelectPhrase($dataContext)" Margin="0,12" />
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</Page>

@@ -35,7 +35,8 @@ namespace Features.CrossPlatform
                .PerRequest<ExecuteViewModel>()
                .PerRequest<EventAggregationViewModel>()
                .PerRequest<DesignTimeViewModel>()
-               .PerRequest<ConductorViewModel>();
+               .PerRequest<ConductorViewModel>()
+               .PerRequest<BubblingViewModel>();
         }
 
         protected override void OnStartup(object sender, StartupEventArgs e)
