@@ -1,0 +1,24 @@
+﻿<Window x:Class="Scenario.KeyBinding.Views.ShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Scenario.KeyBinding.Views"
+        xmlns:cal="http://www.caliburnproject.org"
+        mc:Ignorable="d"
+        Title="ShellView" Height="300" Width="300">
+    <StackPanel>
+        <TextBlock TextWrapping="WrapWithOverflow"
+               HorizontalAlignment="Left">
+      Example application that will catch the Enter key and execute an action based on it.
+        </TextBlock>
+        <TextBlock />
+        <TextBox HorizontalAlignment="Left"
+             Width="278"
+             cal:Message.Attach="[Key Enter] = [EnterPressed]; [Gesture Ctrl+Enter] = [CtrlEnterPressed]">
+        </TextBox>
+        <TextBlock />
+        <TextBlock x:Name="EnterMessage"
+               TextWrapping="WrapWithOverflow" />
+    </StackPanel>
+</Window>
