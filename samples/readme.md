@@ -2,7 +2,7 @@
 
 This folder contains a collection of samples for Caliburn.Micro.
 
-## [Setup](,/setup)
+## [Setup](./setup)
 
 An example of a barebones setup for each supported platform, just beyond the bare minimum (includes a container and dependency injection.) These include:
 
@@ -16,7 +16,7 @@ An example of a barebones setup for each supported platform, just beyond the bar
 - [Windows Phone 8.1 / Silverlight](./setup/Setup.WindowsPhone.Silverlight)
 - [Silverlight](./setup/Setup.Silverlight)
 
-## [Features](,/features)
+## [Features](./features)
 
 A solution that demonstrates the usage of most major framework features across all the supported platforms (showing some of the inevitable platform discrepancies). Also this solution provides an example of using a Shared project to share code (in this case the view models) across mulitple platforms. The features covered include:
 
