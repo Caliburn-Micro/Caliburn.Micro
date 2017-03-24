@@ -9,10 +9,10 @@ An example of a barebones setup for each supported platform, just beyond the bar
 - [Windows 10 / UWP](./setup/Setup.UWP)
 - [WPF](./setup/Setup.WPF)
 - [Xamarin.iOS](./setup/Setup.iOS)
-- [Xamarin.Android](.setup/Setup.Android)
-- [Xamarin.Forms (iOS, Android, Windows Phone, Portable Class Library)](/setup/Setup.Forms)
+- [Xamarin.Android](./setup/Setup.Android)
+- [Xamarin.Forms (iOS, Android, Windows Phone, Portable Class Library)](./setup/Setup.Forms)
 - [Windows 8.1](./setup/Setup.Windows.Runtime)
-- [Windows Phone 8.1 / Windows Runtime](,/setup/Setup.WindowsPhone.Windows.Runtime)
+- [Windows Phone 8.1 / Windows Runtime](./setup/Setup.WindowsPhone.Windows.Runtime)
 - [Windows Phone 8.1 / Silverlight](./setup/Setup.WindowsPhone.Silverlight)
 - [Silverlight](./setup/Setup.Silverlight)
 
