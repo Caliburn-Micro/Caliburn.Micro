@@ -19,6 +19,8 @@ namespace Setup.WPF
         {
             container = new SimpleContainer();
 
+            container.Singleton<IWindowManager, WindowManager>();
+
             container.PerRequest<ShellViewModel>();
         }
 
