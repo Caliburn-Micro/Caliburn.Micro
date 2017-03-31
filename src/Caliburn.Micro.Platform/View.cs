@@ -388,8 +388,8 @@ namespace Caliburn.Micro
         private static string GetContentPropertyName(Type type) {
             var typeInfo = type.GetTypeInfo();
             var contentProperty = typeInfo.GetCustomAttribute<ContentPropertyAttribute>();
-
-            return contentProperty == null ? DefaultContentPropertyName : contentProperty.Name;
+            
+            return contentProperty?.Name ?? DefaultContentPropertyName;
         }
 #else
         static bool SetContentPropertyCore(object targetLocation, object view) {
@@ -398,7 +398,7 @@ namespace Caliburn.Micro
                 var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
                                           .FirstOrDefault() ?? DefaultContentProperty;
 
-                type.GetProperty(contentProperty.Name)
+                type.GetProperty(contentProperty?.Name ?? DefaultContentProperty.Name)
                     .SetValue(targetLocation, view, null);
 
                 return true;
