@@ -21,6 +21,8 @@ namespace Caliburn.Micro.Xamarin.Forms
 
             isInitialized = true;
 
+            PlatformProvider.Current = new FormsPlatformProvider(PlatformProvider.Current);
+
             var baseExtractTypes = AssemblySourceCache.ExtractTypes;
 
             AssemblySourceCache.ExtractTypes = assembly => {
