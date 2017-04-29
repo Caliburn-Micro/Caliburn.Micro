@@ -50,6 +50,7 @@
     <Compile Include="xforms\ActionMessage.cs" />
     <Compile Include="xforms\AttachedCollection.cs" />
     <Compile Include="xforms\ConventionManager.cs" />
+    <Compile Include="xforms\FormsPlatformProvider.cs" />
     <Compile Include="xforms\HttpUtility.cs" />
     <Compile Include="xforms\IAttachedObject.cs" />
     <Compile Include="xforms\INavigationService.cs" />
