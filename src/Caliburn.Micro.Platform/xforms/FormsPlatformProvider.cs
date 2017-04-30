@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace Caliburn.Micro
 {
@@ -35,7 +36,27 @@ namespace Caliburn.Micro
         public object GetFirstNonGeneratedView(object view) => platformProvider.GetFirstNonGeneratedView(view);
 
         /// <inheritdoc />
-        public void ExecuteOnFirstLoad(object view, Action<object> handler) => platformProvider.ExecuteOnFirstLoad(view, handler);
+        public void ExecuteOnFirstLoad(object view, Action<object> handler) {
+
+            var page = view as Page;
+
+            if (page != null) {
+                EventHandler appearing = null;
+
+                appearing = (s, e) => {
+
+                    page.Appearing -= appearing;
+
+                    handler(view);
+                };
+
+                page.Appearing += appearing;
+
+                return;
+            }
+
+            platformProvider.ExecuteOnFirstLoad(view, handler);
+        }
 
         /// <inheritdoc />
         public void ExecuteOnLayoutUpdated(object view, Action<object> handler) => platformProvider.ExecuteOnLayoutUpdated(view, handler);
