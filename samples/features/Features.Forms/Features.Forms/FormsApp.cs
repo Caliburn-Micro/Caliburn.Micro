@@ -14,6 +14,8 @@ namespace Features.CrossPlatform
 
         public FormsApp(SimpleContainer container)
         {
+            Initialize();
+
             Caliburn.Micro.Xamarin.Forms.MessageBinder.SpecialValues.Add("$selecteditem", c =>
             {
                 var listView = c.Source as ListView;

@@ -13,6 +13,8 @@ namespace Setup.Forms
 
         public App(SimpleContainer container)
         {
+            Initialize();
+
             this.container = container;
 
             container.PerRequest<HomeViewModel>();
