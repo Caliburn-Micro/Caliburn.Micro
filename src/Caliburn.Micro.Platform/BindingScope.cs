@@ -319,7 +319,7 @@
                 }
 
                 previous = root;
-                root = VisualTreeHelper.GetParent(previous);
+                root = GetVisualParent(previous);
             }
 
             routeHops.Root = root;
