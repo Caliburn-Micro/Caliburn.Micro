@@ -128,6 +128,12 @@
         };
 
         /// <summary>
+        /// Gets the parent of the given object in the Visual Tree.
+        /// </summary>
+        /// <returns>The parent of the given object in the Visual Tree</returns>
+        public static Func<DependencyObject, DependencyObject> GetVisualParent = e => VisualTreeHelper.GetParent(e);
+
+        /// <summary>
         /// Finds a set of named <see cref="FrameworkElement"/> instances in each hop in a <see cref="ScopeNamingRoute"/>.
         /// </summary>
         /// <remarks>
