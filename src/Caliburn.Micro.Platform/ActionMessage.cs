@@ -192,7 +192,7 @@
                     if (Action.HasTargetSet(currentElement))
                         break;
 
-                    currentElement = VisualTreeHelper.GetParent(currentElement);
+                    currentElement = BindingScope.GetVisualParent(currentElement);
                 }
             }
             else currentElement = context.View;
@@ -419,7 +419,7 @@
                     }
                 }
 
-                currentElement = VisualTreeHelper.GetParent(currentElement);
+                currentElement = BindingScope.GetVisualParent(currentElement);
             }
 
             if (source != null && source.DataContext != null) {
