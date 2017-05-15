@@ -27,6 +27,7 @@ A solution that demonstrates the usage of most major framework features across a
 - Event Aggregation
 - Design Time Conventions
 - Conductors and Composition
+- Navigation
 
 ## [Scenarios](./scenarios)
 
