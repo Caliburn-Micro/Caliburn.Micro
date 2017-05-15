@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cm="clr-namespace:Caliburn.Micro.Xamarin.Forms;assembly=Caliburn.Micro.Platform.Xamarin.Forms"
+             x:Class="Features.CrossPlatform.Views.NavigationSourceView"
+             Title="navigation">
+	<StackLayout>
+    <Entry Text="{Binding Text, Mode=TwoWay}" Placeholder="Text" />
+    <Switch IsToggled="{Binding IsEnabled, Mode=TwoWay}" />
+    <Button Text="Navigate" cm:Message.Attach="Navigate" />
+	</StackLayout>
+</ContentPage>

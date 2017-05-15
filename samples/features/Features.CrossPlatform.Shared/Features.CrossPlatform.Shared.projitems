@@ -31,6 +31,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ExecuteViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\FeatureViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MenuViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\NavigationSourceViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\NavigationTargetViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TabViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ViewModelExtensions.cs" />
   </ItemGroup>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Windows;
 using Caliburn.Micro;
 using Features.CrossPlatform.ViewModels;
@@ -32,7 +31,9 @@ namespace Features.CrossPlatform
                .PerRequest<EventAggregationViewModel>()
                .PerRequest<DesignTimeViewModel>()
                .PerRequest<ConductorViewModel>()
-               .PerRequest<BubblingViewModel>();
+               .PerRequest<BubblingViewModel>()
+               .PerRequest<NavigationSourceViewModel>()
+               .PerRequest<NavigationTargetViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)

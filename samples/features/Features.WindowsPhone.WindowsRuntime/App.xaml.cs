@@ -35,7 +35,9 @@ namespace Features.CrossPlatform
                 .PerRequest<EventAggregationViewModel>()
                 .PerRequest<DesignTimeViewModel>()
                 .PerRequest<ConductorViewModel>()
-                .PerRequest<BubblingViewModel>();
+                .PerRequest<BubblingViewModel>()
+                .PerRequest<NavigationSourceViewModel>()
+                .PerRequest<NavigationTargetViewModel>();
         }
 
         protected override void PrepareViewFirst(Frame rootFrame)

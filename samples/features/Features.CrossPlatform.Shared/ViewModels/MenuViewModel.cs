@@ -25,7 +25,8 @@ namespace Features.CrossPlatform.ViewModels
                 new FeatureViewModel("Design Time", "Conventions in the xaml desginer and design mode detection.", typeof(DesignTimeViewModel)),
 #endif
                 new FeatureViewModel("Conductors", "Composing view models together with lifecycle events", typeof(ConductorViewModel)),
-                new FeatureViewModel("Bubbling Actions", "How to bubble actions from a child view model to a parent", typeof(BubblingViewModel))
+                new FeatureViewModel("Bubbling Actions", "How to bubble actions from a child view model to a parent", typeof(BubblingViewModel)),
+                new FeatureViewModel("Navigation", "Using a navigation service to switch between view models.", typeof(NavigationSourceViewModel)),
                 // Context Menus
                 // Navigation
                 // Window Manager
