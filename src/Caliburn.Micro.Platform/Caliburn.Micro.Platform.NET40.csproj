@@ -73,6 +73,9 @@
     <Compile Include="MessageBinder.cs" />
     <Compile Include="NameTransformer.cs" />
     <Compile Include="net40\AttachedCollection.cs" />
+    <Compile Include="net40\INavigationService.cs" />
+    <Compile Include="net40\NavigationExtensions.cs" />
+    <Compile Include="net40\NavigationHelper.cs" />
     <Compile Include="net40\Parameter.cs" />
     <Compile Include="net40\WindowManager.cs" />
     <Compile Include="Parser.cs" />
