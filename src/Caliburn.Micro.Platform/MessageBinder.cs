@@ -12,6 +12,9 @@ namespace Caliburn.Micro
 #if !SILVERLIGHT
     using System.ComponentModel;
 #endif
+#if WinRT
+    using Windows.UI.Xaml.Controls;
+#endif
 
     /// <summary>
     /// A service that is capable of properly binding values to a method's parameters and creating instances of <see cref="IResult"/>.
@@ -30,6 +33,9 @@ namespace Caliburn.Micro
                 {"$bindingcontext", c => c.Source.BindingContext},
 #else
                 {"$datacontext", c => c.Source.DataContext},
+#endif
+#if WinRT
+                {"$clickeditem", c => ((ItemClickEventArgs)c.EventArgs).ClickedItem},
 #endif
                 {"$source", c => c.Source},
                 {"$executioncontext", c => c},
