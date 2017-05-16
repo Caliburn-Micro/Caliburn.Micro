@@ -20,8 +20,6 @@ namespace Features.CrossPlatform
 
         protected override void Configure()
         {
-            MessageBinder.SpecialValues.Add("$clickeditem", c => ((ItemClickEventArgs)c.EventArgs).ClickedItem);
-
             container = new WinRTContainer();
             container.RegisterWinRTServices();
 
