@@ -36,14 +36,14 @@
         /// <param name = "propertyName">Name of the property.</param>
         public virtual void NotifyOfPropertyChange(string propertyName) {
             if (IsNotifying)
-                Execute.OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
+                OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
         }
 
         /// <summary>
         /// Raises a change notification indicating that all bindings should be refreshed.
         /// </summary>
         public void Refresh() {
-            Execute.OnUIThread(() => {
+            OnUIThread(() => {
                 OnPropertyChanged(new PropertyChangedEventArgs("Count"));
                 OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
@@ -56,7 +56,7 @@
         /// <param name = "index">The index to insert at.</param>
         /// <param name = "item">The item to be inserted.</param>
         protected override sealed void InsertItem(int index, T item) {
-            Execute.OnUIThread(() => InsertItemBase(index, item));
+            OnUIThread(() => InsertItemBase(index, item));
         }
 
         /// <summary>
@@ -77,7 +77,7 @@
         /// <param name = "index">The index to set the item at.</param>
         /// <param name = "item">The item to set.</param>
         protected override sealed void SetItem(int index, T item) {
-            Execute.OnUIThread(() => SetItemBase(index, item));
+            OnUIThread(() => SetItemBase(index, item));
         }
 
         /// <summary>
@@ -115,7 +115,7 @@
         /// Clears the items contained by the collection.
         /// </summary>
         protected override sealed void ClearItems() {
-            Execute.OnUIThread(ClearItemsBase);
+            OnUIThread(ClearItemsBase);
         }
 
         /// <summary>
@@ -153,7 +153,7 @@
         /// </summary>
         /// <param name = "items">The items.</param>
         public virtual void AddRange(IEnumerable<T> items) {
-            Execute.OnUIThread(() => {
+            OnUIThread(() => {
                 var previousNotificationSetting = IsNotifying;
                 IsNotifying = false;
                 var index = Count;
@@ -174,7 +174,7 @@
         /// </summary>
         /// <param name = "items">The items.</param>
         public virtual void RemoveRange(IEnumerable<T> items) {
-            Execute.OnUIThread(() => {
+            OnUIThread(() => {
                 var previousNotificationSetting = IsNotifying;
                 IsNotifying = false;
                 foreach (var item in items) {
@@ -190,5 +190,12 @@
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             });
         }
+
+        /// <summary>
+        /// Executes the given action on the UI thread
+        /// </summary>
+        /// <remarks>An extension point for subclasses to customise how property change notifications are handled.</remarks>
+        /// <param name="action"></param>
+        protected virtual void OnUIThread(System.Action action) => action.OnUIThread();
     }
 }
