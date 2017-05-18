@@ -44,7 +44,7 @@
         public virtual void NotifyOfPropertyChange([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null) {
 #endif
             if (IsNotifying && PropertyChanged != null) {
-                Execute.OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
+                OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
             }
         }
 
@@ -68,5 +68,12 @@
                 handler(this, e);
             }
         }
+
+        /// <summary>
+        /// Executes the given action on the UI thread
+        /// </summary>
+        /// <remarks>An extension point for subclasses to customise how property change notifications are handled.</remarks>
+        /// <param name="action"></param>
+        protected virtual void OnUIThread(System.Action action) => action.OnUIThread();
     }
 }
