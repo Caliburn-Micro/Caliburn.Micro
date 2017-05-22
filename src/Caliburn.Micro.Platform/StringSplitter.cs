@@ -84,7 +84,7 @@ namespace Caliburn.Micro {
             {
                 var current = parameters[i];
 
-                if (current == '"')
+                if (current == '"' || current == '\'')
                 {
                     if (i == 0 || parameters[i - 1] != '\\')
                     {
