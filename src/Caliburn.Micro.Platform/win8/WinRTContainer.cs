@@ -57,7 +57,7 @@
             return sharingService;
         }
 
-#if !WP81 && !WINDOWS_UWP
+#if !WINDOWS_UWP
         /// <summary>
         /// Registers the Caliburn.Micro settings service with the container.
         /// </summary>
