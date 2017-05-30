@@ -252,7 +252,7 @@ namespace Caliburn.Micro
             }
 
             var viewModelType = viewModel.GetType();
-#if SL5 || NET45
+#if NET45
             var viewModelTypeProvider = viewModel as ICustomTypeProvider;
             if (viewModelTypeProvider != null) {
                 viewModelType = viewModelTypeProvider.GetCustomType();
