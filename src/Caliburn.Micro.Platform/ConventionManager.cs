@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-#if WinRT81
+#if WINDOWS_UWP
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Controls.Primitives;
@@ -21,7 +21,7 @@
     using System.Windows.Shapes;    
     using EventTrigger = System.Windows.Interactivity.EventTrigger;
 #endif
-#if !WinRT
+#if !WINDOWS_UWP
     using System.Windows.Documents;
 #endif
 
@@ -52,12 +52,12 @@
         /// The default DataTemplate used for ItemsControls when required.
         /// </summary>
         public static DataTemplate DefaultItemTemplate = (DataTemplate)
-#if WinRT
+#if WINDOWS_UWP
         XamlReader.Load(
 #else
         XamlReader.Parse(
 #endif
-#if WinRT
+#if WINDOWS_UWP
             "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' xmlns:cal='using:Caliburn.Micro'>" +
                 "<ContentControl cal:View.Model=\"{Binding}\" VerticalContentAlignment=\"Stretch\" HorizontalContentAlignment=\"Stretch\" IsTabStop=\"False\" />" +
             "</DataTemplate>"
@@ -73,7 +73,7 @@
         /// The default DataTemplate used for Headered controls when required.
         /// </summary>
         public static DataTemplate DefaultHeaderTemplate = (DataTemplate)
-#if WinRT
+#if WINDOWS_UWP
         XamlReader.Load(
 #else
         XamlReader.Parse(
@@ -115,7 +115,7 @@
         /// <param name="bindableProperty"></param>
         public static Action<Type, string, PropertyInfo, FrameworkElement, ElementConvention, DependencyProperty> SetBinding =
             (viewModelType, path, property, element, convention, bindableProperty) => {
-#if WinRT
+#if WINDOWS_UWP
                 var binding = new Binding { Path = new PropertyPath(path) };
 #else
                 var binding = new Binding(path);
@@ -134,7 +134,7 @@
         /// Applies the appropriate binding mode to the binding.
         /// </summary>
         public static Action<Binding, PropertyInfo> ApplyBindingMode = (binding, property) => {
-#if WinRT
+#if WINDOWS_UWP
             var setMethod = property.SetMethod;
             binding.Mode = (property.CanWrite && setMethod != null && setMethod.IsPublic) ? BindingMode.TwoWay : BindingMode.OneWay;
 #else
@@ -153,7 +153,7 @@
                 binding.ValidatesOnExceptions = true;
             }
 #endif
-#if !WinRT
+#if !WINDOWS_UWP
             if (typeof(IDataErrorInfo).IsAssignableFrom(viewModelType)) {
                 binding.ValidatesOnDataErrors = true;
                 binding.ValidatesOnExceptions = true;
@@ -173,8 +173,8 @@
         /// Determines whether a custom string format is needed and applies it to the binding.
         /// </summary>
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyStringFormat = (binding, convention, property) => {
-#if !WinRT
-            if(typeof(DateTime).IsAssignableFrom(property.PropertyType))
+#if !WINDOWS_UWP
+            if (typeof(DateTime).IsAssignableFrom(property.PropertyType))
                 binding.StringFormat = "{0:d}";
 #endif
         };
@@ -183,7 +183,7 @@
         /// Determines whether a custom update source trigger should be applied to the binding.
         /// </summary>
         public static Action<DependencyProperty, DependencyObject, Binding, PropertyInfo> ApplyUpdateSourceTrigger = (bindableProperty, element, binding, info) => {
-#if WinRT81 || NET
+#if WINDOWS_UWP || NET
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
         };
@@ -202,27 +202,21 @@
                     return View.ModelProperty;
                };
 #endif
-#if !WinRT
+#if !WINDOWS_UWP
             AddElementConvention<DatePicker>(DatePicker.SelectedDateProperty, "SelectedDate", "SelectedDateChanged");
 #endif
-#if WinRT81
+#if WINDOWS_UWP
             AddElementConvention<DatePicker>(DatePicker.DateProperty, "Date", "DateChanged");
             AddElementConvention<TimePicker>(TimePicker.TimeProperty, "Time", "TimeChanged");
             AddElementConvention<Hub>(Hub.HeaderProperty, "Header", "Loaded");
             AddElementConvention<HubSection>(HubSection.HeaderProperty, "Header", "SectionsInViewChanged");
             AddElementConvention<MenuFlyoutItem>(MenuFlyoutItem.TextProperty, "Text", "Click");
             AddElementConvention<ToggleMenuFlyoutItem>(ToggleMenuFlyoutItem.IsCheckedProperty, "IsChecked", "Click");
-#endif
-#if WinRT81
             AddElementConvention<SearchBox>(SearchBox.QueryTextProperty, "QueryText", "QuerySubmitted");
-#endif
-#if WinRT
             AddElementConvention<ToggleSwitch>(ToggleSwitch.IsOnProperty, "IsOn", "Toggled");
             AddElementConvention<ProgressRing>(ProgressRing.IsActiveProperty, "IsActive", "Loaded");
             AddElementConvention<Slider>(Slider.ValueProperty, "Value", "ValueChanged");
             AddElementConvention<RichEditBox>(RichEditBox.DataContextProperty, "DataContext", "TextChanged");
-#endif
-#if WINDOWS_UWP
             AddElementConvention<Pivot>(Pivot.ItemsSourceProperty, "SelectedItem", "SelectionChanged")
                 .ApplyBinding = (viewModelType, path, property, element, convention) =>
                 {
@@ -236,8 +230,6 @@
 
                     return true;
                 };
-#endif
-#if WinRT
             AddElementConvention<HyperlinkButton>(HyperlinkButton.ContentProperty, "DataContext", "Click");
             AddElementConvention<PasswordBox>(PasswordBox.PasswordProperty, "Password", "PasswordChanged");
 #else
@@ -366,7 +358,7 @@
 
             ElementConvention propertyConvention;
             ElementConventions.TryGetValue(elementType, out propertyConvention);
-#if WinRT
+#if WINDOWS_UWP
             return propertyConvention ?? GetElementConvention(elementType.GetTypeInfo().BaseType);
 #else
             return propertyConvention ?? GetElementConvention(elementType.BaseType);
@@ -436,7 +428,7 @@
                 return;
             }
 
-#if !WinRT
+#if !WINDOWS_UWP
             if (property.PropertyType.IsGenericType) {
                 var itemType = property.PropertyType.GetGenericArguments().First();
                 if (itemType.IsValueType || typeof(string).IsAssignableFrom(itemType)) {
@@ -478,7 +470,7 @@
                 foreach (var potentialName in DerivePotentialSelectionNames(baseName)) {
                     if (viewModelType.GetPropertyCaseInsensitive(potentialName) != null) {
                         var selectionPath = path.Replace(baseName, potentialName);
-#if WinRT
+#if WINDOWS_UWP
                         var binding = new Binding { Mode = BindingMode.TwoWay, Path = new PropertyPath(selectionPath) };
 #else
                         var binding = new Binding(selectionPath) { Mode = BindingMode.TwoWay };
@@ -537,7 +529,7 @@
         /// <param name="propertyName">The property to search for.</param>
         /// <returns>The property or null if not found.</returns>
         public static PropertyInfo GetPropertyCaseInsensitive(this Type type, string propertyName) {
-#if WinRT
+#if WINDOWS_UWP
             var typeInfo = type.GetTypeInfo();
             var typeList = new List<Type> { type };
 

@@ -5,7 +5,7 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
-#if !WinRT
+#if !WINDOWS_UWP
     using System.Windows;
 #else
     using Windows.UI.Xaml;

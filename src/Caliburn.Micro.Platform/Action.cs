@@ -4,7 +4,7 @@ namespace Caliburn.Micro.Xamarin.Forms
 namespace Caliburn.Micro
 #endif 
 {
-#if WinRT
+#if WINDOWS_UWP
     using System.Linq;
     using Windows.UI.Xaml;
     using System.Reflection;
@@ -122,7 +122,7 @@ namespace Caliburn.Micro
 
             var context = new ActionExecutionContext {
                 Target = target,
-#if WinRT
+#if WINDOWS_UWP
                 Method = target.GetType().GetRuntimeMethods().Single(m => m.Name == methodName),
 #else
                 Method = target.GetType().GetMethod(methodName),

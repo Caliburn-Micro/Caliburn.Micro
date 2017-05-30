@@ -148,7 +148,7 @@ namespace Caliburn.Micro
             return value;
         }
 
-#if WinRT81
+#if WINDOWS_UWP
         /// <summary>
         /// Gets a collection of PageStackEntry instances representing the backward navigation history of the Frame.
         /// </summary>

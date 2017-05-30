@@ -2,7 +2,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-#if WinRT
+#if WINDOWS_UWP
     using System.Reflection;
     using Windows.UI.Core;
     using Windows.UI.Xaml;
@@ -15,7 +15,7 @@
     /// A <see cref="IPlatformProvider"/> implementation for the XAML platfrom.
     /// </summary>
     public class XamlPlatformProvider : IPlatformProvider {
-#if WinRT
+#if WINDOWS_UWP
         private CoreDispatcher dispatcher;
 #else
         private Dispatcher dispatcher;
@@ -25,7 +25,7 @@
         /// Initializes a new instance of the <see cref="XamlPlatformProvider"/> class.
         /// </summary>
         public XamlPlatformProvider() {
-#if WinRT
+#if WINDOWS_UWP
             dispatcher = Window.Current.Dispatcher;
 #else
             dispatcher = Dispatcher.CurrentDispatcher;
@@ -45,7 +45,7 @@
         }
 
         private bool CheckAccess() {
-#if WinRT
+#if WINDOWS_UWP
             return dispatcher == null || Window.Current != null;
 #else
             return dispatcher == null || dispatcher.CheckAccess();
@@ -58,7 +58,7 @@
         /// <param name="action">The action to execute.</param>
         public void BeginOnUIThread(System.Action action) {
             ValidateDispatcher();
-#if WinRT
+#if WINDOWS_UWP
             var dummy = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
 #else
             dispatcher.BeginInvoke(action);
@@ -72,7 +72,7 @@
         /// <returns></returns>
         public Task OnUIThreadAsync(System.Action action) {
             ValidateDispatcher();
-#if WinRT
+#if WINDOWS_UWP
             return dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask();
 #elif NET45
             return dispatcher.InvokeAsync(action).Task;
@@ -101,7 +101,7 @@
             if (CheckAccess())
                 action();
             else {
-#if WinRT
+#if WINDOWS_UWP
                 dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask().Wait();
 #elif NET
                 Exception exception = null;
@@ -206,14 +206,14 @@
 
             foreach (var contextualView in views) {
                 var viewType = contextualView.GetType();
-#if WinRT
+#if WINDOWS_UWP
                 var closeMethod = viewType.GetRuntimeMethod("Close", new Type[0]);
 #else
                 var closeMethod = viewType.GetMethod("Close");
 #endif
                 if (closeMethod != null)
                     return () => {
-#if !WinRT
+#if !WINDOWS_UWP
                         var isClosed = false;
                         if (dialogResult != null) {
                             var resultProperty = contextualView.GetType().GetProperty("DialogResult");
@@ -231,7 +231,7 @@
 #endif
                     };
 
-#if WinRT
+#if WINDOWS_UWP
                 var isOpenProperty = viewType.GetRuntimeProperty("IsOpen");
 #else
                 var isOpenProperty = viewType.GetProperty("IsOpen");

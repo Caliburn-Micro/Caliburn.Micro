@@ -17,7 +17,7 @@ namespace Caliburn.Micro
     /// <summary>
     /// Represents a parameter of an <see cref="ActionMessage"/>.
     /// </summary>
-#if WinRT81 || XFORMS
+#if WINDOWS_UWP || XFORMS
     public class Parameter : DependencyObject, IAttachedObject {
         DependencyObject associatedObject;
 #else
@@ -49,7 +49,7 @@ namespace Caliburn.Micro
             set { SetValue(ValueProperty, value); }
         }
 
-#if WinRT81 || XFORMS
+#if WINDOWS_UWP || XFORMS
         DependencyObject IAttachedObject.AssociatedObject {
 #else
         FrameworkElement IAttachedObject.AssociatedObject
@@ -68,7 +68,7 @@ namespace Caliburn.Micro
             set { owner = new WeakReference(value); }
         }
 
-#if WinRT81 || XFORMS
+#if WINDOWS_UWP || XFORMS
         void IAttachedObject.Attach(DependencyObject dependencyObject) {
 #else
         void IAttachedObject.Attach(FrameworkElement dependencyObject)

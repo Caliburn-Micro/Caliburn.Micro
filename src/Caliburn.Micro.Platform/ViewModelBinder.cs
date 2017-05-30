@@ -14,7 +14,7 @@ namespace Caliburn.Micro
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
-#elif WinRT81
+#elif WINDOWS_UWP
     using Windows.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
 #else
@@ -121,7 +121,7 @@ namespace Caliburn.Micro
         public static Func<IEnumerable<FrameworkElement>, Type, IEnumerable<FrameworkElement>> BindActions = (namedElements, viewModelType) => {
             var unmatchedElements = namedElements.ToList();
 #if !XFORMS
-#if WinRT || XFORMS
+#if WINDOWS_UWP || XFORMS
             var methods = viewModelType.GetRuntimeMethods();
 #else
             var methods = viewModelType.GetMethods();
@@ -142,7 +142,7 @@ namespace Caliburn.Micro
 
                 unmatchedElements.Remove(foundControl);
 
-#if WinRT81
+#if WINDOWS_UWP
                 var triggers = Interaction.GetBehaviors(foundControl);
                 if (triggers != null && triggers.Count > 0)
                 {
@@ -193,7 +193,7 @@ namespace Caliburn.Micro
         /// </summary>
         ///<remarks>Passes the the view model, view and creation context (or null for default) to use in applying binding.</remarks>
         public static Action<object, DependencyObject, object> Bind = (viewModel, view, context) => {
-#if !WinRT && !XFORMS
+#if !WINDOWS_UWP && !XFORMS
             // when using d:DesignInstance, Blend tries to assign the DesignInstanceExtension class as the DataContext,
             // so here we get the actual ViewModel which is in the Instance property of DesignInstanceExtension
             if (View.InDesignMode) {

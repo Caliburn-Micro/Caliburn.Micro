@@ -7,7 +7,7 @@ namespace Caliburn.Micro
     using System;
     using System.Collections.Generic;
     using System.Linq;
-#if WinRT81
+#if WINDOWS_UWP
     using System.Reflection;
     using Windows.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
@@ -72,7 +72,7 @@ namespace Caliburn.Micro
                 var trigger = CreateTrigger(target, triggerPlusMessage.Length == 1 ? null : triggerPlusMessage[0]);
                 var message = CreateMessage(target, messageDetail);
 
-#if WinRT81 || XFORMS
+#if WINDOWS_UWP || XFORMS
                 AddActionToTrigger(target, message, trigger);
 #else
                 trigger.Actions.Add(message);
@@ -110,7 +110,7 @@ namespace Caliburn.Micro
         }
 #endif
 
-#if WinRT81
+#if WINDOWS_UWP
 
         private static void AddActionToTrigger(DependencyObject target, TriggerAction message, TriggerBase trigger)
         {
@@ -334,7 +334,7 @@ namespace Caliburn.Micro
             {
                 path = ConventionManager.GetElementConvention(element.GetType()).ParameterProperty;
             }
-#if WinRT
+#if WINDOWS_UWP
             var binding = new Binding
             {
                 Path = new PropertyPath(path),
@@ -348,7 +348,7 @@ namespace Caliburn.Micro
             };
 #endif
 
-#if !WinRT
+#if !WINDOWS_UWP
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
 

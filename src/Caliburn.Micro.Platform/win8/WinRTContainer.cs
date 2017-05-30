@@ -30,7 +30,7 @@
 
             if (rootFrame == null)
                 throw new ArgumentNullException("rootFrame");
-#if WinRT81
+#if WINDOWS_UWP
             var frameAdapter = cacheViewModels ? (INavigationService)
                 new CachingFrameAdapter(rootFrame, treatViewAsLoaded) : 
                 new FrameAdapter(rootFrame, treatViewAsLoaded);
@@ -67,7 +67,7 @@
                 return this.GetInstance<ISettingsService>(null);
 
             if (!HasHandler(typeof (ISettingsWindowManager), null))
-#if WinRT81
+#if WINDOWS_UWP
                 RegisterInstance(typeof (ISettingsWindowManager), null, new SettingsWindowManager());
 #else
                 RegisterInstance(typeof(ISettingsWindowManager), null, new CallistoSettingsWindowManager());

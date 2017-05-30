@@ -1,4 +1,4 @@
-﻿#if WinRT
+﻿#if WINDOWS_UWP
 namespace Caliburn.Micro
 {
     using System;

@@ -5,7 +5,7 @@
     /// <summary>
     /// Represents a parameter of an <see cref="ActionMessage"/>.
     /// </summary>
-#if WinRT81
+#if WINDOWS_UWP
     public class Parameter : DependencyObject, IAttachedObject {
         DependencyObject associatedObject;
 #else
@@ -34,7 +34,7 @@
             set { SetValue(ValueProperty, value); }
         }
 
-#if WinRT81
+#if WINDOWS_UWP
         DependencyObject IAttachedObject.AssociatedObject {
 #else
         FrameworkElement IAttachedObject.AssociatedObject {
@@ -51,7 +51,7 @@
             set { owner = new WeakReference(value); }
         }
 
-#if WinRT81
+#if WINDOWS_UWP
         void IAttachedObject.Attach(DependencyObject dependencyObject) {
 #else
         void IAttachedObject.Attach(FrameworkElement dependencyObject) {

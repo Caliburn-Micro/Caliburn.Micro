@@ -46,7 +46,7 @@
             if (navigationService == null) {
                 throw new InvalidOperationException("Cannot navigate without attaching an INavigationService. Call AttachTo first.");
             }
-#if WinRT
+#if WINDOWS_UWP
             navigationService.NavigateToViewModel<TViewModel>(uri.AbsoluteUri);
 #else
             navigationService.Navigate(uri);
@@ -65,7 +65,7 @@
 
             var packUri = ViewLocator.DeterminePackUriFromType(typeof(TViewModel), viewType);
             var qs = BuildQueryString();
-#if WinRT
+#if WINDOWS_UWP
             // We need a value uri here otherwise there are problems using uri as a parameter
             return new Uri("caliburn://" + packUri + qs, UriKind.Absolute);
 #else

@@ -10,7 +10,7 @@ namespace Caliburn.Micro
     using System.Windows;
     using System.Collections.Generic;
 
-#if WinRT
+#if WINDOWS_UWP
     using Windows.UI.Xaml;
 #endif
 

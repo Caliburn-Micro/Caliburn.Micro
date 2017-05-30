@@ -141,7 +141,7 @@
         /// </summary>
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyStringFormat = (binding, convention, property) =>
         {
-#if !WinRT
+#if !WINDOWS_UWP
             if (typeof(DateTime).IsAssignableFrom(property.PropertyType))
                 binding.StringFormat = "{0:d}";
 #endif

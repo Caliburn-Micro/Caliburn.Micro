@@ -79,7 +79,7 @@ namespace Caliburn.Micro {
         /// </summary>
         void GoBack();
 
-#if WinRT81
+#if WINDOWS_UWP
         /// <summary>
         /// Gets a collection of PageStackEntry instances representing the backward navigation history of the Frame.
         /// </summary>
@@ -89,9 +89,7 @@ namespace Caliburn.Micro {
         /// Gets a collection of PageStackEntry instances representing the forward navigation history of the Frame.
         /// </summary>
         IList<PageStackEntry> ForwardStack { get; }
-#endif
 
-#if WINDOWS_UWP
         /// <summary>
         /// Occurs when the user requests a back navigation via hardware back button or gesture or voice.
         /// </summary>
@@ -400,7 +398,7 @@ namespace Caliburn.Micro {
             get { return frame.CanGoBack; }
         }
 
-#if WinRT81
+#if WINDOWS_UWP
         /// <summary>
         /// Gets a collection of PageStackEntry instances representing the backward navigation history of the Frame.
         /// </summary>
