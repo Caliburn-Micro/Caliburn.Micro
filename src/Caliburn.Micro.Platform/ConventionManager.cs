@@ -202,7 +202,7 @@
                     return View.ModelProperty;
                };
 #endif
-#if !WINDOWS_PHONE && !WinRT
+#if !WinRT
             AddElementConvention<DatePicker>(DatePicker.SelectedDateProperty, "SelectedDate", "SelectedDateChanged");
 #endif
 #if WinRT81

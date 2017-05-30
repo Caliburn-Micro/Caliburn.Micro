@@ -39,10 +39,6 @@
         static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
         ActionExecutionContext context;
 
-#if WINDOWS_PHONE
-        internal Microsoft.Phone.Shell.IApplicationBarMenuItem applicationBarSource;
-#endif
-
         internal static readonly DependencyProperty HandlerProperty = DependencyProperty.RegisterAttached(
             "Handler",
             typeof(object),
@@ -341,15 +337,6 @@
         /// </summary>
         /// <remarks>Returns a value indicating whether or not the action is available.</remarks>
         public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context => {
-#if WINDOWS_PHONE
-            var message = context.Message;
-            if (message != null && message.applicationBarSource != null) {
-                if (context.CanExecute != null) {
-                    message.applicationBarSource.IsEnabled = context.CanExecute();
-                }
-                return message.applicationBarSource.IsEnabled;
-            }
-#endif
 
 #if WinRT
             var source = context.Source as Control;

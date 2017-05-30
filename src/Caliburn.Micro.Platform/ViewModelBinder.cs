@@ -22,10 +22,6 @@ namespace Caliburn.Micro
     using System.Windows.Interactivity;
 #endif
 
-#if WINDOWS_PHONE
-    using Microsoft.Phone.Controls;
-#endif
-
     /// <summary>
     /// Binds a view to a view model.
     /// </summary>
@@ -239,15 +235,8 @@ namespace Caliburn.Micro
                 return;
             }
 
-#if WINDOWS_PHONE
-            BindAppBar(view);
-#endif
-
             if (!ShouldApplyConventions(element)) {
                 Log.Info("Skipping conventions for {0} and {1}.", element, viewModel);
-#if WINDOWS_PHONE
-                view.SetValue(ConventionsAppliedProperty, true); // we always apply the AppBar conventions
-#endif
                 return;
             }
 
@@ -269,52 +258,5 @@ namespace Caliburn.Micro
 
             view.SetValue(ConventionsAppliedProperty, true);
         };
-
-#if WINDOWS_PHONE
-        static void BindAppBar(DependencyObject view) {
-            var page = view as PhoneApplicationPage;
-            if (page == null || page.ApplicationBar == null) {
-                return;
-            }
-
-            var triggers = Interaction.GetTriggers(view);
-
-            foreach(var item in page.ApplicationBar.Buttons) {
-                var button = item as IAppBarActionMessage;
-                if (button == null || string.IsNullOrEmpty(button.Message)) {
-                    continue;
-                }
-
-                var parsedTrigger = Parser.Parse(view, button.Message).First();
-                var trigger = new AppBarItemTrigger(button);
-                var actionMessages = parsedTrigger.Actions.OfType<ActionMessage>().ToList();
-                actionMessages.Apply(x => {
-                    x.applicationBarSource = button;
-                    parsedTrigger.Actions.Remove(x);
-                    trigger.Actions.Add(x);
-                });
-                
-                triggers.Add(trigger);
-            }
-
-            foreach (var item in page.ApplicationBar.MenuItems) {
-                var menuItem = item as IAppBarActionMessage;
-                if (menuItem == null || string.IsNullOrEmpty(menuItem.Message)) {
-					continue;
-                }
-
-                var parsedTrigger = Parser.Parse(view, menuItem.Message).First();
-                var trigger = new AppBarItemTrigger(menuItem);
-                var actionMessages = parsedTrigger.Actions.OfType<ActionMessage>().ToList();
-                actionMessages.Apply(x => {
-                    x.applicationBarSource = menuItem;
-                    parsedTrigger.Actions.Remove(x);
-                    trigger.Actions.Add(x);
-                });
-
-                triggers.Add(trigger);
-            }
-        }
-#endif
     }
 }
