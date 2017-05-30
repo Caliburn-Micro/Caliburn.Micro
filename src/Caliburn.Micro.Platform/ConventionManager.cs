@@ -21,7 +21,7 @@
     using System.Windows.Shapes;    
     using EventTrigger = System.Windows.Interactivity.EventTrigger;
 #endif
-#if !SILVERLIGHT && !WinRT
+#if !WinRT
     using System.Windows.Documents;
 #endif
 
@@ -52,7 +52,7 @@
         /// The default DataTemplate used for ItemsControls when required.
         /// </summary>
         public static DataTemplate DefaultItemTemplate = (DataTemplate)
-#if SILVERLIGHT || WinRT
+#if WinRT
         XamlReader.Load(
 #else
         XamlReader.Parse(
@@ -73,7 +73,7 @@
         /// The default DataTemplate used for Headered controls when required.
         /// </summary>
         public static DataTemplate DefaultHeaderTemplate = (DataTemplate)
-#if SILVERLIGHT || WinRT
+#if WinRT
         XamlReader.Load(
 #else
         XamlReader.Parse(
@@ -147,7 +147,7 @@
         /// Determines whether or not and what type of validation to enable on the binding.
         /// </summary>
         public static Action<Binding, Type, PropertyInfo> ApplyValidation = (binding, viewModelType, property) => {
-#if SILVERLIGHT || NET45
+#if NET45
             if (typeof(INotifyDataErrorInfo).IsAssignableFrom(viewModelType)) {
                 binding.ValidatesOnNotifyDataErrors = true;
                 binding.ValidatesOnExceptions = true;
@@ -183,15 +183,7 @@
         /// Determines whether a custom update source trigger should be applied to the binding.
         /// </summary>
         public static Action<DependencyProperty, DependencyObject, Binding, PropertyInfo> ApplyUpdateSourceTrigger = (bindableProperty, element, binding, info) => {
-#if SILVERLIGHT && !SL5
-            ApplySilverlightTriggers(
-                element, 
-                bindableProperty, 
-                x => x.GetBindingExpression(bindableProperty),
-                info,
-                binding
-                );
-#elif WinRT81 || NET
+#if WinRT81 || NET
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
         };
@@ -245,7 +237,7 @@
                     return true;
                 };
 #endif
-#if SILVERLIGHT || WinRT
+#if WinRT
             AddElementConvention<HyperlinkButton>(HyperlinkButton.ContentProperty, "DataContext", "Click");
             AddElementConvention<PasswordBox>(PasswordBox.PasswordProperty, "Password", "PasswordChanged");
 #else
@@ -323,11 +315,9 @@
 
                     if (element.Content is DependencyObject && !OverwriteContent)
                         return null;
-#if SILVERLIGHT
-                    var useViewModel = element.ContentTemplate == null;
-#else
+
                     var useViewModel = element.ContentTemplate == null && element.ContentTemplateSelector == null;
-#endif
+
                     if (useViewModel) {
                         Log.Info("ViewModel bound on {0}.", element.Name);
                         return View.ModelProperty;
@@ -462,15 +452,10 @@
             }
 #endif
 
-#if !SILVERLIGHT
             if (itemsControl.ItemTemplateSelector == null){
                 itemsControl.ItemTemplate = DefaultItemTemplate;
                 Log.Info("ItemTemplate applied to {0}.", itemsControl.Name);
             }
-#else
-            itemsControl.ItemTemplate = DefaultItemTemplate;
-            Log.Info("ItemTemplate applied to {0}.", itemsControl.Name);
-#endif
         }
 
         /// <summary>
@@ -581,45 +566,5 @@
                 .FirstOrDefault(property => property != null);
 #endif
         }
-
-#if (SILVERLIGHT && !SL5)
-        /// <summary>
-        /// Accounts for the lack of UpdateSourceTrigger in silverlight.
-        /// </summary>
-        /// <param name="element">The element to wire for change events on.</param>
-        /// <param name="dependencyProperty">The property that is being bound.</param>
-        /// <param name="expressionSource">Gets the the binding expression that needs to be updated.</param>
-        /// <param name="property">The property being bound to if available.</param>
-        /// <param name="binding">The binding if available.</param>
-        public static void ApplySilverlightTriggers(DependencyObject element, DependencyProperty dependencyProperty, Func<FrameworkElement, BindingExpression> expressionSource, PropertyInfo property, Binding binding){
-            var textBox = element as TextBox;
-            if (textBox != null && dependencyProperty == TextBox.TextProperty) {
-                if (property != null) {
-                    var typeCode = Type.GetTypeCode(property.PropertyType);
-                    if (typeCode == TypeCode.Single || typeCode == TypeCode.Double || typeCode == TypeCode.Decimal) {
-                        binding.UpdateSourceTrigger = UpdateSourceTrigger.Explicit;
-                        textBox.KeyUp += delegate {
-                            var start = textBox.SelectionStart;
-                            var text = textBox.Text;
-
-                            expressionSource(textBox).UpdateSource();
-
-                            textBox.Text = text;
-                            textBox.SelectionStart = start;
-                        };
-                        return;
-                    }
-                }
-
-                textBox.TextChanged += delegate { expressionSource(textBox).UpdateSource(); };
-                return;
-            }
-
-            var passwordBox = element as PasswordBox;
-            if (passwordBox != null && dependencyProperty == PasswordBox.PasswordProperty) {
-                passwordBox.PasswordChanged += delegate { expressionSource(passwordBox).UpdateSource(); };
-            }
-        }
-#endif
     }
 }

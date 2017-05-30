@@ -148,7 +148,6 @@
     <Compile Include="MessageBinder.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TypeDescriptor.cs" />
     <Compile Include="View.cs" />
     <Compile Include="ViewLocator.cs" />
     <Compile Include="ViewModelBinder.cs" />

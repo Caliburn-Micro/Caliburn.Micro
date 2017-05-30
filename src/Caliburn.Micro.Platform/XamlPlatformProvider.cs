@@ -25,9 +25,7 @@
         /// Initializes a new instance of the <see cref="XamlPlatformProvider"/> class.
         /// </summary>
         public XamlPlatformProvider() {
-#if SILVERLIGHT
-            dispatcher = System.Windows.Deployment.Current.Dispatcher;
-#elif WinRT
+#if WinRT
             dispatcher = Window.Current.Dispatcher;
 #else
             dispatcher = Dispatcher.CurrentDispatcher;
@@ -215,7 +213,7 @@
 #endif
                 if (closeMethod != null)
                     return () => {
-#if !SILVERLIGHT && !WinRT
+#if !WinRT
                         var isClosed = false;
                         if (dialogResult != null) {
                             var resultProperty = contextualView.GetType().GetProperty("DialogResult");

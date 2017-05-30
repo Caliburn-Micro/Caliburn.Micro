@@ -9,9 +9,7 @@ namespace Caliburn.Micro
     using System.Linq;
     using System.Reflection;
     using System.Collections.Generic;
-#if !SILVERLIGHT
     using System.ComponentModel;
-#endif
 #if WinRT
     using Windows.UI.Xaml.Controls;
 #endif

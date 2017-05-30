@@ -119,11 +119,9 @@
         /// </summary>
         protected virtual void PrepareApplication() {
             Application.Startup += OnStartup;
-#if SILVERLIGHT
-            Application.UnhandledException += OnUnhandledException;
-#else
+
             Application.DispatcherUnhandledException += OnUnhandledException;
-#endif
+
             Application.Exit += OnExit;
         }
 
@@ -184,49 +182,13 @@
         /// <param name="e">The event args.</param>
         protected virtual void OnExit(object sender, EventArgs e) { }
 
-#if SILVERLIGHT
-        /// <summary>
-        /// Override this to add custom behavior for unhandled exceptions.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The event args.</param>
-        protected virtual void OnUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e) { }
-#else
         /// <summary>
         /// Override this to add custom behavior for unhandled exceptions.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event args.</param>
         protected virtual void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) { }
-#endif
             
-#if SILVERLIGHT && !WINDOWS_PHONE
-        /// <summary>
-        /// Locates the view model, locates the associate view, binds them and shows it as the root view.
-        /// </summary>
-        /// <param name="viewModelType">The view model type.</param>
-        protected void DisplayRootViewFor(Type viewModelType) {
-            var viewModel = IoC.GetInstance(viewModelType, null);
-            var view = ViewLocator.LocateForModel(viewModel, null, null);
-
-            ViewModelBinder.Bind(viewModel, view, null);
-
-            var activator = viewModel as IActivate;
-            if(activator != null)
-                activator.Activate();
-
-            Mouse.Initialize(view);
-            Application.RootVisual = view;
-        }
-
-        /// <summary>
-        /// Locates the view model, locates the associate view, binds them and shows it as the root view.
-        /// </summary>
-        /// <typeparam name="TViewModel">The view model type.</typeparam>
-        protected void DisplayRootViewFor<TViewModel>() {
-            DisplayRootViewFor(typeof(TViewModel));
-        }
-#elif NET
         /// <summary>
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
         /// </summary>
@@ -245,6 +207,5 @@
         protected void DisplayRootViewFor<TViewModel>(IDictionary<string, object> settings = null) {
             DisplayRootViewFor(typeof(TViewModel), settings);
         }
-#endif
     }
 }

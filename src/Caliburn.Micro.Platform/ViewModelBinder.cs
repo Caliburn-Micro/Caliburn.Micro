@@ -263,12 +263,6 @@ namespace Caliburn.Micro
 #else
             var namedElements = BindingScope.GetNamedElements(element);
 #endif
-#if SILVERLIGHT
-            namedElements.Apply(x => x.SetValue(
-                View.IsLoadedProperty,
-                element.GetValue(View.IsLoadedProperty))
-                );
-#endif
             namedElements = BindActions(namedElements, viewModelType);
             namedElements = BindProperties(namedElements, viewModelType);
             HandleUnmatchedElements(namedElements, viewModelType);

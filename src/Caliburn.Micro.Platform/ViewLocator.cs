@@ -22,7 +22,7 @@ namespace Caliburn.Micro
     using Windows.UI.Xaml.Controls;
 #endif
 
-#if !SILVERLIGHT && !WinRT && !XFORMS
+#if !WinRT && !XFORMS
     using System.Windows.Interop;
 #endif
 
@@ -396,7 +396,7 @@ namespace Caliburn.Micro
             if (viewAware != null) {
                 var view = viewAware.GetView(context) as UIElement;
                 if (view != null) {
-#if !SILVERLIGHT && !WinRT && !XFORMS
+#if !WinRT && !XFORMS
                     var windowCheck = view as Window;
                     if (windowCheck == null || (!windowCheck.IsLoaded && !(new WindowInteropHelper(windowCheck).Handle == IntPtr.Zero))) {
                         Log.Info("Using cached view for {0}.", model);

@@ -348,24 +348,11 @@ namespace Caliburn.Micro
             };
 #endif
 
-#if (SILVERLIGHT && !SL5)
-            var expression = (BindingExpression)BindingOperations.SetBinding(parameter, Parameter.ValueProperty, binding);
-
-            var field = element.GetType().GetField(path + "Property", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-            if (field == null) {
-                return;
-            }
-
-            ConventionManager.ApplySilverlightTriggers(element, (DependencyProperty)field.GetValue(null), x => expression, null, null);
-#else
-
 #if !WinRT
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
 
             BindingOperations.SetBinding(parameter, Parameter.ValueProperty, binding);
-
-#endif
 #endif
         }
     }

@@ -38,7 +38,7 @@
         /// Notifies subscribers of the property change.
         /// </summary>
         /// <param name = "propertyName">Name of the property.</param>
-#if NET || SILVERLIGHT
+#if NET
         public virtual void NotifyOfPropertyChange(string propertyName) {
 #else
         public virtual void NotifyOfPropertyChange([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null) {

@@ -83,7 +83,6 @@
       <SubType>Code</SubType>
     </Compile>
     <AppDesigner Include="Properties\" />
-    <Compile Include="TypeDescriptor.cs" />
     <Compile Include="View.cs" />
     <Compile Include="ViewLocator.cs" />
     <Compile Include="ViewModelBinder.cs" />

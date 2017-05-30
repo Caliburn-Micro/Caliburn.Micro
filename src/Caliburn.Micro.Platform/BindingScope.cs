@@ -26,7 +26,7 @@
         {
             AddChildResolver<ContentControl>(e => new[] { e.Content as DependencyObject });
             AddChildResolver<ItemsControl>(e => e.Items.OfType<DependencyObject>().ToArray() );
-#if !SILVERLIGHT && !WinRT
+#if !WinRT
             AddChildResolver<HeaderedContentControl>(e => new[] { e.Header as DependencyObject });
             AddChildResolver<HeaderedItemsControl>(e => new[] { e.Header as DependencyObject });
 #endif
@@ -291,12 +291,12 @@
 
                 if (root is UserControl)
                     break;
-#if !SILVERLIGHT
+
                 if (root is Page) {
                     root = ((Page) root).Content as DependencyObject ?? root;
                     break;
                 }
-#endif
+
                 if ((bool) root.GetValue(View.IsScopeRootProperty))
                     break;
 

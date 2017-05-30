@@ -117,9 +117,7 @@ namespace Caliburn.Micro
             handler(element, new RoutedEventArgs());
             return true;
 #else
-#if SILVERLIGHT
-            if ((bool)element.GetValue(IsLoadedProperty)) {
-#elif WinRT
+#if WinRT
             if (IsElementLoaded(element)) {
 #else
             if(element.IsLoaded) {
@@ -131,9 +129,6 @@ namespace Caliburn.Micro
             RoutedEventHandler loaded = null;
             loaded = (s, e) => {
                 element.Loaded -= loaded;
-#if SILVERLIGHT
-                element.SetValue(IsLoadedProperty, true);
-#endif
                 handler(s, e);
             };
             element.Loaded += loaded;
@@ -426,8 +421,6 @@ namespace Caliburn.Micro
                     inDesignMode = false;
 #elif WinRT
                     inDesignMode = DesignMode.DesignModeEnabled;
-#elif SILVERLIGHT
-                    inDesignMode = DesignerProperties.IsInDesignTool;
 #else
                     var descriptor = DependencyPropertyDescriptor.FromProperty(DesignerProperties.IsInDesignModeProperty, typeof(FrameworkElement));
                     inDesignMode = (bool)descriptor.Metadata.DefaultValue;

@@ -351,7 +351,7 @@
             }
 #endif
 
-#if SILVERLIGHT || WinRT
+#if WinRT
             var source = context.Source as Control;
 #else
             var source = context.Source;
@@ -360,7 +360,7 @@
                 return true;
             }
 
-#if SILVERLIGHT || WinRT
+#if WinRT
             var hasBinding = ConventionManager.HasBinding(source, Control.IsEnabledProperty);
 #else
             var hasBinding = ConventionManager.HasBinding(source, UIElement.IsEnabledProperty);
