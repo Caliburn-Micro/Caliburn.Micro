@@ -1,4 +1,6 @@
-﻿namespace Caliburn.Micro {
+﻿using System.Reflection;
+
+namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
@@ -93,8 +95,8 @@
                 /// </summary>
                 protected override void OnInitialize() {
                     if (openPublicItems) {
-                        GetType().GetProperties()
-                            .Where(x => x.Name != "Parent" && typeof (T).IsAssignableFrom(x.PropertyType))
+                        GetType().GetRuntimeProperties()
+                            .Where(x => x.Name != "Parent" && typeof (T).GetTypeInfo().IsAssignableFrom(x.PropertyType.GetTypeInfo()))
                             .Select(x => x.GetValue(this, null))
                             .Cast<T>()
                             .Apply(ActivateItem);

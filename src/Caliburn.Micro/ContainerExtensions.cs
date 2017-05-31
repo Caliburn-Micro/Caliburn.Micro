@@ -97,15 +97,15 @@
                 filter = type => true;
 
             var serviceType = typeof (TService);
-            var types = from type in assembly.GetTypes()
-                        where serviceType.IsAssignableFrom(type)
-                              && !type.IsAbstract()
-                              && !type.IsInterface()
-                              && filter(type)
+            var types = from type in assembly.DefinedTypes
+                        where serviceType.GetTypeInfo().IsAssignableFrom(type)
+                              && !type.IsAbstract
+                              && !type.IsInterface
+                              && filter(type.AsType())
                         select type;
 
             foreach (var type in types) {
-                container.RegisterSingleton(typeof (TService), null, type);
+                container.RegisterSingleton(typeof (TService), null, type.AsType());
             }
 
             return container;

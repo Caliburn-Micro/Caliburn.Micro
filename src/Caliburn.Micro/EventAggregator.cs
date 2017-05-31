@@ -103,12 +103,12 @@
             public Handler(object handler) {
                 reference = new WeakReference(handler);
 
-                var interfaces = handler.GetType().GetInterfaces()
-                    .Where(x => typeof(IHandle).IsAssignableFrom(x) && x.IsGenericType());
+                var interfaces = handler.GetType().GetTypeInfo().ImplementedInterfaces
+                    .Where(x => typeof(IHandle).GetTypeInfo().IsAssignableFrom(x.GetTypeInfo()) && x.GetTypeInfo().IsGenericType);
 
                 foreach(var @interface in interfaces) {
-                    var type = @interface.GetGenericArguments()[0];
-                    var method = @interface.GetMethod("Handle", new Type[] { type });
+                    var type = @interface.GetTypeInfo().GenericTypeArguments[0];
+                    var method = @interface.GetRuntimeMethod("Handle", new Type[] { type });
 
                     if (method != null) {
                         supportedHandlers[type] = method;
@@ -127,7 +127,7 @@
                 }
 
                 foreach(var pair in supportedHandlers) {
-                    if(pair.Key.IsAssignableFrom(messageType)) {
+                    if(pair.Key.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo())) {
                         var result = pair.Value.Invoke(target, new[] { message });
                         if (result != null) {
                             HandlerResultProcessing(target, result);
@@ -139,7 +139,7 @@
             }
 
             public bool Handles(Type messageType) {
-                return supportedHandlers.Any(pair => pair.Key.IsAssignableFrom(messageType));
+                return supportedHandlers.Any(pair => pair.Key.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo()));
             }
         }
     }

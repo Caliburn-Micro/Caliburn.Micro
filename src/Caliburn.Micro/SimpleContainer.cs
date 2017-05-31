@@ -94,16 +94,16 @@
                 return null;
             }
 
-            if (delegateType.IsAssignableFrom(service)) {
-                var typeToCreate = service.GetGenericArguments()[0];
+            if (delegateType.GetTypeInfo().IsAssignableFrom(service.GetTypeInfo())) {
+                var typeToCreate = service.GetTypeInfo().GenericTypeArguments[0];
                 var factoryFactoryType = typeof(FactoryFactory<>).MakeGenericType(typeToCreate);
                 var factoryFactoryHost = Activator.CreateInstance(factoryFactoryType);
-                var factoryFactoryMethod = factoryFactoryType.GetMethod("Create", new Type[] { typeof(SimpleContainer) });
+                var factoryFactoryMethod = factoryFactoryType.GetRuntimeMethod("Create", new Type[] { typeof(SimpleContainer) });
                 return factoryFactoryMethod.Invoke(factoryFactoryHost, new object[] { this });
             }
 
-            if (enumerableType.IsAssignableFrom(service) && service.IsGenericType()) {
-                var listType = service.GetGenericArguments()[0];
+            if (enumerableType.GetTypeInfo().IsAssignableFrom(service.GetTypeInfo()) && service.GetTypeInfo().IsGenericType) {
+                var listType = service.GetTypeInfo().GenericTypeArguments[0];
                 var instances = GetAllInstances(listType).ToList();
                 var array = Array.CreateInstance(listType, instances.Count);
 
@@ -142,8 +142,8 @@
         /// </summary>
         /// <param name = "instance">The instance.</param>
         public void BuildUp(object instance) {
-            var injectables = from property in instance.GetType().GetProperties()
-                              where property.CanRead && property.CanWrite && property.PropertyType.IsInterface()
+            var injectables = from property in instance.GetType().GetRuntimeProperties()
+                              where property.CanRead && property.CanWrite && property.PropertyType.GetTypeInfo().IsInterface
                               select property;
 
             foreach (var propertyInfo in injectables) {
@@ -223,7 +223,7 @@
         }
 
         static ConstructorInfo SelectEligibleConstructor(Type type) {
-            return (from c in type.GetConstructors().Where(c => c.IsPublic)
+            return (from c in type.GetTypeInfo().DeclaredConstructors.Where(c => c.IsPublic)
                     orderby c.GetParameters().Length descending
                     select c).FirstOrDefault();
         }

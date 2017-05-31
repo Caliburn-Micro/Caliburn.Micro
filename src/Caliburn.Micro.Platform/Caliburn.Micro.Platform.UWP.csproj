@@ -121,9 +121,9 @@
       <Project>{0ecbe3d9-aed4-419d-a6e3-c53d5ce2a02a}</Project>
       <Name>Caliburn.Micro.Platform.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">
-      <Project>{6d772b52-da8f-4784-971a-4bf50cb6d306}</Project>
-      <Name>Caliburn.Micro</Name>
+    <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.Core.csproj">
+      <Project>{614e1789-d938-4c8b-9d46-ba99160d22e0}</Project>
+      <Name>Caliburn.Micro.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

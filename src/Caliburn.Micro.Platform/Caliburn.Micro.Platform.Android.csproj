@@ -42,12 +42,7 @@
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
-    <Reference Include="System.Collections" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ObjectModel" />
-    <Reference Include="System.Reflection" />
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -63,9 +58,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.csproj">
-      <Project>{6d772b52-da8f-4784-971a-4bf50cb6d306}</Project>
-      <Name>Caliburn.Micro</Name>
+    <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.Core.csproj">
+      <Project>{614e1789-d938-4c8b-9d46-ba99160d22e0}</Project>
+      <Name>Caliburn.Micro.Core</Name>
     </ProjectReference>
     <ProjectReference Include="Caliburn.Micro.Platform.Core.csproj">
       <Project>{0ecbe3d9-aed4-419d-a6e3-c53d5ce2a02a}</Project>
