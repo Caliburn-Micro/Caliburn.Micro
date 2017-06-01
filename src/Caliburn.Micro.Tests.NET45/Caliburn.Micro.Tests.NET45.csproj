@@ -81,7 +81,7 @@
       <Project>{04c6555d-50be-40be-9b3f-74fac0f73fa2}</Project>
       <Name>Caliburn.Micro.Platform.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.Platform.NET45.csproj">
+    <ProjectReference Include="..\Caliburn.Micro.Platform.Legacy\Caliburn.Micro.Platform.NET45.csproj">
       <Project>{ef2c0c7d-3ffe-4884-9aac-7622fee66809}</Project>
       <Name>Caliburn.Micro.Platform.NET45</Name>
     </ProjectReference>
