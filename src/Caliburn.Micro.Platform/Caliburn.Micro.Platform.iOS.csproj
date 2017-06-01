@@ -48,8 +48,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Caliburn.Micro\Caliburn.Micro.Core.csproj">
-      <Project>{614e1789-d938-4c8b-9d46-ba99160d22e0}</Project>
+    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj">
+      <Project>{026678e0-a3e4-4760-a277-87352392fb6e}</Project>
       <Name>Caliburn.Micro.Core</Name>
     </ProjectReference>
     <ProjectReference Include="Caliburn.Micro.Platform.Core.csproj">
