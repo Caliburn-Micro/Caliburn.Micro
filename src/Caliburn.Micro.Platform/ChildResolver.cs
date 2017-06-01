@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 #if WINDOWS_UWP
 using Windows.UI.Xaml;
 #else

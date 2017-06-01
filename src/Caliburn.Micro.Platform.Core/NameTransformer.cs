@@ -9,11 +9,8 @@
     /// </summary>
     public class NameTransformer : BindableCollection<NameTransformer.Rule> {
 
-#if NET
-        private const RegexOptions options = RegexOptions.Compiled;
-#else
         private const RegexOptions options = RegexOptions.None;
-#endif
+
 
         bool useEagerRuleSelection = true;
 

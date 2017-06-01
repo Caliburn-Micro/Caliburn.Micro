@@ -102,7 +102,7 @@ namespace Caliburn.Micro
             }
 
             var providedType = providedValue.GetType();
-            if (destinationType.IsAssignableFrom(providedType)) {
+            if (destinationType.GetTypeInfo().IsAssignableFrom(providedType.GetTypeInfo())) {
                 return providedValue;
             }
 
@@ -137,7 +137,7 @@ namespace Caliburn.Micro
                     return Enum.ToObject(destinationType, providedValue);
                 }
 
-                if (typeof (Guid).IsAssignableFrom(destinationType)) {
+                if (typeof (Guid).GetTypeInfo().IsAssignableFrom(destinationType.GetTypeInfo())) {
                     var stringValue = providedValue as string;
                     if (stringValue != null) {
                         return new Guid(stringValue);

@@ -5,11 +5,6 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
-#if !WINDOWS_UWP
-    using System.Windows;
-#else
-    using Windows.UI.Xaml;
-#endif
 
     /// <summary>
     /// A source of assemblies that are inspectable by the framework.
@@ -29,7 +24,7 @@
             }
 
             var type = names
-                .Join(Instance.SelectMany(a => a.GetExportedTypes()), n => n, t => t.FullName, (n, t) => t)
+                .Join(Instance.SelectMany(a => a.ExportedTypes), n => n, t => t.FullName, (n, t) => t)
                 .FirstOrDefault();
             return type;
         };
@@ -46,12 +41,9 @@
         /// Extracts the types from the spezified assembly for storing in the cache.
         /// </summary>
         public static Func<Assembly, IEnumerable<Type>> ExtractTypes = assembly =>
-            assembly.GetExportedTypes()
+            assembly.ExportedTypes
                 .Where(t =>
-#if !CORE
-                    typeof(UIElement).IsAssignableFrom(t) ||
-#endif
-                    typeof(INotifyPropertyChanged).IsAssignableFrom(t));
+                    typeof(INotifyPropertyChanged).GetTypeInfo().IsAssignableFrom(t.GetTypeInfo()));
 
         /// <summary>
         /// Installs the caching subsystem.

@@ -100,8 +100,8 @@
       <Project>{026678e0-a3e4-4760-a277-87352392fb6e}</Project>
       <Name>Caliburn.Micro.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="Caliburn.Micro.Platform.Core.csproj">
-      <Project>{0ecbe3d9-aed4-419d-a6e3-c53d5ce2a02a}</Project>
+    <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj">
+      <Project>{04c6555d-50be-40be-9b3f-74fac0f73fa2}</Project>
       <Name>Caliburn.Micro.Platform.Core</Name>
     </ProjectReference>
   </ItemGroup>

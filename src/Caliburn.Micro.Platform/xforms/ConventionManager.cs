@@ -142,7 +142,7 @@
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyStringFormat = (binding, convention, property) =>
         {
 #if !WINDOWS_UWP
-            if (typeof(DateTime).IsAssignableFrom(property.PropertyType))
+            if (typeof(DateTime).GetTypeInfo().IsAssignableFrom(property.PropertyType.GetTypeInfo()))
                 binding.StringFormat = "{0:d}";
 #endif
         };
@@ -312,7 +312,7 @@
         {
             if (property.PropertyType.GetTypeInfo().IsGenericType) {
                 var itemType = property.PropertyType.GenericTypeArguments.First();
-                if (itemType.GetTypeInfo().IsValueType || typeof (string).IsAssignableFrom(itemType)) {
+                if (itemType.GetTypeInfo().IsValueType || typeof (string).GetTypeInfo().IsAssignableFrom(itemType.GetTypeInfo())) {
                     return;
                 }
             }
@@ -392,7 +392,7 @@
                                ? element.GetValue(headerTemplateSelectorProperty)
                                : null;
 
-            if (template != null || selector != null || !typeof(IHaveDisplayName).IsAssignableFrom(viewModelType))
+            if (template != null || selector != null || !typeof(IHaveDisplayName).GetTypeInfo().IsAssignableFrom(viewModelType.GetTypeInfo()))
             {
                 return;
             }

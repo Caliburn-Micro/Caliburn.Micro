@@ -24,12 +24,8 @@ namespace Caliburn.Micro {
             var builder = new StringBuilder();
 
             int squareBrackets = 0;
-#if WINDOWS_UWP
-            foreach (var current in message.ToCharArray())
-            {
-#else
+
             foreach (var current in message) {
-#endif
                 //Square brackets are used as delimiters, so only separators outside them count...
                 if (current == '[')
                 {

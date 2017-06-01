@@ -234,7 +234,8 @@ namespace Caliburn.Micro
                     .GetValue(dependencyObject, null);
 #else
                 var type = dependencyObject.GetType();
-                var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
+                var contentProperty = type.GetCustomAttributes(typeof(ContentPropertyAttribute), true)
+                                          .OfType<ContentPropertyAttribute>()
                                           .FirstOrDefault() ?? DefaultContentProperty;
 
                 return type.GetProperty(contentProperty.Name)
@@ -390,7 +391,8 @@ namespace Caliburn.Micro
         static bool SetContentPropertyCore(object targetLocation, object view) {
             try {
                 var type = targetLocation.GetType();
-                var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
+                var contentProperty = type.GetCustomAttributes(typeof(ContentPropertyAttribute), true)
+                                          .OfType<ContentPropertyAttribute>()
                                           .FirstOrDefault() ?? DefaultContentProperty;
 
                 type.GetProperty(contentProperty?.Name ?? DefaultContentProperty.Name)

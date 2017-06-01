@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using Xamarin.Forms;
 
 namespace Caliburn.Micro.Xamarin.Forms
@@ -27,8 +28,8 @@ namespace Caliburn.Micro.Xamarin.Forms
 
             AssemblySourceCache.ExtractTypes = assembly => {
                 var baseTypes = baseExtractTypes(assembly);
-                var elementTypes = assembly.GetExportedTypes()
-                    .Where(t => typeof (Element).IsAssignableFrom(t));
+                var elementTypes = assembly.ExportedTypes
+                    .Where(t => typeof (Element).GetTypeInfo().IsAssignableFrom(t.GetTypeInfo()));
 
                 return baseTypes.Union(elementTypes);
             };

@@ -179,7 +179,7 @@ namespace Caliburn.Micro
         };
 
         static bool IsAsyncMethod(MethodInfo method) {
-            return typeof(Task).IsAssignableFrom(method.ReturnType) &&
+            return typeof(Task).GetTypeInfo().IsAssignableFrom(method.ReturnType.GetTypeInfo()) &&
                    method.Name.EndsWith(AsyncSuffix, StringComparison.OrdinalIgnoreCase);
         }
 
