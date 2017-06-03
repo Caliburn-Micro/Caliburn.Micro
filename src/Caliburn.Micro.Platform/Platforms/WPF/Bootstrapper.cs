@@ -6,6 +6,7 @@
     using System.Windows;
     using System.Windows.Threading;
 
+
     /// <summary>
     /// Inherit from this class in order to customize the configuration of the framework.
     /// </summary>
@@ -38,7 +39,7 @@
 
             PlatformProvider.Current = new XamlPlatformProvider();
 
-#if WP8 || NET45
+
             var baseExtractTypes = AssemblySourceCache.ExtractTypes;
 
             AssemblySourceCache.ExtractTypes = assembly =>
@@ -51,7 +52,6 @@
             };
 
             AssemblySource.Instance.Refresh();
-#endif
 
             if(Execute.InDesignMode) {
                 try {
@@ -145,10 +145,9 @@
         /// <param name="key">The key to locate.</param>
         /// <returns>The located service.</returns>
         protected virtual object GetInstance(Type service, string key) {
-#if NET
+
             if (service == typeof(IWindowManager))
                 service = typeof(WindowManager);
-#endif
 
             return Activator.CreateInstance(service);
         }
