@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;uap10.0;MonoAndroid10;Xamarin.iOS</TargetFrameworks>
+    <TargetFrameworks>netstandard1.4;net45;uap10.0;MonoAndroid10;Xamarin.iOS</TargetFrameworks>
     <AssemblyName>Caliburn.Micro.Platform</AssemblyName>
     <RootNamespace>Caliburn.Micro</RootNamespace>
   </PropertyGroup>
@@ -30,6 +30,12 @@
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.4'">
+    <DefineConstants>XFORMS</DefineConstants>
+    <PackageTargetFallback>portable-net45+win8+wpa81+wp8</PackageTargetFallback>
+    <DebugType>full</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -85,6 +91,17 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="Xamarin.iOS" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.4'">
+    <Compile Include="Platforms\Xamarin.Forms\*.cs" />
+    <Compile Remove="ActionMessage.cs" />
+    <Compile Remove="BindingScope.cs" />
+    <Compile Remove="BooleanToVisibilityConverter.cs" />
+    <Compile Remove="ChildResolver.cs" />
+    <Compile Remove="ConventionManager.cs" />
+    <Compile Remove="XamlPlatformProvider.cs" />
+    <PackageReference Include="Xamarin.Forms" Version="2.0.1.6505" />
   </ItemGroup>
 
   <ItemGroup>
