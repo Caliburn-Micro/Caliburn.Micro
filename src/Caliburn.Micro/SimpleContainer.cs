@@ -217,7 +217,9 @@
             var constructor = SelectEligibleConstructor(implementation);
 
             if (constructor != null)
-                args.AddRange(constructor.GetParameters().Select(info => GetInstance(info.ParameterType, null)));
+                args.AddRange(constructor.GetParameters()
+                    .Select(info => GetInstance(info.ParameterType, info.Name)
+                        ?? GetInstance(info.ParameterType, null)));
 
             return args.ToArray();
         }

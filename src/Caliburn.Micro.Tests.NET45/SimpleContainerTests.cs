@@ -73,6 +73,42 @@
         }
     }
 
+
+    public class SimpleContainer_Resolve_different_parameters_of_same_type {
+        public class SingleTwoIntsConstructor
+        {
+            public int Value { get; private set; }
+
+            public SingleTwoIntsConstructor(int x, int y)
+            {
+                this.Value = x * 10 + y;
+            }
+        }
+
+        [Fact]
+        public void Container_SingleTwoIntsConstructor()
+        {
+            var container = new SimpleContainer();
+            container.Singleton<SingleTwoIntsConstructor>();
+            container.RegisterInstance(typeof(int), "y", 2);
+            container.RegisterInstance(typeof(int), "x", 4);
+            var inst = (SingleTwoIntsConstructor)container.GetInstance(typeof(SingleTwoIntsConstructor), null);
+            Assert.Equal(42, inst.Value);
+        }
+
+        [Fact]
+        public void Container_SingleTwoIntsConstructor_registeredInDifferentOrder()
+        {
+            var container = new SimpleContainer();
+            container.Singleton<SingleTwoIntsConstructor>();
+            container.RegisterInstance(typeof(int), "x", 4);
+            container.RegisterInstance(typeof(int), "y", 2);
+            var inst = (SingleTwoIntsConstructor)container.GetInstance(typeof(SingleTwoIntsConstructor), null);
+            Assert.Equal(42, inst.Value);
+        }
+
+    }
+
     public class SimpleContainer_Registering_Instances {
         [Fact]
         public void Instances_registered_PerRequest_returns_a_different_instance_for_each_call() {
