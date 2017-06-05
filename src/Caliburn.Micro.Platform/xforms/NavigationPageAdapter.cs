@@ -126,7 +126,7 @@ namespace Caliburn.Micro.Xamarin.Forms {
 
             var view = ViewLocator.LocateForModelType(viewModelType, null, null);
 
-            return PushAsync(view, parameter, animated);
+            return PushAsync(view, parameter, animated, viewModelType);
         }
 
         /// <summary>
@@ -176,14 +176,14 @@ namespace Caliburn.Micro.Xamarin.Forms {
             return NavigateToViewAsync(typeof(T), parameter, animated);
         }
 
-        private Task PushAsync(Element view, object parameter, bool animated)
+        private Task PushAsync(Element view, object parameter, bool animated, Type viewModelType = null)
         {
             var page = view as Page;
 
             if (page == null && !(view is ContentView))
                 throw new NotSupportedException(String.Format("{0} does not inherit from either {1} or {2}.", view.GetType(), typeof(Page), typeof(ContentView)));
 
-            var viewModel = ViewModelLocator.LocateForView(view);
+            var viewModel = viewModelType == null ? ViewModelLocator.LocateForView(view) : IoC.GetInstance(viewModelType, null);
 
             if (viewModel != null) {
                 TryInjectParameters(viewModel, parameter);
