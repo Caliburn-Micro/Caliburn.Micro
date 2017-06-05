@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Core", "Cali
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.Core", "Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj", "{04C6555D-50BE-40BE-9B3F-74FAC0F73FA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.iOS", "Caliburn.Micro.Platform.Legacy\Caliburn.Micro.Platform.iOS.csproj", "{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.Xamarin.Forms", "Caliburn.Micro.Platform.Legacy\Caliburn.Micro.Platform.Xamarin.Forms.csproj", "{67F9D3A8-F71E-4428-913F-C37AE82CDB24}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform", "Caliburn.Micro.Platform\Caliburn.Micro.Platform.csproj", "{2E540802-53A7-479B-B2D9-84B0AA44F083}"
@@ -75,22 +73,6 @@ Global
 		{04C6555D-50BE-40BE-9B3F-74FAC0F73FA2}.Release|x64.Build.0 = Release|Any CPU
 		{04C6555D-50BE-40BE-9B3F-74FAC0F73FA2}.Release|x86.ActiveCfg = Release|Any CPU
 		{04C6555D-50BE-40BE-9B3F-74FAC0F73FA2}.Release|x86.Build.0 = Release|Any CPU
-		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}.Debug|ARM.Build.0 = Debug|Any CPU
-		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}.Debug|x64.Build.0 = Debug|Any CPU
-		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}.Debug|x86.Build.0 = Debug|Any CPU
-		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}.Release|ARM.ActiveCfg = Release|Any CPU
-		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}.Release|ARM.Build.0 = Release|Any CPU
-		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}.Release|x64.ActiveCfg = Release|Any CPU
-		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}.Release|x64.Build.0 = Release|Any CPU
-		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}.Release|x86.ActiveCfg = Release|Any CPU
-		{F2A3A287-ADA2-4FB8-A7AD-15B5BA92F2D1}.Release|x86.Build.0 = Release|Any CPU
 		{67F9D3A8-F71E-4428-913F-C37AE82CDB24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{67F9D3A8-F71E-4428-913F-C37AE82CDB24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67F9D3A8-F71E-4428-913F-C37AE82CDB24}.Debug|ARM.ActiveCfg = Debug|Any CPU

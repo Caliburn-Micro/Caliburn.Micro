@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;uap10.0;MonoAndroid10</TargetFrameworks>
+    <TargetFrameworks>net45;uap10.0;MonoAndroid10;Xamarin.iOS</TargetFrameworks>
     <AssemblyName>Caliburn.Micro.Platform</AssemblyName>
     <RootNamespace>Caliburn.Micro</RootNamespace>
   </PropertyGroup>
@@ -23,6 +23,13 @@
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <DevInstrumentationEnabled>True</DevInstrumentationEnabled>
     <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'Xamarin.iOS'">
+    <DefineConstants>IOS</DefineConstants>
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -63,6 +70,21 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'Xamarin.iOS'">
+    <Compile Remove="*.cs" />
+    <Compile Include="Platforms\iOS\*.cs" />
+    <Reference Include="System" />
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Collections" />
+    <Reference Include="System.Threading.Tasks" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="Xamarin.iOS" />
   </ItemGroup>
 
   <ItemGroup>
