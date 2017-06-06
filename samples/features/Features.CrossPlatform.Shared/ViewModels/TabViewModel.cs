@@ -22,7 +22,7 @@ namespace Features.CrossPlatform.ViewModels
 
         protected override void OnDeactivate(bool close)
         {
-            Messages.Add($"Deactivted, close: {close}");
+            Messages.Add($"Deactivated, close: {close}");
         }
 
         public BindableCollection<string> Messages { get; }
