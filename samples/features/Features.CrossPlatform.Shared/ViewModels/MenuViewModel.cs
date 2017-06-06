@@ -22,7 +22,7 @@ namespace Features.CrossPlatform.ViewModels
                 new FeatureViewModel("Execute", "Using Execute to execute code on the UI thread.", typeof(ExecuteViewModel)),
                 new FeatureViewModel("Event Aggregator", "Send events between uncoupled view models.", typeof(EventAggregationViewModel)),
 #if !XAMARINFORMS
-                new FeatureViewModel("Design Time", "Conventions in the xaml desginer and design mode detection.", typeof(DesignTimeViewModel)),
+                new FeatureViewModel("Design Time", "Conventions in the xaml designer and design mode detection.", typeof(DesignTimeViewModel)),
 #endif
                 new FeatureViewModel("Conductors", "Composing view models together with lifecycle events", typeof(ConductorViewModel)),
                 new FeatureViewModel("Bubbling Actions", "How to bubble actions from a child view model to a parent", typeof(BubblingViewModel)),
