@@ -5,6 +5,8 @@
     <AssemblyName>Caliburn.Micro.Platform</AssemblyName>
     <RootNamespace>Caliburn.Micro</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputPath>..\..\bin\$(TargetFramework.ToLower())\$(Configuration.ToLower())\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
@@ -37,6 +39,8 @@
     <DefineConstants>XFORMS</DefineConstants>
     <PackageTargetFallback>portable-net45+win8+wpa81+wp8</PackageTargetFallback>
     <DebugType>full</DebugType>
+    <OutputPath>..\..\bin\xamarin-forms\$(Configuration.ToLower())\</OutputPath>
+    <AssemblyName>Caliburn.Micro.Xamarin.Forms</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

@@ -5,14 +5,8 @@
     <AssemblyName>Caliburn.Micro</AssemblyName>
     <RootNamespace>Caliburn.Micro</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\..\bin\netstandard\Release\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\bin\netstandard\Debug\</OutputPath>
+    <OutputPath>..\..\bin\core\$(Configuration.ToLower())\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
