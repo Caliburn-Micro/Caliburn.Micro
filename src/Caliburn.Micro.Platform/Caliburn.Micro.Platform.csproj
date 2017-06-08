@@ -101,11 +101,17 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.4'">
     <Compile Include="Platforms\Xamarin.Forms\*.cs" />
     <Compile Remove="ActionMessage.cs" />
+    <None Include="ActionMessage.cs" />
     <Compile Remove="BindingScope.cs" />
+    <None Include="BindingScope.cs" />
     <Compile Remove="BooleanToVisibilityConverter.cs" />
+    <None Include="BooleanToVisibilityConverter.cs" />
     <Compile Remove="ChildResolver.cs" />
+    <None Include="ChildResolver.cs" />
     <Compile Remove="ConventionManager.cs" />
+    <None Include="ConventionManager.cs" />
     <Compile Remove="XamlPlatformProvider.cs" />
+    <None Include="XamlPlatformProvider.cs" />
     <PackageReference Include="Xamarin.Forms" Version="2.0.1.6505" />
   </ItemGroup>
 
