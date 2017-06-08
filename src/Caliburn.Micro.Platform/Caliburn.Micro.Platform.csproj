@@ -4,6 +4,7 @@
     <TargetFrameworks>netstandard1.4;net45;uap10.0;MonoAndroid10;Xamarin.iOS</TargetFrameworks>
     <AssemblyName>Caliburn.Micro.Platform</AssemblyName>
     <RootNamespace>Caliburn.Micro</RootNamespace>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
@@ -102,6 +103,10 @@
     <Compile Remove="ConventionManager.cs" />
     <Compile Remove="XamlPlatformProvider.cs" />
     <PackageReference Include="Xamarin.Forms" Version="2.0.1.6505" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" />
   </ItemGroup>
 
   <ItemGroup>
