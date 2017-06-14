@@ -126,16 +126,16 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Caliburn.Micro">
-      <HintPath>..\..\..\..\bin\iOS\Debug\Caliburn.Micro.dll</HintPath>
+      <HintPath>..\..\..\..\bin\xamarin.ios\debug\Caliburn.Micro.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.Platform">
-      <HintPath>..\..\..\..\bin\iOS\Debug\Caliburn.Micro.Platform.dll</HintPath>
+      <HintPath>..\..\..\..\bin\xamarin.ios\debug\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.Platform.Core">
-      <HintPath>..\..\..\..\bin\iOS\Debug\Caliburn.Micro.Platform.Core.dll</HintPath>
+      <HintPath>..\..\..\..\bin\xamarin.ios\debug\Caliburn.Micro.Platform.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro.Platform.Xamarin.Forms">
-      <HintPath>..\..\..\..\bin\xamarin-forms\Debug\Caliburn.Micro.Platform.Xamarin.Forms.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Xamarin.Forms">
+      <HintPath>..\..\..\..\bin\xamarin-forms\debug\Caliburn.Micro.Xamarin.Forms.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
