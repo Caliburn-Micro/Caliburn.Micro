@@ -2,7 +2,7 @@
 #if XFORMS
 using Xamarin.Forms;
 using DependencyProperty = Xamarin.Forms.BindableProperty;
-#elif WinRT
+#elif WINDOWS_UWP
 using Windows.UI.Xaml;
 #else
 using System.Windows;

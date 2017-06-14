@@ -7,7 +7,7 @@ namespace Caliburn.Micro
     using System;
     using System.Collections.Generic;
     using System.Linq;
-#if WinRT81
+#if WINDOWS_UWP
     using Windows.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
@@ -99,7 +99,7 @@ namespace Caliburn.Micro
 
             var messageTriggers = (TriggerBase[])d.GetValue(MessageTriggersProperty);
 
-#if WinRT81
+#if WINDOWS_UWP
             var allTriggers = Interaction.GetBehaviors(d);
 
             if (messageTriggers != null)

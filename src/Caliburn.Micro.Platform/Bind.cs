@@ -5,7 +5,7 @@ namespace Caliburn.Micro
 #endif 
 {
     using System;
-#if WinRT
+#if WINDOWS_UWP
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Data;
 #elif XFORMS

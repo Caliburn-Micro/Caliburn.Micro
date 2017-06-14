@@ -7,7 +7,7 @@ namespace Caliburn.Micro
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-#if WinRT
+#if WINDOWS_UWP
     using Windows.UI.Xaml;
 #elif XFORMS
     using global::Xamarin.Forms;
