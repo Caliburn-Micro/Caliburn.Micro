@@ -26,6 +26,7 @@
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <DevInstrumentationEnabled>True</DevInstrumentationEnabled>
     <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
+    <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'Xamarin.iOS'">
