@@ -17,26 +17,4 @@
         /// </summary>
         DontUseDi,
     }
-
-
-    public class ViewCreationConfiguration {
-
-        public ViewCreationConfiguration() {
-            this.ViewCreationBehavior = ViewCreationBehavior.UseDIContainer;
-        }
-
-        /// <summary>
-        /// Determines how views are created
-        /// The default is to make a callback where you can hook a DI container
-        /// </summary>
-        public ViewCreationBehavior ViewCreationBehavior { get; set; }
-
-        /// <summary>
-        /// Determines how CM reacts when creation fails. 
-        /// When <see langword="true" an empty view is shown with a single text explaining the problem
-        /// When <see langword="false" an exception is thrown. This is the default
-        /// </summary>
-        public bool ShowEmptyViewWhenCreationFailed { get; set; }
-
-    }
 }

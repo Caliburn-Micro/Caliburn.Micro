@@ -108,7 +108,7 @@ namespace Caliburn.Micro
         /// You can change this behavior by adjusting the configuration.
         /// </summary>
         /// <param name="config">An instance of <see cref="ViewCreationConfiguration"/> that provides the settings for configuration</param>
-        public static void ConfigureViewLocation(ViewCreationConfiguration config)
+        public static void ConfigureViewCreation(ViewCreationConfiguration config)
         {
             if (config == null)
             {
@@ -333,8 +333,7 @@ namespace Caliburn.Micro
 
         private static UIElement GetOrCreateViewTypeV3Style(Type viewType)
         {
-            var view = IoC.GetAllInstances(viewType)
-                .FirstOrDefault() as UIElement;
+            var view = IoC.GetAllInstances(viewType)?.FirstOrDefault() as UIElement;
 
             return view!= null
             ? InitializeAndReturnView(view)
