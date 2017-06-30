@@ -4,6 +4,7 @@
     <TargetFramework>netstandard1.0</TargetFramework>
     <AssemblyName>Caliburn.Micro</AssemblyName>
     <RootNamespace>Caliburn.Micro</RootNamespace>
+    <PackageId>$(MSBuildProjectName)</PackageId>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>..\..\bin\core\$(Configuration.ToLower())\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>

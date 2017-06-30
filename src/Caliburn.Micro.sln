@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Tests.NET45"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Core", "Caliburn.Micro.Core\Caliburn.Micro.Core.csproj", "{026678E0-A3E4-4760-A277-87352392FB6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.Core", "Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj", "{04C6555D-50BE-40BE-9B3F-74FAC0F73FA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Platform.Core", "Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj", "{04C6555D-50BE-40BE-9B3F-74FAC0F73FA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform", "Caliburn.Micro.Platform\Caliburn.Micro.Platform.csproj", "{2E540802-53A7-479B-B2D9-84B0AA44F083}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Platform", "Caliburn.Micro.Platform\Caliburn.Micro.Platform.csproj", "{2E540802-53A7-479B-B2D9-84B0AA44F083}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

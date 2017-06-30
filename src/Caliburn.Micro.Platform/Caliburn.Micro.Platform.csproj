@@ -4,6 +4,7 @@
     <TargetFrameworks>netstandard1.4;net45;uap10.0;MonoAndroid10;Xamarin.iOS</TargetFrameworks>
     <AssemblyName>Caliburn.Micro.Platform</AssemblyName>
     <RootNamespace>Caliburn.Micro</RootNamespace>
+    <PackageId>$(MSBuildProjectName)</PackageId>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>..\..\bin\$(TargetFramework.ToLower())\$(Configuration.ToLower())\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
