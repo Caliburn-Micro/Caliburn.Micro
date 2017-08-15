@@ -64,6 +64,7 @@
     <Compile Include="ScopeNamingRouteTests.cs" />
     <Compile Include="ConductorWithCollectionOneActiveTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleContainerTestModels.cs" />
     <Compile Include="SimpleContainerTests.cs" />
     <Compile Include="StringSplitterTests.cs" />
     <Compile Include="ViewLocatorTests.cs" />

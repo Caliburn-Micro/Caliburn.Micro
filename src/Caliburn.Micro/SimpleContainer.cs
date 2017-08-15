@@ -15,6 +15,11 @@
         readonly List<ContainerEntry> entries;
 
         /// <summary>
+        /// Whether to enable recursive property injection for all resolutions.
+        /// </summary>
+        public bool EnablePropertyInjection { get; set; }
+
+        /// <summary>
         ///   Initializes a new instance of the <see cref = "SimpleContainer" /> class.
         /// </summary>
         public SimpleContainer() {
@@ -85,9 +90,20 @@
         /// <param name = "key">The key.</param>
         /// <returns>The instance, or null if a handler is not found.</returns>
         public object GetInstance(Type service, string key) {
+            return GetInstance(service, key, EnablePropertyInjection);
+        }
+
+        object GetInstance(Type service, string key, bool injectPropertiesRecursively)
+        {
             var entry = GetEntry(service, key);
-            if (entry != null) {
-                return entry.Single()(this);
+            if (entry != null)
+            {
+                var singleInstance = entry.Single()(this);
+                if (injectPropertiesRecursively)
+                {
+                    BuildUp(singleInstance, true);
+                }
+                return singleInstance;
             }
 
             if (service == null) {
@@ -99,7 +115,13 @@
                 var factoryFactoryType = typeof(FactoryFactory<>).MakeGenericType(typeToCreate);
                 var factoryFactoryHost = Activator.CreateInstance(factoryFactoryType);
                 var factoryFactoryMethod = factoryFactoryType.GetMethod("Create", new Type[] { typeof(SimpleContainer) });
-                return factoryFactoryMethod.Invoke(factoryFactoryHost, new object[] { this });
+                var fromFactoryInstance = factoryFactoryMethod.Invoke(factoryFactoryHost, new object[] { this });
+
+                if (injectPropertiesRecursively) {
+                    BuildUp(fromFactoryInstance, true);
+                }
+
+                return fromFactoryInstance;
             }
 
             if (enumerableType.IsAssignableFrom(service) && service.IsGenericType()) {
@@ -108,6 +130,10 @@
                 var array = Array.CreateInstance(listType, instances.Count);
 
                 for (var i = 0; i < array.Length; i++) {
+                    if (injectPropertiesRecursively) {
+                        BuildUp(instances[i], true);
+                    }
+
                     array.SetValue(instances[i], i);
                 }
 
@@ -134,6 +160,12 @@
         /// <returns>All the instances or an empty enumerable if none are found.</returns>
         public IEnumerable<object> GetAllInstances(Type service) {
             var entry = GetEntry(service, null);
+            var instances = entry != null ? entry.Select(x => x(this)) : new object[0];
+
+            if (EnablePropertyInjection) {
+                instances.Apply(x => BuildUp(x, true));
+            }
+
             return entry != null ? entry.Select(x => x(this)) : new object[0];
         }
 
@@ -141,15 +173,16 @@
         ///   Pushes dependencies into an existing instance based on interface properties with setters.
         /// </summary>
         /// <param name = "instance">The instance.</param>
-        public void BuildUp(object instance) {
+        /// <param name = "recursive">Whether the properties must be injected recursively.</param>
+        public void BuildUp(object instance, bool recursive = false) {
             var injectables = from property in instance.GetType().GetProperties()
-                              where property.CanRead && property.CanWrite && property.PropertyType.IsInterface()
+                              where property.CanRead && property.CanWrite
                               select property;
 
             foreach (var propertyInfo in injectables) {
-                var injection = GetAllInstances(propertyInfo.PropertyType).ToArray();
-                if (injection.Any()) {
-                    propertyInfo.SetValue(instance, injection.First(), null);
+                var injection = GetInstance(propertyInfo.PropertyType, null, recursive);
+                if (injection != null) {
+                    propertyInfo.SetValue(instance, injection, null);
                 }
             }
         }
