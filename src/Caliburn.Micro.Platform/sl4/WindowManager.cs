@@ -52,7 +52,7 @@
             ViewModelBinder.Bind(rootModel, view, context);
 
             var haveDisplayName = rootModel as IHaveDisplayName;
-            if(haveDisplayName != null && !ConventionManager.HasBinding(view, ChildWindow.TitleProperty)) {
+            if(string.IsNullOrEmpty(view.Title) && haveDisplayName != null && !ConventionManager.HasBinding(view, ChildWindow.TitleProperty)) {
                 var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
                 view.SetBinding(ChildWindow.TitleProperty, binding);
             }
