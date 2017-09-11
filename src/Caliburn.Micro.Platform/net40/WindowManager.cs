@@ -142,7 +142,7 @@
             ViewModelBinder.Bind(rootModel, view, context);
 
             var haveDisplayName = rootModel as IHaveDisplayName;
-            if (haveDisplayName != null && !ConventionManager.HasBinding(view, Window.TitleProperty)) {
+            if (string.IsNullOrEmpty(view.Title) && haveDisplayName != null && !ConventionManager.HasBinding(view, Window.TitleProperty)) {
                 var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
                 view.SetBinding(Window.TitleProperty, binding);
             }
@@ -219,7 +219,7 @@
             ViewModelBinder.Bind(rootModel, view, context);
 
             var haveDisplayName = rootModel as IHaveDisplayName;
-            if (haveDisplayName != null && !ConventionManager.HasBinding(view, Page.TitleProperty)) {
+            if (string.IsNullOrEmpty(view.Title) && haveDisplayName != null && !ConventionManager.HasBinding(view, Page.TitleProperty)) {
                 var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
                 view.SetBinding(Page.TitleProperty, binding);
             }
