@@ -37,7 +37,7 @@
         /// <summary>
         /// Indicates whether or not the framework is in design-time mode.
         /// </summary>
-        public bool InDesignMode {
+        public virtual bool InDesignMode {
             get { return View.InDesignMode; }
         }
 
@@ -58,7 +58,7 @@
         /// Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        public void BeginOnUIThread(System.Action action) {
+        public virtual void BeginOnUIThread(System.Action action) {
             ValidateDispatcher();
 #if WinRT
             var dummy = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
@@ -72,7 +72,7 @@
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <returns></returns>
-        public Task OnUIThreadAsync(System.Action action) {
+        public virtual Task OnUIThreadAsync(System.Action action) {
             ValidateDispatcher();
 #if WinRT
             return dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask();
@@ -99,7 +99,7 @@
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public void OnUIThread(System.Action action) {
+        public virtual void OnUIThread(System.Action action) {
             if (CheckAccess())
                 action();
             else {
@@ -151,7 +151,7 @@
         /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
         /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was.
         /// </remarks>
-        public object GetFirstNonGeneratedView(object view) {
+        public virtual object GetFirstNonGeneratedView(object view) {
             return View.GetFirstNonGeneratedView(view);
         }
 
@@ -167,7 +167,7 @@
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public void ExecuteOnFirstLoad(object view, Action<object> handler) {
+        public virtual void ExecuteOnFirstLoad(object view, Action<object> handler) {
             var element = view as FrameworkElement;
             if (element != null && !(bool) element.GetValue(PreviouslyAttachedProperty)) {
                 element.SetValue(PreviouslyAttachedProperty, true);
@@ -180,7 +180,7 @@
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public void ExecuteOnLayoutUpdated(object view, Action<object> handler) {
+        public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler) {
             var element = view as FrameworkElement;
             if (element != null) {
                 View.ExecuteOnLayoutUpdated(element, (s, e) => handler(s));
@@ -197,7 +197,7 @@
         /// An <see cref="Action" /> to close the view model.
         /// </returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public System.Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult) {
+        public virtual System.Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult) {
             var child = viewModel as IChild;
             if (child != null) {
                 var conductor = child.Parent as IConductor;
