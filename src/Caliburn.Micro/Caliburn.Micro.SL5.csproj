@@ -73,6 +73,7 @@
     <Compile Include="ActivationEventArgs.cs" />
     <Compile Include="ActivationProcessedEventArgs.cs" />
     <Compile Include="BindableCollection.cs" />
+    <Compile Include="CallerMemberName.cs" />
     <Compile Include="Conductor.cs" />
     <Compile Include="ConductorBase.cs" />
     <Compile Include="ConductorBaseWithActiveItem.cs" />
