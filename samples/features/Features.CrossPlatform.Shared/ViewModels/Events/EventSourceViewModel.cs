@@ -17,7 +17,7 @@ namespace Features.CrossPlatform.ViewModels.Events
         public string Text
         {
             get { return text; }
-            set { this.Set(ref text, value); }
+            set { Set(ref text, value); }
         }
 
         public void Publish()

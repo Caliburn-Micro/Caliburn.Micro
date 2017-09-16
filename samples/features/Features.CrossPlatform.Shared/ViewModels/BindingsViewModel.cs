@@ -24,7 +24,7 @@ namespace Features.CrossPlatform.ViewModels
         public ActivityBaseViewModel SelectedActivity
         {
             get { return selectedActivity; }
-            set { this.Set(ref selectedActivity, value); }
+            set { Set(ref selectedActivity, value); }
         }
     }
 }

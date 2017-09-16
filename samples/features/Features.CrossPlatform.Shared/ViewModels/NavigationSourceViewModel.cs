@@ -21,13 +21,13 @@ namespace Features.CrossPlatform.ViewModels
         public string Text
         {
             get { return text; }
-            set { this.Set(ref text, value); }
+            set { Set(ref text, value); }
         }
 
         public bool IsEnabled
         {
             get { return isEnabled; }
-            set { this.Set(ref isEnabled, value); }
+            set { Set(ref isEnabled, value); }
         }
 
         public void Navigate()
