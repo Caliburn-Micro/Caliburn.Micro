@@ -1,9 +1,8 @@
-﻿using System.Reflection;
-
-namespace Caliburn.Micro.Xamarin.Forms {
+﻿namespace Caliburn.Micro.Xamarin.Forms {
 
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Threading.Tasks;
     using global::Xamarin.Forms;
 
@@ -74,13 +73,21 @@ namespace Caliburn.Micro.Xamarin.Forms {
             return page;
         }
 
-        private static void DeactivateView(BindableObject view)
+        /// <summary>
+        /// Apply logic to deactivate the active view when it is popped off the navigation stack
+        /// </summary>
+        /// <param name="view">the previously active view</param>
+        protected virtual void DeactivateView(BindableObject view)
         {
             var deactivate = view?.BindingContext as IDeactivate;
             deactivate?.Deactivate(false);
         }
 
-        private static void ActivateView(BindableObject view)
+        /// <summary>
+        /// Apply logic to activate a view when it is popped onto the navigation stack
+        /// </summary>
+        /// <param name="view">the view to activate</param>
+        protected virtual void ActivateView(BindableObject view)
         {
             var activate = view?.BindingContext as IActivate;
             activate?.Activate();
