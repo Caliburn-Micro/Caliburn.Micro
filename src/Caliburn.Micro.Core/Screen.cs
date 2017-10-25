@@ -147,7 +147,7 @@
         /// <summary>
         /// Called when deactivating.
         /// </summary>
-        /// <param name = "close">Inidicates whether this instance will be closed.</param>
+        /// <param name = "close">Indicates whether this instance will be closed.</param>
         protected virtual void OnDeactivate(bool close) {}
 
         /// <summary>

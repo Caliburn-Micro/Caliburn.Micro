@@ -18,7 +18,7 @@ namespace Caliburn.Micro
         /// <summary>
         ///   Indicates whether or not the framework is in design-time mode.
         /// </summary>
-        public bool InDesignMode
+        public virtual bool InDesignMode
         {
             get { return false; }
         }
@@ -27,7 +27,7 @@ namespace Caliburn.Micro
         ///   Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        public void BeginOnUIThread(Action action)
+        public virtual void BeginOnUIThread(Action action)
         {
             UIApplication.SharedApplication.InvokeOnMainThread(action);
         }
@@ -36,7 +36,7 @@ namespace Caliburn.Micro
         ///   Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name = "action">The action to execute.</param>
-        public Task OnUIThreadAsync(Action action)
+        public virtual Task OnUIThreadAsync(Action action)
         {
             var completionSource = new TaskCompletionSource<bool>();
 
@@ -68,7 +68,7 @@ namespace Caliburn.Micro
         ///   Executes the action on the UI thread.
         /// </summary>
         /// <param name = "action">The action to execute.</param>
-        public void OnUIThread(Action action) {
+        public virtual void OnUIThread(Action action) {
             if (CheckAccess())
                 action();
             else
@@ -85,7 +85,7 @@ namespace Caliburn.Micro
         /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
         /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was. 
         /// </remarks>
-        public object GetFirstNonGeneratedView(object view)
+        public virtual object GetFirstNonGeneratedView(object view)
         {
             return view;
         }
@@ -95,7 +95,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public void ExecuteOnFirstLoad(object view, Action<object> handler)
+        public virtual void ExecuteOnFirstLoad(object view, Action<object> handler)
         {
             var viewController = view as IUIViewController;
 
@@ -119,7 +119,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public void ExecuteOnLayoutUpdated(object view, Action<object> handler)
+        public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler)
         {
             var viewController = view as IUIViewController;
 
@@ -145,7 +145,7 @@ namespace Caliburn.Micro
         /// <param name="views">The associated views.</param>
         /// <param name="dialogResult">The dialog result.</param>
         /// <returns>An <see cref="Action"/> to close the view model.</returns>
-        public Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
+        public virtual Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
         {
             var child = viewModel as IChild;
 

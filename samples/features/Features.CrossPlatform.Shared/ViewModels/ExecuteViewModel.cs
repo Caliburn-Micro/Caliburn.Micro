@@ -12,7 +12,7 @@ namespace Features.CrossPlatform.ViewModels
         public bool Safe
         {
             get { return safe; }
-            set { this.Set(ref safe, value); }
+            set { Set(ref safe, value); }
         }
 
         public void StartBackgroundWork()

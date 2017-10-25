@@ -21,22 +21,22 @@ namespace Caliburn.Micro
         private readonly IPlatformProvider platformProvider;
 
         /// <inheritdoc />
-        public bool InDesignMode => platformProvider.InDesignMode;
+        public virtual bool InDesignMode => platformProvider.InDesignMode;
 
         /// <inheritdoc />
-        public void BeginOnUIThread(Action action) => platformProvider.BeginOnUIThread(action);
+        public virtual void BeginOnUIThread(Action action) => platformProvider.BeginOnUIThread(action);
 
         /// <inheritdoc />
-        public Task OnUIThreadAsync(Action action) => platformProvider.OnUIThreadAsync(action);
+        public virtual Task OnUIThreadAsync(Action action) => platformProvider.OnUIThreadAsync(action);
 
         /// <inheritdoc />
-        public void OnUIThread(Action action) => platformProvider.OnUIThread(action);
+        public virtual void OnUIThread(Action action) => platformProvider.OnUIThread(action);
 
         /// <inheritdoc />
-        public object GetFirstNonGeneratedView(object view) => platformProvider.GetFirstNonGeneratedView(view);
+        public virtual object GetFirstNonGeneratedView(object view) => platformProvider.GetFirstNonGeneratedView(view);
 
         /// <inheritdoc />
-        public void ExecuteOnFirstLoad(object view, Action<object> handler) {
+        public virtual void ExecuteOnFirstLoad(object view, Action<object> handler) {
 
             var page = view as Page;
 
@@ -59,9 +59,9 @@ namespace Caliburn.Micro
         }
 
         /// <inheritdoc />
-        public void ExecuteOnLayoutUpdated(object view, Action<object> handler) => platformProvider.ExecuteOnLayoutUpdated(view, handler);
+        public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler) => platformProvider.ExecuteOnLayoutUpdated(view, handler);
 
         /// <inheritdoc />
-        public Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult) => platformProvider.GetViewCloseAction(viewModel, views, dialogResult);
+        public virtual Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult) => platformProvider.GetViewCloseAction(viewModel, views, dialogResult);
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.Micro {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq.Expressions;
     using System.Runtime.Serialization;
@@ -38,11 +39,7 @@
         /// Notifies subscribers of the property change.
         /// </summary>
         /// <param name = "propertyName">Name of the property.</param>
-#if NET
-        public virtual void NotifyOfPropertyChange(string propertyName) {
-#else
         public virtual void NotifyOfPropertyChange([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null) {
-#endif
             if (IsNotifying && PropertyChanged != null) {
                 OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
             }
@@ -75,5 +72,25 @@
         /// <remarks>An extension point for subclasses to customise how property change notifications are handled.</remarks>
         /// <param name="action"></param>
         protected virtual void OnUIThread(System.Action action) => action.OnUIThread();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="oldValue"></param>
+        /// <param name="newValue"></param>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        public virtual bool Set<T>(ref T oldValue, T newValue, [System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(oldValue, newValue))
+                return false;
+
+            oldValue = newValue;
+
+            NotifyOfPropertyChange(propertyName ?? string.Empty);
+
+            return true;
+        }
     }
 }

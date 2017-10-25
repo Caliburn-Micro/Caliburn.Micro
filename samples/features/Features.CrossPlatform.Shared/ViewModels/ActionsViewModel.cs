@@ -28,7 +28,7 @@ namespace Features.CrossPlatform.ViewModels
         public string Output
         {
             get { return output; }
-            set { this.Set(ref output, value); }
+            set { Set(ref output, value); }
         }
     }
 }

@@ -67,7 +67,7 @@ namespace Caliburn.Micro {
                 /// <summary>
                 /// Called when deactivating.
                 /// </summary>
-                /// <param name="close">Inidicates whether this instance will be closed.</param>
+                /// <param name="close">Indicates whether this instance will be closed.</param>
                 protected override void OnDeactivate(bool close) {
                     items.OfType<IDeactivate>().Apply(x => x.Deactivate(close));
                     if (close) {
