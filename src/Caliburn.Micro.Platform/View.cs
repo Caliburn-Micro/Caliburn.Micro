@@ -184,7 +184,7 @@ namespace Caliburn.Micro
             }
         }
 #endif
-
+#if !XFORMS
         /// <summary>
         /// Executes the handler the next time the elements's LayoutUpdated event fires.
         /// </summary>
@@ -197,14 +197,14 @@ namespace Caliburn.Micro
         public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler handler) {
             EventHandler onLayoutUpdate = null;
 #endif
-#if !XFORMS
             onLayoutUpdate = (s, e) => {
                 element.LayoutUpdated -= onLayoutUpdate;
                 handler(element, e);
             };
             element.LayoutUpdated += onLayoutUpdate;
-#endif
+
         }
+#endif
 
         /// <summary>
         /// Used to retrieve the root, non-framework-created view.
