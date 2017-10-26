@@ -77,17 +77,6 @@ namespace Caliburn.Micro.WPF.Tests
         }
 
         [Fact]
-        public void RootMustBePartOfPathIfAnyHops()
-        {
-            var route = new BindingScope.ScopeNamingRoute();
-            var d1 = new DependencyObject();
-            var d2 = new DependencyObject();
-
-            route.AddHop(d1, d2);
-            Assert.Throws<ArgumentException>(() => route.Root = new DependencyObject());
-        }
-
-        [Fact]
         public void RootCanBeSetIfNoHops()
         {
             var route = new BindingScope.ScopeNamingRoute();
