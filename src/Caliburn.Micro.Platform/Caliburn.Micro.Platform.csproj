@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.4;net45;uap10.0;MonoAndroid10;Xamarin.iOS</TargetFrameworks>
+    <TargetFrameworks>netstandard1.4;net45;uap10.0;MonoAndroid403;Xamarin.iOS10</TargetFrameworks>
     <AssemblyName>Caliburn.Micro.Platform</AssemblyName>
     <RootNamespace>Caliburn.Micro</RootNamespace>
     <PackageId>$(MSBuildProjectName)</PackageId>
@@ -21,16 +21,16 @@
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'MonoAndroid10'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'MonoAndroid403'">
     <DefineConstants>ANDROID</DefineConstants>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <DevInstrumentationEnabled>True</DevInstrumentationEnabled>
-    <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'Xamarin.iOS'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'Xamarin.iOS10'">
     <DefineConstants>IOS</DefineConstants>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
@@ -63,41 +63,19 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0'">
     <Compile Include="Platforms\UWP\*.cs" />
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="5.0.0" />
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid10'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid403'">
     <Compile Remove="*.cs" />
     <Compile Include="Platforms\Android\*.cs" />
     <Compile Include="ViewModelLocator.cs" />
-    <Reference Include="Mono.Android" />
-    <Reference Include="System" />
-    <Reference Include="System.Collections" />
-    <Reference Include="System.Threading.Tasks" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Threading.Tasks" />
-    <Reference Include="System.IdentityModel" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'Xamarin.iOS'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'Xamarin.iOS10'">
     <Compile Remove="*.cs" />
     <Compile Include="Platforms\iOS\*.cs" />
-    <Reference Include="System" />
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Collections" />
-    <Reference Include="System.Threading.Tasks" />
-    <Reference Include="System.IdentityModel" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="Xamarin.iOS" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.4'">
@@ -122,7 +100,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.0.2" />
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
