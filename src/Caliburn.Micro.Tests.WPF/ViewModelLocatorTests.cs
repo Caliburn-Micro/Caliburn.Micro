@@ -1,37 +1,17 @@
 using System;
 using Xunit;
 
-namespace Caliburn.Micro.WPF.Tests {
+namespace Caliburn.Micro.Tests.WPF
+{
     public class ViewModelLocatorTests
     {
         [Fact]
-        public void COnfigureTypeMappingsWithDefaultValuesShouldNotThrow()
-        {
-            var typeMappingConfiguration = new TypeMappingConfiguration();
-
-            Assert.DoesNotThrow(() => ViewModelLocator.ConfigureTypeMappings(typeMappingConfiguration));
-        }
-
-        [Fact]
-        public void ConfigureTypeMappingsShouldThrowWhenDefaultSubNamespaceForViewsIsNull()
+        public void ConfigureTypeMappingsShouldThrowWhenDefaultSubNamespaceForViewModelsIsEmpty()
         {
             var config = new TypeMappingConfiguration
             {
-                DefaultSubNamespaceForViews = null,
-                DefaultSubNamespaceForViewModels = "not null",
-                NameFormat = "not null"
-            };
-
-            Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
-        }
-
-        [Fact]
-        public void ConfigureTypeMappingsShouldThrowWhenDefaultSubNamespaceForViewsIsEmpty()
-        {
-            var config = new TypeMappingConfiguration
-            {
-                DefaultSubNamespaceForViews = string.Empty,
-                DefaultSubNamespaceForViewModels = "not Empty",
+                DefaultSubNamespaceForViews = "not empty",
+                DefaultSubNamespaceForViewModels = string.Empty,
                 NameFormat = "not Empty"
             };
 
@@ -52,13 +32,39 @@ namespace Caliburn.Micro.WPF.Tests {
         }
 
         [Fact]
-        public void ConfigureTypeMappingsShouldThrowWhenDefaultSubNamespaceForViewModelsIsEmpty()
+        public void ConfigureTypeMappingsShouldThrowWhenDefaultSubNamespaceForViewsIsEmpty()
         {
             var config = new TypeMappingConfiguration
             {
-                DefaultSubNamespaceForViews = "not empty",
-                DefaultSubNamespaceForViewModels = string.Empty,
+                DefaultSubNamespaceForViews = string.Empty,
+                DefaultSubNamespaceForViewModels = "not Empty",
                 NameFormat = "not Empty"
+            };
+
+            Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
+        }
+
+        [Fact]
+        public void ConfigureTypeMappingsShouldThrowWhenDefaultSubNamespaceForViewsIsNull()
+        {
+            var config = new TypeMappingConfiguration
+            {
+                DefaultSubNamespaceForViews = null,
+                DefaultSubNamespaceForViewModels = "not null",
+                NameFormat = "not null"
+            };
+
+            Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
+        }
+
+        [Fact]
+        public void ConfigureTypeMappingsShouldThrowWhenNameFormatIsEmpty()
+        {
+            var config = new TypeMappingConfiguration
+            {
+                DefaultSubNamespaceForViews = "not Empty",
+                DefaultSubNamespaceForViewModels = "not Empty",
+                NameFormat = string.Empty
             };
 
             Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
@@ -78,16 +84,11 @@ namespace Caliburn.Micro.WPF.Tests {
         }
 
         [Fact]
-        public void ConfigureTypeMappingsShouldThrowWhenNameFormatIsEmpty()
+        public void COnfigureTypeMappingsWithDefaultValuesShouldNotThrow()
         {
-            var config = new TypeMappingConfiguration
-            {
-                DefaultSubNamespaceForViews = "not Empty",
-                DefaultSubNamespaceForViewModels = "not Empty",
-                NameFormat = string.Empty
-            };
+            var typeMappingConfiguration = new TypeMappingConfiguration();
 
-            Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
+            ViewModelLocator.ConfigureTypeMappings(typeMappingConfiguration);
         }
     }
 }

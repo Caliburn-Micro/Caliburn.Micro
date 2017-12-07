@@ -3,10 +3,24 @@ using System.Collections.Generic;
 using System.Windows;
 using Xunit;
 
-namespace Caliburn.Micro.WPF.Tests
+namespace Caliburn.Micro.Tests.WPF
 {
     public class ScopeNamingRouteTests
     {
+        [Fact]
+        public void CannotAddDisjointHops()
+        {
+            var route = new BindingScope.ScopeNamingRoute();
+            var d1 = new DependencyObject();
+            var d2 = new DependencyObject();
+            var d3 = new DependencyObject();
+            var d4 = new DependencyObject();
+
+            // d1 -> d2 and d3 -> d4, but d2 doesn't lead to d3, so d3 -> d4 is rejected
+            route.AddHop(d1, d2);
+            Assert.Throws<ArgumentException>(() => route.AddHop(d3, d4));
+        }
+
         [Fact]
         public void CorrectlyGetsAddedHop()
         {
@@ -18,21 +32,6 @@ namespace Caliburn.Micro.WPF.Tests
             var result = route.TryGetHop(d1, out target);
             Assert.True(result);
             Assert.Same(d2, target);
-        }
-
-        [Fact]
-        public void PreventsRoutingCycles()
-        {
-            var route = new BindingScope.ScopeNamingRoute();
-            var d1 = new DependencyObject();
-            var d2 = new DependencyObject();
-            var d3 = new DependencyObject();
-            var d4 = new DependencyObject();
-
-            route.AddHop(d1, d2);
-            route.AddHop(d2, d3);
-            route.AddHop(d3, d4);
-            Assert.Throws<ArgumentException>(() => route.AddHop(d4, d1));
         }
 
         [Fact]
@@ -48,7 +47,12 @@ namespace Caliburn.Micro.WPF.Tests
             route.AddHop(d2, d3);
             route.AddHop(d3, d4);
 
-            var all = new List<DependencyObject> { d2, d3, d4 };
+            var all = new List<DependencyObject>
+            {
+                d2,
+                d3,
+                d4
+            };
 
             var source = d1;
             DependencyObject target;
@@ -63,7 +67,7 @@ namespace Caliburn.Micro.WPF.Tests
         }
 
         [Fact]
-        public void CannotAddDisjointHops()
+        public void PreventsRoutingCycles()
         {
             var route = new BindingScope.ScopeNamingRoute();
             var d1 = new DependencyObject();
@@ -71,9 +75,10 @@ namespace Caliburn.Micro.WPF.Tests
             var d3 = new DependencyObject();
             var d4 = new DependencyObject();
 
-            // d1 -> d2 and d3 -> d4, but d2 doesn't lead to d3, so d3 -> d4 is rejected
             route.AddHop(d1, d2);
-            Assert.Throws<ArgumentException>(() => route.AddHop(d3, d4));
+            route.AddHop(d2, d3);
+            route.AddHop(d3, d4);
+            Assert.Throws<ArgumentException>(() => route.AddHop(d4, d1));
         }
 
         [Fact]
