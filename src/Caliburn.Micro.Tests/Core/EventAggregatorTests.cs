@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Threading;
 using Moq;
 using Xunit;
 
@@ -55,44 +54,13 @@ namespace Caliburn.Micro.Tests.Core
         [Fact]
         public void A_null_marshal_causes_an_ArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => { new EventAggregator().Publish(new object(), null); });
+            Assert.Throws<ArgumentNullException>(() => { new EventAggregator().PublishAsync(new object(), null, CancellationToken.None); });
         }
 
         [Fact]
         public void A_null_message_causes_an_ArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => { new EventAggregator().PublishOnCurrentThread(null); });
-        }
-
-        [Fact]
-        public void A_valid_message_invokes_HandlerResultProcessing_when_expected_to()
-        {
-            var eventAggregator = new EventAggregator();
-            var coroutineHandlerMock = new Mock<IHandleWithCoroutine<object>>();
-            var taskHandlerMock = new Mock<IHandleWithTask<object>>();
-            var coroutineHandlerProcessed = false;
-            var taskHandlerProcessed = false;
-
-            coroutineHandlerMock.Setup(handlerStub => handlerStub.Handle(It.IsAny<object>()))
-                .Returns(() => new List<IResult>());
-
-            taskHandlerMock.Setup(handlerStub => handlerStub.Handle(It.IsAny<object>()))
-                .Returns(() => new Task(() => { }));
-
-            EventAggregator.HandlerResultProcessing = (target, result) =>
-            {
-                if (target is IHandleWithCoroutine<object>)
-                    coroutineHandlerProcessed = true;
-                else if (target is IHandleWithTask<object>)
-                    taskHandlerProcessed = true;
-            };
-
-            eventAggregator.Subscribe(coroutineHandlerMock.Object);
-            eventAggregator.Subscribe(taskHandlerMock.Object);
-            eventAggregator.PublishOnCurrentThread(new object());
-
-            Assert.True(coroutineHandlerProcessed);
-            Assert.True(taskHandlerProcessed);
+            Assert.Throws<ArgumentNullException>(() => { new EventAggregator().PublishOnCurrentThreadAsync(null, CancellationToken.None); });
         }
 
         [Fact]
@@ -103,7 +71,13 @@ namespace Caliburn.Micro.Tests.Core
             var marshallerCalled = false;
 
             eventAggregator.Subscribe(handlerMock.Object);
-            eventAggregator.Publish(new object(), action => marshallerCalled = true);
+            eventAggregator.PublishAsync(new object(), f =>
+            {
+                marshallerCalled = true;
+
+                return f();
+
+            }, CancellationToken.None);
 
             Assert.True(marshallerCalled);
         }
@@ -112,17 +86,18 @@ namespace Caliburn.Micro.Tests.Core
         public void A_valid_message_is_published_to_all_handlers()
         {
             var eventAggregator = new EventAggregator();
+
             var handlerMockA = new Mock<IHandle<object>>();
             var handlerMockB = new Mock<IHandle<object>>();
 
-
             eventAggregator.Subscribe(handlerMockA.Object);
             eventAggregator.Subscribe(handlerMockB.Object);
-            eventAggregator.PublishOnCurrentThread(new object());
 
-            handlerMockA.Verify(handlerStub => handlerStub.Handle(It.IsAny<object>()),
+            eventAggregator.PublishOnCurrentThreadAsync(new object(), CancellationToken.None);
+
+            handlerMockA.Verify(handlerStub => handlerStub.HandleAsync(It.IsAny<object>(), It.IsAny<CancellationToken>()),
                 Times.AtLeastOnce());
-            handlerMockB.Verify(handlerStub => handlerStub.Handle(It.IsAny<object>()),
+            handlerMockB.Verify(handlerStub => handlerStub.HandleAsync(It.IsAny<object>(), It.IsAny<CancellationToken>()),
                 Times.AtLeastOnce());
         }
     }

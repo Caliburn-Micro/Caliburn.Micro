@@ -1,145 +1,143 @@
-﻿namespace Caliburn.Micro {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
-    /// <summary>
-    /// Enables loosely-coupled publication of and subscription to events.
-    /// </summary>
-    public class EventAggregator : IEventAggregator {
-        readonly List<Handler> handlers = new List<Handler>();
-
+namespace Caliburn.Micro
+{
+    /// <inheritdoc />
+    public class EventAggregator : IEventAggregator
+    {
         /// <summary>
         /// Processing of handler results on publication thread.
         /// </summary>
         public static Action<object, object> HandlerResultProcessing = (target, result) => { };
 
-        /// <summary>
-        /// Searches the subscribed handlers to check if we have a handler for
-        /// the message type supplied.
-        /// </summary>
-        /// <param name="messageType">The message type to check with</param>
-        /// <returns>True if any handler is found, false if not.</returns>
-        public bool HandlerExistsFor(Type messageType) {
-            return handlers.Any(handler => handler.Handles(messageType) & !handler.IsDead);
+        private readonly List<Handler> _handlers = new List<Handler>();
+
+        /// <inheritdoc />
+        public bool HandlerExistsFor(Type messageType)
+        {
+            lock (_handlers)
+            {
+                return _handlers.Any(handler => handler.Handles(messageType) & !handler.IsDead);
+            }
         }
 
-        /// <summary>
-        /// Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />
-        /// </summary>
-        /// <param name = "subscriber">The instance to subscribe for event publication.</param>
-        public virtual void Subscribe(object subscriber) {
-            if (subscriber == null) {
-                throw new ArgumentNullException("subscriber");
-            }
-            lock(handlers) {
-                if (handlers.Any(x => x.Matches(subscriber))) {
+        /// <inheritdoc />
+        public virtual void Subscribe(object subscriber)
+        {
+            if (subscriber == null)
+                throw new ArgumentNullException(nameof(subscriber));
+
+            lock (_handlers)
+            {
+                if (_handlers.Any(x => x.Matches(subscriber)))
                     return;
-                }
 
-                handlers.Add(new Handler(subscriber));
+                _handlers.Add(new Handler(subscriber));
             }
         }
 
-        /// <summary>
-        /// Unsubscribes the instance from all events.
-        /// </summary>
-        /// <param name = "subscriber">The instance to unsubscribe.</param>
-        public virtual void Unsubscribe(object subscriber) {
-            if (subscriber == null) {
-                throw new ArgumentNullException("subscriber");
-            }
-            lock(handlers) {
-                var found = handlers.FirstOrDefault(x => x.Matches(subscriber));
+        /// <inheritdoc />
+        public virtual void Unsubscribe(object subscriber)
+        {
+            if (subscriber == null)
+                throw new ArgumentNullException(nameof(subscriber));
 
-                if (found != null) {
-                    handlers.Remove(found);
-                }
+            lock (_handlers)
+            {
+                var found = _handlers.FirstOrDefault(x => x.Matches(subscriber));
+
+                if (found != null)
+                    _handlers.Remove(found);
             }
         }
 
-        /// <summary>
-        /// Publishes a message.
-        /// </summary>
-        /// <param name = "message">The message instance.</param>
-        /// <param name = "marshal">Allows the publisher to provide a custom thread marshaller for the message publication.</param>
-        public virtual void Publish(object message, Action<System.Action> marshal) {
-            if (message == null){
-                throw new ArgumentNullException("message");
-            }
-            if (marshal == null) {
-                throw new ArgumentNullException("marshal");
-            }
+        /// <inheritdoc />
+        public virtual Task PublishAsync(object message, Func<Func<Task>, Task> marshal, CancellationToken cancellationToken)
+        {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
+            if (marshal == null)
+                throw new ArgumentNullException(nameof(marshal));
 
             Handler[] toNotify;
-            lock (handlers) {
-                toNotify = handlers.ToArray();
+
+            lock (_handlers)
+            {
+                toNotify = _handlers.ToArray();
             }
 
-            marshal(() => {
+            return marshal(async () =>
+            {
                 var messageType = message.GetType();
+                
+                var tasks = toNotify.SelectMany(h => h.Handle(messageType, message, CancellationToken.None));
 
-                var dead = toNotify
-                    .Where(handler => !handler.Handle(messageType, message))
-                    .ToList();
+                await Task.WhenAll(tasks);
 
-                if(dead.Any()) {
-                    lock(handlers) {
-                        dead.Apply(x => handlers.Remove(x));
+                var dead = toNotify.Where(h => h.IsDead).ToList();
+
+                if (dead.Any())
+                {
+                    lock (_handlers)
+                    {
+                        dead.Apply(x => _handlers.Remove(x));
                     }
                 }
             });
         }
 
-        class Handler {
-            readonly WeakReference reference;
-            readonly Dictionary<Type, MethodInfo> supportedHandlers = new Dictionary<Type, MethodInfo>();
+        private class Handler
+        {
+            private readonly WeakReference _reference;
+            private readonly Dictionary<Type, MethodInfo> _supportedHandlers = new Dictionary<Type, MethodInfo>();
 
-            public bool IsDead {
-                get { return reference.Target == null; }
-            }
-
-            public Handler(object handler) {
-                reference = new WeakReference(handler);
+            public Handler(object handler)
+            {
+                _reference = new WeakReference(handler);
 
                 var interfaces = handler.GetType().GetTypeInfo().ImplementedInterfaces
                     .Where(x => typeof(IHandle).GetTypeInfo().IsAssignableFrom(x.GetTypeInfo()) && x.GetTypeInfo().IsGenericType);
 
-                foreach(var @interface in interfaces) {
+                foreach (var @interface in interfaces)
+                {
                     var type = @interface.GetTypeInfo().GenericTypeArguments[0];
-                    var method = @interface.GetRuntimeMethod("Handle", new Type[] { type });
+                    var method = @interface.GetRuntimeMethod("HandleAsync", new[]  { type, typeof(CancellationToken) });
 
-                    if (method != null) {
-                        supportedHandlers[type] = method;
-                    }
+                    if (method != null)
+                        _supportedHandlers[type] = method;
                 }
             }
 
-            public bool Matches(object instance) {
-                return reference.Target == instance;
+            public bool IsDead => _reference.Target == null;
+
+            public bool Matches(object instance)
+            {
+                return _reference.Target == instance;
             }
 
-            public bool Handle(Type messageType, object message) {
-                var target = reference.Target;
-                if (target == null) {
-                    return false;
-                }
+            public IEnumerable<Task> Handle(Type messageType, object message, CancellationToken cancellationToken)
+            {
+                var target = _reference.Target;
 
-                foreach(var pair in supportedHandlers) {
-                    if(pair.Key.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo())) {
-                        var result = pair.Value.Invoke(target, new[] { message });
-                        if (result != null) {
-                            HandlerResultProcessing(target, result);
-                        }
-                    }
-                }
-                
-                return true;
+                if (target == null)
+                    return Enumerable.Empty<Task>();
+
+                return _supportedHandlers
+                    .Where(handler => handler.Key.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo()))
+                    .Select(pair => pair.Value.Invoke(target, new[] {message, cancellationToken}))
+                    .Select(result => (Task) result)
+                    .ToList();
             }
 
-            public bool Handles(Type messageType) {
-                return supportedHandlers.Any(pair => pair.Key.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo()));
+            public bool Handles(Type messageType)
+            {
+                return _supportedHandlers.Any(pair => pair.Key.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo()));
             }
         }
     }
