@@ -91,6 +91,16 @@ namespace Caliburn.Micro
         }
 
         /// <summary>
+        /// Publishes a message on the current thread (synchrone).
+        /// </summary>
+        /// <param name="eventAggregator">The event aggregator.</param>
+        /// <param name = "message">The message instance.</param>
+        public static Task PublishOnCurrentThreadAsync(this IEventAggregator eventAggregator, object message)
+        {
+            return eventAggregator.PublishOnCurrentThreadAsync(message, CancellationToken.None);
+        }
+
+        /// <summary>
         /// Publishes a message on a background thread (async).
         /// </summary>
         /// <param name="eventAggregator">The event aggregator.</param>
@@ -99,6 +109,16 @@ namespace Caliburn.Micro
         public static Task PublishOnBackgroundThreadAsync(this IEventAggregator eventAggregator, object message, CancellationToken cancellationToken)
         {
             return eventAggregator.PublishAsync(message, f => Task.Factory.StartNew(f, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default), cancellationToken);
+        }
+
+        /// <summary>
+        /// Publishes a message on a background thread (async).
+        /// </summary>
+        /// <param name="eventAggregator">The event aggregator.</param>
+        /// <param name = "message">The message instance.</param>
+        public static Task PublishOnBackgroundThreadAsync(this IEventAggregator eventAggregator, object message)
+        {
+            return eventAggregator.PublishOnBackgroundThreadAsync(message, CancellationToken.None);
         }
 
         /// <summary>
@@ -134,6 +154,16 @@ namespace Caliburn.Micro
                 return taskCompletionSource.Task;
 
             }, cancellationToken);
+        }
+
+        /// <summary>
+        /// Publishes a message on the UI thread.
+        /// </summary>
+        /// <param name="eventAggregator">The event aggregator.</param>
+        /// <param name = "message">The message instance.</param>
+        public static Task PublishOnUIThreadAsync(this IEventAggregator eventAggregator, object message)
+        {
+            return eventAggregator.PublishOnUIThreadAsync(message, CancellationToken.None);
         }
     }
 }
