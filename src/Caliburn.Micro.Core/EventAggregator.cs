@@ -10,11 +10,6 @@ namespace Caliburn.Micro
     /// <inheritdoc />
     public class EventAggregator : IEventAggregator
     {
-        /// <summary>
-        /// Processing of handler results on publication thread.
-        /// </summary>
-        public static Action<object, object> HandlerResultProcessing = (target, result) => { };
-
         private readonly List<Handler> _handlers = new List<Handler>();
 
         /// <inheritdoc />

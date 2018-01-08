@@ -1,16 +1,18 @@
-﻿namespace Caliburn.Micro {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Windows.ApplicationModel;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Windows.ApplicationModel;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// Encapsulates the app and its available services.
     /// </summary>
-    public abstract class CaliburnApplication : Application {
+    public abstract class CaliburnApplication : Application
+    {
         private bool isInitialized;
 
         /// <summary>
@@ -21,7 +23,8 @@
         /// <summary>
         /// Called by the bootstrapper's constructor at design time to start the framework.
         /// </summary>
-        protected virtual void StartDesignTime() {
+        protected virtual void StartDesignTime()
+        {
             AssemblySource.Instance.Clear();
             AssemblySource.Instance.AddRange(SelectAssemblies());
 
@@ -34,23 +37,8 @@
         /// <summary>
         /// Called by the bootstrapper's constructor at runtime to start the framework.
         /// </summary>
-        protected virtual void StartRuntime() {
-            EventAggregator.HandlerResultProcessing = (target, result) => {
-                var task = result as System.Threading.Tasks.Task;
-                if (task != null) {
-                    result = new IResult[] {task.AsResult()};
-                }
-
-                var coroutine = result as IEnumerable<IResult>;
-                if (coroutine != null) {
-                    var viewAware = target as IViewAware;
-                    var view = viewAware != null ? viewAware.GetView() : null;
-                    var context = new CoroutineExecutionContext {Target = target, View = view};
-
-                    Coroutine.BeginExecute(coroutine.GetEnumerator(), context);
-                }
-            };
-
+        protected virtual void StartRuntime()
+        {
             AssemblySourceCache.Install();
             AssemblySource.Instance.AddRange(SelectAssemblies());
 
@@ -65,8 +53,10 @@
         /// <summary>
         /// Start the framework.
         /// </summary>
-        protected void Initialize() {
-            if (isInitialized) {
+        protected void Initialize()
+        {
+            if (isInitialized)
+            {
                 return;
             }
 
@@ -88,17 +78,21 @@
             AssemblySource.Instance.Refresh();
 
 
-            if (Execute.InDesignMode) {
-                try {
+            if (Execute.InDesignMode)
+            {
+                try
+                {
                     StartDesignTime();
                 }
-                catch {
+                catch
+                {
                     //if something fails at design-time, there's really nothing we can do...
                     isInitialized = false;
                     throw;
                 }
             }
-            else {
+            else
+            {
                 StartRuntime();
             }
         }
@@ -107,7 +101,8 @@
         /// Invoked when the application creates a window.
         /// </summary>
         /// <param name="args">Event data for the event.</param>
-        protected override void OnWindowCreated(WindowCreatedEventArgs args) {
+        protected override void OnWindowCreated(WindowCreatedEventArgs args)
+        {
             base.OnWindowCreated(args);
 
             // Because dispatchers are tied to windows Execute will fail in 
@@ -120,7 +115,8 @@
         /// <summary>
         /// Provides an opportunity to hook into the application object.
         /// </summary>
-        protected virtual void PrepareApplication() {
+        protected virtual void PrepareApplication()
+        {
             Resuming += OnResuming;
             Suspending += OnSuspending;
             UnhandledException += OnUnhandledException;
@@ -129,14 +125,16 @@
         /// <summary>
         /// Override to configure the framework and setup your IoC container.
         /// </summary>
-        protected virtual void Configure() {
+        protected virtual void Configure()
+        {
         }
 
         /// <summary>
         /// Override to tell the framework where to find assemblies to inspect for views, etc.
         /// </summary>
         /// <returns>A list of assemblies to inspect.</returns>
-        protected virtual IEnumerable<Assembly> SelectAssemblies() {
+        protected virtual IEnumerable<Assembly> SelectAssemblies()
+        {
             return new[] {GetType().GetTypeInfo().Assembly};
         }
 
@@ -146,7 +144,8 @@
         /// <param name="service">The service to locate.</param>
         /// <param name="key">The key to locate.</param>
         /// <returns>The located service.</returns>
-        protected virtual object GetInstance(Type service, string key) {
+        protected virtual object GetInstance(Type service, string key)
+        {
             return System.Activator.CreateInstance(service);
         }
 
@@ -155,7 +154,8 @@
         /// </summary>
         /// <param name="service">The service to locate.</param>
         /// <returns>The located services.</returns>
-        protected virtual IEnumerable<object> GetAllInstances(Type service) {
+        protected virtual IEnumerable<object> GetAllInstances(Type service)
+        {
             return new[] {System.Activator.CreateInstance(service)};
         }
 
@@ -163,7 +163,8 @@
         /// Override this to provide an IoC specific implementation.
         /// </summary>
         /// <param name="instance">The instance to perform injection on.</param>
-        protected virtual void BuildUp(object instance) {
+        protected virtual void BuildUp(object instance)
+        {
         }
 
         /// <summary>
@@ -171,7 +172,8 @@
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event args.</param>
-        protected virtual void OnResuming(object sender, object e) {
+        protected virtual void OnResuming(object sender, object e)
+        {
         }
 
         /// <summary>
@@ -179,7 +181,8 @@
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event args.</param>
-        protected virtual void OnSuspending(object sender, SuspendingEventArgs e) {
+        protected virtual void OnSuspending(object sender, SuspendingEventArgs e)
+        {
         }
 
         /// <summary>
@@ -187,21 +190,24 @@
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event args.</param>
-        protected virtual void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) {
+        protected virtual void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
         }
 
         /// <summary>
         /// Creates the root frame used by the application.
         /// </summary>
         /// <returns>The frame.</returns>
-        protected virtual Frame CreateApplicationFrame() {
+        protected virtual Frame CreateApplicationFrame()
+        {
             return new Frame();
         }
 
         /// <summary>
         /// Allows you to trigger the creation of the RootFrame from Configure if necessary.
         /// </summary>
-        protected virtual void PrepareViewFirst() {
+        protected virtual void PrepareViewFirst()
+        {
             if (RootFrame != null)
                 return;
 
@@ -213,7 +219,8 @@
         /// Override this to register a navigation service.
         /// </summary>
         /// <param name="rootFrame">The root frame of the application.</param>
-        protected virtual void PrepareViewFirst(Frame rootFrame) {
+        protected virtual void PrepareViewFirst(Frame rootFrame)
+        {
         }
 
         /// <summary>
@@ -221,7 +228,8 @@
         /// </summary>
         /// <param name="viewType">The view type to navigate to.</param>
         /// <param name="paramter">The object parameter to pass to the target.</param>
-        protected void DisplayRootView(Type viewType, object paramter = null) {
+        protected void DisplayRootView(Type viewType, object paramter = null)
+        {
             Initialize();
 
             PrepareViewFirst();
@@ -240,15 +248,17 @@
         /// </summary>
         /// <typeparam name="T">The view type to navigate to.</typeparam>
         /// <param name="parameter">The object parameter to pass to the target.</param>
-        protected void DisplayRootView<T>(object parameter = null) {
-            DisplayRootView(typeof (T), parameter);
+        protected void DisplayRootView<T>(object parameter = null)
+        {
+            DisplayRootView(typeof(T), parameter);
         }
 
         /// <summary>
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
         /// </summary>
         /// <param name="viewModelType">The view model type.</param>
-        protected void DisplayRootViewFor(Type viewModelType) {
+        protected void DisplayRootViewFor(Type viewModelType)
+        {
             Initialize();
 
             var viewModel = IoC.GetInstance(viewModelType, null);
@@ -268,8 +278,9 @@
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
         /// </summary>
         /// <typeparam name="T">The view model type.</typeparam>
-        protected void DisplayRootViewFor<T>() {
-            DisplayRootViewFor(typeof (T));
+        protected void DisplayRootViewFor<T>()
+        {
+            DisplayRootViewFor(typeof(T));
         }
     }
 }

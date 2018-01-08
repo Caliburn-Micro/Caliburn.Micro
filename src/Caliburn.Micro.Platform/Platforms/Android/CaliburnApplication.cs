@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
 using Android.App;
 using Android.Runtime;
 
@@ -45,25 +44,6 @@ namespace Caliburn.Micro
         /// </summary>B
         protected virtual void StartRuntime()
         {
-            EventAggregator.HandlerResultProcessing = (target, result) =>
-            {
-                var task = result as Task;
-                if (task != null)
-                {
-                    result = new IResult[] { task.AsResult() };
-                }
-
-                var coroutine = result as IEnumerable<IResult>;
-                if (coroutine != null)
-                {
-                    var viewAware = target as IViewAware;
-                    var view = viewAware != null ? viewAware.GetView() : null;
-                    var context = new CoroutineExecutionContext { Target = target, View = view };
-
-                    Coroutine.BeginExecute(coroutine.GetEnumerator(), context);
-                }
-            };
-
             AssemblySourceCache.Install();
             AssemblySource.Instance.AddRange(SelectAssemblies());
 

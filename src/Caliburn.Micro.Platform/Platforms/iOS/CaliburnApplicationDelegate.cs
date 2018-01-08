@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
 using Foundation;
 using UIKit;
 
@@ -12,21 +11,21 @@ namespace Caliburn.Micro
     /// </summary>
     public class CaliburnApplicationDelegate : UIApplicationDelegate
     {
-        private bool isInitialized;
+        private bool _isInitialized;
 
         /// <summary>
         /// Creates an instance of <see cref="CaliburnApplicationDelegate"/>.
         /// </summary>
-        public CaliburnApplicationDelegate() {
-            
+        public CaliburnApplicationDelegate()
+        {
         }
 
         /// <summary>
         /// Creates an instance of <see cref="CaliburnApplicationDelegate"/>.
         /// </summary>
         /// <param name="handle">/// The handle for this class</param>
-        public CaliburnApplicationDelegate(IntPtr handle) : base(handle) {
-            
+        public CaliburnApplicationDelegate(IntPtr handle) : base(handle)
+        {
         }
 
         /// <summary>
@@ -36,7 +35,6 @@ namespace Caliburn.Micro
         public CaliburnApplicationDelegate(NSObjectFlag t)
             : base(t)
         {
-            
         }
 
         /// <summary>
@@ -59,25 +57,6 @@ namespace Caliburn.Micro
         /// </summary>B
         protected virtual void StartRuntime()
         {
-            EventAggregator.HandlerResultProcessing = (target, result) =>
-            {
-                var task = result as Task;
-                if (task != null)
-                {
-                    result = new IResult[] { task.AsResult() };
-                }
-
-                var coroutine = result as IEnumerable<IResult>;
-                if (coroutine != null)
-                {
-                    var viewAware = target as IViewAware;
-                    var view = viewAware != null ? viewAware.GetView() : null;
-                    var context = new CoroutineExecutionContext { Target = target, View = view };
-
-                    Coroutine.BeginExecute(coroutine.GetEnumerator(), context);
-                }
-            };
-
             AssemblySourceCache.Install();
             AssemblySource.Instance.AddRange(SelectAssemblies());
 
@@ -92,17 +71,14 @@ namespace Caliburn.Micro
         /// </summary>
         protected void Initialize()
         {
-            if (isInitialized)
-            {
+            if (_isInitialized)
                 return;
-            }
 
-            isInitialized = true;
+            _isInitialized = true;
 
             PlatformProvider.Current = new IOSPlatformProvider();
 
             if (Execute.InDesignMode)
-            {
                 try
                 {
                     StartDesignTime();
@@ -110,14 +86,11 @@ namespace Caliburn.Micro
                 catch
                 {
                     //if something fails at design-time, there's really nothing we can do...
-                    isInitialized = false;
+                    _isInitialized = false;
                     throw;
                 }
-            }
             else
-            {
                 StartRuntime();
-            }
         }
 
         /// <summary>
@@ -133,7 +106,7 @@ namespace Caliburn.Micro
         /// <returns>A list of assemblies to inspect.</returns>
         protected virtual IEnumerable<Assembly> SelectAssemblies()
         {
-            return new[] { GetType().GetTypeInfo().Assembly };
+            return new[] {GetType().GetTypeInfo().Assembly};
         }
 
         /// <summary>
@@ -154,7 +127,7 @@ namespace Caliburn.Micro
         /// <returns>The located services.</returns>
         protected virtual IEnumerable<object> GetAllInstances(Type service)
         {
-            return new[] { Activator.CreateInstance(service) };
+            return new[] {Activator.CreateInstance(service)};
         }
 
         /// <summary>
