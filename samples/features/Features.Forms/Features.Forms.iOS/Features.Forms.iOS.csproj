@@ -126,13 +126,13 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Caliburn.Micro">
-      <HintPath>..\..\..\..\bin\xamarin.ios\debug\Caliburn.Micro.dll</HintPath>
+      <HintPath>..\..\..\..\bin\xamarin.ios10\debug\Caliburn.Micro.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.Platform">
-      <HintPath>..\..\..\..\bin\xamarin.ios\debug\Caliburn.Micro.Platform.dll</HintPath>
+      <HintPath>..\..\..\..\bin\xamarin.ios10\debug\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.Platform.Core">
-      <HintPath>..\..\..\..\bin\xamarin.ios\debug\Caliburn.Micro.Platform.Core.dll</HintPath>
+      <HintPath>..\..\..\..\bin\xamarin.ios10\debug\Caliburn.Micro.Platform.Core.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.Xamarin.Forms">
       <HintPath>..\..\..\..\bin\xamarin-forms\debug\Caliburn.Micro.Xamarin.Forms.dll</HintPath>
