@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Moq;
 using Xunit;
 
@@ -11,6 +12,13 @@ namespace Caliburn.Micro.Tests.Core
         public void A_null_subscriber_causes_an_ArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() => { new EventAggregator().SubscribeOnPublishedThread(null); });
+        }
+
+        [Fact]
+        public void A_null_marshall_causes_an_ArgumentNullException()
+        {
+            var handlerStub = new Mock<IHandle<object>>().Object;
+            Assert.Throws<ArgumentNullException>(() => { new EventAggregator().Subscribe(handlerStub, null); });
         }
 
         [Fact]
@@ -64,14 +72,15 @@ namespace Caliburn.Micro.Tests.Core
         }
 
         [Fact]
-        public void A_valid_message_is_invoked_on_the_supplied_marshaller()
+        public async Task A_valid_message_is_invoked_on_the_supplied_publication_marshaller()
         {
             var eventAggregator = new EventAggregator();
             var handlerMock = new Mock<IHandle<object>>();
             var marshallerCalled = false;
 
             eventAggregator.SubscribeOnPublishedThread(handlerMock.Object);
-            eventAggregator.PublishAsync(new object(), f =>
+
+            await eventAggregator.PublishAsync(new object(), f =>
             {
                 marshallerCalled = true;
 
@@ -83,7 +92,27 @@ namespace Caliburn.Micro.Tests.Core
         }
 
         [Fact]
-        public void A_valid_message_is_published_to_all_handlers()
+        public async Task A_valid_message_is_invoked_on_the_supplied_subscription_marshaller()
+        {
+            var eventAggregator = new EventAggregator();
+            var handlerMock = new Mock<IHandle<object>>();
+            var marshallerCalled = false;
+
+            eventAggregator.Subscribe(handlerMock.Object, f =>
+            {
+                marshallerCalled = true;
+
+                return f();
+
+            });
+
+            await eventAggregator.PublishOnCurrentThreadAsync(new object(), CancellationToken.None);
+
+            Assert.True(marshallerCalled);
+        }
+
+        [Fact]
+        public async Task A_valid_message_is_published_to_all_handlers()
         {
             var eventAggregator = new EventAggregator();
 
@@ -93,13 +122,35 @@ namespace Caliburn.Micro.Tests.Core
             eventAggregator.SubscribeOnPublishedThread(handlerMockA.Object);
             eventAggregator.SubscribeOnPublishedThread(handlerMockB.Object);
 
-            eventAggregator.PublishOnCurrentThreadAsync(new object(), CancellationToken.None);
+            await eventAggregator.PublishOnCurrentThreadAsync(new object(), CancellationToken.None);
 
             handlerMockA.Verify(handlerStub => handlerStub.HandleAsync(It.IsAny<object>(), It.IsAny<CancellationToken>()),
                 Times.AtLeastOnce());
             handlerMockB.Verify(handlerStub => handlerStub.HandleAsync(It.IsAny<object>(), It.IsAny<CancellationToken>()),
                 Times.AtLeastOnce());
         }
+
+        [Fact]
+        public async Task A_valid_message_is_published_to_all_handlers_respecting_inheritance()
+        {
+            var eventAggregator = new EventAggregator();
+
+            var handlerMockA = new Mock<IHandle<MessageBase>>();
+            var handlerMockB = new Mock<IHandle<Message>>();
+
+            eventAggregator.SubscribeOnPublishedThread(handlerMockA.Object);
+            eventAggregator.SubscribeOnPublishedThread(handlerMockB.Object);
+
+            await eventAggregator.PublishOnCurrentThreadAsync(new Message(), CancellationToken.None);
+
+            handlerMockA.Verify(handlerStub => handlerStub.HandleAsync(It.IsAny<MessageBase>(), It.IsAny<CancellationToken>()),
+                Times.AtLeastOnce());
+            handlerMockB.Verify(handlerStub => handlerStub.HandleAsync(It.IsAny<Message>(), It.IsAny<CancellationToken>()),
+                Times.AtLeastOnce());
+        }
+
+        public class MessageBase { }
+        public class Message : MessageBase { }
     }
 
     public class EventAggregatorHandlerExistence

@@ -32,6 +32,9 @@ namespace Caliburn.Micro
             if (subscriber == null)
                 throw new ArgumentNullException(nameof(subscriber));
 
+            if (marshal == null)
+                throw new ArgumentNullException(nameof(marshal));
+
             lock (_handlers)
             {
                 if (_handlers.Any(x => x.Matches(subscriber)))
