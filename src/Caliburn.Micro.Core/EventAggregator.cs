@@ -106,8 +106,11 @@ namespace Caliburn.Micro
                 _marshal = marshal;
                 _reference = new WeakReference(handler);
 
+                //var interfaces = handler.GetType().GetTypeInfo().ImplementedInterfaces
+                //    .Where(x => typeof(IHandle).GetTypeInfo().IsAssignableFrom(x.GetTypeInfo()) && x.GetTypeInfo().IsGenericType);
+
                 var interfaces = handler.GetType().GetTypeInfo().ImplementedInterfaces
-                    .Where(x => typeof(IHandle).GetTypeInfo().IsAssignableFrom(x.GetTypeInfo()) && x.GetTypeInfo().IsGenericType);
+                    .Where(x => x.GetTypeInfo().IsGenericType && x.GetGenericTypeDefinition() == typeof(IHandle<>));
 
                 foreach (var @interface in interfaces)
                 {

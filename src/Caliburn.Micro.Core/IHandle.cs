@@ -4,18 +4,11 @@ using System.Threading.Tasks;
 namespace Caliburn.Micro
 {
     /// <summary>
-    /// A marker interface for classes that subscribe to messages.
-    /// </summary>
-    public interface IHandle
-    {
-    }
-
-    /// <summary>
     /// Denotes a class which can handle a particular type of message.
     /// </summary>
     /// <typeparam name = "TMessage">The type of message to handle.</typeparam>
     // ReSharper disable once TypeParameterCanBeVariant
-    public interface IHandle<TMessage> : IHandle
+    public interface IHandle<TMessage>
     {
         /// <summary>
         /// Handles the message.
