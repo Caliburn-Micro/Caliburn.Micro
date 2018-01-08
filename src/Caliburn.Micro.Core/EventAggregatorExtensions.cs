@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,6 +10,75 @@ namespace Caliburn.Micro
     /// </summary>
     public static class EventAggregatorExtensions
     {
+        /// <summary>
+        /// Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />.
+        /// </summary>
+        /// <remarks>The subscription is invoked on the thread chosen by the publisher.</remarks>
+        /// <param name="eventAggregator"></param>
+        /// <param name = "subscriber">The instance to subscribe for event publication.</param>
+        public static void SubscribeOnPublishedThread(this IEventAggregator eventAggregator, object subscriber)
+        {
+            eventAggregator.Subscribe(subscriber, f => f());
+        }
+
+        /// <summary>
+        /// Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />.
+        /// </summary>
+        /// <remarks>The subscription is invoked on the thread chosen by the publisher.</remarks>
+        /// <param name="eventAggregator"></param>
+        /// <param name = "subscriber">The instance to subscribe for event publication.</param>
+        [Obsolete("Use SubscribeOnPublishedThread")]
+        public static void Subscribe(this IEventAggregator eventAggregator, object subscriber)
+        {
+            eventAggregator.SubscribeOnPublishedThread(subscriber);
+        }
+
+        /// <summary>
+        /// Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />.
+        /// </summary>
+        /// <remarks>The subscription is invoked on a new background thread.</remarks>
+        /// <param name="eventAggregator"></param>
+        /// <param name = "subscriber">The instance to subscribe for event publication.</param>
+        public static void SubscribeOnBackgroundThread(this IEventAggregator eventAggregator, object subscriber)
+        {
+            eventAggregator.Subscribe(subscriber, f => Task.Factory.StartNew(f, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default));
+        }
+
+        /// <summary>
+        /// Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />.
+        /// </summary>
+        /// <remarks>The subscription is invoked on the UI thread.</remarks>
+        /// <param name="eventAggregator"></param>
+        /// <param name = "subscriber">The instance to subscribe for event publication.</param>
+        public static void SubscribeOnUIThread(this IEventAggregator eventAggregator, object subscriber)
+        {
+            eventAggregator.Subscribe(subscriber, f =>
+            {
+                var taskCompletionSource = new TaskCompletionSource<bool>();
+
+                Execute.BeginOnUIThread(async () =>
+                {
+                    try
+                    {
+                        await f();
+
+                        taskCompletionSource.SetResult(true);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        taskCompletionSource.SetCanceled();
+                    }
+                    catch (Exception ex)
+                    {
+                        taskCompletionSource.SetException(ex);
+                    }
+                });
+
+                return taskCompletionSource.Task;
+
+            });
+        }
+
         /// <summary>
         /// Publishes a message on the current thread (synchrone).
         /// </summary>

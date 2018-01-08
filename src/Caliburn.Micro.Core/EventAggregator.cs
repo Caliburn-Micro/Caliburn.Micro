@@ -27,7 +27,7 @@ namespace Caliburn.Micro
         }
 
         /// <inheritdoc />
-        public virtual void Subscribe(object subscriber)
+        public virtual void Subscribe(object subscriber, Func<Func<Task>, Task> marshal)
         {
             if (subscriber == null)
                 throw new ArgumentNullException(nameof(subscriber));
@@ -37,7 +37,7 @@ namespace Caliburn.Micro
                 if (_handlers.Any(x => x.Matches(subscriber)))
                     return;
 
-                _handlers.Add(new Handler(subscriber));
+                _handlers.Add(new Handler(subscriber, marshal));
             }
         }
 
@@ -76,7 +76,7 @@ namespace Caliburn.Micro
             {
                 var messageType = message.GetType();
                 
-                var tasks = toNotify.SelectMany(h => h.Handle(messageType, message, CancellationToken.None));
+                var tasks = toNotify.Select(h => h.Handle(messageType, message, CancellationToken.None));
 
                 await Task.WhenAll(tasks);
 
@@ -94,11 +94,13 @@ namespace Caliburn.Micro
 
         private class Handler
         {
+            private readonly Func<Func<Task>, Task> _marshal;
             private readonly WeakReference _reference;
             private readonly Dictionary<Type, MethodInfo> _supportedHandlers = new Dictionary<Type, MethodInfo>();
 
-            public Handler(object handler)
+            public Handler(object handler, Func<Func<Task>, Task> marshal)
             {
+                _marshal = marshal;
                 _reference = new WeakReference(handler);
 
                 var interfaces = handler.GetType().GetTypeInfo().ImplementedInterfaces
@@ -121,18 +123,23 @@ namespace Caliburn.Micro
                 return _reference.Target == instance;
             }
 
-            public IEnumerable<Task> Handle(Type messageType, object message, CancellationToken cancellationToken)
+            public Task Handle(Type messageType, object message, CancellationToken cancellationToken)
             {
                 var target = _reference.Target;
 
                 if (target == null)
-                    return Enumerable.Empty<Task>();
+                    return Task.FromResult(false);
 
-                return _supportedHandlers
-                    .Where(handler => handler.Key.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo()))
-                    .Select(pair => pair.Value.Invoke(target, new[] {message, cancellationToken}))
-                    .Select(result => (Task) result)
-                    .ToList();
+                return _marshal(() =>
+                {
+                    var tasks = _supportedHandlers
+                        .Where(handler => handler.Key.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo()))
+                        .Select(pair => pair.Value.Invoke(target, new[] {message, cancellationToken}))
+                        .Select(result => (Task)result)
+                        .ToList();
+
+                    return Task.WhenAll(tasks);
+                });
             }
 
             public bool Handles(Type messageType)

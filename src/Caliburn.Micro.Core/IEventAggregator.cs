@@ -21,7 +21,8 @@ namespace Caliburn.Micro
         /// Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />
         /// </summary>
         /// <param name = "subscriber">The instance to subscribe for event publication.</param>
-        void Subscribe(object subscriber);
+        /// <param name = "marshal">Allows the subscriber to provide a custom thread marshaller for the message subscription.</param>
+        void Subscribe(object subscriber, Func<Func<Task>, Task> marshal);
 
         /// <summary>
         /// Unsubscribes the instance from all events.

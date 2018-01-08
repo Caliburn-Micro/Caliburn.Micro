@@ -10,7 +10,7 @@ namespace Caliburn.Micro.Tests.Core
         [Fact]
         public void A_null_subscriber_causes_an_ArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => { new EventAggregator().Subscribe(null); });
+            Assert.Throws<ArgumentNullException>(() => { new EventAggregator().SubscribeOnPublishedThread(null); });
         }
 
         [Fact]
@@ -21,7 +21,7 @@ namespace Caliburn.Micro.Tests.Core
 
             Assert.False(aggregator.HandlerExistsFor(typeof(object)));
 
-            aggregator.Subscribe(handlerStub);
+            aggregator.SubscribeOnPublishedThread(handlerStub);
 
             Assert.True(aggregator.HandlerExistsFor(typeof(object)));
         }
@@ -41,7 +41,7 @@ namespace Caliburn.Micro.Tests.Core
             var eventAggregator = new EventAggregator();
             var handlerMock = new Mock<IHandle<object>>();
 
-            eventAggregator.Subscribe(handlerMock.Object);
+            eventAggregator.SubscribeOnPublishedThread(handlerMock.Object);
             Assert.True(eventAggregator.HandlerExistsFor(typeof(object)));
 
             eventAggregator.Unsubscribe(handlerMock.Object);
@@ -70,7 +70,7 @@ namespace Caliburn.Micro.Tests.Core
             var handlerMock = new Mock<IHandle<object>>();
             var marshallerCalled = false;
 
-            eventAggregator.Subscribe(handlerMock.Object);
+            eventAggregator.SubscribeOnPublishedThread(handlerMock.Object);
             eventAggregator.PublishAsync(new object(), f =>
             {
                 marshallerCalled = true;
@@ -90,8 +90,8 @@ namespace Caliburn.Micro.Tests.Core
             var handlerMockA = new Mock<IHandle<object>>();
             var handlerMockB = new Mock<IHandle<object>>();
 
-            eventAggregator.Subscribe(handlerMockA.Object);
-            eventAggregator.Subscribe(handlerMockB.Object);
+            eventAggregator.SubscribeOnPublishedThread(handlerMockA.Object);
+            eventAggregator.SubscribeOnPublishedThread(handlerMockB.Object);
 
             eventAggregator.PublishOnCurrentThreadAsync(new object(), CancellationToken.None);
 
@@ -116,7 +116,7 @@ namespace Caliburn.Micro.Tests.Core
             var handlerStub = new Mock<IHandle<object>>().Object;
             var aggregator = new EventAggregator();
 
-            aggregator.Subscribe(handlerStub);
+            aggregator.SubscribeOnPublishedThread(handlerStub);
 
             Assert.True(aggregator.HandlerExistsFor(typeof(object)));
         }
