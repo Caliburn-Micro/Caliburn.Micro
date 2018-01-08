@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Caliburn.Micro;
 using Features.CrossPlatform.Messages;
 
@@ -20,9 +21,9 @@ namespace Features.CrossPlatform.ViewModels.Events
             set { Set(ref text, value); }
         }
 
-        public void Publish()
+        public async void Publish()
         {
-            eventAggregator.PublishOnUIThread(new SimpleMessage(Text));
+            await eventAggregator.PublishOnUIThreadAsync(new SimpleMessage(Text), CancellationToken.None);
         }
     }
 }
