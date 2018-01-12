@@ -63,6 +63,9 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0'">
     <Compile Include="Platforms\UWP\*.cs" />
+    <Content Include="Platforms\UWP\Caliburn.Micro.Platform.UWP.rd.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.0" />
   </ItemGroup>
