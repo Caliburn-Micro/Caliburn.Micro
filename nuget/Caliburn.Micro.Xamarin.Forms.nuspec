@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Caliburn.Micro.Xamarin.Forms</id>
-    <version>3.2.0</version>
+    <version>4.0.0-alpha.1</version>
     <authors>Rob Eisenberg, Marco Amendola, Chin Bae, Ryan Cromwell, Nigel Sampson, Thomas Ibel, Matt Hidinger</authors>
     <description>A small, yet powerful framework designed for Xaml platforms, Caliburn.Micro implements a variety of UI patterns for solving real-world problems. Patterns that are highlighted include MVVM (Presentation Model), MVP and MVC.</description>
     <language>en-US</language>
@@ -16,42 +16,30 @@
 
     <dependencies>
       <group>
-        <dependency id="Caliburn.Micro.Core" version="[3.2.0]" />
+        <dependency id="Caliburn.Micro.Core" version="[4.0.0-alpha.1]" />
         <dependency id="Xamarin.Forms" version="2.0.1.6505" />
       </group>
       <group targetFramework="net45">
-        <dependency id="Caliburn.Micro" version="[3.2.0]" />
+        <dependency id="Caliburn.Micro" version="[4.0.0-alpha.1]" />
         <dependency id="Xamarin.Forms" version="2.0.1.6505" />
       </group>
-      <group targetFramework="win8">
-        <dependency id="Caliburn.Micro" version="[3.2.0]" />
+      <group targetFramework="monoandroid403">
+        <dependency id="Caliburn.Micro" version="[4.0.0-alpha.1]" />
         <dependency id="Xamarin.Forms" version="2.0.1.6505" />
       </group>
-      <group targetFramework="wp8">
-        <dependency id="Caliburn.Micro" version="[3.2.0]" />
+      <group targetFramework="xamarin.ios10">
+        <dependency id="Caliburn.Micro" version="[4.0.0-alpha.1]" />
         <dependency id="Xamarin.Forms" version="2.0.1.6505" />
       </group>
-      <group targetFramework="wpa81">
-        <dependency id="Caliburn.Micro" version="[3.2.0]" />
-        <dependency id="Xamarin.Forms" version="2.0.1.6505" />
-      </group>
-      <group targetFramework="MonoAndroid10">
-        <dependency id="Caliburn.Micro" version="[3.2.0]" />
-        <dependency id="Xamarin.Forms" version="2.0.1.6505" />
-      </group>
-      <group targetFramework="Xamarin.iOS10">
-        <dependency id="Caliburn.Micro" version="[3.2.0]" />
-        <dependency id="Xamarin.Forms" version="2.0.1.6505" />
-      </group>
-      <group targetFramework="MonoTouch10">
-        <dependency id="Caliburn.Micro" version="[3.2.0]" />
+       <group targetFramework="uap10.0">
+        <dependency id="Caliburn.Micro" version="[4.0.0-alpha.1]" />
         <dependency id="Xamarin.Forms" version="2.0.1.6505" />
       </group>
     </dependencies>
   </metadata>
 
   <files>
-    <file src="..\bin\xamarin-forms\Release\Caliburn.Micro.Platform.Xamarin.Forms.*" target="lib\portable-net45+win8+wp8+wpa81+MonoAndroid10+Xamarin.iOS10+MonoTouch10" />
+    <file src="..\bin\xamarin-forms\release\Caliburn.Micro.Platform.Xamarin.Forms.*" target="lib\netstandard1.4" />
 	
     <file src="..\src\*.cs" target="src" />
     <file src="..\src\Caliburn.Micro.Platform*\**\*.cs" exclude="**\obj\**\*.*" target="src" />
