@@ -20,7 +20,7 @@
       </group>
       <group targetFramework="uap10.0">
         <dependency id="Caliburn.Micro.Core" version="[4.0.0-alpha.1]" />
-        <dependency id="Microsoft.Xaml.Behaviors.Uwp.Managed" version="1.1.0" />
+        <dependency id="Microsoft.Xaml.Behaviors.Uwp.Managed" version="2.0.0" />
       </group>
     </dependencies>
   </metadata>
@@ -35,7 +35,7 @@
     <file src="..\bin\xamarin.ios10\release\Caliburn.Micro.*.*" target="lib\xamarin.ios10" />
 
     <file src="..\bin\uap10.0\release\Caliburn.Micro.*.*" target="lib\uap10.0" />
-    <file src="..\bin\uap10.0\release\Platforms\UWP\Caliburn.Micro.Platform.UWP.rd.xml" target="lib\uap10.0\Caliburn.Micro.Platform.UWP\Properties\Caliburn.Micro.Platform.UWP.rd.xml" />
+    <file src="..\bin\uap10.0\release\Platforms\UWP\Caliburn.Micro.Platform.rd.xml" target="lib\uap10.0\Caliburn.Micro.Platform\Platforms\UWP\Caliburn.Micro.Platform.rd.xml" />
     
     <file src="..\src\*.cs" target="src" />
     <file src="..\src\Caliburn.Micro.Platform*\**\*.cs" exclude="**\obj\**\*.*" target="src" />
