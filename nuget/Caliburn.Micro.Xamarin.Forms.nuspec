@@ -39,7 +39,7 @@
   </metadata>
 
   <files>
-    <file src="..\bin\xamarin-forms\release\Caliburn.Micro.Platform.Xamarin.Forms.*" target="lib\netstandard1.4" />
+    <file src="..\bin\xamarin-forms\release\Caliburn.Micro.Xamarin.Forms.*" target="lib\netstandard1.4" />
 	
     <file src="..\src\*.cs" target="src" />
     <file src="..\src\Caliburn.Micro.Platform*\**\*.cs" exclude="**\obj\**\*.*" target="src" />

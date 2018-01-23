@@ -42,7 +42,7 @@
     <PackageTargetFallback>portable-net45+win8+wpa81+wp8</PackageTargetFallback>
     <DebugType>full</DebugType>
     <OutputPath>..\..\bin\xamarin-forms\$(Configuration.ToLower())\</OutputPath>
-    <AssemblyName>Caliburn.Micro.Platform.Xamarin.Forms</AssemblyName>
+    <AssemblyName>Caliburn.Micro.Xamarin.Forms</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
