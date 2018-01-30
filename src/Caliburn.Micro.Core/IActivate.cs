@@ -1,10 +1,14 @@
-﻿namespace Caliburn.Micro {
-    using System;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// Denotes an instance which requires activation.
     /// </summary>
-    public interface IActivate {
+    public interface IActivate
+    {
         ///<summary>
         /// Indicates whether or not this instance is active.
         ///</summary>
@@ -13,7 +17,7 @@
         /// <summary>
         /// Activates this instance.
         /// </summary>
-        void Activate();
+        Task ActivateAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Raised after activation occurs.

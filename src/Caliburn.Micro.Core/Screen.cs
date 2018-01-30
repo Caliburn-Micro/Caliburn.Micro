@@ -1,43 +1,66 @@
-﻿namespace Caliburn.Micro {
-    using System;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// A base implementation of <see cref = "IScreen" />.
     /// </summary>
-    public class Screen : ViewAware, IScreen, IChild {
-        static readonly ILog Log = LogManager.GetLog(typeof (Screen));
+    public class Screen : ViewAware, IScreen, IChild
+    {
+        private static readonly ILog Log = LogManager.GetLog(typeof(Screen));
+        private string _displayName;
 
-        bool isActive;
-        bool isInitialized;
-        object parent;
-        string displayName;
+        private bool _isActive;
+        private bool _isInitialized;
+        private object _parent;
 
         /// <summary>
         /// Creates an instance of the screen.
         /// </summary>
-        public Screen() {
-            displayName = GetType().FullName;
+        public Screen()
+        {
+            _displayName = GetType().FullName;
+        }
+
+        /// <summary>
+        /// Indicates whether or not this instance is currently initialized.
+        /// Virtualized in order to help with document oriented view models.
+        /// </summary>
+        public virtual bool IsInitialized
+        {
+            get => _isInitialized;
+            private set
+            {
+                _isInitialized = value;
+                NotifyOfPropertyChange();
+            }
         }
 
         /// <summary>
         /// Gets or Sets the Parent <see cref = "IConductor" />
         /// </summary>
-        public virtual object Parent {
-            get { return parent; }
-            set {
-                parent = value;
-                NotifyOfPropertyChange("Parent");
+        public virtual object Parent
+        {
+            get => _parent;
+            set
+            {
+                _parent = value;
+                NotifyOfPropertyChange();
             }
         }
 
         /// <summary>
         /// Gets or Sets the Display Name
         /// </summary>
-        public virtual string DisplayName {
-            get { return displayName; }
-            set {
-                displayName = value;
-                NotifyOfPropertyChange("DisplayName");
+        public virtual string DisplayName
+        {
+            get => _displayName;
+            set
+            {
+                _displayName = value;
+                NotifyOfPropertyChange();
             }
         }
 
@@ -45,23 +68,13 @@
         /// Indicates whether or not this instance is currently active.
         /// Virtualized in order to help with document oriented view models.
         /// </summary>
-        public virtual bool IsActive {
-            get { return isActive; }
-            private set {
-                isActive = value;
-                NotifyOfPropertyChange("IsActive");
-            }
-        }
-
-        /// <summary>
-        /// Indicates whether or not this instance is currently initialized.
-        /// Virtualized in order to help with document oriented view models.
-        /// </summary>
-        public virtual bool IsInitialized {
-            get { return isInitialized; }
-            private set {
-                isInitialized = value;
-                NotifyOfPropertyChange("IsInitialized");
+        public virtual bool IsActive
+        {
+            get => _isActive;
+            private set
+            {
+                _isActive = value;
+                NotifyOfPropertyChange();
             }
         }
 
@@ -80,64 +93,49 @@
         /// </summary>
         public virtual event EventHandler<DeactivationEventArgs> Deactivated = delegate { };
 
-        void IActivate.Activate() {
-            if (IsActive) {
+        async Task IActivate.ActivateAsync(CancellationToken cancellationToken)
+        {
+            if (IsActive)
                 return;
-            }
 
             var initialized = false;
 
-            if (!IsInitialized) {
+            if (!IsInitialized)
+            {
                 IsInitialized = initialized = true;
-                OnInitialize();
+                await OnInitializeAsync(cancellationToken);
             }
 
             IsActive = true;
             Log.Info("Activating {0}.", this);
-            OnActivate();
+            await OnActivateAsync(cancellationToken);
 
-            var handler = Activated;
-            if (handler != null) {
-                handler(this, new ActivationEventArgs
-                {
-                    WasInitialized = initialized
-                });
-            }
+            Activated?.Invoke(this, new ActivationEventArgs
+            {
+                WasInitialized = initialized
+            });
         }
 
-        /// <summary>
-        /// Called when initializing.
-        /// </summary>
-        protected virtual void OnInitialize() {}
-
-        /// <summary>
-        /// Called when activating.
-        /// </summary>
-        protected virtual void OnActivate() {}
-
-        void IDeactivate.Deactivate(bool close) {
-            if (IsActive || (IsInitialized && close)) {
-                var attemptingDeactivationHandler = AttemptingDeactivation;
-                if (attemptingDeactivationHandler != null) {
-                    attemptingDeactivationHandler(this, new DeactivationEventArgs
-                    {
-                        WasClosed = close
-                    });
-                }
+        void IDeactivate.Deactivate(bool close)
+        {
+            if (IsActive || IsInitialized && close)
+            {
+                AttemptingDeactivation?.Invoke(this, new DeactivationEventArgs
+                {
+                    WasClosed = close
+                });
 
                 IsActive = false;
                 Log.Info("Deactivating {0}.", this);
                 OnDeactivate(close);
 
-                var deactivatedHandler = Deactivated;
-                if (deactivatedHandler != null) {
-                    deactivatedHandler(this, new DeactivationEventArgs
-                    {
-                        WasClosed = close
-                    });
-                }
+                Deactivated?.Invoke(this, new DeactivationEventArgs
+                {
+                    WasClosed = close
+                });
 
-                if (close) {
+                if (close)
+                {
                     Views.Clear();
                     Log.Info("Closed {0}.", this);
                 }
@@ -145,16 +143,11 @@
         }
 
         /// <summary>
-        /// Called when deactivating.
-        /// </summary>
-        /// <param name = "close">Indicates whether this instance will be closed.</param>
-        protected virtual void OnDeactivate(bool close) {}
-
-        /// <summary>
         /// Called to check whether or not this instance can close.
         /// </summary>
         /// <param name = "callback">The implementor calls this action with the result of the close check.</param>
-        public virtual void CanClose(Action<bool> callback) {
+        public virtual void CanClose(Action<bool> callback)
+        {
             callback(true);
         }
 
@@ -163,8 +156,33 @@
         /// Also provides an opportunity to pass a dialog result to it's corresponding view.
         /// </summary>
         /// <param name="dialogResult">The dialog result.</param>
-        public virtual void TryClose(bool? dialogResult = null) {
+        public virtual void TryClose(bool? dialogResult = null)
+        {
             PlatformProvider.Current.GetViewCloseAction(this, Views.Values, dialogResult).OnUIThread();
+        }
+
+        /// <summary>
+        /// Called when initializing.
+        /// </summary>
+        protected virtual Task OnInitializeAsync(CancellationToken cancellationToken)
+        {
+            return Task.FromResult(true);
+        }
+
+        /// <summary>
+        /// Called when activating.
+        /// </summary>
+        protected virtual Task OnActivateAsync(CancellationToken cancellationToken)
+        {
+            return Task.FromResult(true);
+        }
+
+        /// <summary>
+        /// Called when deactivating.
+        /// </summary>
+        /// <param name = "close">Indicates whether this instance will be closed.</param>
+        protected virtual void OnDeactivate(bool close)
+        {
         }
     }
 }
