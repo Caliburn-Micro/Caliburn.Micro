@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Caliburn.Micro
 {
@@ -12,10 +13,9 @@ namespace Caliburn.Micro
         /// Activates the item if it implements <see cref="IActivate"/>, otherwise does nothing.
         /// </summary>
         /// <param name="potentialActivatable">The potential activatable.</param>
-        public static void TryActivateAsync(object potentialActivatable)
+        public static Task TryActivateAsync(object potentialActivatable)
         {
-            var activator = potentialActivatable as IActivate;
-            activator?.ActivateAsync(CancellationToken.None);
+            return potentialActivatable is IActivate activator ? activator.ActivateAsync(CancellationToken.None) : Task.FromResult(true);
         }
 
         /// <summary>
@@ -23,10 +23,9 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="potentialActivatable">The potential activatable.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public static void TryActivate(object potentialActivatable, CancellationToken cancellationToken)
+        public static Task TryActivateAsync(object potentialActivatable, CancellationToken cancellationToken)
         {
-            var activator = potentialActivatable as IActivate;
-            activator?.ActivateAsync(CancellationToken.None);
+            return potentialActivatable is IActivate activator ? activator.ActivateAsync(cancellationToken) : Task.FromResult(true);
         }
 
         /// <summary>
