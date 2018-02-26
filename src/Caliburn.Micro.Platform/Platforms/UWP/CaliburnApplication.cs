@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -257,7 +259,7 @@ namespace Caliburn.Micro
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
         /// </summary>
         /// <param name="viewModelType">The view model type.</param>
-        protected void DisplayRootViewFor(Type viewModelType)
+        protected async Task DisplayRootViewForAsync(Type viewModelType, CancellationToken cancellationToken)
         {
             Initialize();
 
@@ -266,21 +268,24 @@ namespace Caliburn.Micro
 
             ViewModelBinder.Bind(viewModel, view, null);
 
-            var activator = viewModel as IActivate;
-            if (activator != null)
-                activator.Activate();
+            if (viewModel is IActivate activator)
+                await activator.ActivateAsync(cancellationToken);
 
             Window.Current.Content = view;
             Window.Current.Activate();
         }
 
+        protected Task DisplayRootViewForAsync(Type viewModelType) => DisplayRootViewForAsync(viewModelType, CancellationToken.None);
+
         /// <summary>
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
         /// </summary>
         /// <typeparam name="T">The view model type.</typeparam>
-        protected void DisplayRootViewFor<T>()
+        protected Task DisplayRootViewForAsync<T>(CancellationToken cancellationToken)
         {
-            DisplayRootViewFor(typeof(T));
+            return DisplayRootViewForAsync(typeof(T), cancellationToken);
         }
+
+        protected Task DisplayRootViewForAsync<T>() => DisplayRootViewForAsync<T>(CancellationToken.None);
     }
 }
