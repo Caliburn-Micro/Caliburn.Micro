@@ -1,16 +1,16 @@
-﻿namespace Caliburn.Micro
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Navigation;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Navigation;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     ///   Implemented by services that provide <see cref="Uri" /> based navigation.
     /// </summary>
-    public interface INavigationService {
-        
+    public interface INavigationService
+    {
         /// <summary>
         /// Navigates to the view represented by the given view model.
         /// </summary>
@@ -133,7 +133,11 @@
             {
                 var shouldCancel = false;
                 var runningAsync = true;
-                guard.CanClose(result => { runningAsync = false; shouldCancel = !result; });
+                guard.CanClose(result =>
+                {
+                    runningAsync = false;
+                    shouldCancel = !result;
+                });
                 if (runningAsync)
                     throw new NotSupportedException("Async CanClose is not supported.");
 
@@ -169,7 +173,7 @@
         /// </summary>
         /// <param name="sender"> The event sender. </param>
         /// <param name="e"> The event args. </param>
-        protected virtual void OnNavigated(object sender, NavigationEventArgs e)
+        protected virtual async void OnNavigated(object sender, NavigationEventArgs e)
         {
             if (e.Uri.IsAbsoluteUri || e.Content == null)
             {
@@ -198,10 +202,9 @@
             TryInjectParameters(viewModel, e.ExtraData);
             ViewModelBinder.Bind(viewModel, page, null);
 
-            var activator = viewModel as IActivate;
-            if (activator != null)
+            if (viewModel is IActivate activator)
             {
-                activator.Activate();
+                await activator.ActivateAsync();
             }
 
             GC.Collect();
@@ -330,7 +333,8 @@
         ///   Removes the most recent entry from the back stack.
         /// </summary>
         /// <returns> The entry that was removed. </returns>
-        public JournalEntry RemoveBackEntry() {
+        public JournalEntry RemoveBackEntry()
+        {
             return frame.RemoveBackEntry();
         }
 

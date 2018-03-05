@@ -102,7 +102,7 @@ namespace Caliburn.Micro.Xamarin.Forms
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
         /// </summary>
         /// <param name="viewModelType">The view model type.</param>
-        protected void DisplayRootViewFor(Type viewModelType)
+        protected async Task DisplayRootViewForAsync(Type viewModelType)
         {
             var viewModel = IoC.GetInstance(viewModelType, null);
             var view = ViewLocator.LocateForModel(viewModel, null, null);
@@ -114,9 +114,10 @@ namespace Caliburn.Micro.Xamarin.Forms
 
             ViewModelBinder.Bind(viewModel, view, null);
 
-            var activator = viewModel as IActivate;
-            if (activator != null)
-                activator.Activate();
+            if (viewModel is IActivate activator)
+            {
+                await activator.ActivateAsync();
+            }
 
             MainPage = page;
         }
@@ -125,9 +126,9 @@ namespace Caliburn.Micro.Xamarin.Forms
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
         /// </summary>
         /// <typeparam name="T">The view model type.</typeparam>
-        protected void DisplayRootViewFor<T>()
+        protected Task DisplayRootViewForAsync<T>()
         {
-            DisplayRootViewFor(typeof(T));
+            return DisplayRootViewForAsync(typeof(T));
         }
     }
 }

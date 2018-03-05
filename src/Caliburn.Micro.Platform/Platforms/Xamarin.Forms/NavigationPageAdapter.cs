@@ -87,10 +87,12 @@
         /// Apply logic to activate a view when it is popped onto the navigation stack
         /// </summary>
         /// <param name="view">the view to activate</param>
-        protected virtual void ActivateView(BindableObject view)
+        protected virtual async void ActivateView(BindableObject view)
         {
-            var activate = view?.BindingContext as IActivate;
-            activate?.Activate();
+            if (view?.BindingContext is IActivate activator)
+            {
+                await activator.ActivateAsync();
+            }
         }
 
         /// <summary>

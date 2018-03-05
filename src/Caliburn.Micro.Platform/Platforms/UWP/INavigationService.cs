@@ -1,14 +1,14 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using Windows.Foundation;
+using Windows.Storage;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace Caliburn.Micro {
-    using System;
-    using System.Collections.Generic;
-    using Windows.Foundation;
-    using Windows.Storage;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
-    using Windows.UI.Xaml.Navigation;
+    
 
     /// <summary>
     ///   Implemented by services that provide (<see cref="System.Uri" /> based) navigation.
@@ -221,7 +221,7 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="viewModel">The view model.</param>
-        protected virtual void BindViewModel(DependencyObject view, object viewModel = null)
+        protected virtual async void BindViewModel(DependencyObject view, object viewModel = null)
         {
             ViewLocator.InitializeComponent(view);
 
@@ -238,10 +238,9 @@ namespace Caliburn.Micro {
             TryInjectParameters(viewModel, CurrentParameter);
             ViewModelBinder.Bind(viewModel, view, null);
 
-            var activator = viewModel as IActivate;
-            if (activator != null)
+            if (viewModel is IActivate activator)
             {
-                activator.Activate();
+                await activator.ActivateAsync();
             }
         }
 
