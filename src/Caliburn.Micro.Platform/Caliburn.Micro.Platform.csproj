@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="MSBuild.Sdk.Extras/1.2.2">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.4;net45;uap10.0;MonoAndroid403;Xamarin.iOS10</TargetFrameworks>
+    <TargetFrameworks>netstandard1.4;net45;uap10.0;MonoAndroid43;Xamarin.iOS10</TargetFrameworks>
     <AssemblyName>Caliburn.Micro.Platform</AssemblyName>
     <RootNamespace>Caliburn.Micro</RootNamespace>
     <PackageId>$(MSBuildProjectName)</PackageId>
@@ -21,12 +21,12 @@
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'MonoAndroid403'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'MonoAndroid43'">
     <DefineConstants>ANDROID</DefineConstants>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <DevInstrumentationEnabled>True</DevInstrumentationEnabled>
-    <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.3.0</TargetFrameworkVersion>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
   </PropertyGroup>
 
@@ -66,7 +66,6 @@
     <Content Include="Platforms\UWP\Caliburn.Micro.Platform.rd.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.0" />
   </ItemGroup>
 
@@ -95,7 +94,7 @@
     <None Include="ConventionManager.cs" />
     <Compile Remove="XamlPlatformProvider.cs" />
     <None Include="XamlPlatformProvider.cs" />
-    <PackageReference Include="Xamarin.Forms" Version="2.0.1.6505" />
+    <PackageReference Include="Xamarin.Forms" Version="2.5.0.280555" />
   </ItemGroup>
 
   <ItemGroup>
@@ -103,14 +102,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
     <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
   </ItemGroup>
-
-  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 
 </Project>
