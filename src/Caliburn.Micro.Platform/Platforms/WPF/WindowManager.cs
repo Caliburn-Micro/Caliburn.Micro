@@ -83,7 +83,7 @@
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The view context.</param>
         /// <param name="settings">The optional popup settings.</param>
-        public virtual void ShowPopup(object rootModel, object context = null, IDictionary<string, object> settings = null) {
+        public virtual async void ShowPopup(object rootModel, object context = null, IDictionary<string, object> settings = null) {
             var popup = CreatePopup(rootModel, settings);
             var view = ViewLocator.LocateForModel(rootModel, popup, context);
 
@@ -92,10 +92,10 @@
 
             ViewModelBinder.Bind(rootModel, popup, null);
 			Action.SetTargetWithoutContext(view, rootModel);
-
-            var activatable = rootModel as IActivate;
-            if (activatable != null) {
-                activatable.Activate();
+            
+            if (rootModel is IActivate activator)
+            {
+                await activator.ActivateAsync();
             }
 
             var deactivator = rootModel as IDeactivate;
@@ -226,9 +226,9 @@
 
             ApplySettings(view, settings);
 
-            var activatable = rootModel as IActivate;
-            if (activatable != null) {
-                activatable.Activate();
+            if (rootModel is IActivate activator)
+            {
+                activator.ActivateAsync();
             }
 
             var deactivatable = rootModel as IDeactivate;
@@ -285,9 +285,9 @@
                 this.model = model;
                 this.view = view;
 
-                var activatable = model as IActivate;
-                if (activatable != null) {
-                    activatable.Activate();
+                if (model is IActivate activator)
+                {
+                    activator.ActivateAsync();
                 }
 
                 var deactivatable = model as IDeactivate;
