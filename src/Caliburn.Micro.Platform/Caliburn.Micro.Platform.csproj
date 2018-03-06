@@ -63,13 +63,11 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0'">
     <Compile Include="Platforms\UWP\*.cs" />
-    <Content Include="Platforms\UWP\Caliburn.Micro.Platform.rd.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+	<EmbeddedResource Include="Platforms\UWP\Caliburn.Micro.Platform.rd.xml" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid403'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid43'">
     <Compile Remove="*.cs" />
     <Compile Include="Platforms\Android\*.cs" />
     <Compile Include="ViewModelLocator.cs" />
