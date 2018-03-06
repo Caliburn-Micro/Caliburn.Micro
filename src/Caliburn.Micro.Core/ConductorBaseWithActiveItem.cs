@@ -46,7 +46,7 @@ namespace Caliburn.Micro
                 await ScreenExtensions.TryActivateAsync(newItem, cancellationToken);
 
             _activeItem = newItem;
-            NotifyOfPropertyChange();
+            NotifyOfPropertyChange(nameof(ActiveItem));
             OnActivationProcessed(_activeItem, true);
         }
 
