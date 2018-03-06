@@ -12,9 +12,9 @@ namespace Features.CrossPlatform.Views
 
 	    private ConductorViewModel ViewModel => (ConductorViewModel) BindingContext;
 
-	    public void OnAddTab(object sender, EventArgs e)
+	    public async void OnAddTab(object sender, EventArgs e)
 	    {
-	        ViewModel.AddTab();
+	        await ViewModel.AddTabAsync();
 	    }
 
         public void OnCloseTab(object sender, EventArgs e)
