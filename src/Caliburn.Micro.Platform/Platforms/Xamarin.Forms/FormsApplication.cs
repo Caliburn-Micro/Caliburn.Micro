@@ -62,7 +62,6 @@ namespace Caliburn.Micro.Xamarin.Forms
 
             RootNavigationPage = CreateApplicationPage();
             PrepareViewFirst(RootNavigationPage);
-            MainPage = RootNavigationPage;
         }
 
         /// <summary>
@@ -88,6 +87,8 @@ namespace Caliburn.Micro.Xamarin.Forms
             var navigationService = IoC.Get<INavigationService>();
 
             navigationService.NavigateToViewAsync(viewType);
+
+            MainPage = RootNavigationPage;
         }
 
         /// <summary>
