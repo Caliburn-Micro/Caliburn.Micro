@@ -16,6 +16,11 @@
         public string DefaultSubNamespaceForViewModels = "ViewModels";
 
         /// <summary>
+        /// The default subnamespace for DesignViewModels. Used for creating default subnamespace mappings. Defaults to "DesignViewModels".
+        /// </summary>
+        public string DefaultSubNamespaceForDesignViewModels = "DesignViewModels";
+
+        /// <summary>
         /// Flag to indicate whether or not the name of the Type should be transformed when adding a type mapping. Defaults to true.
         /// </summary>
         public bool UseNameSuffixesInMappings = true;
@@ -35,6 +40,12 @@
         /// Default values are "View", "Page"
         /// </summary>
         public List<string> ViewSuffixList = new List<string>(new[] { "View", "Page" });
+
+        /// <summary>
+        /// List of design ViewModels suffixes for which default type mappings should be created. Applies only when UseNameSuffixesInMappings = true.
+        /// Default values are "ViewModelDesign", "DesignViewModel"
+        /// </summary>
+        public List<string> DesignViewModelSuffixList = new List<string>(new[] { "ViewModelDesign", "DesignViewModel" });
 
         /// <summary>
         /// The name suffix for ViewModels. Applies only when UseNameSuffixesInMappings = true. The default is "ViewModel".
