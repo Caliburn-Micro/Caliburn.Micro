@@ -86,6 +86,10 @@ namespace Caliburn.Micro
             includeViewSuffixInVmNames = config.IncludeViewSuffixInViewModelNames;
 
             SetAllDefaults();
+
+            if (Execute.InDesignMode) {
+                NameTransformer.AddRule("ModelDesign$", string.Empty);
+            }
         }
 
 
