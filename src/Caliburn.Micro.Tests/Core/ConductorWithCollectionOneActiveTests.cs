@@ -35,9 +35,11 @@ namespace Caliburn.Micro.Tests.Core
                 _closeCallback = callback;
             }
 
-            public override void TryClose(bool? dialogResult = null)
+            public override Task TryCloseAsync(bool? dialogResult = null)
             {
                 _closeCallback?.Invoke(IsClosable);
+
+                return Task.CompletedTask;
             }
         }
 
@@ -164,7 +166,7 @@ namespace Caliburn.Micro.Tests.Core
         }
 
         [Fact] // See http://caliburnmicro.codeplex.com/discussions/430917
-        public void TryCloseStressTest()
+        public async Task TryCloseStressTest()
         {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             var conducted = Enumerable.Range(0, 10000)
@@ -195,8 +197,8 @@ namespace Caliburn.Micro.Tests.Core
             });
             Assert.False(finished);
 
-            defered1.TryClose();
-            defered2.TryClose();
+            await defered1.TryCloseAsync();
+            await defered2.TryCloseAsync();
             Assert.True(finished);
         }
     }
