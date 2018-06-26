@@ -84,7 +84,7 @@ namespace Caliburn.Micro
                 /// </summary>
                 /// <param name="item">The item to close.</param>
                 /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
-                public override void DeactivateItem(T item, bool close)
+                public override async void DeactivateItem(T item, bool close)
                 {
                     if (item == null)
                         return;
@@ -92,11 +92,12 @@ namespace Caliburn.Micro
                     if (!close)
                         ScreenExtensions.TryDeactivate(item, false);
                     else
-                        CloseStrategy.Execute(new[] {item}, (canClose, closable) =>
-                        {
-                            if (canClose)
-                                CloseItemCore(item);
-                        });
+                    {
+                        var closeResult = await CloseStrategy.ExecuteAsync(new[] { item }, CancellationToken.None);
+
+                        if (closeResult.CloseCanOccur)
+                            CloseItemCore(item);
+                    }
                 }
 
                 private void CloseItemCore(T item)
@@ -139,39 +140,39 @@ namespace Caliburn.Micro
                 /// <summary>
                 /// Called to check whether or not this instance can close.
                 /// </summary>
-                /// <param name="callback">The implementor calls this action with the result of the close check.</param>
-                public override void CanClose(Action<bool> callback)
+                public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken)
                 {
-                    CloseStrategy.Execute(_items.ToList(), (canClose, closable) =>
+                    var closeResult = await CloseStrategy.ExecuteAsync(_items.ToList(), cancellationToken);
+
+                    if (!closeResult.CloseCanOccur && closeResult.Children.Any())
                     {
-                        if (!canClose && closable.Any())
+                        var closable = closeResult.Children;
+
+                        if (closable.Contains(ActiveItem))
                         {
-                            if (closable.Contains(ActiveItem))
+                            var list = _items.ToList();
+                            var next = ActiveItem;
+                            do
                             {
-                                var list = _items.ToList();
-                                var next = ActiveItem;
-                                do
-                                {
-                                    var previous = next;
-                                    next = DetermineNextItemToActivate(list, list.IndexOf(previous));
-                                    list.Remove(previous);
-                                } while (closable.Contains(next));
+                                var previous = next;
+                                next = DetermineNextItemToActivate(list, list.IndexOf(previous));
+                                list.Remove(previous);
+                            } while (closable.Contains(next));
 
-                                var previousActive = ActiveItem;
-                                ChangeActiveItemAsync(next, true); // Temporary lack of await till we migration ICloseStrategy
-                                _items.Remove(previousActive);
+                            var previousActive = ActiveItem;
+                            await ChangeActiveItemAsync(next, true);
+                            _items.Remove(previousActive);
 
-                                var stillToClose = closable.ToList();
-                                stillToClose.Remove(previousActive);
-                                closable = stillToClose;
-                            }
-
-                            closable.OfType<IDeactivate>().Apply(x => x.Deactivate(true));
-                            _items.RemoveRange(closable);
+                            var stillToClose = closable.ToList();
+                            stillToClose.Remove(previousActive);
+                            closable = stillToClose;
                         }
 
-                        callback(canClose);
-                    });
+                        closable.OfType<IDeactivate>().Apply(x => x.Deactivate(true));
+                        _items.RemoveRange(closable);
+                    }
+
+                    return closeResult.CloseCanOccur;
                 }
 
                 /// <summary>

@@ -23,13 +23,16 @@ namespace Caliburn.Micro
                 return;
             }
 
-            CloseStrategy.Execute(new[] {ActiveItem}, (canClose, items) =>
+            var closeResult = await CloseStrategy.ExecuteAsync(new[] { ActiveItem }, cancellationToken);
+
+            if (closeResult.CloseCanOccur)
             {
-                if (canClose)
-                    ChangeActiveItemAsync(item, true, cancellationToken); // Temporary lack of await till we migration ICloseStrategy
-                else
-                    OnActivationProcessed(item, false);
-            });
+                await ChangeActiveItemAsync(item, true, cancellationToken);
+            }
+            else
+            {
+                OnActivationProcessed(item, false);
+            }
         }
 
         /// <summary>
@@ -37,25 +40,27 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="item">The item to close.</param>
         /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
-        public override void DeactivateItem(T item, bool close)
+        public override async void DeactivateItem(T item, bool close)
         {
             if (item == null || !item.Equals(ActiveItem))
                 return;
 
-            CloseStrategy.Execute(new[] {ActiveItem}, (canClose, items) =>
+            var closeResult = await CloseStrategy.ExecuteAsync(new[] { ActiveItem }, CancellationToken.None);
+
+            if (closeResult.CloseCanOccur)
             {
-                if (canClose)
-                    ChangeActiveItemAsync(default(T), close); // Temporary lack of await till we migration ICloseStrategy
-            });
+                await ChangeActiveItemAsync(default(T), close);
+            }
         }
 
         /// <summary>
         /// Called to check whether or not this instance can close.
         /// </summary>
-        /// <param name="callback">The implementor calls this action with the result of the close check.</param>
-        public override void CanClose(Action<bool> callback)
+        public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken)
         {
-            CloseStrategy.Execute(new[] {ActiveItem}, (canClose, items) => callback(canClose));
+            var closeResult = await CloseStrategy.ExecuteAsync(new[] { ActiveItem }, cancellationToken);
+
+            return closeResult.CloseCanOccur;
         }
 
         /// <summary>

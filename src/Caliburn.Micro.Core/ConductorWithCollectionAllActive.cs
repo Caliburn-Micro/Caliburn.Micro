@@ -87,18 +87,17 @@ namespace Caliburn.Micro
                 /// Called to check whether or not this instance can close.
                 /// </summary>
                 /// <param name="callback">The implementor calls this action with the result of the close check.</param>
-                public override void CanClose(Action<bool> callback)
+                public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken)
                 {
-                    CloseStrategy.Execute(_items.ToList(), (canClose, closable) =>
-                    {
-                        if (!canClose && closable.Any())
-                        {
-                            closable.OfType<IDeactivate>().Apply(x => x.Deactivate(true));
-                            _items.RemoveRange(closable);
-                        }
+                    var closeResult = await CloseStrategy.ExecuteAsync(_items.ToList(), cancellationToken);
 
-                        callback(canClose);
-                    });
+                    if (!closeResult.CloseCanOccur && closeResult.Children.Any())
+                    {
+                        closeResult.Children.OfType<IDeactivate>().Apply(x => x.Deactivate(true));
+                        _items.RemoveRange(closeResult.Children);
+                    }
+
+                    return closeResult.CloseCanOccur;
                 }
 
                 /// <summary>
@@ -137,17 +136,18 @@ namespace Caliburn.Micro
                 /// </summary>
                 /// <param name="item">The item to close.</param>
                 /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
-                public override void DeactivateItem(T item, bool close)
+                public override async void DeactivateItem(T item, bool close)
                 {
                     if (item == null)
                         return;
 
                     if (close)
-                        CloseStrategy.Execute(new[] {item}, (canClose, closable) =>
-                        {
-                            if (canClose)
-                                CloseItemCore(item);
-                        });
+                    {
+                        var closeResult = await CloseStrategy.ExecuteAsync(new[] { item }, CancellationToken.None);
+
+                        if (closeResult.CloseCanOccur)
+                            CloseItemCore(item);
+                    }
                     else
                         ScreenExtensions.TryDeactivate(item, false);
                 }
