@@ -146,9 +146,9 @@ namespace Caliburn.Micro
         /// Called to check whether or not this instance can close.
         /// </summary>
         /// <param name = "callback">The implementor calls this action with the result of the close check.</param>
-        public virtual void CanClose(Action<bool> callback)
+        public virtual Task<bool> CanCloseAsync(CancellationToken cancellationToken)
         {
-            callback(true);
+            return Task.FromResult(true);
         }
 
         /// <summary>
