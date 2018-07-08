@@ -14,32 +14,15 @@ namespace Caliburn.Micro.Tests.Core
             public bool IsClosed { get; private set; }
             public bool IsClosable { get; set; }
 
-            public override void CanClose(Action<bool> callback)
+            public override Task<bool> CanCloseAsync(CancellationToken cancellationToken)
             {
-                callback(IsClosable);
+                return Task.FromResult(IsClosable);
             }
 
             protected override void OnDeactivate(bool close)
             {
                 base.OnDeactivate(close);
                 IsClosed = close;
-            }
-        }
-
-        private class DeferredCloseScreen : StateScreen
-        {
-            private Action<bool> _closeCallback;
-
-            public override void CanClose(Action<bool> callback)
-            {
-                _closeCallback = callback;
-            }
-
-            public override Task TryCloseAsync(bool? dialogResult = null)
-            {
-                _closeCallback?.Invoke(IsClosable);
-
-                return Task.CompletedTask;
             }
         }
 
@@ -61,8 +44,11 @@ namespace Caliburn.Micro.Tests.Core
                 IsClosable = true
             };
             conductor.Items.Add(conducted);
+
             await ((IActivate)conductor).ActivateAsync(CancellationToken.None);
-            conductor.CanClose(Assert.True);
+            var canClose =await conductor.CanCloseAsync(CancellationToken.None);
+
+            Assert.True(canClose);
             Assert.False(conducted.IsClosed);
         }
 
@@ -79,7 +65,9 @@ namespace Caliburn.Micro.Tests.Core
             };
             conductor.Items.Add(conducted);
             await((IActivate)conductor).ActivateAsync(CancellationToken.None);
-            conductor.CanClose(Assert.True);
+            var canClose = await conductor.CanCloseAsync(CancellationToken.None);
+
+            Assert.True(canClose);
             Assert.True(conducted.IsClosed);
         }
 
@@ -163,43 +151,6 @@ namespace Caliburn.Micro.Tests.Core
             conductor.Items[0] = conducted2;
             Assert.NotEqual(conductor, conducted.Parent);
             Assert.Equal(conductor, conducted2.Parent);
-        }
-
-        [Fact] // See http://caliburnmicro.codeplex.com/discussions/430917
-        public async Task TryCloseStressTest()
-        {
-            var conductor = new Conductor<IScreen>.Collection.OneActive();
-            var conducted = Enumerable.Range(0, 10000)
-                .Select(i => new Screen
-                {
-                    DisplayName = i.ToString(CultureInfo.InvariantCulture)
-                });
-            conductor.Items.AddRange(conducted);
-
-            var defered1 = new DeferredCloseScreen
-            {
-                DisplayName = "d1",
-                IsClosable = true
-            };
-            var defered2 = new DeferredCloseScreen
-            {
-                DisplayName = "d2",
-                IsClosable = true
-            };
-            conductor.Items.Insert(0, defered1);
-            conductor.Items.Insert(500, defered2);
-
-            var finished = false;
-            conductor.CanClose(canClose =>
-            {
-                finished = true;
-                Assert.True(canClose);
-            });
-            Assert.False(finished);
-
-            await defered1.TryCloseAsync();
-            await defered2.TryCloseAsync();
-            Assert.True(finished);
         }
     }
 }
