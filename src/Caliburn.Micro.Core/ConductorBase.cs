@@ -24,9 +24,9 @@ namespace Caliburn.Micro
             set => _closeStrategy = value;
         }
 
-        void IConductor.DeactivateItem(object item, bool close)
+        Task IConductor.DeactivateItemAsync(object item, bool close, CancellationToken cancellationToken)
         {
-            DeactivateItem((T)item, close);
+            return DeactivateItemAsync((T)item, close, cancellationToken);
         }
 
         IEnumerable IParent.GetChildren()
@@ -62,7 +62,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="item">The item to close.</param>
         /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
-        public abstract void DeactivateItem(T item, bool close);
+        public abstract Task DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken);
 
         /// <summary>
         /// Called by a subclass when an activation needs processing.

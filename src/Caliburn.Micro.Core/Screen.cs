@@ -116,7 +116,7 @@ namespace Caliburn.Micro
             });
         }
 
-        void IDeactivate.Deactivate(bool close)
+        async Task IDeactivate.DeactivateAsync(bool close, CancellationToken cancellationToken)
         {
             if (IsActive || IsInitialized && close)
             {
@@ -127,7 +127,7 @@ namespace Caliburn.Micro
 
                 IsActive = false;
                 Log.Info("Deactivating {0}.", this);
-                OnDeactivate(close);
+                await OnDeactivateAsync(close, cancellationToken);
 
                 Deactivated?.Invoke(this, new DeactivationEventArgs
                 {
@@ -183,8 +183,9 @@ namespace Caliburn.Micro
         /// Called when deactivating.
         /// </summary>
         /// <param name = "close">Indicates whether this instance will be closed.</param>
-        protected virtual void OnDeactivate(bool close)
+        protected virtual Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
+            return Task.FromResult(true);
         }
     }
 }

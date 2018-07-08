@@ -19,9 +19,9 @@ namespace Caliburn.Micro.Tests.Core
                 return Task.FromResult(IsClosable);
             }
 
-            protected override void OnDeactivate(bool close)
+            protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
             {
-                base.OnDeactivate(close);
+                await base.OnDeactivateAsync(close, cancellationToken);
                 IsClosed = close;
             }
         }

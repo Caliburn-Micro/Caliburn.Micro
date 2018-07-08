@@ -38,7 +38,7 @@ namespace Caliburn.Micro
         /// <param name="cancellationToken"></param>
         protected virtual async Task ChangeActiveItemAsync(T newItem, bool closePrevious, CancellationToken cancellationToken)
         {
-            ScreenExtensions.TryDeactivate(_activeItem, closePrevious);
+            await ScreenExtensions.TryDeactivateAsync(_activeItem, closePrevious, cancellationToken);
 
             newItem = EnsureItem(newItem);
 

@@ -184,7 +184,7 @@ namespace Caliburn.Micro {
 
             if (view.DataContext is IDeactivate deactivator)
             {
-                deactivator.Deactivate(CanCloseOnNavigating(sender, e));
+                await deactivator.DeactivateAsync(CanCloseOnNavigating(sender, e), CancellationToken.None);
             }
         }
 

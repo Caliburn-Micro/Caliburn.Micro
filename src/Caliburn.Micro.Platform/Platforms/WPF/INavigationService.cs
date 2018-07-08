@@ -146,7 +146,7 @@ namespace Caliburn.Micro
             // e.g. When the app is activated with Fast Switch
             if (deactivator != null && frame.CurrentSource != e.Uri)
             {
-                deactivator.Deactivate(CanCloseOnNavigating(sender, e));
+                await deactivator.DeactivateAsync(CanCloseOnNavigating(sender, e), CancellationToken.None);
             }
         }
 

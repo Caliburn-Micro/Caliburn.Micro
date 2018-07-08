@@ -101,7 +101,7 @@
 
             var deactivator = rootModel as IDeactivate;
             if (deactivator != null) {
-                popup.Closed += delegate { deactivator.Deactivate(true); };
+                popup.Closed += delegate { deactivator.DeactivateAsync(true); };
             }
 
             popup.IsOpen = true;
@@ -234,7 +234,7 @@
 
             var deactivatable = rootModel as IDeactivate;
             if (deactivatable != null) {
-                view.Unloaded += (s, e) => deactivatable.Deactivate(true);
+                view.Unloaded += (s, e) => deactivatable.DeactivateAsync(true);
             }
 
             return view;
@@ -313,7 +313,7 @@
                 var deactivatable = (IDeactivate)model;
 
                 deactivatingFromView = true;
-                deactivatable.Deactivate(true);
+                deactivatable.DeactivateAsync(true);
                 deactivatingFromView = false;
             }
 

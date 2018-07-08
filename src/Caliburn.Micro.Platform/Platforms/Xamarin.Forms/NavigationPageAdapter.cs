@@ -26,26 +26,26 @@
             navigationPage.PoppedToRoot += OnPoppedToRoot;
         }
 
-        private void OnPoppedToRoot(object sender, NavigationEventArgs e)
+        private async void OnPoppedToRoot(object sender, NavigationEventArgs e)
         {
-            DeactivateView(currentPage);
-            ActivateView(navigationPage.CurrentPage);
+            await DeactivateViewAsync(currentPage);
+            await ActivateViewAsync(navigationPage.CurrentPage);
 
             currentPage = navigationPage.CurrentPage;
         }
 
-        private void OnPopped(object sender, NavigationEventArgs e)
+        private async void OnPopped(object sender, NavigationEventArgs e)
         {
-            DeactivateView(currentPage);
-            ActivateView(navigationPage.CurrentPage);
+            await DeactivateViewAsync(currentPage);
+            await ActivateViewAsync(navigationPage.CurrentPage);
 
             currentPage = navigationPage.CurrentPage;
         }
 
-        private void OnPushed(object sender, NavigationEventArgs e)
+        private async void OnPushed(object sender, NavigationEventArgs e)
         {
-            DeactivateView(currentPage);
-            ActivateView(navigationPage.CurrentPage);
+            await DeactivateViewAsync(currentPage);
+            await ActivateViewAsync(navigationPage.CurrentPage);
 
             currentPage = navigationPage.CurrentPage;
         }
@@ -78,17 +78,19 @@
         /// Apply logic to deactivate the active view when it is popped off the navigation stack
         /// </summary>
         /// <param name="view">the previously active view</param>
-        protected virtual void DeactivateView(BindableObject view)
+        protected virtual async Task DeactivateViewAsync(BindableObject view)
         {
-            var deactivate = view?.BindingContext as IDeactivate;
-            deactivate?.Deactivate(false);
+            if (view?.BindingContext is IDeactivate deactivate)
+            {
+                await deactivate.DeactivateAsync(false);
+            }
         }
 
         /// <summary>
         /// Apply logic to activate a view when it is popped onto the navigation stack
         /// </summary>
         /// <param name="view">the view to activate</param>
-        protected virtual async void ActivateView(BindableObject view)
+        protected virtual async Task ActivateViewAsync(BindableObject view)
         {
             if (view?.BindingContext is IActivate activator)
             {

@@ -40,7 +40,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="item">The item to close.</param>
         /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
-        public override async void DeactivateItem(T item, bool close)
+        public override async Task DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken)
         {
             if (item == null || !item.Equals(ActiveItem))
                 return;
@@ -75,9 +75,9 @@ namespace Caliburn.Micro
         /// Called when deactivating.
         /// </summary>
         /// <param name="close">Indicates whether this instance will be closed.</param>
-        protected override void OnDeactivate(bool close)
+        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
-            ScreenExtensions.TryDeactivate(ActiveItem, close);
+            return ScreenExtensions.TryDeactivateAsync(ActiveItem, close, cancellationToken);
         }
 
         /// <summary>

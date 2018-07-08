@@ -33,11 +33,10 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="potentialDeactivatable">The potential deactivatable.</param>
         /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
-        public static void TryDeactivate(object potentialDeactivatable, bool close)
+        /// /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        public static Task TryDeactivateAsync(object potentialDeactivatable, bool close, CancellationToken cancellationToken)
         {
-            var deactivator = potentialDeactivatable as IDeactivate;
-            if (deactivator != null)
-                deactivator.Deactivate(close);
+            return potentialDeactivatable is IDeactivate deactivator ? deactivator.DeactivateAsync(close, cancellationToken): Task.FromResult(true);
         }
 
         /// <summary>
@@ -45,9 +44,9 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="conductor">The conductor.</param>
         /// <param name="item">The item to close.</param>
-        public static void CloseItem(this IConductor conductor, object item)
+        public static Task CloseItemAsync(this IConductor conductor, object item, CancellationToken cancellationToken)
         {
-            conductor.DeactivateItem(item, true);
+            return conductor.DeactivateItemAsync(item, true, cancellationToken);
         }
 
         /// <summary>
@@ -55,9 +54,9 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="conductor">The conductor.</param>
         /// <param name="item">The item to close.</param>
-        public static void CloseItem<T>(this ConductorBase<T> conductor, T item) where T : class
+        public static Task CloseItemAsync<T>(this ConductorBase<T> conductor, T item, CancellationToken cancellationToken) where T : class
         {
-            conductor.DeactivateItem(item, true);
+            return conductor.DeactivateItemAsync(item, true, cancellationToken);
         }
 
         ///<summary>
@@ -96,7 +95,7 @@ namespace Caliburn.Micro
                 if (deactivatable == null)
                     ((IDeactivate)s).Deactivated -= handler;
                 else
-                    deactivatable.Deactivate(e.WasClosed);
+                    deactivatable.DeactivateAsync(e.WasClosed, CancellationToken.None);
             };
             parent.Deactivated += handler;
         }
