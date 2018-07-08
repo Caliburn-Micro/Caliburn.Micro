@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -114,7 +115,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="sender"> The event sender. </param>
         /// <param name="e"> The event args. </param>
-        protected virtual void OnNavigating(object sender, NavigatingCancelEventArgs e)
+        protected virtual async void OnNavigating(object sender, NavigatingCancelEventArgs e)
         {
             ExternalNavigatingHandler(sender, e);
             if (e.Cancel)
@@ -128,20 +129,11 @@ namespace Caliburn.Micro
                 return;
             }
 
-            var guard = fe.DataContext as IGuardClose;
-            if (guard != null && !e.Uri.IsAbsoluteUri)
+            if (fe.DataContext is IGuardClose guard)
             {
-                var shouldCancel = false;
-                var runningAsync = true;
-                guard.CanClose(result =>
-                {
-                    runningAsync = false;
-                    shouldCancel = !result;
-                });
-                if (runningAsync)
-                    throw new NotSupportedException("Async CanClose is not supported.");
+                var canClose = await guard.CanCloseAsync(CancellationToken.None);
 
-                if (shouldCancel)
+                if (!canClose)
                 {
                     e.Cancel = true;
                     return;

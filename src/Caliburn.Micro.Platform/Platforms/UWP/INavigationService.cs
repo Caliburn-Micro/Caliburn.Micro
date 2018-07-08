@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Core;
@@ -161,35 +162,28 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name="sender"> The event sender. </param>
         /// <param name="e"> The event args. </param>
-        protected virtual void OnNavigating(object sender, NavigatingCancelEventArgs e) {
+        protected virtual async void OnNavigating(object sender, NavigatingCancelEventArgs e) {
             ExternalNavigatingHandler(sender, e);
 
             if (e.Cancel)
                 return;
 
-            var view = frame.Content as FrameworkElement;
-
-            if (view == null)
+            if (!(frame.Content is FrameworkElement view))
                 return;
 
-            var guard = view.DataContext as IGuardClose;
+            if (view.DataContext is IGuardClose guard)
+            {
+                var canClose = await guard.CanCloseAsync(CancellationToken.None);
 
-            if (guard != null) {
-                var shouldCancel = false;
-                var runningAsync = true;
-                guard.CanClose(result => { runningAsync = false; shouldCancel = !result; });
-                if (runningAsync)
-                    throw new NotSupportedException("Async CanClose is not supported.");
-
-                if (shouldCancel) {
+                if (!canClose)
+                {
                     e.Cancel = true;
                     return;
                 }
             }
 
-            var deactivator = view.DataContext as IDeactivate;
-
-            if (deactivator != null) {
+            if (view.DataContext is IDeactivate deactivator)
+            {
                 deactivator.Deactivate(CanCloseOnNavigating(sender, e));
             }
         }

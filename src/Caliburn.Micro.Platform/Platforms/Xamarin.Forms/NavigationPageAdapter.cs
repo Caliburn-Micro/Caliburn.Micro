@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Threading;
     using System.Threading.Tasks;
     using global::Xamarin.Forms;
 
@@ -100,12 +101,14 @@
         /// </summary>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        public Task GoBackAsync(bool animated = true) {
-            
-            if (!CanClose())
-                return Task.FromResult(false);
+        public async Task GoBackAsync(bool animated = true) {
 
-            return navigationPage.PopAsync(animated);
+            var canClose = await CanCloseAysnc();
+
+            if (!canClose)
+                return;
+
+            await navigationPage.PopAsync(animated);
         }
 
         /// <summary>
@@ -113,12 +116,14 @@
         /// </summary>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        public Task GoBackToRootAsync(bool animated = true) 
+        public async Task GoBackToRootAsync(bool animated = true) 
         {
-            if (!CanClose())
-                return Task.FromResult(false);
+            var canClose = await CanCloseAysnc();
 
-            return navigationPage.PopToRootAsync(animated);
+            if (!canClose)
+                return;
+
+            await navigationPage.PopToRootAsync(animated);
         }
 
         /// <summary>
@@ -128,14 +133,16 @@
         /// <param name="parameter">The paramter to pass to the view model</param>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        public Task NavigateToViewModelAsync(Type viewModelType, object parameter = null, bool animated = true)
+        public async Task NavigateToViewModelAsync(Type viewModelType, object parameter = null, bool animated = true)
         {
-            if (!CanClose())
-                return Task.FromResult(false);
+            var canClose = await CanCloseAysnc();
+
+            if (!canClose)
+                return;
 
             var view = ViewLocator.LocateForModelType(viewModelType, null, null);
 
-            return PushAsync(view, parameter, animated);
+            await PushAsync(view, parameter, animated);
         }
 
         /// <summary>
@@ -145,12 +152,14 @@
         /// <param name="parameter">The paramter to pass to the view model</param>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        public Task NavigateToViewModelAsync<T>(object parameter = null, bool animated = true)
+        public async Task NavigateToViewModelAsync<T>(object parameter = null, bool animated = true)
         {
-            if (!CanClose())
-                return Task.FromResult(false);
+            var canClose = await CanCloseAysnc();
 
-           return NavigateToViewModelAsync(typeof(T), parameter, animated);
+            if (!canClose)
+                return;
+
+            await NavigateToViewModelAsync(typeof(T), parameter, animated);
         }
 
         /// <summary>
@@ -160,14 +169,16 @@
         /// <param name="parameter">The paramter to pass to the view model</param>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        public Task NavigateToViewAsync(Type viewType, object parameter = null, bool animated = true)
+        public async Task NavigateToViewAsync(Type viewType, object parameter = null, bool animated = true)
         {
-            if (!CanClose())
-                return Task.FromResult(false);
+            var canClose = await CanCloseAysnc();
+
+            if (!canClose)
+                return;
 
             var view = ViewLocator.GetOrCreateViewType(viewType);
 
-            return PushAsync(view, parameter, animated);
+            await PushAsync(view, parameter, animated);
         }
 
         /// <summary>
@@ -177,12 +188,14 @@
         /// <param name="parameter">The paramter to pass to the view model</param>
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
-        public Task NavigateToViewAsync<T>(object parameter = null, bool animated = true)
+        public async Task NavigateToViewAsync<T>(object parameter = null, bool animated = true)
         {
-            if (!CanClose())
-                return Task.FromResult(false);
+            var canClose = await CanCloseAysnc();
 
-            return NavigateToViewAsync(typeof(T), parameter, animated);
+            if (!canClose)
+                return;
+
+            await NavigateToViewAsync(typeof(T), parameter, animated);
         }
 
         private Task PushAsync(Element view, object parameter, bool animated)
@@ -263,20 +276,15 @@
             }
         }
 
-        private bool CanClose() {
+        private async Task<bool> CanCloseAysnc() {
             var view = navigationPage.CurrentPage;
 
-            var guard = view?.BindingContext as IGuardClose;
-
-            if (guard != null)
+            if (view?.BindingContext is IGuardClose guard)
             {
-                var shouldCancel = false;
-                var runningAsync = true;
-                guard.CanClose(result => { runningAsync = false; shouldCancel = !result; });
-                if (runningAsync)
-                    throw new NotSupportedException("Async CanClose is not supported.");
+                var canClose = await guard.CanCloseAsync(CancellationToken.None);
 
-                if (shouldCancel) {
+                if (!canClose)
+                {
                     return false;
                 }
             }

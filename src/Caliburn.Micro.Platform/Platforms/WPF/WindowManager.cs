@@ -8,6 +8,7 @@
     using System.Windows.Data;
     using System.Linq;
     using System.Windows.Navigation;
+    using System.Threading;
 
     /// <summary>
     /// A service that manages windows.
@@ -277,7 +278,6 @@
         class WindowConductor {
             bool deactivatingFromView;
             bool deactivateFromViewModel;
-            bool actuallyClosing;
             readonly Window view;
             readonly object model;
 
@@ -329,45 +329,25 @@
                 }
 
                 deactivateFromViewModel = true;
-                actuallyClosing = true;
                 view.Close();
-                actuallyClosing = false;
                 deactivateFromViewModel = false;
             }
 
-            void Closing(object sender, CancelEventArgs e) {
+            async void Closing(object sender, CancelEventArgs e) {
                 if (e.Cancel) {
                     return;
                 }
 
                 var guard = (IGuardClose)model;
 
-                if (actuallyClosing) {
-                    actuallyClosing = false;
-                    return;
-                }
+                var canClose = await guard.CanCloseAsync(CancellationToken.None);
 
-                bool runningAsync = false, shouldEnd = false;
-
-                guard.CanClose(canClose => {
-                    Execute.OnUIThread(() => {
-                        if(runningAsync && canClose) {
-                            actuallyClosing = true;
-                            view.Close();
-                        }
-                        else {
-                            e.Cancel = !canClose;
-                        }
-
-                        shouldEnd = true;
-                    });
+                Execute.OnUIThread(() => {
+                    if (canClose)
+                        view.Close();
                 });
 
-                if (shouldEnd) {
-                    return;
-                }
-
-                runningAsync = e.Cancel = true;
+                e.Cancel = !canClose;
             }
         }
     }
