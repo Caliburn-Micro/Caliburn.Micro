@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
 #if WINDOWS_UWP
     using System.Reflection;
@@ -200,7 +201,8 @@
             if (child != null) {
                 var conductor = child.Parent as IConductor;
                 if (conductor != null) {
-                    return () => conductor.CloseItem(viewModel);
+                    // ToDo: Fix CancellationToken.None
+                    return () => conductor.CloseItemAsync(viewModel, CancellationToken.None);
                 }
             }
 
