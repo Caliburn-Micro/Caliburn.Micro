@@ -158,7 +158,9 @@ namespace Caliburn.Micro
         /// <param name="dialogResult">The dialog result.</param>
         public virtual Task TryCloseAsync(bool? dialogResult = null)
         {
-            PlatformProvider.Current.GetViewCloseAction(this, Views.Values, dialogResult).OnUIThread();
+            var closeAction = PlatformProvider.Current.GetViewCloseAction(this, Views.Values, dialogResult);
+
+            Execute.OnUIThreadAsync(async () => await closeAction(CancellationToken.None));
 
             return Task.FromResult(true);
         }

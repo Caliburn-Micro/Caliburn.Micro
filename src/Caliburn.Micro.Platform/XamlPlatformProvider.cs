@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
 #if WINDOWS_UWP
     using System.Reflection;
@@ -195,12 +196,13 @@
         /// An <see cref="Action" /> to close the view model.
         /// </returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public virtual System.Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult) {
+        public virtual Func<CancellationToken, Task> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
+        {
             var child = viewModel as IChild;
             if (child != null) {
                 var conductor = child.Parent as IConductor;
                 if (conductor != null) {
-                    return () => conductor.CloseItem(viewModel);
+                    return ct => conductor.CloseItemAsync(viewModel, ct);
                 }
             }
 
@@ -212,7 +214,7 @@
                 var closeMethod = viewType.GetMethod("Close");
 #endif
                 if (closeMethod != null)
-                    return () => {
+                    return ct => {
 #if !WINDOWS_UWP
                         var isClosed = false;
                         if (dialogResult != null) {
@@ -229,6 +231,7 @@
 #else
                         closeMethod.Invoke(contextualView, null);
 #endif
+                        return Task.FromResult(true);
                     };
 
 #if WINDOWS_UWP
@@ -237,11 +240,20 @@
                 var isOpenProperty = viewType.GetProperty("IsOpen");
 #endif
                 if (isOpenProperty != null) {
-                    return () => isOpenProperty.SetValue(contextualView, false, null);
+                    return ct =>
+                    {
+                        isOpenProperty.SetValue(contextualView, false, null);
+
+                        return Task.FromResult(true);
+                    };
                 }
             }
 
-            return () => LogManager.GetLog(typeof(Screen)).Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
+            return ct =>
+            {
+                LogManager.GetLog(typeof(Screen)).Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
+                return Task.FromResult(true);
+            };
         }
     }
 }

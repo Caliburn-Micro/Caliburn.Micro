@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -84,8 +85,9 @@
         /// <returns>
         /// An <see cref="Action" /> to close the view model.
         /// </returns>
-        public virtual Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult) {
-            return () => { };
+        public virtual Func<CancellationToken, Task> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
+        {
+            return ct => Task.FromResult(true);
         }
     }
 }

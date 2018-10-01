@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -62,6 +63,6 @@ namespace Caliburn.Micro
         public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler) => platformProvider.ExecuteOnLayoutUpdated(view, handler);
 
         /// <inheritdoc />
-        public virtual Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult) => platformProvider.GetViewCloseAction(viewModel, views, dialogResult);
+        public virtual Func<CancellationToken, Task> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult) => platformProvider.GetViewCloseAction(viewModel, views, dialogResult);
     }
 }

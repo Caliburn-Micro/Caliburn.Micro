@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Foundation;
 using UIKit;
@@ -145,7 +146,7 @@ namespace Caliburn.Micro
         /// <param name="views">The associated views.</param>
         /// <param name="dialogResult">The dialog result.</param>
         /// <returns>An <see cref="Action"/> to close the view model.</returns>
-        public virtual Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
+        public virtual Func<CancellationToken, Task> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
         {
             var child = viewModel as IChild;
 
@@ -155,11 +156,15 @@ namespace Caliburn.Micro
 
                 if (conductor != null)
                 {
-                    return () => conductor.CloseItem(viewModel);
+                    return ct => conductor.CloseItemAsync(viewModel, ct);
                 }
             }
 
-            return () => LogManager.GetLog(typeof(Screen)).Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
+            return ct =>
+            {
+                LogManager.GetLog(typeof(Screen)).Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
+                return Task.FromResult(true);
+            };
         }
     }
 }
