@@ -10,6 +10,6 @@ namespace Caliburn.Micro
         /// <summary>
         /// Indicates whether the sender was initialized in addition to being activated.
         /// </summary>
-        public bool WasInitialized;
+        public bool WasInitialized { get; set; }
     }
 }

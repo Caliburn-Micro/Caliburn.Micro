@@ -145,7 +145,8 @@ namespace Caliburn.Micro
         /// <summary>
         /// Called to check whether or not this instance can close.
         /// </summary>
-        /// <param name = "callback">The implementor calls this action with the result of the close check.</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>A task that represents the asynchronous operation and holds the value of the close check..</returns>
         public virtual Task<bool> CanCloseAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(true);
@@ -185,6 +186,8 @@ namespace Caliburn.Micro
         /// Called when deactivating.
         /// </summary>
         /// <param name = "close">Indicates whether this instance will be closed.</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         protected virtual Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
             return Task.FromResult(true);

@@ -35,7 +35,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="newItem">The new item to activate.</param>
         /// <param name="closePrevious">Indicates whether or not to close the previous active item.</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         protected virtual async Task ChangeActiveItemAsync(T newItem, bool closePrevious, CancellationToken cancellationToken)
         {
             await ScreenExtensions.TryDeactivateAsync(_activeItem, closePrevious, cancellationToken);
@@ -50,6 +51,12 @@ namespace Caliburn.Micro
             OnActivationProcessed(_activeItem, true);
         }
 
-        protected Task ChangeActiveItemAsync(T newItem, bool closePrevious) => ChangeActiveItemAsync(newItem, closePrevious, CancellationToken.None);
+        /// <summary>
+        /// Changes the active item.
+        /// </summary>
+        /// <param name="newItem">The new item to activate.</param>
+        /// <param name="closePrevious">Indicates whether or not to close the previous active item.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        protected Task ChangeActiveItemAsync(T newItem, bool closePrevious) => ChangeActiveItemAsync(newItem, closePrevious, default);
     }
 }

@@ -87,7 +87,6 @@
         /// <summary>
         /// Adds a child resolver.
         /// </summary>
-        /// <param name="filter">The type filter.</param>
         /// <param name="resolver">The resolver.</param>
         public static ChildResolver AddChildResolver<T>(Func<T, IEnumerable<DependencyObject>> resolver) where T : DependencyObject
         {

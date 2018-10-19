@@ -1,17 +1,20 @@
-﻿namespace Caliburn.Micro {
-    using System;
+﻿using System;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// Extension methods for <see cref="IResult"/> instances.
     /// </summary>
-    public static class ResultExtensions {
+    public static class ResultExtensions
+    {
         /// <summary>
         /// Adds behavior to the result which is executed when the <paramref name ="result"/> was cancelled.
         /// </summary>
         /// <param name="result">The result to decorate.</param>
         /// <param name="coroutine">The coroutine to execute when <paramref name="result"/> was canceled.</param>
         /// <returns></returns>
-        public static IResult WhenCancelled(this IResult result, Func<IResult> coroutine) {
+        public static IResult WhenCancelled(this IResult result, Func<IResult> coroutine)
+        {
             return new ContinueResultDecorator(result, coroutine);
         }
 
@@ -20,7 +23,8 @@
         /// </summary>
         /// <param name="result">The result to decorate.</param>
         /// <returns></returns>
-        public static IResult OverrideCancel(this IResult result) {
+        public static IResult OverrideCancel(this IResult result)
+        {
             return new OverrideCancelResultDecorator(result);
         }
 
@@ -34,7 +38,8 @@
         /// <returns></returns>
         public static IResult Rescue<TException>(this IResult result, Func<TException, IResult> rescue,
             bool cancelResult = true)
-            where TException : Exception {
+            where TException : Exception
+        {
             return new RescueResultDecorator<TException>(result, rescue, cancelResult);
         }
 
@@ -46,7 +51,8 @@
         /// <param name="cancelResult">Set to true to cancel the result after executing rescue.</param>
         /// <returns></returns>
         public static IResult Rescue(this IResult result, Func<Exception, IResult> rescue,
-            bool cancelResult = true) {
+            bool cancelResult = true)
+        {
             return Rescue<Exception>(result, rescue, cancelResult);
         }
     }

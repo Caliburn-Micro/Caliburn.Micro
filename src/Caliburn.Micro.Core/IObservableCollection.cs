@@ -1,12 +1,14 @@
-﻿namespace Caliburn.Micro {
-    using System.Collections.Generic;
-    using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 
+namespace Caliburn.Micro
+{   
     /// <summary>
     /// Represents a collection that is observable.
     /// </summary>
     /// <typeparam name = "T">The type of elements contained in the collection.</typeparam>
-    public interface IObservableCollection<T> : IList<T>, INotifyPropertyChangedEx, INotifyCollectionChanged {
+    public interface IObservableCollection<T> : IList<T>, INotifyPropertyChangedEx, INotifyCollectionChanged
+    {
         /// <summary>
         ///   Adds the range.
         /// </summary>

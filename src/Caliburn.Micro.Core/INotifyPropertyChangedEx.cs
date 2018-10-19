@@ -1,10 +1,12 @@
-﻿namespace Caliburn.Micro {
-    using System.ComponentModel;
+﻿using System.ComponentModel;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// Extends <see cref = "INotifyPropertyChanged" /> such that the change event can be raised by external parties.
     /// </summary>
-    public interface INotifyPropertyChangedEx : INotifyPropertyChanged {
+    public interface INotifyPropertyChangedEx : INotifyPropertyChanged
+    {
         /// <summary>
         /// Enables/Disables property change notification.
         /// </summary>

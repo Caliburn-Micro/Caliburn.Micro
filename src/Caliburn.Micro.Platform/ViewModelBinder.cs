@@ -1,8 +1,4 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#else
-namespace Caliburn.Micro
-#endif
+﻿namespace Caliburn.Micro
 {
     using System;
     using System.Linq;
@@ -207,11 +203,7 @@ namespace Caliburn.Micro
 
             Log.Info("Binding {0} and {1}.", view, viewModel);
 
-#if XFORMS
-            var noContext = Caliburn.Micro.Xamarin.Forms.Bind.NoContextProperty;
-#else
             var noContext = Caliburn.Micro.Bind.NoContextProperty;
-#endif
 
             if ((bool)view.GetValue(noContext)) {
                 Action.SetTargetWithoutContext(view, viewModel);

@@ -1,20 +1,23 @@
 ﻿#define DEBUG
 
-namespace Caliburn.Micro {
-    using System;
-    using System.Diagnostics;
+using System;
+using System.Diagnostics;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     ///   A simple logger thats logs everything to the debugger.
     /// </summary>
-    public class DebugLog : ILog {
+    public class DebugLog : ILog
+    {
         private readonly string typeName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DebugLog"/> class.
         /// </summary>
         /// <param name="type">The type.</param>
-        public DebugLog(Type type) {
+        public DebugLog(Type type)
+        {
             typeName = type.FullName;
         }
 
@@ -23,7 +26,8 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name="format">A formatted message.</param>
         /// <param name="args">Parameters to be injected into the formatted message.</param>
-        public void Info(string format, params object[] args) {
+        public void Info(string format, params object[] args)
+        {
             Debug.WriteLine("[{1}] INFO: {0}", string.Format(format, args), typeName);
         }
 
@@ -32,7 +36,8 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name="format">A formatted message.</param>
         /// <param name="args">Parameters to be injected into the formatted message.</param>
-        public void Warn(string format, params object[] args) {
+        public void Warn(string format, params object[] args)
+        {
             Debug.WriteLine("[{1}] WARN: {0}", string.Format(format, args), typeName);
         }
 
@@ -40,7 +45,8 @@ namespace Caliburn.Micro {
         /// Logs the exception.
         /// </summary>
         /// <param name="exception">The exception.</param>
-        public void Error(Exception exception) {
+        public void Error(Exception exception)
+        {
             Debug.WriteLine("[{1}] ERROR: {0}", exception, typeName);
         }
     }

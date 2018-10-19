@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Micro.Xamarin.Forms
+﻿namespace Caliburn.Micro
 {
     using System;
     using System.Collections.Generic;
@@ -119,7 +119,7 @@
         {
             UpdateContext();
 
-            FrameworkElement currentElement;
+            UIElement currentElement;
 
             if (context.View == null)
             {
@@ -130,7 +130,7 @@
                     if (Action.HasTargetSet(currentElement))
                         break;
 
-                    currentElement = currentElement.ParentView;
+                    currentElement = currentElement.Parent;
                 }
             }
             else currentElement = context.View as FrameworkElement;
@@ -156,7 +156,7 @@
         /// <summary>
         /// Invokes the action.
         /// </summary>
-        /// <param name="sender"></param>
+        /// <param name="sender">The Visual Element invoking the event</param>
         protected override void Invoke(VisualElement sender)
         {
             Log.Info("Invoking {0}.", this);
@@ -306,8 +306,6 @@
         /// <summary>
         /// Finds the method on the target matching the specified message.
         /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="target">The target.</param>
         /// <returns>The matching method, if available.</returns>
         public static Func<ActionMessage, object, MethodInfo> GetTargetMethod = (message, target) =>
         {
@@ -325,7 +323,7 @@
         {
             var source = context.Source;
 
-            FrameworkElement currentElement = source;
+            UIElement currentElement = source;
 
             while (currentElement != null)
             {
@@ -350,7 +348,7 @@
                     }
                 }
 
-                currentElement = currentElement.ParentView;
+                currentElement = currentElement.Parent;
             }
 
             if (source != null && source.BindingContext != null)
@@ -426,14 +424,14 @@
                 );
         };
 
-        ///  <summary>
-        ///  Try to find a candidate for guard function, having:
+        /// <summary>
+        /// Try to find a candidate for guard function, having:
         /// 		- a name in the form "CanXXX"
         /// 		- no generic parameters
         /// 		- a bool return type
         /// 		- no parameters or a set of parameters corresponding to the action method
-        ///  </summary>
-        ///  <param name="context">The execution context</param>
+        /// </summary>
+        /// <param name="context">The execution context</param>
         /// <param name="possibleGuardNames">Method names to look for.</param>
         /// <returns>A MethodInfo, if found; null otherwise</returns>
         static MethodInfo TryFindGuardMethod(ActionExecutionContext context, IEnumerable<string> possibleGuardNames) {

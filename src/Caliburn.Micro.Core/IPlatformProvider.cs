@@ -1,15 +1,15 @@
-﻿namespace Caliburn.Micro {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// Interface for platform specific operations that need enlightenment.
     /// </summary>
-    public interface IPlatformProvider {
-        #region Execute
-
+    public interface IPlatformProvider
+    {
         /// <summary>
         ///   Indicates whether or not the framework is in design-time mode.
         /// </summary>
@@ -32,10 +32,6 @@
         /// </summary>
         /// <param name = "action">The action to execute.</param>
         void OnUIThread(Action action);
-
-        #endregion
-
-        #region ViewAware
 
         /// <summary>
         /// Used to retrieve the root, non-framework-created view.
@@ -69,9 +65,7 @@
         /// <param name="viewModel">The view model to close.</param>
         /// <param name="views">The associated views.</param>
         /// <param name="dialogResult">The dialog result.</param>
-        /// <returns>An <see cref="Action"/> to close the view model.</returns>
+        /// <returns>An <see cref="Func{T, TResult}"/> to close the view model.</returns>
         Func<CancellationToken, Task> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult);
-
-        #endregion
     }
 }

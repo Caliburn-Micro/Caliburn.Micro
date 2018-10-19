@@ -1,10 +1,10 @@
-namespace Caliburn.Micro.Xamarin.Forms {
+namespace Caliburn.Micro {
 
     using System;
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Implemented by services that provide view & view model based navigation
+    /// Implemented by services that provide view and view model based navigation
     /// </summary>
     public interface INavigationService {
 

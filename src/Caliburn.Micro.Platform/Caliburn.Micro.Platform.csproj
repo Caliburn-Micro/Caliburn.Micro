@@ -1,56 +1,23 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/1.2.2">
+﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.4;net45;uap10.0;MonoAndroid43;Xamarin.iOS10</TargetFrameworks>
-    <AssemblyName>Caliburn.Micro.Platform</AssemblyName>
+    <TargetFrameworks>net46;uap10.0.16299;Xamarin.iOS10;MonoAndroid80;netstandard2.0</TargetFrameworks>
+    <PackageId>Caliburn.Micro</PackageId>
+    <Product>Caliburn.Micro</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
-    <PackageId>$(MSBuildProjectName)</PackageId>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <OutputPath>..\..\bin\$(TargetFramework.ToLower())\$(Configuration.ToLower())\</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
-    <DefineConstants>NET</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
-    <DefineConstants>WINDOWS_UWP</DefineConstants>
-    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'MonoAndroid43'">
-    <DefineConstants>ANDROID</DefineConstants>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
-    <DevInstrumentationEnabled>True</DevInstrumentationEnabled>
-    <TargetFrameworkVersion>v4.3.0</TargetFrameworkVersion>
-    <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'Xamarin.iOS10'">
-    <DefineConstants>IOS</DefineConstants>
-    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
-    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.4'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'Xamarin.iOS10' or '$(TargetFramework)' == 'MonoAndroid80'">
     <DefineConstants>XFORMS</DefineConstants>
-    <PackageTargetFallback>portable-net45+win8+wpa81+wp8</PackageTargetFallback>
-    <DebugType>full</DebugType>
-    <OutputPath>..\..\bin\xamarin-forms\$(Configuration.ToLower())\</OutputPath>
-    <AssemblyName>Caliburn.Micro.Xamarin.Forms</AssemblyName>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <Compile Remove="Platforms\**\*.*" />
-    <None Include="Platforms\**\*.*" />
+    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
+    <Compile Remove="Platforms\**\*.cs" />
+    <None Include="Platforms\**\*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Windows.Interactivity">
@@ -58,50 +25,45 @@
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
-    <Compile Include="Platforms\WPF\*.cs" />
+    <Compile Include="Platforms\net46\**\*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0'">
-    <Compile Include="Platforms\UWP\*.cs" />
-	<EmbeddedResource Include="Platforms\UWP\Caliburn.Micro.Platform.rd.xml" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
+    <Compile Include="Platforms\uap\**\*.cs" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid43'">
-    <Compile Remove="*.cs" />
-    <Compile Include="Platforms\Android\*.cs" />
-    <Compile Include="ViewModelLocator.cs" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid80'">
+    <Compile Include="Platforms\android\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'Xamarin.iOS10'">
+    <Compile Include="Platforms\ios\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'Xamarin.iOS10' or '$(TargetFramework)' == 'MonoAndroid80'">
+    <PackageReference Include="Xamarin.Forms" Version="3.0.0.561731" />
     <Compile Remove="*.cs" />
-    <Compile Include="Platforms\iOS\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.4'">
-    <Compile Include="Platforms\Xamarin.Forms\*.cs" />
-    <Compile Remove="ActionMessage.cs" />
-    <None Include="ActionMessage.cs" />
-    <Compile Remove="BindingScope.cs" />
-    <None Include="BindingScope.cs" />
-    <Compile Remove="BooleanToVisibilityConverter.cs" />
-    <None Include="BooleanToVisibilityConverter.cs" />
-    <Compile Remove="ChildResolver.cs" />
-    <None Include="ChildResolver.cs" />
-    <Compile Remove="ConventionManager.cs" />
-    <None Include="ConventionManager.cs" />
-    <Compile Remove="XamlPlatformProvider.cs" />
-    <None Include="XamlPlatformProvider.cs" />
-    <PackageReference Include="Xamarin.Forms" Version="2.5.0.280555" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="..\GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
-    <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
+    <Compile Include="Platforms\xamarin.forms\**\*.cs" />
+    <Compile Include="Action.cs" />
+    <Compile Include="ActionExecutionContext.cs" />
+    <Compile Include="AssemblySource.cs" />
+    <Compile Include="Bind.cs" />
+    <Compile Include="DependencyPropertyHelper.cs" />
+    <Compile Include="ElementConvention.cs" />
+    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="IHaveParameters.cs" />
+    <Compile Include="Message.cs" />
+    <Compile Include="MessageBinder.cs" />
+    <Compile Include="NameTransformer.cs" />
+    <Compile Include="Parser.cs" />
+    <Compile Include="RegExHelper.cs" />
+    <Compile Include="StringSplitter.cs" />
+    <Compile Include="TypeMappingConfiguration.cs" />
+    <Compile Include="View.cs" />
+    <Compile Include="ViewLocator.cs" />
+    <Compile Include="ViewModelBinder.cs" />
+    <Compile Include="ViewModelLocator.cs" />
   </ItemGroup>
 
 </Project>

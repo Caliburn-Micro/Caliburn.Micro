@@ -25,15 +25,21 @@ namespace Caliburn.Micro
         public virtual void Subscribe(object subscriber, Func<Func<Task>, Task> marshal)
         {
             if (subscriber == null)
+            {
                 throw new ArgumentNullException(nameof(subscriber));
+            }
 
             if (marshal == null)
+            {
                 throw new ArgumentNullException(nameof(marshal));
+            }
 
             lock (_handlers)
             {
                 if (_handlers.Any(x => x.Matches(subscriber)))
+                {
                     return;
+                }
 
                 _handlers.Add(new Handler(subscriber, marshal));
             }
@@ -43,14 +49,18 @@ namespace Caliburn.Micro
         public virtual void Unsubscribe(object subscriber)
         {
             if (subscriber == null)
+            {
                 throw new ArgumentNullException(nameof(subscriber));
+            }
 
             lock (_handlers)
             {
                 var found = _handlers.FirstOrDefault(x => x.Matches(subscriber));
 
                 if (found != null)
+                {
                     _handlers.Remove(found);
+                }
             }
         }
 
@@ -58,10 +68,14 @@ namespace Caliburn.Micro
         public virtual Task PublishAsync(object message, Func<Func<Task>, Task> marshal, CancellationToken cancellationToken)
         {
             if (message == null)
+            {
                 throw new ArgumentNullException(nameof(message));
+            }
 
             if (marshal == null)
+            {
                 throw new ArgumentNullException(nameof(marshal));
+            }
 
             Handler[] toNotify;
 
@@ -73,7 +87,7 @@ namespace Caliburn.Micro
             return marshal(async () =>
             {
                 var messageType = message.GetType();
-                
+
                 var tasks = toNotify.Select(h => h.Handle(messageType, message, CancellationToken.None));
 
                 await Task.WhenAll(tasks);
@@ -110,10 +124,12 @@ namespace Caliburn.Micro
                 foreach (var @interface in interfaces)
                 {
                     var type = @interface.GetTypeInfo().GenericTypeArguments[0];
-                    var method = @interface.GetRuntimeMethod("HandleAsync", new[]  { type, typeof(CancellationToken) });
+                    var method = @interface.GetRuntimeMethod("HandleAsync", new[] { type, typeof(CancellationToken) });
 
                     if (method != null)
+                    {
                         _supportedHandlers[type] = method;
+                    }
                 }
             }
 
@@ -129,13 +145,15 @@ namespace Caliburn.Micro
                 var target = _reference.Target;
 
                 if (target == null)
+                {
                     return Task.FromResult(false);
+                }
 
                 return _marshal(() =>
                 {
                     var tasks = _supportedHandlers
                         .Where(handler => handler.Key.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo()))
-                        .Select(pair => pair.Value.Invoke(target, new[] {message, cancellationToken}))
+                        .Select(pair => pair.Value.Invoke(target, new[] { message, cancellationToken }))
                         .Select(result => (Task)result)
                         .ToList();
 

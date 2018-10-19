@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,6 +21,7 @@ namespace Caliburn.Micro
             this.closeConductedItemsWhenConductorCannotClose = closeConductedItemsWhenConductorCannotClose;
         }
 
+        /// <inheritdoc />
         public async Task<ICloseResult<T>> ExecuteAsync(IEnumerable<T> toClose, CancellationToken cancellationToken)
         {
             var closeable = new List<T>();

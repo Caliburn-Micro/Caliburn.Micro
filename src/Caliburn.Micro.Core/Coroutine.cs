@@ -1,13 +1,15 @@
-﻿namespace Caliburn.Micro {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// Manages coroutine execution.
     /// </summary>
-    public static class Coroutine {
-        static readonly ILog Log = LogManager.GetLog(typeof(Coroutine));
+    public static class Coroutine
+    {
+        private static readonly ILog Log = LogManager.GetLog(typeof(Coroutine));
 
         /// <summary>
         /// Creates the parent enumerator.
@@ -20,13 +22,15 @@
         /// <param name="coroutine">The coroutine to execute.</param>
         /// <param name="context">The context to execute the coroutine within.</param>
         /// /// <param name="callback">The completion callback for the coroutine.</param>
-        public static void BeginExecute(IEnumerator<IResult> coroutine, CoroutineExecutionContext context = null, EventHandler<ResultCompletionEventArgs> callback = null) {
+        public static void BeginExecute(IEnumerator<IResult> coroutine, CoroutineExecutionContext context = null, EventHandler<ResultCompletionEventArgs> callback = null)
+        {
             Log.Info("Executing coroutine.");
 
             var enumerator = CreateParentEnumerator(coroutine);
             IoC.BuildUp(enumerator);
 
-            if (callback != null) {
+            if (callback != null)
+            {
                 ExecuteOnCompleted(enumerator, callback);
             }
 
@@ -40,24 +44,34 @@
         /// <param name="coroutine">The coroutine to execute.</param>
         /// <param name="context">The context to execute the coroutine within.</param>
         /// <returns>A task that represents the asynchronous coroutine.</returns>
-        public static Task ExecuteAsync(IEnumerator<IResult> coroutine, CoroutineExecutionContext context = null) {
+        public static Task ExecuteAsync(IEnumerator<IResult> coroutine, CoroutineExecutionContext context = null)
+        {
             var taskSource = new TaskCompletionSource<object>();
 
-            BeginExecute(coroutine, context, (s, e) => {
+            BeginExecute(coroutine, context, (s, e) =>
+            {
                 if (e.Error != null)
+                {
                     taskSource.SetException(e.Error);
+                }
                 else if (e.WasCancelled)
+                {
                     taskSource.SetCanceled();
+                }
                 else
+                {
                     taskSource.SetResult(null);
+                }
             });
 
             return taskSource.Task;
         }
 
-        static void ExecuteOnCompleted(IResult result, EventHandler<ResultCompletionEventArgs> handler) {
+        private static void ExecuteOnCompleted(IResult result, EventHandler<ResultCompletionEventArgs> handler)
+        {
             EventHandler<ResultCompletionEventArgs> onCompledted = null;
-            onCompledted = (s, e) => {
+            onCompledted = (s, e) =>
+            {
                 result.Completed -= onCompledted;
                 handler(s, e);
             };
@@ -67,14 +81,18 @@
         /// <summary>
         /// Called upon completion of a coroutine.
         /// </summary>
-        public static event EventHandler<ResultCompletionEventArgs> Completed = (s, e) => {
-            if(e.Error != null) {
+        public static event EventHandler<ResultCompletionEventArgs> Completed = (s, e) =>
+        {
+            if (e.Error != null)
+            {
                 Log.Error(e.Error);
             }
-            else if(e.WasCancelled) {
+            else if (e.WasCancelled)
+            {
                 Log.Info("Coroutine execution cancelled.");
             }
-            else {
+            else
+            {
                 Log.Info("Coroutine execution completed.");
             }
         };

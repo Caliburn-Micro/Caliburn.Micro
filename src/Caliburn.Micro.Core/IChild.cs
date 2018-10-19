@@ -1,8 +1,10 @@
-namespace Caliburn.Micro {
+namespace Caliburn.Micro
+{
     /// <summary>
     /// Denotes a node within a parent/child hierarchy.
     /// </summary>
-    public interface IChild {
+    public interface IChild
+    {
         /// <summary>
         /// Gets or Sets the Parent
         /// </summary>
@@ -13,7 +15,8 @@ namespace Caliburn.Micro {
     /// Denotes a node within a parent/child hierarchy.
     /// </summary>
     /// <typeparam name="TParent">The type of parent.</typeparam>
-    public interface IChild<TParent> : IChild {
+    public interface IChild<TParent> : IChild
+    {
         /// <summary>
         /// Gets or Sets the Parent
         /// </summary>

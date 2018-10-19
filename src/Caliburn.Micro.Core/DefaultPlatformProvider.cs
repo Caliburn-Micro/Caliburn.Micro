@@ -1,17 +1,20 @@
-﻿namespace Caliburn.Micro {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// Default implementation for <see cref="IPlatformProvider"/> that does no platform enlightenment.
     /// </summary>
-    public class DefaultPlatformProvider : IPlatformProvider {
+    public class DefaultPlatformProvider : IPlatformProvider
+    {
         /// <summary>
         /// Indicates whether or not the framework is in design-time mode.
         /// </summary>
-        public virtual bool InDesignMode {
+        public virtual bool InDesignMode
+        {
             get { return true; }
         }
 
@@ -19,7 +22,8 @@
         /// Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        public virtual void BeginOnUIThread(Action action) {
+        public virtual void BeginOnUIThread(Action action)
+        {
             action();
         }
 
@@ -28,7 +32,8 @@
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <returns></returns>
-        public virtual Task OnUIThreadAsync(Action action) {
+        public virtual Task OnUIThreadAsync(Action action)
+        {
             return Task.Factory.StartNew(action);
         }
 
@@ -36,7 +41,8 @@
         /// Executes the action on the UI thread.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        public virtual void OnUIThread(Action action) {
+        public virtual void OnUIThread(Action action)
+        {
             action();
         }
 
@@ -53,7 +59,8 @@
         /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
         /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was.
         /// </remarks>
-        public virtual object GetFirstNonGeneratedView(object view) {
+        public virtual object GetFirstNonGeneratedView(object view)
+        {
             return view;
         }
 
@@ -63,7 +70,8 @@
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
         /// <returns>true if the handler was executed immediately; false otherwise</returns>
-        public virtual void ExecuteOnFirstLoad(object view, Action<object> handler) {
+        public virtual void ExecuteOnFirstLoad(object view, Action<object> handler)
+        {
             handler(view);
         }
 
@@ -72,7 +80,8 @@
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler) {
+        public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler)
+        {
             handler(view);
         }
 

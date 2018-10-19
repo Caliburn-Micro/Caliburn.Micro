@@ -1,18 +1,21 @@
-﻿namespace Caliburn.Micro {
+﻿namespace Caliburn.Micro
+{
     using System;
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Extension methods to bring <see cref="System.Threading.Tasks.Task"/> and <see cref="Caliburn.Micro.IResult"/> together.
+    /// Extension methods to bring <see cref="Task"/> and <see cref="IResult"/> together.
     /// </summary>
-    public static class TaskExtensions {
+    public static class TaskExtensions
+    {
         /// <summary>
         /// Executes an <see cref="Caliburn.Micro.IResult"/> asynchronous.
         /// </summary>
         /// <param name="result">The coroutine to execute.</param>
         /// <param name="context">The context to execute the coroutine within.</param>
         /// <returns>A task that represents the asynchronous coroutine.</returns>
-        public static Task ExecuteAsync(this IResult result, CoroutineExecutionContext context = null) {
+        public static Task ExecuteAsync(this IResult result, CoroutineExecutionContext context = null)
+        {
             return InternalExecuteAsync<object>(result, context);
         }
 
@@ -24,33 +27,43 @@
         /// <param name="context">The context to execute the coroutine within.</param>
         /// <returns>A task that represents the asynchronous coroutine.</returns>
         public static Task<TResult> ExecuteAsync<TResult>(this IResult<TResult> result,
-                                                          CoroutineExecutionContext context = null) {
+                                                          CoroutineExecutionContext context = null)
+        {
             return InternalExecuteAsync<TResult>(result, context);
         }
 
-        static Task<TResult> InternalExecuteAsync<TResult>(IResult result, CoroutineExecutionContext context) {
+        private static Task<TResult> InternalExecuteAsync<TResult>(IResult result, CoroutineExecutionContext context)
+        {
             var taskSource = new TaskCompletionSource<TResult>();
 
             EventHandler<ResultCompletionEventArgs> completed = null;
-            completed = (s, e) => {
+            completed = (s, e) =>
+            {
                 result.Completed -= completed;
 
                 if (e.Error != null)
+                {
                     taskSource.SetException(e.Error);
+                }
                 else if (e.WasCancelled)
+                {
                     taskSource.SetCanceled();
-                else {
+                }
+                else
+                {
                     var rr = result as IResult<TResult>;
                     taskSource.SetResult(rr != null ? rr.Result : default(TResult));
                 }
             };
 
-            try {
+            try
+            {
                 IoC.BuildUp(result);
                 result.Completed += completed;
                 result.Execute(context ?? new CoroutineExecutionContext());
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 result.Completed -= completed;
                 taskSource.SetException(ex);
             }
@@ -63,7 +76,8 @@
         /// </summary>
         /// <param name="task">The task.</param>
         /// <returns>The coroutine that encapsulates the task.</returns>
-        public static TaskResult AsResult(this Task task) {
+        public static TaskResult AsResult(this Task task)
+        {
             return new TaskResult(task);
         }
 
@@ -73,7 +87,8 @@
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="task">The task.</param>
         /// <returns>The coroutine that encapsulates the task.</returns>
-        public static TaskResult<TResult> AsResult<TResult>(this Task<TResult> task) {
+        public static TaskResult<TResult> AsResult<TResult>(this Task<TResult> task)
+        {
             return new TaskResult<TResult>(task);
         }
     }

@@ -35,7 +35,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name = "message">The message instance.</param>
         /// <param name = "marshal">Allows the publisher to provide a custom thread marshaller for the message publication.</param>
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         Task PublishAsync(object message, Func<Func<Task>, Task> marshal, CancellationToken cancellationToken);
     }
 }

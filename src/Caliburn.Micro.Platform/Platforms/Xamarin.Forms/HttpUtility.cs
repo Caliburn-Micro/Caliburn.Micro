@@ -32,7 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Caliburn.Micro.Xamarin.Forms
+namespace Caliburn.Micro
 {
     internal sealed class HttpUtility
     {

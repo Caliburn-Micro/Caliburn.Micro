@@ -17,6 +17,8 @@ namespace Caliburn.Micro
         /// <summary>
         /// Activates this instance.
         /// </summary>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         Task ActivateAsync(CancellationToken cancellationToken);
 
         /// <summary>

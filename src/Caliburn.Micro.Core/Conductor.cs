@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -40,10 +39,14 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="item">The item to close.</param>
         /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public override async Task DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken)
         {
             if (item == null || !item.Equals(ActiveItem))
+            {
                 return;
+            }
 
             var closeResult = await CloseStrategy.ExecuteAsync(new[] { ActiveItem }, CancellationToken.None);
 
@@ -56,6 +59,8 @@ namespace Caliburn.Micro
         /// <summary>
         /// Called to check whether or not this instance can close.
         /// </summary>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken)
         {
             var closeResult = await CloseStrategy.ExecuteAsync(new[] { ActiveItem }, cancellationToken);
@@ -66,6 +71,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Called when activating.
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         protected override Task OnActivateAsync(CancellationToken cancellationToken)
         {
             return ScreenExtensions.TryActivateAsync(ActiveItem, cancellationToken);
@@ -75,6 +81,8 @@ namespace Caliburn.Micro
         /// Called when deactivating.
         /// </summary>
         /// <param name="close">Indicates whether this instance will be closed.</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
             return ScreenExtensions.TryDeactivateAsync(ActiveItem, close, cancellationToken);
@@ -86,7 +94,7 @@ namespace Caliburn.Micro
         /// <returns>The collection of children.</returns>
         public override IEnumerable<T> GetChildren()
         {
-            return new[] {ActiveItem};
+            return new[] { ActiveItem };
         }
     }
 }

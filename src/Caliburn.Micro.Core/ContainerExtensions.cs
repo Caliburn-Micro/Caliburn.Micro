@@ -1,13 +1,15 @@
-﻿namespace Caliburn.Micro {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// Extension methods for the <see cref="SimpleContainer"/>.
     /// </summary>
-    public static class ContainerExtensions {
+    public static class ContainerExtensions
+    {
         /// <summary>
         /// Registers a singleton.
         /// </summary>
@@ -15,7 +17,8 @@
         /// <param name="container">The container.</param>
         /// <param name="key">The key.</param>
         /// <returns>The container.</returns>
-        public static SimpleContainer Singleton<TImplementation>(this SimpleContainer container, string key = null) {
+        public static SimpleContainer Singleton<TImplementation>(this SimpleContainer container, string key = null)
+        {
             return Singleton<TImplementation, TImplementation>(container, key);
         }
 
@@ -28,8 +31,9 @@
         /// <param name="key">The key.</param>
         /// <returns>The container.</returns>
         public static SimpleContainer Singleton<TService, TImplementation>(this SimpleContainer container, string key = null)
-            where TImplementation : TService {
-            container.RegisterSingleton(typeof (TService), key, typeof (TImplementation));
+            where TImplementation : TService
+        {
+            container.RegisterSingleton(typeof(TService), key, typeof(TImplementation));
             return container;
         }
 
@@ -40,7 +44,8 @@
         /// <param name="container">The container.</param>
         /// <param name="key">The key.</param>
         /// <returns>The container.</returns>
-        public static SimpleContainer PerRequest<TImplementation>(this SimpleContainer container, string key = null) {
+        public static SimpleContainer PerRequest<TImplementation>(this SimpleContainer container, string key = null)
+        {
             return PerRequest<TImplementation, TImplementation>(container, key);
         }
 
@@ -53,8 +58,9 @@
         /// <param name="key">The key.</param>
         /// <returns>The container.</returns>
         public static SimpleContainer PerRequest<TService, TImplementation>(this SimpleContainer container, string key = null)
-            where TImplementation : TService {
-            container.RegisterPerRequest(typeof (TService), key, typeof (TImplementation));
+            where TImplementation : TService
+        {
+            container.RegisterPerRequest(typeof(TService), key, typeof(TImplementation));
             return container;
         }
 
@@ -65,8 +71,9 @@
         /// <param name="container">The container.</param>
         /// <param name="instance">The instance.</param>
         /// <returns>The container.</returns>
-        public static SimpleContainer Instance<TService>(this SimpleContainer container, TService instance) {
-            container.RegisterInstance(typeof (TService), null, instance);
+        public static SimpleContainer Instance<TService>(this SimpleContainer container, TService instance)
+        {
+            container.RegisterInstance(typeof(TService), null, instance);
             return container;
         }
 
@@ -78,8 +85,9 @@
         /// <param name="handler">The handler.</param>
         /// <returns>The container.</returns>
         public static SimpleContainer Handler<TService>(this SimpleContainer container,
-                                                        Func<SimpleContainer, object> handler) {
-            container.RegisterHandler(typeof (TService), null, handler);
+                                                        Func<SimpleContainer, object> handler)
+        {
+            container.RegisterHandler(typeof(TService), null, handler);
             return container;
         }
 
@@ -92,11 +100,14 @@
         /// <param name="filter">The type filter.</param>
         /// <returns>The container.</returns>
         public static SimpleContainer AllTypesOf<TService>(this SimpleContainer container, Assembly assembly,
-                                                           Func<Type, bool> filter = null) {
+                                                           Func<Type, bool> filter = null)
+        {
             if (filter == null)
+            {
                 filter = type => true;
+            }
 
-            var serviceType = typeof (TService);
+            var serviceType = typeof(TService);
             var types = from type in assembly.DefinedTypes
                         where serviceType.GetTypeInfo().IsAssignableFrom(type)
                               && !type.IsAbstract
@@ -104,8 +115,9 @@
                               && filter(type.AsType())
                         select type;
 
-            foreach (var type in types) {
-                container.RegisterSingleton(typeof (TService), null, type.AsType());
+            foreach (var type in types)
+            {
+                container.RegisterSingleton(typeof(TService), null, type.AsType());
             }
 
             return container;
@@ -118,8 +130,9 @@
         /// <param name="container">The container.</param>
         /// <param name="key">The key.</param>
         /// <returns>The instance.</returns>
-        public static TService GetInstance<TService>(this SimpleContainer container, string key = null) {
-            return (TService) container.GetInstance(typeof (TService), key);
+        public static TService GetInstance<TService>(this SimpleContainer container, string key = null)
+        {
+            return (TService)container.GetInstance(typeof(TService), key);
         }
 
         /// <summary>
@@ -128,8 +141,9 @@
         /// <typeparam name="TService">The type to resolve.</typeparam>
         /// <param name="container">The container.</param>
         /// <returns>The resolved instances.</returns>
-        public static IEnumerable<TService> GetAllInstances<TService>(this SimpleContainer container) {
-            return container.GetAllInstances(typeof (TService)).Cast<TService>();
+        public static IEnumerable<TService> GetAllInstances<TService>(this SimpleContainer container)
+        {
+            return container.GetAllInstances(typeof(TService)).Cast<TService>();
         }
 
         /// <summary>
@@ -139,8 +153,9 @@
         /// <param name="container">The container.</param>
         /// <param name="key">The key.</param>
         /// <returns>True if a handler is registere; false otherwise.</returns>
-        public static bool HasHandler<TService>(this SimpleContainer container, string key = null) {
-            return container.HasHandler(typeof (TService), key);
+        public static bool HasHandler<TService>(this SimpleContainer container, string key = null)
+        {
+            return container.HasHandler(typeof(TService), key);
         }
 
         /// <summary>
@@ -149,7 +164,8 @@
         /// <typeparam name="TService">The service type.</typeparam>
         /// <param name="container">The container.</param>
         /// <param name = "key">The key.</param>
-        public static void UnregisterHandler<TService>(this SimpleContainer container, string key = null) {
+        public static void UnregisterHandler<TService>(this SimpleContainer container, string key = null)
+        {
             container.UnregisterHandler(typeof(TService), key);
         }
     }

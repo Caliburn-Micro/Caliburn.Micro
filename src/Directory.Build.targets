@@ -1,0 +1,19 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
+        <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
+        <DefineConstants>$(DefineConstants);NET</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(TargetFramework.StartsWith('uap'))">
+        <DefineConstants>$(DefineConstants);WINDOWS_UWP</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
+        <DefineConstants>$(DefineConstants);IOS</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
+        <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
+    </PropertyGroup>
+
+    <Target Name="Package" DependsOnTargets="Clean;Restore;Build;Pack" />
+</Project>

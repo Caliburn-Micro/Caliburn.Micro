@@ -1,7 +1,7 @@
 ﻿using System;
 using Xamarin.Forms;
 
-namespace Caliburn.Micro.Xamarin.Forms
+namespace Caliburn.Micro
 {
     /// <summary>
     /// Helper class to try and abtract the differences in TriggerAction across platforms

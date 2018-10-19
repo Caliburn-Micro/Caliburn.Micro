@@ -1,12 +1,14 @@
-﻿namespace Caliburn.Micro {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// Used by the framework to pull instances from an IoC container and to inject dependencies into certain existing classes.
     /// </summary>
-    public static class IoC {
+    public static class IoC
+    {
         /// <summary>
         /// Gets an instance by type and key.
         /// </summary>
@@ -28,7 +30,8 @@
         /// <typeparam name="T">The type to resolve.</typeparam>
         /// <param name="key">The key to look up.</param>
         /// <returns>The resolved instance.</returns>
-        public static T Get<T>(string key = null) {
+        public static T Get<T>(string key = null)
+        {
             return (T)GetInstance(typeof(T), key);
         }
 
@@ -37,7 +40,8 @@
         /// </summary>
         /// <typeparam name="T">The type to resolve.</typeparam>
         /// <returns>The resolved instances.</returns>
-        public static IEnumerable<T> GetAll<T>() {
+        public static IEnumerable<T> GetAll<T>()
+        {
             return GetAllInstances(typeof(T)).Cast<T>();
         }
     }

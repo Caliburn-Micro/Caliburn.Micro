@@ -362,8 +362,6 @@
         /// <summary>
         /// Finds the method on the target matching the specified message.
         /// </summary>
-        /// <param name="target">The target.</param>
-        /// <param name="message">The message.</param>
         /// <returns>The matching method, if available.</returns>
         public static Func<ActionMessage, object, MethodInfo> GetTargetMethod = (message, target) => {
 #if WINDOWS_UWP

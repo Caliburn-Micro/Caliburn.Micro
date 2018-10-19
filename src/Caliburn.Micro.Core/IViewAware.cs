@@ -1,10 +1,12 @@
-﻿namespace Caliburn.Micro {
-    using System;
+﻿using System;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// Denotes a class which is aware of its view(s).
     /// </summary>
-    public interface IViewAware {
+    public interface IViewAware
+    {
         /// <summary>
         /// Attaches a view to this instance.
         /// </summary>

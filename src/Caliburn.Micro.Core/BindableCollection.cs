@@ -1,27 +1,31 @@
-﻿namespace Caliburn.Micro {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Collections.Specialized;
-    using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// A base collection class that supports automatic UI thread marshalling.
     /// </summary>
     /// <typeparam name="T">The type of elements contained in the collection.</typeparam>
-    public class BindableCollection<T> : ObservableCollection<T>, IObservableCollection<T> {
+    public class BindableCollection<T> : ObservableCollection<T>, IObservableCollection<T>
+    {
         /// <summary>
-        /// Initializes a new instance of the <see cref = "Caliburn.Micro.BindableCollection&lt;T&gt;" /> class.
+        /// Initializes a new instance of the <see cref = "BindableCollection&lt;T&gt;" /> class.
         /// </summary>
-        public BindableCollection() {
+        public BindableCollection()
+        {
             IsNotifying = true;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref = "Caliburn.Micro.BindableCollection&lt;T&gt;" /> class.
+        /// Initializes a new instance of the <see cref = "BindableCollection&lt;T&gt;" /> class.
         /// </summary>
         /// <param name = "collection">The collection from which the elements are copied.</param>
         public BindableCollection(IEnumerable<T> collection)
-            : base(collection) {
+            : base(collection)
+        {
             IsNotifying = true;
         }
 
@@ -34,16 +38,21 @@
         /// Notifies subscribers of the property change.
         /// </summary>
         /// <param name = "propertyName">Name of the property.</param>
-        public virtual void NotifyOfPropertyChange(string propertyName) {
+        public virtual void NotifyOfPropertyChange(string propertyName)
+        {
             if (IsNotifying)
+            {
                 OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
+            }
         }
 
         /// <summary>
         /// Raises a change notification indicating that all bindings should be refreshed.
         /// </summary>
-        public void Refresh() {
-            OnUIThread(() => {
+        public void Refresh()
+        {
+            OnUIThread(() =>
+            {
                 OnPropertyChanged(new PropertyChangedEventArgs("Count"));
                 OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
@@ -51,11 +60,12 @@
         }
 
         /// <summary>
-        ///   Inserts the item to the specified position.
+        /// Inserts the item to the specified position.
         /// </summary>
         /// <param name = "index">The index to insert at.</param>
         /// <param name = "item">The item to be inserted.</param>
-        protected override sealed void InsertItem(int index, T item) {
+        protected override sealed void InsertItem(int index, T item)
+        {
             OnUIThread(() => InsertItemBase(index, item));
         }
 
@@ -65,9 +75,10 @@
         /// <param name = "index">The index.</param>
         /// <param name = "item">The item.</param>
         /// <remarks>
-        ///   Used to avoid compiler warning regarding unverifiable code.
+        /// Used to avoid compiler warning regarding unverifiable code.
         /// </remarks>
-        protected virtual void InsertItemBase(int index, T item) {
+        protected virtual void InsertItemBase(int index, T item)
+        {
             base.InsertItem(index, item);
         }
 
@@ -76,7 +87,8 @@
         /// </summary>
         /// <param name = "index">The index to set the item at.</param>
         /// <param name = "item">The item to set.</param>
-        protected override sealed void SetItem(int index, T item) {
+        protected override sealed void SetItem(int index, T item)
+        {
             OnUIThread(() => SetItemBase(index, item));
         }
 
@@ -86,9 +98,10 @@
         /// <param name = "index">The index.</param>
         /// <param name = "item">The item.</param>
         /// <remarks>
-        ///   Used to avoid compiler warning regarding unverifiable code.
+        /// Used to avoid compiler warning regarding unverifiable code.
         /// </remarks>
-        protected virtual void SetItemBase(int index, T item) {
+        protected virtual void SetItemBase(int index, T item)
+        {
             base.SetItem(index, item);
         }
 
@@ -96,7 +109,8 @@
         /// Removes the item at the specified position.
         /// </summary>
         /// <param name = "index">The position used to identify the item to remove.</param>
-        protected override sealed void RemoveItem(int index) {
+        protected override sealed void RemoveItem(int index)
+        {
             Execute.OnUIThread(() => RemoveItemBase(index));
         }
 
@@ -107,14 +121,16 @@
         /// <remarks>
         ///   Used to avoid compiler warning regarding unverifiable code.
         /// </remarks>
-        protected virtual void RemoveItemBase(int index) {
+        protected virtual void RemoveItemBase(int index)
+        {
             base.RemoveItem(index);
         }
 
         /// <summary>
         /// Clears the items contained by the collection.
         /// </summary>
-        protected override sealed void ClearItems() {
+        protected override sealed void ClearItems()
+        {
             OnUIThread(ClearItemsBase);
         }
 
@@ -124,7 +140,8 @@
         /// <remarks>
         ///   Used to avoid compiler warning regarding unverifiable code.
         /// </remarks>
-        protected virtual void ClearItemsBase() {
+        protected virtual void ClearItemsBase()
+        {
             base.ClearItems();
         }
 
@@ -132,8 +149,10 @@
         /// Raises the <see cref = "E:System.Collections.ObjectModel.ObservableCollection`1.CollectionChanged" /> event with the provided arguments.
         /// </summary>
         /// <param name = "e">Arguments of the event being raised.</param>
-        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e) {
-            if (IsNotifying) {
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            if (IsNotifying)
+            {
                 base.OnCollectionChanged(e);
             }
         }
@@ -142,8 +161,10 @@
         /// Raises the PropertyChanged event with the provided arguments.
         /// </summary>
         /// <param name = "e">The event data to report in the event.</param>
-        protected override void OnPropertyChanged(PropertyChangedEventArgs e) {
-            if (IsNotifying) {
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            if (IsNotifying)
+            {
                 base.OnPropertyChanged(e);
             }
         }
@@ -152,12 +173,15 @@
         /// Adds the range.
         /// </summary>
         /// <param name = "items">The items.</param>
-        public virtual void AddRange(IEnumerable<T> items) {
-            OnUIThread(() => {
+        public virtual void AddRange(IEnumerable<T> items)
+        {
+            OnUIThread(() =>
+            {
                 var previousNotificationSetting = IsNotifying;
                 IsNotifying = false;
                 var index = Count;
-                foreach (var item in items) {
+                foreach (var item in items)
+                {
                     InsertItemBase(index, item);
                     index++;
                 }
@@ -173,13 +197,17 @@
         /// Removes the range.
         /// </summary>
         /// <param name = "items">The items.</param>
-        public virtual void RemoveRange(IEnumerable<T> items) {
-            OnUIThread(() => {
+        public virtual void RemoveRange(IEnumerable<T> items)
+        {
+            OnUIThread(() =>
+            {
                 var previousNotificationSetting = IsNotifying;
                 IsNotifying = false;
-                foreach (var item in items) {
+                foreach (var item in items)
+                {
                     var index = IndexOf(item);
-                    if (index >= 0) {
+                    if (index >= 0)
+                    {
                         RemoveItemBase(index);
                     }
                 }

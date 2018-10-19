@@ -1,42 +1,46 @@
-﻿namespace Caliburn.Micro {
-    using System;
+﻿using System;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// Base class for all <see cref="IResult"/> decorators.
     /// </summary>
-    public abstract class ResultDecoratorBase : IResult {
-        readonly IResult innerResult;
-        CoroutineExecutionContext context;
+    public abstract class ResultDecoratorBase : IResult
+    {
+        private readonly IResult innerResult;
+        private CoroutineExecutionContext context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResultDecoratorBase"/> class.
         /// </summary>
         /// <param name="result">The result to decorate.</param>
-        protected ResultDecoratorBase(IResult result) {
-            if (result == null) 
-                throw new ArgumentNullException("result");
-
-            innerResult = result;
+        protected ResultDecoratorBase(IResult result)
+        {
+            innerResult = result ?? throw new ArgumentNullException("result");
         }
 
         /// <summary>
         /// Executes the result using the specified context.
         /// </summary>
         /// <param name="context">The context.</param>
-        public void Execute(CoroutineExecutionContext context) {
+        public void Execute(CoroutineExecutionContext context)
+        {
             this.context = context;
 
-            try {
+            try
+            {
                 innerResult.Completed += InnerResultCompleted;
                 IoC.BuildUp(innerResult);
                 innerResult.Execute(this.context);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 InnerResultCompleted(innerResult, new ResultCompletionEventArgs { Error = ex });
             }
         }
 
-        void InnerResultCompleted(object sender, ResultCompletionEventArgs args) {
+        private void InnerResultCompleted(object sender, ResultCompletionEventArgs args)
+        {
             innerResult.Completed -= InnerResultCompleted;
             OnInnerResultCompleted(context, innerResult, args);
             context = null;
@@ -59,7 +63,8 @@
         /// Raises the <see cref="Completed" /> event.
         /// </summary>
         /// <param name="args">The <see cref="ResultCompletionEventArgs"/> instance containing the event data.</param>
-        protected void OnCompleted(ResultCompletionEventArgs args) {
+        protected void OnCompleted(ResultCompletionEventArgs args)
+        {
             Completed(this, args);
         }
     }

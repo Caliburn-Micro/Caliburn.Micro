@@ -11,7 +11,8 @@ namespace Caliburn.Micro
         /// <summary>
         /// Called to check whether or not this instance can close.
         /// </summary>
-        /// <param name="callback">The implementer calls this action with the result of the close check.</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>A task that represents the asynchronous operation and contains the result of the close.</returns>
         Task<bool> CanCloseAsync(CancellationToken cancellationToken);
     }
 }

@@ -1,10 +1,12 @@
-﻿namespace Caliburn.Micro {
-    using System;
+﻿using System;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// A logger.
     /// </summary>
-    public interface ILog {
+    public interface ILog
+    {
         /// <summary>
         /// Logs the message as info.
         /// </summary>

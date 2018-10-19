@@ -107,12 +107,6 @@
         /// <summary>
         /// Creates a binding and sets it on the element, applying the appropriate conventions.
         /// </summary>
-        /// <param name="viewModelType"></param>
-        /// <param name="path"></param>
-        /// <param name="property"></param>
-        /// <param name="element"></param>
-        /// <param name="convention"></param>
-        /// <param name="bindableProperty"></param>
         public static Action<Type, string, PropertyInfo, FrameworkElement, ElementConvention, DependencyProperty> SetBinding =
             (viewModelType, path, property, element, convention, bindableProperty) => {
 #if WINDOWS_UWP
@@ -453,10 +447,6 @@
         /// <summary>
         /// Configures the selected item convention.
         /// </summary>
-        /// <param name="selector">The element that has a SelectedItem property.</param>
-        /// <param name="selectedItemProperty">The SelectedItem property.</param>
-        /// <param name="viewModelType">The view model type.</param>
-        /// <param name="path">The property path.</param>
         public static Action<FrameworkElement, DependencyProperty, Type, string> ConfigureSelectedItem =
             (selector, selectedItemProperty, viewModelType, path) => {
                 if (HasBinding(selector, selectedItemProperty)) {
@@ -490,12 +480,6 @@
         /// <summary>
         /// Configures the SelectedItem binding for matched selection path.
         /// </summary>
-        /// <param name="selector">The element that has a SelectedItem property.</param>
-        /// <param name="selectedItemProperty">The SelectedItem property.</param>
-        /// <param name="viewModelType">The view model type.</param>
-        /// <param name="selectionPath">The property path.</param>
-        /// <param name="binding">The binding to configure.</param>
-        /// <returns>A bool indicating whether to apply binding</returns>
         public static Func<FrameworkElement, DependencyProperty, Type, string, Binding, bool> ConfigureSelectedItemBinding =
             (selector, selectedItemProperty, viewModelType, selectionPath, binding) => {
                 return true;
@@ -504,10 +488,10 @@
         /// <summary>
         /// Applies a header template based on <see cref="IHaveDisplayName"/>
         /// </summary>
-        /// <param name="element"></param>
-        /// <param name="headerTemplateProperty"></param>
-        /// <param name="headerTemplateSelectorProperty"> </param>
-        /// <param name="viewModelType"></param>
+        /// <param name="element">The element to apply the header template to.</param>
+        /// <param name="headerTemplateProperty">The depdendency property for the hdeader.</param>
+        /// <param name="headerTemplateSelectorProperty">The selector dependency property.</param>
+        /// <param name="viewModelType">The type of the view model.</param>
         public static void ApplyHeaderTemplate(FrameworkElement element, DependencyProperty headerTemplateProperty, DependencyProperty headerTemplateSelectorProperty, Type viewModelType) {
             var template = element.GetValue(headerTemplateProperty);
             var selector = headerTemplateSelectorProperty != null

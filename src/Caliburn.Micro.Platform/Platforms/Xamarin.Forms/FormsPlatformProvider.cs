@@ -25,13 +25,13 @@ namespace Caliburn.Micro
         public virtual bool InDesignMode => platformProvider.InDesignMode;
 
         /// <inheritdoc />
-        public virtual void BeginOnUIThread(Action action) => platformProvider.BeginOnUIThread(action);
+        public virtual void BeginOnUIThread(System.Action action) => platformProvider.BeginOnUIThread(action);
 
         /// <inheritdoc />
-        public virtual Task OnUIThreadAsync(Action action) => platformProvider.OnUIThreadAsync(action);
+        public virtual Task OnUIThreadAsync(System.Action action) => platformProvider.OnUIThreadAsync(action);
 
         /// <inheritdoc />
-        public virtual void OnUIThread(Action action) => platformProvider.OnUIThread(action);
+        public virtual void OnUIThread(System.Action action) => platformProvider.OnUIThread(action);
 
         /// <inheritdoc />
         public virtual object GetFirstNonGeneratedView(object view) => platformProvider.GetFirstNonGeneratedView(view);

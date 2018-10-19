@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace Caliburn.Micro.Xamarin.Forms
+namespace Caliburn.Micro
 {
     /// <summary>
     /// A slimmed down version of the normal Caliburn Application for Xamarin Forms, used to register the navigation service and set up the initial view.

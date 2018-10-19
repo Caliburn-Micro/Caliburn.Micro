@@ -22,7 +22,8 @@ namespace Caliburn.Micro
         /// Activates the item if it implements <see cref="IActivate"/>, otherwise does nothing.
         /// </summary>
         /// <param name="potentialActivatable">The potential activatable.</param>
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public static Task TryActivateAsync(object potentialActivatable, CancellationToken cancellationToken)
         {
             return potentialActivatable is IActivate activator ? activator.ActivateAsync(cancellationToken) : Task.FromResult(true);
@@ -33,7 +34,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="potentialDeactivatable">The potential deactivatable.</param>
         /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
-        /// /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public static Task TryDeactivateAsync(object potentialDeactivatable, bool close, CancellationToken cancellationToken)
         {
             return potentialDeactivatable is IDeactivate deactivator ? deactivator.DeactivateAsync(close, cancellationToken): Task.FromResult(true);
@@ -44,6 +46,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="conductor">The conductor.</param>
         /// <param name="item">The item to close.</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public static Task CloseItemAsync(this IConductor conductor, object item, CancellationToken cancellationToken)
         {
             return conductor.DeactivateItemAsync(item, true, cancellationToken);
@@ -54,6 +58,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="conductor">The conductor.</param>
         /// <param name="item">The item to close.</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public static Task CloseItemAsync<T>(this ConductorBase<T> conductor, T item, CancellationToken cancellationToken) where T : class
         {
             return conductor.DeactivateItemAsync(item, true, cancellationToken);

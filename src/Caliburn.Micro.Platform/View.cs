@@ -1,8 +1,4 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#else
-namespace Caliburn.Micro
-#endif 
+﻿namespace Caliburn.Micro
 {
     using System;
     using System.Linq;
@@ -209,8 +205,6 @@ namespace Caliburn.Micro
         /// <summary>
         /// Used to retrieve the root, non-framework-created view.
         /// </summary>
-        /// <param name="view">The view to search.</param>
-        /// <returns>The root element that was not created by the framework.</returns>
         /// <remarks>In certain instances the services create UI elements.
         /// For example, if you ask the window manager to show a UserControl as a dialog, it creates a window to host the UserControl in.
         /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.

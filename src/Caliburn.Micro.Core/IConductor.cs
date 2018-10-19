@@ -22,6 +22,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="item">The item to close.</param>
         /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         Task DeactivateItemAsync(object item, bool close, CancellationToken cancellationToken);
 
         /// <summary>

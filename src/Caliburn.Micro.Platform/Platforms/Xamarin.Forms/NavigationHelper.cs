@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Micro.Xamarin.Forms
+﻿namespace Caliburn.Micro
 {
     using System;
     using System.Collections.Generic;
