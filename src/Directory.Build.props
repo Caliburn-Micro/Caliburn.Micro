@@ -1,13 +1,13 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
 		<Copyright>Copyright (c) 2010 Blue Spire Consulting, Inc.</Copyright>
-    	<PackageLicenseUrl>https://raw.githubusercontent.com/Caliburn-Micro/Caliburn.Micro/master/License.txt</PackageLicenseUrl>
-    	<PackageProjectUrl>http://caliburnmicro.com</PackageProjectUrl>
-    	<PackageIconUrl>https://raw.githubusercontent.com/Caliburn-Micro/Caliburn.Micro/master/CaliburnIcon.png</PackageIconUrl>
-    	<Authors>Nigel Sampson, Rob Eisenberg, Thomas Ibel, Marco Amendola, Chin Bae, Ryan Cromwell, Matt Hidinger</Authors>
-    	<Owners>Nigel Sampson, Rob Eisenberg, Thomas Ibel</Owners>
-    	<PackageTags>MVVM;WPF;WinRT;UWP;Xamarin;Android;iOS;CoC;Convention;MVP;PM;Screen;Coroutine;Behavior;Model-View-ViewModel;Presentation;UI;ViewModel;;Caliburn</PackageTags>
-    	<PackageReleaseNotes>http://caliburnmicro.com</PackageReleaseNotes>
+    		<PackageLicenseUrl>https://raw.githubusercontent.com/Caliburn-Micro/Caliburn.Micro/master/License.txt</PackageLicenseUrl>
+    		<PackageProjectUrl>http://caliburnmicro.com</PackageProjectUrl>
+    		<PackageIconUrl>https://raw.githubusercontent.com/Caliburn-Micro/Caliburn.Micro/master/CaliburnIcon.png</PackageIconUrl>
+    		<Authors>Nigel Sampson, Rob Eisenberg, Thomas Ibel, Marco Amendola, Chin Bae, Ryan Cromwell, Matt Hidinger</Authors>
+    		<Owners>Nigel Sampson, Rob Eisenberg, Thomas Ibel</Owners>
+    		<PackageTags>MVVM;WPF;WinRT;UWP;Xamarin;Android;iOS;CoC;Convention;MVP;PM;Screen;Coroutine;Behavior;Model-View-ViewModel;Presentation;UI;ViewModel;;Caliburn</PackageTags>
+    		<PackageReleaseNotes>http://caliburnmicro.com</PackageReleaseNotes>
 		<Description>A small, yet powerful framework designed for Xaml platforms, Caliburn.Micro implements a variety of UI patterns for solving real-world problems. Patterns that are highlighted include MVVM (Presentation Model), MVP and MVC.</Description>
 		<Version>4.0.0-alpha.1</Version>
 	</PropertyGroup>
@@ -15,18 +15,18 @@
 	<PropertyGroup>
 		<LangVersion>7.3</LangVersion>
 		<OutputPath>..\..\bin\$(MSBuildProjectName)\$(Configuration.ToLower())\</OutputPath>
-		<RepositoryUrl>https://github.com/nigel-sampson/project-reboot</RepositoryUrl>
-    	<RepositoryType>git</RepositoryType>
-    	<EmbedUntrackedSources>true</EmbedUntrackedSources>
-    	<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<RepositoryUrl>https://github.com/Caliburn-Micro/Caliburn.Micro</RepositoryUrl>
+    		<RepositoryType>git</RepositoryType>
+    		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+    		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IsTestProject>$(MSBuildProjectName.Contains('Tests'))</IsTestProject>
-    	<SourceLinkEnabled></SourceLinkEnabled>
+    		<SourceLinkEnabled></SourceLinkEnabled>
 		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' and '$(IsTestProject)' != 'true'">true</GenerateDocumentationFile>
 		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 		<PackageOutputPath>..\..\packages</PackageOutputPath>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(IsTestProject)' != 'true' and '$(SourceLinkEnabled)' != 'false'">
-    	<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All" /> 
+    		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All" /> 
   	</ItemGroup>
 </Project>
