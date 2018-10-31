@@ -16,19 +16,21 @@ namespace Features.CrossPlatform.ViewModels
         {
             Messages.Add("Initialized");
 
-			return Task.FromResult(true);
+            return Task.CompletedTask;
         }
 
         protected override Task OnActivateAsync(CancellationToken cancellationToken)
         {
             Messages.Add("Activated");
 
-			return Task.FromResult(true);
+            return Task.CompletedTask;
         }
-
-        protected override void OnDeactivate(bool close)
+        
+        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
             Messages.Add($"Deactivated, close: {close}");
+
+            return Task.CompletedTask;
         }
 
         public BindableCollection<string> Messages { get; }

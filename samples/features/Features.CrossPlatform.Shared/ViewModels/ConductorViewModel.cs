@@ -27,9 +27,9 @@ namespace Features.CrossPlatform.ViewModels
 
 	    public bool CanCloseTab => Items.Count > 1;
 
-        public void CloseTab()
+        public Task CloseTab()
         {
-            DeactivateItem(ActiveItem, close: true);
+            return DeactivateItemAsync(ActiveItem, close: true, cancellationToken: CancellationToken.None);
         }
     }
 }

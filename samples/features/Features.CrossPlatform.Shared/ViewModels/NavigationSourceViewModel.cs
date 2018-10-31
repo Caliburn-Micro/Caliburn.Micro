@@ -1,9 +1,5 @@
 ﻿using System;
 using Caliburn.Micro;
-#if XAMARINFORMS
-using Caliburn.Micro.Xamarin.Forms;
-using INavigationService = Caliburn.Micro.Xamarin.Forms.INavigationService;
-#endif
 
 namespace Features.CrossPlatform.ViewModels
 {

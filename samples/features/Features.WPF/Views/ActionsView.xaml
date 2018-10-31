@@ -31,7 +31,7 @@
                 <Button x:Name="Clear" Content="Clear" Style="{StaticResource ActionButtonStyle}"/>
                 <Button x:Name="SimpleSayHello" Content="Simple Say Hello" Style="{StaticResource ActionButtonStyle}"/>
                 <Button cal:Message.Attach="SimpleSayHello" Content="Simple Say Hello (using Message.Attach)" Style="{StaticResource ActionButtonStyle}"/>
-                <Button cal:Message.Attach="[Event DoubleTapped] = [SimpleSayHello]" Content="Simple Say Hello (Custom Event - Double Tapped)" Style="{StaticResource ActionButtonStyle}"/>
+                <Button cal:Message.Attach="[Event MouseDoubleClick] = [SimpleSayHello]" Content="Simple Say Hello (Custom Event - Double Tapped)" Style="{StaticResource ActionButtonStyle}"/>
                 <Button x:Name="FullSyntax" Content="Simple Say Hello (Full Behaviour Syntax)" Style="{StaticResource ActionButtonStyle}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">

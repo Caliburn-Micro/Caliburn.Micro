@@ -1,5 +1,5 @@
 ﻿using System;
-using Caliburn.Micro.Xamarin.Forms;
+using Caliburn.Micro;
 
 namespace Features.CrossPlatform
 {
