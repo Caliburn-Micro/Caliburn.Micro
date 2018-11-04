@@ -1,19 +1,21 @@
-﻿namespace Caliburn.Micro {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Controls.Primitives;
-    using System.Windows.Data;
-    using System.Linq;
-    using System.Windows.Navigation;
-    using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
+using System.Windows.Navigation;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// A service that manages windows.
     /// </summary>
-    public interface IWindowManager {
+    public interface IWindowManager
+    {
         /// <summary>
         /// Shows a modal dialog for the specified model.
         /// </summary>
@@ -43,7 +45,8 @@
     /// <summary>
     /// A service that manages windows.
     /// </summary>
-    public class WindowManager : IWindowManager {
+    public class WindowManager : IWindowManager
+    {
         /// <summary>
         /// Shows a modal dialog for the specified model.
         /// </summary>
@@ -51,7 +54,8 @@
         /// <param name="context">The context.</param>
         /// <param name="settings">The dialog popup settings.</param>
         /// <returns>The dialog result.</returns>
-        public virtual bool? ShowDialog(object rootModel, object context = null, IDictionary<string, object> settings = null){
+        public virtual bool? ShowDialog(object rootModel, object context = null, IDictionary<string, object> settings = null)
+        {
             return CreateWindow(rootModel, true, context, settings).ShowDialog();
         }
 
@@ -61,19 +65,23 @@
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
         /// <param name="settings">The optional window settings.</param>
-        public virtual void ShowWindow(object rootModel, object context = null, IDictionary<string, object> settings = null){
+        public virtual void ShowWindow(object rootModel, object context = null, IDictionary<string, object> settings = null)
+        {
             NavigationWindow navWindow = null;
 
             var application = Application.Current;
-            if (application != null && application.MainWindow != null) {
+            if (application != null && application.MainWindow != null)
+            {
                 navWindow = application.MainWindow as NavigationWindow;
             }
 
-            if(navWindow != null) {
+            if (navWindow != null)
+            {
                 var window = CreatePage(rootModel, context, settings);
                 navWindow.Navigate(window);
             }
-            else {
+            else
+            {
                 CreateWindow(rootModel, false, context, settings).Show();
             }
         }
@@ -84,7 +92,8 @@
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The view context.</param>
         /// <param name="settings">The optional popup settings.</param>
-        public virtual async void ShowPopup(object rootModel, object context = null, IDictionary<string, object> settings = null) {
+        public virtual async void ShowPopup(object rootModel, object context = null, IDictionary<string, object> settings = null)
+        {
             var popup = CreatePopup(rootModel, settings);
             var view = ViewLocator.LocateForModel(rootModel, popup, context);
 
@@ -92,16 +101,16 @@
             popup.SetValue(View.IsGeneratedProperty, true);
 
             ViewModelBinder.Bind(rootModel, popup, null);
-			Action.SetTargetWithoutContext(view, rootModel);
-            
+            Action.SetTargetWithoutContext(view, rootModel);
+
             if (rootModel is IActivate activator)
             {
                 await activator.ActivateAsync();
             }
 
-            var deactivator = rootModel as IDeactivate;
-            if (deactivator != null) {
-                popup.Closed += delegate { deactivator.DeactivateAsync(true); };
+            if (rootModel is IDeactivate deactivator)
+            {
+                popup.Closed += async (s, e) => await deactivator.DeactivateAsync(true);
             }
 
             popup.IsOpen = true;
@@ -114,15 +123,24 @@
         /// <param name="rootModel">The model.</param>
         /// <param name="settings">The optional popup settings.</param>
         /// <returns>The popup.</returns>
-        protected virtual Popup CreatePopup(object rootModel, IDictionary<string, object> settings) {
+        protected virtual Popup CreatePopup(object rootModel, IDictionary<string, object> settings)
+        {
             var popup = new Popup();
 
-            if (ApplySettings(popup, settings)) {
+            if (ApplySettings(popup, settings))
+            {
                 if (!settings.ContainsKey("PlacementTarget") && !settings.ContainsKey("Placement"))
+                {
                     popup.Placement = PlacementMode.MousePoint;
+                }
+
                 if (!settings.ContainsKey("AllowsTransparency"))
+                {
                     popup.AllowsTransparency = true;
-            }else {
+                }
+            }
+            else
+            {
                 popup.AllowsTransparency = true;
                 popup.Placement = PlacementMode.MousePoint;
             }
@@ -138,12 +156,14 @@
         /// <param name="context">The view context.</param>
         /// <param name="settings">The optional popup settings.</param>
         /// <returns>The window.</returns>
-        protected virtual Window CreateWindow(object rootModel, bool isDialog, object context, IDictionary<string, object> settings) {
+        protected virtual Window CreateWindow(object rootModel, bool isDialog, object context, IDictionary<string, object> settings)
+        {
             var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context), isDialog);
             ViewModelBinder.Bind(rootModel, view, context);
 
             var haveDisplayName = rootModel as IHaveDisplayName;
-            if (string.IsNullOrEmpty(view.Title) && haveDisplayName != null && !ConventionManager.HasBinding(view, Window.TitleProperty)) {
+            if (string.IsNullOrEmpty(view.Title) && haveDisplayName != null && !ConventionManager.HasBinding(view, Window.TitleProperty))
+            {
                 var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
                 view.SetBinding(Window.TitleProperty, binding);
             }
@@ -162,11 +182,21 @@
         /// <param name="view">The view.</param>
         /// <param name="isDialog">Whethor or not the window is being shown as a dialog.</param>
         /// <returns>The window.</returns>
-        protected virtual Window EnsureWindow(object model, object view, bool isDialog) {
-            var window = view as Window;
+        protected virtual Window EnsureWindow(object model, object view, bool isDialog)
+        {
 
-            if (window == null) {
-                window = new Window {
+            if (view is Window window)
+            {
+                var owner = InferOwnerOf(window);
+                if (owner != null && isDialog)
+                {
+                    window.Owner = owner;
+                }
+            }
+            else
+            {
+                window = new Window
+                {
                     Content = view,
                     SizeToContent = SizeToContent.WidthAndHeight
                 };
@@ -174,18 +204,14 @@
                 window.SetValue(View.IsGeneratedProperty, true);
 
                 var owner = InferOwnerOf(window);
-                if (owner != null) {
+                if (owner != null)
+                {
                     window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     window.Owner = owner;
                 }
-                else {
+                else
+                {
                     window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                }
-            }
-            else {
-                var owner = InferOwnerOf(window);
-                if (owner != null && isDialog) {
-                    window.Owner = owner;
                 }
             }
 
@@ -197,9 +223,11 @@
         /// </summary>
         /// <param name="window">The window to whose owner needs to be determined.</param>
         /// <returns>The owner.</returns>
-        protected virtual Window InferOwnerOf(Window window) {
+        protected virtual Window InferOwnerOf(Window window)
+        {
             var application = Application.Current;
-            if (application == null) {
+            if (application == null)
+            {
                 return null;
             }
 
@@ -215,12 +243,14 @@
         /// <param name="context">The context.</param>
         /// <param name="settings">The optional popup settings.</param>
         /// <returns>The page.</returns>
-        public virtual Page CreatePage(object rootModel, object context, IDictionary<string, object> settings) {
+        public virtual Page CreatePage(object rootModel, object context, IDictionary<string, object> settings)
+        {
             var view = EnsurePage(rootModel, ViewLocator.LocateForModel(rootModel, null, context));
             ViewModelBinder.Bind(rootModel, view, context);
 
             var haveDisplayName = rootModel as IHaveDisplayName;
-            if (string.IsNullOrEmpty(view.Title) && haveDisplayName != null && !ConventionManager.HasBinding(view, Page.TitleProperty)) {
+            if (string.IsNullOrEmpty(view.Title) && haveDisplayName != null && !ConventionManager.HasBinding(view, Page.TitleProperty))
+            {
                 var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
                 view.SetBinding(Page.TitleProperty, binding);
             }
@@ -232,9 +262,9 @@
                 activator.ActivateAsync();
             }
 
-            var deactivatable = rootModel as IDeactivate;
-            if (deactivatable != null) {
-                view.Unloaded += (s, e) => deactivatable.DeactivateAsync(true);
+            if (rootModel is IDeactivate deactivatable)
+            {
+                view.Unloaded += async (s, e) => await deactivatable.DeactivateAsync(true);
             }
 
             return view;
@@ -246,25 +276,31 @@
         /// <param name="model">The model.</param>
         /// <param name="view">The view.</param>
         /// <returns>The page.</returns>
-        protected virtual Page EnsurePage(object model, object view) {
-            var page = view as Page;
-
-            if(page == null) {
-                page = new Page { Content = view };
-                page.SetValue(View.IsGeneratedProperty, true);
+        protected virtual Page EnsurePage(object model, object view)
+        {
+            if (view is Page page)
+            {
+                return page;
             }
+
+            page = new Page { Content = view };
+            page.SetValue(View.IsGeneratedProperty, true);
 
             return page;
         }
 
-        bool ApplySettings(object target, IEnumerable<KeyValuePair<string, object>> settings) {
-            if (settings != null) {
+        private bool ApplySettings(object target, IEnumerable<KeyValuePair<string, object>> settings)
+        {
+            if (settings != null)
+            {
                 var type = target.GetType();
 
-                foreach (var pair in settings) {
+                foreach (var pair in settings)
+                {
                     var propertyInfo = type.GetProperty(pair.Key);
 
-                    if (propertyInfo != null) {
+                    if (propertyInfo != null)
+                    {
                         propertyInfo.SetValue(target, pair.Value, null);
                     }
                 }
@@ -275,13 +311,15 @@
             return false;
         }
 
-        class WindowConductor {
-            bool deactivatingFromView;
-            bool deactivateFromViewModel;
-            readonly Window view;
-            readonly object model;
+        private class WindowConductor
+        {
+            private bool deactivatingFromView;
+            private bool deactivateFromViewModel;
+            private readonly Window view;
+            private readonly object model;
 
-            public WindowConductor(object model, Window view) {
+            public WindowConductor(object model, Window view)
+            {
                 this.model = model;
                 this.view = view;
 
@@ -290,23 +328,25 @@
                     activator.ActivateAsync();
                 }
 
-                var deactivatable = model as IDeactivate;
-                if (deactivatable != null) {
+                if (model is IDeactivate deactivatable)
+                {
                     view.Closed += Closed;
                     deactivatable.Deactivated += Deactivated;
                 }
 
-                var guard = model as IGuardClose;
-                if (guard != null) {
+                if (model is IGuardClose guard)
+                {
                     view.Closing += Closing;
                 }
             }
 
-            void Closed(object sender, EventArgs e) {
+            private void Closed(object sender, EventArgs e)
+            {
                 view.Closed -= Closed;
                 view.Closing -= Closing;
 
-                if (deactivateFromViewModel) {
+                if (deactivateFromViewModel)
+                {
                     return;
                 }
 
@@ -317,14 +357,17 @@
                 deactivatingFromView = false;
             }
 
-            void Deactivated(object sender, DeactivationEventArgs e) {
-                if (!e.WasClosed) {
+            private void Deactivated(object sender, DeactivationEventArgs e)
+            {
+                if (!e.WasClosed)
+                {
                     return;
                 }
 
                 ((IDeactivate)model).Deactivated -= Deactivated;
 
-                if (deactivatingFromView) {
+                if (deactivatingFromView)
+                {
                     return;
                 }
 
@@ -333,19 +376,16 @@
                 deactivateFromViewModel = false;
             }
 
-            async void Closing(object sender, CancelEventArgs e) {
-                if (e.Cancel) {
+            private async void Closing(object sender, CancelEventArgs e)
+            {
+                if (e.Cancel)
+                {
                     return;
                 }
 
-                var guard = (IGuardClose)model;
+                var guard = (IGuardClose) model;
 
                 var canClose = await guard.CanCloseAsync(CancellationToken.None);
-
-                Execute.OnUIThread(() => {
-                    if (canClose)
-                        view.Close();
-                });
 
                 e.Cancel = !canClose;
             }
