@@ -1,0 +1,23 @@
+name: Continuous Integration
+trigger:
+- dev/4.0.0
+
+pool:
+  vmImage: vs2017-win2016
+
+variables:
+  buildConfiguration: Release
+  solution: './src/Caliburn.Micro.sln'
+
+steps:
+- task: NugetRestore@2
+  displayName: Nuget Restore
+  inputs:
+    command: restore
+    solution: '$(solution)'
+
+- task: VSBuild@1
+  displayName: Build Solution
+  inputs:
+    solution: '$(solution)'
+    configuration: '$(buildConfiguration)'
