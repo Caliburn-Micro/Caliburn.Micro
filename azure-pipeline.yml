@@ -6,7 +6,8 @@ pool:
 
 variables:
   buildConfiguration: Release
-  solution: './src/Caliburn.Micro.sln'
+  buildPlatform: Any CPU
+  solution: '.\src\Caliburn.Micro.sln'
 
 steps:
 - task: VSBuild@1
@@ -21,4 +22,12 @@ steps:
   inputs:
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
+    platform: '$(buildPlatform)'
     msbuildArgs: '/t:Build'
+
+- task: VSTest@2
+  displayName: Run Unit Tests
+  inputs:
+    testAssemblyVer2: '.\bin\*.Tests\$(buildConfiguration)\*\*.Tests.dll'
+    configuration: '$(buildConfiguration)'
+    platform: '$(buildPlatform)'
