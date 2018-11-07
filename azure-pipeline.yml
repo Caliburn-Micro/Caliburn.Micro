@@ -1,4 +1,3 @@
-name: Continuous Integration
 trigger:
 - dev/4.0.0
 
@@ -10,14 +9,16 @@ variables:
   solution: './src/Caliburn.Micro.sln'
 
 steps:
-- task: NugetRestore@2
+- task: VSBuild@1
   displayName: Nuget Restore
   inputs:
-    command: restore
     solution: '$(solution)'
+    configuration: '$(buildConfiguration)'
+    msbuildArgs: '/t:Restore'
 
 - task: VSBuild@1
   displayName: Build Solution
   inputs:
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
+    msbuildArgs: '/t:Build'
