@@ -28,6 +28,6 @@ steps:
 - task: VSTest@2
   displayName: Run Unit Tests
   inputs:
-    testAssemblyVer2: '.\bin\**\*.Tests.dll'
+    testAssemblyVer2: 'bin\**\*.Tests.dll'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
