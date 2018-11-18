@@ -28,12 +28,12 @@ steps:
     msbuildArgs: '/t:Restore'
 
 - task: VSBuild@1
-  displayName: Build Solution
+  displayName: Build & Pack Solution
   inputs:
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Build'
+    msbuildArgs: '/t:Pack'
 
 - task: VSTest@2
   displayName: Run Unit Tests
