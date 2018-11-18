@@ -26,11 +26,16 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Windows.Interactivity">
-      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Expression\Blend\.NETFramework\v4.5\Libraries\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\..\lib\System.Windows.Interactivity.dll</HintPath>
     </Reference>
+    
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
     <Compile Include="Platforms\net46\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Label="Package">
+    <None Include="..\..\lib\System.Windows.Interactivity.dll" PackagePath="lib\net46" Pack="true" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
