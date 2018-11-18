@@ -9,7 +9,6 @@
 		<PackageTags>MVVM;WPF;WinRT;UWP;Xamarin;Android;iOS;CoC;Convention;MVP;PM;Screen;Coroutine;Behavior;Model-View-ViewModel;Presentation;UI;ViewModel;;Caliburn</PackageTags>
 		<PackageReleaseNotes>http://caliburnmicro.com</PackageReleaseNotes>
 		<Description>A small, yet powerful framework designed for Xaml platforms, Caliburn.Micro implements a variety of UI patterns for solving real-world problems. Patterns that are highlighted include MVVM (Presentation Model), MVP and MVC.</Description>
-		<Version>4.0.0-alpha.1</Version>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -20,11 +19,15 @@
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IsTestProject>$(MSBuildProjectName.Contains('Tests'))</IsTestProject>
-		<SourceLinkEnabled></SourceLinkEnabled>
-		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' and '$(IsTestProject)' != 'true'">true</GenerateDocumentationFile>
+		<SourceLinkEnabled>true</SourceLinkEnabled>
+		<GenerateDocumentationFile Condition="'$(Configuration)' == 'Release' and '$(IsTestProject)' != 'true'">true</GenerateDocumentationFile>
 		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 		<PackageOutputPath>..\..\packages</PackageOutputPath>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Nerdbank.GitVersioning" Version="2.2.33" PrivateAssets="All" /> 
+	</ItemGroup>
 
 	<ItemGroup Condition="'$(IsTestProject)' != 'true' and '$(SourceLinkEnabled)' != 'false'">
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All" /> 
