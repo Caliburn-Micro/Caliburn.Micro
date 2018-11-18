@@ -46,10 +46,10 @@ steps:
   displayName: Copy Packages to Artifact Directory
   inputs:
     Contents: 'packages\*.nupkg'
-    TargetFolder: '$(build.artifactStagingDirectory)\packages'
+    TargetFolder: '$(build.artifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
   displayName: Publish Package Artifacts
   inputs:
-    pathToPublish: '$(build.artifactStagingDirectory)\packages'
+    pathToPublish: '$(build.artifactStagingDirectory)'
     artifactName: Packages
