@@ -7,7 +7,7 @@ pool:
 variables:
   buildConfiguration: Release
   buildPlatform: Any CPU
-  solution: '.\src\Caliburn.Micro.sln'
+  solution: 'src\Caliburn.Micro.sln'
 
 steps:
 - task: DotNetCoreCLI@2  
@@ -19,7 +19,7 @@ steps:
   
 - script: nbgv cloud
   displayName: Set Version
-  
+
 - task: VSBuild@1
   displayName: Nuget Restore
   inputs:
@@ -41,3 +41,15 @@ steps:
     testAssemblyVer2: 'bin\**\*.Tests.dll'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
+
+- task: CopyFiles@2
+  displayName: Copy Packages to Artifact Directory
+  inputs:
+    Contents: 'packages\*.nupkg'
+    TargetFolder: '$(build.artifactStagingDirectory)\packages'
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Package Artifacts
+  inputs:
+    pathToPublish: '$(build.artifactStagingDirectory)\packages'
+    artifactName: Packages
