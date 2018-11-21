@@ -1,5 +1,7 @@
 # Caliburn.Micro
 
+[![Build Status](https://dev.azure.com/caliburn-micro/caliburn-micro/_apis/build/status/Continuous%20Integration)](https://dev.azure.com/caliburn-micro/caliburn-micro/_build/latest?definitionId=3)
+
 Caliburn.Micro is a small, yet powerful framework, designed for building applications across all XAML platforms. With strong support for MVVM and other proven UI patterns, Caliburn.Micro will enable you to build your solution quickly, without the need to sacrifice code quality or testability.
 
 ## Packages are available on Nuget
