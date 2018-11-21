@@ -6,5 +6,10 @@
     },
     "publicReleaseRefSpec": [
         "^refs/heads/master$"
-    ]
+    ],
+    "cloudBuild": {
+        "buildNumber": {
+            "enabled": false
+        }
+    }
 }
