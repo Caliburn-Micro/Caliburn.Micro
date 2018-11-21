@@ -1,5 +1,5 @@
 trigger:
-- dev/4.0.0
+- *
 
 pool:
   vmImage: vs2017-win2016
