@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -23,7 +24,7 @@ namespace Caliburn.Micro
         /// <param name="context">The context.</param>
         /// <param name="settings">The optional dialog settings.</param>
         /// <returns>The dialog result.</returns>
-        bool? ShowDialog(object rootModel, object context = null, IDictionary<string, object> settings = null);
+        Task<bool?> ShowDialogAsync(object rootModel, object context = null, IDictionary<string, object> settings = null);
 
         /// <summary>
         /// Shows a non-modal window for the specified model.
@@ -31,7 +32,7 @@ namespace Caliburn.Micro
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
         /// <param name="settings">The optional window settings.</param>
-        void ShowWindow(object rootModel, object context = null, IDictionary<string, object> settings = null);
+        Task ShowWindowAsync(object rootModel, object context = null, IDictionary<string, object> settings = null);
 
         /// <summary>
         /// Shows a popup at the current mouse position.
@@ -39,7 +40,7 @@ namespace Caliburn.Micro
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The view context.</param>
         /// <param name="settings">The optional popup settings.</param>
-        void ShowPopup(object rootModel, object context = null, IDictionary<string, object> settings = null);
+        Task ShowPopupAsync(object rootModel, object context = null, IDictionary<string, object> settings = null);
     }
 
     /// <summary>
@@ -54,9 +55,11 @@ namespace Caliburn.Micro
         /// <param name="context">The context.</param>
         /// <param name="settings">The dialog popup settings.</param>
         /// <returns>The dialog result.</returns>
-        public virtual bool? ShowDialog(object rootModel, object context = null, IDictionary<string, object> settings = null)
+        public virtual async Task<bool?> ShowDialogAsync(object rootModel, object context = null, IDictionary<string, object> settings = null)
         {
-            return CreateWindow(rootModel, true, context, settings).ShowDialog();
+            var window = await CreateWindowAsync(rootModel, true, context, settings);
+                
+            return window.ShowDialog();
         }
 
         /// <summary>
@@ -65,7 +68,7 @@ namespace Caliburn.Micro
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
         /// <param name="settings">The optional window settings.</param>
-        public virtual void ShowWindow(object rootModel, object context = null, IDictionary<string, object> settings = null)
+        public virtual async Task ShowWindowAsync(object rootModel, object context = null, IDictionary<string, object> settings = null)
         {
             NavigationWindow navWindow = null;
 
@@ -77,12 +80,14 @@ namespace Caliburn.Micro
 
             if (navWindow != null)
             {
-                var window = CreatePage(rootModel, context, settings);
+                var window = await CreatePageAsync(rootModel, context, settings);
                 navWindow.Navigate(window);
             }
             else
             {
-                CreateWindow(rootModel, false, context, settings).Show();
+                var window = await CreateWindowAsync(rootModel, false, context, settings);
+
+                window.Show();
             }
         }
 
@@ -92,7 +97,7 @@ namespace Caliburn.Micro
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The view context.</param>
         /// <param name="settings">The optional popup settings.</param>
-        public virtual async void ShowPopup(object rootModel, object context = null, IDictionary<string, object> settings = null)
+        public virtual async Task ShowPopupAsync(object rootModel, object context = null, IDictionary<string, object> settings = null)
         {
             var popup = CreatePopup(rootModel, settings);
             var view = ViewLocator.LocateForModel(rootModel, popup, context);
@@ -156,7 +161,7 @@ namespace Caliburn.Micro
         /// <param name="context">The view context.</param>
         /// <param name="settings">The optional popup settings.</param>
         /// <returns>The window.</returns>
-        protected virtual Window CreateWindow(object rootModel, bool isDialog, object context, IDictionary<string, object> settings)
+        protected virtual async Task<Window> CreateWindowAsync(object rootModel, bool isDialog, object context, IDictionary<string, object> settings)
         {
             var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context), isDialog);
             ViewModelBinder.Bind(rootModel, view, context);
@@ -170,7 +175,9 @@ namespace Caliburn.Micro
 
             ApplySettings(view, settings);
 
-            new WindowConductor(rootModel, view);
+            var conductor = new WindowConductor(rootModel, view);
+
+            await conductor.InitialiseAysnc();
 
             return view;
         }
@@ -243,7 +250,7 @@ namespace Caliburn.Micro
         /// <param name="context">The context.</param>
         /// <param name="settings">The optional popup settings.</param>
         /// <returns>The page.</returns>
-        public virtual Page CreatePage(object rootModel, object context, IDictionary<string, object> settings)
+        public virtual async Task<Page> CreatePageAsync(object rootModel, object context, IDictionary<string, object> settings)
         {
             var view = EnsurePage(rootModel, ViewLocator.LocateForModel(rootModel, null, context));
             ViewModelBinder.Bind(rootModel, view, context);
@@ -259,7 +266,7 @@ namespace Caliburn.Micro
 
             if (rootModel is IActivate activator)
             {
-                activator.ActivateAsync();
+                await activator.ActivateAsync();
             }
 
             if (rootModel is IDeactivate deactivatable)
@@ -322,10 +329,13 @@ namespace Caliburn.Micro
             {
                 this.model = model;
                 this.view = view;
+            }
 
+            public async Task InitialiseAysnc()
+            {
                 if (model is IActivate activator)
                 {
-                    activator.ActivateAsync();
+                    await activator.ActivateAsync();
                 }
 
                 if (model is IDeactivate deactivatable)
@@ -340,7 +350,7 @@ namespace Caliburn.Micro
                 }
             }
 
-            private void Closed(object sender, EventArgs e)
+            private async void Closed(object sender, EventArgs e)
             {
                 view.Closed -= Closed;
                 view.Closing -= Closing;
@@ -353,7 +363,7 @@ namespace Caliburn.Micro
                 var deactivatable = (IDeactivate)model;
 
                 deactivatingFromView = true;
-                deactivatable.DeactivateAsync(true);
+                await deactivatable.DeactivateAsync(true);
                 deactivatingFromView = false;
             }
 
