@@ -76,7 +76,7 @@ namespace Caliburn.Micro
         /// Creates the root frame and navigates to the specified view.
         /// </summary>
         /// <param name="viewType">The view type to navigate to.</param>
-        protected void DisplayRootView(Type viewType)
+        protected async Task DisplayRootView(Type viewType)
         {
             PrepareViewFirst();
 
@@ -86,7 +86,7 @@ namespace Caliburn.Micro
 
             var navigationService = IoC.Get<INavigationService>();
 
-            navigationService.NavigateToViewAsync(viewType);
+            await navigationService.NavigateToViewAsync(viewType);
 
             MainPage = RootNavigationPage;
         }
@@ -95,9 +95,9 @@ namespace Caliburn.Micro
         /// Creates the root frame and navigates to the specified view.
         /// </summary>
         /// <typeparam name="T">The view type to navigate to.</typeparam>
-        protected void DisplayRootView<T>()
+        protected Task DisplayRootView<T>()
         {
-            DisplayRootView(typeof(T));
+            return DisplayRootView(typeof(T));
         }
 
         /// <summary>
@@ -109,9 +109,7 @@ namespace Caliburn.Micro
             var viewModel = IoC.GetInstance(viewModelType, null);
             var view = ViewLocator.LocateForModel(viewModel, null, null);
 
-            var page = view as Page;
-
-            if (page == null)
+            if (!(view is Page page))
                 throw new NotSupportedException(String.Format("{0} does not inherit from {1}.", view.GetType(), typeof(Page)));
 
             ViewModelBinder.Bind(viewModel, view, null);
