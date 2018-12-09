@@ -36,6 +36,7 @@
 
   <ItemGroup Label="Package">
     <None Include="..\..\lib\System.Windows.Interactivity.dll" PackagePath="lib\net46" Pack="true" />
+    <None Include="Platforms\uap\Caliburn.Micro.Platform.rd.xml" PackagePath="lib\uap10.0.16299\Caliburn.Micro.Platform\Properties\Caliburn.Micro.Platform.rd.xml" Pack="true" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
