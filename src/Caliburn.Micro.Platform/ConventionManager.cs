@@ -19,7 +19,7 @@
     using System.Windows.Data;
     using System.Windows.Markup;
     using System.Windows.Shapes;    
-    using EventTrigger = System.Windows.Interactivity.EventTrigger;
+    using EventTrigger = Microsoft.Xaml.Behaviors.EventTrigger;
 #endif
 #if !WINDOWS_UWP
     using System.Windows.Documents;

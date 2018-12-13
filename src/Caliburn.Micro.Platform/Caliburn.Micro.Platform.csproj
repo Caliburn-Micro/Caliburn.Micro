@@ -23,19 +23,15 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version=" 1.0.1" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="System.Windows.Interactivity">
-      <HintPath>..\..\lib\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
-    
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
     <Compile Include="Platforms\net46\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup Label="Package">
-    <None Include="..\..\lib\System.Windows.Interactivity.dll" PackagePath="lib\net46" Pack="true" />
     <None Include="Platforms\uap\Caliburn.Micro.Platform.rd.xml" PackagePath="lib\uap10.0.16299\Caliburn.Micro.Platform\Properties\Caliburn.Micro.Platform.rd.xml" Pack="true" />
   </ItemGroup>
 

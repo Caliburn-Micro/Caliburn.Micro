@@ -15,13 +15,11 @@
     using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
 #else
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Data;
-    using System.Windows.Interactivity;
     using System.Windows.Markup;
-    using System.Windows.Media;
-    using EventTrigger = System.Windows.Interactivity.EventTrigger;
+    using Microsoft.Xaml.Behaviors;
+    using EventTrigger = Microsoft.Xaml.Behaviors.EventTrigger;
 #endif
 
     /// <summary>

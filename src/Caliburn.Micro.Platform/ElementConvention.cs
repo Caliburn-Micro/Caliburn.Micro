@@ -12,7 +12,7 @@
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
 #else
     using System.Windows;
-    using TriggerBase = System.Windows.Interactivity.TriggerBase;
+    using TriggerBase = Microsoft.Xaml.Behaviors.TriggerBase;
 #endif
 
     /// <summary>
