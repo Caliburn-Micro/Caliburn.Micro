@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Caliburn.Micro.Templates.WPF</id>
+    <version>1.0.0</version>
+    <description>Creates a blank WPF app using Caliburn.Micro.</description>
+    <authors>Nigel Sampson</authors>
+    <packageTypes>
+      <packageType name="Template" />
+    </packageTypes>
+  </metadata>
+  <files>
+    <file src='**' target="\content" exclude="readme.md;bin\**;obj\**" />
+  </files>
+</package>
