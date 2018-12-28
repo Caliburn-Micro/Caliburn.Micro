@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net45</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
