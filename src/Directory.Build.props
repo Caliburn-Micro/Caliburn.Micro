@@ -1,7 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
 		<Copyright>Copyright (c) 2010 Blue Spire Consulting, Inc.</Copyright>
-		<PackageLicenseUrl>https://raw.githubusercontent.com/Caliburn-Micro/Caliburn.Micro/master/License.txt</PackageLicenseUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>http://caliburnmicro.com</PackageProjectUrl>
 		<PackageIconUrl>https://raw.githubusercontent.com/Caliburn-Micro/Caliburn.Micro/master/CaliburnIcon.png</PackageIconUrl>
 		<Authors>Nigel Sampson, Rob Eisenberg, Thomas Ibel, Marco Amendola, Chin Bae, Ryan Cromwell, Matt Hidinger</Authors>
