@@ -15,5 +15,14 @@
         <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
     </PropertyGroup>
 
+    <Target Name="AddCommitHashToAssemblyAttributes" BeforeTargets="GetAssemblyAttributes">
+        <ItemGroup>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute" Condition=" '$(SourceRevisionId)' != '' ">
+                <_Parameter1>CommitHash</_Parameter1>
+                <_Parameter2>$(SourceRevisionId)</_Parameter2>
+            </AssemblyAttribute>
+        </ItemGroup>
+    </Target>
+
     <Target Name="Package" DependsOnTargets="Clean;Restore;Build;Pack" />
 </Project>
