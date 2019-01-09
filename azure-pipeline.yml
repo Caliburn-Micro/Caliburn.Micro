@@ -42,20 +42,36 @@ steps:
     platform: '$(buildPlatform)'
 
 - task: VSBuild@1
-  displayName: Build & Pack Setup Solution
+  displayName: Restore Setup Solution
   inputs:
     solution: '$(setupSamplesSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Restore;Build'
+    msbuildArgs: '/t:Restore'
 
 - task: VSBuild@1
-  displayName: Build & Pack Features Solution
+  displayName: Build Setup Solution
+  inputs:
+    solution: '$(setupSamplesSolution)'
+    configuration: '$(buildConfiguration)'
+    platform: '$(buildPlatform)'
+    msbuildArgs: '/t:Build'
+
+- task: VSBuild@1
+  displayName: Restore Features Solution
   inputs:
     solution: '$(featuresSamplesSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Restore;Build'
+    msbuildArgs: '/t:Restore'
+
+- task: VSBuild@1
+  displayName: Build Features Solution
+  inputs:
+    solution: '$(featuresSamplesSolution)'
+    configuration: '$(buildConfiguration)'
+    platform: '$(buildPlatform)'
+    msbuildArgs: '/t:Build'
 
 - task: CopyFiles@2
   displayName: Copy Packages to Artifact Directory
