@@ -4,7 +4,9 @@ pool:
 variables:
   buildConfiguration: Release
   buildPlatform: Any CPU
-  solution: 'src\Caliburn.Micro.sln'
+  coreSolution: 'src\Caliburn.Micro.sln'
+  setupSamplesSolution: 'samples\setup\Setup.sln'
+  featuresSamplesSolution: 'samples\features\Features.sln'
 
 steps:
 - task: DotNetCoreCLI@2  
@@ -18,16 +20,9 @@ steps:
   displayName: Set Version
 
 - task: VSBuild@1
-  displayName: Nuget Restore
+  displayName: Build & Pack Core Solution
   inputs:
-    solution: '$(solution)'
-    configuration: '$(buildConfiguration)'
-    msbuildArgs: '/t:Restore'
-
-- task: VSBuild@1
-  displayName: Build & Pack Solution
-  inputs:
-    solution: '$(solution)'
+    solution: '$(coreSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
     msbuildArgs: '/t:Pack'
@@ -38,6 +33,22 @@ steps:
     testAssemblyVer2: 'bin\**\*.Tests.dll'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
+
+- task: VSBuild@1
+  displayName: Build & Pack Setup Solution
+  inputs:
+    solution: '$(setupSamplesSolution)'
+    configuration: '$(buildConfiguration)'
+    platform: '$(buildPlatform)'
+    msbuildArgs: '/t:Restore;Build'
+
+- task: VSBuild@1
+  displayName: Build & Pack Features Solution
+  inputs:
+    solution: '$(featuresSamplesSolution)'
+    configuration: '$(buildConfiguration)'
+    platform: '$(buildPlatform)'
+    msbuildArgs: '/t:Restore;Build'
 
 - task: CopyFiles@2
   displayName: Copy Packages to Artifact Directory
