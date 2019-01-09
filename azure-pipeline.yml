@@ -41,13 +41,10 @@ steps:
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
 
-- task: VSBuild@1
+- task: NuGetCommand@2
   displayName: Restore Setup Solution
   inputs:
-    solution: '$(setupSamplesSolution)'
-    configuration: '$(buildConfiguration)'
-    platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Restore'
+    restoreSolution: '$(setupSamplesSolution)'
 
 - task: VSBuild@1
   displayName: Build Setup Solution
@@ -57,13 +54,10 @@ steps:
     platform: '$(buildPlatform)'
     msbuildArgs: '/t:Build'
 
-- task: VSBuild@1
+- task: NuGetCommand@2
   displayName: Restore Features Solution
   inputs:
-    solution: '$(featuresSamplesSolution)'
-    configuration: '$(buildConfiguration)'
-    platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Restore'
+    restoreSolution: '$(featuresSamplesSolution)'
 
 - task: VSBuild@1
   displayName: Build Features Solution
