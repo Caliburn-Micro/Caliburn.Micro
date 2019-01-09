@@ -20,6 +20,13 @@ steps:
   displayName: Set Version
 
 - task: VSBuild@1
+  displayName: Nuget Restore
+  inputs:
+    solution: '$(coreSolution)'
+    configuration: '$(buildConfiguration)'
+    msbuildArgs: '/t:Restore'
+
+- task: VSBuild@1
   displayName: Build & Pack Core Solution
   inputs:
     solution: '$(coreSolution)'
