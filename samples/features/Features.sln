@@ -15,7 +15,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Features.Forms", "Features.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Features.Forms.iOS", "Features.Forms\Features.Forms.iOS\Features.Forms.iOS.csproj", "{098D8242-A354-4328-B11E-0306AEAD3014}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Features.Forms.Android", "C:\Users\Nigel Sampson\source\repos\Features.Forms\Features.Forms\Features.Forms.Android\Features.Forms.Android.csproj", "{C22C023A-6B52-4FE3-B98A-57F973D56D4B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Features.Forms.Android", "Features.Forms\Features.Forms.Android\Features.Forms.Android.csproj", "{C22C023A-6B52-4FE3-B98A-57F973D56D4B}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
