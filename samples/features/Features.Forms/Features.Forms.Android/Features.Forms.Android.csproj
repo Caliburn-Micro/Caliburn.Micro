@@ -40,6 +40,7 @@
     <WarningLevel>4</WarningLevel>
     <AndroidManagedSymbols>true</AndroidManagedSymbols>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <DefineConstants>__UNIFIED__;__MOBILE__;__ANDROID__;XAMARINFORMS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Caliburn.Micro.Core">
