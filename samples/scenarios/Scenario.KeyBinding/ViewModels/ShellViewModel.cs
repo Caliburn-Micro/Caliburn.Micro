@@ -31,5 +31,10 @@ namespace Scenario.KeyBinding.ViewModels
         {
             EnterMessage = "Ctrl+Enter has been pressed";
         }
+
+        public void AltEnterPressed()
+        {
+            EnterMessage = "Alt+Enter has been pressed";
+        }
     }
 }
