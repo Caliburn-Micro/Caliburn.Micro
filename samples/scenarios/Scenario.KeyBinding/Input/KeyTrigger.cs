@@ -41,7 +41,8 @@ namespace Scenario.KeyBinding.Input
 
         private void OnAssociatedObjectKeyDown(object sender, KeyEventArgs e)
         {
-            if ((e.Key == Key) && (Keyboard.Modifiers == GetActualModifiers(e.Key, Modifiers)))
+            var key = (e.Key == Key.System) ? e.SystemKey : e.Key;
+            if ((key == Key) && (Keyboard.Modifiers == GetActualModifiers(e.Key, Modifiers)))
             {
                 InvokeActions(e);
             }
