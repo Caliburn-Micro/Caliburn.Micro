@@ -136,14 +136,15 @@ namespace Caliburn.Micro
         }
 
         /// <summary>
-        /// Gets all instances of a particular type.
+        /// Gets all instances of a particular type and the given key (default null).
         /// </summary>
         /// <typeparam name="TService">The type to resolve.</typeparam>
         /// <param name="container">The container.</param>
+        /// <param name = "key">The key shared by those instances</param>
         /// <returns>The resolved instances.</returns>
-        public static IEnumerable<TService> GetAllInstances<TService>(this SimpleContainer container)
+        public static IEnumerable<TService> GetAllInstances<TService>(this SimpleContainer container, string key = null)
         {
-            return container.GetAllInstances(typeof(TService)).Cast<TService>();
+            return container.GetAllInstances(typeof(TService), key).Cast<TService>();
         }
 
         /// <summary>

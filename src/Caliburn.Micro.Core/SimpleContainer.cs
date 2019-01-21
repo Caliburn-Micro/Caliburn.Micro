@@ -144,14 +144,15 @@ namespace Caliburn.Micro
         }
 
         /// <summary>
-        ///   Requests all instances of a given type.
+        ///   Requests all instances of a given type and the given key (default null).
         /// </summary>
         /// <param name = "service">The service.</param>
+        /// <param name = "key">The key shared by those instances</param>
         /// <returns>All the instances or an empty enumerable if none are found.</returns>
-        public IEnumerable<object> GetAllInstances(Type service)
+        public IEnumerable<object> GetAllInstances(Type service, string key = null)
         {
-            var entry = GetEntry(service, null);
-            return entry != null ? entry.Select(x => x(this)) : new object[0];
+            var entries = GetEntry(service, key);
+            return entries != null ? entries.Select(x => x(this)) : new object[0];
         }
 
         /// <summary>
