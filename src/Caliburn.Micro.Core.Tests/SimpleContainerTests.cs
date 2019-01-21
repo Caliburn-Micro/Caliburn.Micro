@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Linq;
+using Xunit;
 
 namespace Caliburn.Micro.Core.Tests
 {
@@ -108,6 +109,18 @@ namespace Caliburn.Micro.Core.Tests
             var instanceB = container.GetInstance(typeof(object), null);
 
             Assert.NotSame(instanceA, instanceB);
+        }
+
+        [Fact]
+        public void Instances_registered_with_different_keys_get_all_instances_return_all()
+        {
+            var container = new SimpleContainer();
+            container.RegisterInstance(typeof(object), "test", new object());
+            container.RegisterInstance(typeof(object), "test", new object());
+
+            var results = container.GetAllInstances<object>("test");
+
+            Assert.Equal(2, results.Count());
         }
     }
 }
