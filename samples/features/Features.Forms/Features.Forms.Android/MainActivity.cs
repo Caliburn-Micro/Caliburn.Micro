@@ -7,6 +7,7 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Features.CrossPlatform;
+using Caliburn.Micro;
 
 namespace Features.Forms.Droid
 {
@@ -20,7 +21,7 @@ namespace Features.Forms.Droid
 
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            LoadApplication(new FormsApp());
+            LoadApplication(IoC.Get<FormsApp>());
         }
     }
 }
