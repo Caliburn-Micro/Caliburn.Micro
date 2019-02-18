@@ -7,7 +7,7 @@
     <RootNamespace>Caliburn.Micro</RootNamespace>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net46'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
     <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
