@@ -71,25 +71,12 @@
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <returns></returns>
-        public virtual Task OnUIThreadAsync(System.Action action) {
+        public virtual Task OnUIThreadAsync(Func<Task> action) {
             ValidateDispatcher();
 #if WINDOWS_UWP
-            return dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask();
-#elif NET45
-            return dispatcher.InvokeAsync(action).Task;
+            return dispatcher.RunTaskAsync(action);
 #else
-            var taskSource = new TaskCompletionSource<object>();
-            System.Action method = () => {
-                try {
-                    action();
-                    taskSource.SetResult(null);
-                }
-                catch(Exception ex) {
-                    taskSource.SetException(ex);
-                }
-            };
-            dispatcher.BeginInvoke(method);
-            return taskSource.Task;
+            return dispatcher.InvokeAsync(action).Task;
 #endif
         }
 
@@ -104,7 +91,7 @@
             else {
 #if WINDOWS_UWP
                 dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask().Wait();
-#elif NET
+#else
                 Exception exception = null;
                 System.Action method = () => {
                     try {
@@ -115,22 +102,6 @@
                     }
                 };
                 dispatcher.Invoke(method);
-                if (exception != null)
-                    throw new System.Reflection.TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
-#else
-                var waitHandle = new System.Threading.ManualResetEvent(false);
-                Exception exception = null;
-                System.Action method = () => {
-                    try {
-                        action();
-                    }
-                    catch (Exception ex) {
-                        exception = ex;
-                    }
-                    waitHandle.Set();
-                };
-                dispatcher.BeginInvoke(method);
-                waitHandle.WaitOne();
                 if (exception != null)
                     throw new System.Reflection.TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
 #endif

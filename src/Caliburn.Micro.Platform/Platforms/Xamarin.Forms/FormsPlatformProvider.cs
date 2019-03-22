@@ -28,7 +28,7 @@ namespace Caliburn.Micro
         public virtual void BeginOnUIThread(System.Action action) => platformProvider.BeginOnUIThread(action);
 
         /// <inheritdoc />
-        public virtual Task OnUIThreadAsync(System.Action action) => platformProvider.OnUIThreadAsync(action);
+        public virtual Task OnUIThreadAsync(Func<Task> action) => platformProvider.OnUIThreadAsync(action);
 
         /// <inheritdoc />
         public virtual void OnUIThread(System.Action action) => platformProvider.OnUIThread(action);

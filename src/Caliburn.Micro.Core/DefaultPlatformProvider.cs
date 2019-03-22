@@ -32,7 +32,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <returns></returns>
-        public virtual Task OnUIThreadAsync(Action action)
+        public virtual Task OnUIThreadAsync(Func<Task> action)
         {
             return Task.Factory.StartNew(action);
         }

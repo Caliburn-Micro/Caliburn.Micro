@@ -32,7 +32,7 @@ namespace Caliburn.Micro
         ///   Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name = "action">The action to execute.</param>
-        public static Task OnUIThreadAsync(this Action action)
+        public static Task OnUIThreadAsync(this Func<Task> action)
         {
             return PlatformProvider.Current.OnUIThreadAsync(action);
         }

@@ -37,16 +37,16 @@ namespace Caliburn.Micro
         ///   Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name = "action">The action to execute.</param>
-        public virtual Task OnUIThreadAsync(System.Action action)
+        public virtual Task OnUIThreadAsync(Func<Task> action)
         {
             var completionSource = new TaskCompletionSource<bool>();
 
-            UIApplication.SharedApplication.InvokeOnMainThread(() =>
+            UIApplication.SharedApplication.InvokeOnMainThread(async () =>
             {
 
                 try
                 {
-                    action();
+                    await action();
 
                     completionSource.SetResult(true);
 
@@ -73,7 +73,11 @@ namespace Caliburn.Micro
             if (CheckAccess())
                 action();
             else
-                OnUIThreadAsync(action).Wait();
+                OnUIThreadAsync(() =>
+                {
+                    action();
+                    return Task.CompletedTask;
+                }).Wait();
         }
 
         /// <summary>

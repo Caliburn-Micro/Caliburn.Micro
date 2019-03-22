@@ -25,7 +25,7 @@ namespace Caliburn.Micro
         ///   Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name = "action">The action to execute.</param>
-        Task OnUIThreadAsync(Action action);
+        Task OnUIThreadAsync(Func<Task> action);
 
         /// <summary>
         ///   Executes the action on the UI thread.
