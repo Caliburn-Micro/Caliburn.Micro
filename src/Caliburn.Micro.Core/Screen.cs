@@ -102,13 +102,13 @@ namespace Caliburn.Micro
 
             if (!IsInitialized)
             {
-                IsInitialized = initialized = true;
                 await OnInitializeAsync(cancellationToken);
+                IsInitialized = initialized = true;
             }
 
-            IsActive = true;
             Log.Info("Activating {0}.", this);
             await OnActivateAsync(cancellationToken);
+            IsActive = true;
 
             Activated?.Invoke(this, new ActivationEventArgs
             {
@@ -125,9 +125,9 @@ namespace Caliburn.Micro
                     WasClosed = close
                 });
 
-                IsActive = false;
                 Log.Info("Deactivating {0}.", this);
                 await OnDeactivateAsync(close, cancellationToken);
+                IsActive = false;
 
                 Deactivated?.Invoke(this, new DeactivationEventArgs
                 {
