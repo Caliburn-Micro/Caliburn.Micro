@@ -152,18 +152,6 @@ namespace Caliburn.Micro
         /// <returns>An <see cref="Action"/> to close the view model.</returns>
         public virtual Func<CancellationToken, Task> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
         {
-            var child = viewModel as IChild;
-
-            if (child != null)
-            {
-                var conductor = child.Parent as IConductor;
-
-                if (conductor != null)
-                {
-                    return ct => conductor.CloseItemAsync(viewModel, ct);
-                }
-            }
-
             return ct =>
             {
                 LogManager.GetLog(typeof(Screen)).Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");

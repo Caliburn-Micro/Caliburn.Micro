@@ -169,14 +169,6 @@
         /// <exception cref="System.NotImplementedException"></exception>
         public virtual Func<CancellationToken, Task> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
         {
-            var child = viewModel as IChild;
-            if (child != null) {
-                var conductor = child.Parent as IConductor;
-                if (conductor != null) {
-                    return ct => conductor.CloseItemAsync(viewModel, ct);
-                }
-            }
-
             foreach (var contextualView in views) {
                 var viewType = contextualView.GetType();
 #if WINDOWS_UWP

@@ -157,13 +157,16 @@ namespace Caliburn.Micro
         /// Also provides an opportunity to pass a dialog result to it's corresponding view.
         /// </summary>
         /// <param name="dialogResult">The dialog result.</param>
-        public virtual Task TryCloseAsync(bool? dialogResult = null)
+        public virtual async Task TryCloseAsync(bool? dialogResult = null)
         {
+            if (Parent is IConductor conductor)
+            {
+                await conductor.CloseItemAsync(this, CancellationToken.None);
+            }
+
             var closeAction = PlatformProvider.Current.GetViewCloseAction(this, Views.Values, dialogResult);
 
-            Execute.OnUIThreadAsync(async () => await closeAction(CancellationToken.None));
-
-            return Task.FromResult(true);
+            await Execute.OnUIThreadAsync(async () => await closeAction(CancellationToken.None));
         }
 
         /// <summary>
