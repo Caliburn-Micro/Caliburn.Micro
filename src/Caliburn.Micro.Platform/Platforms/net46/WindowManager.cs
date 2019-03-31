@@ -322,6 +322,7 @@ namespace Caliburn.Micro
         {
             private bool deactivatingFromView;
             private bool deactivateFromViewModel;
+            private bool actuallyClosing;
             private readonly Window view;
             private readonly object model;
 
@@ -382,7 +383,9 @@ namespace Caliburn.Micro
                 }
 
                 deactivateFromViewModel = true;
+                actuallyClosing = true;
                 view.Close();
+                actuallyClosing = false;
                 deactivateFromViewModel = false;
             }
 
@@ -393,11 +396,26 @@ namespace Caliburn.Micro
                     return;
                 }
 
-                var guard = (IGuardClose) model;
+                var guard = (IGuardClose)model;
+
+                if (actuallyClosing)
+                {
+                    actuallyClosing = false;
+                    return;
+                }
+
+                var cachedDialogResult = view.DialogResult;
+
+                e.Cancel = true;
 
                 var canClose = await guard.CanCloseAsync(CancellationToken.None);
 
-                e.Cancel = !canClose;
+                if (canClose)
+                {
+                    actuallyClosing = true;
+                    view.DialogResult = cachedDialogResult;
+                    view.Close();
+                }
             }
         }
     }
