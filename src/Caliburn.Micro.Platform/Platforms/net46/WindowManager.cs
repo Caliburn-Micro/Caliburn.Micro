@@ -413,7 +413,12 @@ namespace Caliburn.Micro
                 if (canClose)
                 {
                     actuallyClosing = true;
-                    view.DialogResult = cachedDialogResult;
+
+                    if (view.DialogResult != cachedDialogResult)
+                    {
+                        view.DialogResult = cachedDialogResult;
+                    }
+                    
                     view.Close();
                 }
             }
