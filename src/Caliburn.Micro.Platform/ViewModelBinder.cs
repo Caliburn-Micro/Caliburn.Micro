@@ -1,8 +1,4 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#else
-namespace Caliburn.Micro
-#endif
+﻿namespace Caliburn.Micro
 {
     using System;
     using System.Linq;
@@ -14,16 +10,12 @@ namespace Caliburn.Micro
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
-#elif WinRT81
+#elif WINDOWS_UWP
     using Windows.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
 #else
     using System.Windows;
-    using System.Windows.Interactivity;
-#endif
-
-#if WINDOWS_PHONE
-    using Microsoft.Phone.Controls;
+    using Microsoft.Xaml.Behaviors;
 #endif
 
     /// <summary>
@@ -125,7 +117,7 @@ namespace Caliburn.Micro
         public static Func<IEnumerable<FrameworkElement>, Type, IEnumerable<FrameworkElement>> BindActions = (namedElements, viewModelType) => {
             var unmatchedElements = namedElements.ToList();
 #if !XFORMS
-#if WinRT || XFORMS
+#if WINDOWS_UWP || XFORMS
             var methods = viewModelType.GetRuntimeMethods();
 #else
             var methods = viewModelType.GetMethods();
@@ -146,7 +138,7 @@ namespace Caliburn.Micro
 
                 unmatchedElements.Remove(foundControl);
 
-#if WinRT81
+#if WINDOWS_UWP
                 var triggers = Interaction.GetBehaviors(foundControl);
                 if (triggers != null && triggers.Count > 0)
                 {
@@ -183,7 +175,7 @@ namespace Caliburn.Micro
         };
 
         static bool IsAsyncMethod(MethodInfo method) {
-            return typeof(Task).IsAssignableFrom(method.ReturnType) &&
+            return typeof(Task).GetTypeInfo().IsAssignableFrom(method.ReturnType.GetTypeInfo()) &&
                    method.Name.EndsWith(AsyncSuffix, StringComparison.OrdinalIgnoreCase);
         }
 
@@ -197,7 +189,7 @@ namespace Caliburn.Micro
         /// </summary>
         ///<remarks>Passes the the view model, view and creation context (or null for default) to use in applying binding.</remarks>
         public static Action<object, DependencyObject, object> Bind = (viewModel, view, context) => {
-#if !WinRT && !XFORMS
+#if !WINDOWS_UWP && !XFORMS
             // when using d:DesignInstance, Blend tries to assign the DesignInstanceExtension class as the DataContext,
             // so here we get the actual ViewModel which is in the Instance property of DesignInstanceExtension
             if (View.InDesignMode) {
@@ -211,11 +203,7 @@ namespace Caliburn.Micro
 
             Log.Info("Binding {0} and {1}.", view, viewModel);
 
-#if XFORMS
-            var noContext = Caliburn.Micro.Xamarin.Forms.Bind.NoContextProperty;
-#else
             var noContext = Caliburn.Micro.Bind.NoContextProperty;
-#endif
 
             if ((bool)view.GetValue(noContext)) {
                 Action.SetTargetWithoutContext(view, viewModel);
@@ -239,20 +227,13 @@ namespace Caliburn.Micro
                 return;
             }
 
-#if WINDOWS_PHONE
-            BindAppBar(view);
-#endif
-
             if (!ShouldApplyConventions(element)) {
                 Log.Info("Skipping conventions for {0} and {1}.", element, viewModel);
-#if WINDOWS_PHONE
-                view.SetValue(ConventionsAppliedProperty, true); // we always apply the AppBar conventions
-#endif
                 return;
             }
 
             var viewModelType = viewModel.GetType();
-#if SL5 || NET45
+#if NET45
             var viewModelTypeProvider = viewModel as ICustomTypeProvider;
             if (viewModelTypeProvider != null) {
                 viewModelType = viewModelTypeProvider.GetCustomType();
@@ -263,64 +244,11 @@ namespace Caliburn.Micro
 #else
             var namedElements = BindingScope.GetNamedElements(element);
 #endif
-#if SILVERLIGHT
-            namedElements.Apply(x => x.SetValue(
-                View.IsLoadedProperty,
-                element.GetValue(View.IsLoadedProperty))
-                );
-#endif
             namedElements = BindActions(namedElements, viewModelType);
             namedElements = BindProperties(namedElements, viewModelType);
             HandleUnmatchedElements(namedElements, viewModelType);
 
             view.SetValue(ConventionsAppliedProperty, true);
         };
-
-#if WINDOWS_PHONE
-        static void BindAppBar(DependencyObject view) {
-            var page = view as PhoneApplicationPage;
-            if (page == null || page.ApplicationBar == null) {
-                return;
-            }
-
-            var triggers = Interaction.GetTriggers(view);
-
-            foreach(var item in page.ApplicationBar.Buttons) {
-                var button = item as IAppBarActionMessage;
-                if (button == null || string.IsNullOrEmpty(button.Message)) {
-                    continue;
-                }
-
-                var parsedTrigger = Parser.Parse(view, button.Message).First();
-                var trigger = new AppBarItemTrigger(button);
-                var actionMessages = parsedTrigger.Actions.OfType<ActionMessage>().ToList();
-                actionMessages.Apply(x => {
-                    x.applicationBarSource = button;
-                    parsedTrigger.Actions.Remove(x);
-                    trigger.Actions.Add(x);
-                });
-                
-                triggers.Add(trigger);
-            }
-
-            foreach (var item in page.ApplicationBar.MenuItems) {
-                var menuItem = item as IAppBarActionMessage;
-                if (menuItem == null || string.IsNullOrEmpty(menuItem.Message)) {
-					continue;
-                }
-
-                var parsedTrigger = Parser.Parse(view, menuItem.Message).First();
-                var trigger = new AppBarItemTrigger(menuItem);
-                var actionMessages = parsedTrigger.Actions.OfType<ActionMessage>().ToList();
-                actionMessages.Apply(x => {
-                    x.applicationBarSource = menuItem;
-                    parsedTrigger.Actions.Remove(x);
-                    trigger.Actions.Add(x);
-                });
-
-                triggers.Add(trigger);
-            }
-        }
-#endif
     }
 }

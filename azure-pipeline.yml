@@ -1,0 +1,80 @@
+pool:
+  vmImage: vs2017-win2016
+
+variables:
+  buildConfiguration: Release
+  buildPlatform: Any CPU
+  coreSolution: 'src\Caliburn.Micro.sln'
+  setupSamplesSolution: 'samples\setup\Setup.sln'
+  featuresSamplesSolution: 'samples\features\Features.sln'
+
+steps:
+- task: DotNetCoreCLI@2  
+  inputs:
+    command: custom
+    custom: tool
+    arguments: install --tool-path . nbgv
+  displayName: Install NBGV tool
+  
+- script: nbgv cloud
+  displayName: Set Version
+
+- task: VSBuild@1
+  displayName: Nuget Restore
+  inputs:
+    solution: '$(coreSolution)'
+    configuration: '$(buildConfiguration)'
+    msbuildArgs: '/t:Restore'
+
+- task: VSBuild@1
+  displayName: Build & Pack Core Solution
+  inputs:
+    solution: '$(coreSolution)'
+    configuration: '$(buildConfiguration)'
+    platform: '$(buildPlatform)'
+    msbuildArgs: '/t:Pack'
+
+- task: VSTest@2
+  displayName: Run Unit Tests
+  inputs:
+    testAssemblyVer2: 'bin\**\*.Tests.dll'
+    configuration: '$(buildConfiguration)'
+    platform: '$(buildPlatform)'
+
+- task: NuGetCommand@2
+  displayName: Restore Setup Solution
+  inputs:
+    restoreSolution: '$(setupSamplesSolution)'
+
+- task: VSBuild@1
+  displayName: Build Setup Solution
+  inputs:
+    solution: '$(setupSamplesSolution)'
+    configuration: '$(buildConfiguration)'
+    platform: '$(buildPlatform)'
+    msbuildArgs: '/t:Build'
+
+- task: NuGetCommand@2
+  displayName: Restore Features Solution
+  inputs:
+    restoreSolution: '$(featuresSamplesSolution)'
+
+- task: VSBuild@1
+  displayName: Build Features Solution
+  inputs:
+    solution: '$(featuresSamplesSolution)'
+    configuration: '$(buildConfiguration)'
+    platform: '$(buildPlatform)'
+    msbuildArgs: '/t:Build'
+
+- task: CopyFiles@2
+  displayName: Copy Packages to Artifact Directory
+  inputs:
+    Contents: 'packages\*.nupkg'
+    TargetFolder: '$(build.artifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Package Artifacts
+  inputs:
+    pathToPublish: '$(build.artifactStagingDirectory)'
+    artifactName: Packages

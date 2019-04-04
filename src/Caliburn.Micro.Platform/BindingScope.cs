@@ -2,7 +2,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-#if WinRT
+#if WINDOWS_UWP
     using System.ServiceModel;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
@@ -26,15 +26,15 @@
         {
             AddChildResolver<ContentControl>(e => new[] { e.Content as DependencyObject });
             AddChildResolver<ItemsControl>(e => e.Items.OfType<DependencyObject>().ToArray() );
-#if !SILVERLIGHT && !WinRT
+#if !WINDOWS_UWP
             AddChildResolver<HeaderedContentControl>(e => new[] { e.Header as DependencyObject });
             AddChildResolver<HeaderedItemsControl>(e => new[] { e.Header as DependencyObject });
 #endif
-#if WinRT
+#if WINDOWS_UWP
             AddChildResolver<SemanticZoom>(e => new[] { e.ZoomedInView as DependencyObject, e.ZoomedOutView as DependencyObject });
             AddChildResolver<ListViewBase>(e => new[] { e.Header as DependencyObject });
 #endif
-#if WinRT81
+#if WINDOWS_UWP
             AddChildResolver<ListViewBase>(e => new[] { e.Footer as DependencyObject });
             AddChildResolver<Hub>(ResolveHub);
             AddChildResolver<HubSection>(e => new[] { e.Header as DependencyObject });
@@ -54,7 +54,7 @@
         /// <param name="name">The name to search for.</param>
         /// <returns>The named element or null if not found.</returns>
         public static FrameworkElement FindName(this IEnumerable<FrameworkElement> elementsToSearch, string name) {
-#if WinRT
+#if WINDOWS_UWP
             return elementsToSearch.FirstOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 #else
             return elementsToSearch.FirstOrDefault(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
@@ -87,7 +87,6 @@
         /// <summary>
         /// Adds a child resolver.
         /// </summary>
-        /// <param name="filter">The type filter.</param>
         /// <param name="resolver">The resolver.</param>
         public static ChildResolver AddChildResolver<T>(Func<T, IEnumerable<DependencyObject>> resolver) where T : DependencyObject
         {
@@ -183,7 +182,7 @@
                         queue.Enqueue(childDo);
                     }
 
-#if WinRT
+#if WINDOWS_UWP
                     var page = current as Page;
 
                     if (page != null) {
@@ -217,7 +216,7 @@
             return descendants;
         };
 
-#if WinRT81
+#if WINDOWS_UWP
         private static IEnumerable<DependencyObject> ResolveFlyoutBase(FlyoutBase flyoutBase) {
             if (flyoutBase == null)
                 yield break;
@@ -240,7 +239,6 @@
 
         private static IEnumerable<DependencyObject> ResolveMenuFlyoutItems(MenuFlyoutItemBase item) {
             yield return item;
-#if WINDOWS_UWP
             var subItem = item as MenuFlyoutSubItem;
 
             if (subItem != null && subItem.Items != null) {
@@ -248,7 +246,6 @@
                     yield return subSubItem;
                 }
             }
-#endif
         }
 
         private static IEnumerable<DependencyObject> ResolveCommandBar(CommandBar commandBar) {
@@ -291,16 +288,16 @@
 
                 if (root is UserControl)
                     break;
-#if !SILVERLIGHT
+
                 if (root is Page) {
                     root = ((Page) root).Content as DependencyObject ?? root;
                     break;
                 }
-#endif
+
                 if ((bool) root.GetValue(View.IsScopeRootProperty))
                     break;
 
-#if WinRT
+#if WINDOWS_UWP
                 if (root is AppBar) {
                     var frame = Window.Current.Content as Frame;
                     var page = (frame != null) ? frame.Content as Page : null;

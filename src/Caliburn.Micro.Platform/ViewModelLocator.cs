@@ -1,8 +1,4 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#else
-namespace Caliburn.Micro
-#endif
+﻿namespace Caliburn.Micro
 {
     using System;
     using System.Linq;
@@ -10,7 +6,7 @@ namespace Caliburn.Micro
     using System.Windows;
     using System.Collections.Generic;
 
-#if WinRT
+#if WINDOWS_UWP
     using Windows.UI.Xaml;
 #endif
 

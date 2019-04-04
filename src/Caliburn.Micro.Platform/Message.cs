@@ -1,13 +1,9 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#else
-namespace Caliburn.Micro
-#endif 
+﻿namespace Caliburn.Micro
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-#if WinRT81
+#if WINDOWS_UWP
     using Windows.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
@@ -19,8 +15,8 @@ namespace Caliburn.Micro
     using DependencyObject = global::Xamarin.Forms.BindableObject;
 #else
     using System.Windows;
-    using System.Windows.Interactivity;
-    using TriggerBase = System.Windows.Interactivity.TriggerBase;
+    using Microsoft.Xaml.Behaviors;
+    using TriggerBase = Microsoft.Xaml.Behaviors.TriggerBase;
 #endif
 
 
@@ -99,7 +95,7 @@ namespace Caliburn.Micro
 
             var messageTriggers = (TriggerBase[])d.GetValue(MessageTriggersProperty);
 
-#if WinRT81
+#if WINDOWS_UWP
             var allTriggers = Interaction.GetBehaviors(d);
 
             if (messageTriggers != null)

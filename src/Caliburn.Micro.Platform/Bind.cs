@@ -1,11 +1,7 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#else
-namespace Caliburn.Micro
-#endif 
+﻿namespace Caliburn.Micro
 {
     using System;
-#if WinRT
+#if WINDOWS_UWP
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Data;
 #elif XFORMS

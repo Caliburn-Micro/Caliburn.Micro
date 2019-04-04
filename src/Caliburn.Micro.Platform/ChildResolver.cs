@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-#if WinRT
+using System.Reflection;
+#if WINDOWS_UWP
 using Windows.UI.Xaml;
 #else
 using System.Windows;

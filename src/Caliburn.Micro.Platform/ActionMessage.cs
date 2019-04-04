@@ -4,7 +4,7 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
-#if WinRT81
+#if WINDOWS_UWP
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Data;
     using Windows.UI.Xaml.Markup;
@@ -15,19 +15,17 @@
     using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
 #else
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Data;
-    using System.Windows.Interactivity;
     using System.Windows.Markup;
-    using System.Windows.Media;
-    using EventTrigger = System.Windows.Interactivity.EventTrigger;
+    using Microsoft.Xaml.Behaviors;
+    using EventTrigger = Microsoft.Xaml.Behaviors.EventTrigger;
 #endif
 
     /// <summary>
     /// Used to send a message from the UI to a presentation model class, indicating that a particular Action should be invoked.
     /// </summary>
-#if WinRT
+#if WINDOWS_UWP
     [ContentProperty(Name = "Parameters")]
 #else
     [ContentProperty("Parameters")]
@@ -38,10 +36,6 @@
     public class ActionMessage : TriggerAction<FrameworkElement>, IHaveParameters {
         static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
         ActionExecutionContext context;
-
-#if WINDOWS_PHONE
-        internal Microsoft.Phone.Shell.IApplicationBarMenuItem applicationBarSource;
-#endif
 
         internal static readonly DependencyProperty HandlerProperty = DependencyProperty.RegisterAttached(
             "Handler",
@@ -95,7 +89,7 @@
         /// Gets or sets the name of the method to be invoked on the presentation model class.
         /// </summary>
         /// <value>The name of the method.</value>
-#if !WinRT
+#if !WINDOWS_UWP
         [Category("Common Properties")]
 #endif
         public string MethodName {
@@ -107,7 +101,7 @@
         /// Gets the parameters to pass as part of the method invocation.
         /// </summary>
         /// <value>The parameters.</value>
-#if !WinRT
+#if !WINDOWS_UWP
         [Category("Common Properties")]
 #endif  
         public AttachedCollection<Parameter> Parameters {
@@ -122,7 +116,7 @@
         /// <summary>
         /// Called after the action is attached to an AssociatedObject.
         /// </summary>
-#if WinRT81
+#if WINDOWS_UWP
         protected override void OnAttached() {
             if (!View.InDesignMode) {
                 Parameters.Attach(AssociatedObject);
@@ -202,7 +196,7 @@
                 Path = new PropertyPath(Message.HandlerProperty), 
                 Source = currentElement
             };
-#elif WinRT
+#elif WINDOWS_UWP
             var binding = new Binding {
                 Source = currentElement
             };
@@ -341,17 +335,8 @@
         /// </summary>
         /// <remarks>Returns a value indicating whether or not the action is available.</remarks>
         public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context => {
-#if WINDOWS_PHONE
-            var message = context.Message;
-            if (message != null && message.applicationBarSource != null) {
-                if (context.CanExecute != null) {
-                    message.applicationBarSource.IsEnabled = context.CanExecute();
-                }
-                return message.applicationBarSource.IsEnabled;
-            }
-#endif
 
-#if SILVERLIGHT || WinRT
+#if WINDOWS_UWP
             var source = context.Source as Control;
 #else
             var source = context.Source;
@@ -360,7 +345,7 @@
                 return true;
             }
 
-#if SILVERLIGHT || WinRT
+#if WINDOWS_UWP
             var hasBinding = ConventionManager.HasBinding(source, Control.IsEnabledProperty);
 #else
             var hasBinding = ConventionManager.HasBinding(source, UIElement.IsEnabledProperty);
@@ -375,11 +360,9 @@
         /// <summary>
         /// Finds the method on the target matching the specified message.
         /// </summary>
-        /// <param name="target">The target.</param>
-        /// <param name="message">The message.</param>
         /// <returns>The matching method, if available.</returns>
         public static Func<ActionMessage, object, MethodInfo> GetTargetMethod = (message, target) => {
-#if WinRT
+#if WINDOWS_UWP
             return (from method in target.GetType().GetRuntimeMethods()
                     where method.Name == message.MethodName
                     let methodParameters = method.GetParameters()
@@ -556,7 +539,7 @@
 
         static MethodInfo GetMethodInfo(Type t, string methodName)
         {
-#if WinRT
+#if WINDOWS_UWP
             return t.GetRuntimeMethods().SingleOrDefault(m => m.Name == methodName);
 #else
             return t.GetMethod(methodName);

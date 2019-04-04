@@ -1,0 +1,27 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.1;net45;uap10.0.16299;Xamarin.iOS10;MonoAndroid80</TargetFrameworks>
+    <PackageId>Caliburn.Micro.Core</PackageId>
+    <Product>Caliburn.Micro Core</Product>
+    <RootNamespace>Caliburn.Micro</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
+    <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
+    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid'))">
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,1 @@
+msbuild ../src/Caliburn.Micro.sln /t:package /p:Configuration=Release

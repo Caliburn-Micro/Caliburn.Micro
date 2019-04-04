@@ -1,26 +1,24 @@
-﻿namespace Caliburn.Micro {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     ///  Class for managing the list of rules for doing name transformation.
     /// </summary>
-    public class NameTransformer : BindableCollection<NameTransformer.Rule> {
+    public class NameTransformer : BindableCollection<NameTransformer.Rule>
+    {
 
-#if NET
-        private const RegexOptions options = RegexOptions.Compiled;
-#else
         private const RegexOptions options = RegexOptions.None;
-#endif
-
-        bool useEagerRuleSelection = true;
+        private bool useEagerRuleSelection = true;
 
         /// <summary>
         /// Flag to indicate if transformations from all matched rules are returned. Otherwise, transformations from only the first matched rule are returned.
         /// </summary>
-        public bool UseEagerRuleSelection {
+        public bool UseEagerRuleSelection
+        {
             get { return useEagerRuleSelection; }
             set { useEagerRuleSelection = value; }
         }
@@ -31,7 +29,8 @@
         /// <param name = "replacePattern">Regular expression pattern for replacing text</param>
         /// <param name = "replaceValue">The replacement value.</param>
         /// <param name = "globalFilterPattern">Regular expression pattern for global filtering</param>
-        public void AddRule(string replacePattern, string replaceValue, string globalFilterPattern = null) {
+        public void AddRule(string replacePattern, string replaceValue, string globalFilterPattern = null)
+        {
             AddRule(replacePattern, new[] { replaceValue }, globalFilterPattern);
         }
 
@@ -41,8 +40,10 @@
         /// <param name = "replacePattern">Regular expression pattern for replacing text</param>
         /// <param name = "replaceValueList">The list of replacement values</param>
         /// <param name = "globalFilterPattern">Regular expression pattern for global filtering</param>
-        public void AddRule(string replacePattern, IEnumerable<string> replaceValueList, string globalFilterPattern = null) {
-            Add(new Rule {
+        public void AddRule(string replacePattern, IEnumerable<string> replaceValueList, string globalFilterPattern = null)
+        {
+            Add(new Rule
+            {
                 ReplacePattern = replacePattern,
                 ReplacementValues = replaceValueList,
                 GlobalFilterPattern = globalFilterPattern
@@ -54,7 +55,8 @@
         /// </summary>
         /// <param name = "source">The name to transform into the resolved name list</param>
         /// <returns>The transformed names.</returns>
-        public IEnumerable<string> Transform(string source) {
+        public IEnumerable<string> Transform(string source)
+        {
             return Transform(source, r => r);
         }
 
@@ -64,16 +66,20 @@
         /// <param name = "source">The name to transform into the resolved name list</param>
         /// <param name = "getReplaceString">A function to do a transform on each item in the ReplaceValueList prior to applying the regular expression transform</param>
         /// <returns>The transformed names.</returns>
-        public IEnumerable<string> Transform(string source, Func<string, string> getReplaceString) {
+        public IEnumerable<string> Transform(string source, Func<string, string> getReplaceString)
+        {
             var nameList = new List<string>();
             var rules = this.Reverse();
 
-            foreach(var rule in rules) {
-                if(!string.IsNullOrEmpty(rule.GlobalFilterPattern) && !rule.GlobalFilterPatternRegex.IsMatch(source)) {
+            foreach (var rule in rules)
+            {
+                if (!string.IsNullOrEmpty(rule.GlobalFilterPattern) && !rule.GlobalFilterPatternRegex.IsMatch(source))
+                {
                     continue;
                 }
 
-                if(!rule.ReplacePatternRegex.IsMatch(source)) {
+                if (!rule.ReplacePatternRegex.IsMatch(source))
+                {
                     continue;
                 }
 
@@ -83,7 +89,8 @@
                         .Select(repString => rule.ReplacePatternRegex.Replace(source, repString))
                     );
 
-                if (!useEagerRuleSelection) {
+                if (!useEagerRuleSelection)
+                {
                     break;
                 }
             }
@@ -94,7 +101,8 @@
         ///<summary>
         /// A rule that describes a name transform.
         ///</summary>
-        public class Rule {
+        public class Rule
+        {
             private Regex replacePatternRegex;
             private Regex globalFilterPatternRegex;
 
@@ -116,8 +124,10 @@
             /// <summary>
             /// Regular expression for global filtering
             /// </summary>
-            public Regex GlobalFilterPatternRegex {
-                get {
+            public Regex GlobalFilterPatternRegex
+            {
+                get
+                {
                     return globalFilterPatternRegex ?? (globalFilterPatternRegex = new Regex(GlobalFilterPattern, options));
                 }
             }
@@ -125,8 +135,10 @@
             /// <summary>
             /// Regular expression for replacing text
             /// </summary>
-            public Regex ReplacePatternRegex {
-                get {
+            public Regex ReplacePatternRegex
+            {
+                get
+                {
                     return replacePatternRegex ?? (replacePatternRegex = new Regex(ReplacePattern, options));
                 }
             }

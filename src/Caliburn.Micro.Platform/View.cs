@@ -1,12 +1,8 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#else
-namespace Caliburn.Micro
-#endif 
+﻿namespace Caliburn.Micro
 {
     using System;
     using System.Linq;
-#if WinRT
+#if WINDOWS_UWP
     using System.Reflection;
     using Windows.ApplicationModel;
     using Windows.UI.Xaml;
@@ -33,7 +29,7 @@ namespace Caliburn.Micro
     /// </summary>
     public static class View {
         static readonly ILog Log = LogManager.GetLog(typeof(View));
-#if WinRT || XFORMS
+#if WINDOWS_UWP || XFORMS
         const string DefaultContentPropertyName = "Content";
 #else
         static readonly ContentPropertyAttribute DefaultContentProperty = new ContentPropertyAttribute("Content");
@@ -117,12 +113,10 @@ namespace Caliburn.Micro
             handler(element, new RoutedEventArgs());
             return true;
 #else
-#if SILVERLIGHT
-            if ((bool)element.GetValue(IsLoadedProperty)) {
-#elif WinRT
+#if WINDOWS_UWP
             if (IsElementLoaded(element)) {
 #else
-            if(element.IsLoaded) {
+            if (element.IsLoaded) {
 #endif
                 handler(element, new RoutedEventArgs());
                 return true;
@@ -131,9 +125,6 @@ namespace Caliburn.Micro
             RoutedEventHandler loaded = null;
             loaded = (s, e) => {
                 element.Loaded -= loaded;
-#if SILVERLIGHT
-                element.SetValue(IsLoadedProperty, true);
-#endif
                 handler(s, e);
             };
             element.Loaded += loaded;
@@ -158,7 +149,7 @@ namespace Caliburn.Micro
 #endif
         }
 
-#if WinRT
+#if WINDOWS_UWP
         /// <summary>
         /// Determines whether the specified <paramref name="element"/> is loaded.
         /// </summary>
@@ -189,33 +180,31 @@ namespace Caliburn.Micro
             }
         }
 #endif
-
+#if !XFORMS
         /// <summary>
         /// Executes the handler the next time the elements's LayoutUpdated event fires.
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="handler">The handler.</param>
-#if WinRT
+#if WINDOWS_UWP
         public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler<object> handler) {
             EventHandler<object> onLayoutUpdate = null;
 #else
         public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler handler) {
             EventHandler onLayoutUpdate = null;
 #endif
-#if !XFORMS
             onLayoutUpdate = (s, e) => {
                 element.LayoutUpdated -= onLayoutUpdate;
                 handler(element, e);
             };
             element.LayoutUpdated += onLayoutUpdate;
-#endif
+
         }
+#endif
 
         /// <summary>
         /// Used to retrieve the root, non-framework-created view.
         /// </summary>
-        /// <param name="view">The view to search.</param>
-        /// <returns>The root element that was not created by the framework.</returns>
         /// <remarks>In certain instances the services create UI elements.
         /// For example, if you ask the window manager to show a UserControl as a dialog, it creates a window to host the UserControl in.
         /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
@@ -231,7 +220,7 @@ namespace Caliburn.Micro
                 if (dependencyObject is ContentControl) {
                     return ((ContentControl)dependencyObject).Content;
                 }
-#if WinRT || XFORMS
+#if WINDOWS_UWP || XFORMS
                 var type = dependencyObject.GetType();
                 var contentPropertyName = GetContentPropertyName(type);
 
@@ -239,7 +228,8 @@ namespace Caliburn.Micro
                     .GetValue(dependencyObject, null);
 #else
                 var type = dependencyObject.GetType();
-                var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
+                var contentProperty = type.GetCustomAttributes(typeof(ContentPropertyAttribute), true)
+                                          .OfType<ContentPropertyAttribute>()
                                           .FirstOrDefault() ?? DefaultContentProperty;
 
                 return type.GetProperty(contentProperty.Name)
@@ -367,7 +357,7 @@ namespace Caliburn.Micro
             return SetContentPropertyCore(targetLocation, view);
         }
 
-#if WinRT || XFORMS
+#if WINDOWS_UWP || XFORMS
         static bool SetContentPropertyCore(object targetLocation, object view) {
             try {
                 var type = targetLocation.GetType();
@@ -395,7 +385,8 @@ namespace Caliburn.Micro
         static bool SetContentPropertyCore(object targetLocation, object view) {
             try {
                 var type = targetLocation.GetType();
-                var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
+                var contentProperty = type.GetCustomAttributes(typeof(ContentPropertyAttribute), true)
+                                          .OfType<ContentPropertyAttribute>()
                                           .FirstOrDefault() ?? DefaultContentProperty;
 
                 type.GetProperty(contentProperty?.Name ?? DefaultContentProperty.Name)
@@ -424,10 +415,8 @@ namespace Caliburn.Micro
                 {
 #if XFORMS
                     inDesignMode = false;
-#elif WinRT
+#elif WINDOWS_UWP
                     inDesignMode = DesignMode.DesignModeEnabled;
-#elif SILVERLIGHT
-                    inDesignMode = DesignerProperties.IsInDesignTool;
 #else
                     var descriptor = DependencyPropertyDescriptor.FromProperty(DesignerProperties.IsInDesignModeProperty, typeof(FrameworkElement));
                     inDesignMode = (bool)descriptor.Metadata.DefaultValue;

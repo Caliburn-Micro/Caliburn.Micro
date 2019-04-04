@@ -1,18 +1,12 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#else
-namespace Caliburn.Micro
-#endif
+﻿namespace Caliburn.Micro
 {
     using System;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using System.Collections.Generic;
-#if !SILVERLIGHT
     using System.ComponentModel;
-#endif
-#if WinRT
+#if WINDOWS_UWP
     using Windows.UI.Xaml.Controls;
 #endif
 
@@ -34,7 +28,7 @@ namespace Caliburn.Micro
 #else
                 {"$datacontext", c => c.Source.DataContext},
 #endif
-#if WinRT
+#if WINDOWS_UWP
                 {"$clickeditem", c => ((ItemClickEventArgs)c.EventArgs).ClickedItem},
 #endif
                 {"$source", c => c.Source},
@@ -104,7 +98,7 @@ namespace Caliburn.Micro
             }
 
             var providedType = providedValue.GetType();
-            if (destinationType.IsAssignableFrom(providedType)) {
+            if (destinationType.GetTypeInfo().IsAssignableFrom(providedType.GetTypeInfo())) {
                 return providedValue;
             }
 
@@ -113,7 +107,7 @@ namespace Caliburn.Micro
             }
 
             try {
-#if !WinRT && !XFORMS
+#if !WINDOWS_UWP && !XFORMS
                 var converter = TypeDescriptor.GetConverter(destinationType);
 
                 if (converter.CanConvertFrom(providedType)) {
@@ -126,7 +120,7 @@ namespace Caliburn.Micro
                     return converter.ConvertTo(providedValue, destinationType);
                 }
 #endif
-#if WinRT || XFORMS
+#if WINDOWS_UWP || XFORMS
                 if (destinationType.GetTypeInfo().IsEnum) {
 #else
                 if (destinationType.IsEnum) {
@@ -139,7 +133,7 @@ namespace Caliburn.Micro
                     return Enum.ToObject(destinationType, providedValue);
                 }
 
-                if (typeof (Guid).IsAssignableFrom(destinationType)) {
+                if (typeof (Guid).GetTypeInfo().IsAssignableFrom(destinationType.GetTypeInfo())) {
                     var stringValue = providedValue as string;
                     if (stringValue != null) {
                         return new Guid(stringValue);
@@ -164,7 +158,7 @@ namespace Caliburn.Micro
         /// <param name="type">The type.</param>
         /// <returns>The default value.</returns>
         public static object GetDefaultValue(Type type) {
-#if WinRT || XFORMS
+#if WINDOWS_UWP || XFORMS
             var typeInfo = type.GetTypeInfo();
             return typeInfo.IsClass || typeInfo.IsInterface ? null : System.Activator.CreateInstance(type);
 #else

@@ -1,12 +1,8 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#else
-namespace Caliburn.Micro
-#endif
+﻿namespace Caliburn.Micro
 {
     using System;
     using System.Reflection;
-#if WinRT81
+#if WINDOWS_UWP
     using Windows.UI.Xaml;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
 #elif XFORMS
@@ -16,7 +12,7 @@ namespace Caliburn.Micro
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
 #else
     using System.Windows;
-    using TriggerBase = System.Windows.Interactivity.TriggerBase;
+    using TriggerBase = Microsoft.Xaml.Behaviors.TriggerBase;
 #endif
 
     /// <summary>

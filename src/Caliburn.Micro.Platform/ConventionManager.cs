@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-#if WinRT81
+#if WINDOWS_UWP
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Controls.Primitives;
@@ -19,9 +19,9 @@
     using System.Windows.Data;
     using System.Windows.Markup;
     using System.Windows.Shapes;    
-    using EventTrigger = System.Windows.Interactivity.EventTrigger;
+    using EventTrigger = Microsoft.Xaml.Behaviors.EventTrigger;
 #endif
-#if !SILVERLIGHT && !WinRT
+#if !WINDOWS_UWP
     using System.Windows.Documents;
 #endif
 
@@ -52,12 +52,12 @@
         /// The default DataTemplate used for ItemsControls when required.
         /// </summary>
         public static DataTemplate DefaultItemTemplate = (DataTemplate)
-#if SILVERLIGHT || WinRT
+#if WINDOWS_UWP
         XamlReader.Load(
 #else
         XamlReader.Parse(
 #endif
-#if WinRT
+#if WINDOWS_UWP
             "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' xmlns:cal='using:Caliburn.Micro'>" +
                 "<ContentControl cal:View.Model=\"{Binding}\" VerticalContentAlignment=\"Stretch\" HorizontalContentAlignment=\"Stretch\" IsTabStop=\"False\" />" +
             "</DataTemplate>"
@@ -73,7 +73,7 @@
         /// The default DataTemplate used for Headered controls when required.
         /// </summary>
         public static DataTemplate DefaultHeaderTemplate = (DataTemplate)
-#if SILVERLIGHT || WinRT
+#if WINDOWS_UWP
         XamlReader.Load(
 #else
         XamlReader.Parse(
@@ -107,15 +107,9 @@
         /// <summary>
         /// Creates a binding and sets it on the element, applying the appropriate conventions.
         /// </summary>
-        /// <param name="viewModelType"></param>
-        /// <param name="path"></param>
-        /// <param name="property"></param>
-        /// <param name="element"></param>
-        /// <param name="convention"></param>
-        /// <param name="bindableProperty"></param>
         public static Action<Type, string, PropertyInfo, FrameworkElement, ElementConvention, DependencyProperty> SetBinding =
             (viewModelType, path, property, element, convention, bindableProperty) => {
-#if WinRT
+#if WINDOWS_UWP
                 var binding = new Binding { Path = new PropertyPath(path) };
 #else
                 var binding = new Binding(path);
@@ -134,7 +128,7 @@
         /// Applies the appropriate binding mode to the binding.
         /// </summary>
         public static Action<Binding, PropertyInfo> ApplyBindingMode = (binding, property) => {
-#if WinRT
+#if WINDOWS_UWP
             var setMethod = property.SetMethod;
             binding.Mode = (property.CanWrite && setMethod != null && setMethod.IsPublic) ? BindingMode.TwoWay : BindingMode.OneWay;
 #else
@@ -147,13 +141,13 @@
         /// Determines whether or not and what type of validation to enable on the binding.
         /// </summary>
         public static Action<Binding, Type, PropertyInfo> ApplyValidation = (binding, viewModelType, property) => {
-#if SILVERLIGHT || NET45
+#if NET45
             if (typeof(INotifyDataErrorInfo).IsAssignableFrom(viewModelType)) {
                 binding.ValidatesOnNotifyDataErrors = true;
                 binding.ValidatesOnExceptions = true;
             }
 #endif
-#if !WinRT
+#if !WINDOWS_UWP
             if (typeof(IDataErrorInfo).IsAssignableFrom(viewModelType)) {
                 binding.ValidatesOnDataErrors = true;
                 binding.ValidatesOnExceptions = true;
@@ -173,8 +167,8 @@
         /// Determines whether a custom string format is needed and applies it to the binding.
         /// </summary>
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyStringFormat = (binding, convention, property) => {
-#if !WinRT
-            if(typeof(DateTime).IsAssignableFrom(property.PropertyType))
+#if !WINDOWS_UWP
+            if (typeof(DateTime).IsAssignableFrom(property.PropertyType))
                 binding.StringFormat = "{0:d}";
 #endif
         };
@@ -183,15 +177,7 @@
         /// Determines whether a custom update source trigger should be applied to the binding.
         /// </summary>
         public static Action<DependencyProperty, DependencyObject, Binding, PropertyInfo> ApplyUpdateSourceTrigger = (bindableProperty, element, binding, info) => {
-#if SILVERLIGHT && !SL5
-            ApplySilverlightTriggers(
-                element, 
-                bindableProperty, 
-                x => x.GetBindingExpression(bindableProperty),
-                info,
-                binding
-                );
-#elif WinRT81 || NET
+#if WINDOWS_UWP || NET
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
         };
@@ -210,27 +196,21 @@
                     return View.ModelProperty;
                };
 #endif
-#if !WINDOWS_PHONE && !WinRT
+#if !WINDOWS_UWP
             AddElementConvention<DatePicker>(DatePicker.SelectedDateProperty, "SelectedDate", "SelectedDateChanged");
 #endif
-#if WinRT81
+#if WINDOWS_UWP
             AddElementConvention<DatePicker>(DatePicker.DateProperty, "Date", "DateChanged");
             AddElementConvention<TimePicker>(TimePicker.TimeProperty, "Time", "TimeChanged");
             AddElementConvention<Hub>(Hub.HeaderProperty, "Header", "Loaded");
             AddElementConvention<HubSection>(HubSection.HeaderProperty, "Header", "SectionsInViewChanged");
             AddElementConvention<MenuFlyoutItem>(MenuFlyoutItem.TextProperty, "Text", "Click");
             AddElementConvention<ToggleMenuFlyoutItem>(ToggleMenuFlyoutItem.IsCheckedProperty, "IsChecked", "Click");
-#endif
-#if WinRT81 && !WP81
             AddElementConvention<SearchBox>(SearchBox.QueryTextProperty, "QueryText", "QuerySubmitted");
-#endif
-#if WinRT
             AddElementConvention<ToggleSwitch>(ToggleSwitch.IsOnProperty, "IsOn", "Toggled");
             AddElementConvention<ProgressRing>(ProgressRing.IsActiveProperty, "IsActive", "Loaded");
             AddElementConvention<Slider>(Slider.ValueProperty, "Value", "ValueChanged");
             AddElementConvention<RichEditBox>(RichEditBox.DataContextProperty, "DataContext", "TextChanged");
-#endif
-#if WP81 || WINDOWS_UWP
             AddElementConvention<Pivot>(Pivot.ItemsSourceProperty, "SelectedItem", "SelectionChanged")
                 .ApplyBinding = (viewModelType, path, property, element, convention) =>
                 {
@@ -244,8 +224,6 @@
 
                     return true;
                 };
-#endif
-#if SILVERLIGHT || WinRT
             AddElementConvention<HyperlinkButton>(HyperlinkButton.ContentProperty, "DataContext", "Click");
             AddElementConvention<PasswordBox>(PasswordBox.PasswordProperty, "Password", "PasswordChanged");
 #else
@@ -323,11 +301,9 @@
 
                     if (element.Content is DependencyObject && !OverwriteContent)
                         return null;
-#if SILVERLIGHT
-                    var useViewModel = element.ContentTemplate == null;
-#else
+
                     var useViewModel = element.ContentTemplate == null && element.ContentTemplateSelector == null;
-#endif
+
                     if (useViewModel) {
                         Log.Info("ViewModel bound on {0}.", element.Name);
                         return View.ModelProperty;
@@ -376,7 +352,7 @@
 
             ElementConvention propertyConvention;
             ElementConventions.TryGetValue(elementType, out propertyConvention);
-#if WinRT
+#if WINDOWS_UWP
             return propertyConvention ?? GetElementConvention(elementType.GetTypeInfo().BaseType);
 #else
             return propertyConvention ?? GetElementConvention(elementType.BaseType);
@@ -446,7 +422,7 @@
                 return;
             }
 
-#if !WinRT
+#if !WINDOWS_UWP
             if (property.PropertyType.IsGenericType) {
                 var itemType = property.PropertyType.GetGenericArguments().First();
                 if (itemType.IsValueType || typeof(string).IsAssignableFrom(itemType)) {
@@ -462,24 +438,15 @@
             }
 #endif
 
-#if !SILVERLIGHT
             if (itemsControl.ItemTemplateSelector == null){
                 itemsControl.ItemTemplate = DefaultItemTemplate;
                 Log.Info("ItemTemplate applied to {0}.", itemsControl.Name);
             }
-#else
-            itemsControl.ItemTemplate = DefaultItemTemplate;
-            Log.Info("ItemTemplate applied to {0}.", itemsControl.Name);
-#endif
         }
 
         /// <summary>
         /// Configures the selected item convention.
         /// </summary>
-        /// <param name="selector">The element that has a SelectedItem property.</param>
-        /// <param name="selectedItemProperty">The SelectedItem property.</param>
-        /// <param name="viewModelType">The view model type.</param>
-        /// <param name="path">The property path.</param>
         public static Action<FrameworkElement, DependencyProperty, Type, string> ConfigureSelectedItem =
             (selector, selectedItemProperty, viewModelType, path) => {
                 if (HasBinding(selector, selectedItemProperty)) {
@@ -493,7 +460,7 @@
                 foreach (var potentialName in DerivePotentialSelectionNames(baseName)) {
                     if (viewModelType.GetPropertyCaseInsensitive(potentialName) != null) {
                         var selectionPath = path.Replace(baseName, potentialName);
-#if WinRT
+#if WINDOWS_UWP
                         var binding = new Binding { Mode = BindingMode.TwoWay, Path = new PropertyPath(selectionPath) };
 #else
                         var binding = new Binding(selectionPath) { Mode = BindingMode.TwoWay };
@@ -513,12 +480,6 @@
         /// <summary>
         /// Configures the SelectedItem binding for matched selection path.
         /// </summary>
-        /// <param name="selector">The element that has a SelectedItem property.</param>
-        /// <param name="selectedItemProperty">The SelectedItem property.</param>
-        /// <param name="viewModelType">The view model type.</param>
-        /// <param name="selectionPath">The property path.</param>
-        /// <param name="binding">The binding to configure.</param>
-        /// <returns>A bool indicating whether to apply binding</returns>
         public static Func<FrameworkElement, DependencyProperty, Type, string, Binding, bool> ConfigureSelectedItemBinding =
             (selector, selectedItemProperty, viewModelType, selectionPath, binding) => {
                 return true;
@@ -527,10 +488,10 @@
         /// <summary>
         /// Applies a header template based on <see cref="IHaveDisplayName"/>
         /// </summary>
-        /// <param name="element"></param>
-        /// <param name="headerTemplateProperty"></param>
-        /// <param name="headerTemplateSelectorProperty"> </param>
-        /// <param name="viewModelType"></param>
+        /// <param name="element">The element to apply the header template to.</param>
+        /// <param name="headerTemplateProperty">The depdendency property for the hdeader.</param>
+        /// <param name="headerTemplateSelectorProperty">The selector dependency property.</param>
+        /// <param name="viewModelType">The type of the view model.</param>
         public static void ApplyHeaderTemplate(FrameworkElement element, DependencyProperty headerTemplateProperty, DependencyProperty headerTemplateSelectorProperty, Type viewModelType) {
             var template = element.GetValue(headerTemplateProperty);
             var selector = headerTemplateSelectorProperty != null
@@ -552,7 +513,7 @@
         /// <param name="propertyName">The property to search for.</param>
         /// <returns>The property or null if not found.</returns>
         public static PropertyInfo GetPropertyCaseInsensitive(this Type type, string propertyName) {
-#if WinRT
+#if WINDOWS_UWP
             var typeInfo = type.GetTypeInfo();
             var typeList = new List<Type> { type };
 
@@ -581,45 +542,5 @@
                 .FirstOrDefault(property => property != null);
 #endif
         }
-
-#if (SILVERLIGHT && !SL5)
-        /// <summary>
-        /// Accounts for the lack of UpdateSourceTrigger in silverlight.
-        /// </summary>
-        /// <param name="element">The element to wire for change events on.</param>
-        /// <param name="dependencyProperty">The property that is being bound.</param>
-        /// <param name="expressionSource">Gets the the binding expression that needs to be updated.</param>
-        /// <param name="property">The property being bound to if available.</param>
-        /// <param name="binding">The binding if available.</param>
-        public static void ApplySilverlightTriggers(DependencyObject element, DependencyProperty dependencyProperty, Func<FrameworkElement, BindingExpression> expressionSource, PropertyInfo property, Binding binding){
-            var textBox = element as TextBox;
-            if (textBox != null && dependencyProperty == TextBox.TextProperty) {
-                if (property != null) {
-                    var typeCode = Type.GetTypeCode(property.PropertyType);
-                    if (typeCode == TypeCode.Single || typeCode == TypeCode.Double || typeCode == TypeCode.Decimal) {
-                        binding.UpdateSourceTrigger = UpdateSourceTrigger.Explicit;
-                        textBox.KeyUp += delegate {
-                            var start = textBox.SelectionStart;
-                            var text = textBox.Text;
-
-                            expressionSource(textBox).UpdateSource();
-
-                            textBox.Text = text;
-                            textBox.SelectionStart = start;
-                        };
-                        return;
-                    }
-                }
-
-                textBox.TextChanged += delegate { expressionSource(textBox).UpdateSource(); };
-                return;
-            }
-
-            var passwordBox = element as PasswordBox;
-            if (passwordBox != null && dependencyProperty == PasswordBox.PasswordProperty) {
-                passwordBox.PasswordChanged += delegate { expressionSource(passwordBox).UpdateSource(); };
-            }
-        }
-#endif
     }
 }

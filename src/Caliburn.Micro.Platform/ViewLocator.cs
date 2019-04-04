@@ -1,8 +1,4 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#else
-namespace Caliburn.Micro
-#endif
+﻿namespace Caliburn.Micro
 {
     using System;
     using System.Linq;
@@ -14,7 +10,7 @@ namespace Caliburn.Micro
     using UIElement = global::Xamarin.Forms.Element;
     using TextBlock = global::Xamarin.Forms.Label;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
-#elif !WinRT
+#elif !WINDOWS_UWP
     using System.Windows;
     using System.Windows.Controls;
 #else
@@ -22,7 +18,7 @@ namespace Caliburn.Micro
     using Windows.UI.Xaml.Controls;
 #endif
 
-#if !SILVERLIGHT && !WinRT && !XFORMS
+#if !WINDOWS_UWP && !XFORMS
     using System.Windows.Interop;
 #endif
 
@@ -268,8 +264,8 @@ namespace Caliburn.Micro
                 return view;
             }
 
-#if !WinRT && !XFORMS
-            if(viewType.IsInterface || viewType.IsAbstract || !typeof(UIElement).IsAssignableFrom(viewType))
+#if !WINDOWS_UWP && !XFORMS
+            if (viewType.IsInterface || viewType.IsAbstract || !typeof(UIElement).IsAssignableFrom(viewType))
                 return new TextBlock { Text = string.Format("Cannot create {0}.", viewType.FullName) };
 #else
             var viewTypeInfo = viewType.GetTypeInfo();
@@ -396,7 +392,7 @@ namespace Caliburn.Micro
             if (viewAware != null) {
                 var view = viewAware.GetView(context) as UIElement;
                 if (view != null) {
-#if !SILVERLIGHT && !WinRT && !XFORMS
+#if !WINDOWS_UWP && !XFORMS
                     var windowCheck = view as Window;
                     if (windowCheck == null || (!windowCheck.IsLoaded && !(new WindowInteropHelper(windowCheck).Handle == IntPtr.Zero))) {
                         Log.Info("Using cached view for {0}.", model);
@@ -416,7 +412,7 @@ namespace Caliburn.Micro
         /// Transforms a view type into a pack uri.
         /// </summary>
         public static Func<Type, Type, string> DeterminePackUriFromType = (viewModelType, viewType) => {
-#if !WinRT && !XFORMS
+#if !WINDOWS_UWP && !XFORMS
             var assemblyName = viewType.Assembly.GetAssemblyName();
             var applicationAssemblyName = Application.Current.GetType().Assembly.GetAssemblyName();
 #else
@@ -444,7 +440,7 @@ namespace Caliburn.Micro
         public static void InitializeComponent(object element) {
 #if XFORMS
             return;
-#elif !WinRT
+#elif !WINDOWS_UWP
             var method = element.GetType()
                 .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
 

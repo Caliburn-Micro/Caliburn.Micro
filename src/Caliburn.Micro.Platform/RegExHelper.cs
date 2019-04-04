@@ -1,10 +1,12 @@
-﻿namespace Caliburn.Micro {
-    using System;
+﻿using System;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     ///  Helper class for encoding strings to regular expression patterns
     /// </summary>
-    public static class RegExHelper {
+    public static class RegExHelper
+    {
         /// <summary>
         /// Regular expression pattern for valid name
         /// </summary>
@@ -26,7 +28,8 @@
         /// <param name="groupName">Name of capture group to create</param>
         /// <param name="regEx">Regular expression pattern to capture</param>
         /// <returns>Regular expression capture group with the specified group name</returns>
-        public static string GetCaptureGroup(string groupName, string regEx) {
+        public static string GetCaptureGroup(string groupName, string regEx)
+        {
             return String.Concat(@"(?<", groupName, ">", regEx, ")");
         }
 
@@ -35,7 +38,8 @@
         /// </summary>
         /// <param name="srcNamespace">Source namespace to convert to regular expression</param>
         /// <returns>Namespace converted to a regular expression</returns>
-        public static string NamespaceToRegEx(string srcNamespace) {
+        public static string NamespaceToRegEx(string srcNamespace)
+        {
             //Need to escape the "." as it's a special character in regular expression syntax
             var nsencoded = srcNamespace.Replace(".", @"\.");
 
@@ -49,7 +53,8 @@
         /// </summary>
         /// <param name="groupName">Name of capture group to create</param>
         /// <returns>Regular expression capture group with the specified group name</returns>
-        public static string GetNameCaptureGroup(string groupName) {
+        public static string GetNameCaptureGroup(string groupName)
+        {
             return GetCaptureGroup(groupName, NameRegEx);
         }
 
@@ -58,7 +63,8 @@
         /// </summary>
         /// <param name="groupName">Name of capture group to create</param>
         /// <returns>Regular expression capture group with the specified group name</returns>
-        public static string GetNamespaceCaptureGroup(string groupName) {
+        public static string GetNamespaceCaptureGroup(string groupName)
+        {
             return GetCaptureGroup(groupName, NamespaceRegEx);
         }
     }

@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Caliburn.Micro {
+namespace Caliburn.Micro
+{
 
     /// <summary>
     /// Helper class when splitting strings
     /// </summary>
-    public static class StringSplitter {
-        
+    public static class StringSplitter
+    {
+
         /// <summary>
         /// Splits a string with a chosen separator. 
         /// If a substring is contained in [...] it will not be splitted.
@@ -24,12 +26,9 @@ namespace Caliburn.Micro {
             var builder = new StringBuilder();
 
             int squareBrackets = 0;
-#if WinRT
-            foreach (var current in message.ToCharArray())
+
+            foreach (var current in message)
             {
-#else
-            foreach(var current in message) {
-#endif
                 //Square brackets are used as delimiters, so only separators outside them count...
                 if (current == '[')
                 {
@@ -45,7 +44,10 @@ namespace Caliburn.Micro {
                     {
                         str = builder.ToString();
                         if (!string.IsNullOrEmpty(str))
+                        {
                             list.Add(builder.ToString());
+                        }
+
                         builder.Length = 0;
                         continue;
                     }
