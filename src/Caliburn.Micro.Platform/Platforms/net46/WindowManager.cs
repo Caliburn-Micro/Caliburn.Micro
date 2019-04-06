@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -417,9 +417,14 @@ namespace Caliburn.Micro
                     if (view.DialogResult != cachedDialogResult)
                     {
                         view.DialogResult = cachedDialogResult;
+                        view.Close();
+                    }
+                    else
+                    {
+                        e.Cancel = false;
                     }
                     
-                    view.Close();
+                    
                 }
             }
         }
