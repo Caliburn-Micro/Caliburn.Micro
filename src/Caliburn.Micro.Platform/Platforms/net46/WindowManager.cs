@@ -408,23 +408,22 @@ namespace Caliburn.Micro
 
                 e.Cancel = true;
 
+                await Task.Yield();
+
                 var canClose = await guard.CanCloseAsync(CancellationToken.None);
+                
+                if (!canClose)
+                    return;
 
-                if (canClose)
+                actuallyClosing = true;
+
+                if (cachedDialogResult == null)
                 {
-                    actuallyClosing = true;
-
-                    if (view.DialogResult != cachedDialogResult)
-                    {
-                        view.DialogResult = cachedDialogResult;
-                        view.Close();
-                    }
-                    else
-                    {
-                        e.Cancel = false;
-                    }
-                    
-                    
+                    view.Close();
+                }
+                else if (view.DialogResult != cachedDialogResult)
+                {
+                    view.DialogResult = cachedDialogResult;
                 }
             }
         }
