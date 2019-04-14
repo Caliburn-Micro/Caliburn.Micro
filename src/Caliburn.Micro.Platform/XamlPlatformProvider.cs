@@ -76,7 +76,7 @@
 #if WINDOWS_UWP
             return dispatcher.RunTaskAsync(action);
 #else
-            return dispatcher.InvokeAsync(action).Task;
+            return dispatcher.InvokeAsync(action).Task.Unwrap();
 #endif
         }
 
