@@ -22,10 +22,7 @@
         /// <returns>Itself</returns>
         public NavigateHelper<TViewModel> WithParam<TValue>(Expression<Func<TViewModel, TValue>> property, TValue value)
         {
-            if (value is ValueType || !ReferenceEquals(null, value))
-            {
-                parameters[property.GetMemberInfo().Name] = value;
-            }
+            parameters[property.GetMemberInfo().Name] = value;
 
             return this;
         }
