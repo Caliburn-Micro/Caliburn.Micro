@@ -90,7 +90,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="sender"> The event sender. </param>
         /// <param name="e"> The event args. </param>
-        protected override void OnNavigated(object sender, NavigationEventArgs e)
+        protected override async void OnNavigated(object sender, NavigationEventArgs e)
         {
             if (e.Content == null)
                 return;
@@ -113,7 +113,7 @@ namespace Caliburn.Micro
 
                     Log.Info("Popping view model of type {0} off the back stack", viewModel == null ? "null" : viewModel.GetType().Name);
 
-                    BindViewModel(view, viewModel);
+                    await BindViewModel(view, viewModel);
 
                     break;
                 }
@@ -123,14 +123,14 @@ namespace Caliburn.Micro
 
                     Log.Info("Popping view model of type {0} off the forward stack", viewModel == null ? "null" : viewModel.GetType().Name);
 
-                    BindViewModel(view, viewModel);
+                    await BindViewModel(view, viewModel);
 
                     break;
                 }
                 case NavigationMode.New:
                 case NavigationMode.Refresh:
 
-                    BindViewModel(view);
+                    await BindViewModel(view);
 
                     break;
             }

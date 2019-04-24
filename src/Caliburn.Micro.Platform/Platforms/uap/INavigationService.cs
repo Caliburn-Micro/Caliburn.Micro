@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Core;
@@ -8,13 +9,13 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-namespace Caliburn.Micro {
-    
-
+namespace Caliburn.Micro
+{
     /// <summary>
     ///   Implemented by services that provide (<see cref="System.Uri" /> based) navigation.
     /// </summary>
-    public interface INavigationService {
+    public interface INavigationService
+    {
         /// <summary>
         ///   Raised after navigation.
         /// </summary>
@@ -107,7 +108,7 @@ namespace Caliburn.Micro {
         /// Tries to restore the frame navigation state from local settings.
         /// </summary>
         /// <returns>Whether the restoration of successful.</returns>
-        bool ResumeState();
+        Task<bool> ResumeStateAsync();
     }
 
     /// <summary>
@@ -193,21 +194,21 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name="sender"> The event sender. </param>
         /// <param name="e"> The event args. </param>
-        protected virtual void OnNavigated(object sender, NavigationEventArgs e) {
+        protected virtual async void OnNavigated(object sender, NavigationEventArgs e) {
 
             if (e.Content == null)
                 return;
 
             CurrentParameter = e.Parameter;
 
-            var view = e.Content as Page;
 
-            if (view == null) {
+            if (!(e.Content is Page view))
+            {
                 throw new ArgumentException("View '" + e.Content.GetType().FullName +
                                             "' should inherit from Page or one of its descendents.");
             }
 
-            BindViewModel(view);
+            await BindViewModel(view);
         }
 
         /// <summary>
@@ -215,7 +216,7 @@ namespace Caliburn.Micro {
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="viewModel">The view model.</param>
-        protected virtual async void BindViewModel(DependencyObject view, object viewModel = null)
+        protected virtual async Task BindViewModel(DependencyObject view, object viewModel = null)
         {
             ViewLocator.InitializeComponent(view);
 
@@ -431,7 +432,7 @@ namespace Caliburn.Micro {
         /// Tries to restore the frame navigation state from local settings.
         /// </summary>
         /// <returns>Whether the restoration of successful.</returns>
-        public virtual bool ResumeState() {
+        public virtual async Task<bool> ResumeStateAsync() {
             var container = GetSettingsContainer();
 
             if (!container.Values.ContainsKey(FrameStateKey))
@@ -453,7 +454,7 @@ namespace Caliburn.Micro {
                 return false;
             }
 
-            BindViewModel(view);
+            await BindViewModel(view);
 
             if (Window.Current.Content == null)
                 Window.Current.Content = frame;
