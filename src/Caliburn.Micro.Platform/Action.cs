@@ -154,10 +154,6 @@
             }
 
             var target = e.NewValue;
-            var containerKey = e.NewValue as string;
-            if (containerKey != null) {
-                target = IoC.GetInstance(null, containerKey);
-            }
 #if XFORMS
             Log.Info("Attaching message handler {0} to {1}.", target, d);
             Message.SetHandler(d, target);
