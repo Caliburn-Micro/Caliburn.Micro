@@ -53,7 +53,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Installs the caching subsystem.
         /// </summary>
-        public static void Install()
+        public static System.Action Install = () =>
         {
             if (isInstalled)
             {
@@ -94,6 +94,6 @@ namespace Caliburn.Micro
                 var type = names.Select(n => TypeNameCache.GetValueOrDefault(n)).FirstOrDefault(t => t != null);
                 return type;
             };
-        }
+        };
     }
 }
