@@ -1,14 +1,12 @@
-﻿<Project >
-  <Sdk Name="MSBuild.Sdk.Extras" Version="2.0.24" />
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.1;net45;uap10.0.16299;Xamarin.iOS10;MonoAndroid80;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>netstandard1.1;net45;uap10.0.16299;Xamarin.iOS10;MonoAndroid80</TargetFrameworks>
     <PackageId>Caliburn.Micro.Core</PackageId>
     <Product>Caliburn.Micro Core</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="2.0.24" />
-  </ItemGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
     <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>

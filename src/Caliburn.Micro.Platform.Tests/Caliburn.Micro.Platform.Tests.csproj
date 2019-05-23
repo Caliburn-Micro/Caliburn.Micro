@@ -1,5 +1,5 @@
-﻿<Project>
-  <Sdk Name="MSBuild.Sdk.Extras" Version="2.0.24" />
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+
   <PropertyGroup>
     <TargetFramework>net46</TargetFramework>
     <IsPackable>false</IsPackable>
