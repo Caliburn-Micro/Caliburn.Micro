@@ -1,7 +1,9 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
-
+﻿<Project>
+  <Sdk Name="MSBuild.Sdk.Extras" Version="2.0.24" />
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.1;net45;uap10.0.16299;Xamarin.iOS10;MonoAndroid80</TargetFrameworks>
+    <!--<TargetFrameworks>netstandard1.1;net45;uap10.0.16299;Xamarin.iOS10;MonoAndroid80;netcoreapp3.0</TargetFrameworks>-->
+    <TargetFrameworks>net45;Xamarin.iOS10;MonoAndroid80;netstandard2.0;netcoreapp3.0</TargetFrameworks>
+    <!--<TargetFrameworks>net45;netcoreapp3.0</TargetFrameworks>-->
     <PackageId>Caliburn.Micro.Core</PackageId>
     <Product>Caliburn.Micro Core</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
@@ -11,6 +13,10 @@
     <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
+    <PackageReference Include="System.Numerics.Vectors.WindowsRuntime" Version="4.3.0" />
+  </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
     <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />

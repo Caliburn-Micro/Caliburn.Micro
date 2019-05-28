@@ -191,7 +191,7 @@
             }
             else currentElement = context.View;
 
-#if NET
+#if NET || NETCOREAPP
             var binding = new Binding {
                 Path = new PropertyPath(Message.HandlerProperty), 
                 Source = currentElement
