@@ -254,11 +254,18 @@ namespace Caliburn.Micro
             return args.ToArray();
         }
 
-        private static ConstructorInfo SelectEligibleConstructor(Type type)
+        private ConstructorInfo SelectEligibleConstructor(Type type)
         {
-            return (from c in type.GetTypeInfo().DeclaredConstructors.Where(c => c.IsPublic)
-                    orderby c.GetParameters().Length descending
-                    select c).FirstOrDefault();
+            return type.GetTypeInfo().DeclaredConstructors
+                .Where(c => c.IsPublic)
+                .Select(c => new
+                {
+                    Constructor = c,
+                    HandledParamters = c.GetParameters().Count(p => HasHandler(p.ParameterType, null))
+                })
+                .OrderByDescending(c => c.HandledParamters)
+                .Select(c => c.Constructor)
+                .FirstOrDefault();
         }
 
         private class ContainerEntry : List<Func<SimpleContainer, object>>
