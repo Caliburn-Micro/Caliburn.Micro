@@ -13,7 +13,7 @@ namespace Caliburn.Micro
         private readonly List<Handler> _handlers = new List<Handler>();
 
         /// <inheritdoc />
-        public bool HandlerExistsFor(Type messageType)
+        public virtual bool HandlerExistsFor(Type messageType)
         {
             lock (_handlers)
             {
