@@ -34,6 +34,11 @@
         }
 
         /// <summary>
+        /// Whether or not classes should execute property change notications on the UI thread.
+        /// </summary>
+        public virtual bool PropertyChangeNotificationsOnUIThread => true;
+
+        /// <summary>
         /// Indicates whether or not the framework is in design-time mode.
         /// </summary>
         public virtual bool InDesignMode {
