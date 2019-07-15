@@ -29,6 +29,11 @@ namespace Caliburn.Micro
         }
 
         /// <summary>
+        /// Whether to enable recursive property injection for all resolutions.
+        /// </summary>
+        public bool EnablePropertyInjection { get; set; }
+
+        /// <summary>
         ///   Registers the instance.
         /// </summary>
         /// <param name = "service">The service.</param>
@@ -98,7 +103,14 @@ namespace Caliburn.Micro
             var entry = GetEntry(service, key);
             if (entry != null)
             {
-                return entry.Single()(this);
+                var instance = entry.Single()(this);
+
+                if (EnablePropertyInjection && instance != null)
+                {
+                    BuildUp(instance);
+                }
+
+                return instance;
             }
 
             if (service == null)
@@ -123,6 +135,11 @@ namespace Caliburn.Micro
 
                 for (var i = 0; i < array.Length; i++)
                 {
+                    if (EnablePropertyInjection)
+                    {
+                        BuildUp(instances[i]);
+                    }
+
                     array.SetValue(instances[i], i);
                 }
 
@@ -152,7 +169,23 @@ namespace Caliburn.Micro
         public IEnumerable<object> GetAllInstances(Type service, string key = null)
         {
             var entries = GetEntry(service, key);
-            return entries != null ? entries.Select(x => x(this)) : new object[0];
+
+            if (entries == null)
+            {
+                return new object[0];
+            }
+
+            var instances = entries.Select(e => e(this));
+
+            foreach(var instance in instances)
+            {
+                if (EnablePropertyInjection && instance != null)
+                {
+                    BuildUp(instance);
+                }
+            }
+
+            return instances;
         }
 
         /// <summary>
@@ -161,16 +194,18 @@ namespace Caliburn.Micro
         /// <param name = "instance">The instance.</param>
         public void BuildUp(object instance)
         {
-            var injectables = from property in instance.GetType().GetRuntimeProperties()
-                              where property.CanRead && property.CanWrite && property.PropertyType.GetTypeInfo().IsInterface
-                              select property;
+            var properties = instance
+                .GetType()
+                .GetRuntimeProperties()
+                .Where(p => p.CanRead && p.CanWrite && p.PropertyType.GetTypeInfo().IsInterface);
 
-            foreach (var propertyInfo in injectables)
+            foreach (var property in properties)
             {
-                var injection = GetAllInstances(propertyInfo.PropertyType).ToArray();
-                if (injection.Any())
+                var value = GetInstance(property.PropertyType, null);
+
+                if (value != null)
                 {
-                    propertyInfo.SetValue(instance, injection.First(), null);
+                    property.SetValue(instance, value, null);
                 }
             }
         }
