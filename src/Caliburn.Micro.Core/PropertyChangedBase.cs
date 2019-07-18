@@ -47,7 +47,14 @@ namespace Caliburn.Micro
         {
             if (IsNotifying && PropertyChanged != null)
             {
-                OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
+                if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+                {
+                    OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
+                }
+                else
+                {
+                    OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                }
             }
         }
 
