@@ -318,7 +318,7 @@ namespace Caliburn.Micro
             return false;
         }
 
-        private class WindowConductor
+        protected class WindowConductor
         {
             private bool deactivatingFromView;
             private bool deactivateFromViewModel;
