@@ -363,7 +363,7 @@
         /// Determines whether a particular dependency property already has a binding on the provided element.
         /// </summary>
         public static bool HasBinding(FrameworkElement element, DependencyProperty property) {
-#if NET
+#if NET || NETCOREAPP
             return BindingOperations.GetBindingBase(element, property) != null;
 #else
             return element.GetBindingExpression(property) != null;
