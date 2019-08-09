@@ -177,7 +177,7 @@
         /// Determines whether a custom update source trigger should be applied to the binding.
         /// </summary>
         public static Action<DependencyProperty, DependencyObject, Binding, PropertyInfo> ApplyUpdateSourceTrigger = (bindableProperty, element, binding, info) => {
-#if WINDOWS_UWP || NET
+#if WINDOWS_UWP || NET || NETCOREAPP
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
         };
