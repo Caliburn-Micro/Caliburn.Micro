@@ -79,8 +79,4 @@
     <Compile Include="ViewModelLocator.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Platforms\net46-netcore\AssemblyInfo.cs" />
-  </ItemGroup>
-
 </Project>

@@ -177,7 +177,7 @@
         /// Determines whether a custom update source trigger should be applied to the binding.
         /// </summary>
         public static Action<DependencyProperty, DependencyObject, Binding, PropertyInfo> ApplyUpdateSourceTrigger = (bindableProperty, element, binding, info) => {
-#if WINDOWS_UWP || NET || NETCOREAPP
+#if WINDOWS_UWP || NET || NETCORE
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
         };
@@ -363,7 +363,7 @@
         /// Determines whether a particular dependency property already has a binding on the provided element.
         /// </summary>
         public static bool HasBinding(FrameworkElement element, DependencyProperty property) {
-#if NET || NETCOREAPP
+#if NET || NETCORE
             return BindingOperations.GetBindingBase(element, property) != null;
 #else
             return element.GetBindingExpression(property) != null;
