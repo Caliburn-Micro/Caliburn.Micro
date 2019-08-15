@@ -1,10 +1,15 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;uap10.0.16299;Xamarin.iOS10;MonoAndroid80;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net45;uap10.0.16299;Xamarin.iOS10;MonoAndroid80;netstandard2.0;netcoreapp3.0</TargetFrameworks>
     <PackageId>Caliburn.Micro</PackageId>
     <Product>Caliburn.Micro</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Workaround for https://github.com/onovotny/MSBuildSdkExtras/issues/173 -->
+  <PropertyGroup Label="Android DesignTimeBuild error workaround">
+    <DesignTimeBuild>false</DesignTimeBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'Xamarin.iOS10' or '$(TargetFramework)' == 'MonoAndroid80'">
@@ -28,7 +33,13 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
-    <Compile Include="Platforms\net46\**\*.cs" />
+    <Compile Include="Platforms\net46-netcore\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.0.1" />
+    <PackageReference Include="Microsoft.WindowsDesktop.App" Version="3.0.0-preview7-27912-14" />
+    <Compile Include="Platforms\net46-netcore\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup Label="Package">
@@ -71,10 +82,6 @@
     <Compile Include="ViewLocator.cs" />
     <Compile Include="ViewModelBinder.cs" />
     <Compile Include="ViewModelLocator.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Platforms\net46\AssemblyInfo.cs" />
   </ItemGroup>
 
 </Project>

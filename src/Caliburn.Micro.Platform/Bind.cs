@@ -154,7 +154,7 @@
         /// </summary>
         /// <param name="dependencyObject">The ui to apply conventions to.</param>
         /// <returns>Whether or not conventions are applied.</returns>
-#if NET
+#if NET || NETCORE
         [AttachedPropertyBrowsableForTypeAttribute(typeof(DependencyObject))]
 #endif
         public static bool GetAtDesignTime(DependencyObject dependencyObject) {

@@ -29,8 +29,15 @@ steps:
   displayName: Nuget Restore
   inputs:
     solution: '$(coreSolution)'
-    configuration: '$(buildConfiguration)'
     msbuildArgs: '/t:Restore'
+    configuration: '$(buildConfiguration)'
+
+- task: PowerShell@2
+# Workaround for https://github.com/onovotny/MSBuildSdkExtras/issues/174
+  displayName: 'Resource.Designer workaround'
+  inputs:
+    targetType: 'inline'
+    script: 'New-Item -ItemType File -Path .\src\Caliburn.Micro.Core\obj\Release\MonoAndroid80\Resource.Designer.cs -Force'
 
 - task: VSBuild@1
   displayName: Build & Pack Core Solution
@@ -40,12 +47,12 @@ steps:
     platform: '$(buildPlatform)'
     msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
 
-- task: VSTest@2
+- task: DotNetCoreCLI@2
   displayName: Run Unit Tests
   inputs:
-    testAssemblyVer2: 'bin\**\*.Tests.dll'
-    configuration: '$(buildConfiguration)'
-    platform: '$(buildPlatform)'
+    command: test
+    projects: '**/*Test*/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
 - task: NuGetCommand@2
   displayName: Restore Setup Solution

@@ -2,6 +2,9 @@
     <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
         <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
     </PropertyGroup>
+	  <PropertyGroup Condition="$(TargetFramework.StartsWith('netcore'))">
+        <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
+    </PropertyGroup>
     <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
         <DefineConstants>$(DefineConstants);NET</DefineConstants>
     </PropertyGroup>
