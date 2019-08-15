@@ -9,6 +9,12 @@ variables:
   featuresSamplesSolution: 'samples\features\Features.sln'
 
 steps:
+- task: DotNetCoreInstaller@0
+  displayName: 'Install .NET Core 3'
+  inputs:
+    version: '3.0.100-preview6-013656'
+    packageType: sdk
+
 - task: DotNetCoreCLI@2  
   inputs:
     command: custom
