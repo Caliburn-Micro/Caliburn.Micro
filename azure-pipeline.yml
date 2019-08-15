@@ -45,7 +45,7 @@ steps:
     solution: '$(coreSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME)/"'
+    msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
 
 - task: DotNetCoreCLI@2
   displayName: Run Unit Tests
@@ -65,7 +65,7 @@ steps:
     solution: '$(setupSamplesSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME)/"'
+    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
 
 - task: NuGetCommand@2
   displayName: Restore Features Solution
@@ -78,7 +78,7 @@ steps:
     solution: '$(featuresSamplesSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME)/"'
+    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
 
 - task: CopyFiles@2
   displayName: Copy Packages to Artifact Directory
