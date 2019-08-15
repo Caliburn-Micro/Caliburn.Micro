@@ -12,9 +12,8 @@ steps:
 - task: UseDotNet@2
   displayName: 'Install .NET Core 3'
   inputs:
-    version: '3.0.100-preview8-013656'
-    packageType: sdk
-    includePreviewVersions: true
+    packageType: 'sdk'
+    useGlobalJson: true
 
 - task: DotNetCoreCLI@2  
   inputs:
@@ -39,7 +38,7 @@ steps:
     solution: '$(coreSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Pack'
+    msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
 
 - task: VSTest@2
   displayName: Run Unit Tests
@@ -59,7 +58,7 @@ steps:
     solution: '$(setupSamplesSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Build'
+    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
 
 - task: NuGetCommand@2
   displayName: Restore Features Solution
@@ -72,7 +71,7 @@ steps:
     solution: '$(featuresSamplesSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Build'
+    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
 
 - task: CopyFiles@2
   displayName: Copy Packages to Artifact Directory
