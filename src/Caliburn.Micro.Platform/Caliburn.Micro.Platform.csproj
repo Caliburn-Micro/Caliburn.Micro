@@ -7,6 +7,11 @@
     <RootNamespace>Caliburn.Micro</RootNamespace>
   </PropertyGroup>
 
+  <!-- Workaround for https://github.com/onovotny/MSBuildSdkExtras/issues/173 -->
+  <PropertyGroup Label="Android DesignTimeBuild error workaround">
+    <DesignTimeBuild>false</DesignTimeBuild>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'Xamarin.iOS10' or '$(TargetFramework)' == 'MonoAndroid80'">
     <DefineConstants>XFORMS</DefineConstants>
   </PropertyGroup>
