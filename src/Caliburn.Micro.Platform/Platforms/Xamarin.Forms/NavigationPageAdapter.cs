@@ -105,7 +105,7 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public async Task GoBackAsync(bool animated = true) {
 
-            var canClose = await CanCloseAysnc();
+            var canClose = await CanCloseAsync();
 
             if (!canClose)
                 return;
@@ -120,7 +120,7 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public async Task GoBackToRootAsync(bool animated = true) 
         {
-            var canClose = await CanCloseAysnc();
+            var canClose = await CanCloseAsync();
 
             if (!canClose)
                 return;
@@ -137,7 +137,7 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public async Task NavigateToViewModelAsync(Type viewModelType, object parameter = null, bool animated = true)
         {
-            var canClose = await CanCloseAysnc();
+            var canClose = await CanCloseAsync();
 
             if (!canClose)
                 return;
@@ -156,7 +156,7 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public async Task NavigateToViewModelAsync<T>(object parameter = null, bool animated = true)
         {
-            var canClose = await CanCloseAysnc();
+            var canClose = await CanCloseAsync();
 
             if (!canClose)
                 return;
@@ -173,7 +173,7 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public async Task NavigateToViewAsync(Type viewType, object parameter = null, bool animated = true)
         {
-            var canClose = await CanCloseAysnc();
+            var canClose = await CanCloseAsync();
 
             if (!canClose)
                 return;
@@ -192,7 +192,7 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public async Task NavigateToViewAsync<T>(object parameter = null, bool animated = true)
         {
-            var canClose = await CanCloseAysnc();
+            var canClose = await CanCloseAsync();
 
             if (!canClose)
                 return;
@@ -278,7 +278,7 @@
             }
         }
 
-        private async Task<bool> CanCloseAysnc() {
+        private async Task<bool> CanCloseAsync() {
             var view = navigationPage.CurrentPage;
 
             if (view?.BindingContext is IGuardClose guard)
