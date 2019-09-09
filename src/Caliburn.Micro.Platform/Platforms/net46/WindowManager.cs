@@ -177,7 +177,7 @@ namespace Caliburn.Micro
 
             var conductor = new WindowConductor(rootModel, view);
 
-            await conductor.InitialiseAysnc();
+            await conductor.InitialiseAsync();
 
             return view;
         }
@@ -332,7 +332,7 @@ namespace Caliburn.Micro
                 this.view = view;
             }
 
-            public async Task InitialiseAysnc()
+            public async Task InitialiseAsync()
             {
                 if (model is IActivate activator)
                 {
