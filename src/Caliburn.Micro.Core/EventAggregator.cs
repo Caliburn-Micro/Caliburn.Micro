@@ -17,7 +17,7 @@ namespace Caliburn.Micro
         {
             lock (_handlers)
             {
-                return _handlers.Any(handler => handler.Handles(messageType) & !handler.IsDead);
+                return _handlers.Any(handler => handler.Handles(messageType) && !handler.IsDead);
             }
         }
 
