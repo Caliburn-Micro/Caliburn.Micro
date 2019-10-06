@@ -32,13 +32,6 @@ steps:
     msbuildArgs: '/t:Restore'
     configuration: '$(buildConfiguration)'
 
-- task: PowerShell@2
-# Workaround for https://github.com/onovotny/MSBuildSdkExtras/issues/174
-  displayName: 'Resource.Designer workaround'
-  inputs:
-    targetType: 'inline'
-    script: 'New-Item -ItemType File -Path .\src\Caliburn.Micro.Core\obj\Release\MonoAndroid80\Resource.Designer.cs -Force'
-
 - task: VSBuild@1
   displayName: Build & Pack Core Solution
   inputs:
