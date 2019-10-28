@@ -47,32 +47,6 @@ steps:
     projects: '**/*Test*/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
-- task: NuGetCommand@2
-  displayName: Restore Setup Solution
-  inputs:
-    restoreSolution: '$(setupSamplesSolution)'
-
-- task: VSBuild@1
-  displayName: Build Setup Solution
-  inputs:
-    solution: '$(setupSamplesSolution)'
-    configuration: '$(buildConfiguration)'
-    platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
-
-- task: NuGetCommand@2
-  displayName: Restore Features Solution
-  inputs:
-    restoreSolution: '$(featuresSamplesSolution)'
-
-- task: VSBuild@1
-  displayName: Build Features Solution
-  inputs:
-    solution: '$(featuresSamplesSolution)'
-    configuration: '$(buildConfiguration)'
-    platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
-
 - task: CopyFiles@2
   displayName: Copy Packages to Artifact Directory
   inputs:
