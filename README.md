@@ -13,7 +13,7 @@ Caliburn.Micro is a small, yet powerful framework, designed for building applica
 ## Packages are available on Nuget
 - [Caliburn.Micro.Core](https://www.nuget.org/packages/Caliburn.Micro.Core/) - The Portable Class Library (PCL) portion of Caliburn.Micro.
 - [Caliburn.Micro](https://www.nuget.org/packages/Caliburn.Micro/) - The platform-specific adapters for Caliburn.Micro.
-- [Caliburn.Micro.Start](https://www.nuget.org/packages/Caliburn.Micro.Start/) - Includes a starting bootstrapper, view model and view.
+- [Caliburn.Micro.Xamarin.Forms](https://www.nuget.org/packages/Caliburn.Micro.Xamarin.Forms/) - Support to Caliburn.Micro in Xamarin.Forms.
 
 ## Questions
 - For non bug related questions see [Stack Overflow](https://stackoverflow.com/questions/tagged/caliburn.micro)
