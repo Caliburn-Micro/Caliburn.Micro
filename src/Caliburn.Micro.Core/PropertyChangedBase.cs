@@ -86,7 +86,7 @@ namespace Caliburn.Micro
         protected virtual void OnUIThread(System.Action action) => action.OnUIThread();
 
         /// <summary>
-        /// Sets a backing field value and if it's changed raise a notifcation.
+        /// Sets a backing field value and if it's changed raise a notification.
         /// </summary>
         /// <typeparam name="T">The type of the value being set.</typeparam>
         /// <param name="oldValue">A reference to the field to update.</param>
