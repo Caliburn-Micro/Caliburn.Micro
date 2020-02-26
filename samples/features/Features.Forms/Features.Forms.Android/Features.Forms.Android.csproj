@@ -44,10 +44,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Caliburn.Micro.Core">
-      <HintPath>..\..\..\..\bin\Caliburn.Micro.Platform\release\monoandroid80\80\Caliburn.Micro.Core.dll</HintPath>
+      <HintPath>..\..\..\..\bin\Caliburn.Micro.Platform\release\monoandroid80\Caliburn.Micro.Core.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.Platform">
-      <HintPath>..\..\..\..\bin\Caliburn.Micro.Platform\release\monoandroid80\80\Caliburn.Micro.Platform.dll</HintPath>
+      <HintPath>..\..\..\..\bin\Caliburn.Micro.Platform\release\monoandroid80\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="System" />
