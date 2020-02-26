@@ -16,15 +16,15 @@
     <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
   </ItemGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid'))">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   
-  <PropertyGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid'))">
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <AndroidResgenNamespace>Caliburn.Micro.Core</AndroidResgenNamespace>
   </PropertyGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
 
