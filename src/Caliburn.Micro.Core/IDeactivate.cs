@@ -20,7 +20,7 @@ namespace Caliburn.Micro
         /// <param name="close">Indicates whether or not this instance is being closed.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task DeactivateAsync(bool close, CancellationToken cancellationToken);
+        Task DeactivateAsync(bool close, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Raised after deactivation.
