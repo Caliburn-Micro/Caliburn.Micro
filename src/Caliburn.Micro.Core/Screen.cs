@@ -147,7 +147,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation and holds the value of the close check..</returns>
-        public virtual Task<bool> CanCloseAsync(CancellationToken cancellationToken)
+        public virtual Task<bool> CanCloseAsync(CancellationToken cancellationToken = default)
         {
             return Task.FromResult(true);
         }
