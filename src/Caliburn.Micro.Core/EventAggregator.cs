@@ -65,7 +65,7 @@ namespace Caliburn.Micro
         }
 
         /// <inheritdoc />
-        public virtual Task PublishAsync(object message, Func<Func<Task>, Task> marshal, CancellationToken cancellationToken)
+        public virtual Task PublishAsync(object message, Func<Func<Task>, Task> marshal, CancellationToken cancellationToken = default)
         {
             if (message == null)
             {

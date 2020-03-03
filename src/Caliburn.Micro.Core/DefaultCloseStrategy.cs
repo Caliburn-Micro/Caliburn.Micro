@@ -22,7 +22,7 @@ namespace Caliburn.Micro
         }
 
         /// <inheritdoc />
-        public async Task<ICloseResult<T>> ExecuteAsync(IEnumerable<T> toClose, CancellationToken cancellationToken)
+        public async Task<ICloseResult<T>> ExecuteAsync(IEnumerable<T> toClose, CancellationToken cancellationToken = default)
         {
             var closeable = new List<T>();
             var closeCanOccur = true;

@@ -10,7 +10,7 @@ namespace Caliburn.Micro
     public partial class Conductor<T> : ConductorBaseWithActiveItem<T> where T : class
     {
         /// <inheritdoc />
-        public override async Task ActivateItemAsync(T item, CancellationToken cancellationToken)
+        public override async Task ActivateItemAsync(T item, CancellationToken cancellationToken = default)
         {
             if (item != null && item.Equals(ActiveItem))
             {
@@ -41,7 +41,7 @@ namespace Caliburn.Micro
         /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public override async Task DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken)
+        public override async Task DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken = default)
         {
             if (item == null || !item.Equals(ActiveItem))
             {
@@ -61,7 +61,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken)
+        public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken = default )
         {
             var closeResult = await CloseStrategy.ExecuteAsync(new[] { ActiveItem }, cancellationToken);
 
