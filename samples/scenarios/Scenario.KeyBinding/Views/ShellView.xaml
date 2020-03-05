@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Scenario.KeyBinding.Views"
-        xmlns:cal="http://www.caliburnproject.org"
+        xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
         mc:Ignorable="d"
         Title="ShellView" Height="300" Width="300">
     <StackPanel>
