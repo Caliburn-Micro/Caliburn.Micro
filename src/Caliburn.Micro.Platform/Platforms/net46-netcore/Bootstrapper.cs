@@ -88,7 +88,7 @@ namespace Caliburn.Micro
             {
                 try
                 {
-                    //if (!AssemblySource.Instance.Contains(assembly))
+                    if (!AssemblySource.Instance.Contains(assembly))
                         AssemblySource.Instance.Add(assembly);
                 }
                 catch (ArgumentException)
@@ -114,7 +114,7 @@ namespace Caliburn.Micro
             {
                 try
                 {
-                    //if (!AssemblySource.Instance.Contains(assembly))
+                    if (!AssemblySource.Instance.Contains(assembly))
                         AssemblySource.Instance.Add(assembly);
                 }
                 catch (ArgumentException)
