@@ -83,7 +83,19 @@ namespace Caliburn.Micro
         protected virtual void StartDesignTime()
         {
             AssemblySource.Instance.Clear();
-            AssemblySource.Instance.AddRange(SelectAssemblies());
+			
+			foreach (var assembly in SelectAssemblies())
+            {
+                try
+                {
+                    if (!AssemblySource.Instance.Contains(assembly))
+                        AssemblySource.Instance.Add(assembly);
+                }
+                catch (ArgumentException)
+                {
+                    // ignore
+                }
+            }
 
             Configure();
             IoC.GetInstance = GetInstance;
@@ -97,7 +109,19 @@ namespace Caliburn.Micro
         protected virtual void StartRuntime()
         {
             AssemblySourceCache.Install();
-            AssemblySource.Instance.AddRange(SelectAssemblies());
+			
+			foreach (var assembly in SelectAssemblies())
+            {
+                try
+                {
+                    if (!AssemblySource.Instance.Contains(assembly))
+                        AssemblySource.Instance.Add(assembly);
+                }
+                catch (ArgumentException)
+                {
+                    // ignore
+                }
+            }
 
             if (useApplication)
             {
