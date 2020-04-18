@@ -17,7 +17,7 @@ namespace Features.CrossPlatform.Results
         public override void Execute(CoroutineExecutionContext context)
         {
             if (!(context.View is Page))
-                throw new InvalidOperationException("View must be a Page to use MessageDialogResult");
+                throw new InvalidOperationException("View must be a Page to use BusyResult");
 
             var page = (Page)context.View;
 

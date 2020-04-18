@@ -1,5 +1,4 @@
-﻿using System;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using Features.CrossPlatform.ViewModels;
 using Features.CrossPlatform.Views;
 using Xamarin.Forms;
