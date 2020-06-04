@@ -17,6 +17,27 @@ namespace Caliburn.Micro
         /// </summary>
         public static readonly IObservableCollection<Assembly> Instance = new BindableCollection<Assembly>();
 
+
+        /// <summary>
+        /// Adds a collection of assemblies to AssemblySource
+        /// </summary>
+        /// <param name="assemblies">The assemblies to add</param>
+        public static void AddRange(IEnumerable<Assembly> assemblies)
+        {
+            foreach(var assembly in assemblies)
+            {
+                try
+                {
+                    if (!Instance.Contains(assembly))
+                        Instance.Add(assembly);
+                }
+                catch (ArgumentException)
+                {
+                    // ignore
+                }
+            }
+        }
+
         /// <summary>
         /// Finds a type which matches one of the elements in the sequence of names.
         /// </summary>
