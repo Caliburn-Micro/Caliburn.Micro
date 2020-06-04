@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Caliburn.Micro
@@ -45,7 +46,7 @@ namespace Caliburn.Micro
                         str = builder.ToString();
                         if (!string.IsNullOrEmpty(str))
                         {
-                            list.Add(builder.ToString());
+                            list.Add(builder.ToString().Trim());
                         }
 
                         builder.Length = 0;
@@ -59,10 +60,12 @@ namespace Caliburn.Micro
             str = builder.ToString();
             if (!string.IsNullOrEmpty(str))
             {
-                list.Add(builder.ToString());
+                list.Add(builder.ToString().Trim());
             }
 
-            return list.ToArray();
+            return list
+                .Where(s => !string.IsNullOrEmpty(s))
+                .ToArray();
         }
 
         /// <summary>
