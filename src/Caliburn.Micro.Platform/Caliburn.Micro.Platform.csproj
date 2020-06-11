@@ -5,15 +5,12 @@
     <PackageId>Caliburn.Micro</PackageId>
     <Product>Caliburn.Micro</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
+    <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'Xamarin.iOS10' or '$(TargetFramework)' == 'MonoAndroid80'">
     <DefineConstants>XFORMS</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
-    <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   
   <ItemGroup>
