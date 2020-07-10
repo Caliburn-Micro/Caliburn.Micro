@@ -2,6 +2,27 @@
 
 Thanks for wanting to contribute to Caliburn.Micro. Contributions don't need to take the form of code, submitting issues and writing documentation is just as important.
 
+## FAQ: I see an error when opening the solution
+```error  : The expression "[System.IO.Path]::GetDirectoryName('')" cannot be evaluated. The path is not of a legal form.```
+
+This (unhelpfully) seems to be caused by not having the correct .NET Core SDK installed (see https://github.com/novotnyllc/MSBuildSdkExtras/issues/190).
+
+To find the version of the SDK that Caliburn Micro requires go to src/global.json.
+
+e.g.
+```
+{
+  "sdk": {
+    "version": "3.1.300"
+  },
+  "msbuild-sdks": {
+    "MSBuild.Sdk.Extras": "2.0.54"
+  }
+}	
+```
+
+Once this version listed in the global.json file is installed the solution will open with all the projects loaded. If the correct versions of the SDKs for Android, UAP and Xamarin are not installed there are error messages at build time that contain instructions on how to proceed. 
+
 ## Raising Issues
 
 Basic support is provided by the community on [Stack Overflow][http://stackoverflow.com/questions/tagged/caliburn.micro] including the core contributors.
