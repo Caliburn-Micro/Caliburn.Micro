@@ -3,7 +3,7 @@
 ## No longer under active maitenance
 This project is not longer being actively maintained, for more detail see the [announcement](https://caliburnmicro.com/announcements/stepping-away).
 
-
+## Packages
  Channel | Status
 :------: | ------
 CI | [![Build Status](https://img.shields.io/azure-devops/build/caliburn-micro/caliburn-micro/3.svg?logo=windows&logoColor=white&style=for-the-badge)](https://dev.azure.com/caliburn-micro/caliburn-micro/_build/latest?definitionId=3)
