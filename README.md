@@ -1,8 +1,5 @@
 # Caliburn.Micro
 
-## No longer under active maitenance
-This project is not longer being actively maintained, for more detail see the [announcement](https://caliburnmicro.com/announcements/stepping-away).
-
 ## Packages
  Channel | Status
 :------: | ------
