@@ -262,7 +262,7 @@
             {
                 actualParameter.Value = parameterText.Substring(1, parameterText.Length - 2);
             }
-            else if (MessageBinder.SpecialValues.ContainsKey(parameterText.ToLower()) || char.IsNumber(parameterText[0]))
+            else if (MessageBinder.SpecialValues.ContainsKey(parameterText.ToLower()) || decimal.TryParse(parameterText, out _))
             {
                 actualParameter.Value = parameterText;
             }
