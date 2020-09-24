@@ -56,18 +56,18 @@ namespace Caliburn.Micro
             deactivatingFromView = false;
         }
 
-        private void Deactivated(object sender, DeactivationEventArgs e)
+        private Task Deactivated(object sender, DeactivationEventArgs e)
         {
             if (!e.WasClosed)
             {
-                return;
+                return Task.FromResult(false);
             }
 
             ((IDeactivate)model).Deactivated -= Deactivated;
 
             if (deactivatingFromView)
             {
-                return;
+                return Task.FromResult(true);
             }
 
             deactivateFromViewModel = true;
@@ -75,6 +75,8 @@ namespace Caliburn.Micro
             view.Close();
             actuallyClosing = false;
             deactivateFromViewModel = false;
+
+            return Task.FromResult(true);
         }
 
         private async void Closing(object sender, CancelEventArgs e)
