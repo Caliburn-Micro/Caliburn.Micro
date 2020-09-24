@@ -127,14 +127,14 @@ namespace Caliburn.Micro
         public static void DeactivateWith(this IDeactivate child, IDeactivate parent)
         {
             var childReference = new WeakReference(child);
-            EventHandler<DeactivationEventArgs> handler = null;
-            handler = (s, e) =>
+            AsyncEventHandler<DeactivationEventArgs> handler = null;
+            handler = async (s, e) =>
             {
                 var deactivatable = (IDeactivate)childReference.Target;
                 if (deactivatable == null)
                     ((IDeactivate)s).Deactivated -= handler;
                 else
-                    deactivatable.DeactivateAsync(e.WasClosed, CancellationToken.None);
+                    await deactivatable.DeactivateAsync(e.WasClosed, CancellationToken.None);
             };
             parent.Deactivated += handler;
         }
