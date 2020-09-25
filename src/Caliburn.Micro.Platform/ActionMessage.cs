@@ -380,11 +380,28 @@
                     where message.Parameters.Count == methodParameters.Length
                     select method).FirstOrDefault();
 #else
-            return (from method in target.GetType().GetMethods()
-                    where method.Name == message.MethodName
-                    let methodParameters = method.GetParameters()
-                    where message.Parameters.Count == methodParameters.Length
-                    select method).FirstOrDefault();
+            //return 
+
+            var methods = (from method in target.GetType().GetMethods()
+                where method.Name == message.MethodName
+                let methodParameters = method.GetParameters()
+                where message.Parameters.Count == methodParameters.Length && message.Parameters.Zip(methodParameters,
+                          (parameter, info) => info.ParameterType.IsInstanceOfType(parameter.Value)).All(b => b)
+                select method);
+
+            MethodInfo returnMethodInfo = null;
+            foreach (MethodInfo method in methods)
+            {
+                returnMethodInfo = method;
+                if (method.GetParameters().Zip(message.Parameters, (info, parameter) =>
+                    parameter.Value.GetType().IsAssignableFrom(info.ParameterType)
+                ).All(b => b))
+                {
+                    break;
+                }
+            }
+
+            return returnMethodInfo;
 #endif
         };
 
