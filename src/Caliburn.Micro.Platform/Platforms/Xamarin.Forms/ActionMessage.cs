@@ -39,6 +39,10 @@
         public ActionMessage()
         {
             Parameters = new AttachedCollection<Parameter>();
+            Parameters.CollectionChanged += (s, e) =>
+            {
+                e.NewItems.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
+            };
         }
 
         /// <summary>
