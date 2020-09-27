@@ -155,6 +155,9 @@
 
             while (queue.Count > 0) {
                 var current = queue.Dequeue();
+                if (current == null)
+                    continue;
+                    
                 var currentElement = current as FrameworkElement;
 
                 if (currentElement != null && !string.IsNullOrEmpty(currentElement.Name))
