@@ -1,15 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Core", "Caliburn.Micro.Core\Caliburn.Micro.Core.csproj", "{F36828EE-446C-42F2-A0EC-D4FB112BD183}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Platform", "Caliburn.Micro.Platform\Caliburn.Micro.Platform.csproj", "{8AFF2D6E-2DE3-467F-B796-7DF2244D3831}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Core.Tests", "Caliburn.Micro.Core.Tests\Caliburn.Micro.Core.Tests.csproj", "{0437DA4A-6813-46AB-B6A7-31817037778F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Core.Tests", "Caliburn.Micro.Core.Tests\Caliburn.Micro.Core.Tests.csproj", "{0437DA4A-6813-46AB-B6A7-31817037778F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Platform.Tests", "Caliburn.Micro.Platform.Tests\Caliburn.Micro.Platform.Tests.csproj", "{AD615ED9-9EC4-42B6-B52C-1CD6C8051BE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Platform.Tests", "Caliburn.Micro.Platform.Tests\Caliburn.Micro.Platform.Tests.csproj", "{AD615ED9-9EC4-42B6-B52C-1CD6C8051BE0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Platform.Core", "Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj", "{BFB9D3A5-6710-4729-9890-D7B784C8E8B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Xamarin.Forms", "Caliburn.Micro.Xamarin.Forms\Caliburn.Micro.Xamarin.Forms.csproj", "{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +73,30 @@ Global
 		{AD615ED9-9EC4-42B6-B52C-1CD6C8051BE0}.Release|x64.Build.0 = Release|Any CPU
 		{AD615ED9-9EC4-42B6-B52C-1CD6C8051BE0}.Release|x86.ActiveCfg = Release|Any CPU
 		{AD615ED9-9EC4-42B6-B52C-1CD6C8051BE0}.Release|x86.Build.0 = Release|Any CPU
+		{BFB9D3A5-6710-4729-9890-D7B784C8E8B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFB9D3A5-6710-4729-9890-D7B784C8E8B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFB9D3A5-6710-4729-9890-D7B784C8E8B7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BFB9D3A5-6710-4729-9890-D7B784C8E8B7}.Debug|x64.Build.0 = Debug|Any CPU
+		{BFB9D3A5-6710-4729-9890-D7B784C8E8B7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BFB9D3A5-6710-4729-9890-D7B784C8E8B7}.Debug|x86.Build.0 = Debug|Any CPU
+		{BFB9D3A5-6710-4729-9890-D7B784C8E8B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFB9D3A5-6710-4729-9890-D7B784C8E8B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFB9D3A5-6710-4729-9890-D7B784C8E8B7}.Release|x64.ActiveCfg = Release|Any CPU
+		{BFB9D3A5-6710-4729-9890-D7B784C8E8B7}.Release|x64.Build.0 = Release|Any CPU
+		{BFB9D3A5-6710-4729-9890-D7B784C8E8B7}.Release|x86.ActiveCfg = Release|Any CPU
+		{BFB9D3A5-6710-4729-9890-D7B784C8E8B7}.Release|x86.Build.0 = Release|Any CPU
+		{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}.Debug|x64.Build.0 = Debug|Any CPU
+		{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}.Debug|x86.Build.0 = Debug|Any CPU
+		{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}.Release|x64.ActiveCfg = Release|Any CPU
+		{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}.Release|x64.Build.0 = Release|Any CPU
+		{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}.Release|x86.ActiveCfg = Release|Any CPU
+		{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,25 +1,37 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;uap10.0.16299;Xamarin.iOS10;MonoAndroid80;netstandard2.0;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net461;Xamarin.iOS10;MonoAndroid80;netcoreapp3.0;uap10.0.16299</TargetFrameworks>
     <PackageId>Caliburn.Micro</PackageId>
     <Product>Caliburn.Micro</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
     <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
+
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'Xamarin.iOS10' or '$(TargetFramework)' == 'MonoAndroid80'">
-    <DefineConstants>XFORMS</DefineConstants>
-  </PropertyGroup>
-  
+  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'all'))"/>
+    </ItemGroup>
+  </Target>
+
   <ItemGroup>
-    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
+    <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" AdditionalProperties="TargetFramework=netstandard2.0" PrivateAssets="all">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <IncludeAssets>Caliburn.Micro.Platform.Core.dll</IncludeAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" AdditionalProperties="TargetFramework=netstandard2.0">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <ExcludeAssets>Caliburn.Micro.Core.dll</ExcludeAssets>
+    </ProjectReference>
     <Compile Remove="Platforms\**\*.cs" />
     <None Include="Platforms\**\*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -44,35 +56,14 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid80'">
+    <Compile Remove="*.cs" />
     <Compile Include="Platforms\android\**\*.cs" />
+    <Compile Include="ViewModelLocator.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'Xamarin.iOS10'">
-    <Compile Include="Platforms\ios\**\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'Xamarin.iOS10' or '$(TargetFramework)' == 'MonoAndroid80'">
-    <PackageReference Include="Xamarin.Forms" Version="3.0.0.561731" />
     <Compile Remove="*.cs" />
-    <Compile Include="Platforms\xamarin.forms\**\*.cs" />
-    <Compile Include="Action.cs" />
-    <Compile Include="ActionExecutionContext.cs" />
-    <Compile Include="AssemblySource.cs" />
-    <Compile Include="Bind.cs" />
-    <Compile Include="DependencyPropertyHelper.cs" />
-    <Compile Include="ElementConvention.cs" />
-    <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="IHaveParameters.cs" />
-    <Compile Include="Message.cs" />
-    <Compile Include="MessageBinder.cs" />
-    <Compile Include="NameTransformer.cs" />
-    <Compile Include="Parser.cs" />
-    <Compile Include="RegExHelper.cs" />
-    <Compile Include="StringSplitter.cs" />
-    <Compile Include="TypeMappingConfiguration.cs" />
-    <Compile Include="View.cs" />
-    <Compile Include="ViewLocator.cs" />
-    <Compile Include="ViewModelBinder.cs" />
+    <Compile Include="Platforms\ios\**\*.cs" />
     <Compile Include="ViewModelLocator.cs" />
   </ItemGroup>
 
