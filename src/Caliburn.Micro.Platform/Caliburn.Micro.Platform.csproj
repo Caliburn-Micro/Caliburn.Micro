@@ -30,7 +30,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.3" />
-    <PackageReference Include="Microsoft.WindowsDesktop.App" Version="3.0.0-preview7-27912-14" />
+    <PackageReference Include="Microsoft.WindowsDesktop.App" Version="3.0.0" />
     <Compile Include="Platforms\net46-netcore\**\*.cs" />
   </ItemGroup>
 
