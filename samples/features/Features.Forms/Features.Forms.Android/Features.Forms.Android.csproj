@@ -49,6 +49,9 @@
     <Reference Include="Caliburn.Micro.Platform">
       <HintPath>..\..\..\..\bin\Caliburn.Micro.Platform\release\monoandroid80\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
+    <Reference Include="Caliburn.Micro.Xamarin.Forms">
+      <HintPath>..\..\..\..\bin\Caliburn.Micro.Xamarin.Forms\release\netstandard2.0\Caliburn.Micro.Xamarin.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
