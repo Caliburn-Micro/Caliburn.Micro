@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Features.Forms.iOS", "Featu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Features.Forms.Android", "Features.Forms\Features.Forms.Android\Features.Forms.Android.csproj", "{C22C023A-6B52-4FE3-B98A-57F973D56D4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Features.NetCore", "Features.NetCore\Features.NetCore.csproj", "{BB2E4A7A-B6D2-4179-8C75-3FD993E9E7A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Features.NetCore", "Features.NetCore\Features.NetCore.csproj", "{BB2E4A7A-B6D2-4179-8C75-3FD993E9E7A9}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -26,6 +26,7 @@ Global
 		Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems*{3bae54c3-20a6-40a8-93be-b324fed7d3fc}*SharedItemsImports = 4
 		Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems*{7bdab9d6-294b-4aa5-a7f5-3b2992e1d5d2}*SharedItemsImports = 13
 		Features.Forms\Features.Forms\Features.Forms.projitems*{aed0f189-e321-4d50-b4dc-36023d91ba0a}*SharedItemsImports = 13
+		Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems*{bb2e4a7a-b6d2-4179-8c75-3fd993e9e7a9}*SharedItemsImports = 5
 		Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems*{c22c023a-6b52-4fe3-b98a-57f973d56d4b}*SharedItemsImports = 4
 		Features.Forms\Features.Forms\Features.Forms.projitems*{c22c023a-6b52-4fe3-b98a-57f973d56d4b}*SharedItemsImports = 4
 		Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems*{ffac51be-42e4-4bd3-96aa-96fe2a7853ac}*SharedItemsImports = 4
