@@ -91,7 +91,7 @@ namespace Caliburn.Micro
     /// <summary>
     ///   A basic implementation of <see cref="INavigationService" /> designed to adapt the <see cref="Frame" /> control.
     /// </summary>
-    public class FrameAdapter : INavigationService
+    public class FrameAdapter : INavigationService, IDisposable
     {
         readonly Frame frame;
         readonly bool treatViewAsLoaded;
@@ -328,6 +328,12 @@ namespace Caliburn.Micro
         public JournalEntry RemoveBackEntry()
         {
             return frame.RemoveBackEntry();
+        }
+
+        public void Dispose()
+        {
+            this.frame.Navigating -= OnNavigating;
+            this.frame.Navigated -= OnNavigated;
         }
 
         /// <summary>
