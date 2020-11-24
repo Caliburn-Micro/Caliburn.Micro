@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;uap10.0.16299;Xamarin.iOS10;MonoAndroid80;netstandard2.0;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net461;uap10.0.16299;Xamarin.iOS10;MonoAndroid80;netstandard2.0;netcoreapp3.1</TargetFrameworks>
     <PackageId>Caliburn.Micro</PackageId>
     <Product>Caliburn.Micro</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
@@ -19,7 +19,7 @@
     <None Include="Platforms\**\*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
