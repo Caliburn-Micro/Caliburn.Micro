@@ -10,7 +10,7 @@ variables:
 
 steps:
 - task: UseDotNet@2
-  displayName: 'Install .NET Core 3'
+  displayName: 'Install .NET 5'
   inputs:
     packageType: 'sdk'
     useGlobalJson: true
