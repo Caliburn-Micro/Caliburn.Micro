@@ -3,6 +3,6 @@
     "version": "5.0.100"
   },
   "msbuild-sdks": {
-    "MSBuild.Sdk.Extras": "2.0.54"
+    "MSBuild.Sdk.Extras": "2.1.2"
   }
 }	
