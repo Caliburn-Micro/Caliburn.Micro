@@ -46,7 +46,7 @@ namespace Caliburn.Micro
                 }
             }
 
-            if (!this.closeConductedItemsWhenConductorCannotClose)
+            if (!this.closeConductedItemsWhenConductorCannotClose && !closeCanOccur)
             {
                 closeable.Clear();
             }
