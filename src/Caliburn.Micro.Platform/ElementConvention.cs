@@ -10,6 +10,11 @@
     using DependencyObject = global::Xamarin.Forms.BindableObject;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
+#elif AVALONIA
+    using DependencyProperty = Avalonia.AvaloniaProperty;
+    using DependencyObject = Avalonia.AvaloniaObject;
+    using FrameworkElement = Avalonia.Controls.Control;
+    using TriggerBase = Avalonia.Xaml.Interactivity.Trigger;
 #else
     using System.Windows;
     using TriggerBase = Microsoft.Xaml.Behaviors.TriggerBase;

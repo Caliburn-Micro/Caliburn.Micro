@@ -10,6 +10,11 @@
     using UIElement = global::Xamarin.Forms.Element;
     using TextBlock = global::Xamarin.Forms.Label;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Controls;
+    using UIElement = Avalonia.Controls.Control;
+    using DependencyObject = Avalonia.IAvaloniaObject;
 #elif !WINDOWS_UWP
     using System.Windows;
     using System.Windows.Controls;
@@ -18,7 +23,7 @@
     using Windows.UI.Xaml.Controls;
 #endif
 
-#if !WINDOWS_UWP && !XFORMS
+#if !WINDOWS_UWP && !XFORMS && !AVALONIA
     using System.Windows.Interop;
 #endif
 
@@ -394,12 +399,18 @@
                 if (view != null) {
 #if !WINDOWS_UWP && !XFORMS
                     var windowCheck = view as Window;
-                    if (windowCheck == null || (!windowCheck.IsLoaded && !(new WindowInteropHelper(windowCheck).Handle == IntPtr.Zero))) {
+
+#if AVALONIA
+                    if (windowCheck == null)
+#else
+                    if (windowCheck == null || (!windowCheck.IsLoaded && !(new WindowInteropHelper(windowCheck).Handle == IntPtr.Zero)))
+#endif
+                    { 
                         Log.Info("Using cached view for {0}.", model);
                         return view;
                     }
 #else
-                    Log.Info("Using cached view for {0}.", model);
+                        Log.Info("Using cached view for {0}.", model);
                     return view;
 #endif
                 }
