@@ -10,6 +10,9 @@
     using DependencyObject = global::Xamarin.Forms.BindableObject;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
+#elif AVALONIA
+    using FrameworkElement = Avalonia.Controls.Control;
+    using DependencyObject = Avalonia.IAvaloniaObject;
 #else
     using System.Windows;
 #endif

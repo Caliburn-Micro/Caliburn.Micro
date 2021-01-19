@@ -7,6 +7,10 @@
     using System.Reflection;
     using Windows.UI.Core;
     using Windows.UI.Xaml;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Threading;
+    using FrameworkElement = Avalonia.Controls.Control;
 #else
     using System.Windows;
     using System.Windows.Threading;
@@ -28,6 +32,8 @@
         public XamlPlatformProvider() {
 #if WINDOWS_UWP
             dispatcher = Window.Current.Dispatcher;
+#elif AVALONIA
+            dispatcher = Dispatcher.UIThread;
 #else
             dispatcher = Dispatcher.CurrentDispatcher;
 #endif
@@ -66,6 +72,8 @@
             ValidateDispatcher();
 #if WINDOWS_UWP
             var dummy = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+#elif AVALONIA
+            dispatcher.Post(action);
 #else
             dispatcher.BeginInvoke(action);
 #endif
@@ -80,6 +88,8 @@
             ValidateDispatcher();
 #if WINDOWS_UWP
             return dispatcher.RunTaskAsync(action);
+#elif AVALONIA
+            return dispatcher.InvokeAsync(action);
 #else
             return dispatcher.InvokeAsync(action).Task.Unwrap();
 #endif
@@ -106,7 +116,12 @@
                         exception = ex;
                     }
                 };
+#if AVALONIA
+                //TODO: (Avalonia) Need to check if GetAwaiter().GetResult() is a good solution here
+                dispatcher.InvokeAsync(action).GetAwaiter().GetResult(); 
+#else
                 dispatcher.Invoke(method);
+#endif
                 if (exception != null)
                     throw new System.Reflection.TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
 #endif
@@ -130,12 +145,16 @@
             return View.GetFirstNonGeneratedView(view);
         }
 
+#if AVALONIA
+        private static readonly AvaloniaProperty PreviouslyAttachedProperty = AvaloniaProperty.RegisterAttached<AvaloniaObject, bool>("PreviouslyAttached", typeof(XamlPlatformProvider));
+#else
         private static readonly DependencyProperty PreviouslyAttachedProperty = DependencyProperty.RegisterAttached(
             "PreviouslyAttached",
             typeof (bool),
             typeof (XamlPlatformProvider),
             null
             );
+#endif
 
         /// <summary>
         /// Executes the handler the fist time the view is loaded.
