@@ -197,21 +197,21 @@
         }
 #endif
 
-            /// <summary>
-            /// Executes the handler when the element is unloaded.
-            /// </summary>
-            /// <param name="element">The element.</param>
-            /// <param name="handler">The handler.</param>
+        /// <summary>
+        /// Executes the handler when the element is unloaded.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="handler">The handler.</param>
 #if AVALONIA
-            public static void ExecuteOnUnload(FrameworkElement element, EventHandler handler)
+        public static void ExecuteOnUnload(FrameworkElement element, EventHandler handler)
         {
-            EventHandler<VisualTreeAttachmentEventArgs> unloaded = null;
+            EventHandler<LogicalTreeAttachmentEventArgs> unloaded = null;
             unloaded = (s, e) =>
             {
-                element.DetachedFromVisualTree -= unloaded;
+                element.DetachedFromLogicalTree -= unloaded;
                 handler(s, e);
             };
-            element.DetachedFromVisualTree += unloaded;
+            element.DetachedFromLogicalTree += unloaded;
         }
 #else
         public static void ExecuteOnUnload(FrameworkElement element, RoutedEventHandler handler) {
