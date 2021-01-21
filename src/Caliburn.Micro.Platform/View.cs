@@ -17,6 +17,17 @@
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
     using ContentControl = global::Xamarin.Forms.ContentView;
+#elif AVALONIA
+    using Avalonia;
+    using FrameworkElement = Avalonia.Controls.Control;
+    using DependencyObject = Avalonia.IAvaloniaObject;
+    using DependencyProperty = Avalonia.AvaloniaProperty;
+    using DependencyPropertyChangedEventArgs = Avalonia.AvaloniaPropertyChangedEventArgs;
+    using Avalonia.Controls;
+    using Avalonia.Interactivity;
+    using Avalonia.Metadata;
+    using Avalonia.VisualTree;
+    using Avalonia.LogicalTree;
 #else
     using System.ComponentModel;
     using System.Windows;
@@ -31,7 +42,7 @@
         static readonly ILog Log = LogManager.GetLog(typeof(View));
 #if WINDOWS_UWP || XFORMS
         const string DefaultContentPropertyName = "Content";
-#else
+#elif !AVALONIA
         static readonly ContentPropertyAttribute DefaultContentProperty = new ContentPropertyAttribute("Content");
 #endif
 
@@ -39,38 +50,52 @@
         /// A dependency property which allows the framework to track whether a certain element has already been loaded in certain scenarios.
         /// </summary>
         public static readonly DependencyProperty IsLoadedProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, bool>("IsLoaded", typeof(View));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "IsLoaded",
                 typeof(bool),
                 typeof(View),
                 false
                 );
+#endif
 
         /// <summary>
         /// A dependency property which marks an element as a name scope root.
         /// </summary>
         public static readonly DependencyProperty IsScopeRootProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, bool>("IsScopeRoot", typeof(View));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "IsScopeRoot",
                 typeof(bool),
                 typeof(View),
                 false
                 );
+#endif
 
         /// <summary>
         /// A dependency property which allows the override of convention application behavior.
         /// </summary>
         public static readonly DependencyProperty ApplyConventionsProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, bool?>("ApplyConventions", typeof(View));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "ApplyConventions",
                 typeof(bool?),
                 typeof(View)
                 );
-
+#endif
         /// <summary>
         /// A dependency property for assigning a context to a particular portion of the UI.
         /// </summary>
         public static readonly DependencyProperty ContextProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, object>("Context", typeof(View));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "Context",
                 typeof(object),
@@ -78,11 +103,15 @@
                 null, 
                 OnContextChanged
                 );
+#endif
 
         /// <summary>
         /// A dependency property for attaching a model to the UI.
         /// </summary>
         public static DependencyProperty ModelProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, object>("Model", typeof(View));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "Model",
                 typeof(object),
@@ -90,17 +119,31 @@
                 null, 
                 OnModelChanged
                 );
+#endif
 
         /// <summary>
         /// Used by the framework to indicate that this element was generated.
         /// </summary>
         public static readonly DependencyProperty IsGeneratedProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, bool>("IsGenerated", typeof(View));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "IsGenerated",
                 typeof(bool),
                 typeof(View),
                 false
                 );
+#endif
+
+
+#if AVALONIA
+        static View()
+        {
+            ContextProperty.Changed.Subscribe(args => OnContextChanged(args.Sender, args));
+            ModelProperty.Changed.Subscribe(args => OnModelChanged(args.Sender, args));
+        }
+#endif
 
         /// <summary>
         /// Executes the handler immediately if the element is loaded, otherwise wires it to the Loaded event.
@@ -108,7 +151,27 @@
         /// <param name="element">The element.</param>
         /// <param name="handler">The handler.</param>
         /// <returns>true if the handler was executed immediately; false otherwise</returns>
+#if AVALONIA
+        public static bool ExecuteOnLoad(FrameworkElement element, EventHandler handler)
+        {
+            if (((ILogical) element).IsAttachedToLogicalTree)
+            {
+                handler(element, new RoutedEventArgs());
+                return true;
+            }
+
+            EventHandler<LogicalTreeAttachmentEventArgs> loaded = null;
+            loaded = (s, e) => {
+                element.AttachedToLogicalTree -= loaded;
+                handler(s, e);
+            };
+            element.AttachedToLogicalTree += loaded;
+
+            return false;
+        }
+#else
         public static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler) {
+
 #if XFORMS
             handler(element, new RoutedEventArgs());
             return true;
@@ -128,16 +191,29 @@
                 handler(s, e);
             };
             element.Loaded += loaded;
+
             return false;
 #endif
-
         }
+#endif
 
         /// <summary>
         /// Executes the handler when the element is unloaded.
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="handler">The handler.</param>
+#if AVALONIA
+        public static void ExecuteOnUnload(FrameworkElement element, EventHandler handler)
+        {
+            EventHandler<LogicalTreeAttachmentEventArgs> unloaded = null;
+            unloaded = (s, e) =>
+            {
+                element.DetachedFromLogicalTree -= unloaded;
+                handler(s, e);
+            };
+            element.DetachedFromLogicalTree += unloaded;
+        }
+#else
         public static void ExecuteOnUnload(FrameworkElement element, RoutedEventHandler handler) {
 #if !XFORMS
             RoutedEventHandler unloaded = null;
@@ -148,6 +224,7 @@
             element.Unloaded += unloaded;
 #endif
         }
+#endif
 
 #if WINDOWS_UWP
         /// <summary>
@@ -181,16 +258,16 @@
         }
 #endif
 #if !XFORMS
-        /// <summary>
-        /// Executes the handler the next time the elements's LayoutUpdated event fires.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <param name="handler">The handler.</param>
+            /// <summary>
+            /// Executes the handler the next time the elements's LayoutUpdated event fires.
+            /// </summary>
+            /// <param name="element">The element.</param>
+            /// <param name="handler">The handler.</param>
 #if WINDOWS_UWP
         public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler<object> handler) {
             EventHandler<object> onLayoutUpdate = null;
 #else
-        public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler handler) {
+            public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler handler) {
             EventHandler onLayoutUpdate = null;
 #endif
             onLayoutUpdate = (s, e) => {
@@ -226,6 +303,13 @@
 
                 return type.GetRuntimeProperty(contentPropertyName)
                     .GetValue(dependencyObject, null);
+#elif AVALONIA
+                var type = dependencyObject.GetType();
+                var contentProperty = type.GetProperties().FirstOrDefault(p => p.GetCustomAttributes(typeof(ContentAttribute), true).Any());
+                return
+                    contentProperty != null
+                        ? contentProperty.GetValue(dependencyObject, null)
+                        : dependencyObject;
 #else
                 var type = dependencyObject.GetType();
                 var contentProperty = type.GetCustomAttributes(typeof(ContentPropertyAttribute), true)
@@ -379,13 +463,18 @@
         static bool SetContentPropertyCore(object targetLocation, object view) {
             try {
                 var type = targetLocation.GetType();
+#if AVALONIA
+                var contentProperty = type.GetProperties().FirstOrDefault(p => p.GetCustomAttributes(typeof(ContentAttribute), true).Any());
+
+                type.GetProperty(contentProperty?.Name ?? "Content")?.SetValue(targetLocation, view, null);
+#else
                 var contentProperty = type.GetCustomAttributes(typeof(ContentPropertyAttribute), true)
                                           .OfType<ContentPropertyAttribute>()
                                           .FirstOrDefault() ?? DefaultContentProperty;
 
                 type.GetProperty(contentProperty?.Name ?? DefaultContentProperty.Name)
                     .SetValue(targetLocation, view, null);
-
+#endif
                 return true;
             }
             catch(Exception e) {
@@ -411,6 +500,8 @@
                     inDesignMode = false;
 #elif WINDOWS_UWP
                     inDesignMode = DesignMode.DesignModeEnabled;
+#elif AVALONIA
+                    inDesignMode = Design.IsDesignMode;
 #else
                     var descriptor = DependencyPropertyDescriptor.FromProperty(DesignerProperties.IsInDesignModeProperty, typeof(FrameworkElement));
                     inDesignMode = (bool)descriptor.Metadata.DefaultValue;
