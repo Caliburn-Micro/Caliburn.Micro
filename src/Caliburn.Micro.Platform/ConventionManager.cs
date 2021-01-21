@@ -218,7 +218,7 @@
 
 #if AVALONIA
             var itemsControlSourceProperty = ItemsControl.ItemsProperty;
-            var loadedEvent = "AttachedToVisualTree";
+            var loadedEvent = "AttachedToLogicalTree";
 #else
             var itemsControlSourceProperty = ItemsControl.ItemsSourceProperty;
             var loadedEvent = "Loaded";
@@ -294,7 +294,7 @@
             AddElementConvention<TreeView>(TreeView.ItemsProperty, "SelectedItem", "SelectedItemChanged");
 #endif
 #if AVALONIA
-            AddElementConvention<TabControl>(TabControl.ItemsProperty, "ItemsSource", "SelectionChanged")
+            AddElementConvention<TabControl>(TabControl.ItemsProperty, "Items", "SelectionChanged")
 #else
             AddElementConvention<TabControl>(TabControl.ItemsSourceProperty, "ItemsSource", "SelectionChanged")
 #endif

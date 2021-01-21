@@ -154,19 +154,19 @@
 #if AVALONIA
         public static bool ExecuteOnLoad(FrameworkElement element, EventHandler handler)
         {
-            if (((IVisual) element).IsAttachedToVisualTree)
+            if (((ILogical) element).IsAttachedToLogicalTree)
             {
                 handler(element, new RoutedEventArgs());
                 return true;
             }
 
-            EventHandler<VisualTreeAttachmentEventArgs> loaded = null;
+            EventHandler<LogicalTreeAttachmentEventArgs> loaded = null;
             loaded = (s, e) => {
-                element.AttachedToVisualTree -= loaded;
+                element.AttachedToLogicalTree -= loaded;
                 handler(s, e);
             };
-            element.AttachedToVisualTree += loaded;
-            
+            element.AttachedToLogicalTree += loaded;
+
             return false;
         }
 #else
