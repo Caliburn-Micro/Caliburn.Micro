@@ -33,7 +33,7 @@
         static BindingScope()
         {
             AddChildResolver<ContentControl>(e => new[] { e.Content as DependencyObject });
-            AddChildResolver<ItemsControl>(e => e.Items.OfType<DependencyObject>().ToArray() );
+            AddChildResolver<ItemsControl>(e => e.Items == null ? null : e.Items.OfType<DependencyObject>().ToArray());
 #if !WINDOWS_UWP && !AVALONIA
             AddChildResolver<HeaderedContentControl>(e => new[] { e.Header as DependencyObject });
             AddChildResolver<HeaderedItemsControl>(e => new[] { e.Header as DependencyObject });
