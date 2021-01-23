@@ -1,10 +1,8 @@
-﻿
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.LogicalTree;
 
 namespace Caliburn.Micro
 {
@@ -28,28 +26,10 @@ namespace Caliburn.Micro
             {
                 await activator.ActivateAsync();
             }
-            
+
             if (model is IDeactivate deactivatable)
             {
-                /*
-                                             
-                Using window.Closed here leads to strange DataContext issues in some cases, causing the 
-                application to hang after closing the main window.
-                
-                Example case: 
-                Closing a Conductor.Collection.OneActive window having it's children displayed in a TabControl.
-
-                When TabControl.Items cleared, ContentPresenter.ContentChanged works differently depending on 
-                whether it is attached to a logical tree. If it is attached, it sets the parent of the old child 
-                (the closed tab) to null. This also sets DataContext and View.Model to null.
-
-                Problems begin in the Closed handler because the ContentPresenter is no longer connected to a 
-                logical tree. In this case it sets the inheritance parent of the child control to it's parent. 
-                This sets DataContext to an inherited value instead of null, changing View.Model of the child 
-                control to it's parent screen.
-
-                */
-                //view.Closed += Closed;
+                view.Closed += Closed;
                 deactivatable.Deactivated += Deactivated;
             }
 
@@ -61,7 +41,7 @@ namespace Caliburn.Micro
 
         private async void Closed(object sender, EventArgs e)
         {
-            //view.Closed -= Closed;
+            view.Closed -= Closed;
             view.Closing -= Closing;
 
             if (deactivateFromViewModel)
@@ -92,10 +72,6 @@ namespace Caliburn.Micro
 
             deactivateFromViewModel = true;
             actuallyClosing = true;
-            
-            // calling Closed() here instead of adding it to view.Close
-            Closed(null, null);
-
             view.Close();
             actuallyClosing = false;
             deactivateFromViewModel = false;
@@ -130,14 +106,15 @@ namespace Caliburn.Micro
                 return;
 
             actuallyClosing = true;
+            view.Close();
 
             //if (cachedDialogResult == null)
             //{
-                view.Close();
+            //view.Close();
             //}
             //else if (view.DialogResult != cachedDialogResult)
             //{
-            //  view.DialogResult = cachedDialogResult;
+            //view.DialogResult = cachedDialogResult;
             //}
         }
     }
