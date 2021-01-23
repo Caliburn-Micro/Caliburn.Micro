@@ -14,6 +14,21 @@
     using Microsoft.Xaml.Interactivity;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
     using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Data;
+    using Avalonia.Data.Core;
+    using Avalonia.Interactivity;
+    using Avalonia.Xaml.Interactivity;
+    using Avalonia.VisualTree;
+    using Avalonia.Xaml.Interactions.Core;
+    using DependencyObject = Avalonia.IAvaloniaObject;
+    using XamlReader = Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader;
+    using UIElement = Avalonia.Input.InputElement;
+    using DependencyPropertyChangedEventArgs = Avalonia.AvaloniaPropertyChangedEventArgs;
+    using DependencyProperty = Avalonia.AvaloniaProperty;
+    using EventTrigger = Avalonia.Xaml.Interactions.Core.EventTriggerBehavior;
+    using FrameworkElement = Avalonia.Controls.Control;
 #else
     using System.Windows;
     using System.Windows.Controls.Primitives;
@@ -32,7 +47,7 @@
     /// </summary>
 #if WINDOWS_UWP
     [ContentProperty(Name = "Parameters")]
-#else
+#elif !AVALONIA
     [ContentProperty("Parameters")]
     [DefaultTrigger(typeof(FrameworkElement), typeof(EventTrigger), "MouseLeftButtonDown")]
     [DefaultTrigger(typeof(ButtonBase), typeof(EventTrigger), "Click")]
@@ -42,12 +57,17 @@
         static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
         ActionExecutionContext context;
 
-        internal static readonly DependencyProperty HandlerProperty = DependencyProperty.RegisterAttached(
+        internal static readonly DependencyProperty HandlerProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, object>("Handler", typeof(ActionMessage));
+#else
+            DependencyProperty.RegisterAttached(
             "Handler",
             typeof(object),
             typeof(ActionMessage),
             new PropertyMetadata(null, HandlerPropertyChanged)
             );
+#endif
 
         ///<summary>
         /// Causes the action invocation to "double check" if the action should be invoked by executing the guard immediately before hand.
@@ -65,23 +85,37 @@
         /// Represents the method name of an action message.
         /// </summary>
         public static readonly DependencyProperty MethodNameProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, string>("MethodName", typeof(ActionMessage));
+#else
             DependencyProperty.Register(
                 "MethodName",
                 typeof(string),
                 typeof(ActionMessage),
                 null
                 );
-
+#endif
         /// <summary>
         /// Represents the parameters of an action message.
         /// </summary>
         public static readonly DependencyProperty ParametersProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, AttachedCollection<Parameter>>("Parameters", typeof(ActionMessage));
+#else
             DependencyProperty.Register(
             "Parameters",
             typeof(AttachedCollection<Parameter>),
             typeof(ActionMessage),
             null
             );
+#endif
+
+#if AVALONIA
+        static ActionMessage()
+        {
+            HandlerProperty.Changed.Subscribe(args => HandlerPropertyChanged(args.Sender, args));
+        }
+#endif
 
         /// <summary>
         /// Creates an instance of <see cref="ActionMessage"/>.
@@ -153,8 +187,14 @@
                 Parameters.Apply(x => x.MakeAwareOf(this));
 
                 if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded)) {
+#if AVALONIA
+                    var trigger = Interaction.GetBehaviors(AssociatedObject)
+                        .OfType<Trigger>()
+                        .FirstOrDefault(t => t.Actions.Contains(this)) as EventTriggerBehavior;
+#else
                     var trigger = Interaction.GetTriggers(AssociatedObject)
-                        .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
+                    .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
+#endif
                     if (trigger != null && trigger.EventName == "Loaded")
                         Invoke(new RoutedEventArgs());
                 }
@@ -174,14 +214,25 @@
         protected override void OnDetaching() {
             if (!View.InDesignMode) {
                 Detaching(this, EventArgs.Empty);
+                
+#if AVALONIA
+                //TODO: (Avalonia) Remove the ElementLoaded handler added in OnAttached
+#else
+                //TODO: Fix this: cannot remove ElementLoaded here because a wrapper handler was added instead (in View.ExecuteOnLoad() called from this.OnAttached())
                 AssociatedObject.Loaded -= ElementLoaded;
+#endif
                 Parameters.Detach();
             }
 
             base.OnDetaching();
         }
 
+#if AVALONIA
+        void ElementLoaded(object sender, EventArgs e)
+        {
+#else
         void ElementLoaded(object sender, RoutedEventArgs e) {
+#endif
             UpdateContext();
 
             DependencyObject currentElement;
@@ -190,13 +241,26 @@
                 while (currentElement != null) {
                     if (Action.HasTargetSet(currentElement))
                         break;
-
+#if AVALONIA
+                    currentElement = ((IVisual)currentElement).GetVisualParent() as IAvaloniaObject;
+#else
                     currentElement = BindingScope.GetVisualParent(currentElement);
+#endif
                 }
             }
             else currentElement = context.View;
 
-#if NET || NETCORE
+#if AVALONIA
+            var binding = new Binding
+            {
+                Path = "(cal:Message.Handler)",
+                TypeResolver = (s, s1) =>
+                {
+                    return typeof(Message);
+                },
+                Source = currentElement
+            };
+#elif (NET || NETCORE)
             var binding = new Binding {
                 Path = new PropertyPath(Message.HandlerProperty), 
                 Source = currentElement
@@ -206,7 +270,7 @@
                 Source = currentElement
             };
 #elif NET5_0_WINDOWS
-            const string bindingText = "<Binding xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation\' xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform' Path='(cal:Message.Handler)' />";
+            const string bindingText = "<Binding xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation\' xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform' Path='(cal:Message.Handler)' />"; 
             StringReader stringReader = new StringReader(bindingText);
             XmlReader xmlReader = XmlReader.Create(stringReader);
             var binding = (Binding)XamlReader.Load(xmlReader);
@@ -217,7 +281,11 @@
             var binding = (Binding)XamlReader.Load(bindingText);
             binding.Source = currentElement;
 #endif
+#if AVALONIA
+                this.Bind(HandlerProperty, binding);
+#else
             BindingOperations.SetBinding(this, HandlerProperty, binding);
+#endif
         }
 
         void UpdateContext() {

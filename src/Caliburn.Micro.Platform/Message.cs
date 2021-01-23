@@ -13,6 +13,14 @@
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
+#elif AVALONIA  
+    using Avalonia;
+    using Avalonia.Controls;
+    using Avalonia.Xaml.Interactivity;
+    using DependencyObject = Avalonia.IAvaloniaObject;
+    using TriggerBase = Avalonia.Xaml.Interactivity.Trigger;
+    using DependencyPropertyChangedEventArgs = Avalonia.AvaloniaPropertyChangedEventArgs;
+    using DependencyProperty = Avalonia.AvaloniaProperty;
 #else
     using System.Windows;
     using Microsoft.Xaml.Behaviors;
@@ -25,20 +33,28 @@
     /// </summary>
     public static class Message {
         internal static readonly DependencyProperty HandlerProperty =
+#if AVALONIA
+        AvaloniaProperty.RegisterAttached<AvaloniaObject, object>("Handler", typeof(Message));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "Handler",
                 typeof(object),
                 typeof(Message),
                 null
                 );
+#endif
 
         static readonly DependencyProperty MessageTriggersProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, TriggerBase[]>("MessageTriggers", typeof(Message));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "MessageTriggers",
                 typeof(TriggerBase[]),
                 typeof(Message),
                 null
                 );
+#endif
 
         /// <summary>
         ///   Places a message handler on this element.
@@ -62,6 +78,9 @@
         ///   A property definition representing attached triggers and messages.
         /// </summary>
         public static readonly DependencyProperty AttachProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, string>("Attach", typeof(Message));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "Attach",
                 typeof(string),
@@ -69,6 +88,14 @@
                 null, 
                 OnAttachChanged
                 );
+#endif
+
+#if AVALONIA
+        static Message()
+        {
+            AttachProperty.Changed.Subscribe(args => OnAttachChanged(args.Sender, args));
+        }
+#endif
 
         /// <summary>
         ///   Sets the attached triggers and messages.
@@ -118,14 +145,30 @@
             newTriggers.Apply(allTriggers.Add);
 
 #else
+#if AVALONIA
+            var allTriggers = Interaction.GetBehaviors(d);
+#else
             var allTriggers = Interaction.GetTriggers(d);
+#endif
 
-             if (messageTriggers != null) {
+            if (messageTriggers != null) {
                 messageTriggers.Apply(x => allTriggers.Remove(x));
             }
 
             var newTriggers = Parser.Parse(d, e.NewValue as string).ToArray();
             newTriggers.Apply(allTriggers.Add);
+
+#if AVALONIA
+            //TODO: (Avalonia) Fix this workaround if there is a way to detect Trigger.AssociatedObject changes to update Trigger.Actions[].AssociatedObject 
+            foreach (var t in newTriggers.Where(t => t.Actions != null && t.AssociatedObject != null))
+            {
+                foreach (var a in t.Actions.Cast<TriggerAction>())
+                {
+                    a.AssociatedObject = t.AssociatedObject as Control;
+                }
+            }
+#endif
+
 #endif
 
             if (newTriggers.Length > 0) {

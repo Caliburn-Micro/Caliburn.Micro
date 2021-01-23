@@ -14,6 +14,10 @@
     using UIElement = global::Xamarin.Forms.Element;
 #endif
 
+#if AVALONIA
+    using FrameworkElement = Avalonia.Controls.Control;
+#endif
+
     /// <summary>
     ///   A strategy for determining which view model to use for a given view.
     /// </summary>

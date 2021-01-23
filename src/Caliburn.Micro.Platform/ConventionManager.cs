@@ -11,6 +11,21 @@
     using Windows.UI.Xaml.Markup;
     using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
     using Windows.UI.Xaml.Shapes;
+#elif AVALONIA
+    using System.Collections.Specialized;
+    using Avalonia.Xaml.Interactions.Core;
+    using Avalonia;
+    using Avalonia.Data;
+    using Avalonia.Controls;
+    using Avalonia.Controls.Primitives;
+    using Avalonia.Controls.Shapes;
+    using Avalonia.Markup.Xaml.Templates;
+    using XamlReader = Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader;
+    using FrameworkElement = Avalonia.Controls.Control;
+    using DependencyObject = Avalonia.AvaloniaObject;
+    using DependencyProperty = Avalonia.AvaloniaProperty;
+    using ButtonBase = Avalonia.Controls.Button;
+    using Selector = Avalonia.Controls.Primitives.SelectingItemsControl;
 #else
     using System.ComponentModel;
     using System.Windows;
@@ -21,7 +36,7 @@
     using System.Windows.Shapes;    
     using EventTrigger = Microsoft.Xaml.Behaviors.EventTrigger;
 #endif
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !AVALONIA
     using System.Windows.Documents;
 #endif
 
@@ -31,10 +46,12 @@
     public static class ConventionManager {
         static readonly ILog Log = LogManager.GetLog(typeof(ConventionManager));
 
+#if !AVALONIA
         /// <summary>
         /// Converters <see cref="bool"/> to/from <see cref="Visibility"/>.
         /// </summary>
         public static IValueConverter BooleanToVisibilityConverter = new BooleanToVisibilityConverter();
+#endif
 
         /// <summary>
         /// Indicates whether or not static properties should be included during convention name matching.
@@ -61,6 +78,11 @@
             "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' xmlns:cal='using:Caliburn.Micro'>" +
                 "<ContentControl cal:View.Model=\"{Binding}\" VerticalContentAlignment=\"Stretch\" HorizontalContentAlignment=\"Stretch\" IsTabStop=\"False\" />" +
             "</DataTemplate>"
+#elif AVALONIA
+            "<DataTemplate xmlns=\"https://github.com/avaloniaui\" " +
+            "xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Avalonia'> " +
+            "<ContentControl cal:View.Model=\"{Binding}\" VerticalContentAlignment=\"Stretch\" HorizontalContentAlignment=\"Stretch\" KeyboardNavigation.IsTabStop=\"False\" />" +
+            "</DataTemplate>"
 #else
              "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' " +
                            "xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform'> " +
@@ -78,7 +100,11 @@
 #else
         XamlReader.Parse(
 #endif
+#if AVALONIA
+            "<DataTemplate xmlns=\"https://github.com/avaloniaui\"><TextBlock Text=\"{Binding DisplayName, Mode=TwoWay}\" /></DataTemplate>"
+#else
             "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'><TextBlock Text=\"{Binding DisplayName, Mode=TwoWay}\" /></DataTemplate>"
+#endif
         );
 
         static readonly Dictionary<Type, ElementConvention> ElementConventions = new Dictionary<Type, ElementConvention>();
@@ -121,7 +147,11 @@
                 ApplyValidation(binding, viewModelType, property);
                 ApplyUpdateSourceTrigger(bindableProperty, element, binding, property);
 
+#if AVALONIA
+                element.Bind(bindableProperty, binding);
+#else
                 BindingOperations.SetBinding(element, bindableProperty, binding);
+#endif
             };
 
         /// <summary>
@@ -147,7 +177,7 @@
                 binding.ValidatesOnExceptions = true;
             }
 #endif
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !AVALONIA
             if (typeof(IDataErrorInfo).IsAssignableFrom(viewModelType)) {
                 binding.ValidatesOnDataErrors = true;
                 binding.ValidatesOnExceptions = true;
@@ -159,8 +189,10 @@
         /// Determines whether a value converter is is needed and applies one to the binding.
         /// </summary>
         public static Action<Binding, DependencyProperty, PropertyInfo> ApplyValueConverter = (binding, bindableProperty, property) => {
+#if !AVALONIA
             if (bindableProperty == UIElement.VisibilityProperty && typeof(bool).IsAssignableFrom(property.PropertyType))
                 binding.Converter = BooleanToVisibilityConverter;
+#endif
         };
 
         /// <summary>
@@ -177,12 +209,22 @@
         /// Determines whether a custom update source trigger should be applied to the binding.
         /// </summary>
         public static Action<DependencyProperty, DependencyObject, Binding, PropertyInfo> ApplyUpdateSourceTrigger = (bindableProperty, element, binding, info) => {
-#if WINDOWS_UWP || NET || NETCORE
+#if (WINDOWS_UWP || NET || NETCORE) && !AVALONIA
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
         };
 
         static ConventionManager() {
+
+#if AVALONIA
+            var itemsControlSourceProperty = ItemsControl.ItemsProperty;
+            var loadedEvent = "AttachedToLogicalTree";
+#else
+            var itemsControlSourceProperty = ItemsControl.ItemsSourceProperty;
+            var loadedEvent = "Loaded";
+#endif
+
+
 #if WINDOWS_UWP
             AddElementConvention<SplitView>(SplitView.ContentProperty, "IsPaneOpen", "PaneClosing").GetBindableProperty =
                 delegate (DependencyObject foundControl)
@@ -202,13 +244,13 @@
 #if WINDOWS_UWP
             AddElementConvention<DatePicker>(DatePicker.DateProperty, "Date", "DateChanged");
             AddElementConvention<TimePicker>(TimePicker.TimeProperty, "Time", "TimeChanged");
-            AddElementConvention<Hub>(Hub.HeaderProperty, "Header", "Loaded");
+            AddElementConvention<Hub>(Hub.HeaderProperty, "Header", loadedEvent);
             AddElementConvention<HubSection>(HubSection.HeaderProperty, "Header", "SectionsInViewChanged");
             AddElementConvention<MenuFlyoutItem>(MenuFlyoutItem.TextProperty, "Text", "Click");
             AddElementConvention<ToggleMenuFlyoutItem>(ToggleMenuFlyoutItem.IsCheckedProperty, "IsChecked", "Click");
             AddElementConvention<SearchBox>(SearchBox.QueryTextProperty, "QueryText", "QuerySubmitted");
             AddElementConvention<ToggleSwitch>(ToggleSwitch.IsOnProperty, "IsOn", "Toggled");
-            AddElementConvention<ProgressRing>(ProgressRing.IsActiveProperty, "IsActive", "Loaded");
+            AddElementConvention<ProgressRing>(ProgressRing.IsActiveProperty, "IsActive", loadedEvent);
             AddElementConvention<Slider>(Slider.ValueProperty, "Value", "ValueChanged");
             AddElementConvention<RichEditBox>(RichEditBox.DataContextProperty, "DataContext", "TextChanged");
             AddElementConvention<Pivot>(Pivot.ItemsSourceProperty, "SelectedItem", "SelectionChanged")
@@ -227,28 +269,45 @@
             AddElementConvention<HyperlinkButton>(HyperlinkButton.ContentProperty, "DataContext", "Click");
             AddElementConvention<PasswordBox>(PasswordBox.PasswordProperty, "Password", "PasswordChanged");
 #else
-            AddElementConvention<DocumentViewer>(DocumentViewer.DocumentProperty, "DataContext", "Loaded");
+#if !AVALONIA
+            AddElementConvention<DocumentViewer>(DocumentViewer.DocumentProperty, "DataContext", loadedEvent);
             AddElementConvention<PasswordBox>(null, "Password", "PasswordChanged");
             AddElementConvention<Hyperlink>(Hyperlink.DataContextProperty, "DataContext", "Click");
             AddElementConvention<RichTextBox>(RichTextBox.DataContextProperty, "DataContext", "TextChanged");
+
             AddElementConvention<Menu>(Menu.ItemsSourceProperty,"DataContext", "Click");
             AddElementConvention<MenuItem>(MenuItem.ItemsSourceProperty, "DataContext", "Click");
+#else
+            AddElementConvention<Menu>(Menu.ItemsProperty, "DataContext", "Click");
+            AddElementConvention<MenuItem>(MenuItem.ItemsProperty, "DataContext", "Click");
+#endif
+
             AddElementConvention<Label>(Label.ContentProperty, "Content", "DataContextChanged");
             AddElementConvention<Slider>(Slider.ValueProperty, "Value", "ValueChanged");
             AddElementConvention<Expander>(Expander.IsExpandedProperty, "IsExpanded", "Expanded");
-            AddElementConvention<StatusBar>(StatusBar.ItemsSourceProperty, "DataContext", "Loaded");
-            AddElementConvention<ToolBar>(ToolBar.ItemsSourceProperty, "DataContext", "Loaded");
-            AddElementConvention<ToolBarTray>(ToolBarTray.VisibilityProperty, "DataContext", "Loaded");
+#if !AVALONIA
+            AddElementConvention<StatusBar>(StatusBar.ItemsSourceProperty, "DataContext", loadedEvent);
+            AddElementConvention<ToolBar>(ToolBar.ItemsSourceProperty, "DataContext", loadedEvent);
+            AddElementConvention<ToolBarTray>(ToolBarTray.VisibilityProperty, "DataContext", loadedEvent);
             AddElementConvention<TreeView>(TreeView.ItemsSourceProperty, "SelectedItem", "SelectedItemChanged");
+#else
+            AddElementConvention<TreeView>(TreeView.ItemsProperty, "SelectedItem", "SelectedItemChanged");
+#endif
+#if AVALONIA
+            AddElementConvention<TabControl>(TabControl.ItemsProperty, "Items", "SelectionChanged")
+#else
             AddElementConvention<TabControl>(TabControl.ItemsSourceProperty, "ItemsSource", "SelectionChanged")
+#endif
                 .ApplyBinding = (viewModelType, path, property, element, convention) => {
                     var bindableProperty = convention.GetBindableProperty(element);
                     if(!SetBindingWithoutBindingOverwrite(viewModelType, path, property, element, convention, bindableProperty))
                         return false;
 
                     var tabControl = (TabControl)element;
-                    if(tabControl.ContentTemplate == null 
+                    if(tabControl.ContentTemplate == null
+#if !AVALONIA
                         && tabControl.ContentTemplateSelector == null 
+#endif
                         && property.PropertyType.IsGenericType) {
                         var itemType = property.PropertyType.GetGenericArguments().First();
                         if(!itemType.IsValueType && !typeof(string).IsAssignableFrom(itemType)){
@@ -259,24 +318,33 @@
 
                     ConfigureSelectedItem(element, Selector.SelectedItemProperty, viewModelType, path);
 
-                    if(string.IsNullOrEmpty(tabControl.DisplayMemberPath))
+#if AVALONIA
+                    ApplyHeaderTemplate(tabControl, TabControl.ItemTemplateProperty, null, viewModelType);
+#else
+                    if (string.IsNullOrEmpty(tabControl.DisplayMemberPath))
                         ApplyHeaderTemplate(tabControl, TabControl.ItemTemplateProperty, TabControl.ItemTemplateSelectorProperty, viewModelType);
+#endif
 
                     return true;
                 };
             AddElementConvention<TabItem>(TabItem.ContentProperty, "DataContext", "DataContextChanged");
-            AddElementConvention<Window>(Window.DataContextProperty, "DataContext", "Loaded");
+            AddElementConvention<Window>(Window.DataContextProperty, "DataContext", loadedEvent);
 #endif
-            AddElementConvention<UserControl>(UserControl.VisibilityProperty, "DataContext", "Loaded");
-            AddElementConvention<Image>(Image.SourceProperty, "Source", "Loaded");
+#if AVALONIA
+            AddElementConvention<UserControl>(UserControl.IsVisibleProperty, "DataContext", loadedEvent);
+#else
+            AddElementConvention<UserControl>(UserControl.VisibilityProperty, "DataContext", loadedEvent);
+#endif
+            AddElementConvention<Image>(Image.SourceProperty, "Source", loadedEvent);
             AddElementConvention<ToggleButton>(ToggleButton.IsCheckedProperty, "IsChecked", "Click");
             AddElementConvention<ButtonBase>(ButtonBase.ContentProperty, "DataContext", "Click");
             AddElementConvention<TextBox>(TextBox.TextProperty, "Text", "TextChanged");
             AddElementConvention<TextBlock>(TextBlock.TextProperty, "Text", "DataContextChanged");
             AddElementConvention<ProgressBar>(ProgressBar.ValueProperty, "Value", "ValueChanged");
-            AddElementConvention<Selector>(Selector.ItemsSourceProperty, "SelectedItem", "SelectionChanged")
+
+            AddElementConvention<Selector>(itemsControlSourceProperty, "SelectedItem", "SelectionChanged")
                 .ApplyBinding = (viewModelType, path, property, element, convention) => {
-                    if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, ItemsControl.ItemsSourceProperty)) {
+                    if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, itemsControlSourceProperty)) {
                         return false;
                     }
 
@@ -285,9 +353,10 @@
 
                     return true;
                 };
-            AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", "Loaded")
-                .ApplyBinding = (viewModelType, path, property, element, convention) => {
-                    if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, ItemsControl.ItemsSourceProperty)) {
+
+            AddElementConvention<ItemsControl>(itemsControlSourceProperty, "DataContext", loadedEvent)
+            .ApplyBinding = (viewModelType, path, property, element, convention) => {
+                    if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, itemsControlSourceProperty)) {
                         return false;
                     }
 
@@ -295,14 +364,17 @@
 
                     return true;
                 };
-            AddElementConvention<ContentControl>(ContentControl.ContentProperty, "DataContext", "Loaded").GetBindableProperty =
+            AddElementConvention<ContentControl>(ContentControl.ContentProperty, "DataContext", loadedEvent).GetBindableProperty =
                 delegate(DependencyObject foundControl) {
                     var element = (ContentControl)foundControl;
 
                     if (element.Content is DependencyObject && !OverwriteContent)
                         return null;
 
-                    var useViewModel = element.ContentTemplate == null && element.ContentTemplateSelector == null;
+                    var useViewModel = element.ContentTemplate == null;
+#if !AVALONIA
+                    useViewModel = useViewModel && element.ContentTemplateSelector == null;
+#endif
 
                     if (useViewModel) {
                         Log.Info("ViewModel bound on {0}.", element.Name);
@@ -312,8 +384,13 @@
                     Log.Info("Content bound on {0}. Template or content was present.", element.Name);
                     return ContentControl.ContentProperty;
                 };
+#if AVALONIA
+            AddElementConvention<Shape>(Shape.IsVisibleProperty, "DataContext", "PointerReleased");
+            AddElementConvention<FrameworkElement>(FrameworkElement.IsVisibleProperty, "DataContext", loadedEvent);
+#else
             AddElementConvention<Shape>(Shape.VisibilityProperty, "DataContext", "MouseLeftButtonUp");
-            AddElementConvention<FrameworkElement>(FrameworkElement.VisibilityProperty, "DataContext", "Loaded");
+            AddElementConvention<FrameworkElement>(FrameworkElement.VisibilityProperty, "DataContext", loadedEvent);
+#endif
         }
 
         /// <summary>
@@ -328,7 +405,11 @@
                 ElementType = typeof(T),
                 GetBindableProperty = element => bindableProperty,
                 ParameterProperty = parameterProperty,
+#if !AVALONIA
                 CreateTrigger = () => new EventTrigger { EventName = eventName }
+#else
+                CreateTrigger = () => new EventTriggerBehavior() {EventName = eventName}
+#endif
             });
         }
 
@@ -363,7 +444,10 @@
         /// Determines whether a particular dependency property already has a binding on the provided element.
         /// </summary>
         public static bool HasBinding(FrameworkElement element, DependencyProperty property) {
-#if NET || NETCORE
+#if AVALONIA
+            //TODO: (Avalonia) Need to find a way to detect existing bindings on an AvaloniaProperty
+            return false;
+#elif NET || NETCORE
             return BindingOperations.GetBindingBase(element, property) != null;
 #else
             return element.GetBindingExpression(property) != null;
@@ -415,17 +499,27 @@
         /// </summary>
         /// <param name="itemsControl">The items control.</param>
         /// <param name="property">The collection property.</param>
-        public static void ApplyItemTemplate(ItemsControl itemsControl, PropertyInfo property) {
-            if (!string.IsNullOrEmpty(itemsControl.DisplayMemberPath)
-                || HasBinding(itemsControl, ItemsControl.DisplayMemberPathProperty)
-                || itemsControl.ItemTemplate != null) {
+        public static void ApplyItemTemplate(ItemsControl itemsControl, PropertyInfo property)
+        {
+            if (itemsControl.ItemTemplate != null)
+            {
                 return;
             }
 
+#if !AVALONIA
+            if (!string.IsNullOrEmpty(itemsControl.DisplayMemberPath)
+                || HasBinding(itemsControl, ItemsControl.DisplayMemberPathProperty))
+            {
+                return;
+            }
+#endif
+
 #if !WINDOWS_UWP
-            if (property.PropertyType.IsGenericType) {
+            if (property.PropertyType.IsGenericType)
+            {
                 var itemType = property.PropertyType.GetGenericArguments().First();
-                if (itemType.IsValueType || typeof(string).IsAssignableFrom(itemType)) {
+                if (itemType.IsValueType || typeof(string).IsAssignableFrom(itemType))
+                {
                     return;
                 }
             }
@@ -438,7 +532,10 @@
             }
 #endif
 
-            if (itemsControl.ItemTemplateSelector == null){
+#if !AVALONIA
+            if (itemsControl.ItemTemplateSelector == null)
+#endif
+            { 
                 itemsControl.ItemTemplate = DefaultItemTemplate;
                 Log.Info("ItemTemplate applied to {0}.", itemsControl.Name);
             }
@@ -467,7 +564,11 @@
 #endif
                         var shouldApplyBinding = ConfigureSelectedItemBinding(selector, selectedItemProperty, viewModelType, selectionPath, binding);
                         if (shouldApplyBinding) {
+#if AVALONIA
+                            selector.Bind(selectedItemProperty, binding);
+#else
                             BindingOperations.SetBinding(selector, selectedItemProperty, binding);
+#endif
                             Log.Info("SelectedItem binding applied to {0}.", selector.Name);
                             return;
                         }
