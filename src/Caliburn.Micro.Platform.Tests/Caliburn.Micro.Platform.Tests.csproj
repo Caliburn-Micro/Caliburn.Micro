@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
+    <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
     <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.Platform.csproj" />
   </ItemGroup>
 

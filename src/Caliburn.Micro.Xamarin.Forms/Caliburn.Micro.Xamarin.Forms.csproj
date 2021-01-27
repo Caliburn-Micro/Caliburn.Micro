@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Caliburn.Micro.Xamarin.Forms</PackageId>
+    <Product>Caliburn.Micro.Xamarin.Forms</Product>
+    <RootNamespace>Caliburn.Micro.Xamarin.Forms</RootNamespace>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+  </PropertyGroup>
+
+  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'all'))"/>
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" AdditionalProperties="TargetFramework=netstandard2.0" PrivateAssets="all">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <IncludeAssets>Caliburn.Micro.Platform.Core.dll</IncludeAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" AdditionalProperties="TargetFramework=netstandard2.0">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <ExcludeAssets>Caliburn.Micro.Core.dll</ExcludeAssets>
+    </ProjectReference>
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <DefineConstants>XFORMS</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Forms" Version="3.0.0.561731" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Caliburn.Micro.Platform\Action.cs" Link="Action.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ActionExecutionContext.cs" Link="ActionExecutionContext.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Bind.cs" Link="Bind.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\DependencyPropertyHelper.cs" Link="DependencyPropertyHelper.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ElementConvention.cs" Link="ElementConvention.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\IHaveParameters.cs" Link="IHaveParameters.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Message.cs" Link="Message.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\MessageBinder.cs" Link="MessageBinder.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Parser.cs" Link="Parser.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\ActionMessage.cs" Link="Platforms\Xamarin.Forms\ActionMessage.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\AttachedCollection.cs" Link="Platforms\Xamarin.Forms\AttachedCollection.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\ConventionManager.cs" Link="Platforms\Xamarin.Forms\ConventionManager.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\DependencyPropertyChangedEventArgs.cs" Link="Platforms\Xamarin.Forms\DependencyPropertyChangedEventArgs.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\FormsApplication.cs" Link="Platforms\Xamarin.Forms\FormsApplication.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\FormsPlatformProvider.cs" Link="Platforms\Xamarin.Forms\FormsPlatformProvider.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\HttpUtility.cs" Link="Platforms\Xamarin.Forms\HttpUtility.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\IAttachedObject.cs" Link="Platforms\Xamarin.Forms\IAttachedObject.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\INavigationService.cs" Link="Platforms\Xamarin.Forms\INavigationService.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\NavigationExtensions.cs" Link="Platforms\Xamarin.Forms\NavigationExtensions.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\NavigationHelper.cs" Link="Platforms\Xamarin.Forms\NavigationHelper.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\NavigationPageAdapter.cs" Link="Platforms\Xamarin.Forms\NavigationPageAdapter.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\Parameter.cs" Link="Platforms\Xamarin.Forms\Parameter.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\PropertyChangedCallback.cs" Link="Platforms\Xamarin.Forms\PropertyChangedCallback.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\RoutedEventArgs.cs" Link="Platforms\Xamarin.Forms\RoutedEventArgs.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\RoutedEventHandler.cs" Link="Platforms\Xamarin.Forms\RoutedEventHandler.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Xamarin.Forms\TriggerActionBase.cs" Link="Platforms\Xamarin.Forms\TriggerActionBase.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\View.cs" Link="View.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ViewLocator.cs" Link="ViewLocator.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ViewModelBinder.cs" Link="ViewModelBinder.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ViewModelLocator.cs" Link="ViewModelLocator.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Platforms\Xamarin.Forms\" />
+  </ItemGroup>
+
+</Project>
