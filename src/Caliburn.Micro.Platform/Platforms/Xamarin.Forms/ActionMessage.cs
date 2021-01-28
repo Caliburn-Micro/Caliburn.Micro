@@ -313,11 +313,31 @@
         /// <returns>The matching method, if available.</returns>
         public static Func<ActionMessage, object, MethodInfo> GetTargetMethod = (message, target) =>
         {
-            return (from method in target.GetType().GetRuntimeMethods()
-                    where method.Name == message.MethodName
-                    let methodParameters = method.GetParameters()
-                    where message.Parameters.Count == methodParameters.Length
-                    select method).FirstOrDefault();
+            //return (from method in target.GetType().GetRuntimeMethods()
+            //        where method.Name == message.MethodName
+            //        let methodParameters = method.GetParameters()
+            //        where message.Parameters.Count == methodParameters.Length
+            //        select method).FirstOrDefault();
+            var methods = (from method in target.GetType().GetRuntimeMethods()
+                           where method.Name == message.MethodName
+                           let methodParameters = method.GetParameters()
+                           where message.Parameters.Count == methodParameters.Length && message.Parameters.OfType<Parameter>().Zip(methodParameters,
+                                     (parameter, info) => info.ParameterType.IsInstanceOfType(parameter.Value)).All(b => b)
+                           select method);
+
+            MethodInfo returnMethodInfo = null;
+            foreach (MethodInfo method in methods)
+            {
+                returnMethodInfo = method;
+                if (method.GetParameters().Zip(message.Parameters.OfType<Parameter>(), (info, parameter) =>
+                    parameter.Value.GetType().IsAssignableFrom(info.ParameterType)
+                ).All(b => b))
+                {
+                    break;
+                }
+            }
+
+            return returnMethodInfo;
         };
 
         /// <summary>
