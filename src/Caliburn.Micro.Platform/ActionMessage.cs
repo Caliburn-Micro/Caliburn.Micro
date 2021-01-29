@@ -373,62 +373,7 @@
         /// </summary>
         /// <returns>The matching method, if available.</returns>
         public static Func<ActionMessage, object, MethodInfo> GetTargetMethod = (message, target) => {
-#if WINDOWS_UWP
-            //return (from method in target.GetType().GetRuntimeMethods()
-            //        where method.Name == message.MethodName
-            //        let methodParameters = method.GetParameters()
-            //        where message.Parameters.Count == methodParameters.Length
-            //        select method).FirstOrDefault();
-
-            var methods = (from method in target.GetType().GetRuntimeMethods()
-                        where method.Name == message.MethodName
-                        let methodParameters = method.GetParameters()
-                        where message.Parameters.Count == methodParameters.Length && message.Parameters.OfType<Parameter>().Zip<Parameter, ParameterInfo, bool>(methodParameters,
-                        (Parameter parameter, ParameterInfo info) => info.ParameterType.IsInstanceOfType(parameter.Value)).All(b => b)
-                        select method);
-
-            MethodInfo returnMethodInfo = null;
-            foreach (MethodInfo method in methods)
-            {
-                returnMethodInfo = method;
-                if (method.GetParameters().Zip(message.Parameters.OfType<Parameter>(), (info, parameter) =>
-                    parameter.Value.GetType().IsAssignableFrom(info.ParameterType)
-                ).All(b => b))
-                {
-                    break;
-                }
-            }
-
-            return returnMethodInfo;
-
-#else
-            //return (from method in target.GetType().GetMethods()
-            //where method.Name == message.MethodName
-            //let methodParameters = method.GetParameters()
-            //where message.Parameters.Count == methodParameters.Length
-            //select method).FirstOrDefault();
-
-            var methods = (from method in target.GetType().GetMethods()
-                           where method.Name == message.MethodName
-                           let methodParameters = method.GetParameters()
-                           where message.Parameters.Count == methodParameters.Length && message.Parameters.Zip(methodParameters,
-                                     (parameter, info) => info.ParameterType.IsInstanceOfType(parameter.Value)).All(b => b)
-                           select method);
-
-            MethodInfo returnMethodInfo = null;
-            foreach (MethodInfo method in methods)
-            {
-                returnMethodInfo = method;
-                if (method.GetParameters().Zip(message.Parameters, (info, parameter) =>
-                    parameter.Value.GetType().IsAssignableFrom(info.ParameterType)
-                ).All(b => b))
-                {
-                    break;
-                }
-            }
-
-            return returnMethodInfo;
-#endif
+            return GetMethodInfo(target.GetType(), message.MethodName, message);
         };
 
         /// <summary>
@@ -495,7 +440,7 @@
                 foreach (string possibleGuardName in possibleGuardNames)
                 {
                     matchingGuardName = possibleGuardName;
-                    guard = GetMethodInfo(targetType, "get_" + matchingGuardName);
+                    guard = GetMethodInfo(targetType, "get_" + matchingGuardName, context.Message);
                     if (guard != null) break;
                 }
 
@@ -543,7 +488,7 @@
             MethodInfo guard = null;
             foreach (string possibleGuardName in possibleGuardNames)
             {
-                guard = GetMethodInfo(targetType, possibleGuardName);
+                guard = GetMethodInfo(targetType, possibleGuardName, context.Message);
                 if (guard != null) break;
             }
 
@@ -597,6 +542,55 @@
             return t.GetRuntimeMethods().SingleOrDefault(m => m.Name == methodName);
 #else
             return t.GetMethod(methodName);
+#endif
+        }
+
+        static MethodInfo GetMethodInfo(Type t, string methodName, ActionMessage message)
+        {
+#if WINDOWS_UWP
+            var methods = (from method in t.GetRuntimeMethods()
+                where method.Name == methodName
+                let methodParameters = method.GetParameters()
+                where message.Parameters.Count == methodParameters.Length
+                      && message.Parameters.OfType<Parameter>().Zip(methodParameters, 
+                          (parameter, info) => info.ParameterType.IsInstanceOfType(parameter.Value)).All(b => b)
+                select method);
+
+            MethodInfo returnMethodInfo = null;
+            foreach (MethodInfo method in methods)
+            {
+                returnMethodInfo = method;
+                if (method.GetParameters().Zip(message.Parameters.OfType<Parameter>(), (info, parameter) =>
+                    parameter.Value.GetType().IsAssignableFrom(info.ParameterType)
+                ).All(b => b))
+                {
+                    break;
+                }
+            }
+
+            return returnMethodInfo;
+#else
+            var methods = (from method in t.GetMethods()
+                where method.Name == methodName
+                let methodParameters = method.GetParameters()
+                where message.Parameters.Count == methodParameters.Length
+                      && message.Parameters.Zip(methodParameters,
+                          (parameter, info) => info.ParameterType.IsInstanceOfType(parameter.Value)).All(b => b)
+                select method);
+
+            MethodInfo returnMethodInfo = null;
+            foreach (MethodInfo method in methods)
+            {
+                returnMethodInfo = method;
+                if (method.GetParameters().Zip(message.Parameters, (info, parameter) =>
+                    parameter.Value.GetType().IsAssignableFrom(info.ParameterType)
+                ).All(b => b))
+                {
+                    break;
+                }
+            }
+
+            return returnMethodInfo;
 #endif
         }
     }
