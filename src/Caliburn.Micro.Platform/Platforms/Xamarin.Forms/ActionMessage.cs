@@ -313,11 +313,7 @@
         /// <returns>The matching method, if available.</returns>
         public static Func<ActionMessage, object, MethodInfo> GetTargetMethod = (message, target) =>
         {
-            return (from method in target.GetType().GetRuntimeMethods()
-                    where method.Name == message.MethodName
-                    let methodParameters = method.GetParameters()
-                    where message.Parameters.Count == methodParameters.Length
-                    select method).FirstOrDefault();
+            return GetMethodInfo(target.GetType(), message.MethodName, message);
         };
 
         /// <summary>
@@ -443,7 +439,7 @@
             MethodInfo guard = null;
             foreach (string possibleGuardName in possibleGuardNames)
             {
-                guard = GetMethodInfo(targetType, possibleGuardName);
+                guard = GetMethodInfo(targetType, possibleGuardName, context.Message);
                 if (guard != null) break;
             }
 
@@ -494,6 +490,31 @@
 
         static MethodInfo GetMethodInfo(Type t, string methodName) {
             return t.GetRuntimeMethods().SingleOrDefault(m => m.Name == methodName);
+        }
+
+        static MethodInfo GetMethodInfo(Type t, string methodName, ActionMessage message)
+        {
+            var methods = (from method in t.GetRuntimeMethods()
+                where method.Name == methodName
+                let methodParameters = method.GetParameters()
+                where message.Parameters.Count == methodParameters.Length
+                      && message.Parameters.OfType<Parameter>().Zip(methodParameters,
+                          (parameter, info) => info.ParameterType.IsInstanceOfType(parameter.Value)).All(b => b)
+                select method);
+
+            MethodInfo returnMethodInfo = null;
+            foreach (MethodInfo method in methods)
+            {
+                returnMethodInfo = method;
+                if (method.GetParameters().Zip(message.Parameters.OfType<Parameter>(), (info, parameter) =>
+                    parameter.Value.GetType().IsAssignableFrom(info.ParameterType)
+                ).All(b => b))
+                {
+                    break;
+                }
+            }
+
+            return returnMethodInfo;
         }
     }
 }
