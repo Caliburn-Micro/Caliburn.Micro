@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="a004c07d-d3fb-47f8-9cb2-29928144196c" Publisher="CN=Nigel Sampson" Version="1.0.0.0" />
+  <Identity Name="a004c07d-d3fb-47f8-9cb2-29928144196c" Publisher="CN=Caliburn.Micro" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="a004c07d-d3fb-47f8-9cb2-29928144196c" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Features.CrossPlatform</DisplayName>
