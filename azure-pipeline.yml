@@ -1,0 +1,86 @@
+pool:
+  vmImage: windows-2019
+
+variables:
+  buildConfiguration: Release
+  buildPlatform: Any CPU
+  coreSolution: 'src\Caliburn.Micro.sln'
+  setupSamplesSolution: 'samples\setup\Setup.sln'
+  featuresSamplesSolution: 'samples\features\Features.sln'
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Install .NET 5'
+  inputs:
+    packageType: 'sdk'
+    useGlobalJson: true
+
+- task: DotNetCoreCLI@2  
+  inputs:
+    command: custom
+    custom: tool
+    arguments: install --tool-path . nbgv
+  displayName: Install NBGV tool
+  
+- script: nbgv cloud
+  displayName: Set Version
+
+- task: VSBuild@1
+  displayName: Nuget Restore
+  inputs:
+    solution: '$(coreSolution)'
+    msbuildArgs: '/t:Restore'
+    configuration: '$(buildConfiguration)'
+
+- task: VSBuild@1
+  displayName: Build & Pack Core Solution
+  inputs:
+    solution: '$(coreSolution)'
+    configuration: '$(buildConfiguration)'
+    platform: '$(buildPlatform)'
+    msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
+
+- task: DotNetCoreCLI@2
+  displayName: Run Unit Tests
+  inputs:
+    command: test
+    projects: '**/*Test*/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+
+- task: NuGetCommand@2
+  displayName: Restore Setup Solution
+  inputs:
+    restoreSolution: '$(setupSamplesSolution)'
+
+- task: VSBuild@1
+  displayName: Build Setup Solution
+  inputs:
+    solution: '$(setupSamplesSolution)'
+    configuration: '$(buildConfiguration)'
+    platform: '$(buildPlatform)'
+    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
+
+- task: NuGetCommand@2
+  displayName: Restore Features Solution
+  inputs:
+    restoreSolution: '$(featuresSamplesSolution)'
+
+- task: VSBuild@1
+  displayName: Build Features Solution
+  inputs:
+    solution: '$(featuresSamplesSolution)'
+    configuration: '$(buildConfiguration)'
+    platform: '$(buildPlatform)'
+    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
+
+- task: CopyFiles@2
+  displayName: Copy Packages to Artifact Directory
+  inputs:
+    Contents: 'packages\*.nupkg'
+    TargetFolder: '$(build.artifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Package Artifacts
+  inputs:
+    pathToPublish: '$(build.artifactStagingDirectory)'
+    artifactName: Packages

@@ -1,0 +1,13 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Nigel Sampson",
+    "classifications": [ "UWP", "MVVM" ],
+    "identity": "Caliburn.Micro.Templates.UWP",
+    "name": "Caliburn Micro UWP Application",
+    "shortName": "cm-uwp",
+    "tags": {
+        "language": "C#"
+    },
+    "sourceName": "Setup.UWP",
+    "preferNameDirectory": true
+}

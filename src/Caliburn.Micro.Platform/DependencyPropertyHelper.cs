@@ -2,13 +2,17 @@
 #if XFORMS
 using Xamarin.Forms;
 using DependencyProperty = Xamarin.Forms.BindableProperty;
-#elif WinRT
+#elif WINDOWS_UWP
 using Windows.UI.Xaml;
 #else
 using System.Windows;
 #endif
 
+#if XFORMS
+namespace Caliburn.Micro.Xamarin.Forms
+#else
 namespace Caliburn.Micro
+#endif
 {
     /// <summary>
     /// Class that abstracts the differences in creating a DepedencyProperty / BindableProperty on the different platforms.

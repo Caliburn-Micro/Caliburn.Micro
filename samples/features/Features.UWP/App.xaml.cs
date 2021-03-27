@@ -75,7 +75,7 @@ namespace Features.CrossPlatform
             container.BuildUp(instance);
         }
 
-        protected override async void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        protected override async void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             e.Handled = true;
 

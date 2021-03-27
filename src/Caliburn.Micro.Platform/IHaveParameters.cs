@@ -2,7 +2,7 @@
 namespace Caliburn.Micro.Xamarin.Forms
 #else
 namespace Caliburn.Micro
-#endif 
+#endif
 {
     /// <summary>
     /// Indicates that a message is parameterized.

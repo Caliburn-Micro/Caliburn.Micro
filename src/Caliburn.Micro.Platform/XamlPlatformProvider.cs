@@ -1,8 +1,9 @@
 ﻿namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
-#if WinRT
+#if WINDOWS_UWP
     using System.Reflection;
     using Windows.UI.Core;
     using Windows.UI.Xaml;
@@ -15,7 +16,7 @@
     /// A <see cref="IPlatformProvider"/> implementation for the XAML platfrom.
     /// </summary>
     public class XamlPlatformProvider : IPlatformProvider {
-#if WinRT
+#if WINDOWS_UWP
         private CoreDispatcher dispatcher;
 #else
         private Dispatcher dispatcher;
@@ -25,14 +26,17 @@
         /// Initializes a new instance of the <see cref="XamlPlatformProvider"/> class.
         /// </summary>
         public XamlPlatformProvider() {
-#if SILVERLIGHT
-            dispatcher = System.Windows.Deployment.Current.Dispatcher;
-#elif WinRT
+#if WINDOWS_UWP
             dispatcher = Window.Current.Dispatcher;
 #else
             dispatcher = Dispatcher.CurrentDispatcher;
 #endif
         }
+
+        /// <summary>
+        /// Whether or not classes should execute property change notications on the UI thread.
+        /// </summary>
+        public virtual bool PropertyChangeNotificationsOnUIThread => true;
 
         /// <summary>
         /// Indicates whether or not the framework is in design-time mode.
@@ -47,7 +51,7 @@
         }
 
         private bool CheckAccess() {
-#if WinRT
+#if WINDOWS_UWP
             return dispatcher == null || Window.Current != null;
 #else
             return dispatcher == null || dispatcher.CheckAccess();
@@ -60,7 +64,7 @@
         /// <param name="action">The action to execute.</param>
         public virtual void BeginOnUIThread(System.Action action) {
             ValidateDispatcher();
-#if WinRT
+#if WINDOWS_UWP
             var dummy = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
 #else
             dispatcher.BeginInvoke(action);
@@ -72,25 +76,12 @@
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <returns></returns>
-        public virtual Task OnUIThreadAsync(System.Action action) {
+        public virtual Task OnUIThreadAsync(Func<Task> action) {
             ValidateDispatcher();
-#if WinRT
-            return dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask();
-#elif NET45
-            return dispatcher.InvokeAsync(action).Task;
+#if WINDOWS_UWP
+            return dispatcher.RunTaskAsync(action);
 #else
-            var taskSource = new TaskCompletionSource<object>();
-            System.Action method = () => {
-                try {
-                    action();
-                    taskSource.SetResult(null);
-                }
-                catch(Exception ex) {
-                    taskSource.SetException(ex);
-                }
-            };
-            dispatcher.BeginInvoke(method);
-            return taskSource.Task;
+            return dispatcher.InvokeAsync(action).Task.Unwrap();
 #endif
         }
 
@@ -103,9 +94,9 @@
             if (CheckAccess())
                 action();
             else {
-#if WinRT
+#if WINDOWS_UWP
                 dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask().Wait();
-#elif NET
+#else
                 Exception exception = null;
                 System.Action method = () => {
                     try {
@@ -116,22 +107,6 @@
                     }
                 };
                 dispatcher.Invoke(method);
-                if (exception != null)
-                    throw new System.Reflection.TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
-#else
-                var waitHandle = new System.Threading.ManualResetEvent(false);
-                Exception exception = null;
-                System.Action method = () => {
-                    try {
-                        action();
-                    }
-                    catch (Exception ex) {
-                        exception = ex;
-                    }
-                    waitHandle.Set();
-                };
-                dispatcher.BeginInvoke(method);
-                waitHandle.WaitOne();
                 if (exception != null)
                     throw new System.Reflection.TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
 #endif
@@ -197,25 +172,18 @@
         /// An <see cref="Action" /> to close the view model.
         /// </returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public virtual System.Action GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult) {
-            var child = viewModel as IChild;
-            if (child != null) {
-                var conductor = child.Parent as IConductor;
-                if (conductor != null) {
-                    return () => conductor.CloseItem(viewModel);
-                }
-            }
-
+        public virtual Func<CancellationToken, Task> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
+        {
             foreach (var contextualView in views) {
                 var viewType = contextualView.GetType();
-#if WinRT
+#if WINDOWS_UWP
                 var closeMethod = viewType.GetRuntimeMethod("Close", new Type[0]);
 #else
-                var closeMethod = viewType.GetMethod("Close");
+                var closeMethod = viewType.GetMethod("Close", new Type[0]);
 #endif
                 if (closeMethod != null)
-                    return () => {
-#if !SILVERLIGHT && !WinRT
+                    return ct => {
+#if !WINDOWS_UWP
                         var isClosed = false;
                         if (dialogResult != null) {
                             var resultProperty = contextualView.GetType().GetProperty("DialogResult");
@@ -231,19 +199,29 @@
 #else
                         closeMethod.Invoke(contextualView, null);
 #endif
+                        return Task.FromResult(true);
                     };
 
-#if WinRT
+#if WINDOWS_UWP
                 var isOpenProperty = viewType.GetRuntimeProperty("IsOpen");
 #else
                 var isOpenProperty = viewType.GetProperty("IsOpen");
 #endif
                 if (isOpenProperty != null) {
-                    return () => isOpenProperty.SetValue(contextualView, false, null);
+                    return ct =>
+                    {
+                        isOpenProperty.SetValue(contextualView, false, null);
+
+                        return Task.FromResult(true);
+                    };
                 }
             }
 
-            return () => LogManager.GetLog(typeof(Screen)).Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
+            return ct =>
+            {
+                LogManager.GetLog(typeof(Screen)).Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
+                return Task.FromResult(true);
+            };
         }
     }
 }

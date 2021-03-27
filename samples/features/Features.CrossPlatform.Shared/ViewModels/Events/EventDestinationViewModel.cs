@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using Features.CrossPlatform.Messages;
 
@@ -17,7 +19,7 @@ namespace Features.CrossPlatform.ViewModels.Events
 
         public void Subscribe()
         {
-            eventAggregator.Subscribe(this);
+            eventAggregator.SubscribeOnPublishedThread(this);
         }
 
         public void Unsubscribe()
@@ -25,9 +27,11 @@ namespace Features.CrossPlatform.ViewModels.Events
             eventAggregator.Unsubscribe(this);
         }
 
-        public void Handle(SimpleMessage message)
+        public Task HandleAsync(SimpleMessage message, CancellationToken cancellationToken)
         {
             Messages.Add(message);
+
+            return Task.FromResult(true);
         }
 
         public BindableCollection<SimpleMessage> Messages { get; }

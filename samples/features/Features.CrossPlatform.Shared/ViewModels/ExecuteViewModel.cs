@@ -38,11 +38,13 @@ namespace Features.CrossPlatform.ViewModels
             UpdateView();
         }
 
-        private void UpdateView()
+        private Task UpdateView()
         {
             var view = (ExecuteView) GetView();
 
             view.UpdateView();
+
+            return Task.CompletedTask;
         }
     }
 }

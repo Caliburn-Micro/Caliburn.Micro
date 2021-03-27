@@ -2,10 +2,10 @@
 namespace Caliburn.Micro.Xamarin.Forms
 #else
 namespace Caliburn.Micro
-#endif 
+#endif
 {
     using System;
-#if WinRT
+#if WINDOWS_UWP
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Data;
 #elif XFORMS
@@ -127,12 +127,6 @@ namespace Caliburn.Micro
 
             View.ExecuteOnLoad(fe, delegate {
                 var target = e.NewValue;
-                var containerKey = e.NewValue as string;
-                if (containerKey != null) {
-                    LogManager.GetLog(typeof(Bind)).Info("Using IoC is deprecated and will be removed in v3.0");
-                    target = IoC.GetInstance(null, containerKey);
-                }
-
                 d.SetValue(View.IsScopeRootProperty, true);
 
 #if XFORMS
@@ -164,7 +158,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="dependencyObject">The ui to apply conventions to.</param>
         /// <returns>Whether or not conventions are applied.</returns>
-#if NET
+#if NET || NETCORE
         [AttachedPropertyBrowsableForTypeAttribute(typeof(DependencyObject))]
 #endif
         public static bool GetAtDesignTime(DependencyObject dependencyObject) {

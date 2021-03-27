@@ -1,5 +1,9 @@
 ﻿using System;
+using Caliburn.Micro;
+
+#if XAMARINFORMS
 using Caliburn.Micro.Xamarin.Forms;
+#endif
 
 namespace Features.CrossPlatform
 {

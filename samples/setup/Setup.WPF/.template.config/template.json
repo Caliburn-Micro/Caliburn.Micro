@@ -1,0 +1,13 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Nigel Sampson",
+    "classifications": [ "WPF", "MVVM" ],
+    "identity": "Caliburn.Micro.Templates.WPF",
+    "name": "Caliburn Micro WPF Application",
+    "shortName": "cm-wpf",
+    "tags": {
+        "language": "C#"
+    },
+    "sourceName": "Setup.WPF",
+    "preferNameDirectory": true
+}

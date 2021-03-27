@@ -2,9 +2,9 @@
 namespace Caliburn.Micro.Xamarin.Forms
 #else
 namespace Caliburn.Micro
-#endif 
+#endif
 {
-#if WinRT
+#if WINDOWS_UWP
     using System.Linq;
     using Windows.UI.Xaml;
     using System.Reflection;
@@ -122,7 +122,7 @@ namespace Caliburn.Micro
 
             var context = new ActionExecutionContext {
                 Target = target,
-#if WinRT
+#if WINDOWS_UWP
                 Method = target.GetType().GetRuntimeMethods().Single(m => m.Name == methodName),
 #else
                 Method = target.GetType().GetMethod(methodName),
@@ -158,10 +158,6 @@ namespace Caliburn.Micro
             }
 
             var target = e.NewValue;
-            var containerKey = e.NewValue as string;
-            if (containerKey != null) {
-                target = IoC.GetInstance(null, containerKey);
-            }
 #if XFORMS
             Log.Info("Attaching message handler {0} to {1}.", target, d);
             Message.SetHandler(d, target);
