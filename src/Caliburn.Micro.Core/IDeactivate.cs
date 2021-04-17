@@ -25,6 +25,6 @@ namespace Caliburn.Micro
         /// <summary>
         /// Raised after deactivation.
         /// </summary>
-        event EventHandler<DeactivationEventArgs> Deactivated;
+        event AsyncEventHandler<DeactivationEventArgs> Deactivated;
     }
 }

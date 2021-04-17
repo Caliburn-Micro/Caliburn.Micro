@@ -114,8 +114,10 @@ namespace Caliburn.Micro
     /// <summary>
     ///   A basic implementation of <see cref="INavigationService" /> designed to adapt the <see cref="Frame" /> control.
     /// </summary>
-    public class FrameAdapter : INavigationService {
-
+    public class FrameAdapter : INavigationService, IDisposable {
+#if WINDOWS_UWP
+        private SystemNavigationManager navigationManager;
+#endif 
         private static readonly ILog Log = LogManager.GetLog(typeof(FrameAdapter));
         private const string FrameStateKey = "FrameState";
         private const string ParameterKey = "ParameterKey";
@@ -144,7 +146,7 @@ namespace Caliburn.Micro
             // This could leak memory if we're creating and destorying navigation services regularly.
             // Another unlikely scenario though
 
-            var navigationManager = SystemNavigationManager.GetForCurrentView();
+            navigationManager = SystemNavigationManager.GetForCurrentView();
 
             navigationManager.BackRequested += OnBackRequested;
 #endif
@@ -498,6 +500,15 @@ namespace Caliburn.Micro
         private static ApplicationDataContainer GetSettingsContainer() {
             return ApplicationData.Current.LocalSettings.CreateContainer("Caliburn.Micro",
                 ApplicationDataCreateDisposition.Always);
+        }
+
+        public void Dispose()
+        {
+            this.frame.Navigating -= OnNavigating;
+            this.frame.Navigated -= OnNavigated;
+#if WINDOWS_UWP
+            navigationManager.BackRequested -= OnBackRequested;
+#endif
         }
     }
 }

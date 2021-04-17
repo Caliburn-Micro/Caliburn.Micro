@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Caliburn.Micro
+namespace Caliburn.Micro.Xamarin.Forms
 {
     /// <summary>
     /// Helper class with abstracting Xamarin Forms.

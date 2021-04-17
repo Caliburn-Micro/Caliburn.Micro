@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,8 +17,8 @@ namespace Caliburn.Micro.Platform.Tests
             var oddResult = Parser.CreateParameter(null, "-0.1");
             var nanResult = Parser.CreateParameter(null, "-0.1abc");
 
-            Assert.Equal(0.1, double.Parse((string)evenResult.Value));
-            Assert.Equal(-0.1, double.Parse((string)oddResult.Value));
+            Assert.Equal(0.1, double.Parse((string)evenResult.Value, CultureInfo.InvariantCulture));
+            Assert.Equal(-0.1, double.Parse((string)oddResult.Value, CultureInfo.InvariantCulture));
             Assert.Null(nanResult.Value);
         }
     }
