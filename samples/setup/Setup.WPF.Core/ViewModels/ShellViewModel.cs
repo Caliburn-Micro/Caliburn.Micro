@@ -1,8 +1,11 @@
 ﻿using System;
-using System.Windows;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 
-namespace Setup.WPF.ViewModels
+namespace Setup.WPF.Core.ViewModels
 {
     public class ShellViewModel : Screen
     {
@@ -20,7 +23,7 @@ namespace Setup.WPF.ViewModels
 
         public ShellViewModel()
         {
-            Title = "Welcome to Caliburn Micro in WPF";
+            Title = "Welcome to Caliburn Micro in .net 5 WPF";
         }
 
     }
