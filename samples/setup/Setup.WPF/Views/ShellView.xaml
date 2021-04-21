@@ -6,6 +6,6 @@
         mc:Ignorable="d"
         Title="ShellView" Height="300" Width="300">
     <Grid>
-        
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  Text="{Binding Title}"/>
     </Grid>
 </Window>

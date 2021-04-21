@@ -1,17 +1,18 @@
+﻿using Caliburn.Micro;
+using Foundation;
+using Setup.iOS.ViewModel;
 using System;
-using Caliburn.Micro;
-using Setup.iOS.ViewModels;
 using UIKit;
 
 namespace Setup.iOS
 {
-	public partial class MainViewController : UIViewController
-	{
+    public partial class MainViewController : UIViewController
+    {
         private readonly MainViewModel viewModel;
 
-        public MainViewController (IntPtr handle)
-            : base (handle)
-		{
+        public MainViewController(IntPtr handle)
+            : base(handle)
+        {
             viewModel = IoC.Get<MainViewModel>();
 
             var viewAware = (IViewAware)viewModel;
@@ -19,18 +20,18 @@ namespace Setup.iOS
             viewAware.AttachView(this);
         }
 
-        public override void ViewDidLoad()
+        public override async void ViewDidLoad()
         {
             base.ViewDidLoad();
 
-            ScreenExtensions.TryActivate(viewModel);
+            await ScreenExtensions.TryActivateAsync(viewModel);
         }
 
-        public override void ViewWillDisappear(bool animated)
+        public override async void ViewWillDisappear(bool animated)
         {
             base.ViewWillDisappear(animated);
 
-            ScreenExtensions.TryDeactivate(viewModel, false);
+            await ScreenExtensions.TryDeactivateAsync(viewModel, false);
         }
     }
 }

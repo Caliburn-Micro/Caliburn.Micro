@@ -1,5 +1,7 @@
 using System;
+using System.Net.Mime;
 using Android.App;
+using Android.Widget;
 using Caliburn.Micro;
 using Setup.Android.ViewModels;
 
@@ -9,7 +11,6 @@ namespace Setup.Android.Activities
     public class HomeActivity : Activity
     {
         private readonly HomeViewModel viewModel;
-
         public HomeActivity()
         {
             viewModel = IoC.Get<HomeViewModel>();
@@ -19,18 +20,18 @@ namespace Setup.Android.Activities
             viewAware.AttachView(this);
         }
 
-        protected override void OnResume()
+        protected override async void OnResume()
         {
             base.OnResume();
 
-            ScreenExtensions.TryActivate(viewModel);
+            await ScreenExtensions.TryActivateAsync(viewModel);
         }
 
-        protected override void OnPause()
+        protected override async void OnPause()
         {
             base.OnPause();
 
-            ScreenExtensions.TryDeactivate(viewModel, false);
+            await ScreenExtensions.TryDeactivateAsync(viewModel, false);
         }
     }
 }
