@@ -144,11 +144,11 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Caliburn.Micro">
-      <Version>4.0.165-rc</Version>
+    <PackageReference Include="vb2ae.Caliburn.Micro">
+      <Version>4.0.169-g30e441eef5</Version>
     </PackageReference>
-    <PackageReference Include="Caliburn.Micro.Xamarin.Forms">
-      <Version>4.0.165-rc</Version>
+    <PackageReference Include="vb2ae.Caliburn.Micro.Xamarin.Forms">
+      <Version>4.0.169-g30e441eef5</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.12" />
