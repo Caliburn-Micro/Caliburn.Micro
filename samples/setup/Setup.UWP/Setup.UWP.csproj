@@ -121,11 +121,14 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Caliburn.Micro">
+      <Version>4.0.173</Version>
+    </PackageReference>
+    <PackageReference Include="Caliburn.Micro.Core">
+      <Version>4.0.173</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.12</Version>
-    </PackageReference>
-    <PackageReference Include="vb2ae.Caliburn.Micro">
-      <Version>4.0.169-g30e441eef5</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

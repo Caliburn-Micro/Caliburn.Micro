@@ -16,7 +16,7 @@ namespace Setup.Android.Activities
             viewModel = IoC.Get<HomeViewModel>();
 
             var viewAware = (IViewAware) viewModel;
-
+            
             viewAware.AttachView(this);
         }
 
