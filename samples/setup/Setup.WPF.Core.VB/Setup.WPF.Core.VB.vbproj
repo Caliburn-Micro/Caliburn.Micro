@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="vb2ae.Caliburn.Micro" Version="4.0.169-g30e441eef5" />
-    <PackageReference Include="vb2ae.Caliburn.Micro.Core" Version="4.0.169-g30e441eef5" />
+    <PackageReference Include="Caliburn.Micro" Version="4.0.173" />
+    <PackageReference Include="Caliburn.Micro.Core" Version="4.0.173" />
   </ItemGroup>
 
 </Project>

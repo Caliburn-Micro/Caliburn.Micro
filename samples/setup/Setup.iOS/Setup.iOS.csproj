@@ -68,8 +68,11 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="vb2ae.Caliburn.Micro">
-      <Version>4.0.169-g30e441eef5</Version>
+    <PackageReference Include="Caliburn.Micro">
+      <Version>4.0.173</Version>
+    </PackageReference>
+    <PackageReference Include="Caliburn.Micro.Core">
+      <Version>4.0.173</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
   </ItemGroup>
