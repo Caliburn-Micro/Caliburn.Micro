@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="0.10.3" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.3" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.3" />
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="0.10.3" />
+    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="0.10.3" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.3" />
+   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Caliburn.Micro.Avalonia">
+      <HintPath>..\..\..\bin\Caliburn.Micro.Avalonia\release\net5.0\Caliburn.Micro.Avalonia.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Core">
+      <HintPath>..\..\..\bin\Caliburn.Micro.Avalonia\release\net5.0\Caliburn.Micro.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

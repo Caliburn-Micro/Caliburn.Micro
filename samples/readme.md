@@ -15,6 +15,7 @@ An example of a barebones setup for each supported platform, just beyond the bar
 - [Windows Phone 8.1 / Windows Runtime](./setup/Setup.WindowsPhone.Windows.Runtime)
 - [Windows Phone 8.1 / Silverlight](./setup/Setup.WindowsPhone.Silverlight)
 - [Silverlight](./setup/Setup.Silverlight)
+- [Avalonia](./setup/Setup.Avalonia)
 
 ## [Features](./features)
 
