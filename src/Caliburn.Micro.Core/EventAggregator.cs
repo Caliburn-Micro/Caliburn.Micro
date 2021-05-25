@@ -88,7 +88,7 @@ namespace Caliburn.Micro
             {
                 var messageType = message.GetType();
 
-                var tasks = toNotify.Select(h => h.Handle(messageType, message, CancellationToken.None));
+                var tasks = toNotify.Select(h => h.Handle(messageType, message, cancellationToken));
 
                 await Task.WhenAll(tasks);
 
