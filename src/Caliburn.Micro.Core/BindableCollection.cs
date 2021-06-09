@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
+
 
 namespace Caliburn.Micro
 {
@@ -218,7 +221,8 @@ namespace Caliburn.Micro
                 var previousNotificationSetting = IsNotifying;
                 IsNotifying = false;
                 var index = Count;
-                foreach (var item in items)
+                var list = items as IList<T> ?? items.ToList();
+                foreach (var item in list)
                 {
                     InsertItemBase(index, item);
                     index++;
@@ -227,7 +231,7 @@ namespace Caliburn.Micro
 
                 OnPropertyChanged(new PropertyChangedEventArgs("Count"));
                 OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, list as IList));
             }
 
             if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
@@ -250,7 +254,8 @@ namespace Caliburn.Micro
             {
                 var previousNotificationSetting = IsNotifying;
                 IsNotifying = false;
-                foreach (var item in items)
+                var list = items as IList<T> ?? items.ToList();
+                foreach (var item in list)
                 {
                     var index = IndexOf(item);
                     if (index >= 0)
@@ -262,7 +267,7 @@ namespace Caliburn.Micro
 
                 OnPropertyChanged(new PropertyChangedEventArgs("Count"));
                 OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, list as IList));
             }
 
             if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
