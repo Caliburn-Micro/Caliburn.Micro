@@ -1,4 +1,8 @@
-﻿namespace Caliburn.Micro
+﻿#if XFORMS
+namespace Caliburn.Micro.Xamarin.Forms
+#else
+namespace Caliburn.Micro
+#endif
 {
     using System;
     using System.Linq;
@@ -303,10 +307,7 @@
                 var context = GetContext(targetLocation);
                 
                 var view = ViewLocator.LocateForModel(args.NewValue, targetLocation, context);
-                // Trialing binding before setting content in Xamarin Forms
-#if XFORMS
                 ViewModelBinder.Bind(args.NewValue, view, context);
-#endif
                 if (!SetContentProperty(targetLocation, view)) {
 
                     Log.Warn("SetContentProperty failed for ViewLocator.LocateForModel, falling back to LocateForModelType");
@@ -315,9 +316,6 @@
 
                     SetContentProperty(targetLocation, view);
                 }
-#if !XFORMS
-                ViewModelBinder.Bind(args.NewValue, view, context);
-#endif
             }
             else {
                 SetContentProperty(targetLocation, args.NewValue);

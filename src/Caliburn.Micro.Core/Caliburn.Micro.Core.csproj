@@ -1,13 +1,10 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.1;net45;uap10.0.16299;Xamarin.iOS10;MonoAndroid80</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PackageId>Caliburn.Micro.Core</PackageId>
     <Product>Caliburn.Micro Core</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
     <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
@@ -16,12 +13,21 @@
     <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
   </ItemGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid'))">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
+    <AndroidResgenNamespace>Caliburn.Micro.Core</AndroidResgenNamespace>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
     <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.0.0" />
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.3.37" />
   </ItemGroup>
 
 </Project>

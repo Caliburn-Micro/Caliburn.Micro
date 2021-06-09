@@ -13,11 +13,11 @@ namespace Caliburn.Micro
         private readonly List<Handler> _handlers = new List<Handler>();
 
         /// <inheritdoc />
-        public bool HandlerExistsFor(Type messageType)
+        public virtual bool HandlerExistsFor(Type messageType)
         {
             lock (_handlers)
             {
-                return _handlers.Any(handler => handler.Handles(messageType) & !handler.IsDead);
+                return _handlers.Any(handler => handler.Handles(messageType) && !handler.IsDead);
             }
         }
 
@@ -65,7 +65,7 @@ namespace Caliburn.Micro
         }
 
         /// <inheritdoc />
-        public virtual Task PublishAsync(object message, Func<Func<Task>, Task> marshal, CancellationToken cancellationToken)
+        public virtual Task PublishAsync(object message, Func<Func<Task>, Task> marshal, CancellationToken cancellationToken = default)
         {
             if (message == null)
             {
@@ -88,7 +88,7 @@ namespace Caliburn.Micro
             {
                 var messageType = message.GetType();
 
-                var tasks = toNotify.Select(h => h.Handle(messageType, message, CancellationToken.None));
+                var tasks = toNotify.Select(h => h.Handle(messageType, message, cancellationToken));
 
                 await Task.WhenAll(tasks);
 

@@ -34,6 +34,11 @@
         }
 
         /// <summary>
+        /// Whether or not classes should execute property change notications on the UI thread.
+        /// </summary>
+        public virtual bool PropertyChangeNotificationsOnUIThread => true;
+
+        /// <summary>
         /// Indicates whether or not the framework is in design-time mode.
         /// </summary>
         public virtual bool InDesignMode {
@@ -174,7 +179,7 @@
 #if WINDOWS_UWP
                 var closeMethod = viewType.GetRuntimeMethod("Close", new Type[0]);
 #else
-                var closeMethod = viewType.GetMethod("Close");
+                var closeMethod = viewType.GetMethod("Close", new Type[0]);
 #endif
                 if (closeMethod != null)
                     return ct => {

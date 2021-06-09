@@ -47,6 +47,11 @@ namespace Caliburn.Micro
         }
 
         /// <summary>
+        /// Whether or not classes should execute property change notications on the UI thread.
+        /// </summary>
+        public virtual bool PropertyChangeNotificationsOnUIThread => true;
+
+        /// <summary>
         /// Used to retrieve the root, non-framework-created view.
         /// </summary>
         /// <param name="view">The view to search.</param>

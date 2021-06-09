@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Caliburn.Micro.Core.Tests
@@ -121,6 +122,234 @@ namespace Caliburn.Micro.Core.Tests
             var results = container.GetAllInstances<object>("test");
 
             Assert.Equal(2, results.Count());
+        }
+    }
+
+    public class SimpleContainer_Find_Constructor
+    {
+
+        public class SingleEmptyConstructorType
+        {
+            public SingleEmptyConstructorType()
+            {
+
+            }
+        }
+
+        [Fact]
+        public void Container_Finds_Single_Constructor()
+        {
+            var container = new SimpleContainer();
+            container.Singleton<SingleEmptyConstructorType>();
+            container.GetInstance(typeof(SingleEmptyConstructorType), null);
+        }
+
+        public class SingleNonEmptyConstructorType
+        {
+            public SingleNonEmptyConstructorType(SimpleContainer_Find_Constructor.SingleEmptyConstructorType type)
+            {
+            }
+        }
+
+        [Fact]
+        public void Container_No_EmptyConstructor()
+        {
+            var container = new SimpleContainer();
+            container.Singleton<SingleNonEmptyConstructorType>();
+            container.GetInstance(typeof(SingleNonEmptyConstructorType), null);
+        }
+
+        public class SingleIntConstructor
+        {
+            public int Value { get; private set; }
+
+            public SingleIntConstructor(int x)
+            {
+                this.Value = x;
+            }
+        }
+
+        [Fact]
+        public void Container_SingleIntConstructor()
+        {
+            var container = new SimpleContainer();
+            container.Singleton<SingleIntConstructor>();
+            container.RegisterInstance(typeof(int), "x", 4);
+            var inst = (SingleIntConstructor)container.GetInstance(typeof(SingleIntConstructor), null);
+            Assert.Equal(4, inst.Value);
+        }
+
+        public class TwoConstructors
+        {
+            public int Value { get; set; }
+
+            public TwoConstructors()
+            {
+                this.Value = 42;
+            }
+
+            public TwoConstructors(int value)
+            {
+                Value = value;
+            }
+        }
+
+        [Fact]
+        public void Container_ChooseConstructorWithRegisteredParameter()
+        {
+            var container = new SimpleContainer();
+            container.Singleton<TwoConstructors>();
+            container.RegisterInstance(typeof(int), null, 23);
+            var inst = (TwoConstructors)container.GetInstance(typeof(TwoConstructors), null);
+            Assert.Equal(23, inst.Value);
+        }
+
+        [Fact]
+        public void Container_ChooseEmptyConstructorWithoutRegisteredParameter()
+        {
+            var container = new SimpleContainer();
+            container.Singleton<TwoConstructors>();
+            var inst = (TwoConstructors)container.GetInstance(typeof(TwoConstructors), null);
+            Assert.Equal(42, inst.Value);
+        }
+    }
+
+    public class SimpleContainer_Recursive
+    {
+        private interface IComponent { }
+        private interface IDependency1 { }
+        private interface IDependency2 { }
+        private interface IEnumerableDependency { }
+
+        private class Component : IComponent
+        {
+            public IDependency1 Dependency1 { get; set; }
+            public NonInterfaceDependency NonInterfaceDependency { get; set; }
+        }
+
+        private class Dependency1 : IDependency1
+        {
+            public IDependency2 Dependency2 { get; set; }
+            public IList<IEnumerableDependency> EnumerableDependencies { get; set; }
+        }
+
+        private class Dependency2 : IDependency2 { }
+
+        private class EnumerableDependency1 : IEnumerableDependency
+        {
+            public IDependency2 Dependency2 { get; set; }
+        }
+
+        private class EnumerableDependency2 : IEnumerableDependency { }
+
+        private class NonInterfaceDependency { }
+
+        private class SecondDependency1 : Dependency1 { }
+
+        private static void RegisterAllComponents(SimpleContainer container)
+        {
+            container.RegisterPerRequest(typeof(IComponent), null, typeof(Component));
+            container.RegisterPerRequest(typeof(IDependency1), null, typeof(Dependency1));
+            container.RegisterPerRequest(typeof(IDependency2), null, typeof(Dependency2));
+            container.RegisterPerRequest(typeof(NonInterfaceDependency), null, typeof(NonInterfaceDependency));
+            container.RegisterPerRequest(typeof(IEnumerableDependency), null, typeof(EnumerableDependency1));
+            container.RegisterPerRequest(typeof(IEnumerableDependency), null, typeof(EnumerableDependency2));
+        }
+
+        [Fact]
+        public void Instances_Are_Recursively_Property_Injected_When_Enabled()
+        {
+            var container = new SimpleContainer
+            {
+                EnablePropertyInjection = true
+            };
+
+            RegisterAllComponents(container);
+
+            var instance = (Component)container.GetInstance<IComponent>();
+
+            Assert.NotNull(((Dependency1)instance.Dependency1).Dependency2);
+        }
+
+        [Fact]
+        public void BuildUp_Injects_All_Registered_Dependencies_Non_Recursively()
+        {
+            var container = new SimpleContainer();
+            RegisterAllComponents(container);
+
+            var instance = (Component)container.GetInstance<IComponent>();
+            container.BuildUp(instance);
+
+            Assert.Null(((Dependency1)instance.Dependency1).Dependency2);
+        }
+
+        [Fact]
+        public void BuildUp_Injects_Dependencies_Recursively()
+        {
+            var container = new SimpleContainer
+            {
+                EnablePropertyInjection = true
+            };
+
+            RegisterAllComponents(container);
+
+            var instance = (Component)container.GetInstance<IComponent>();
+            container.BuildUp(instance);
+
+            Assert.NotNull(((Dependency1)instance.Dependency1).Dependency2);
+        }
+
+        [Fact]
+        public void BuildUp_Injects_Enumerable_Dependencies()
+        {
+            var container = new SimpleContainer
+            {
+                EnablePropertyInjection = true
+            };
+
+            RegisterAllComponents(container);
+
+            var instance = (Component)container.GetInstance<IComponent>();
+            container.BuildUp(instance);
+
+            Assert.Equal(2, (((Dependency1)instance.Dependency1).EnumerableDependencies.Count));
+        }
+
+        [Fact]
+        public void BuildUp_Injects_Properties_Of_Enumerable_Dependencies()
+        {
+            var container = new SimpleContainer
+            {
+                EnablePropertyInjection = true
+            };
+
+            RegisterAllComponents(container);
+
+            var instance = (Component)container.GetInstance<IComponent>();
+            container.BuildUp(instance);
+
+            Assert.NotNull(((EnumerableDependency1)(((Dependency1)instance.Dependency1).EnumerableDependencies.First())).Dependency2);
+        }
+
+        [Fact]
+        public void BuildUp_Throws_When_Multiple_Types_Found_For_Component()
+        {
+            var container = new SimpleContainer();
+            RegisterAllComponents(container);
+            container.RegisterPerRequest(typeof(IDependency1), null, typeof(SecondDependency1));
+
+            var instance = (Component)container.GetInstance<IComponent>();
+
+            try
+            {
+                container.BuildUp(instance);
+            }
+            catch
+            {
+                return;
+            }
+
+            Assert.NotNull(null);
         }
     }
 }

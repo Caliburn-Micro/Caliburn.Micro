@@ -1,4 +1,8 @@
-﻿namespace Caliburn.Micro
+﻿#if XFORMS
+namespace Caliburn.Micro.Xamarin.Forms
+#else
+namespace Caliburn.Micro
+#endif
 {
     using System;
 #if WINDOWS_UWP
@@ -154,7 +158,7 @@
         /// </summary>
         /// <param name="dependencyObject">The ui to apply conventions to.</param>
         /// <returns>Whether or not conventions are applied.</returns>
-#if NET
+#if NET || NETCORE
         [AttachedPropertyBrowsableForTypeAttribute(typeof(DependencyObject))]
 #endif
         public static bool GetAtDesignTime(DependencyObject dependencyObject) {

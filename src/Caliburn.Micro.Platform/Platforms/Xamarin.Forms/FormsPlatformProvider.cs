@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace Caliburn.Micro
+namespace Caliburn.Micro.Xamarin.Forms
 {
     /// <summary>
     /// A <see cref="IPlatformProvider"/> implementation for the Xamarin.Forms platfrom.
@@ -23,6 +23,11 @@ namespace Caliburn.Micro
 
         /// <inheritdoc />
         public virtual bool InDesignMode => platformProvider.InDesignMode;
+
+        /// <summary>
+        /// Whether or not classes should execute property change notications on the UI thread.
+        /// </summary>
+        public virtual bool PropertyChangeNotificationsOnUIThread => platformProvider.PropertyChangeNotificationsOnUIThread;
 
         /// <inheritdoc />
         public virtual void BeginOnUIThread(System.Action action) => platformProvider.BeginOnUIThread(action);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -42,7 +43,14 @@ namespace Caliburn.Micro
         {
             if (IsNotifying)
             {
-                OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
+                if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+                {
+                    OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
+                }
+                else
+                {
+                    OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+                }
             }
         }
 
@@ -51,12 +59,21 @@ namespace Caliburn.Micro
         /// </summary>
         public void Refresh()
         {
-            OnUIThread(() =>
+            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+            {
+                OnUIThread(() =>
+                {
+                    OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+                    OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                });
+            }
+            else
             {
                 OnPropertyChanged(new PropertyChangedEventArgs("Count"));
                 OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            });
+            }
         }
 
         /// <summary>
@@ -66,7 +83,14 @@ namespace Caliburn.Micro
         /// <param name = "item">The item to be inserted.</param>
         protected override sealed void InsertItem(int index, T item)
         {
-            OnUIThread(() => InsertItemBase(index, item));
+            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+            {
+                OnUIThread(() => InsertItemBase(index, item));
+            }
+            else
+            {
+                InsertItemBase(index, item);
+            }
         }
 
         /// <summary>
@@ -89,7 +113,14 @@ namespace Caliburn.Micro
         /// <param name = "item">The item to set.</param>
         protected override sealed void SetItem(int index, T item)
         {
-            OnUIThread(() => SetItemBase(index, item));
+            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+            {
+                OnUIThread(() => SetItemBase(index, item));
+            }
+            else
+            {
+                SetItemBase(index, item);
+            }
         }
 
         /// <summary>
@@ -111,7 +142,14 @@ namespace Caliburn.Micro
         /// <param name = "index">The position used to identify the item to remove.</param>
         protected override sealed void RemoveItem(int index)
         {
-            Execute.OnUIThread(() => RemoveItemBase(index));
+            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+            {
+                OnUIThread(() => RemoveItemBase(index));
+            }
+            else
+            {
+                RemoveItemBase(index);
+            }
         }
 
         /// <summary>
@@ -175,7 +213,7 @@ namespace Caliburn.Micro
         /// <param name = "items">The items.</param>
         public virtual void AddRange(IEnumerable<T> items)
         {
-            OnUIThread(() =>
+            void AddRange()
             {
                 var previousNotificationSetting = IsNotifying;
                 IsNotifying = false;
@@ -190,7 +228,16 @@ namespace Caliburn.Micro
                 OnPropertyChanged(new PropertyChangedEventArgs("Count"));
                 OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            });
+            }
+
+            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+            {
+                OnUIThread(AddRange);
+            }
+            else
+            {
+                AddRange();
+            }
         }
 
         /// <summary>
@@ -199,7 +246,7 @@ namespace Caliburn.Micro
         /// <param name = "items">The items.</param>
         public virtual void RemoveRange(IEnumerable<T> items)
         {
-            OnUIThread(() =>
+            void RemoveRange()
             {
                 var previousNotificationSetting = IsNotifying;
                 IsNotifying = false;
@@ -216,7 +263,16 @@ namespace Caliburn.Micro
                 OnPropertyChanged(new PropertyChangedEventArgs("Count"));
                 OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            });
+            }
+
+            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+            {
+                OnUIThread(RemoveRange);
+            }
+            else
+            {
+                RemoveRange();
+            }
         }
 
         /// <summary>

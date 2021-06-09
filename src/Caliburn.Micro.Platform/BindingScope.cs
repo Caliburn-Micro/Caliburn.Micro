@@ -155,6 +155,9 @@
 
             while (queue.Count > 0) {
                 var current = queue.Dequeue();
+                if (current == null)
+                    continue;
+                    
                 var currentElement = current as FrameworkElement;
 
                 if (currentElement != null && !string.IsNullOrEmpty(currentElement.Name))
@@ -169,7 +172,7 @@
                     continue;
                 }
 
-#if NET
+#if NET || NETCORE
                 var childCount = (current is Visual || current is Visual3D)
                     ? VisualTreeHelper.GetChildrenCount(current) : 0;
 #else

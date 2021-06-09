@@ -20,7 +20,11 @@ namespace Caliburn.Micro
         public AndroidPlatformProvider(Application application) {
             application.RegisterActivityLifecycleCallbacks(lifecycleHandler);
         }
-        
+
+        /// <summary>
+        /// Whether or not classes should execute property change notications on the UI thread.
+        /// </summary>
+        public virtual bool PropertyChangeNotificationsOnUIThread => true;
 
         private bool CheckAccess() {
             return SynchronizationContext.Current != null;

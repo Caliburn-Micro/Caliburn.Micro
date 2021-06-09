@@ -91,7 +91,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Raised after deactivation.
         /// </summary>
-        public virtual event EventHandler<DeactivationEventArgs> Deactivated = delegate { };
+        public virtual event AsyncEventHandler<DeactivationEventArgs> Deactivated = delegate { return Task.FromResult(true); };
 
         async Task IActivate.ActivateAsync(CancellationToken cancellationToken)
         {
@@ -129,10 +129,10 @@ namespace Caliburn.Micro
                 await OnDeactivateAsync(close, cancellationToken);
                 IsActive = false;
 
-                Deactivated?.Invoke(this, new DeactivationEventArgs
+                await (Deactivated?.InvokeAllAsync(this, new DeactivationEventArgs
                 {
                     WasClosed = close
-                });
+                }) ?? Task.FromResult(true));
 
                 if (close)
                 {
@@ -147,7 +147,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation and holds the value of the close check..</returns>
-        public virtual Task<bool> CanCloseAsync(CancellationToken cancellationToken)
+        public virtual Task<bool> CanCloseAsync(CancellationToken cancellationToken = default)
         {
             return Task.FromResult(true);
         }

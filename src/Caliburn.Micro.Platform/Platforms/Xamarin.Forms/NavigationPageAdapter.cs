@@ -1,4 +1,5 @@
-﻿namespace Caliburn.Micro {
+﻿namespace Caliburn.Micro.Xamarin.Forms
+{
 
     using System;
     using System.Collections.Generic;
@@ -105,7 +106,7 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public async Task GoBackAsync(bool animated = true) {
 
-            var canClose = await CanCloseAysnc();
+            var canClose = await CanCloseAsync();
 
             if (!canClose)
                 return;
@@ -120,7 +121,7 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public async Task GoBackToRootAsync(bool animated = true) 
         {
-            var canClose = await CanCloseAysnc();
+            var canClose = await CanCloseAsync();
 
             if (!canClose)
                 return;
@@ -137,7 +138,7 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public async Task NavigateToViewModelAsync(Type viewModelType, object parameter = null, bool animated = true)
         {
-            var canClose = await CanCloseAysnc();
+            var canClose = await CanCloseAsync();
 
             if (!canClose)
                 return;
@@ -156,11 +157,6 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public async Task NavigateToViewModelAsync<T>(object parameter = null, bool animated = true)
         {
-            var canClose = await CanCloseAysnc();
-
-            if (!canClose)
-                return;
-
             await NavigateToViewModelAsync(typeof(T), parameter, animated);
         }
 
@@ -173,7 +169,7 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public async Task NavigateToViewAsync(Type viewType, object parameter = null, bool animated = true)
         {
-            var canClose = await CanCloseAysnc();
+            var canClose = await CanCloseAsync();
 
             if (!canClose)
                 return;
@@ -192,15 +188,10 @@
         /// <returns>The asynchrous task representing the transition</returns>
         public async Task NavigateToViewAsync<T>(object parameter = null, bool animated = true)
         {
-            var canClose = await CanCloseAysnc();
-
-            if (!canClose)
-                return;
-
             await NavigateToViewAsync(typeof(T), parameter, animated);
         }
 
-        private Task PushAsync(Element view, object parameter, bool animated)
+        private async Task PushAsync(Element view, object parameter, bool animated)
         {
             var page = view as Page;
 
@@ -213,6 +204,11 @@
                 TryInjectParameters(viewModel, parameter);
 
                 ViewModelBinder.Bind(viewModel, view, null);
+
+                if (viewModel is IActivate activator)
+                {
+                    await activator.ActivateAsync();
+                }
             }
 
             var contentView = view as ContentView;
@@ -220,7 +216,7 @@
                 page = CreateContentPage(contentView, viewModel);
             }
 
-            return navigationPage.PushAsync(page, animated);
+            await navigationPage.PushAsync(page, animated);
         }
 
         /// <summary>
@@ -278,7 +274,7 @@
             }
         }
 
-        private async Task<bool> CanCloseAysnc() {
+        private async Task<bool> CanCloseAsync() {
             var view = navigationPage.CurrentPage;
 
             if (view?.BindingContext is IGuardClose guard)

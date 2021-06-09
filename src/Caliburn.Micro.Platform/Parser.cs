@@ -1,4 +1,8 @@
-﻿namespace Caliburn.Micro
+﻿#if XFORMS
+namespace Caliburn.Micro.Xamarin.Forms
+#else
+namespace Caliburn.Micro
+#endif
 {
     using System;
     using System.Collections.Generic;
@@ -262,7 +266,7 @@
             {
                 actualParameter.Value = parameterText.Substring(1, parameterText.Length - 2);
             }
-            else if (MessageBinder.SpecialValues.ContainsKey(parameterText.ToLower()) || char.IsNumber(parameterText[0]))
+            else if (MessageBinder.SpecialValues.ContainsKey(parameterText.ToLower()) || decimal.TryParse(parameterText, out _))
             {
                 actualParameter.Value = parameterText;
             }
