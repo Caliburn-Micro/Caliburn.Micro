@@ -218,5 +218,15 @@ namespace Caliburn.Micro
         {
             return DisplayRootViewForAsync(typeof(TViewModel), settings);
         }
+
+        /// <summary>
+        /// Locates the view model, locates the associate view, binds them and shows it as the root view.
+        /// </summary>
+        /// <typeparam name="TViewModel">The view model type.</typeparam>
+        /// <param name="settings">The optional window settings.</param>
+        protected Task DisplayRootViewForAsync<TViewModel>(IDictionary<string, object> settings = null)
+        {
+            return DisplayRootViewForAsync(typeof(TViewModel), settings);
+        }
     }
 }
