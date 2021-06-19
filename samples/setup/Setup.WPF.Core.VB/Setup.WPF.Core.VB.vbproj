@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Caliburn.Micro" Version="4.0.180" />
+    <PackageReference Include="Caliburn.Micro" Version="4.0.173" />
   </ItemGroup>
 
 </Project>

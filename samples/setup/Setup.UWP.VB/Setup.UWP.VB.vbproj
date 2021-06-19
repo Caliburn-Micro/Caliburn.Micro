@@ -199,8 +199,8 @@
     <Import Include="Windows.UI.Xaml.Navigation" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Caliburn.Micro.Core">
-      <Version>4.0.180</Version>
+    <PackageReference Include="Caliburn.Micro">
+      <Version>4.0.173</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.11</Version>
