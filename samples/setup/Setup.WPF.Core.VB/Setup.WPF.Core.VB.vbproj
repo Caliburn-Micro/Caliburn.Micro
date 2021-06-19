@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <PackageReference Include="Caliburn.Micro" Version="4.0.180" />
-    <PackageReference Include="Caliburn.Micro.Core" Version="4.0.180" />
   </ItemGroup>
 
 </Project>

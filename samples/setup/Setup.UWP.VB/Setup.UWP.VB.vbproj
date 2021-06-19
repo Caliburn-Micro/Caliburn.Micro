@@ -207,6 +207,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Caliburn.Micro.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Caliburn.Micro.Core.4.0.180\lib\netstandard2.0\Caliburn.Micro.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Caliburn.Micro.Platform">
       <HintPath>..\..\..\..\..\..\.nuget\packages\vb2ae.caliburn.micro\4.0.169-g30e441eef5\lib\uap10.0.16299\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
