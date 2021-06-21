@@ -24,6 +24,6 @@ namespace Caliburn.Micro
         /// <summary>
         /// Raised after activation occurs.
         /// </summary>
-        event EventHandler<ActivationEventArgs> Activated;
+        event AsyncEventHandler<ActivationEventArgs> Activated;
     }
 }
