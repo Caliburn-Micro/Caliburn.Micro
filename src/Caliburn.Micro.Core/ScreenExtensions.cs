@@ -107,13 +107,13 @@ namespace Caliburn.Micro
         {
             var childReference = new WeakReference(child);
 
-            void OnParentActivated(object s, ActivationEventArgs e)
+            async Task OnParentActivated(object s, ActivationEventArgs e)
             {
                 var activatable = (IActivate)childReference.Target;
                 if (activatable == null)
                     ((IActivate)s).Activated -= OnParentActivated;
                 else
-                    activatable.ActivateAsync(CancellationToken.None);
+                    await activatable.ActivateAsync(CancellationToken.None);
             }
 
             parent.Activated += OnParentActivated;
@@ -127,16 +127,17 @@ namespace Caliburn.Micro
         public static void DeactivateWith(this IDeactivate child, IDeactivate parent)
         {
             var childReference = new WeakReference(child);
-            AsyncEventHandler<DeactivationEventArgs> handler = null;
-            handler = async (s, e) =>
+
+            async Task OnParentDeactivated(object s, DeactivationEventArgs e)
             {
                 var deactivatable = (IDeactivate)childReference.Target;
                 if (deactivatable == null)
-                    ((IDeactivate)s).Deactivated -= handler;
+                    ((IDeactivate)s).Deactivated -= OnParentDeactivated;
                 else
                     await deactivatable.DeactivateAsync(e.WasClosed, CancellationToken.None);
-            };
-            parent.Deactivated += handler;
+            }
+
+            parent.Deactivated += OnParentDeactivated;
         }
 
         ///<summary>

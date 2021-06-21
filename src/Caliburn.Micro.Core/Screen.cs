@@ -81,7 +81,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Raised after activation occurs.
         /// </summary>
-        public virtual event EventHandler<ActivationEventArgs> Activated = delegate { };
+        public virtual event AsyncEventHandler<ActivationEventArgs> Activated = delegate { return Task.FromResult(true); };
 
         /// <summary>
         /// Raised before deactivation.
@@ -110,10 +110,10 @@ namespace Caliburn.Micro
             await OnActivateAsync(cancellationToken);
             IsActive = true;
 
-            Activated?.Invoke(this, new ActivationEventArgs
+            await (Activated?.InvokeAllAsync(this, new ActivationEventArgs
             {
                 WasInitialized = initialized
-            });
+            }) ?? Task.FromResult(true));
         }
 
         async Task IDeactivate.DeactivateAsync(bool close, CancellationToken cancellationToken)
