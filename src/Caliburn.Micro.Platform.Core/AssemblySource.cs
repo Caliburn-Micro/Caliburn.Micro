@@ -90,13 +90,7 @@ namespace Caliburn.Micro
                     case NotifyCollectionChangedAction.Add:
                         e.NewItems.OfType<Assembly>()
                             .SelectMany(a => ExtractTypes(a))
-                            .Apply(t =>
-                            {
-                                if (!TypeNameCache.ContainsKey(t.FullName))
-                                {
-                                    TypeNameCache.Add(t.FullName, t);
-                                }
-                            });
+                            .Apply(AddTypeAssembly);
                         break;
                     case NotifyCollectionChangedAction.Remove:
                     case NotifyCollectionChangedAction.Replace:
@@ -104,7 +98,7 @@ namespace Caliburn.Micro
                         TypeNameCache.Clear();
                         AssemblySource.Instance
                             .SelectMany(a => ExtractTypes(a))
-                            .Apply(t => TypeNameCache.Add(t.FullName, t));
+                            .Apply(AddTypeAssembly);
                         break;
                 }
             };
@@ -122,5 +116,13 @@ namespace Caliburn.Micro
                 return type;
             };
         };
+
+        private static void AddTypeAssembly(Type type)
+        {
+            if (!TypeNameCache.ContainsKey(type.FullName))
+            {
+                TypeNameCache.Add(type.FullName, type);
+            }
+        }
     }
 }
