@@ -90,7 +90,13 @@ namespace Caliburn.Micro
                     case NotifyCollectionChangedAction.Add:
                         e.NewItems.OfType<Assembly>()
                             .SelectMany(a => ExtractTypes(a))
-                            .Apply(t => TypeNameCache.Add(t.FullName, t));
+                            .Apply(t =>
+                            {
+                                if (!TypeNameCache.ContainsKey(t.FullName))
+                                {
+                                    TypeNameCache.Add(t.FullName, t);
+                                }
+                            });
                         break;
                     case NotifyCollectionChangedAction.Remove:
                     case NotifyCollectionChangedAction.Replace:
