@@ -3,9 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cm="http://caliburnmicro.com"
         mc:Ignorable="d"
         Title="ShellView" Height="300" Width="300">
     <Grid>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  Text="{Binding Title}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Text="{Binding Message}"/>
+        <ContentControl cm:View.Model="{Binding ActiveItem}" Grid.Row="1" Margin="40,20"/>
     </Grid>
 </Window>
