@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="vb2ae.Caliburn.Micro" Version="4.0.169-g30e441eef5" />
     <PackageReference Include="vb2ae.Caliburn.Micro.Core" Version="4.0.169-g30e441eef5" />
   </ItemGroup>

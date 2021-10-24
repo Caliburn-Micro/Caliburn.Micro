@@ -15,7 +15,9 @@ namespace Setup.WPF.Core
 
         public Bootstrapper()
         {
+            LogManager.GetLog = type => new DebugLogger(type);
             Initialize();
+
         }
 
         protected override void Configure()

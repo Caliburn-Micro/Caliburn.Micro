@@ -7,7 +7,7 @@ using Caliburn.Micro;
 
 namespace Setup.WPF.Core.ViewModels
 {
-    public class ShellViewModel : Screen
+    public class ShellViewModel : Conductor<object>
     {
         private string _title;
 
