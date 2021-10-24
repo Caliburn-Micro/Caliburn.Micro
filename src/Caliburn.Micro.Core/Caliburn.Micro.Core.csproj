@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net5.0-windows;net6.0-windows;netcoreapp3.1</TargetFrameworks>
     <PackageId>Caliburn.Micro.Core</PackageId>
     <Product>Caliburn.Micro Core</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
