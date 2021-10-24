@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using Caliburn.Micro;
 using Setup.WPF.ViewModels;
@@ -22,17 +21,12 @@ namespace Setup.WPF
 
             container.Singleton<IWindowManager, WindowManager>();
 
-            // container.PerRequest<ShellViewModel>();
-            GetType().Assembly.GetTypes().Where(type => type.IsClass)
-     .Where(type => type.Name.EndsWith("ViewModel"))
-     .ToList()
-     .ForEach(viewModelType => container.RegisterPerRequest
-         (viewModelType, viewModelType.ToString(), viewModelType));
+            container.PerRequest<ShellViewModel>();
         }
 
         protected override async void OnStartup(object sender, StartupEventArgs e)
         {
-           await DisplayRootViewFor<ShellViewModel>();
+            await DisplayRootViewFor<ShellViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)

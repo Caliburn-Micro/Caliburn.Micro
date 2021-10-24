@@ -15,7 +15,6 @@ namespace Setup.WPF.Core
 
         public Bootstrapper()
         {
-            LogManager.GetLog = type => new DebugLogger(type);
             Initialize();
 
         }
