@@ -16,14 +16,7 @@ namespace Caliburn.Micro
         /// <param name = "message">The message.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A task that represents the asynchronous coroutine.</returns>
-#if NET5_0 || NET6_0 || NETCOREAPP3_1
-       public Task HandleAsync(TMessage message, CancellationToken cancellationToken)
-       {
-            return Task.CompletedTask;
-       }
-
-#else
         Task HandleAsync(TMessage message, CancellationToken cancellationToken);
-#endif
+
     }
 }
