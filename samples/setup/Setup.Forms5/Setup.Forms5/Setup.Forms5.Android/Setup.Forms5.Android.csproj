@@ -61,11 +61,11 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="vb2ae.Caliburn.Micro">
-      <Version>4.0.169-g30e441eef5</Version>
+    <PackageReference Include="Caliburn.Micro">
+      <Version>4.0.173</Version>
     </PackageReference>
-    <PackageReference Include="vb2ae.Caliburn.Micro.Xamarin.Forms">
-      <Version>4.0.169-g30e441eef5</Version>
+    <PackageReference Include="Caliburn.Micro.Xamarin.Forms">
+      <Version>4.0.173</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
