@@ -22,7 +22,7 @@
     using Microsoft.Xaml.Behaviors;
     using EventTrigger = Microsoft.Xaml.Behaviors.EventTrigger;
 #endif
-#if NET5_0_WINDOWS
+#if NET5_0_WINDOWS || NET6_0_WINDOWS
     using System.IO;
     using System.Xml;
 #endif
@@ -205,7 +205,7 @@
             var binding = new Binding {
                 Source = currentElement
             };
-#elif NET5_0_WINDOWS
+#elif NET5_0_WINDOWS || NET6_0_WINDOWS
             const string bindingText = "<Binding xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation\' xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform' Path='(cal:Message.Handler)' />";
             StringReader stringReader = new StringReader(bindingText);
             XmlReader xmlReader = XmlReader.Create(stringReader);
