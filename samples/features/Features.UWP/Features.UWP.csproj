@@ -250,7 +250,7 @@
   <ItemGroup>
     <Reference Include="Caliburn.Micro.Core, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\Caliburn.Micro.Platform\release\uap10.0.16299\Caliburn.Micro.Core.dll</HintPath>
+      <HintPath>..\..\..\bin\Caliburn.Micro.Platform\release\uap10.0.18362\Caliburn.Micro.Core.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.Platform, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
