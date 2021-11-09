@@ -16,6 +16,7 @@ namespace Setup.WPF.Core
         public Bootstrapper()
         {
             Initialize();
+
         }
 
         protected override void Configure()
