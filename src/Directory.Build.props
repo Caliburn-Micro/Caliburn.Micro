@@ -4,7 +4,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>http://caliburnmicro.com</PackageProjectUrl>
 		<PackageIconUrl>https://raw.githubusercontent.com/Caliburn-Micro/Caliburn.Micro/master/CaliburnIcon.png</PackageIconUrl>
-		<Authors>Nigel Sampson, Rob Eisenberg, Thomas Ibel, Marco Amendola, Chin Bae, Ryan Cromwell, Matt Hidinger, Ken Tucker</Authors>
+		<Authors>Nigel Sampson, Rob Eisenberg, Thomas Ibel, Marco Amendola, Chin Bae, Ryan Cromwell, Matt Hidinger, Ken Tucker, Kasper Sejer Kristensen</Authors>
 		<Owners>Nigel Sampson, Rob Eisenberg, Thomas Ibel</Owners>
 		<PackageTags>MVVM;WPF;WinRT;UWP;Xamarin;Android;iOS;CoC;Convention;MVP;PM;Screen;Coroutine;Behavior;Model-View-ViewModel;Presentation;UI;ViewModel;;Caliburn</PackageTags>
 		<PackageReleaseNotes>http://caliburnmicro.com</PackageReleaseNotes>
