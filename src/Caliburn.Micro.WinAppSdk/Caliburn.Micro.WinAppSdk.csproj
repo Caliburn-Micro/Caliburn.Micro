@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>Caliburn.Micro.WinAppSdk</RootNamespace>
+    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+    <UseWinUI>true</UseWinUI>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Winappsdk\AppManifestHelper.cs" />
+    <Compile Remove="Winappsdk\AttachedCollection.81.cs" />
+    <Compile Remove="Winappsdk\CachingFrameAdapter.cs" />
+    <Compile Remove="Winappsdk\CaliburnApplication.cs" />
+    <Compile Remove="Winappsdk\DispatcherTaskExtensions.cs" />
+    <Compile Remove="Winappsdk\FrameAdapter.cs" />
+    <Compile Remove="Winappsdk\IAttachedObject.cs" />
+    <Compile Remove="Winappsdk\INavigationService.cs" />
+    <Compile Remove="Winappsdk\ISharingService.cs" />
+    <Compile Remove="Winappsdk\ISupportSharing.cs" />
+    <Compile Remove="Winappsdk\NavigateHelper.cs" />
+    <Compile Remove="Winappsdk\NavigationExtensions.cs" />
+    <Compile Remove="Winappsdk\Parameter.cs" />
+    <Compile Remove="Winappsdk\SharingService.cs" />
+    <Compile Remove="Winappsdk\TriggerAction.cs" />
+    <Compile Remove="Winappsdk\WinRTContainer.cs" />
+    <Compile Remove="Winappsdk\XamlMetadataProvider.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Winappsdk\AppManifestHelper.cs" />
+    <None Include="Winappsdk\AttachedCollection.81.cs" />
+    <None Include="Winappsdk\CachingFrameAdapter.cs" />
+    <None Include="Winappsdk\CaliburnApplication.cs" />
+    <None Include="Winappsdk\DispatcherTaskExtensions.cs" />
+    <None Include="Winappsdk\FrameAdapter.cs" />
+    <None Include="Winappsdk\IAttachedObject.cs" />
+    <None Include="Winappsdk\INavigationService.cs" />
+    <None Include="Winappsdk\ISharingService.cs" />
+    <None Include="Winappsdk\ISupportSharing.cs" />
+    <None Include="Winappsdk\NavigateHelper.cs" />
+    <None Include="Winappsdk\NavigationExtensions.cs" />
+    <None Include="Winappsdk\Parameter.cs" />
+    <None Include="Winappsdk\SharingService.cs" />
+    <None Include="Winappsdk\TriggerAction.cs" />
+    <None Include="Winappsdk\WinRTContainer.cs" />
+    <None Include="Winappsdk\XamlMetadataProvider.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0-experimental1" />
+      <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.0.0-experimental1" />
+      <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.0.0-experimental1" />
+      <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="1.0.0-experimental1" />
+      <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
+    <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
+  </ItemGroup>
+</Project>
