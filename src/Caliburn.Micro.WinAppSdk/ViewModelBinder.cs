@@ -6,7 +6,6 @@ namespace Caliburn.Micro
     using System.Collections.Generic;
     using System.Reflection;
     using System.Threading.Tasks;
-    using Windows.UI.Xaml;
     using Microsoft.UI.Xaml;
 
 
