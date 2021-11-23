@@ -7,6 +7,9 @@
     <UseWinUI>true</UseWinUI>
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>True</Optimize>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="Winappsdk\AppManifestHelper.cs" />
     <None Include="Winappsdk\AttachedCollection.cs" />
