@@ -13,6 +13,7 @@
     using Windows.UI.Xaml.Data;
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Data;
+    using Microsoft.Xaml.Interactivity;
 
 
     /// <summary>
@@ -206,7 +207,7 @@
         /// <summary>
         /// Function used to parse a string identified as a message parameter.
         /// </summary>
-        public static Func<DependencyObject, string, Parameter> CreateParameter = (target, parameterText) =>
+        public static Func<DependencyObject, string,  Parameter> CreateParameter = (target, parameterText) =>
         {
             var actualParameter = new Parameter();
 
@@ -248,7 +249,7 @@
         /// <param name="elementName">The name of the element to bind to.</param>
         /// <param name="path">The path of the element to bind to.</param>
         /// <param name="bindingMode">The binding mode to use.</param>
-        public static void BindParameter(FrameworkElement target, Parameter parameter, string elementName, string path, BindingMode bindingMode)
+        public static void BindParameter(FrameworkElement target,  Parameter parameter, string elementName, string path, BindingMode bindingMode)
         {
 
             var element = elementName == "$this"

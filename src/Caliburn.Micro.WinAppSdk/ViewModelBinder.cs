@@ -7,6 +7,7 @@ namespace Caliburn.Micro
     using System.Reflection;
     using System.Threading.Tasks;
     using Microsoft.UI.Xaml;
+    using Microsoft.Xaml.Interactivity;
 
 
     /// <summary>
@@ -84,7 +85,7 @@ namespace Caliburn.Micro
                 unmatchedElements.Remove(foundControl);
 
                 var triggers = Interaction.GetBehaviors(foundControl);
-                if (triggers != null && triggers.Count > 0)
+                if (triggers != null && triggers.Count() > 0)
                 {
                     Log.Info("Action Convention Not Applied: Interaction.Triggers already set on {0}.", foundControl.Name);
                     continue;

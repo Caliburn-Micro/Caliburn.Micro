@@ -8,27 +8,8 @@
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Winappsdk\AppManifestHelper.cs" />
-    <Compile Remove="Winappsdk\AttachedCollection.81.cs" />
-    <Compile Remove="Winappsdk\CachingFrameAdapter.cs" />
-    <Compile Remove="Winappsdk\CaliburnApplication.cs" />
-    <Compile Remove="Winappsdk\DispatcherTaskExtensions.cs" />
-    <Compile Remove="Winappsdk\FrameAdapter.cs" />
-    <Compile Remove="Winappsdk\IAttachedObject.cs" />
-    <Compile Remove="Winappsdk\INavigationService.cs" />
-    <Compile Remove="Winappsdk\ISharingService.cs" />
-    <Compile Remove="Winappsdk\ISupportSharing.cs" />
-    <Compile Remove="Winappsdk\NavigateHelper.cs" />
-    <Compile Remove="Winappsdk\NavigationExtensions.cs" />
-    <Compile Remove="Winappsdk\Parameter.cs" />
-    <Compile Remove="Winappsdk\SharingService.cs" />
-    <Compile Remove="Winappsdk\TriggerAction.cs" />
-    <Compile Remove="Winappsdk\WinRTContainer.cs" />
-    <Compile Remove="Winappsdk\XamlMetadataProvider.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Winappsdk\AppManifestHelper.cs" />
-    <None Include="Winappsdk\AttachedCollection.81.cs" />
+    <None Include="Winappsdk\AttachedCollection.cs" />
     <None Include="Winappsdk\CachingFrameAdapter.cs" />
     <None Include="Winappsdk\CaliburnApplication.cs" />
     <None Include="Winappsdk\DispatcherTaskExtensions.cs" />
@@ -47,10 +28,11 @@
   </ItemGroup>
 
   <ItemGroup>
-      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0-experimental1" />
+      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
       <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.0.0-experimental1" />
       <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.0.0-experimental1" />
       <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="1.0.0-experimental1" />
+      <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.8" />
   </ItemGroup>
 
   <ItemGroup>

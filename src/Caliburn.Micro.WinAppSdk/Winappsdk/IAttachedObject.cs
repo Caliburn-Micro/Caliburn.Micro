@@ -1,8 +1,9 @@
 ﻿namespace Caliburn.Micro {
+    using Microsoft.UI.Xaml;
     using Windows.UI.Xaml;
 
     /// <summary>
-    /// Interaface usually from the Interactivity SDK's included here for completeness.
+    /// Interface usually from the Interactivity SDK's included here for completeness.
     /// </summary>
     public interface IAttachedObject {
         /// <summary>

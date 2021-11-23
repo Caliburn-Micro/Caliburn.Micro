@@ -5,6 +5,9 @@ namespace Caliburn.Micro
     using System.Linq;
     using System.Reflection;
     using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Markup;
+    using Microsoft.UI.Xaml.Media;
     using Windows.ApplicationModel;
 
 

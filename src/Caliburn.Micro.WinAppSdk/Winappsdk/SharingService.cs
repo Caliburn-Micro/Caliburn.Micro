@@ -1,7 +1,8 @@
 ﻿namespace Caliburn.Micro {
+    using Microsoft.UI.Xaml;
     using Windows.ApplicationModel.DataTransfer;
     using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Controls;
 
     /// <summary>
     /// Service that handles the <see cref="DataTransferManager.DataRequested"/> event.

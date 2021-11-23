@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.Micro {
     using System.Linq;
+    using Microsoft.UI.Xaml;
     using Windows.Foundation.Collections;
     using Windows.UI.Xaml;
 

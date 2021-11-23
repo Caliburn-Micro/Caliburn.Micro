@@ -4,9 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace Caliburn.Micro
 {
@@ -99,28 +99,21 @@ namespace Caliburn.Micro
             }
         }
 
-        /// <summary>
-        /// Invoked when the application creates a window.
-        /// </summary>
-        /// <param name="args">Event data for the event.</param>
-        protected override void OnWindowCreated(WindowCreatedEventArgs args)
+
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            base.OnWindowCreated(args);
-
-            // Because dispatchers are tied to windows Execute will fail in 
-            // scenarios when the app has multiple windows open (though contract 
-            // activation, this keeps Excute up to date with the currently activated window
-
-            args.Window.Activated += (s, e) => PlatformProvider.Current = new XamlPlatformProvider();
+            base.OnLaunched(args);
+            PlatformProvider.Current = new XamlPlatformProvider();
         }
+
 
         /// <summary>
         /// Provides an opportunity to hook into the application object.
         /// </summary>
         protected virtual void PrepareApplication()
         {
-            Resuming += OnResuming;
-            Suspending += OnSuspending;
+            //Resuming += OnResuming;
+            //Suspending += OnSuspending;
             UnhandledException += OnUnhandledException;
         }
 
@@ -192,7 +185,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event args.</param>
-        protected virtual void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        protected virtual void OnUnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
         {
         }
 

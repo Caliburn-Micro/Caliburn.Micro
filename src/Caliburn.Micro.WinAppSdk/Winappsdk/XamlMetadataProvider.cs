@@ -3,6 +3,8 @@
     using System.Collections.Generic;
     using Windows.UI.Xaml.Markup;
     using Windows.UI.Xaml;
+    using Microsoft.UI.Xaml.Markup;
+    using Microsoft.UI.Xaml;
 
     /// <summary>
     /// Implements XAML schema context concepts that support XAML parsing.
@@ -213,6 +215,8 @@
         public virtual IXamlType KeyType {
             get { throw new NotImplementedException(); }
         }
+
+        public IXamlType BoxedType => throw new NotImplementedException();
 
         public virtual object ActivateInstance() {
             throw new NotImplementedException();

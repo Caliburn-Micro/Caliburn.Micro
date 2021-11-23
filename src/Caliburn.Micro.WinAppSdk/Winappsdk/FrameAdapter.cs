@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 
 namespace Caliburn.Micro
 {
@@ -16,9 +17,9 @@ namespace Caliburn.Micro
     /// </summary>
     public class FrameAdapter : INavigationService, IDisposable
     {
-#if WINDOWS_UWP
+
         private SystemNavigationManager navigationManager;
-#endif 
+
         private static readonly ILog Log = LogManager.GetLog(typeof(FrameAdapter));
         private const string FrameStateKey = "FrameState";
         private const string ParameterKey = "ParameterKey";
@@ -43,15 +44,14 @@ namespace Caliburn.Micro
             this.frame.Navigating += OnNavigating;
             this.frame.Navigated += OnNavigated;
 
-#if WINDOWS_UWP
 
-            // This could leak memory if we're creating and destorying navigation services regularly.
+            // This could leak memory if we're creating and destroying navigation services regularly.
             // Another unlikely scenario though
 
             navigationManager = SystemNavigationManager.GetForCurrentView();
 
-            navigationManager.BackRequested += OnBackRequested;
-#endif
+         //   navigationManager.BackRequested += OnBackRequested;
+
         }
 
         /// <summary>

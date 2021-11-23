@@ -46,11 +46,8 @@
             if (navigationService == null) {
                 throw new InvalidOperationException("Cannot navigate without attaching an INavigationService. Call AttachTo first.");
             }
-#if WINDOWS_UWP
             navigationService.NavigateToViewModel<TViewModel>(uri.AbsoluteUri);
-#else
-            navigationService.Navigate(uri);
-#endif
+
         }
 
         /// <summary>

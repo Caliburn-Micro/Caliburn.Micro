@@ -13,12 +13,14 @@
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Markup;
     using Microsoft.UI.Xaml.Data;
+    using Microsoft.UI.Xaml.Controls;
 
     /// <summary>
     /// Used to send a message from the UI to a presentation model class, indicating that a particular Action should be invoked.
     /// </summary>
     [ContentProperty(Name = "Parameters")]
-    public class ActionMessage : TriggerAction<FrameworkElement>, IHaveParameters {
+    public class ActionMessage : TriggerAction<FrameworkElement>, IHaveParameters
+    {
         static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
         ActionExecutionContext context;
 
@@ -66,7 +68,8 @@
         /// <summary>
         /// Creates an instance of <see cref="ActionMessage"/>.
         /// </summary>
-        public ActionMessage() {
+        public ActionMessage()
+        {
             SetValue(ParametersProperty, new AttachedCollection<Parameter>());
         }
 
@@ -75,7 +78,8 @@
         /// </summary>
         /// <value>The name of the method.</value>
         [Category("Common Properties")]
-        public string MethodName {
+        public string MethodName
+        {
             get { return (string)GetValue(MethodNameProperty); }
             set { SetValue(MethodNameProperty, value); }
         }
@@ -84,7 +88,8 @@
         /// Gets the parameters to pass as part of the method invocation.
         /// </summary>
         /// <value>The parameters.</value>
-        public AttachedCollection<Parameter> Parameters {
+        public AttachedCollection<Parameter> Parameters
+        {
             get { return (AttachedCollection<Parameter>)GetValue(ParametersProperty); }
         }
 
@@ -96,13 +101,16 @@
         /// <summary>
         /// Called after the action is attached to an AssociatedObject.
         /// </summary>
-        protected override void OnAttached() {
-            if (!View.InDesignMode) {
+        protected override void OnAttached()
+        {
+            if (!View.InDesignMode)
+            {
                 Parameters.Attach(AssociatedObject);
                 Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
 
-                
-                if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded)) {
+
+                if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded))
+                {
                     // Not yet sure if this will be needed
                     //var trigger = Interaction.GetTriggers(AssociatedObject)
                     //    .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
@@ -121,15 +129,18 @@
             OnDetaching();
         }
 
-        static void HandlerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        static void HandlerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
             ((ActionMessage)d).UpdateContext();
         }
 
         /// <summary>
         /// Called when the action is being detached from its AssociatedObject, but before it has actually occurred.
         /// </summary>
-        protected override void OnDetaching() {
-            if (!View.InDesignMode) {
+        protected override void OnDetaching()
+        {
+            if (!View.InDesignMode)
+            {
                 Detaching(this, EventArgs.Empty);
                 AssociatedObject.Loaded -= ElementLoaded;
                 Parameters.Detach();
@@ -138,37 +149,41 @@
             base.OnDetaching();
         }
 
-        void ElementLoaded(object sender, RoutedEventArgs e) {
+        void ElementLoaded(object sender, RoutedEventArgs e)
+        {
             UpdateContext();
 
             DependencyObject currentElement;
-            if (context.View == null) {
+            if (context.View == null)
+            {
                 currentElement = AssociatedObject;
-                while (currentElement != null) {
+                while (currentElement != null)
+                {
                     if (Action.HasTargetSet(currentElement))
                         break;
 
                     currentElement = BindingScope.GetVisualParent(currentElement);
                 }
             }
-            else currentElement = context.View;
+            else
+                currentElement = context.View;
 
 
 
             const string bindingText = "<Binding xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation\' xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform' Path='(cal:Message.Handler)' />";
-            StringReader stringReader = new StringReader(bindingText);
-            XmlReader xmlReader = XmlReader.Create(stringReader);
-            var binding = (Binding)XamlReader.Load(xmlReader);
+            var binding = (Binding)XamlReader.Load(bindingText);
             binding.Source = currentElement;
 
             BindingOperations.SetBinding(this, HandlerProperty, binding);
         }
 
-        void UpdateContext() {
+        void UpdateContext()
+        {
             if (context != null)
                 context.Dispose();
 
-            context = new ActionExecutionContext {
+            context = new ActionExecutionContext
+            {
                 Message = this,
                 Source = AssociatedObject
             };
@@ -181,16 +196,20 @@
         /// Invokes the action.
         /// </summary>
         /// <param name="eventArgs">The parameter to the action. If the action does not require a parameter, the parameter may be set to a null reference.</param>
-        protected override void Invoke(object eventArgs) {
+        protected override void Invoke(object eventArgs)
+        {
             Log.Info("Invoking {0}.", this);
 
-            if (context == null) {
+            if (context == null)
+            {
                 UpdateContext();
             }
 
-            if (context.Target == null || context.View == null) {
+            if (context.Target == null || context.View == null)
+            {
                 PrepareContext(context);
-                if (context.Target == null) {
+                if (context.Target == null)
+                {
                     var ex = new Exception(string.Format("No target found for method {0}.", context.Message.MethodName));
                     Log.Error(ex);
 
@@ -199,12 +218,14 @@
                     throw ex;
                 }
 
-                if (!UpdateAvailabilityCore()) {
+                if (!UpdateAvailabilityCore())
+                {
                     return;
                 }
             }
 
-            if (context.Method == null) {
+            if (context.Method == null)
+            {
                 var ex = new Exception(string.Format("Method {0} not found on target of type {1}.", context.Message.MethodName, context.Target.GetType()));
                 Log.Error(ex);
 
@@ -215,7 +236,8 @@
 
             context.EventArgs = eventArgs;
 
-            if (EnforceGuardsDuringInvocation && context.CanExecute != null && !context.CanExecute()) {
+            if (EnforceGuardsDuringInvocation && context.CanExecute != null && !context.CanExecute())
+            {
                 return;
             }
 
@@ -226,7 +248,8 @@
         /// <summary>
         /// Forces an update of the UI's Enabled/Disabled state based on the the preconditions associated with the method.
         /// </summary>
-        public virtual void UpdateAvailability() {
+        public virtual void UpdateAvailability()
+        {
             if (context == null)
                 return;
 
@@ -236,7 +259,8 @@
             UpdateAvailabilityCore();
         }
 
-        bool UpdateAvailabilityCore() {
+        bool UpdateAvailabilityCore()
+        {
             Log.Info("{0} availability update.", this);
             return ApplyAvailabilityEffect(context);
         }
@@ -247,34 +271,40 @@
         /// <returns>
         /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
         /// </returns>
-        public override string ToString() {
+        public override string ToString()
+        {
             return "Action: " + MethodName;
         }
 
         /// <summary>
         /// Invokes the action using the specified <see cref="ActionExecutionContext"/>
         /// </summary>
-        public static Action<ActionExecutionContext> InvokeAction = context => {
+        public static Action<ActionExecutionContext> InvokeAction = context =>
+        {
             var values = MessageBinder.DetermineParameters(context, context.Method.GetParameters());
             var returnValue = context.Method.Invoke(context.Target, values);
 
             var task = returnValue as System.Threading.Tasks.Task;
-            if (task != null) {
+            if (task != null)
+            {
                 returnValue = task.AsResult();
             }
-            
+
             var result = returnValue as IResult;
-            if (result != null) {
+            if (result != null)
+            {
                 returnValue = new[] { result };
             }
 
             var enumerable = returnValue as IEnumerable<IResult>;
-            if (enumerable != null) {
+            if (enumerable != null)
+            {
                 returnValue = enumerable.GetEnumerator();
             }
 
             var enumerator = returnValue as IEnumerator<IResult>;
-            if (enumerator != null) {
+            if (enumerator != null)
+            {
                 Coroutine.BeginExecute(enumerator,
                     new CoroutineExecutionContext
                     {
@@ -289,17 +319,20 @@
         /// Applies an availability effect, such as IsEnabled, to an element.
         /// </summary>
         /// <remarks>Returns a value indicating whether or not the action is available.</remarks>
-        public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context => {
+        public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context =>
+        {
 
             var source = context.Source as Control;
 
-            if (source == null) {
+            if (source == null)
+            {
                 return true;
             }
 
             var hasBinding = ConventionManager.HasBinding(source, Control.IsEnabledProperty);
 
-            if (!hasBinding && context.CanExecute != null) {
+            if (!hasBinding && context.CanExecute != null)
+            {
                 source.IsEnabled = context.CanExecute();
             }
 
@@ -310,7 +343,8 @@
         /// Finds the method on the target matching the specified message.
         /// </summary>
         /// <returns>The matching method, if available.</returns>
-        public static Func<ActionMessage, object, MethodInfo> GetTargetMethod = (message, target) => {
+        public static Func<ActionMessage, object, MethodInfo> GetTargetMethod = (message, target) =>
+        {
             return (from method in target.GetType().GetRuntimeMethods()
                     where method.Name == message.MethodName
                     let methodParameters = method.GetParameters()
@@ -322,23 +356,29 @@
         /// <summary>
         /// Sets the target, method and view on the context. Uses a bubbling strategy by default.
         /// </summary>
-        public static Action<ActionExecutionContext> SetMethodBinding = context => {
+        public static Action<ActionExecutionContext> SetMethodBinding = context =>
+        {
             var source = context.Source;
 
             DependencyObject currentElement = source;
-            while (currentElement != null) {
-                if (Action.HasTargetSet(currentElement)) {
+            while (currentElement != null)
+            {
+                if (Action.HasTargetSet(currentElement))
+                {
                     var target = Message.GetHandler(currentElement);
-                    if (target != null) {
+                    if (target != null)
+                    {
                         var method = GetTargetMethod(context.Message, target);
-                        if (method != null) {
+                        if (method != null)
+                        {
                             context.Method = method;
                             context.Target = target;
                             context.View = currentElement;
                             return;
                         }
                     }
-                    else {
+                    else
+                    {
                         context.View = currentElement;
                         return;
                     }
@@ -347,11 +387,13 @@
                 currentElement = BindingScope.GetVisualParent(currentElement);
             }
 
-            if (source != null && source.DataContext != null) {
+            if (source != null && source.DataContext != null)
+            {
                 var target = source.DataContext;
                 var method = GetTargetMethod(context.Message, target);
 
-                if (method != null) {
+                if (method != null)
+                {
                     context.Target = target;
                     context.Method = method;
                     context.View = source;
@@ -362,7 +404,8 @@
         /// <summary>
         /// Prepares the action execution context for use.
         /// </summary>
-        public static Action<ActionExecutionContext> PrepareContext = context => {
+        public static Action<ActionExecutionContext> PrepareContext = context =>
+        {
             SetMethodBinding(context);
             if (context.Target == null || context.Method == null)
             {
@@ -384,17 +427,20 @@
                 {
                     matchingGuardName = possibleGuardName;
                     guard = GetMethodInfo(targetType, "get_" + matchingGuardName);
-                    if (guard != null) break;
+                    if (guard != null)
+                        break;
                 }
 
                 if (guard == null)
                     return;
 
                 PropertyChangedEventHandler handler = null;
-                handler = (s, e) => {
+                handler = (s, e) =>
+                {
                     if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == matchingGuardName)
                     {
-                        Caliburn.Micro.Execute.OnUIThread(() => {
+                        Caliburn.Micro.Execute.OnUIThread(() =>
+                        {
                             var message = context.Message;
                             if (message == null)
                             {
@@ -407,8 +453,10 @@
                 };
 
                 inpc.PropertyChanged += handler;
-                context.Disposing += delegate { inpc.PropertyChanged -= handler; };
-                context.Message.Detaching += delegate { inpc.PropertyChanged -= handler; };
+                context.Disposing += delegate
+                { inpc.PropertyChanged -= handler; };
+                context.Message.Detaching += delegate
+                { inpc.PropertyChanged -= handler; };
             }
 
             context.CanExecute = () => (bool)guard.Invoke(
@@ -426,23 +474,30 @@
         /// <param name="context">The execution context</param>
         /// <param name="possibleGuardNames">Method names to look for.</param>
         ///<returns>A MethodInfo, if found; null otherwise</returns>
-        static MethodInfo TryFindGuardMethod(ActionExecutionContext context, IEnumerable<string> possibleGuardNames) {
+        static MethodInfo TryFindGuardMethod(ActionExecutionContext context, IEnumerable<string> possibleGuardNames)
+        {
             var targetType = context.Target.GetType();
             MethodInfo guard = null;
             foreach (string possibleGuardName in possibleGuardNames)
             {
                 guard = GetMethodInfo(targetType, possibleGuardName);
-                if (guard != null) break;
+                if (guard != null)
+                    break;
             }
 
-            if (guard == null) return null;
-            if (guard.ContainsGenericParameters) return null;
-            if (!typeof(bool).Equals(guard.ReturnType)) return null;
+            if (guard == null)
+                return null;
+            if (guard.ContainsGenericParameters)
+                return null;
+            if (!typeof(bool).Equals(guard.ReturnType))
+                return null;
 
             var guardPars = guard.GetParameters();
             var actionPars = context.Method.GetParameters();
-            if (guardPars.Length == 0) return guard;
-            if (guardPars.Length != actionPars.Length) return null;
+            if (guardPars.Length == 0)
+                return guard;
+            if (guardPars.Length != actionPars.Length)
+                return null;
 
             var comparisons = guardPars.Zip(
                 context.Method.GetParameters(),
@@ -460,7 +515,8 @@
         /// <summary>
         /// Returns the list of possible names of guard methods / properties for the given method.
         /// </summary>
-        public static Func<MethodInfo, IEnumerable<string>> BuildPossibleGuardNames = method => {
+        public static Func<MethodInfo, IEnumerable<string>> BuildPossibleGuardNames = method =>
+        {
 
             var guardNames = new List<string>();
 
@@ -472,7 +528,8 @@
 
             const string AsyncMethodSuffix = "Async";
 
-            if (methodName.EndsWith(AsyncMethodSuffix, StringComparison.OrdinalIgnoreCase)) {
+            if (methodName.EndsWith(AsyncMethodSuffix, StringComparison.OrdinalIgnoreCase))
+            {
                 guardNames.Add(GuardPrefix + methodName.Substring(0, methodName.Length - AsyncMethodSuffix.Length));
             }
 

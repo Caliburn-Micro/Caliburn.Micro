@@ -162,12 +162,9 @@ namespace Caliburn.Micro
         /// <param name="type">The type.</param>
         /// <returns>The default value.</returns>
         public static object GetDefaultValue(Type type) {
-#if WINDOWS_UWP || XFORMS
             var typeInfo = type.GetTypeInfo();
             return typeInfo.IsClass || typeInfo.IsInterface ? null : System.Activator.CreateInstance(type);
-#else
-            return type.IsClass || type.IsInterface ? null : Activator.CreateInstance(type);
-#endif
+
         }
     }
 }

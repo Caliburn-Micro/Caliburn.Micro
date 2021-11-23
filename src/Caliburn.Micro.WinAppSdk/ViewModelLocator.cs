@@ -9,6 +9,7 @@ namespace Caliburn.Micro
     using System.Text.RegularExpressions;
     using System.Windows;
     using System.Collections.Generic;
+    using Microsoft.UI.Xaml;
 
 #if WINDOWS_UWP
     using Windows.UI.Xaml;
@@ -404,17 +405,7 @@ namespace Caliburn.Micro
                 return null;
             }
 
-#if ANDROID || IOS
-             return LocateForViewType(view.GetType());
-#elif XFORMS
-            var frameworkElement = view as UIElement;
-            if (frameworkElement != null && frameworkElement.BindingContext != null)
-            {
-                return frameworkElement.BindingContext;
-            }
 
-            return LocateForViewType(view.GetType());
-#else
             var frameworkElement = view as FrameworkElement;
             if (frameworkElement != null && frameworkElement.DataContext != null)
             {
@@ -422,7 +413,6 @@ namespace Caliburn.Micro
             }
 
             return LocateForViewType(view.GetType());
-#endif
         };
     }
 }

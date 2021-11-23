@@ -6,6 +6,7 @@
     using Windows.UI.Xaml;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
     using Microsoft.UI.Xaml;
+    using Microsoft.Xaml.Interactivity;
 
 
 

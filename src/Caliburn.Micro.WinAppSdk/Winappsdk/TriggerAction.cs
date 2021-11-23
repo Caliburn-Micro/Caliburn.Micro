@@ -1,4 +1,5 @@
 ﻿namespace Caliburn.Micro {
+    using Microsoft.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
     using Windows.UI.Xaml;
 

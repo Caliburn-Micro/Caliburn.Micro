@@ -1,6 +1,6 @@
 ﻿namespace Caliburn.Micro {
     using System;
-    using Windows.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Controls;
 
     /// <summary>
     /// A custom IoC container which integrates with WinRT and properly registers all Caliburn.Micro services.
@@ -30,13 +30,10 @@
 
             if (rootFrame == null)
                 throw new ArgumentNullException("rootFrame");
-#if WINDOWS_UWP
             var frameAdapter = cacheViewModels ? (INavigationService)
                 new CachingFrameAdapter(rootFrame, treatViewAsLoaded) : 
                 new FrameAdapter(rootFrame, treatViewAsLoaded);
-#else
-            var frameAdapter = new FrameAdapter(rootFrame, treatViewAsLoaded);
-#endif
+
 
             RegisterInstance(typeof (INavigationService), null, frameAdapter);
 
@@ -57,28 +54,6 @@
             return sharingService;
         }
 
-#if !WINDOWS_UWP
-        /// <summary>
-        /// Registers the Caliburn.Micro settings service with the container.
-        /// </summary>
 
-        public ISettingsService RegisterSettingsService() {
-            if (HasHandler(typeof (ISettingsService), null))
-                return this.GetInstance<ISettingsService>(null);
-
-            if (!HasHandler(typeof (ISettingsWindowManager), null))
-#if WINDOWS_UWP
-                RegisterInstance(typeof (ISettingsWindowManager), null, new SettingsWindowManager());
-#else
-                RegisterInstance(typeof(ISettingsWindowManager), null, new CallistoSettingsWindowManager());
-#endif
-
-            var settingsService =
-                new SettingsService((ISettingsWindowManager) GetInstance(typeof (ISettingsWindowManager), null));
-            RegisterInstance(typeof (ISettingsService), null, settingsService);
-
-            return settingsService;
-        }
-#endif
     }
 }
