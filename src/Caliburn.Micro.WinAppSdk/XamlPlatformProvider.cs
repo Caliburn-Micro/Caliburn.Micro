@@ -1,4 +1,5 @@
-﻿namespace Caliburn.Micro {
+﻿namespace Caliburn.Micro
+{
     using System;
     using System.Collections.Generic;
     using System.Reflection;
@@ -8,23 +9,26 @@
     using Windows.UI.Core;
     using Windows.UI.Xaml;
     using Microsoft.UI.Xaml;
+    using Microsoft.UI.Dispatching;
 
 
     /// <summary>
     /// A <see cref="IPlatformProvider"/> implementation for the XAML platfrom.
     /// </summary>
-    public class XamlPlatformProvider : IPlatformProvider {
+    public class XamlPlatformProvider : IPlatformProvider
+    {
 
-        private CoreDispatcher dispatcher;
+        private DispatcherQueue dispatcher;
         private static readonly ILog Log = LogManager.GetLog(typeof(XamlPlatformProvider));
 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XamlPlatformProvider"/> class.
         /// </summary>
-        public XamlPlatformProvider() {
+        public XamlPlatformProvider()
+        {
             Log.Info("XamlPlatformProvider");
-            dispatcher = Window.Current.Dispatcher;
+            dispatcher = DispatcherQueue.GetForCurrentThread();
             Log.Info("XamlPlatformProvider got dispatcher");
 
         }
@@ -37,16 +41,19 @@
         /// <summary>
         /// Indicates whether or not the framework is in design-time mode.
         /// </summary>
-        public virtual bool InDesignMode {
+        public virtual bool InDesignMode
+        {
             get { return View.InDesignMode; }
         }
 
-        private void ValidateDispatcher() {
+        private void ValidateDispatcher()
+        {
             if (dispatcher == null)
                 throw new InvalidOperationException("Not initialized with dispatcher.");
         }
 
-        private bool CheckAccess() {
+        private bool CheckAccess()
+        {
             return dispatcher == null || Window.Current != null;
         }
 
@@ -54,7 +61,8 @@
         /// Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        public virtual void BeginOnUIThread(System.Action action) {
+        public virtual void BeginOnUIThread(System.Action action)
+        {
             ValidateDispatcher();
             var dummy = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
 
@@ -65,7 +73,8 @@
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <returns></returns>
-        public virtual Task OnUIThreadAsync(Func<Task> action) {
+        public virtual Task OnUIThreadAsync(Func<Task> action)
+        {
             ValidateDispatcher();
             return dispatcher.RunTaskAsync(action);
 
@@ -76,10 +85,12 @@
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public virtual void OnUIThread(System.Action action) {
+        public virtual void OnUIThread(System.Action action)
+        {
             if (CheckAccess())
                 action();
-            else {
+            else
+            {
                 dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask().Wait();
             }
         }
@@ -97,14 +108,15 @@
         /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
         /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was.
         /// </remarks>
-        public virtual object GetFirstNonGeneratedView(object view) {
+        public virtual object GetFirstNonGeneratedView(object view)
+        {
             return View.GetFirstNonGeneratedView(view);
         }
 
         private static readonly DependencyProperty PreviouslyAttachedProperty = DependencyProperty.RegisterAttached(
             "PreviouslyAttached",
-            typeof (bool),
-            typeof (XamlPlatformProvider),
+            typeof(bool),
+            typeof(XamlPlatformProvider),
             null
             );
 
@@ -113,9 +125,11 @@
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public virtual void ExecuteOnFirstLoad(object view, Action<object> handler) {
+        public virtual void ExecuteOnFirstLoad(object view, Action<object> handler)
+        {
             var element = view as FrameworkElement;
-            if (element != null && !(bool) element.GetValue(PreviouslyAttachedProperty)) {
+            if (element != null && !(bool)element.GetValue(PreviouslyAttachedProperty))
+            {
                 element.SetValue(PreviouslyAttachedProperty, true);
                 View.ExecuteOnLoad(element, (s, e) => handler(s));
             }
@@ -126,9 +140,11 @@
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler) {
+        public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler)
+        {
             var element = view as FrameworkElement;
-            if (element != null) {
+            if (element != null)
+            {
                 View.ExecuteOnLayoutUpdated(element, (s, e) => handler(s));
             }
         }
@@ -145,18 +161,21 @@
         /// <exception cref="System.NotImplementedException"></exception>
         public virtual Func<CancellationToken, Task> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
         {
-            foreach (var contextualView in views) {
+            foreach (var contextualView in views)
+            {
                 var viewType = contextualView.GetType();
                 var closeMethod = viewType.GetRuntimeMethod("Close", new Type[0]);
 
                 if (closeMethod != null)
-                    return ct => {
+                    return ct =>
+                    {
                         closeMethod.Invoke(contextualView, null);
                         return Task.FromResult(true);
                     };
 
                 var isOpenProperty = viewType.GetRuntimeProperty("IsOpen");
-                if (isOpenProperty != null) {
+                if (isOpenProperty != null)
+                {
                     return ct =>
                     {
                         isOpenProperty.SetValue(contextualView, false, null);
