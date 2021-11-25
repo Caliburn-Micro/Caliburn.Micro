@@ -16,6 +16,7 @@ namespace Caliburn.Micro
     public abstract class CaliburnApplication : Application
     {
         private bool isInitialized;
+        private static readonly ILog Log = LogManager.GetLog(typeof(CaliburnApplication));
 
         /// <summary>
         /// The root frame of the application.
@@ -57,6 +58,7 @@ namespace Caliburn.Micro
         /// </summary>
         protected void Initialize()
         {
+            Log.Info("Initialize");
             if (isInitialized)
             {
                 return;
@@ -64,8 +66,9 @@ namespace Caliburn.Micro
 
             isInitialized = true;
 
+            Log.Info("PlatformProvider.Current");
             PlatformProvider.Current = new XamlPlatformProvider();
-
+            Log.Info("baseExtractTypes");
             var baseExtractTypes = AssemblySourceCache.ExtractTypes;
 
             AssemblySourceCache.ExtractTypes = assembly =>

@@ -7,7 +7,7 @@ namespace Caliburn.Micro
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Data;
 
-
+    
 
     /// <summary>
     ///   Hosts dependency properties for binding.

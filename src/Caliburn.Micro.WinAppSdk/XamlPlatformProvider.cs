@@ -16,13 +16,16 @@
     public class XamlPlatformProvider : IPlatformProvider {
 
         private CoreDispatcher dispatcher;
+        private static readonly ILog Log = LogManager.GetLog(typeof(XamlPlatformProvider));
 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XamlPlatformProvider"/> class.
         /// </summary>
         public XamlPlatformProvider() {
+            Log.Info("XamlPlatformProvider");
             dispatcher = Window.Current.Dispatcher;
+            Log.Info("XamlPlatformProvider got dispatcher");
 
         }
 
