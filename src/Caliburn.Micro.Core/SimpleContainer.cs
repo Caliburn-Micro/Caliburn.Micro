@@ -14,6 +14,7 @@ namespace Caliburn.Micro
         private static readonly Type delegateType = typeof(Delegate);
         private static readonly Type enumerableType = typeof(IEnumerable);
         private readonly List<ContainerEntry> entries;
+        private static readonly ILog Log = LogManager.GetLog(typeof(SimpleContainer));
 
         /// <summary>
         ///   Initializes a new instance of the <see cref = "SimpleContainer" /> class.
@@ -41,7 +42,10 @@ namespace Caliburn.Micro
         /// <param name = "implementation">The implementation.</param>
         public void RegisterInstance(Type service, string key, object implementation)
         {
+            Log.Info($"Register Instance {service.ToString()}");
             RegisterHandler(service, key, container => implementation);
+            Log.Info("Register Instance done");
+
         }
 
         /// <summary>
@@ -154,7 +158,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="service">The service.</param>
         /// <param name="key">The key.</param>
-        /// <returns>True if a handler is registere; false otherwise.</returns>
+        /// <returns>True if a handler is registered false otherwise.</returns>
         public bool HasHandler(Type service, string key)
         {
             return GetEntry(service, key) != null;

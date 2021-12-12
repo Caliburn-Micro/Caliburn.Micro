@@ -10,18 +10,20 @@
     <UseWinUI>true</UseWinUI>
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
     <LangVersion>latest</LangVersion>
+    <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-    <Optimize>True</Optimize>
+    <Optimize>False</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Optimize>True</Optimize>
+    <Optimize>False</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm64'">
-    <Optimize>True</Optimize>
+    <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Views\HomeView.xaml" />
+    <None Remove="Views\ShellView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +39,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.8" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -50,6 +53,11 @@
     <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
     <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
     <ProjectReference Include="..\Caliburn.Micro.WinAppSdk\Caliburn.Micro.WinAppSdk.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\ShellView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\HomeView.xaml">

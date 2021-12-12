@@ -21,6 +21,7 @@ namespace Caliburn.Micro
         /// </summary>
         public Screen()
         {
+            Log.Debug("screen constructor");
             _displayName = GetType().FullName;
         }
 
@@ -95,6 +96,7 @@ namespace Caliburn.Micro
 
         async Task IActivate.ActivateAsync(CancellationToken cancellationToken)
         {
+            Log.Debug("ActiveateAsync");
             if (IsActive)
                 return;
 

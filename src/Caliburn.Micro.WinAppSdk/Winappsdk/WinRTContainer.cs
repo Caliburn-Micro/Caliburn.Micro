@@ -6,14 +6,18 @@
     /// A custom IoC container which integrates with WinRT and properly registers all Caliburn.Micro services.
     /// </summary>
     public class WinRTContainer : SimpleContainer {
+
+        private static readonly ILog Log = LogManager.GetLog(typeof(WinRTContainer));
+
+
         /// <summary>
         /// Registers the Caliburn.Micro WinRT services with the container.
         /// </summary>
         public void RegisterWinRTServices() {
             RegisterInstance(typeof (SimpleContainer), null, this);
             RegisterInstance(typeof (WinRTContainer), null, this);
-
-            if (!HasHandler(typeof (IEventAggregator), null)) {
+            var evnt = !HasHandler(typeof(IEventAggregator), null);
+            if (evnt) {
                 RegisterSingleton(typeof (IEventAggregator), null, typeof (EventAggregator));
             }
         }
@@ -25,17 +29,27 @@
         /// <param name="treatViewAsLoaded">if set to <c>true</c> [treat view as loaded].</param>
         /// <param name="cacheViewModels">if set to <c>true</c> then navigation service cache view models for resuse.</param>
         public INavigationService RegisterNavigationService(Frame rootFrame, bool treatViewAsLoaded = false, bool cacheViewModels = false) {
+            Log.Info("Navigation service Has Handler");
             if (HasHandler(typeof (INavigationService), null))
                 return this.GetInstance<INavigationService>(null);
+            Log.Info("Navigation service check for rootFrame");
 
             if (rootFrame == null)
                 throw new ArgumentNullException("rootFrame");
+            Log.Info("Navigation service frameAdapter");
+            Log.Info(cacheViewModels.ToString());
             var frameAdapter = cacheViewModels ? (INavigationService)
                 new CachingFrameAdapter(rootFrame, treatViewAsLoaded) : 
                 new FrameAdapter(rootFrame, treatViewAsLoaded);
 
-
+            Log.Info("Navigation service Register Instance");
+            if (frameAdapter == null)
+            { 
+                Log.Info("frameAdapter is null");
+            }
             RegisterInstance(typeof (INavigationService), null, frameAdapter);
+
+            Log.Info("Navigation service return frameadapter");
 
             return frameAdapter;
         }

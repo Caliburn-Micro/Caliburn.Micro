@@ -4,7 +4,7 @@
     using System.Reflection;
     using Microsoft.UI.Xaml;
     using Windows.UI.Xaml;
-    using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
+    //using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
 
 
     /// <summary>

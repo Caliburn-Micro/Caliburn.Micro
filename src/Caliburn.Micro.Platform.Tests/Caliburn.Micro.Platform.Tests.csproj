@@ -13,7 +13,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Moq" Version="4.15.2" />
+    <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="Xunit.StaFact" Version="0.2.17" />
   </ItemGroup>
 

@@ -1,13 +1,13 @@
 ﻿namespace Caliburn.Micro {
     using Microsoft.UI.Xaml;
-    using Microsoft.Xaml.Interactivity;
+    //using Microsoft.Xaml.Interactivity;
     using Windows.UI.Xaml;
 
     /// <summary>
     /// Represents an attachable object that encapsulates a unit of functionality.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class TriggerAction<T> : DependencyObject, IAction {
+    public abstract class TriggerAction<T> : DependencyObject/*, IAction */{
         /// <summary>
         /// The associated object property.
         /// </summary>

@@ -21,6 +21,8 @@ namespace Caliburn.Micro
         /// <param name="args">Parameters to be injected into the formatted message.</param>
         void Warn(string format, params object[] args);
 
+        void Debug(string format, params object[] args);
+
         /// <summary>
         /// Logs the exception.
         /// </summary>

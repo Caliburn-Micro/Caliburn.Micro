@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -27,53 +28,180 @@ namespace Caliburn.Micro.WinAppSdk.Test
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    public partial class App : CaliburnApplication
+    public partial class App : Application
     {
         private WinRTContainer container;
+        private bool isInitialized;
 
         public App()
         {
             Trace.WriteLine("App start");
-            LogManager.GetLog = type => new DebugLogger(type);
+            LogManager.GetLog = type => new DebugLog(type);
             Initialize();
+            Trace.WriteLine("Initialize done");
             InitializeComponent();
+            Trace.WriteLine("Initialize component done");
         }
 
-        protected override void Configure()
-        { 
-            Trace.WriteLine("Configure");
-            container = new WinRTContainer();
-
-            container.RegisterWinRTServices();
-
-            container.PerRequest<HomeViewModel>();
-        }
-
-        protected override void PrepareViewFirst(Frame rootFrame)
+        /// <summary>
+        /// Start the framework.
+        /// </summary>
+        protected void Initialize()
         {
-            Trace.WriteLine("PrepareViewFirst");
-            container.RegisterNavigationService(rootFrame);
+            Trace.WriteLine("Initialize");
+            if (isInitialized)
+            {
+                Trace.WriteLine("Already initialized");
+                return;
+            }
+
+            isInitialized = true;
+
+            Trace.WriteLine("PlatformProvider.Current");
+            PlatformProvider.Current = new XamlPlatformProvider();
+            Trace.WriteLine("baseExtractTypes");
+            var baseExtractTypes = AssemblySourceCache.ExtractTypes;
+
+            AssemblySourceCache.ExtractTypes = assembly =>
+            {
+                var baseTypes = baseExtractTypes(assembly);
+                var elementTypes = assembly.GetExportedTypes()
+                    .Where(t => typeof(UIElement).IsAssignableFrom(t));
+
+                return baseTypes.Union(elementTypes);
+            };
+
+            AssemblySource.Instance.Refresh();
+
+
+            if (Execute.InDesignMode)
+            {
+                try
+                {
+                    StartDesignTime();
+                }
+                catch
+                {
+                    //if something fails at design-time, there's really nothing we can do...
+                    isInitialized = false;
+                    throw;
+                }
+            }
+            else
+            {
+                StartRuntime();
+            }
+            Trace.WriteLine("Intitialize done");
         }
+
+        /// <summary>
+        /// Called by the bootstrapper's constructor at design time to start the framework.
+        /// </summary>
+        protected virtual void StartDesignTime()
+        {
+            AssemblySource.Instance.Clear();
+            AssemblySource.AddRange(SelectAssemblies());
+
+            Configure();
+            IoC.GetInstance = GetInstance;
+            IoC.GetAllInstances = GetAllInstances;
+            IoC.BuildUp = BuildUp;
+        }
+        /// <summary>
+        /// Override to tell the framework where to find assemblies to inspect for views, etc.
+        /// </summary>
+        /// <returns>A list of assemblies to inspect.</returns>
+        protected virtual IEnumerable<Assembly> SelectAssemblies()
+        {
+            return new[] { GetType().GetTypeInfo().Assembly };
+        }
+
+
+        /// <summary>
+        /// Called by the bootstrapper's constructor at runtime to start the framework.
+        /// </summary>
+        protected virtual void StartRuntime()
+        {
+            AssemblySourceCache.Install();
+            AssemblySource.AddRange(SelectAssemblies());
+            Trace.WriteLine("Start Runtime Prepare application");
+            //PrepareApplication();
+            Trace.WriteLine("Start Runtime Prepare configure");
+            Configure();
+            Trace.WriteLine("Start Runtime IoC GetInstance");
+
+            IoC.GetInstance = GetInstance;
+            Trace.WriteLine("Start Runtime IoC GetAllInstances");
+            IoC.GetAllInstances = GetAllInstances;
+            Trace.WriteLine("Start Runtime BuildUp");
+            IoC.BuildUp = BuildUp;
+            Trace.WriteLine("Buildup done");
+        }
+
 
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            Trace.WriteLine("OnLaunched");
-            DisplayRootView<HomeView>();
+            base.OnLaunched(args);
+            PlatformProvider.Current = new XamlPlatformProvider();
+        }
+        protected void Configure()
+        {
+            Trace.WriteLine("Configure");
+            container = new WinRTContainer();
+            Trace.WriteLine("Configure after new");
+
+            container.RegisterWinRTServices();
+            Trace.WriteLine("Configure after register");
+
+            container.PerRequest<ShellViewModel>();
+            container.PerRequest<HomeViewModel>();
+            container.PerRequest<ShellView>();
+            container.PerRequest<HomeView>();
+            Trace.WriteLine("Configure after HomeViewModel");
+
+
         }
 
-        protected override object GetInstance(Type service, string key)
+        //protected void OnUnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+        //{
+        //    base.OnUnhandledException(sender, e);
+        //    Trace.WriteLine("Unhandled exception");
+        //    Trace.WriteLine(e.Message);
+        //    Trace.WriteLine(e.Exception.Source);
+        //    Trace.WriteLine(e.Exception.StackTrace);
+        //}
+        protected void PrepareViewFirst(Frame rootFrame)
         {
+            Trace.WriteLine("PrepareViewFirst");
+            container.RegisterNavigationService(rootFrame);
+            Trace.WriteLine("PrepareViewFirst registered navigation service");
+        }
+
+        //protected async override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        //{
+        //    Trace.WriteLine("OnLaunched");
+        //    await DisplayRootViewForAsync<ShellView>();
+        //    Trace.WriteLine("On launched shell view displayed");
+        //}
+
+        protected  object GetInstance(Type service, string key)
+        {
+            Trace.WriteLine("GetInstance");
             return container.GetInstance(service, key);
         }
 
-        protected override IEnumerable<object> GetAllInstances(Type service)
+        protected  IEnumerable<object> GetAllInstances(Type service)
         {
             return container.GetAllInstances(service);
         }
 
-        protected override void BuildUp(object instance)
+        protected void BuildUp(object instance)
         {
+            Trace.WriteLine("BuildUp");
+
             container.BuildUp(instance);
+            Trace.WriteLine("BuildUp done");
+
         }
     }
 }

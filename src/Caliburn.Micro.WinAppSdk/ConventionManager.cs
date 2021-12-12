@@ -6,7 +6,7 @@
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Data;
     using Windows.UI.Xaml.Markup;
-    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+  //  using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
     using Microsoft.UI.Xaml.Markup;
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Controls;
@@ -233,7 +233,7 @@
                 ElementType = typeof(T),
                 GetBindableProperty = element => bindableProperty,
                 ParameterProperty = parameterProperty,
-                CreateTrigger = () => new EventTrigger { EventName = eventName }
+                CreateTrigger = () => new EventTrigger()// { EventName = eventName }
             });
         }
 

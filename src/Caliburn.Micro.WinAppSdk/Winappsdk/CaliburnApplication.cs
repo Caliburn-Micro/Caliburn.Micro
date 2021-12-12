@@ -44,13 +44,18 @@ namespace Caliburn.Micro
         {
             AssemblySourceCache.Install();
             AssemblySource.AddRange(SelectAssemblies());
-
+            Log.Debug("Start Runtime Prepare application");
             PrepareApplication();
+            Log.Debug("Start Runtime Prepare configure");
             Configure();
+            Log.Debug("Start Runtime IoC GetInstance");
 
             IoC.GetInstance = GetInstance;
+            Log.Debug("Start Runtime IoC GetAllInstances");
             IoC.GetAllInstances = GetAllInstances;
+            Log.Debug("Start Runtime BuildUp");
             IoC.BuildUp = BuildUp;
+            Log.Debug("Buildup done");
         }
 
         /// <summary>
@@ -61,6 +66,7 @@ namespace Caliburn.Micro
             Log.Info("Initialize");
             if (isInitialized)
             {
+                Log.Debug("Already initialized");
                 return;
             }
 
@@ -100,6 +106,7 @@ namespace Caliburn.Micro
             {
                 StartRuntime();
             }
+            Log.Debug("Intitialize done");
         }
 
 
@@ -228,6 +235,7 @@ namespace Caliburn.Micro
         /// <param name="paramter">The object parameter to pass to the target.</param>
         protected void DisplayRootView(Type viewType, object paramter = null)
         {
+            Log.Debug("DisplayRootView");
             Initialize();
 
             PrepareViewFirst();
@@ -248,6 +256,7 @@ namespace Caliburn.Micro
         /// <param name="parameter">The object parameter to pass to the target.</param>
         protected void DisplayRootView<T>(object parameter = null)
         {
+            Log.Info("DisplayRootView start");
             DisplayRootView(typeof(T), parameter);
         }
 
@@ -259,18 +268,27 @@ namespace Caliburn.Micro
         /// <returns>A task that represents the asynchronous operation.</returns>
         protected async Task DisplayRootViewForAsync(Type viewModelType, CancellationToken cancellationToken)
         {
+            Log.Debug("Display root view for async initialize");
             Initialize();
 
+            Log.Debug($"Ioc get instance {viewModelType.ToString()}");
             var viewModel = IoC.GetInstance(viewModelType, null);
+            Log.Debug("ViewLocator Locate for model");
             var view = ViewLocator.LocateForModel(viewModel, null, null);
 
+            Log.Debug("Display root view for async bind");
             ViewModelBinder.Bind(viewModel, view, null);
 
             if (viewModel is IActivate activator)
                 await activator.ActivateAsync(cancellationToken);
+            Log.Debug("Display root view for async current");
 
             Window.Current.Content = view;
+            Log.Debug("Display root view for async activate");
+
             Window.Current.Activate();
+            Log.Debug("Display root view for async done");
+
         }
 
         /// <summary>
@@ -288,6 +306,7 @@ namespace Caliburn.Micro
         /// <returns>A task that represents the asynchronous operation.</returns>
         protected Task DisplayRootViewForAsync<T>(CancellationToken cancellationToken)
         {
+            Log.Debug("DisplayRootViewForAsync start");
             return DisplayRootViewForAsync(typeof(T), cancellationToken);
         }
 

@@ -1,53 +1,53 @@
-﻿#define DEBUG
-
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Caliburn.Micro
 {
-    /// <summary>
-    ///   A simple logger thats logs everything to the debugger.
-    /// </summary>
     public class DebugLog : ILog
     {
-        private readonly string typeName;
+        private const string ErrorText = "ERROR";
+        private const string WarnText = "WARN";
+        private const string InfoText = "INFO";
+        private const string DebugText = "DEBUG";
+        private readonly Type logType;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DebugLog"/> class.
-        /// </summary>
-        /// <param name="type">The type.</param>
         public DebugLog(Type type)
         {
-            typeName = type.FullName;
+            logType = type;
         }
-
-        /// <summary>
-        /// Logs the message as info.
-        /// </summary>
-        /// <param name="format">A formatted message.</param>
-        /// <param name="args">Parameters to be injected into the formatted message.</param>
-        public void Info(string format, params object[] args)
+        private string CreateLogMessage(string format, params object[] args)
         {
-            Debug.WriteLine("[{1}] INFO: {0}", string.Format(format, args), typeName);
+            return string.Format("[{0}] {1}", DateTime.Now.ToString("o"), string.Format(format, args));
         }
 
-        /// <summary>
-        /// Logs the message as a warning.
-        /// </summary>
-        /// <param name="format">A formatted message.</param>
-        /// <param name="args">Parameters to be injected into the formatted message.</param>
-        public void Warn(string format, params object[] args)
-        {
-            Debug.WriteLine("[{1}] WARN: {0}", string.Format(format, args), typeName);
-        }
-
-        /// <summary>
-        /// Logs the exception.
-        /// </summary>
-        /// <param name="exception">The exception.</param>
         public void Error(Exception exception)
         {
-            Debug.WriteLine("[{1}] ERROR: {0}", exception, typeName);
+            Trace.WriteLine(CreateLogMessage(exception.ToString()), ErrorText);
         }
+
+        public void Info(string format, params object[] args)
+        {
+            Trace.WriteLine(CreateLogMessage(format, args), InfoText);
+        }
+        public void Warn(string format, params object[] args)
+        {
+            Trace.WriteLine(CreateLogMessage(format, args), WarnText);
+        }
+
+        public void Error(string format, params object[] args)
+        {
+            Trace.WriteLine(CreateLogMessage(format, args), ErrorText);
+        }
+
+
+        public void Debug(string format, params object[] args)
+        {
+            Trace.WriteLine(CreateLogMessage(format, args), DebugText);
+        }
+
     }
 }

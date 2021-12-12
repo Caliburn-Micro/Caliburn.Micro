@@ -64,8 +64,10 @@
         public virtual void BeginOnUIThread(System.Action action)
         {
             ValidateDispatcher();
-            var dummy = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
-
+            dispatcher.TryEnqueue(() =>
+            {
+                action.Invoke();
+            });
         }
 
         /// <summary>
@@ -76,8 +78,12 @@
         public virtual Task OnUIThreadAsync(Func<Task> action)
         {
             ValidateDispatcher();
-            return dispatcher.RunTaskAsync(action);
-
+            Task task = null;
+            dispatcher.TryEnqueue(() =>
+            {
+                task = action.Invoke();
+            });
+            return task;
         }
 
         /// <summary>
@@ -91,7 +97,26 @@
                 action();
             else
             {
-                dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask().Wait();
+
+                Exception exception = null;
+                System.Action method = () => {
+                    try
+                    {
+                        action();
+                    }
+                    catch (Exception ex)
+                    {
+                        exception = ex;
+                    }
+                };
+                dispatcher.TryEnqueue(() =>
+                {
+                    method.Invoke();
+                });
+
+                if (exception != null)
+                    throw new System.Reflection.TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
+
             }
         }
 

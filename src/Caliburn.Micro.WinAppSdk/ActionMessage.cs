@@ -5,8 +5,8 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
-    using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
-    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    //using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
+    //using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
 
     using System.IO;
     using System.Xml;

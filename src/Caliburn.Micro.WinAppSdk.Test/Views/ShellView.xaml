@@ -1,12 +1,14 @@
-﻿<Page
-    x:Class="Caliburn.Micro.WinAppSdk.Test.Views.HomeView"
+﻿<Window
+    x:Class="Caliburn.Micro.WinAppSdk.Test.Views.ShellView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Caliburn.Micro.WinAppSdk.Test.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cm="http://caliburnmicro.com"
     mc:Ignorable="d">
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton">Click Me</Button>
-    </StackPanel>
-</Page>
+
+    <Grid>
+       <TextBlock Text="testing"></TextBlock>
+    </Grid>
+</Window>

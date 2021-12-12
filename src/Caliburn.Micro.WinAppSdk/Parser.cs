@@ -5,15 +5,15 @@
     using System.Linq;
     using System.Reflection;
     using Windows.UI.Xaml;
-    using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
-    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
-    using TriggerAction = Microsoft.Xaml.Interactivity.IAction;
+    //using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
+    //using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    //using TriggerAction = Microsoft.Xaml.Interactivity.IAction;
     using System.Text;
     using System.Text.RegularExpressions;
     using Windows.UI.Xaml.Data;
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Data;
-    using Microsoft.Xaml.Interactivity;
+    //using Microsoft.Xaml.Interactivity;
 
 
     /// <summary>
@@ -91,7 +91,7 @@
             {
                 var eventTrigger = (EventTrigger) trigger;
 
-                eventTrigger.Actions.Add(messageDependencyObject);
+         //       eventTrigger.Actions.Add(messageDependencyObject);
             }
             else
             {
@@ -103,15 +103,15 @@
                     return;
                 }
 
-                var actionCollection = actionsProperty.GetValue(trigger) as ActionCollection;
+                //var actionCollection = actionsProperty.GetValue(trigger) as ActionCollection;
 
-                if (actionCollection == null)
-                {
-                    Log.Warn("{0}.Actions is either not an ActionCollection or is null.", trigger.GetType().FullName);
-                    return;
-                }
+                //if (actionCollection == null)
+                //{
+                //    Log.Warn("{0}.Actions is either not an ActionCollection or is null.", trigger.GetType().FullName);
+                //    return;
+                //}
 
-                actionCollection.Add(messageDependencyObject);
+                //actionCollection.Add(messageDependencyObject);
             }
 
             // The second is the IAction doesn't have an associated object property so we have
@@ -122,17 +122,17 @@
             // Turns out trying to a binding won't work because the trigger doesn't notify the 
             // binding of changes, so we just need to set it, yay.
 
-            var actionMessage = message as ActionMessage;
-            var targetElement = target as FrameworkElement;
+            //var actionMessage = message as ActionMessage;
+            //var targetElement = target as FrameworkElement;
 
-            if (actionMessage != null && targetElement != null)
-            {
-                //var binding = new Binding { Source = trigger, Path = new PropertyPath("AssociatedObject") };
+            //if (actionMessage != null && targetElement != null)
+            //{
+            //    //var binding = new Binding { Source = trigger, Path = new PropertyPath("AssociatedObject") };
 
-                //BindingOperations.SetBinding(actionMessage, ActionMessage.AssociatedObjectProperty, binding);
+            //    //BindingOperations.SetBinding(actionMessage, ActionMessage.AssociatedObjectProperty, binding);
 
-                actionMessage.AssociatedObject = targetElement;
-            }
+            //    actionMessage.AssociatedObject = targetElement;
+            //}
             
         }
 
@@ -155,7 +155,7 @@
                 .Replace("Event", string.Empty)
                 .Trim();
 
-            return new EventTrigger { EventName = triggerDetail };
+            return new EventTrigger();// { EventName = triggerDetail };
         };
 
         /// <summary>
@@ -201,7 +201,7 @@
         /// </summary>
         public static Func<DependencyObject, string, TriggerAction> InterpretMessageText = (target, text) =>
         {
-            return new ActionMessage { MethodName = Regex.Replace(text, "^Action", string.Empty).Trim() };
+            return null; //            new ActionMessage { MethodName = Regex.Replace(text, "^Action", string.Empty).Trim() };
         };
 
         /// <summary>

@@ -19,6 +19,7 @@ namespace Caliburn.Micro
             public void Info(string format, params object[] args) { }
             public void Warn(string format, params object[] args) { }
             public void Error(Exception exception) { }
+            public void Debug(string format, params object[] args){ }
         }
     }
 }

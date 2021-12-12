@@ -235,7 +235,7 @@
         }
 
         public virtual object CreateFromString(String input) {
-            throw new NotImplementedException();
+            return null;
         }
     }
 

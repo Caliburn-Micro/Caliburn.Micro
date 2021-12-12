@@ -4,9 +4,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using Windows.UI.Xaml;
-    using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
+    //using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
     using Microsoft.UI.Xaml;
-    using Microsoft.Xaml.Interactivity;
+    //using Microsoft.Xaml.Interactivity;
 
 
 
@@ -85,22 +85,22 @@
 
             var messageTriggers = (TriggerBase[])d.GetValue(MessageTriggersProperty);
 
-            var allTriggers = Interaction.GetBehaviors(d);
+            //var allTriggers = Interaction.GetBehaviors(d);
 
-            if (messageTriggers != null)
-            {
-                messageTriggers.OfType<DependencyObject>().Apply(x => allTriggers.Remove(x));
-            }
+            //if (messageTriggers != null)
+            //{
+            //    messageTriggers.OfType<DependencyObject>().Apply(x => allTriggers.Remove(x));
+            //}
 
             var newTriggers = Parser.Parse(d, e.NewValue as string).ToArray();
-            newTriggers.OfType<DependencyObject>().Apply(allTriggers.Add);
+            //newTriggers.OfType<DependencyObject>().Apply(allTriggers.Add);
 
-            if (newTriggers.Length > 0) {
-                d.SetValue(MessageTriggersProperty, newTriggers);
-            }
-            else {
-                d.ClearValue(MessageTriggersProperty);
-            }
+            //if (newTriggers.Length > 0) {
+            //    d.SetValue(MessageTriggersProperty, newTriggers);
+            //}
+            //else {
+            //    d.ClearValue(MessageTriggersProperty);
+            //}
         }
     }
 }

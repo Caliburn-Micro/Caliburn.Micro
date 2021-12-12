@@ -8,6 +8,9 @@ namespace Caliburn.Micro.WinAppSdk.Test.ViewModels
 {
     public class HomeViewModel : Screen
     {
+
+        private static readonly ILog Log = LogManager.GetLog(typeof(HomeViewModel));
+
         private string _title;
 
         public string Title
@@ -22,6 +25,7 @@ namespace Caliburn.Micro.WinAppSdk.Test.ViewModels
 
         public HomeViewModel()
         {
+            Log.Debug("Home View Model constructor");
             Title = "Welcome to Caliburn Micro in WinAppSdk";
         }
     }

@@ -38,8 +38,10 @@ namespace Caliburn.Micro
         /// </param>
         public FrameAdapter(Frame frame, bool treatViewAsLoaded = false)
         {
+            Log.Info("FrameAdapter constructor");
             this.frame = frame;
             this.treatViewAsLoaded = treatViewAsLoaded;
+            Log.Info("FrameAdapter constructor add event handlers");
 
             this.frame.Navigating += OnNavigating;
             this.frame.Navigated += OnNavigated;
@@ -47,9 +49,15 @@ namespace Caliburn.Micro
 
             // This could leak memory if we're creating and destroying navigation services regularly.
             // Another unlikely scenario though
-
-            navigationManager = SystemNavigationManager.GetForCurrentView();
-
+            Log.Info("FrameAdapter constructor navigation manager");
+            if (CoreWindow.GetForCurrentThread() != null)
+            {
+                navigationManager = SystemNavigationManager.GetForCurrentView();
+            }
+            else
+            {
+                Log.Info("CoreWindow is null");
+            }
          //   navigationManager.BackRequested += OnBackRequested;
 
         }
