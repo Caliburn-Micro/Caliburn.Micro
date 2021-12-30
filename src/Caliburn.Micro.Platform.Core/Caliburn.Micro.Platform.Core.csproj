@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net5.0-windows</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net6.0-windows10.0.19041.0</TargetFrameworks>
     <AssemblyName>Caliburn.Micro.Platform.Core</AssemblyName>
     <RootNamespace>Caliburn.Micro</RootNamespace>
     <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>

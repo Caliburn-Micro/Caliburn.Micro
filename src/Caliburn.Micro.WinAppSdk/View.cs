@@ -343,14 +343,7 @@ namespace Caliburn.Micro
         {
             get
             {
-                if (inDesignMode == null)
-                {
-
-                    inDesignMode = DesignMode.DesignModeEnabled;
-
-                }
-
-                return inDesignMode.GetValueOrDefault(false);
+                return false;
             }
         }
     }

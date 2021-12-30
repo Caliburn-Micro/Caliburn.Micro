@@ -1,4 +1,4 @@
-﻿<Page
+﻿<UserControl
     x:Class="Caliburn.Micro.WinAppSdk.Test.Views.HomeView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,4 +9,4 @@
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Button x:Name="myButton">Click Me</Button>
     </StackPanel>
-</Page>
+</UserControl>

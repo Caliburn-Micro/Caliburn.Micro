@@ -6,8 +6,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using System.Reflection;
-    using Windows.UI.Core;
-    using Windows.UI.Xaml;
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Dispatching;
 
@@ -54,6 +52,7 @@
 
         private bool CheckAccess()
         {
+            //return true;
             return dispatcher == null || Window.Current != null;
         }
 
@@ -63,6 +62,8 @@
         /// <param name="action">The action to execute.</param>
         public virtual void BeginOnUIThread(System.Action action)
         {
+            Log.Debug("Begin on UI thread xaml provider");
+
             ValidateDispatcher();
             dispatcher.TryEnqueue(() =>
             {
@@ -93,13 +94,16 @@
         /// <exception cref="System.NotImplementedException"></exception>
         public virtual void OnUIThread(System.Action action)
         {
+            Log.Debug("On UI thread xaml provider");
+
             if (CheckAccess())
                 action();
             else
             {
 
                 Exception exception = null;
-                System.Action method = () => {
+                System.Action method = () =>
+                {
                     try
                     {
                         action();
@@ -152,6 +156,7 @@
         /// <param name="handler">The handler.</param>
         public virtual void ExecuteOnFirstLoad(object view, Action<object> handler)
         {
+            Log.Debug("Execute on first load xaml provider");
             var element = view as FrameworkElement;
             if (element != null && !(bool)element.GetValue(PreviouslyAttachedProperty))
             {
@@ -167,6 +172,7 @@
         /// <param name="handler">The handler.</param>
         public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler)
         {
+            Log.Debug("Execute on first layout updated xaml provider");
             var element = view as FrameworkElement;
             if (element != null)
             {

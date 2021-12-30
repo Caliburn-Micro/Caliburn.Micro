@@ -26,11 +26,10 @@ namespace Caliburn.Micro.WinAppSdk.Test
         public MainWindow()
         {
             this.InitializeComponent();
+            RootFrame = this.rootFrame;
         }
 
-        private void myButton_Click(object sender, RoutedEventArgs e)
-        {
-            myButton.Content = "Clicked";
-        }
+        public Frame RootFrame;
+
     }
 }

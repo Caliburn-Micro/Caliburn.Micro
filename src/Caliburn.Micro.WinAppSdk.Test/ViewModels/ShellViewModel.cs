@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
 
 namespace Caliburn.Micro.WinAppSdk.Test.ViewModels
 {
@@ -14,6 +15,8 @@ namespace Caliburn.Micro.WinAppSdk.Test.ViewModels
             {
                 await ActivateItemAsync(new HomeViewModel());
             });
+
+            var doc = new DependencyObjectCollection();
         }
 
     }

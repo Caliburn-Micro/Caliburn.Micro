@@ -17,6 +17,19 @@ namespace Caliburn.Micro
         /// </summary>
         public static readonly IObservableCollection<Assembly> Instance = new BindableCollection<Assembly>();
 
+        public static int AssemblyCount
+        {
+            get
+            {
+                int amt = 0;
+                if (Instance != null)
+                {
+                    amt = Instance.Count;
+                }
+
+                return amt;
+            }
+        }
 
         /// <summary>
         /// Adds a collection of assemblies to AssemblySource
@@ -33,6 +46,7 @@ namespace Caliburn.Micro
                 }
                 catch (ArgumentException)
                 {
+                    
                     // ignore
                 }
             }

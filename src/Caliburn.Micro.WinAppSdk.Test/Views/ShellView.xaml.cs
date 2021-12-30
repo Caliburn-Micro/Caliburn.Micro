@@ -21,7 +21,7 @@ namespace Caliburn.Micro.WinAppSdk.Test.Views
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ShellView : Window
+    public sealed partial class ShellView : UserControl
     {
         public ShellView()
         {
