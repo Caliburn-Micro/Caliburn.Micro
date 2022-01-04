@@ -1,5 +1,7 @@
 ﻿#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
 #endif
@@ -14,6 +16,12 @@ namespace Caliburn.Micro
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using DependencyObject =global::Xamarin.Forms.BindableObject;
+#elif MAUI
+    using global::Microsoft.Maui;
+    using UIElement = global::Microsoft.Maui.Controls.Element;
+    using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
+    using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
+    using DependencyObject =global::Microsoft.Maui.Controls.BindableObject;
 #else
     using System.Windows;
     using System.Windows.Data;
@@ -103,7 +111,7 @@ namespace Caliburn.Micro
 
                 d.SetValue(View.IsScopeRootProperty, true);
 
-#if XFORMS
+#if XFORMS || MAUI
                 var context = fe.Id.ToString("N");
 #else
                 var context = string.IsNullOrEmpty(fe.Name)
@@ -129,7 +137,7 @@ namespace Caliburn.Micro
                 var target = e.NewValue;
                 d.SetValue(View.IsScopeRootProperty, true);
 
-#if XFORMS
+#if XFORMS || MAUI
                 var context = fe.Id.ToString("N");
 #else
                 var context = string.IsNullOrEmpty(fe.Name)
@@ -158,7 +166,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="dependencyObject">The ui to apply conventions to.</param>
         /// <returns>Whether or not conventions are applied.</returns>
-#if NET || NETCORE
+#if !MAUI && NET || NETCORE 
         [AttachedPropertyBrowsableForTypeAttribute(typeof(DependencyObject))]
 #endif
         public static bool GetAtDesignTime(DependencyObject dependencyObject) {
@@ -183,6 +191,8 @@ namespace Caliburn.Micro
                 return;
 #if XFORMS
             d.SetBinding(DataContextProperty, String.Empty);
+#elif MAUI
+            d.SetBinding(DataContextProperty, null);
 #else
             BindingOperations.SetBinding(d, DataContextProperty, new Binding());
 #endif
@@ -206,7 +216,7 @@ namespace Caliburn.Micro
             var fe = d as FrameworkElement;
             if (fe == null)
                 return;
-#if XFORMS
+#if XFORMS || MAUI
             ViewModelBinder.Bind(e.NewValue, d, fe.Id.ToString("N"));
 #else
             ViewModelBinder.Bind(e.NewValue, d, string.IsNullOrEmpty(fe.Name) ? fe.GetHashCode().ToString() : fe.Name);

@@ -2,6 +2,9 @@
 #if XFORMS
 using Xamarin.Forms;
 using DependencyProperty = Xamarin.Forms.BindableProperty;
+#elif MAUI
+using Microsoft.Maui.Controls;
+using DependencyProperty = Microsoft.Maui.Controls.BindableProperty;
 #elif WINDOWS_UWP
 using Windows.UI.Xaml;
 #else
@@ -10,6 +13,8 @@ using System.Windows;
 
 #if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
 #endif
@@ -34,6 +39,11 @@ namespace Caliburn.Micro
                 if (propertyChangedCallback != null)
                     propertyChangedCallback(obj, new DependencyPropertyChangedEventArgs(newValue, oldValue, null));
             });
+#elif MAUI
+            return DependencyProperty.CreateAttached(name, propertyType, ownerType, defaultValue, propertyChanged: (obj, oldValue, newValue) => {
+                if (propertyChangedCallback != null)
+                    propertyChangedCallback(obj, new DependencyPropertyChangedEventArgs(newValue, oldValue, null));
+            });
 #else
             return DependencyProperty.RegisterAttached(name, propertyType, ownerType, new PropertyMetadata(defaultValue, propertyChangedCallback));
 #endif
@@ -51,6 +61,12 @@ namespace Caliburn.Micro
         public static DependencyProperty Register(string name, Type propertyType, Type ownerType, object defaultValue = null, PropertyChangedCallback propertyChangedCallback = null)
         {
 #if XFORMS
+            return DependencyProperty.Create(name, propertyType, ownerType, defaultValue, propertyChanged: (obj, oldValue, newValue) =>
+            {
+                if (propertyChangedCallback != null)
+                    propertyChangedCallback(obj, new DependencyPropertyChangedEventArgs(newValue, oldValue, null));
+            });
+#elif MAUI
             return DependencyProperty.Create(name, propertyType, ownerType, defaultValue, propertyChanged: (obj, oldValue, newValue) =>
             {
                 if (propertyChangedCallback != null)

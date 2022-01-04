@@ -1,5 +1,7 @@
 ﻿#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
 #endif
@@ -21,6 +23,15 @@ namespace Caliburn.Micro
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
     using ContentControl = global::Xamarin.Forms.ContentView;
+#elif MAUI
+    using System.Reflection;
+    using global::Microsoft.Maui.Controls;
+    using UIElement = global::Microsoft.Maui.Controls.Element;
+    using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
+    using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
+    using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
+    using ContentControl = global::Microsoft.Maui.Controls.ContentView;
+    //using Microsoft.UI.Xaml;
 #else
     using System.ComponentModel;
     using System.Windows;
@@ -33,7 +44,7 @@ namespace Caliburn.Micro
     /// </summary>
     public static class View {
         static readonly ILog Log = LogManager.GetLog(typeof(View));
-#if WINDOWS_UWP || XFORMS
+#if WINDOWS_UWP || XFORMS || MAUI
         const string DefaultContentPropertyName = "Content";
 #else
         static readonly ContentPropertyAttribute DefaultContentProperty = new ContentPropertyAttribute("Content");
@@ -113,7 +124,7 @@ namespace Caliburn.Micro
         /// <param name="handler">The handler.</param>
         /// <returns>true if the handler was executed immediately; false otherwise</returns>
         public static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler) {
-#if XFORMS
+#if XFORMS || MAUI
             handler(element, new RoutedEventArgs());
             return true;
 #else
@@ -143,7 +154,7 @@ namespace Caliburn.Micro
         /// <param name="element">The element.</param>
         /// <param name="handler">The handler.</param>
         public static void ExecuteOnUnload(FrameworkElement element, RoutedEventHandler handler) {
-#if !XFORMS
+#if !XFORMS && !MAUI
             RoutedEventHandler unloaded = null;
             unloaded = (s, e) => {
                 element.Unloaded -= unloaded;
@@ -184,13 +195,16 @@ namespace Caliburn.Micro
             }
         }
 #endif
-#if !XFORMS
+#if !XFORMS && !MAUI
         /// <summary>
         /// Executes the handler the next time the elements's LayoutUpdated event fires.
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="handler">The handler.</param>
-#if WINDOWS_UWP
+#if WINDOWS_UWP //|| MAUI
+        public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler<object> handler) {
+            EventHandler<object> onLayoutUpdate = null;
+#elif false
         public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler<object> handler) {
             EventHandler<object> onLayoutUpdate = null;
 #else
@@ -224,7 +238,7 @@ namespace Caliburn.Micro
                 if (dependencyObject is ContentControl) {
                     return ((ContentControl)dependencyObject).Content;
                 }
-#if WINDOWS_UWP || XFORMS
+#if WINDOWS_UWP || XFORMS || MAUI
                 var type = dependencyObject.GetType();
                 var contentPropertyName = GetContentPropertyName(type);
 
@@ -355,7 +369,7 @@ namespace Caliburn.Micro
             return SetContentPropertyCore(targetLocation, view);
         }
 
-#if WINDOWS_UWP || XFORMS
+#if WINDOWS_UWP || XFORMS || MAUI
         static bool SetContentPropertyCore(object targetLocation, object view) {
             try {
                 var type = targetLocation.GetType();
@@ -411,7 +425,7 @@ namespace Caliburn.Micro
             {
                 if (inDesignMode == null)
                 {
-#if XFORMS
+#if XFORMS || MAUI
                     inDesignMode = false;
 #elif WINDOWS_UWP
                     inDesignMode = DesignMode.DesignModeEnabled;

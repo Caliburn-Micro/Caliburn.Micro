@@ -14,7 +14,7 @@
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
     <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'all'))"/>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'all'))" />
     </ItemGroup>
   </Target>
 
@@ -54,9 +54,17 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2"  />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
     <Compile Include="Platforms\net46-netcore\**\*.cs" />
   </ItemGroup>
+
+  <!--<ItemGroup>
+    <None Remove="Platforms\Maui\Windows\XamlPlatformProvider.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Platforms\Maui\Windows\XamlPlatformProvider.cs" />
+  </ItemGroup>-->
   
   <ItemGroup Label="Package">
     <None Include="Platforms\uap\Caliburn.Micro.Platform.rd.xml" PackagePath="lib\uap10.0.16299\Caliburn.Micro.Platform\Properties\Caliburn.Micro.Platform.rd.xml" Pack="true" />
@@ -79,5 +87,14 @@
     <Compile Include="ViewModelLocator.cs" />
   </ItemGroup>
 
+  <!--<PropertyGroup Condition="'$(TargetFramework)' == 'net6.0-android'">
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-android'">
+    <Compile Include="Platforms\Maui\**\*.cs" />
+  </ItemGroup>-->
 
 </Project>

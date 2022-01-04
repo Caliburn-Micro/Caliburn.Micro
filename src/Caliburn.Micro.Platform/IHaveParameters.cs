@@ -1,5 +1,7 @@
 ﻿#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
 #endif
