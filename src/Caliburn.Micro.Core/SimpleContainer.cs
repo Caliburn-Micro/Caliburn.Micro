@@ -13,6 +13,9 @@ namespace Caliburn.Micro
     {
         private static readonly Type delegateType = typeof(Delegate);
         private static readonly Type enumerableType = typeof(IEnumerable);
+        private static readonly TypeInfo enumerableTypeInfo = enumerableType.GetTypeInfo();
+        private static readonly TypeInfo delegateTypeInfo = delegateType.GetTypeInfo();
+        private Type simpleContainerType = typeof(SimpleContainer);
         private readonly List<ContainerEntry> entries;
 
         /// <summary>
@@ -119,16 +122,16 @@ namespace Caliburn.Micro
             }
             TypeInfo serviceTypeInfo = service.GetTypeInfo();
 
-            if (delegateType.GetTypeInfo().IsAssignableFrom(serviceTypeInfo))
+            if (delegateTypeInfo.IsAssignableFrom(serviceTypeInfo))
             {
                 var typeToCreate = serviceTypeInfo.GenericTypeArguments[0];
                 var factoryFactoryType = typeof(FactoryFactory<>).MakeGenericType(typeToCreate);
                 var factoryFactoryHost = Activator.CreateInstance(factoryFactoryType);
-                var factoryFactoryMethod = factoryFactoryType.GetRuntimeMethod("Create", new Type[] { typeof(SimpleContainer) });
+                var factoryFactoryMethod = factoryFactoryType.GetRuntimeMethod("Create", new Type[] {simpleContainerType});
                 return factoryFactoryMethod.Invoke(factoryFactoryHost, new object[] { this });
             }
 
-            if (enumerableType.GetTypeInfo().IsAssignableFrom(serviceTypeInfo) && serviceTypeInfo.IsGenericType)
+            if (enumerableTypeInfo.IsAssignableFrom(serviceTypeInfo) && serviceTypeInfo.IsGenericType)
             {
                 var listType = serviceTypeInfo.GenericTypeArguments[0];
                 var instances = GetAllInstances(listType).ToList();
