@@ -29,7 +29,7 @@ namespace Caliburn.Micro.WinAppSdk.Test
             RootFrame = this.rootFrame;
         }
 
-        public Frame RootFrame;
+        public NavigationView RootFrame;
 
     }
 }

@@ -38,16 +38,16 @@ namespace Caliburn.Micro.WinAppSdk.Test
         /// <summary>
         /// The root frame of the application.
         /// </summary>
-        protected Frame RootFrame { get; private set; }
+        protected NavigationView RootFrame { get; private set; }
 
         /// <summary>
         /// Called by the bootstrapper's constructor at runtime to start the framework.
         /// </summary>
         protected virtual void StartRuntime()
         {
-            //AssemblySourceCache.Install();
-            //var ass= SelectAssemblies();
-            //AssemblySource.AddRange(ass);
+            AssemblySourceCache.Install();
+            var ass = SelectAssemblies();
+            AssemblySource.AddRange(ass);
             Log.Debug("Start Runtime Prepare application");
             //  Log.Debug($"Assemblies {AssemblySource.AssemblyCount}");
             //PrepareApplication();
@@ -71,7 +71,7 @@ namespace Caliburn.Micro.WinAppSdk.Test
             container = new WinRTContainer();
 
             container.RegisterWinRTServices();
-
+            
             container.PerRequest<ShellViewModel>();
             container.PerRequest<HomeViewModel>();
             container.PerRequest<HomeView>();
@@ -231,11 +231,7 @@ namespace Caliburn.Micro.WinAppSdk.Test
 
             PrepareViewFirst();
 
-            RootFrame.Navigate(viewType, paramter);
-
-            //// Seems stupid but observed weird behaviour when resetting the Content
-            //if (Window.Current.Content == null)
-            //    Window.Current.Content = RootFrame;
+            // RootFrame.(DisplayRootView<ShellView>());
 
             //Window.Current.Activate();
         }
@@ -257,7 +253,7 @@ namespace Caliburn.Micro.WinAppSdk.Test
         /// Override this to register a navigation service.
         /// </summary>
         /// <param name="rootFrame">The root frame of the application.</param>
-        protected virtual void PrepareViewFirst(Frame rootFrame)
+        protected virtual void PrepareViewFirst(NavigationView rootFrame)
         {
         }
 
@@ -265,7 +261,7 @@ namespace Caliburn.Micro.WinAppSdk.Test
         /// Creates the root frame used by the application.
         /// </summary>
         /// <returns>The frame.</returns>
-        protected virtual Frame CreateApplicationFrame()
+        protected virtual NavigationView CreateApplicationFrame()
         {
             m_window = new MainWindow();
             m_window.Activate();
