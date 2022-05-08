@@ -8,6 +8,14 @@
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Controls.Primitives;
     using Windows.UI.Xaml.Media;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Diagnostics;
+    using Avalonia.VisualTree;
+    using Avalonia.Controls;
+    using Avalonia.Controls.Presenters;
+    using DependencyObject = Avalonia.IAvaloniaObject;
+    using FrameworkElement = Avalonia.Controls.Control;
 #else
     using System.Windows;
     using System.Windows.Controls;
@@ -26,7 +34,7 @@
         {
             AddChildResolver<ContentControl>(e => new[] { e.Content as DependencyObject });
             AddChildResolver<ItemsControl>(e => e.Items.OfType<DependencyObject>().ToArray() );
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !AVALONIA
             AddChildResolver<HeaderedContentControl>(e => new[] { e.Header as DependencyObject });
             AddChildResolver<HeaderedItemsControl>(e => new[] { e.Header as DependencyObject });
 #endif
@@ -130,8 +138,11 @@
         /// Gets the parent of the given object in the Visual Tree.
         /// </summary>
         /// <returns>The parent of the given object in the Visual Tree</returns>
+#if AVALONIA
+        public static Func<DependencyObject, DependencyObject> GetVisualParent = e => ((IVisual)e).GetVisualParent() as DependencyObject;
+#else
         public static Func<DependencyObject, DependencyObject> GetVisualParent = e => VisualTreeHelper.GetParent(e);
-
+#endif
         /// <summary>
         /// Finds a set of named <see cref="FrameworkElement"/> instances in each hop in a <see cref="ScopeNamingRoute"/>.
         /// </summary>
@@ -172,6 +183,21 @@
                     continue;
                 }
 
+#if AVALONIA
+                var visual = current as IVisual;
+                var childCount = visual != null
+                    ? visual.GetVisualChildren().Count() : 0;
+
+                if (childCount > 0)
+                {
+                    foreach (var childDo in visual.GetVisualChildren().OfType<AvaloniaObject>())
+                    {
+                        queue.Enqueue(childDo);
+                    }
+
+                }
+#else
+
 #if NET || CAL_NETCORE
                 var childCount = (current is Visual || current is Visual3D)
                     ? VisualTreeHelper.GetChildrenCount(current) : 0;
@@ -179,8 +205,10 @@
                 var childCount = (current is UIElement)
                     ? VisualTreeHelper.GetChildrenCount(current) : 0;
 #endif
-                if (childCount > 0) {
-                    for (var i = 0; i < childCount; i++) {
+                if (childCount > 0)
+                {
+                    for (var i = 0; i < childCount; i++)
+                    {
                         var childDo = VisualTreeHelper.GetChild(current, i);
                         queue.Enqueue(childDo);
                     }
@@ -197,6 +225,7 @@
                     }
 #endif
                 }
+#endif
                 else {
                     var currentType = current.GetType();
 
@@ -292,10 +321,12 @@
                 if (root is UserControl)
                     break;
 
+#if !AVALONIA
                 if (root is Page) {
                     root = ((Page) root).Content as DependencyObject ?? root;
                     break;
                 }
+#endif
 
                 if ((bool) root.GetValue(View.IsScopeRootProperty))
                     break;

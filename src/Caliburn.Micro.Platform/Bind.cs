@@ -16,6 +16,13 @@ namespace Caliburn.Micro
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using DependencyObject =global::Xamarin.Forms.BindableObject;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Data;
+    using DependencyObject = Avalonia.IAvaloniaObject;
+    using DependencyPropertyChangedEventArgs = Avalonia.AvaloniaPropertyChangedEventArgs;
+    using FrameworkElement = Avalonia.Controls.Control;
+    using DependencyProperty = Avalonia.AvaloniaProperty;
 #elif MAUI
     using global::Microsoft.Maui;
     using UIElement = global::Microsoft.Maui.Controls.Element;
@@ -35,31 +42,52 @@ namespace Caliburn.Micro
         ///   Allows binding on an existing view. Use this on root UserControls, Pages and Windows; not in a DataTemplate.
         /// </summary>
         public static DependencyProperty ModelProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, object>("Model", typeof(Bind));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "Model",
                 typeof(object),
                 typeof(Bind),
-                null, 
+                null,
                 ModelChanged);
+#endif
 
         /// <summary>
         ///   Allows binding on an existing view without setting the data context. Use this from within a DataTemplate.
         /// </summary>
         public static DependencyProperty ModelWithoutContextProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, object>("Handler", typeof(Bind));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "ModelWithoutContext",
                 typeof(object),
                 typeof(Bind),
-                null, 
+                null,
                 ModelWithoutContextChanged);
+#endif
 
         internal static DependencyProperty NoContextProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, bool>("Handler", typeof(Bind));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "NoContext",
                 typeof(bool),
                 typeof(Bind),
                 false);
+#endif
 
+#if AVALONIA
+        static Bind()
+        {
+            ModelProperty.Changed.Subscribe(args => ModelChanged(args.Sender, args));
+            ModelWithoutContextProperty.Changed.Subscribe(args => ModelWithoutContextChanged(args.Sender, args));
+            DataContextProperty.Changed.Subscribe(args => DataContextChanged(args.Sender, args));
+            AtDesignTimeProperty.Changed.Subscribe(args => AtDesignTimeChanged(args.Sender, args));
+        }
+#endif
         /// <summary>
         ///   Gets the model to bind to.
         /// </summary>
@@ -97,7 +125,7 @@ namespace Caliburn.Micro
         }
 
         static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
+            if (Caliburn.Micro.View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
                 return;
             }
 
@@ -106,10 +134,10 @@ namespace Caliburn.Micro
                 return;
             }
 
-            View.ExecuteOnLoad(fe, delegate {
+            Caliburn.Micro.View.ExecuteOnLoad(fe, delegate {
                 var target = e.NewValue;
 
-                d.SetValue(View.IsScopeRootProperty, true);
+                d.SetValue(Caliburn.Micro.View.IsScopeRootProperty, true);
 
 #if XFORMS || MAUI
                 var context = fe.Id.ToString("N");
@@ -124,7 +152,7 @@ namespace Caliburn.Micro
         }
 
         static void ModelWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
+            if (Caliburn.Micro.View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
                 return;
             }
 
@@ -133,9 +161,9 @@ namespace Caliburn.Micro
                 return;
             }
 
-            View.ExecuteOnLoad(fe, delegate {
+            Caliburn.Micro.View.ExecuteOnLoad(fe, delegate {
                 var target = e.NewValue;
-                d.SetValue(View.IsScopeRootProperty, true);
+                d.SetValue(Caliburn.Micro.View.IsScopeRootProperty, true);
 
 #if XFORMS || MAUI
                 var context = fe.Id.ToString("N");
@@ -154,12 +182,16 @@ namespace Caliburn.Micro
         /// Allows application of conventions at design-time.
         /// </summary>
         public static DependencyProperty AtDesignTimeProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, bool>("AtDesignTime", typeof(Bind));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "AtDesignTime",
                 typeof(bool),
                 typeof(Bind),
-                false, 
+                false,
                 AtDesignTimeChanged);
+#endif
 
         /// <summary>
         /// Gets whether or not conventions are being applied at design-time.
@@ -183,7 +215,7 @@ namespace Caliburn.Micro
         }
 
         static void AtDesignTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (!View.InDesignMode)
+            if (!Caliburn.Micro.View.InDesignMode)
                 return;
 
             var atDesignTime = (bool) e.NewValue;
@@ -191,6 +223,8 @@ namespace Caliburn.Micro
                 return;
 #if XFORMS
             d.SetBinding(DataContextProperty, String.Empty);
+#elif AVALONIA
+            d.Bind(DataContextProperty, new Binding());
 #elif MAUI
             d.SetBinding(DataContextProperty, null);
 #else
@@ -199,14 +233,18 @@ namespace Caliburn.Micro
         }
 
         static readonly DependencyProperty DataContextProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, object>("DataContext", typeof(Bind));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "DataContext",
                 typeof(object),
                 typeof(Bind),
                 null, DataContextChanged);
+#endif
 
         static void DataContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (!View.InDesignMode)
+            if (!Caliburn.Micro.View.InDesignMode)
                 return;
 
             var enable = d.GetValue(AtDesignTimeProperty);

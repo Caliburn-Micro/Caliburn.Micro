@@ -16,6 +16,11 @@ namespace Caliburn.Micro
     using UIElement = global::Xamarin.Forms.Element;
     using TextBlock = global::Xamarin.Forms.Label;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Controls;
+    using UIElement = Avalonia.Controls.Control;
+    using DependencyObject = Avalonia.IAvaloniaObject;
 #elif MAUI
     using global::Microsoft.Maui.Controls;
     using UIElement = global::Microsoft.Maui.Controls.Element;
@@ -29,6 +34,7 @@ namespace Caliburn.Micro
     using Windows.UI.Xaml.Controls;
 #endif
 
+#if !WINDOWS_UWP && !XFORMS && !AVALONIA
 #if !WINDOWS_UWP && !XFORMS && !MAUI
     using System.Windows.Interop;
 #endif
@@ -355,7 +361,7 @@ namespace Caliburn.Micro
         public static Func<Type, DependencyObject, object, Type> LocateTypeForModelType = (modelType, displayLocation, context) => {
             var viewTypeName = modelType.FullName;
 
-            if (View.InDesignMode) {
+            if (Caliburn.Micro.View.InDesignMode) {
                 viewTypeName = ModifyModelTypeAtDesignTime(viewTypeName);
             }
 
@@ -405,7 +411,12 @@ namespace Caliburn.Micro
                 if (view != null) {
 #if !WINDOWS_UWP && !XFORMS && !MAUI
                     var windowCheck = view as Window;
-                    if (windowCheck == null || (!windowCheck.IsLoaded && !(new WindowInteropHelper(windowCheck).Handle == IntPtr.Zero))) {
+#if AVALONIA
+                    if (windowCheck == null)
+#else
+                    if (windowCheck == null || (!windowCheck.IsLoaded && !(new WindowInteropHelper(windowCheck).Handle == IntPtr.Zero)))
+#endif
+                    { 
                         Log.Info("Using cached view for {0}.", model);
                         return view;
                     }

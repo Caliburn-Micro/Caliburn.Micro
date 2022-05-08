@@ -25,6 +25,15 @@ namespace Caliburn.Micro
     using global::Xamarin.Forms;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Data;
+    using Avalonia.Controls;
+    using System.Text.RegularExpressions;
+    using DependencyObject = Avalonia.IAvaloniaObject;
+    using TriggerBase = Avalonia.Xaml.Interactivity.Trigger;
+    using FrameworkElement = Avalonia.Controls.Control;
+    using EventTrigger = Avalonia.Xaml.Interactions.Core.EventTriggerBehavior;
 #elif MAUI
     using System.Reflection;
     using System.Text.RegularExpressions;
@@ -284,7 +293,7 @@ namespace Caliburn.Micro
                 var nameAndBindingMode = parameterText.Split(':').Select(x => x.Trim()).ToArray();
                 var index = nameAndBindingMode[0].IndexOf('.');
 
-                View.ExecuteOnLoad(fe, delegate
+                Caliburn.Micro.View.ExecuteOnLoad(fe, delegate
                 {
                     BindParameter(
                         fe,
@@ -350,17 +359,22 @@ namespace Caliburn.Micro
                 Mode = bindingMode
             };
 #else
-            var binding = new Binding(path) {
+            var binding = new Binding(path)
+            {
                 Source = element,
                 Mode = bindingMode
             };
 #endif
 
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !AVALONIA
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
 
+#if AVALONIA
+            parameter.Bind(Parameter.ValueProperty, binding);
+#else
             BindingOperations.SetBinding(parameter, Parameter.ValueProperty, binding);
+#endif
 #endif
         }
     }
