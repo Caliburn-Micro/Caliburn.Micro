@@ -33,7 +33,7 @@
                 VerticalOptions = LayoutOptions.FillAndExpand,
             };
 
-            content.SetBinding(View.ModelProperty, new Binding());
+            content.SetBinding(Caliburn.Micro.View.ModelProperty, new Binding());
 
             var cell = new ViewCell
             {
@@ -196,7 +196,7 @@
 
                    return true;
                };
-            AddElementConvention<ContentView>(View.ModelProperty, "BindingContext", "Focused");
+            AddElementConvention<ContentView>(Caliburn.Micro.View.ModelProperty, "BindingContext", "Focused");
             AddElementConvention<VisualElement>(VisualElement.IsVisibleProperty, "BindingContext", "Focused");
         }
 

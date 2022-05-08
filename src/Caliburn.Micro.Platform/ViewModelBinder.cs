@@ -17,6 +17,12 @@ namespace Caliburn.Micro
 #elif WINDOWS_UWP
     using Windows.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Controls;
+    using FrameworkElement = Avalonia.Controls.Control;
+    using DependencyObject = Avalonia.IAvaloniaObject;
+    using DependencyProperty = Avalonia.AvaloniaProperty;
 #else
     using System.Windows;
     using Microsoft.Xaml.Behaviors;
@@ -42,12 +48,16 @@ namespace Caliburn.Micro
         /// Indicates whether or not the conventions have already been applied to the view.
         /// </summary>
         public static readonly DependencyProperty ConventionsAppliedProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, bool>("ConventionsApplied", typeof(ViewModelBinder));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "ConventionsApplied",
                 typeof(bool),
                 typeof(ViewModelBinder),
                 false
                 );
+#endif
 
 
         /// <summary>

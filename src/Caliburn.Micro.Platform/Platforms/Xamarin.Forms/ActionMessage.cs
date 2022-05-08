@@ -82,7 +82,7 @@
         ///  Called after the action is attached to an AssociatedObject.
         /// </summary>
         protected override void OnAttached() {
-            if (!View.InDesignMode) {
+            if (!Caliburn.Micro.View.InDesignMode) {
                 Parameters.Attach(AssociatedObject);
                 Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
 
@@ -110,7 +110,7 @@
         /// </summary>
         protected override void OnDetaching()
         {
-            if (!View.InDesignMode)
+            if (!Caliburn.Micro.View.InDesignMode)
             {
                 Detaching(this, EventArgs.Empty);
                 Parameters.Detach();
