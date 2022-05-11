@@ -127,7 +127,7 @@ namespace Caliburn.Micro
                 var typeToCreate = serviceTypeInfo.GenericTypeArguments[0];
                 var factoryFactoryType = typeof(FactoryFactory<>).MakeGenericType(typeToCreate);
                 var factoryFactoryHost = Activator.CreateInstance(factoryFactoryType);
-                var factoryFactoryMethod = factoryFactoryType.GetRuntimeMethod("Create", new Type[] {simpleContainerType});
+                var factoryFactoryMethod = factoryFactoryType.GetRuntimeMethod("Create", new Type[] { simpleContainerType });
                 return factoryFactoryMethod.Invoke(factoryFactoryHost, new object[] { this });
             }
 
@@ -244,7 +244,7 @@ namespace Caliburn.Micro
 
             if (key == null)
             {
-                return entries.FirstOrDefault(x => x.Service == service && x.Key == null)
+                return entries.FirstOrDefault(x => x.Service == service && string.IsNullOrEmpty(x.Key))
                        ?? entries.FirstOrDefault(x => x.Service == service);
             }
 
