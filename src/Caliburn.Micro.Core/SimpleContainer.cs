@@ -13,6 +13,9 @@ namespace Caliburn.Micro
     {
         private static readonly Type delegateType = typeof(Delegate);
         private static readonly Type enumerableType = typeof(IEnumerable);
+        private static readonly TypeInfo enumerableTypeInfo = enumerableType.GetTypeInfo();
+        private static readonly TypeInfo delegateTypeInfo = delegateType.GetTypeInfo();
+        private Type simpleContainerType = typeof(SimpleContainer);
         private readonly List<ContainerEntry> entries;
 
         /// <summary>
@@ -117,19 +120,20 @@ namespace Caliburn.Micro
             {
                 return null;
             }
+            TypeInfo serviceTypeInfo = service.GetTypeInfo();
 
-            if (delegateType.GetTypeInfo().IsAssignableFrom(service.GetTypeInfo()))
+            if (delegateTypeInfo.IsAssignableFrom(serviceTypeInfo))
             {
-                var typeToCreate = service.GetTypeInfo().GenericTypeArguments[0];
+                var typeToCreate = serviceTypeInfo.GenericTypeArguments[0];
                 var factoryFactoryType = typeof(FactoryFactory<>).MakeGenericType(typeToCreate);
                 var factoryFactoryHost = Activator.CreateInstance(factoryFactoryType);
-                var factoryFactoryMethod = factoryFactoryType.GetRuntimeMethod("Create", new Type[] { typeof(SimpleContainer) });
+                var factoryFactoryMethod = factoryFactoryType.GetRuntimeMethod("Create", new Type[] { simpleContainerType });
                 return factoryFactoryMethod.Invoke(factoryFactoryHost, new object[] { this });
             }
 
-            if (enumerableType.GetTypeInfo().IsAssignableFrom(service.GetTypeInfo()) && service.GetTypeInfo().IsGenericType)
+            if (enumerableTypeInfo.IsAssignableFrom(serviceTypeInfo) && serviceTypeInfo.IsGenericType)
             {
-                var listType = service.GetTypeInfo().GenericTypeArguments[0];
+                var listType = serviceTypeInfo.GenericTypeArguments[0];
                 var instances = GetAllInstances(listType).ToList();
                 var array = Array.CreateInstance(listType, instances.Count);
 
@@ -177,7 +181,7 @@ namespace Caliburn.Micro
 
             var instances = entries.Select(e => e(this));
 
-            foreach(var instance in instances)
+            foreach (var instance in instances)
             {
                 if (EnablePropertyInjection && instance != null)
                 {
@@ -240,7 +244,7 @@ namespace Caliburn.Micro
 
             if (key == null)
             {
-                return entries.FirstOrDefault(x => x.Service == service && x.Key == null)
+                return entries.FirstOrDefault(x => x.Service == service && string.IsNullOrEmpty(x.Key))
                        ?? entries.FirstOrDefault(x => x.Service == service);
             }
 
