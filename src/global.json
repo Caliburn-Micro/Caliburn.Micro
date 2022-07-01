@@ -1,6 +1,6 @@
 {
   "sdk": {
-    "version": "6.0.400-preview.22301.10"
+    "version": "6.0.301 "
   },
   "msbuild-sdks": {
     "MSBuild.Sdk.Extras": "2.1.2"
