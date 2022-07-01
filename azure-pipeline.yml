@@ -13,7 +13,7 @@ steps:
   displayName: 'Install .NET'
   inputs:
     packageType: 'sdk'
-    useGlobalJson: true
+    version: '6.x'
     includePreviewVersions: true
 
 - task: DotNetCoreCLI@2  
