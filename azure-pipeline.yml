@@ -20,12 +20,6 @@ steps:
   inputs:
     script: 'dotnet workload install maui'
 
-- task: JavaToolInstaller@0
-  inputs:
-    versionSpec: '11'
-    jdkArchitectureOption: 'x64'
-    jdkSourceOption: 'PreInstalled'
-
 - task: DotNetCoreCLI@2  
   inputs:
     command: custom
@@ -49,7 +43,7 @@ steps:
     solution: '$(coreSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
+    msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME_11_X64)"'
 
 - task: DotNetCoreCLI@2
   displayName: Run Unit Tests
