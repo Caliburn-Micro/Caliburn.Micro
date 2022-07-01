@@ -20,6 +20,12 @@ steps:
   inputs:
     script: 'dotnet workload install maui'
 
+- task: JavaToolInstaller@0
+  inputs:
+    versionSpec: '11.0.15+10'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
+
 - task: DotNetCoreCLI@2  
   inputs:
     command: custom
