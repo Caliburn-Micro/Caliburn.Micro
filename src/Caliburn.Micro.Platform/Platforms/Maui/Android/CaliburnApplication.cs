@@ -11,7 +11,7 @@ namespace Caliburn.Micro.Maui
     /// <summary>
     /// Encapsulates the app and its available services.
     /// </summary>
-    public abstract class CaliburnApplication : MauiApplication
+    public abstract class CaliburnApplication : Microsoft.Maui.MauiApplication
     {
         private bool isInitialized;
 
