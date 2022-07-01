@@ -16,6 +16,10 @@ steps:
     version: '6.x'
     includePreviewVersions: true
 
+- task: CmdLine@2
+  inputs:
+    script: 'dotnet workload install maui'
+
 - task: DotNetCoreCLI@2  
   inputs:
     command: custom
