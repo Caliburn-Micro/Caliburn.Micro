@@ -30,10 +30,10 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\appicon.svg" ForegroundFile="Resources\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="Resources\appicon.svg" Color="#512BD4" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\appiconfg.svg" Color="#512BD4" />
+		<MauiSplashScreen Include="Resources\splash.svg" Color="#512BD4" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -44,12 +44,16 @@
 
 	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
 		<!-- Required - WinUI does not yet have buildTransitive for everything -->
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0-preview3" />
-		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.0.29-preview3" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.0" />
+		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.3.1" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Caliburn.Micro.Maui" Version="4.0.195-gc687ba3edc" />
+	  <None Remove="Resources\appiconfg.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Caliburn.Micro.Maui" Version="4.0.196-g3022dd58e0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -58,9 +62,9 @@
 	  </MauiXaml>
 	</ItemGroup>
 
-	<PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
+	<!--<PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
 		<OutputType>WinExe</OutputType>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-	</PropertyGroup>
+	</PropertyGroup>-->
 	
 </Project>

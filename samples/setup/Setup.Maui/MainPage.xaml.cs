@@ -1,6 +1,6 @@
 ﻿using Microsoft.Maui.Controls;
-using Microsoft.Maui.Essentials;
 using System;
+using Microsoft.Maui.Accessibility;
 
 namespace Setup.Maui
 {

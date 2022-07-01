@@ -33,7 +33,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VB.Net", "VB.Net", "{D5FC43
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Setup.UWP.VB", "Setup.UWP.VB\Setup.UWP.VB.vbproj", "{434D2C94-81BB-4EB4-9863-6042D4087C54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Setup.Maui", "Setup.Maui\Setup.Maui.csproj", "{94F2792D-BB49-480C-B2F8-1C6BC80203C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Setup.Maui", "Setup.Maui\Setup.Maui.csproj", "{94F2792D-BB49-480C-B2F8-1C6BC80203C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

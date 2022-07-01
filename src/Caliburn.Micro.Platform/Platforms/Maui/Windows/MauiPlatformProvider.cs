@@ -4,38 +4,29 @@
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
-#if MAUI
     using System.Reflection;
     using Windows.UI.Core;
     //using Windows.UI.Xaml;
     using Microsoft.UI;
     using Microsoft.UI.Xaml;
-#else
-    using System.Windows;
-    using System.Windows.Threading;
-#endif
+
 
     /// <summary>
     /// A <see cref="IPlatformProvider"/> implementation for the XAML platfrom.
     /// </summary>
     public class MauiPlatformProvider : IPlatformProvider 
     {
-#if MAUI
         private CoreDispatcher dispatcher;
-#else
-        private Dispatcher dispatcher;
-#endif
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XamlPlatformProvider"/> class.
         /// </summary>
         public MauiPlatformProvider() 
         {
-#if MAUI
+
             dispatcher = Window.Current?.Dispatcher;
-#else
-            dispatcher = Dispatcher.CurrentDispatcher;
-#endif
+
         }
 
         /// <summary>
@@ -59,11 +50,7 @@
 
         private bool CheckAccess() 
         {
-#if MAUI
             return dispatcher == null || Window.Current != null;
-#else
-            return dispatcher == null || dispatcher.CheckAccess();
-#endif
         }
 
         /// <summary>
@@ -73,11 +60,7 @@
         public virtual void BeginOnUIThread(System.Action action) 
         {
             ValidateDispatcher();
-#if MAUI
             var dummy = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
-#else
-            dispatcher.BeginInvoke(action);
-#endif
         }
 
         /// <summary>
@@ -87,11 +70,8 @@
         /// <returns></returns>
         public virtual Task OnUIThreadAsync(Func<Task> action) {
             ValidateDispatcher();
-#if MAUI
             return dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask();
-#else
-            return dispatcher.InvokeAsync(action).Task.Unwrap();
-#endif
+
         }
 
         /// <summary>
@@ -105,22 +85,7 @@
                 action();
             else 
             {
-#if MAUI
                 dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask().Wait();
-#else
-                Exception exception = null;
-                System.Action method = () => {
-                    try {
-                        action();
-                    }
-                    catch(Exception ex) {
-                        exception = ex;
-                    }
-                };
-                dispatcher.Invoke(method);
-                if (exception != null)
-                    throw new System.Reflection.TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
-#endif
             }
         }
 
@@ -190,37 +155,18 @@
         {
             foreach (var contextualView in views) {
                 var viewType = contextualView.GetType();
-#if MAUI
+
                 var closeMethod = viewType.GetRuntimeMethod("Close", new Type[0]);
-#else
-                var closeMethod = viewType.GetMethod("Close", new Type[0]);
-#endif
+
                 if (closeMethod != null)
                     return ct => {
-#if !MAUI
-                        var isClosed = false;
-                        if (dialogResult != null) {
-                            var resultProperty = contextualView.GetType().GetProperty("DialogResult");
-                            if (resultProperty != null) {
-                                resultProperty.SetValue(contextualView, dialogResult, null);
-                                isClosed = true;
-                            }
-                        }
 
-                        if (!isClosed) {
-                            closeMethod.Invoke(contextualView, null);
-                        }
-#else
                         closeMethod.Invoke(contextualView, null);
-#endif
                         return Task.FromResult(true);
                     };
 
-#if MAUI
                 var isOpenProperty = viewType.GetRuntimeProperty("IsOpen");
-#else
-                var isOpenProperty = viewType.GetProperty("IsOpen");
-#endif
+
                 if (isOpenProperty != null) {
                     return ct =>
                     {

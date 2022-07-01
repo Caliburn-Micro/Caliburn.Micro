@@ -3,6 +3,7 @@ using Microsoft.Maui.Hosting;
 using Microsoft.UI.Xaml;
 using Windows.ApplicationModel;
 using Caliburn.Micro.Maui;
+using Microsoft.Maui.ApplicationModel;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -29,8 +30,7 @@ namespace Setup.Maui.WinUI
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             base.OnLaunched(args);
-
-            Microsoft.Maui.Essentials.Platform.OnLaunched(args);
+            Platform.OnLaunched(args);
         }
     }
 }

@@ -7,9 +7,9 @@ using Microsoft.Maui.Controls;
 namespace Caliburn.Micro.Maui
 {
     /// <summary>
-    /// A slimmed down version of the normal Caliburn Application for Xamarin Forms, used to register the navigation service and set up the initial view.
+    /// A slimmed down version of the normal Caliburn Application for MAUI, used to register the navigation service and set up the initial view.
     /// </summary>
-    public class FormsApplication : Application
+    public class MauiApplication : Application
     {
         private bool isInitialized;
 
