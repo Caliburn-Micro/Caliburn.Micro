@@ -22,8 +22,8 @@ namespace Features.Avalonia.Results
                 throw new System.InvalidOperationException("View must be a Control to use VisualStateResult");
 
             var view = (Control)context.View;
-
-            VisualStateManager.GoToState(view, StateName, UseTransitions);
+            view.Classes.Clear();
+            view.Classes.Add(StateName);
             OnCompleted();
         }
 

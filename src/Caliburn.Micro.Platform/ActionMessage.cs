@@ -29,6 +29,7 @@
     using DependencyProperty = Avalonia.AvaloniaProperty;
     using EventTrigger = Avalonia.Xaml.Interactions.Core.EventTriggerBehavior;
     using FrameworkElement = Avalonia.Controls.Control;
+    using Avalonia.Input;
 #else
     using System.Windows;
     using System.Windows.Controls.Primitives;
@@ -62,7 +63,9 @@
 
         internal static readonly DependencyProperty HandlerProperty =
 #if AVALONIA
-            AvaloniaProperty.RegisterAttached<AvaloniaObject, object>("Handler", typeof(ActionMessage));
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, object>(
+                "Handler", typeof(ActionMessage)
+                );
 #else
             DependencyProperty.RegisterAttached(
             "Handler",
@@ -104,7 +107,10 @@
         /// </summary>
         public static readonly DependencyProperty ParametersProperty =
 #if AVALONIA
-            AvaloniaProperty.RegisterAttached<AvaloniaObject, AttachedCollection<Parameter>>("Parameters", typeof(ActionMessage));
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, AttachedCollection<Parameter>>(
+                "Parameters",
+                typeof(ActionMessage)
+                );
 #else
             DependencyProperty.Register(
             "Parameters",
@@ -198,14 +204,16 @@
                 if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded))
                 {
 #if AVALONIA
+                    string eventName = "AttachedToVisualTree";
                     var trigger = Interaction.GetBehaviors(AssociatedObject)
                         .OfType<Trigger>()
                         .FirstOrDefault(t => t.Actions.Contains(this)) as EventTriggerBehavior;
 #else
-                    var trigger = Interaction.GetTriggers(AssociatedObject)
+                   string eventName = "Loaded";
+                   var trigger = Interaction.GetTriggers(AssociatedObject)
                     .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
 #endif
-                    if (trigger != null && trigger.EventName == "Loaded")
+                    if (trigger != null && trigger.EventName == eventName)
                         Invoke(new RoutedEventArgs());
                 }
             }
@@ -242,6 +250,7 @@
 #if AVALONIA
         void ElementLoaded(object sender, EventArgs e)
         {
+            DependencyObject elementToUse = null;
 #else
         void ElementLoaded(object sender, RoutedEventArgs e)
         {
@@ -256,9 +265,22 @@
                 {
                     if (Action.HasTargetSet(currentElement))
                         break;
-
+                    
 #if AVALONIA
-                    currentElement = ((IVisual)currentElement).GetVisualParent() as IAvaloniaObject;
+                    var currentView = ((IVisual)currentElement);
+                    if (elementToUse == null)
+                        elementToUse = currentElement;
+                    var currentParent = currentView.GetVisualParent();
+                    if (currentParent?.VisualParent != null)
+                    {
+                        currentParent = currentParent.VisualParent;
+                    }
+                    //if (currentParent != null)
+                    //{
+                    //    elementToUse = currentElement;
+                        
+                    //}
+                    currentElement = currentParent as IAvaloniaObject;
 #else
                     currentElement = BindingScope.GetVisualParent(currentElement);
 #endif
@@ -275,7 +297,7 @@
                 {
                     return typeof(Message);
                 },
-                Source = currentElement
+                Source = elementToUse
             };
 #elif (NET || NETCORE)
 #if NET || CAL_NETCORE
@@ -294,7 +316,16 @@
             binding.Source = currentElement;
 #endif
 #if AVALONIA
+            if (elementToUse != null)
+            {
+                elementToUse.GetObservable(HandlerProperty).Subscribe(x =>
+                {
+                    if (x != null)
+                        Invoke(new RoutedEventArgs());
+                });
+                Log.Info($"Binding event {binding.Path} {binding.ElementName} {HandlerProperty.Name}");
                 this.Bind(HandlerProperty, binding);
+            }
 #else
             BindingOperations.SetBinding(this, HandlerProperty, binding);
 #endif

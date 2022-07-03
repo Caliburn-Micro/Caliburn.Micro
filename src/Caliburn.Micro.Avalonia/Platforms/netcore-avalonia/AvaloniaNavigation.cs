@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Caliburn.Micro
 {
-    public class RoutedNavigation : INavigationService
+    public class AvaloniaNavigation : INavigationService
     {
         public Task GoBackAsync(bool animated = true)
         {
