@@ -5,19 +5,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.13" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.10.13" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.13" />
-    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="0.10.13" />
-    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="0.10.13.3" />
-    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.13.3" />
+    <PackageReference Include="Avalonia" Version="0.10.15" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.15" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.15" />
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="0.10.15" />
+    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="0.10.15" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.15" />
    </ItemGroup>
   <ItemGroup>
-    <Reference Include="Caliburn.Micro.Avalonia">
-      <HintPath>..\..\..\bin\Caliburn.Micro.Avalonia\Release\net6.0\Caliburn.Micro.Avalonia.dll</HintPath>
-    </Reference>
-    <Reference Include="Caliburn.Micro.Core">
-      <HintPath>..\..\..\bin\Caliburn.Micro.Avalonia\Release\net6.0\Caliburn.Micro.Core.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\..\src\Caliburn.Micro.Avalonia\Caliburn.Micro.Avalonia.csproj" />
+    <ProjectReference Include="..\..\..\src\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
+    <ProjectReference Include="..\..\..\src\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
   </ItemGroup>
 </Project>

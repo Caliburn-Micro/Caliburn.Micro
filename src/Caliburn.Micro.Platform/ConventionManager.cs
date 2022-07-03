@@ -218,9 +218,11 @@
 #if AVALONIA
             var itemsControlSourceProperty = ItemsControl.ItemsProperty;
             var loadedEvent = "AttachedToLogicalTree";
+            var contentControlBindTo = "Content";
 #else
             var itemsControlSourceProperty = ItemsControl.ItemsSourceProperty;
             var loadedEvent = "Loaded";
+            var contentControlBindTo = "DataContext";
 #endif
 #if WINDOWS_UWP
             AddElementConvention<SplitView>(SplitView.ContentProperty, "IsPaneOpen", "PaneClosing").GetBindableProperty =
@@ -241,13 +243,13 @@
 #if WINDOWS_UWP
             AddElementConvention<DatePicker>(DatePicker.DateProperty, "Date", "DateChanged");
             AddElementConvention<TimePicker>(TimePicker.TimeProperty, "Time", "TimeChanged");
-            AddElementConvention<Hub>(Hub.HeaderProperty, "Header", "Loaded");
+            AddElementConvention<Hub>(Hub.HeaderProperty, "Header", loadedEvent);
             AddElementConvention<HubSection>(HubSection.HeaderProperty, "Header", "SectionsInViewChanged");
             AddElementConvention<MenuFlyoutItem>(MenuFlyoutItem.TextProperty, "Text", "Click");
             AddElementConvention<ToggleMenuFlyoutItem>(ToggleMenuFlyoutItem.IsCheckedProperty, "IsChecked", "Click");
             AddElementConvention<SearchBox>(SearchBox.QueryTextProperty, "QueryText", "QuerySubmitted");
             AddElementConvention<ToggleSwitch>(ToggleSwitch.IsOnProperty, "IsOn", "Toggled");
-            AddElementConvention<ProgressRing>(ProgressRing.IsActiveProperty, "IsActive", "Loaded");
+            AddElementConvention<ProgressRing>(ProgressRing.IsActiveProperty, "IsActive", loadedEvent);
             AddElementConvention<Slider>(Slider.ValueProperty, "Value", "ValueChanged");
             AddElementConvention<RichEditBox>(RichEditBox.DataContextProperty, "DataContext", "TextChanged");
             AddElementConvention<Pivot>(Pivot.ItemsSourceProperty, "SelectedItem", "SelectionChanged")
@@ -271,12 +273,13 @@
             AddElementConvention<PasswordBox>(null, "Password", "PasswordChanged");
             AddElementConvention<Hyperlink>(Hyperlink.DataContextProperty, "DataContext", "Click");
             AddElementConvention<RichTextBox>(RichTextBox.DataContextProperty, "DataContext", "TextChanged");
-
+            
             AddElementConvention<Menu>(Menu.ItemsSourceProperty,"DataContext", "Click");
             AddElementConvention<MenuItem>(MenuItem.ItemsSourceProperty, "DataContext", "Click");
 #else
             AddElementConvention<Menu>(Menu.ItemsProperty, "DataContext", "Click");
             AddElementConvention<MenuItem>(MenuItem.ItemsProperty, "DataContext", "Click");
+            AddElementConvention<SplitView>(SplitView.ContentProperty, "Content", loadedEvent);
 #endif
             AddElementConvention<Label>(Label.ContentProperty, "Content", "DataContextChanged");
             AddElementConvention<Slider>(Slider.ValueProperty, "Value", "ValueChanged");
@@ -322,14 +325,14 @@
                     return true;
                 };
             AddElementConvention<TabItem>(TabItem.ContentProperty, "DataContext", "DataContextChanged");
-            AddElementConvention<Window>(Window.DataContextProperty, "DataContext", "Loaded");
+            AddElementConvention<Window>(Window.DataContextProperty, "DataContext", loadedEvent);
 #endif
 #if AVALONIA
             AddElementConvention<UserControl>(UserControl.IsVisibleProperty, "DataContext", loadedEvent);
 #else
             AddElementConvention<UserControl>(UserControl.VisibilityProperty, "DataContext", loadedEvent);
 #endif
-            AddElementConvention<Image>(Image.SourceProperty, "Source", "Loaded");
+            AddElementConvention<Image>(Image.SourceProperty, "Source", loadedEvent);
             AddElementConvention<ToggleButton>(ToggleButton.IsCheckedProperty, "IsChecked", "Click");
             AddElementConvention<ButtonBase>(ButtonBase.ContentProperty, "DataContext", "Click");
             AddElementConvention<TextBox>(TextBox.TextProperty, "Text", "TextChanged");
@@ -374,7 +377,7 @@
     return true;
 };
 #else
-            AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", "Loaded")
+            AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", loadedEvent)
                 .ApplyBinding = (viewModelType, path, property, element, convention) => {
                     if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, ItemsControl.ItemsSourceProperty)) {
                         return false;
@@ -385,7 +388,7 @@
                     return true;
                 };
 #endif
-            AddElementConvention<ContentControl>(ContentControl.ContentProperty, "DataContext", "Loaded").GetBindableProperty =
+            AddElementConvention<ContentControl>(ContentControl.ContentProperty, contentControlBindTo, loadedEvent).GetBindableProperty =
                 delegate(DependencyObject foundControl) {
                     var element = (ContentControl)foundControl;
 
@@ -469,8 +472,9 @@
         /// </summary>
         public static bool HasBinding(FrameworkElement element, DependencyProperty property) {
 #if AVALONIA
+            bool hasBinding = element.IsSet(property);
             //TODO: (Avalonia) Need to find a way to detect existing bindings on an AvaloniaProperty
-            return false;
+            return hasBinding;
 #elif NET || NETCORE
             return BindingOperations.GetBindingBase(element, property) != null;
 #else

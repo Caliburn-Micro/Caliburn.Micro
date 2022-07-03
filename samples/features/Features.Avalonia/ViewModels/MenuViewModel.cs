@@ -33,9 +33,9 @@ namespace Features.Avalonia.ViewModels
 
         public BindableCollection<FeatureViewModel> Features { get; }
 
-        public void ShowFeature(FeatureViewModel feature)
+        public async void ShowFeature(FeatureViewModel feature)
         {
-            navigationService.NavigateToViewModel(feature.ViewModel);
+           await navigationService.NavigateToViewModelAsync(feature.ViewModel);
         }
     }
 }

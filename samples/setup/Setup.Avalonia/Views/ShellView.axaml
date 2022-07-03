@@ -1,9 +1,31 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Avalonia"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Setup.Avalonia.Views.ShellView"
         Title="ShellView">
-	<TextBlock Name="DisplayName"/>
+    <Grid Name="myGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Name="DisplayName"/>
+        <Button Name="btnSayHello" Grid.Row="1">Say Hello</Button>
+        <SplitView IsPaneOpen="False"
+                   DisplayMode="Overlay"
+                   OpenPaneLength="296" Grid.Row="2" Name="spltTest">
+            <SplitView.Pane Content="{Binding ActiveItem}">
+            </SplitView.Pane>
+
+            <Grid  cal:Message.Attach="RegisterFrame($source)" >
+                <TextBlock Text="Content"
+                           FontSize="24"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"/>
+            </Grid>
+        </SplitView>
+    </Grid>
 </Window>

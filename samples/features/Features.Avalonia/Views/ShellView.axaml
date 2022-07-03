@@ -5,5 +5,12 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Features.Avalonia.Views.ShellView"
         Title="ShellView">
-  Welcome to Avalonia!
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Name="DisplayName"/>
+        <TransitioningContentControl Grid.Row="1"></TransitioningContentControl>
+    </Grid>
 </Window>

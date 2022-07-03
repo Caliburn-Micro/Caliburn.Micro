@@ -30,10 +30,10 @@ namespace Features.Avalonia.ViewModels
 
         public void Navigate()
         {
-            navigationService.For<NavigationTargetViewModel>()
-                .WithParam(v => v.Text, Text)
-                .WithParam(v => v.IsEnabled, IsEnabled)
-                .Navigate();
+            //navigationService.For<NavigationTargetViewModel>()
+            //    .WithParam(v => v.Text, Text)
+            //    .WithParam(v => v.IsEnabled, IsEnabled)
+            //    .Navigate();
         }
     }
 }
