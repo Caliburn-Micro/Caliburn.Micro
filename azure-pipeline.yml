@@ -19,7 +19,7 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'dotnet workload install maui'
+    script: 'dotnet workload install maui maui-ios maui-maccatalyst'
 
 - task: DotNetCoreCLI@2  
   inputs:
