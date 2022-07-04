@@ -13,8 +13,9 @@ steps:
   displayName: 'Install .NET'
   inputs:
     packageType: 'sdk'
-    version: '6.x'
+    useGlobalJson: true
     includePreviewVersions: true
+    performMultiLevelLookup: true
 
 - task: CmdLine@2
   inputs:
