@@ -58,8 +58,8 @@ jobs:
         java-version: 1.8
 
     - name: Setup Android SDK
-      uses: android-actions/setup-android@v1
-      
+      uses: android-actions/setup-android@v2
+
     - uses: nuget/setup-nuget@v1
       with:
          nuget-version: '5.x'
