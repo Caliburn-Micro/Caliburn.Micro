@@ -53,7 +53,10 @@ jobs:
       with:
         global-json-file: src\global.json
 
-
+    - uses: nuget/setup-nuget@v1
+      with:
+         nuget-version: '5.x'
+    - run: nuget restore src\Caliburn.Micro.sln
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
 
