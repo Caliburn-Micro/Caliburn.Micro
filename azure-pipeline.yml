@@ -44,7 +44,7 @@ steps:
     solution: '$(coreSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME_11_X64)"'
+    msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME_11_X64)" /v:diag'
 
 - task: DotNetCoreCLI@2
   displayName: Run Unit Tests
