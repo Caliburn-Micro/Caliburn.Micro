@@ -18,6 +18,7 @@ steps:
     performMultiLevelLookup: true
 
 - task: CmdLine@2
+  displayName: 'Install MAUI'
   inputs:
     script: 'dotnet workload install maui maui-ios maui-maccatalyst'
 
