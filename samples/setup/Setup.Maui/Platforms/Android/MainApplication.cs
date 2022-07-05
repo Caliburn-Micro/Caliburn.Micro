@@ -1,10 +1,6 @@
-﻿using Android.App;
+﻿using System.Reflection;
+using Android.App;
 using Android.Runtime;
-using Microsoft.Maui;
-using Microsoft.Maui.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 
 namespace Setup.Maui
 {
