@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Caliburn.Micro;
 
 namespace Caliburn.Micro
 {
@@ -102,13 +101,12 @@ namespace Caliburn.Micro
         /// </summary>
         protected virtual void PrepareApplication()
         {
-            //TODO: (Avalonia) Implement application events when Avalonia supports them
-            
-            //Application.Startup += OnStartup;
+            if (Application.ApplicationLifetime is IControlledApplicationLifetime controlledApplicationLifetime)
+            {
+                controlledApplicationLifetime.Startup += OnStartup;
 
-            //Aplication.DispatcherUnhandledException += OnUnhandledException;
-
-            //Application.Exit += OnExit;
+                controlledApplicationLifetime.Exit += OnExit;
+            }
         }
 
         /// <summary>
@@ -156,6 +154,24 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="instance">The instance to perform injection on.</param>
         protected virtual void BuildUp(object instance)
+        {
+        }
+
+        /// <summary>
+        /// Override this to add custom behavior to execute after the application starts.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The args.</param>
+        protected virtual void OnStartup(object sender, ControlledApplicationLifetimeStartupEventArgs e)
+        {
+        }
+
+        /// <summary>
+        /// Override this to add custom behavior on exit.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event args.</param>
+        protected virtual void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)
         {
         }
 
