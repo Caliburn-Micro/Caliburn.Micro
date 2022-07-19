@@ -1,5 +1,5 @@
 pool:
-  vmImage: windows-2019
+  vmImage: windows-latest
 
 variables:
   buildConfiguration: Release
@@ -10,7 +10,7 @@ variables:
 
 steps:
 - task: UseDotNet@2
-  displayName: 'Install .NET 5'
+  displayName: 'Install .NET 6'
   inputs:
     packageType: 'sdk'
     useGlobalJson: true
