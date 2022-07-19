@@ -17,7 +17,7 @@
         <SplitView IsPaneOpen="False"
                    DisplayMode="Overlay"
                    OpenPaneLength="296" Grid.Row="2" Name="spltTest">
-            <SplitView.Pane Content="{Binding ActiveItem}">
+            <SplitView.Pane >
             </SplitView.Pane>
 
             <Grid  cal:Message.Attach="RegisterFrame($source)" >
