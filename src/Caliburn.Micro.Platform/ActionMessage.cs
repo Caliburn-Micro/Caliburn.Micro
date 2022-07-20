@@ -298,7 +298,7 @@
                 },
                 Source = elementToUse
             };
-#elif (NET || NETCORE)
+#elif (NET || NETCORE && !WINDOWS_UWP)
             var binding = new Binding {
                 Path = new PropertyPath(Message.HandlerProperty), 
                 Source = currentElement
