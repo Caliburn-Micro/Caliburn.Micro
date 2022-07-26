@@ -9,16 +9,13 @@ namespace Caliburn.Micro
     /// </summary>
     public interface IWindowManager
     {
-        /*
         /// <summary>
         /// Shows a modal dialog for the specified model.
         /// </summary>
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
         /// <param name="settings">The optional dialog settings.</param>
-        /// <returns>The dialog result.</returns>
-        Task<T> ShowDialogAsync<T>(Window owner, object rootModel, object context = null, IDictionary<string, object> settings = null);
-        */
+        Task ShowDialogAsync(object rootModel, object context = null, IDictionary<string, object> settings = null);
 
         /// <summary>
         /// Shows a non-modal window for the specified model.
@@ -40,10 +37,9 @@ namespace Caliburn.Micro
         /// Creates a window.
         /// </summary>
         /// <param name="rootModel">The view model.</param>
-        /// <param name="isDialog">Whethor or not the window is being shown as a dialog.</param>
         /// <param name="context">The view context.</param>
         /// <param name="settings">The optional popup settings.</param>
         /// <returns>The window.</returns>
-        Task<Window> CreateWindowAsync(object rootModel, bool isDialog, object context = null, IDictionary<string, object> settings = null);
+        Task<Window> CreateWindowAsync(object rootModel, object context = null, IDictionary<string, object> settings = null);
     }
 }
