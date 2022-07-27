@@ -475,7 +475,7 @@
             bool hasBinding = element.IsSet(property);
             //TODO: (Avalonia) Need to find a way to detect existing bindings on an AvaloniaProperty
             return hasBinding;
-#elif NET || NETCORE
+#elif (NET || NETCORE) && !WINDOWS_UWP
             return BindingOperations.GetBindingBase(element, property) != null;
 #else
             return element.GetBindingExpression(property) != null;
