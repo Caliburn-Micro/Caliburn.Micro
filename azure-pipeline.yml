@@ -9,7 +9,6 @@ variables:
   coreSolution: 'src\Caliburn.Micro.sln'
   setupSamplesSolution: 'samples\setup\Setup.sln'
   featuresSamplesSolution: 'samples\features\Features.sln'
-  DotNetMauiRollbackFile: '6.0.312.json'
 
 steps:
 - task: UseDotNet@2
@@ -17,8 +16,6 @@ steps:
   inputs:
     packageType: 'sdk'
     useGlobalJson: true
-    includePreviewVersions: true
-    performMultiLevelLookup: true
 
 - task: PowerShell@2
   displayName: 'Install MAUI'
@@ -26,7 +23,7 @@ steps:
     targetType: 'inline'
     script: |
       & dotnet workload search
-      & dotnet workload install maui --verbosity diag --source https://api.nuget.org/v3/index.json
+      & dotnet workload install maui --source https://api.nuget.org/v3/index.json
 
 - task: DotNetCoreCLI@2  
   inputs:
