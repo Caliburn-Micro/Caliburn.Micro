@@ -49,7 +49,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Caliburn.Micro.Maui" Version="4.0.196-g3022dd58e0" />
+	  <PackageReference Include="Caliburn.Micro.Maui" Version="4.0.*-*" />
 	</ItemGroup>
 
 	<ItemGroup>
