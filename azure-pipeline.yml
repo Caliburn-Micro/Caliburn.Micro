@@ -1,5 +1,7 @@
 pool:
   vmImage: windows-2022
+  demands:
+  - MSBuild
 
 variables:
   buildConfiguration: Release
@@ -23,6 +25,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      & dotnet workload search
       & dotnet workload search
       & dotnet workload install maui
 
