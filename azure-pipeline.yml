@@ -7,6 +7,7 @@ variables:
   coreSolution: 'src\Caliburn.Micro.sln'
   setupSamplesSolution: 'samples\setup\Setup.sln'
   featuresSamplesSolution: 'samples\features\Features.sln'
+  DotNetMauiRollbackFile: '6.0.312.json'
 
 steps:
 - task: UseDotNet@2
@@ -20,6 +21,7 @@ steps:
 - task: CmdLine@2
   displayName: 'Install MAUI'
   inputs:
+    script: 'dotnet workload install maui maui-ios maui-maccatalyst --from-rollback-file $(DotNetMauiRollbackFile) --source https://api.nuget.org/v3/index.json'
     script: 'dotnet workload install maui maui-ios maui-maccatalyst'
 
 - task: DotNetCoreCLI@2  
