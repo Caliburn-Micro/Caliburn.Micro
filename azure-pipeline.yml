@@ -24,6 +24,7 @@ steps:
     script: |
       & dotnet workload search
       & dotnet workload install maui --source https://api.nuget.org/v3/index.json
+      & dotnet workload list
 
 - task: DotNetCoreCLI@2  
   inputs:
@@ -48,7 +49,7 @@ steps:
     solution: '$(coreSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME_11_X64)" /v:diag'
+    msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME_11_X64)"'
 
 - task: DotNetCoreCLI@2
   displayName: Run Unit Tests
