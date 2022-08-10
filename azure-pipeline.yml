@@ -23,7 +23,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      & dotnet workload search maui
+      & dotnet workload search
       & dotnet workload install maui
 
 - task: DotNetCoreCLI@2  
