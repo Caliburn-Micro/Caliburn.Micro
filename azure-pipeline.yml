@@ -18,10 +18,13 @@ steps:
     includePreviewVersions: true
     performMultiLevelLookup: true
 
-- task: CmdLine@2
+- task: PowerShell@2
   displayName: 'Install MAUI'
   inputs:
-    script: 'dotnet workload install maui'
+    targetType: 'inline'
+    script: |
+      & dotnet workload search maui
+      & dotnet workload install maui
 
 - task: DotNetCoreCLI@2  
   inputs:
