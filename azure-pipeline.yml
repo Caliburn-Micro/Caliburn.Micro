@@ -22,7 +22,6 @@ steps:
   displayName: 'Install MAUI'
   inputs:
     script: 'dotnet workload install maui maui-ios maui-maccatalyst --from-rollback-file $(DotNetMauiRollbackFile) --source https://api.nuget.org/v3/index.json'
-    script: 'dotnet workload install maui maui-ios maui-maccatalyst'
 
 - task: DotNetCoreCLI@2  
   inputs:
