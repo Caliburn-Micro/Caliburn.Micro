@@ -26,8 +26,7 @@ steps:
     targetType: 'inline'
     script: |
       & dotnet workload search
-      & dotnet workload search
-      & dotnet workload install maui
+      & dotnet workload install maui --verbosity diag
 
 - task: DotNetCoreCLI@2  
   inputs:
