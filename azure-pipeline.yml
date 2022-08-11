@@ -62,7 +62,7 @@ steps:
   displayName: Nuget Restore Setup Solution
   inputs:
     solution: '$(setupSamplesSolution)'
-    msbuildArgs: '/t:Restore'
+    msbuildArgs: '/t:Restore /p:RestoreConfigFile=samples\setup\.nuget\nuget.config'
     configuration: '$(buildConfiguration)'
 
 # - task: NuGetCommand@2
