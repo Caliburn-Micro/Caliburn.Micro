@@ -26,6 +26,10 @@ steps:
       & dotnet workload install maui maui-android maui-ios maui-maccatalyst maui-windows android --source https://api.nuget.org/v3/index.json
       & dotnet workload list
 
+- task: NuGetToolInstaller@1
+  inputs:
+    versionSpec: '6.2.1'
+
 - task: DotNetCoreCLI@2  
   inputs:
     command: custom
@@ -58,20 +62,20 @@ steps:
     projects: '**/*Test*/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
-- task: VSBuild@1
-  displayName: Nuget Restore Setup Solution
-  inputs:
-    solution: '$(setupSamplesSolution)'
-    msbuildArgs: '/t:Restore /p:RestoreConfigFile=samples\setup\.nuget\nuget.config'
-    configuration: '$(buildConfiguration)'
-
-# - task: NuGetCommand@2
-  # displayName: Restore Setup Solution
+# - task: VSBuild@1
+  # displayName: Nuget Restore Setup Solution
   # inputs:
-    # restoreSolution: '$(setupSamplesSolution)'
-    # feedsToUse: config
-    # nugetConfigPath: 'samples\setup\.nuget\nuget.config'
-    # verbosityRestore: 'Detailed'
+    # solution: '$(setupSamplesSolution)'
+    # msbuildArgs: '/t:Restore /p:RestoreConfigFile=samples\setup\.nuget\nuget.config'
+    # configuration: '$(buildConfiguration)'
+
+- task: nugetcommand@2
+  displayname: restore setup solution
+  inputs:
+    restoresolution: '$(setupsamplessolution)'
+    feedstouse: config
+    nugetconfigpath: 'samples\setup\.nuget\nuget.config'
+    verbosityrestore: 'detailed'
 
 
 - task: VSBuild@1
