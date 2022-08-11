@@ -23,7 +23,7 @@ steps:
     targetType: 'inline'
     script: |
       & dotnet workload search
-      & dotnet workload install maui --source https://api.nuget.org/v3/index.json
+      & dotnet workload install maui maui-android maui-ios maui-maccatalyst maui-windows --source https://api.nuget.org/v3/index.json
       & dotnet workload list
 
 - task: DotNetCoreCLI@2  
