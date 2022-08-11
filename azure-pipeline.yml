@@ -58,13 +58,20 @@ steps:
     projects: '**/*Test*/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
-- task: NuGetCommand@2
-  displayName: Restore Setup Solution
+- task: VSBuild@1
+  displayName: Nuget Restore Setup Solution
   inputs:
-    restoreSolution: '$(setupSamplesSolution)'
-    feedsToUse: config
-    nugetConfigPath: 'samples\setup\.nuget\nuget.config'
-    verbosityRestore: 'Detailed'
+    solution: '$(setupSamplesSolution)'
+    msbuildArgs: '/t:Restore'
+    configuration: '$(buildConfiguration)'
+
+# - task: NuGetCommand@2
+  # displayName: Restore Setup Solution
+  # inputs:
+    # restoreSolution: '$(setupSamplesSolution)'
+    # feedsToUse: config
+    # nugetConfigPath: 'samples\setup\.nuget\nuget.config'
+    # verbosityRestore: 'Detailed'
 
 
 - task: VSBuild@1
