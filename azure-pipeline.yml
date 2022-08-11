@@ -28,7 +28,7 @@ steps:
 
 - task: NuGetToolInstaller@1
   inputs:
-    versionSpec: '6.2.1'
+    versionSpec: '6.3.0'
 
 - task: DotNetCoreCLI@2  
   inputs:
@@ -69,13 +69,13 @@ steps:
     # msbuildArgs: '/t:Restore /p:RestoreConfigFile=samples\setup\.nuget\nuget.config'
     # configuration: '$(buildConfiguration)'
 
-- task: nugetcommand@2
-  displayname: restore setup solution
+- task: NuGetCommand@2
+  displayName: restore setup solution
   inputs:
-    restoresolution: '$(setupsamplessolution)'
-    feedstouse: config
-    nugetconfigpath: 'samples\setup\.nuget\nuget.config'
-    verbosityrestore: 'detailed'
+    restoreSolution: '$(setupsamplessolution)'
+    feedsToUse: config
+    nugetConfigPath: 'samples\setup\.nuget\nuget.config'
+    verbosityRestore: 'detailed'
 
 
 - task: VSBuild@1
