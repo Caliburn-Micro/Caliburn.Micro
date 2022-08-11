@@ -58,21 +58,13 @@ steps:
     projects: '**/*Test*/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
-
-- task: DotNetCoreCLI@2
+- task: NuGetCommand@2
   displayName: Restore Setup Solution
   inputs:
-    command: restore                      
-    projects: '$(setupSamplesSolution)'
+    restoreSolution: '$(setupSamplesSolution)'
     feedsToUse: config
     nugetConfigPath: 'samples\setup\.nuget\nuget.config'
-    
-# - task: NuGetCommand@2
-  # displayName: Restore Setup Solution
-  # inputs:
-    # restoreSolution: '$(setupSamplesSolution)'
-    # feedsToUse: config
-    # nugetConfigPath: 'samples\setup\.nuget\nuget.config'
+    verbosityRestore: 'Detailed'
 
 
 - task: VSBuild@1
@@ -81,7 +73,7 @@ steps:
     solution: '$(setupSamplesSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
+    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME_11_X64)"'
 
 - task: NuGetCommand@2
   displayName: Restore Features Solution
@@ -94,7 +86,7 @@ steps:
     solution: '$(featuresSamplesSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
+    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME_11_X64)"'
 
 - task: CopyFiles@2
   displayName: Copy Packages to Artifact Directory
