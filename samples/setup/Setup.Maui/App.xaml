@@ -1,9 +1,9 @@
 ﻿<?xml version = "1.0" encoding = "UTF-8" ?>
-<cal:FormsApplication xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                      xmlns:local="clr-namespace:Setup.Maui"
-                      xmlns:cal="clr-namespace:Caliburn.Micro.Maui;assembly=Caliburn.Micro.Maui"
-                      x:Class="Setup.Maui.App">
+<cal:MauiApplication xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                     xmlns:local="clr-namespace:Setup.Maui"
+                     xmlns:cal="clr-namespace:Caliburn.Micro.Maui;assembly=Caliburn.Micro.Maui"
+                     x:Class="Setup.Maui.App">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -12,4 +12,4 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
-</cal:FormsApplication>
+</cal:MauiApplication>

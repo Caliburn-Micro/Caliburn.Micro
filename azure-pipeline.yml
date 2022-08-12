@@ -27,6 +27,7 @@ steps:
       & dotnet workload list
 
 - task: NuGetToolInstaller@1
+  displayName: 'Install Nuget'
   inputs:
     versionSpec: '6.3.0'
 
@@ -62,15 +63,8 @@ steps:
     projects: '**/*Test*/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
-# - task: VSBuild@1
-  # displayName: Nuget Restore Setup Solution
-  # inputs:
-    # solution: '$(setupSamplesSolution)'
-    # msbuildArgs: '/t:Restore /p:RestoreConfigFile=samples\setup\.nuget\nuget.config'
-    # configuration: '$(buildConfiguration)'
-
 - task: NuGetCommand@2
-  displayName: restore setup solution
+  displayName: Restore Setup Solution
   inputs:
     restoreSolution: '$(setupsamplessolution)'
     feedsToUse: config
