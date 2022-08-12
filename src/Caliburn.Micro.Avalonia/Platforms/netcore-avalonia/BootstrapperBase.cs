@@ -167,7 +167,7 @@ namespace Caliburn.Micro
         protected async Task DisplayRootViewForAsync(Type viewModelType, IDictionary<string, object> settings = null)
         {
             var windowManager = IoC.Get<IWindowManager>();
-            var window = await windowManager.CreateWindowAsync(IoC.GetInstance(viewModelType, null), false, null, settings);
+            var window = await windowManager.CreateWindowAsync(IoC.GetInstance(viewModelType, null), null, settings);
             if (Application.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow == null)
                 desktop.MainWindow = window;
             window.Show();

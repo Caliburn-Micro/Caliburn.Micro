@@ -26,7 +26,7 @@ namespace Caliburn.Micro
         /// <returns>The dialog result.</returns>
         public virtual async Task ShowDialogAsync(object rootModel, object context = null, IDictionary<string, object> settings = null)
         {
-            var window = await CreateWindowAsync(rootModel, true, context, settings);
+            var window = await CreateWindowAsync(rootModel, context, settings);
             
             await window.ShowDialog(InferOwnerOf(window));
         }
@@ -56,7 +56,7 @@ namespace Caliburn.Micro
             else
             {
             */
-                var window = await CreateWindowAsync(rootModel, false, context, settings);
+                var window = await CreateWindowAsync(rootModel, context, settings);
 
                 window.Show();
             /*}*/
@@ -128,13 +128,12 @@ namespace Caliburn.Micro
         /// Creates a window.
         /// </summary>
         /// <param name="rootModel">The view model.</param>
-        /// <param name="isDialog">Whethor or not the window is being shown as a dialog.</param>
         /// <param name="context">The view context.</param>
         /// <param name="settings">The optional popup settings.</param>
         /// <returns>The window.</returns>
-        public virtual async Task<Window> CreateWindowAsync(object rootModel, bool isDialog, object context, IDictionary<string, object> settings)
+        public virtual async Task<Window> CreateWindowAsync(object rootModel, object context, IDictionary<string, object> settings)
         {
-            var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context), isDialog);
+            var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context));
             ViewModelBinder.Bind(rootModel, view, context);
 
             var haveDisplayName = rootModel as IHaveDisplayName;
@@ -154,25 +153,14 @@ namespace Caliburn.Micro
         }
 
         /// <summary>
-        /// Makes sure the view is a window is is wrapped by one.
+        /// Makes sure the view is a window or is wrapped by one.
         /// </summary>
         /// <param name="model">The view model.</param>
         /// <param name="view">The view.</param>
-        /// <param name="isDialog">Whethor or not the window is being shown as a dialog.</param>
         /// <returns>The window.</returns>
-        protected virtual Window EnsureWindow(object model, object view, bool isDialog)
+        protected virtual Window EnsureWindow(object model, object view)
         {
-
-            if (view is Window window)
-            {
-                var owner = InferOwnerOf(window);
-                if (owner != null && isDialog)
-                {
-                    //TODO: (Avalonia) Set window owner
-                    //window.Owner = owner;
-                }
-            }
-            else
+            if (!(view is Window window))
             {
                 window = new Window
                 {
@@ -182,17 +170,9 @@ namespace Caliburn.Micro
 
                 window.SetValue(View.IsGeneratedProperty, true);
 
-                var owner = InferOwnerOf(window);
-                if (owner != null)
-                {
-                    window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                    //TODO: (Avalonia) Set window owner
-                    //window.Owner = owner;
-                }
-                else
-                {
-                    window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                }
+                window.WindowStartupLocation = InferOwnerOf(window) != null
+                    ? WindowStartupLocation.CenterOwner
+                    : WindowStartupLocation.CenterScreen;
             }
 
             return window;
