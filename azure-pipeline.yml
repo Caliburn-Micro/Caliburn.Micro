@@ -1,5 +1,5 @@
 pool:
-  vmImage: windows-2022
+  vmImage: windows-latest
   demands:
   - MSBuild
 
@@ -22,9 +22,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      & dotnet workload search
-      & dotnet workload install maui maui-android maui-ios maui-maccatalyst maui-windows android --source https://api.nuget.org/v3/index.json
-      & dotnet workload list
+      & dotnet workload install maui --source https://api.nuget.org/v3/index.json
 
 - task: NuGetToolInstaller@1
   displayName: 'Install Nuget'
