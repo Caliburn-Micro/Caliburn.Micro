@@ -152,10 +152,19 @@
                 Parameters.Attach(AssociatedObject);
                 Parameters.Apply(x => x.MakeAwareOf(this));
 
-                if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded)) {
-                    var trigger = Interaction.GetTriggers(AssociatedObject)
-                        .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
-                    if (trigger != null && trigger.EventName == "Loaded")
+                if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded))
+                {
+#if AVALONIA
+                    string eventName = "AttachedToLogicalTree";
+                    var trigger = Interaction.GetBehaviors(AssociatedObject)
+                        .OfType<Trigger>()
+                        .FirstOrDefault(t => t.Actions.Contains(this)) as EventTriggerBehavior;
+#else
+                   string eventName = "Loaded";
+                   var trigger = Interaction.GetTriggers(AssociatedObject)
+                    .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
+#endif
+                    if (trigger != null && trigger.EventName == eventName)
                         Invoke(new RoutedEventArgs());
                 }
             }
@@ -191,6 +200,22 @@
                     if (Action.HasTargetSet(currentElement))
                         break;
 
+#if AVALONIA
+                    var currentView = ((IVisual)currentElement);
+                    if (elementToUse == null)
+                        elementToUse = currentElement;
+                    var currentParent = currentView.GetVisualParent();
+                    if (currentParent?.VisualParent != null)
+                    {
+                        currentParent = currentParent.VisualParent;
+                    }
+                    //if (currentParent != null)
+                    //{
+                    //    elementToUse = currentElement;
+
+                    //}
+                    currentElement = currentParent as IAvaloniaObject;
+#else
                     currentElement = BindingScope.GetVisualParent(currentElement);
                 }
             }
@@ -413,7 +438,9 @@
                     }
                 }
 
+
                 currentElement = BindingScope.GetVisualParent(currentElement);
+
             }
 
             if (source != null && source.DataContext != null) {
