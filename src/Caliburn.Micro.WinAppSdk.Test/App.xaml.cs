@@ -231,9 +231,9 @@ namespace Caliburn.Micro.WinAppSdk.Test
 
             PrepareViewFirst();
 
-            // RootFrame.(DisplayRootView<ShellView>());
+           // RootFrame(DisplayRootView<ShellView>());
 
-            //Window.Current.Activate();
+          //  Window.Current.Activate();
         }
 
         /// <summary>
