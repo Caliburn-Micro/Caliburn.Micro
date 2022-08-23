@@ -33,7 +33,7 @@
     <None Include="Platforms\**\**\*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -50,13 +50,11 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
     <Compile Include="Platforms\net46-netcore\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
     <Compile Include="Platforms\net46-netcore\**\*.cs" />
   </ItemGroup>
   
