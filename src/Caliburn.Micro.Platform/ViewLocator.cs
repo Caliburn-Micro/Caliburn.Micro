@@ -1,5 +1,7 @@
 ﻿#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
 #endif
@@ -14,6 +16,11 @@ namespace Caliburn.Micro
     using UIElement = global::Xamarin.Forms.Element;
     using TextBlock = global::Xamarin.Forms.Label;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
+#elif MAUI
+    using global::Microsoft.Maui.Controls;
+    using UIElement = global::Microsoft.Maui.Controls.Element;
+    using TextBlock = global::Microsoft.Maui.Controls.Label;
+    using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
 #elif !WINDOWS_UWP
     using System.Windows;
     using System.Windows.Controls;
@@ -22,7 +29,7 @@ namespace Caliburn.Micro
     using Windows.UI.Xaml.Controls;
 #endif
 
-#if !WINDOWS_UWP && !XFORMS
+#if !WINDOWS_UWP && !XFORMS && !MAUI
     using System.Windows.Interop;
 #endif
 
@@ -396,7 +403,7 @@ namespace Caliburn.Micro
             if (viewAware != null) {
                 var view = viewAware.GetView(context) as UIElement;
                 if (view != null) {
-#if !WINDOWS_UWP && !XFORMS
+#if !WINDOWS_UWP && !XFORMS && !MAUI
                     var windowCheck = view as Window;
                     if (windowCheck == null || (!windowCheck.IsLoaded && !(new WindowInteropHelper(windowCheck).Handle == IntPtr.Zero))) {
                         Log.Info("Using cached view for {0}.", model);
@@ -416,7 +423,7 @@ namespace Caliburn.Micro
         /// Transforms a view type into a pack uri.
         /// </summary>
         public static Func<Type, Type, string> DeterminePackUriFromType = (viewModelType, viewType) => {
-#if !WINDOWS_UWP && !XFORMS
+#if !WINDOWS_UWP && !XFORMS && !MAUI
             var assemblyName = viewType.Assembly.GetAssemblyName();
             var applicationAssemblyName = Application.Current.GetType().Assembly.GetAssemblyName();
 #else

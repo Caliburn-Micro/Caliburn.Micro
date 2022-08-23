@@ -1,5 +1,7 @@
 ﻿#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
 #endif
@@ -14,6 +16,11 @@ namespace Caliburn.Micro
     using DependencyObject = global::Xamarin.Forms.BindableObject;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
+#elif MAUI
+    using global::Microsoft.Maui;
+    using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
+    using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
+    using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
 #else
     using System.Windows;
 #endif
