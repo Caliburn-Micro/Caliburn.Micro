@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30330.147
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31903.286
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Core", "Caliburn.Micro.Core\Caliburn.Micro.Core.csproj", "{F36828EE-446C-42F2-A0EC-D4FB112BD183}"
 EndProject
@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Platform.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Platform.Core", "Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj", "{BFB9D3A5-6710-4729-9890-D7B784C8E8B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Xamarin.Forms", "Caliburn.Micro.Xamarin.Forms\Caliburn.Micro.Xamarin.Forms.csproj", "{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Xamarin.Forms", "Caliburn.Micro.Xamarin.Forms\Caliburn.Micro.Xamarin.Forms.csproj", "{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Maui", "Caliburn.Micro.Maui\Caliburn.Micro.Maui.csproj", "{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,6 +99,18 @@ Global
 		{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}.Release|x64.Build.0 = Release|Any CPU
 		{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}.Release|x86.ActiveCfg = Release|Any CPU
 		{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}.Release|x86.Build.0 = Release|Any CPU
+		{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}.Debug|x64.Build.0 = Debug|Any CPU
+		{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}.Debug|x86.Build.0 = Debug|Any CPU
+		{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}.Release|x64.ActiveCfg = Release|Any CPU
+		{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}.Release|x64.Build.0 = Release|Any CPU
+		{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}.Release|x86.ActiveCfg = Release|Any CPU
+		{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

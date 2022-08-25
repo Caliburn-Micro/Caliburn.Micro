@@ -1,5 +1,7 @@
 ﻿#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
 #endif
@@ -13,6 +15,11 @@ namespace Caliburn.Micro
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
+#elif MAUI
+    using UIElement = global::Microsoft.Maui.Controls.Element;
+    using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
+    using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
+    using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
 #else
     using System.Windows;
 #endif
@@ -158,7 +165,7 @@ namespace Caliburn.Micro
             }
 
             var target = e.NewValue;
-#if XFORMS
+#if XFORMS || MAUI
             Log.Info("Attaching message handler {0} to {1}.", target, d);
             Message.SetHandler(d, target);
 

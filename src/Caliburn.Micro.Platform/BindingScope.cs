@@ -172,7 +172,7 @@
                     continue;
                 }
 
-#if NET || NETCORE
+#if NET || CAL_NETCORE
                 var childCount = (current is Visual || current is Visual3D)
                     ? VisualTreeHelper.GetChildrenCount(current) : 0;
 #else
