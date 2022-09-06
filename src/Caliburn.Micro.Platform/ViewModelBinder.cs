@@ -1,5 +1,7 @@
 ﻿#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
 #endif
@@ -14,6 +16,11 @@ namespace Caliburn.Micro
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
+#elif MAUI
+    using UIElement = global::Microsoft.Maui.Controls.Element;
+    using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
+    using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
+    using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
 #elif WINDOWS_UWP
     using Windows.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
@@ -67,7 +74,7 @@ namespace Caliburn.Micro
         public static Func<IEnumerable<FrameworkElement>, Type, IEnumerable<FrameworkElement>> BindProperties = (namedElements, viewModelType) => {
 
             var unmatchedElements = new List<FrameworkElement>();
-#if !XFORMS
+#if !XFORMS && !MAUI
             foreach (var element in namedElements) {
                 var cleanName = element.Name.Trim('_');
                 var parts = cleanName.Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
@@ -120,8 +127,8 @@ namespace Caliburn.Micro
         /// <remarks>Parameters include the named elements to search through and the type of view model to determine conventions for. Returns unmatched elements.</remarks>
         public static Func<IEnumerable<FrameworkElement>, Type, IEnumerable<FrameworkElement>> BindActions = (namedElements, viewModelType) => {
             var unmatchedElements = namedElements.ToList();
-#if !XFORMS
-#if WINDOWS_UWP || XFORMS
+#if !XFORMS && !MAUI
+#if WINDOWS_UWP || XFORMS || MAUI
             var methods = viewModelType.GetRuntimeMethods();
 #else
             var methods = viewModelType.GetMethods();
@@ -193,7 +200,7 @@ namespace Caliburn.Micro
         /// </summary>
         ///<remarks>Passes the the view model, view and creation context (or null for default) to use in applying binding.</remarks>
         public static Action<object, DependencyObject, object> Bind = (viewModel, view, context) => {
-#if !WINDOWS_UWP && !XFORMS
+#if !WINDOWS_UWP && !XFORMS && !MAUI
             // when using d:DesignInstance, Blend tries to assign the DesignInstanceExtension class as the DataContext,
             // so here we get the actual ViewModel which is in the Instance property of DesignInstanceExtension
             if (View.InDesignMode) {
@@ -209,6 +216,8 @@ namespace Caliburn.Micro
 
 #if XFORMS
             var noContext = Caliburn.Micro.Xamarin.Forms.Bind.NoContextProperty;
+#elif MAUI
+            var noContext = Caliburn.Micro.Maui.Bind.NoContextProperty;
 #else
             var noContext = Caliburn.Micro.Bind.NoContextProperty;
 #endif
@@ -247,7 +256,7 @@ namespace Caliburn.Micro
                 viewModelType = viewModelTypeProvider.GetCustomType();
             }
 #endif
-#if XFORMS
+#if XFORMS || MAUI
             IEnumerable<FrameworkElement> namedElements = new List<FrameworkElement>();
 #else
             var namedElements = BindingScope.GetNamedElements(element);

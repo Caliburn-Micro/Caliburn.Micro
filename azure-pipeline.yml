@@ -1,5 +1,7 @@
 pool:
-  vmImage: windows-2019
+  vmImage: windows-2022
+  demands:
+  - MSBuild
 
 variables:
   buildConfiguration: Release
@@ -10,10 +12,24 @@ variables:
 
 steps:
 - task: UseDotNet@2
-  displayName: 'Install .NET 5'
+  displayName: 'Install .NET'
   inputs:
     packageType: 'sdk'
     useGlobalJson: true
+
+- task: PowerShell@2
+  displayName: 'Install MAUI'
+  inputs:
+    targetType: 'inline'
+    script: |
+      & dotnet workload search
+      & dotnet workload install maui maui-android maui-ios maui-maccatalyst maui-windows android --source https://api.nuget.org/v3/index.json
+      & dotnet workload list
+
+- task: NuGetToolInstaller@1
+  displayName: 'Install Nuget'
+  inputs:
+    versionSpec: '6.3.0'
 
 - task: DotNetCoreCLI@2  
   inputs:
@@ -38,7 +54,7 @@ steps:
     solution: '$(coreSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
+    msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME_11_X64)"'
 
 - task: DotNetCoreCLI@2
   displayName: Run Unit Tests
@@ -50,7 +66,11 @@ steps:
 - task: NuGetCommand@2
   displayName: Restore Setup Solution
   inputs:
-    restoreSolution: '$(setupSamplesSolution)'
+    restoreSolution: '$(setupsamplessolution)'
+    feedsToUse: config
+    nugetConfigPath: 'samples\setup\.nuget\nuget.config'
+    verbosityRestore: 'detailed'
+
 
 - task: VSBuild@1
   displayName: Build Setup Solution
@@ -58,7 +78,7 @@ steps:
     solution: '$(setupSamplesSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
+    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME_11_X64)"'
 
 - task: NuGetCommand@2
   displayName: Restore Features Solution
@@ -71,7 +91,7 @@ steps:
     solution: '$(featuresSamplesSolution)'
     configuration: '$(buildConfiguration)'
     platform: '$(buildPlatform)'
-    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
+    msbuildArgs: '/t:Build /p:JavaSdkDirectory="$(JAVA_HOME_11_X64)"'
 
 - task: CopyFiles@2
   displayName: Copy Packages to Artifact Directory

@@ -1,5 +1,7 @@
 ﻿#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
 #endif
@@ -26,7 +28,7 @@ namespace Caliburn.Micro
             new Dictionary<string, Func<ActionExecutionContext, object>>(StringComparer.OrdinalIgnoreCase)
             {
                 {"$eventargs", c => c.EventArgs},
-#if XFORMS
+#if XFORMS || MAUI
                 {"$datacontext", c => c.Source.BindingContext},
                 {"$bindingcontext", c => c.Source.BindingContext},
 #else
@@ -111,7 +113,7 @@ namespace Caliburn.Micro
             }
 
             try {
-#if !WINDOWS_UWP && !XFORMS
+#if !WINDOWS_UWP && !XFORMS && !MAUI
                 var converter = TypeDescriptor.GetConverter(destinationType);
 
                 if (converter.CanConvertFrom(providedType)) {
@@ -124,7 +126,7 @@ namespace Caliburn.Micro
                     return converter.ConvertTo(providedValue, destinationType);
                 }
 #endif
-#if WINDOWS_UWP || XFORMS
+#if WINDOWS_UWP || XFORMS || MAUI
                 if (destinationType.GetTypeInfo().IsEnum) {
 #else
                 if (destinationType.IsEnum) {
@@ -162,7 +164,7 @@ namespace Caliburn.Micro
         /// <param name="type">The type.</param>
         /// <returns>The default value.</returns>
         public static object GetDefaultValue(Type type) {
-#if WINDOWS_UWP || XFORMS
+#if WINDOWS_UWP || XFORMS || MAUI
             var typeInfo = type.GetTypeInfo();
             return typeInfo.IsClass || typeInfo.IsInterface ? null : System.Activator.CreateInstance(type);
 #else

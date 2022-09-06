@@ -1,5 +1,7 @@
 ﻿#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
 #endif
@@ -17,6 +19,12 @@ namespace Caliburn.Micro
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
+#elif MAUI
+    using global::Microsoft.Maui.Controls;
+    using UIElement = global::Microsoft.Maui.Controls.Element;
+    using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
+    using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
+    using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
 #else
     using System.Windows;
     using Microsoft.Xaml.Behaviors;
@@ -109,7 +117,7 @@ namespace Caliburn.Micro
 
             var newTriggers = Parser.Parse(d, e.NewValue as string).ToArray();
             newTriggers.OfType<DependencyObject>().Apply(allTriggers.Add);
-#elif XFORMS
+#elif XFORMS || MAUI
             var visualElement = d as VisualElement;
 
             var allTriggers = visualElement != null ? visualElement.Triggers : new List<TriggerBase>();
