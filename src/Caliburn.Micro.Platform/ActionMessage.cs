@@ -193,7 +193,7 @@
             }
             else currentElement = context.View;
 
-#if NET || NETCORE
+#if NET || CAL_NETCORE
             var binding = new Binding {
                 Path = new PropertyPath(Message.HandlerProperty), 
                 Source = currentElement
