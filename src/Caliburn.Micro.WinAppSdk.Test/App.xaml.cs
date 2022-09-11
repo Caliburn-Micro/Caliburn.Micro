@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro.WinAppSdk.Test.ViewModels;
 using Caliburn.Micro.WinAppSdk.Test.Views;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -38,7 +39,7 @@ namespace Caliburn.Micro.WinAppSdk.Test
         /// <summary>
         /// The root frame of the application.
         /// </summary>
-        protected NavigationView RootFrame { get; private set; }
+        protected Frame RootFrame { get; private set; }
 
         /// <summary>
         /// Called by the bootstrapper's constructor at runtime to start the framework.
@@ -47,10 +48,10 @@ namespace Caliburn.Micro.WinAppSdk.Test
         {
             AssemblySourceCache.Install();
             var ass = SelectAssemblies();
-            AssemblySource.AddRange(ass);
+            AssemblySource.Instance.AddRange(ass);
             Log.Debug("Start Runtime Prepare application");
-            //  Log.Debug($"Assemblies {AssemblySource.AssemblyCount}");
             //PrepareApplication();
+            Log.Debug($"Assemblies in AssemblySource: {AssemblySource.Instance.Count}");
             Log.Debug("Start Runtime Prepare configure");
             Configure();
             Log.Debug("Start Runtime IoC GetInstance");
@@ -68,14 +69,17 @@ namespace Caliburn.Micro.WinAppSdk.Test
         /// </summary>
         protected virtual void Configure()
         {
+            Log.Debug("Configure");
             container = new WinRTContainer();
 
             container.RegisterWinRTServices();
-            
-            container.PerRequest<ShellViewModel>();
+
             container.PerRequest<HomeViewModel>();
             container.PerRequest<HomeView>();
-            container.PerRequest<ShellView>();
+            container.BuildUp(this);
+
+            Log.Debug($"Assemblies {AssemblySource.AssemblyCount}");
+
         }
 
         /// <summary>
@@ -84,7 +88,10 @@ namespace Caliburn.Micro.WinAppSdk.Test
         /// <returns>A list of assemblies to inspect.</returns>
         protected virtual IEnumerable<Assembly> SelectAssemblies()
         {
-            return new[] { GetType().GetTypeInfo().Assembly };
+            var s = GetType().GetTypeInfo().Assembly;
+            List<Assembly> lstAssembly = new List<Assembly>();
+            lstAssembly.Add(s);
+            return lstAssembly;
         }
 
         /// <summary>
@@ -129,20 +136,6 @@ namespace Caliburn.Micro.WinAppSdk.Test
 
             Log.Info("PlatformProvider.Current");
             PlatformProvider.Current = new XamlPlatformProvider();
-
-            Log.Info("baseExtractTypes");
-            var baseExtractTypes = AssemblySourceCache.ExtractTypes;
-
-            AssemblySourceCache.ExtractTypes = assembly =>
-            {
-                var baseTypes = baseExtractTypes(assembly);
-                var elementTypes = assembly.GetExportedTypes()
-                    .Where(t => typeof(UIElement).IsAssignableFrom(t));
-
-                return baseTypes.Union(elementTypes);
-            };
-
-            AssemblySource.Instance.Refresh();
 
 
             if (Execute.InDesignMode)
@@ -193,6 +186,7 @@ namespace Caliburn.Micro.WinAppSdk.Test
         /// <param name="instance">The instance to perform injection on.</param>
         protected virtual void BuildUp(object instance)
         {
+            container.BuildUp(instance);
         }
 
 
@@ -203,7 +197,7 @@ namespace Caliburn.Micro.WinAppSdk.Test
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            DisplayRootView<ShellView>();
+            DisplayRootView<HomeView>();
         }
 
         /// <summary>
@@ -215,9 +209,10 @@ namespace Caliburn.Micro.WinAppSdk.Test
         {
             Log.Info("DisplayRootView start");
             DisplayRootView(typeof(T), parameter);
+            Log.Info("DisplayRootView end");
         }
 
-        private MainWindow m_window;
+        private Window m_window;
 
         /// <summary>
         /// Creates the root frame and navigates to the specified view.
@@ -228,12 +223,13 @@ namespace Caliburn.Micro.WinAppSdk.Test
         {
             Log.Debug("DisplayRootView");
             Initialize();
-
+            
             PrepareViewFirst();
 
-           // RootFrame(DisplayRootView<ShellView>());
-
-          //  Window.Current.Activate();
+            var homeView = container.GetInstance<HomeView>();
+            var homeViewModel = container.GetInstance<HomeViewModel>();
+            Log.Debug($"Assemblies in AssemblySource: {AssemblySource.Instance.Count}");
+            this.RootFrame.Content = homeView;
         }
 
         /// <summary>
@@ -253,19 +249,31 @@ namespace Caliburn.Micro.WinAppSdk.Test
         /// Override this to register a navigation service.
         /// </summary>
         /// <param name="rootFrame">The root frame of the application.</param>
-        protected virtual void PrepareViewFirst(NavigationView rootFrame)
+        protected virtual void PrepareViewFirst(Frame rootFrame)
         {
+            Log.Debug("PrepareViewFirst");
+            container.RegisterNavigationService(rootFrame);
         }
 
         /// <summary>
         /// Creates the root frame used by the application.
         /// </summary>
         /// <returns>The frame.</returns>
-        protected virtual NavigationView CreateApplicationFrame()
+        protected virtual Frame CreateApplicationFrame()
         {
-            m_window = new MainWindow();
+            Log.Debug("CreateApplicationFrame");
+            m_window = new Window();
+            m_window.Activated += Window_Activated;
+            Frame rootFrame = new Frame();
+            rootFrame.Name = "RootFrame";
+            m_window.Content = rootFrame;
             m_window.Activate();
-            return m_window.RootFrame;
+            return rootFrame;
+        }
+
+        private void Window_Activated(object sender, WindowActivatedEventArgs args)
+        {
+            Log.Debug("Window loaded");
         }
     }
 }

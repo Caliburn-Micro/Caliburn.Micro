@@ -5,6 +5,7 @@
     /// Extension methods for <see cref="INavigationService"/>
     /// </summary>
     public static class NavigationExtensions {
+        private static readonly ILog Log = LogManager.GetLog(typeof(NavigationExtensions));
         /// <summary>
         ///   Navigates to the specified content.
         /// </summary>
@@ -25,6 +26,13 @@
         /// <returns>Whether or not navigation succeeded.</returns>
         public static bool NavigateToViewModel(this INavigationService navigationService, Type viewModelType,
             object parameter = null) {
+            Log.Debug("NavigateToViewModel start");
+            var vt = IoC.GetInstance(viewModelType, null);
+            Log.Debug($"NavigateToViewModel vt is null {vt is null} viewmodeltype {viewModelType.Name}");
+            //if (vt != null)
+            //{
+            //    return navigationService.Navigate(vt.GetType(), parameter);
+            //}
             var viewType = ViewLocator.LocateTypeForModelType(viewModelType, null, null);
             if (viewType == null) {
                 throw new InvalidOperationException(

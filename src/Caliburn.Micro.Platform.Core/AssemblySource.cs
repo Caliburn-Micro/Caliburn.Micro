@@ -12,10 +12,12 @@ namespace Caliburn.Micro
     /// </summary>
     public static class AssemblySource
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(AssemblySource));
+
         /// <summary>
         /// The singleton instance of the AssemblySource used by the framework.
         /// </summary>
-        public static readonly IObservableCollection<Assembly> Instance = new BindableCollection<Assembly>();
+        public static IObservableCollection<Assembly> Instance = new BindableCollection<Assembly>();
 
         public static int AssemblyCount
         {
@@ -37,19 +39,26 @@ namespace Caliburn.Micro
         /// <param name="assemblies">The assemblies to add</param>
         public static void AddRange(IEnumerable<Assembly> assemblies)
         {
-            foreach(var assembly in assemblies)
+            Log.Debug("Adding {0} assemblies to AssemblySource", assemblies.Count());
+            Log.Debug($"Currently {Instance.Count} assemblies in AssemblySource");
+            foreach (var assembly in assemblies)
             {
                 try
                 {
                     if (!Instance.Contains(assembly))
+                    {
                         Instance.Add(assembly);
+                        Log.Debug("Added {0} to AssemblySource", assembly.FullName);
+                    }
                 }
-                catch (ArgumentException)
+                catch (ArgumentException ex)
                 {
-                    
+                    Log.Error(ex);
                     // ignore
                 }
             }
+            Log.Debug($"Currently {Instance.Count} assemblies in AssemblySource after adding");
+
         }
 
         /// <summary>
@@ -57,14 +66,24 @@ namespace Caliburn.Micro
         /// </summary>
         public static Func<IEnumerable<string>, Type> FindTypeByNames = names =>
         {
+            Log.Debug("Finding type by names");
             if (names == null)
             {
+                Log.Debug("TypeNames is null");
                 return null;
+            }
+            else
+            {
+                Log.Debug($"TypeNames is not null {names.Count()}");
+                foreach (var name in names)
+                {
+                    Log.Debug("TypeName is {0}", name);
+                }
             }
 
             var type = names
-                .Join(Instance.SelectMany(a => a.ExportedTypes), n => n, t => t.FullName, (n, t) => t)
-                .FirstOrDefault();
+            .Join(Instance.SelectMany(a => a.ExportedTypes), n => n, t => t.FullName, (n, t) => t)
+            .FirstOrDefault();
             return type;
         };
     }
@@ -133,9 +152,13 @@ namespace Caliburn.Micro
 
         private static void AddTypeAssembly(Type type)
         {
-            if (!TypeNameCache.ContainsKey(type.FullName))
+            lock (TypeNameCache)
             {
-                TypeNameCache.Add(type.FullName, type);
+                if (!TypeNameCache.ContainsKey(type.FullName))
+                {
+
+                    TypeNameCache.Add(type.FullName, type);
+                }
             }
         }
     }

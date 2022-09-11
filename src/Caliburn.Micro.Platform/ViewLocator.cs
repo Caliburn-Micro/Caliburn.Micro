@@ -312,11 +312,13 @@ namespace Caliburn.Micro
         /// </remarks>
         public static Func<string, object, IEnumerable<string>> TransformName = (typeName, context) => {
             Func<string, string> getReplaceString;
+            Log.Debug("Transform Name");
             if (context == null) {
                 getReplaceString = r => r;
                 return NameTransformer.Transform(typeName, getReplaceString);
             }
 
+            Log.Debug("Transform Name useNameSuffixesInMappings");
             var contextstr = ContextSeparator + context;
             string grpsuffix = String.Empty;
             if (useNameSuffixesInMappings) {
@@ -333,6 +335,7 @@ namespace Caliburn.Micro
 
             //Strip out the synonym
             getReplaceString = r => Regex.Replace(r, patternregex, replaceregex);
+            Log.Debug("Transform Name return");
 
             //Return only the names for the context
             return NameTransformer.Transform(typeName, getReplaceString).Where(n => n.EndsWith(contextstr));
@@ -347,11 +350,12 @@ namespace Caliburn.Micro
         /// </remarks>
         public static Func<Type, DependencyObject, object, Type> LocateTypeForModelType = (modelType, displayLocation, context) => {
             var viewTypeName = modelType.FullName;
+            Log.Debug("LocateTypeForModelType");
 
             if (View.InDesignMode) {
                 viewTypeName = ModifyModelTypeAtDesignTime(viewTypeName);
             }
-
+            Log.Debug($"View type name {viewTypeName}");
             viewTypeName = viewTypeName.Substring(
                 0,
                 viewTypeName.IndexOf('`') < 0

@@ -13,7 +13,8 @@
     /// <summary>
     ///   A strategy for determining which view to use for a given model.
     /// </summary>
-    public static class ViewLocator {
+    public static class ViewLocator
+    {
         static readonly ILog Log = LogManager.GetLog(typeof(ViewLocator));
 
         //These fields are used for configuring the default type mappings. They can be changed using ConfigureTypeMappings().
@@ -35,7 +36,8 @@
         /// </summary>
         public static string ContextSeparator = ".";
 
-        static ViewLocator() {
+        static ViewLocator()
+        {
             ConfigureTypeMappings(new TypeMappingConfiguration());
         }
 
@@ -45,16 +47,20 @@
         /// configuration.
         /// </summary>
         /// <param name="config">An instance of TypeMappingConfiguration that provides the settings for configuration</param>
-        public static void ConfigureTypeMappings(TypeMappingConfiguration config) {
-            if (String.IsNullOrEmpty(config.DefaultSubNamespaceForViews)) {
+        public static void ConfigureTypeMappings(TypeMappingConfiguration config)
+        {
+            if (String.IsNullOrEmpty(config.DefaultSubNamespaceForViews))
+            {
                 throw new ArgumentException("DefaultSubNamespaceForViews field cannot be blank.");
             }
 
-            if (String.IsNullOrEmpty(config.DefaultSubNamespaceForViewModels)) {
+            if (String.IsNullOrEmpty(config.DefaultSubNamespaceForViewModels))
+            {
                 throw new ArgumentException("DefaultSubNamespaceForViewModels field cannot be blank.");
             }
 
-            if (String.IsNullOrEmpty(config.NameFormat)) {
+            if (String.IsNullOrEmpty(config.NameFormat))
+            {
                 throw new ArgumentException("NameFormat field cannot be blank.");
             }
 
@@ -73,12 +79,15 @@
         }
 
 
-        private static void SetAllDefaults() {
-            if (useNameSuffixesInMappings) {
+        private static void SetAllDefaults()
+        {
+            if (useNameSuffixesInMappings)
+            {
                 //Add support for all view suffixes
                 ViewSuffixList.Apply(AddDefaultTypeMapping);
             }
-            else {
+            else
+            {
                 AddSubNamespaceMapping(defaultSubNsViewModels, defaultSubNsViews);
             }
         }
@@ -87,8 +96,10 @@
         /// Adds a default type mapping using the standard namespace mapping convention
         /// </summary>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddDefaultTypeMapping(string viewSuffix = "View") {
-            if (!useNameSuffixesInMappings) {
+        public static void AddDefaultTypeMapping(string viewSuffix = "View")
+        {
+            if (!useNameSuffixesInMappings)
+            {
                 return;
             }
 
@@ -106,8 +117,10 @@
         /// is added directly through the NameTransformer.
         /// </summary>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View".</param>
-        public static void RegisterViewSuffix(string viewSuffix) {
-            if (ViewSuffixList.Count(s => s == viewSuffix) == 0) {
+        public static void RegisterViewSuffix(string viewSuffix)
+        {
+            if (ViewSuffixList.Count(s => s == viewSuffix) == 0)
+            {
                 ViewSuffixList.Add(viewSuffix);
             }
         }
@@ -119,22 +132,26 @@
         /// <param name="nsSourceFilterRegEx">RegEx filter pattern for source namespace</param>
         /// <param name="nsTargetsRegEx">Array of RegEx replace values for target namespaces</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string[] nsTargetsRegEx, string viewSuffix = "View") {
+        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string[] nsTargetsRegEx, string viewSuffix = "View")
+        {
             RegisterViewSuffix(viewSuffix);
 
             var replist = new List<string>();
             var repsuffix = useNameSuffixesInMappings ? viewSuffix : String.Empty;
             const string basegrp = "${basename}";
 
-            foreach (var t in nsTargetsRegEx) {
+            foreach (var t in nsTargetsRegEx)
+            {
                 replist.Add(t + String.Format(nameFormat, basegrp, repsuffix));
             }
 
             var rxbase = RegExHelper.GetNameCaptureGroup("basename");
             var suffix = String.Empty;
-            if (useNameSuffixesInMappings) {
+            if (useNameSuffixesInMappings)
+            {
                 suffix = viewModelSuffix;
-                if (!viewModelSuffix.Contains(viewSuffix) && includeViewSuffixInVmNames) {
+                if (!viewModelSuffix.Contains(viewSuffix) && includeViewSuffixInVmNames)
+                {
                     suffix = viewSuffix + suffix;
                 }
             }
@@ -157,7 +174,8 @@
         /// <param name="nsSourceFilterRegEx">RegEx filter pattern for source namespace</param>
         /// <param name="nsTargetRegEx">RegEx replace value for target namespace</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string nsTargetRegEx, string viewSuffix = "View") {
+        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string nsTargetRegEx, string viewSuffix = "View")
+        {
             AddTypeMapping(nsSourceReplaceRegEx, nsSourceFilterRegEx, new[] { nsTargetRegEx }, viewSuffix);
         }
 
@@ -167,13 +185,15 @@
         /// <param name="nsSource">Namespace of source type</param>
         /// <param name="nsTargets">Namespaces of target type as an array</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View") {
+        public static void AddNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View")
+        {
             //need to terminate with "." in order to concatenate with type name later
             var nsencoded = RegExHelper.NamespaceToRegEx(nsSource + ".");
 
             //Start pattern search from beginning of string ("^")
             //unless original string was blank (i.e. special case to indicate "append target to source")
-            if (!String.IsNullOrEmpty(nsSource)) {
+            if (!String.IsNullOrEmpty(nsSource))
+            {
                 nsencoded = "^" + nsencoded;
             }
 
@@ -190,7 +210,8 @@
         /// <param name="nsSource">Namespace of source type</param>
         /// <param name="nsTarget">Namespace of target type</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View") {
+        public static void AddNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View")
+        {
             AddNamespaceMapping(nsSource, new[] { nsTarget }, viewSuffix);
         }
 
@@ -200,7 +221,8 @@
         /// <param name="nsSource">Subnamespace of source type</param>
         /// <param name="nsTargets">Subnamespaces of target type as an array</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddSubNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View") {
+        public static void AddSubNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View")
+        {
             //need to terminate with "." in order to concatenate with type name later
             var nsencoded = RegExHelper.NamespaceToRegEx(nsSource + ".");
 
@@ -209,12 +231,14 @@
 
             if (!String.IsNullOrEmpty(nsSource))
             {
-                if (!nsSource.StartsWith("*")) {
+                if (!nsSource.StartsWith("*"))
+                {
                     rxbeforesrc = RegExHelper.GetNamespaceCaptureGroup("nsbefore");
                     rxbeforetgt = @"${nsbefore}";
                 }
 
-                if (!nsSource.EndsWith("*")) {
+                if (!nsSource.EndsWith("*"))
+                {
                     rxaftersrc = RegExHelper.GetNamespaceCaptureGroup("nsafter");
                     rxaftertgt = "${nsafter}";
                 }
@@ -233,7 +257,8 @@
         /// <param name="nsSource">Subnamespace of source type</param>
         /// <param name="nsTarget">Subnamespace of target type</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddSubNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View") {
+        public static void AddSubNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View")
+        {
             AddSubNamespaceMapping(nsSource, new[] { nsTarget }, viewSuffix);
         }
 
@@ -243,11 +268,13 @@
         /// <remarks>
         ///   Pass the type of view as a parameter and recieve an instance of the view.
         /// </remarks>
-        public static Func<Type, UIElement> GetOrCreateViewType = viewType => {
+        public static Func<Type, UIElement> GetOrCreateViewType = viewType =>
+        {
             var view = IoC.GetAllInstances(viewType)
                            .FirstOrDefault() as UIElement;
 
-            if (view != null) {
+            if (view != null)
+            {
                 InitializeComponent(view);
                 return view;
             }
@@ -271,7 +298,8 @@
         /// </summary>
         public static Func<string, string> ModifyModelTypeAtDesignTime = modelTypeName =>
         {
-            if (modelTypeName.StartsWith("_")) {
+            if (modelTypeName.StartsWith("_"))
+            {
                 var index = modelTypeName.IndexOf('.');
                 modelTypeName = modelTypeName.Substring(index + 1);
                 index = modelTypeName.IndexOf('.');
@@ -290,16 +318,24 @@
         /// typeName = The name of the ViewModel type being resolved to its companion View.
         /// context = An instance of the context or null.
         /// </remarks>
-        public static Func<string, object, IEnumerable<string>> TransformName = (typeName, context) => {
+        public static Func<string, object, IEnumerable<string>> TransformName = (typeName, context) =>
+        {
             Func<string, string> getReplaceString;
-            if (context == null) {
+            Log.Debug("Transform Name");
+            Log.Debug($"Type Name {typeName}");
+            if (context == null)
+            {
+                Log.Debug("Context is null");
                 getReplaceString = r => r;
                 return NameTransformer.Transform(typeName, getReplaceString);
             }
+            Log.Debug($"Context {context.ToString()}");
+            Log.Debug("Transform Name useNameSuffixesInMappings");
 
             var contextstr = ContextSeparator + context;
             string grpsuffix = String.Empty;
-            if (useNameSuffixesInMappings) {
+            if (useNameSuffixesInMappings)
+            {
                 //Create RegEx for matching any of the synonyms registered
                 var synonymregex = "(" + String.Join("|", ViewSuffixList.ToArray()) + ")";
                 grpsuffix = RegExHelper.GetCaptureGroup("suffix", synonymregex);
@@ -313,6 +349,7 @@
 
             //Strip out the synonym
             getReplaceString = r => Regex.Replace(r, patternregex, replaceregex);
+            Log.Debug($"replace string ");
 
             //Return only the names for the context
             return NameTransformer.Transform(typeName, getReplaceString).Where(n => n.EndsWith(contextstr));
@@ -325,10 +362,13 @@
         /// <remarks>
         ///   Pass the model type, display location (or null) and the context instance (or null) as parameters and receive a view type.
         /// </remarks>
-        public static Func<Type, DependencyObject, object, Type> LocateTypeForModelType = (modelType, displayLocation, context) => {
+        public static Func<Type, DependencyObject, object, Type> LocateTypeForModelType = (modelType, displayLocation, context) =>
+        {
             var viewTypeName = modelType.FullName;
-
-            if (View.InDesignMode) {
+            bool isNull = context is null;
+            Log.Debug($"Context is null {isNull}");
+            if (View.InDesignMode)
+            {
                 viewTypeName = ModifyModelTypeAtDesignTime(viewTypeName);
             }
 
@@ -338,11 +378,19 @@
                     ? viewTypeName.Length
                     : viewTypeName.IndexOf('`')
                 );
+            Log.Debug("Locating view for {0}", viewTypeName);
 
             var viewTypeList = TransformName(viewTypeName, context);
+
+            foreach (var t in viewTypeList)
+            {
+                Log.Debug("ViewType {0}", t);
+            }
+            Log.Debug($"Get view type {viewTypeList.Count()}");
             var viewType = AssemblySource.FindTypeByNames(viewTypeList);
 
-            if (viewType == null) {
+            if (viewType == null)
+            {
                 Log.Warn("View not found. Searched: {0}.", string.Join(", ", viewTypeList.ToArray()));
             }
 
@@ -356,7 +404,9 @@
         /// <remarks>
         ///   Pass the model type, display location (or null) and the context instance (or null) as parameters and receive a view instance.
         /// </remarks>
-        public static Func<Type, DependencyObject, object, UIElement> LocateForModelType = (modelType, displayLocation, context) => {
+        public static Func<Type, DependencyObject, object, UIElement> LocateForModelType = (modelType, displayLocation, context) =>
+        {
+            Log.Debug($"LocateForModelType context is null {context is null}");
             var viewType = LocateTypeForModelType(modelType, displayLocation, context);
 
             return viewType == null
@@ -371,11 +421,14 @@
         /// <remarks>
         ///   Pass the model instance, display location (or null) and the context (or null) as parameters and receive a view instance.
         /// </remarks>
-        public static Func<object, DependencyObject, object, UIElement> LocateForModel = (model, displayLocation, context) => {
+        public static Func<object, DependencyObject, object, UIElement> LocateForModel = (model, displayLocation, context) =>
+        {
             var viewAware = model as IViewAware;
-            if (viewAware != null) {
+            if (viewAware != null)
+            {
                 var view = viewAware.GetView(context) as UIElement;
-                if (view != null) {
+                if (view != null)
+                {
 
                     Log.Info("Using cached view for {0}.", model);
                     return view;
@@ -388,7 +441,8 @@
         /// <summary>
         /// Transforms a view type into a pack uri.
         /// </summary>
-        public static Func<Type, Type, string> DeterminePackUriFromType = (viewModelType, viewType) => {
+        public static Func<Type, Type, string> DeterminePackUriFromType = (viewModelType, viewType) =>
+        {
 
             var assemblyName = viewType.GetTypeInfo().Assembly.GetAssemblyName();
             var applicationAssemblyName = Application.Current.GetType().GetTypeInfo().Assembly.GetAssemblyName();
@@ -399,7 +453,8 @@
 
             var uri = viewTypeName.Replace(".", "/") + ".xaml";
 
-            if(!applicationAssemblyName.Equals(assemblyName)) {
+            if (!applicationAssemblyName.Equals(assemblyName))
+            {
                 return "/" + assemblyName + ";component" + uri;
             }
 
@@ -410,7 +465,8 @@
         ///   When a view does not contain a code-behind file, we need to automatically call InitializeCompoent.
         /// </summary>
         /// <param name = "element">The element to initialize</param>
-        public static void InitializeComponent(object element) {
+        public static void InitializeComponent(object element)
+        {
 
             var method = element.GetType().GetTypeInfo()
                 .GetDeclaredMethods("InitializeComponent")

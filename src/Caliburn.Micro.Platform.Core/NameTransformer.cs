@@ -13,6 +13,7 @@ namespace Caliburn.Micro
 
         private const RegexOptions options = RegexOptions.None;
         private bool useEagerRuleSelection = true;
+        private static readonly ILog Log = LogManager.GetLog(typeof(NameTransformer));
 
         /// <summary>
         /// Flag to indicate if transformations from all matched rules are returned. Otherwise, transformations from only the first matched rule are returned.
@@ -70,31 +71,37 @@ namespace Caliburn.Micro
         {
             var nameList = new List<string>();
             var rules = this.Reverse();
-
+            Log.Debug("Transforming {0} using {1} rules", source, rules.Count());
             foreach (var rule in rules)
             {
                 if (!string.IsNullOrEmpty(rule.GlobalFilterPattern) && !rule.GlobalFilterPatternRegex.IsMatch(source))
                 {
+                    Log.Debug("GlobalFilterPattern");
                     continue;
                 }
 
                 if (!rule.ReplacePatternRegex.IsMatch(source))
                 {
+                    Log.Debug($"!rule.ReplacePatternRegex.IsMatch source{source}");
                     continue;
                 }
 
+                Log.Debug("AddRange");
                 nameList.AddRange(
                     rule.ReplacementValues
                         .Select(getReplaceString)
                         .Select(repString => rule.ReplacePatternRegex.Replace(source, repString))
                     );
-
+                foreach (var n in nameList)
+                {
+                    Log.Debug($"Name {n}");
+                }
                 if (!useEagerRuleSelection)
                 {
                     break;
                 }
             }
-
+            Log.Debug($"NamesList has {nameList.Count}");
             return nameList;
         }
 

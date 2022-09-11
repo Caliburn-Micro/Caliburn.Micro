@@ -55,6 +55,7 @@
         /// </summary>
         /// <returns>A uri constructed with the current configuration information.</returns>
         public Uri BuildUri() {
+           
             var viewType = ViewLocator.LocateTypeForModelType(typeof(TViewModel), null, null);
             if(viewType == null) {
                 throw new InvalidOperationException(string.Format("No view was found for {0}. See the log for searched views.", typeof(TViewModel).FullName));

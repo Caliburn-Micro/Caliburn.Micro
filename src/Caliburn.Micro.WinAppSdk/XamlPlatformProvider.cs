@@ -5,9 +5,9 @@
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Reflection;
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Dispatching;
+    using Windows.UI.Core;
 
 
     /// <summary>
@@ -65,9 +65,12 @@
             Log.Debug("Begin on UI thread xaml provider");
 
             ValidateDispatcher();
-            dispatcher.TryEnqueue(() =>
+            //var dummy = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+
+            dispatcher.TryEnqueue(DispatcherQueuePriority.High,() =>
             {
-                action.Invoke();
+                action();
+                Log.Debug("End on UI thread xaml provider");
             });
         }
 
@@ -80,9 +83,10 @@
         {
             ValidateDispatcher();
             Task task = null;
-            dispatcher.TryEnqueue(() =>
+            dispatcher.TryEnqueue(DispatcherQueuePriority.High, () =>
             {
-                task = action.Invoke();
+                task = action();
+                Log.Debug("End on OnUIThreadAsync xaml provider");
             });
             return task;
         }
@@ -97,27 +101,26 @@
             Log.Debug("On UI thread xaml provider");
 
             if (CheckAccess())
+            {
+                Log.Debug("On UI thread xaml provider - already on UI thread");
                 action();
+            }
             else
             {
-
+                Log.Debug("On UI thread xaml provider - not on UI thread");
                 Exception exception = null;
-                System.Action method = () =>
-                {
-                    try
-                    {
-                        action();
-                    }
-                    catch (Exception ex)
-                    {
-                        exception = ex;
-                    }
-                };
-                dispatcher.TryEnqueue(() =>
-                {
-                    method.Invoke();
+                Log.Debug($"execute method {action.GetMethodInfo()}");
+                //var enqueded = dispatcher.TryEnqueue(DispatcherQueuePriority.High, () =>
+                //{
+                //    Log.Debug($"Invoking method");
+                //    action();
+                //    Log.Debug($"enqueded method");
+                //});
+                //Log.Debug($"Enqueded {enqueded}");
+                Task.Run(()=>{ 
+                    action();
+                    Log.Debug("Task was run");
                 });
-
                 if (exception != null)
                     throw new System.Reflection.TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
 

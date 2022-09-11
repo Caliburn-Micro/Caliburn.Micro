@@ -10,7 +10,8 @@
     <UseWinUI>true</UseWinUI>
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
     <DebugType>full</DebugType>
-    <SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <UseWPF>False</UseWPF>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <Optimize>False</Optimize>
@@ -23,7 +24,6 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Views\HomeView.xaml" />
-    <None Remove="Views\ShellView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,8 +37,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.4" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
+    <PackageReference Include="Serilog" Version="2.11.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -52,11 +54,6 @@
     <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
     <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
     <ProjectReference Include="..\Caliburn.Micro.WinAppSdk\Caliburn.Micro.WinAppSdk.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\ShellView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\HomeView.xaml">

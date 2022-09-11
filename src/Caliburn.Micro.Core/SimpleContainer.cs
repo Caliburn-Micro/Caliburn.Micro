@@ -202,11 +202,17 @@ namespace Caliburn.Micro
         /// <param name = "instance">The instance.</param>
         public void BuildUp(object instance)
         {
+            Log.Debug("Build up");
+
+            var b = instance
+                .GetType()
+                .GetRuntimeProperties();
+            Log.Debug($"Build found {b.Count()} properties in b");
             var properties = instance
                 .GetType()
                 .GetRuntimeProperties()
                 .Where(p => p.CanRead && p.CanWrite && p.PropertyType.GetTypeInfo().IsInterface);
-
+            Log.Debug($"Build up found {properties.Count()} properties");
             foreach (var property in properties)
             {
                 var value = GetInstance(property.PropertyType, null);
