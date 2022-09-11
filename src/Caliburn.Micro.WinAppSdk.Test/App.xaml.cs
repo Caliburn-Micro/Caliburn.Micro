@@ -228,6 +228,7 @@ namespace Caliburn.Micro.WinAppSdk.Test
 
             var homeView = container.GetInstance<HomeView>();
             var homeViewModel = container.GetInstance<HomeViewModel>();
+            homeView.DataContext = homeViewModel;
             Log.Debug($"Assemblies in AssemblySource: {AssemblySource.Instance.Count}");
             this.RootFrame.Content = homeView;
         }
