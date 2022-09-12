@@ -225,12 +225,9 @@ namespace Caliburn.Micro.WinAppSdk.Test
             Initialize();
             
             PrepareViewFirst();
-
-            var homeView = container.GetInstance<HomeView>();
-            var homeViewModel = container.GetInstance<HomeViewModel>();
-            homeView.DataContext = homeViewModel;
+            var navService = container.GetInstance<INavigationService>();
             Log.Debug($"Assemblies in AssemblySource: {AssemblySource.Instance.Count}");
-            this.RootFrame.Content = homeView;
+            navService.NavigateToViewModel<HomeViewModel>();
         }
 
         /// <summary>
