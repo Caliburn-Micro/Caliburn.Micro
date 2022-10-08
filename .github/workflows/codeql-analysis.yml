@@ -67,10 +67,10 @@ jobs:
                    & dotnet workload search
                    & dotnet workload install maui maui-android maui-ios maui-maccatalyst maui-windows android --source https://api.nuget.org/v3/index.json
                    & dotnet workload list  
-    - name: restore-nuget-packages
-      # You may pin to the exact commit or the version.
-      # uses: IT-Service/restore-nuget-packages@ef2531f9b1037fa8ea9b1314f1609a10cc78edad
-      uses: IT-Service/restore-nuget-packages@v1
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+    - name: Build app for release
+      run: msbuild src\Caliburn.Micro.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
       
     # Autobuild attempts   # If this step fails, then you should remove it and run the build manually (see below)
 
