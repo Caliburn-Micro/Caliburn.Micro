@@ -51,8 +51,9 @@ jobs:
         # queries: security-extended,security-and-quality
 
     # start build
-    - uses: actions/checkout@v3
-    - name: Setup dotnet        
+    - name: Setup dotnet 
+      uses: actions/checkout@v3
+       
     # Autobuild attempts   # If this step fails, then you should remove it and run the build manually (see below)
 
     # ℹ️ Command-line programs to run using the OS shell.
