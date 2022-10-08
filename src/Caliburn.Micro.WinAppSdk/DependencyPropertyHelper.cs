@@ -10,6 +10,8 @@ namespace Caliburn.Micro
     /// </summary>
     public static class DependencyPropertyHelper
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(DependencyPropertyHelper));
+
         /// <summary>
         /// Register an attached dependency / bindable property
         /// </summary>
@@ -20,10 +22,11 @@ namespace Caliburn.Micro
         /// <param name="propertyChangedCallback">Callback to executed on property changed</param>
         /// <returns>The registered attached dependency property</returns>
         public static DependencyProperty RegisterAttached(string name, Type propertyType, Type ownerType, object defaultValue = null, PropertyChangedCallback propertyChangedCallback = null) {
-
+            Log.Debug($"Default value {defaultValue}");
+            Log.Debug($"Name {name}");
             return DependencyProperty.RegisterAttached(name, propertyType, ownerType, new PropertyMetadata(defaultValue, propertyChangedCallback));
         }
-
+        
         /// <summary>
         /// Register a dependency / bindable property
         /// </summary>
@@ -35,6 +38,8 @@ namespace Caliburn.Micro
         /// <returns>The registered dependency property</returns>
         public static DependencyProperty Register(string name, Type propertyType, Type ownerType, object defaultValue = null, PropertyChangedCallback propertyChangedCallback = null)
         {
+            Log.Debug($"Default value {defaultValue}");
+            Log.Debug($"Name2 {name}");
             return DependencyProperty.Register(name, propertyType, ownerType, new PropertyMetadata(defaultValue, propertyChangedCallback));
         }
     }

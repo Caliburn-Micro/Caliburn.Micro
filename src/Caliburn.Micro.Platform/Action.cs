@@ -174,6 +174,7 @@ namespace Caliburn.Micro
 
              Log.Info("Attaching message handler {0} to {1}.", target, d);
              Message.SetHandler(d, target);
+             Log.Debug("Set message handler");
 #endif
             
 

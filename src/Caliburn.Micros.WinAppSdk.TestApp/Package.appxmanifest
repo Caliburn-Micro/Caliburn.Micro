@@ -7,12 +7,12 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="1025ccd2-236e-4bdf-8351-dfaf58e9095e"
+    Name="7754db06-8b3b-488a-93ee-5865052be32c"
     Publisher="CN=vb2ae"
     Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>Caliburn.Micro.WinAppSdk.Test</DisplayName>
+    <DisplayName>Caliburn.Micros.WinAppSdk.TestApp</DisplayName>
     <PublisherDisplayName>vb2ae</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -31,8 +31,8 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="Caliburn.Micro.WinAppSdk.Test"
-        Description="Caliburn.Micro.WinAppSdk.Test"
+        DisplayName="Caliburn.Micros.WinAppSdk.TestApp"
+        Description="Caliburn.Micros.WinAppSdk.TestApp"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">

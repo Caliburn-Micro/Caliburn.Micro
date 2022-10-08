@@ -29,6 +29,7 @@
                 typeof(Message),
                 null
                 );
+        static readonly ILog Log = LogManager.GetLog(typeof(Message));
 
         /// <summary>
         ///   Places a message handler on this element.
@@ -36,6 +37,7 @@
         /// <param name="d"> The element. </param>
         /// <param name="value"> The message handler. </param>
         public static void SetHandler(DependencyObject d, object value) {
+            Log.Debug($"SetHandler: {d.ToString()} : {value}");
             d.SetValue(HandlerProperty, value);
         }
 

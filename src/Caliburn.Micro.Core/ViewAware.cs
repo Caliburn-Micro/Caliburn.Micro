@@ -9,6 +9,7 @@ namespace Caliburn.Micro
     public class ViewAware : PropertyChangedBase, IViewAware
     {
         private readonly IDictionary<object, object> views;
+        static readonly ILog Log = LogManager.GetLog(typeof(ViewAware));
 
         /// <summary>
         /// The default view context.
@@ -39,19 +40,24 @@ namespace Caliburn.Micro
         void IViewAware.AttachView(object view, object context)
         {
             Views[context ?? DefaultContext] = view;
-
+            Log.Debug("Attach view");
             var nonGeneratedView = PlatformProvider.Current.GetFirstNonGeneratedView(view);
+            Log.Debug("After first non generated view");
             PlatformProvider.Current.ExecuteOnFirstLoad(nonGeneratedView, OnViewLoaded);
+            Log.Debug("After execute on first load");
             OnViewAttached(nonGeneratedView, context);
+            Log.Debug("After on view attached");
             ViewAttached(this, new ViewAttachedEventArgs { View = nonGeneratedView, Context = context });
-
+            Log.Debug("After view attached");
             var activatable = this as IActivate;
             if (activatable == null || activatable.IsActive)
             {
+                Log.Debug("Activatable is null or active");
                 PlatformProvider.Current.ExecuteOnLayoutUpdated(nonGeneratedView, OnViewReady);
             }
             else
             {
+                Log.Debug("Activatable is not null and not active");
                 AttachViewReadyOnActivated(activatable, nonGeneratedView);
             }
         }

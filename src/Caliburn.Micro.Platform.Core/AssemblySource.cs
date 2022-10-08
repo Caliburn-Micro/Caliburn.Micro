@@ -66,7 +66,7 @@ namespace Caliburn.Micro
         /// </summary>
         public static Func<IEnumerable<string>, Type> FindTypeByNames = names =>
         {
-            Log.Debug("Finding type by names");
+            Log.Info("Finding type by names");
             if (names == null)
             {
                 Log.Debug("TypeNames is null");

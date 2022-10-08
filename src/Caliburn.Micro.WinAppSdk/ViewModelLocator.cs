@@ -375,14 +375,14 @@ namespace Caliburn.Micro
         {
             var viewModelType = LocateTypeForViewType(viewType, false);
 
-            if (viewModelType != null)
-            {
-                var viewModel = IoC.GetInstance(viewModelType, null);
-                if (viewModel != null)
-                {
-                    return viewModel;
-                }
-            }
+            //if (viewModelType != null)
+            //{
+            //    var viewModel = IoC.GetInstance(viewModelType, null);
+            //    if (viewModel != null)
+            //    {
+            //        return viewModel;
+            //    }
+            //}
 
             viewModelType = LocateTypeForViewType(viewType, true);
 

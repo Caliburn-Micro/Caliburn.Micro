@@ -371,6 +371,7 @@
             {
                 viewTypeName = ModifyModelTypeAtDesignTime(viewTypeName);
             }
+           // var vt = IoC.GetInstance(viewTypeName, null) as Type;
 
             viewTypeName = viewTypeName.Substring(
                 0,

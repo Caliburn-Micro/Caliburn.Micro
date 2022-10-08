@@ -2,6 +2,7 @@
 namespace Caliburn.Micro
 {
     using System;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using Microsoft.UI.Xaml;
@@ -82,7 +83,7 @@ namespace Caliburn.Micro
             DependencyPropertyHelper.RegisterAttached(
                 "IsGenerated",
                 typeof(bool),
-                typeof(View),
+                typeof(DependencyObject),
                 false
                 );
 
@@ -178,23 +179,43 @@ namespace Caliburn.Micro
         /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was. 
         /// </remarks>
         public static Func<object, object> GetFirstNonGeneratedView = view => {
+            Log.Debug("GetFirstNonGeneratedView start");
             var dependencyObject = view as DependencyObject;
             if (dependencyObject == null) {
-                return view;
+             Log.Debug("GetFirstNonGeneratedView is not set. Returning the view as is.");
+               return view;
             }
+            Log.Debug($"GetValue isGeneratedProperty {IsGeneratedProperty}");
+            Log.Debug($"GetValue dependencyObject {dependencyObject}");
+            try
+            {
+                Log.Debug("Here");
+                //dependencyObject.ClearValue(IsGeneratedProperty);
+                var isGenerated = (bool)dependencyObject.GetValue(IsGeneratedProperty);
+                Log.Debug("also here"); 
+                //Log.Debug($"dependencyObject.ReadLocalValue(IsGeneratedProperty) {dependencyObject.ReadLocalValue(IsGeneratedProperty)}");
+                if (isGenerated)
+                {
+                    Log.Debug("After if");
+                    if (dependencyObject is ContentControl)
+                    {
+                        Log.Debug("GetFirstNonGeneratedView is generated. Returning the content.");
+                        return ((ContentControl)dependencyObject).Content;
+                    }
+                    Log.Debug("GEtFirstNonGeneratedView GetType");
+                    var type = dependencyObject.GetType();
+                    var contentPropertyName = GetContentPropertyName(type);
+                    Log.Debug("GetFirstNonGeneratedView GetRunTimeProperty");
+                    return type.GetRuntimeProperty(contentPropertyName)
+                        .GetValue(dependencyObject, null);
 
-            if ((bool)dependencyObject.GetValue(IsGeneratedProperty)) {
-                if (dependencyObject is ContentControl) {
-                    return ((ContentControl)dependencyObject).Content;
                 }
-                var type = dependencyObject.GetType();
-                var contentPropertyName = GetContentPropertyName(type);
-
-                return type.GetRuntimeProperty(contentPropertyName)
-                    .GetValue(dependencyObject, null);
-
             }
-
+            catch(Exception ex)
+            {
+                Log.Error(ex);
+            }
+            Log.Debug("After GetValue");
             return dependencyObject;
         };
 

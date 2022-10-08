@@ -8,6 +8,7 @@ namespace Caliburn.Micro
     using Windows.UI.Xaml;
     using System.Reflection;
     using Microsoft.UI.Xaml;
+    using System;
 
 
     /// <summary>
@@ -153,8 +154,15 @@ namespace Caliburn.Micro
             }
 
              Log.Info("Attaching message handler {0} to {1}.", target, d);
-             Message.SetHandler(d, target);
-
+            try
+            {
+                Message.SetHandler(d, target);
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex);
+            }
+            Log.Debug("Made it past sethandler");
             
 
         }

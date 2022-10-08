@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -239,14 +240,23 @@ namespace Caliburn.Micro
             Initialize();
 
             PrepareViewFirst();
+            Log.Debug($"Made it past PrepareViewFirst RootFrame is null {RootFrame == null}");
+            Log.Debug($"ViewType is null {viewType == null} {viewType}");
+            Log.Debug($"RootFrame is null {RootFrame == null}");
 
-            RootFrame.Navigate(viewType, paramter);
-
+            //RootFrame.Navigate(viewType, paramter);
+            var myView = IoC.GetInstance(viewType, "") as UserControl;
+            var viewModel = ViewModelLocator.LocateForView(myView);
+            Log.Debug($"myView is null {myView == null}");
+            //myView.DataContext = viewModel;
+            ViewModelBinder.Bind(viewModel, myView, null);
+            RootFrame.Content = myView;
+            Log.Debug($"RootFrame.Content is null {RootFrame.Content == null}");
             // Seems stupid but observed weird behaviour when resetting the Content
-            if (Window.Current.Content == null)
-                Window.Current.Content = RootFrame;
-
-            Window.Current.Activate();
+            //if (Window.Current.Content == null)
+            //    Window.Current.Content = RootFrame;
+            //Log.Debug("Past Window.Current.Content");
+            //Window.Current.Activate();
         }
 
         /// <summary>
