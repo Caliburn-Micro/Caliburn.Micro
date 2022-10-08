@@ -67,6 +67,9 @@ jobs:
                    & dotnet workload search
                    & dotnet workload install maui maui-android maui-ios maui-maccatalyst maui-windows android --source https://api.nuget.org/v3/index.json
                    & dotnet workload list  
+                   & dotnet restore src/Caliburn.Micro.sln
+                   & nuget restore src/Caliburn.Micro.sln
+
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
     - name: Build app for release
