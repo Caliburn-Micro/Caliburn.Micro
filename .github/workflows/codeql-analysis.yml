@@ -53,10 +53,45 @@ jobs:
         # queries: security-extended,security-and-quality
 
         
-    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
-    # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
+    # Autobuild attempts   # If this step fails, then you should remove it and run the build manually (see below)
+- task: PowerShell@2
+  displayName: 'Install MAUI'
+  inputs:
+    targetType: 'inline'
+    script: | to build any compiled languages  (C/C++, C#, or Java).
+      & dotnet workload search
+      & dotnet workload install maui maui-android maui-ios maui-maccatalyst maui-windows android --source https://api.nuget.org/v3/index.json
+      & dotnet workload list
+- task: NuGetToolInstaller@1
+    displayName: 'Install Nuget'
+    inputs:
+      versionSpec: '6.3.0'
+
+- task: DotNetCoreCLI@2  
+  inputs:
+    command: custom
+    custom: tool
+    arguments: install --tool-path . nbgv
+  displayName: Install NBGV tool
+  
+- script: nbgv cloud
+  displayName: Set Version
+
+- task: VSBuild@1
+  displayName: Nuget Restore
+  inputs:
+    solution: '$(coreSolution)'
+    msbuildArgs: '/t:Restore'
+    configuration: '$(buildConfiguration)'
+
+- task: VSBuild@1
+  displayName: Build & Pack Core Solution
+  inputs:
+    solution: '$(coreSolution)'
+    configuration: '$(buildConfiguration)'
+    platform: '$(buildPlatform)'
+    msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME_11_X64)"'
+
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
