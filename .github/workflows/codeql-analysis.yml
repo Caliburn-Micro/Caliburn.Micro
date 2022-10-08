@@ -57,7 +57,16 @@ jobs:
     # You may pin to the exact commit or the version.
     # uses: NuGet/setup-nuget@795d81930e6f583d6dbe984a5634efe5de9e54a7
       uses: NuGet/setup-nuget@v1.0.7     
-      
+    - name: PowerShell script
+    # You may pin to the exact commit or the version.
+    # uses: Amadevus/pwsh-script@1f1751bbf3d1a92127bfc6c32403283625880cbf
+      uses: Amadevus/pwsh-script@v2.0.1
+      with:
+      # PowerShell script to execute in Actions-hydrated context
+         script:   |
+                   & dotnet workload search
+                   & dotnet workload install maui maui-android maui-ios maui-maccatalyst maui-windows android --source https://api.nuget.org/v3/index.json
+                   & dotnet workload list    
     # Autobuild attempts   # If this step fails, then you should remove it and run the build manually (see below)
 
     # ℹ️ Command-line programs to run using the OS shell.
