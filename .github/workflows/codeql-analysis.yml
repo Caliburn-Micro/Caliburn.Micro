@@ -70,7 +70,7 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
     - name: Build app for release
-      run: msbuild src\Caliburn.Micro.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
+      run: msbuild src\Caliburn.Micro.sln -t:rebuild -verbosity:diag -property:Configuration=Release
       
     # Autobuild attempts   # If this step fails, then you should remove it and run the build manually (see below)
 
