@@ -53,7 +53,11 @@ jobs:
     # start build
     - name: Setup dotnet 
       uses: actions/checkout@v3
-       
+    - name: Setup NuGet.exe for use with actions
+    # You may pin to the exact commit or the version.
+    # uses: NuGet/setup-nuget@795d81930e6f583d6dbe984a5634efe5de9e54a7
+      uses: NuGet/setup-nuget@v1.0.7     
+      
     # Autobuild attempts   # If this step fails, then you should remove it and run the build manually (see below)
 
     # ℹ️ Command-line programs to run using the OS shell.
