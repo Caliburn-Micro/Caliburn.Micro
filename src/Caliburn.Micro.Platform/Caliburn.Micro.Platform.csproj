@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;uap10.0.19041;Xamarin.iOS10;MonoAndroid90;netcoreapp3.1;net6.0-windows;net7.0-windows</TargetFrameworks>
+    <TargetFrameworks>net462;uap10.0.19041;Xamarin.iOS10;MonoAndroid90;net7.0-windows;net6.0-windows</TargetFrameworks>
     <PackageId>Caliburn.Micro</PackageId>
     <Product>Caliburn.Micro</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
@@ -38,7 +38,7 @@
   </PropertyGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Xaml" />
@@ -46,13 +46,7 @@
     <Compile Include="Platforms\net46-netcore\**\*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
-    <Compile Include="Platforms\net46-netcore\**\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-windows'">
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
     <Compile Include="Platforms\net46-netcore\**\*.cs" />
   </ItemGroup>
