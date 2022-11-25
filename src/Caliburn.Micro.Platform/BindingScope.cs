@@ -199,7 +199,7 @@
 #else
 
 
-#if (NET || NETCORE) && !WINDOWS_UWP
+#if (NET || CAL_NETCORE) && !WINDOWS_UWP
                 var childCount = (current is System.Windows.Media.Visual || current is System.Windows.Media.Media3D.Visual3D)
                     ? VisualTreeHelper.GetChildrenCount(current) : 0;
 #else

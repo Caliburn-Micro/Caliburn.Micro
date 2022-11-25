@@ -39,10 +39,6 @@
     using EventTrigger = Microsoft.Xaml.Behaviors.EventTrigger;
 #endif
 
-#if NET5_0_WINDOWS || NET6_0_WINDOWS
-    using System.IO;
-    using System.Xml;
-#endif
 
     /// <summary>
     /// Used to send a message from the UI to a presentation model class, indicating that a particular Action should be invoked.
@@ -298,7 +294,7 @@
                 },
                 Source = elementToUse
             };
-#elif (NET || NETCORE && !WINDOWS_UWP)
+#elif (NET || CAL_NETCORE && !WINDOWS_UWP)
             var binding = new Binding {
                 Path = new PropertyPath(Message.HandlerProperty), 
                 Source = currentElement
@@ -307,12 +303,6 @@
             var binding = new Binding {
                 Source = currentElement
             };
-#elif NET5_0_WINDOWS || NET6_0_WINDOWS
-            const string bindingText = "<Binding xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation\' xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform' Path='(cal:Message.Handler)' />";
-            StringReader stringReader = new StringReader(bindingText);
-            XmlReader xmlReader = XmlReader.Create(stringReader);
-            var binding = (Binding)XamlReader.Load(xmlReader);
-            binding.Source = currentElement;
 #else
             const string bindingText = "<Binding xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation\' xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform' Path='(cal:Message.Handler)' />";
 

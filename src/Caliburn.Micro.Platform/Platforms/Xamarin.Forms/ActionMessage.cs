@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Caliburn.Micro;
     using System.Linq;
     using System.Reflection;
     using global::Xamarin.Forms;
@@ -82,7 +83,7 @@
         ///  Called after the action is attached to an AssociatedObject.
         /// </summary>
         protected override void OnAttached() {
-            if (!Caliburn.Micro.View.InDesignMode) {
+            if (!View.InDesignMode) {
                 Parameters.Attach(AssociatedObject);
                 Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
 
@@ -110,7 +111,7 @@
         /// </summary>
         protected override void OnDetaching()
         {
-            if (!Caliburn.Micro.View.InDesignMode)
+            if (!View.InDesignMode)
             {
                 Detaching(this, EventArgs.Empty);
                 Parameters.Detach();

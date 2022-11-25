@@ -1,5 +1,7 @@
 ﻿#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
 #endif
@@ -23,6 +25,10 @@ namespace Caliburn.Micro
     using FrameworkElement = Avalonia.Controls.Control;
 #endif
     
+
+#if MAUI
+    using UIElement = global::Microsoft.Maui.Controls.Element;
+#endif
 
     /// <summary>
     ///   A strategy for determining which view model to use for a given view.
@@ -413,6 +419,14 @@ namespace Caliburn.Micro
 #if ANDROID || IOS
              return LocateForViewType(view.GetType());
 #elif XFORMS
+            var frameworkElement = view as UIElement;
+            if (frameworkElement != null && frameworkElement.BindingContext != null)
+            {
+                return frameworkElement.BindingContext;
+            }
+
+            return LocateForViewType(view.GetType());
+#elif MAUI
             var frameworkElement = view as UIElement;
             if (frameworkElement != null && frameworkElement.BindingContext != null)
             {

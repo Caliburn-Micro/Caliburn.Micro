@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Platform.Cor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Xamarin.Forms", "Caliburn.Micro.Xamarin.Forms\Caliburn.Micro.Xamarin.Forms.csproj", "{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Maui", "Caliburn.Micro.Maui\Caliburn.Micro.Maui.csproj", "{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Avalonia", "Caliburn.Micro.Avalonia\Caliburn.Micro.Avalonia.csproj", "{D076432F-37F6-4532-80D1-46B6666D69ED}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Setup.Avalonia", "..\samples\setup\Setup.Avalonia\Setup.Avalonia.csproj", "{7F4307A8-EC59-40DF-B7CA-90027B7DD28E}"
