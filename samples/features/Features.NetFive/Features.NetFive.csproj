@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>Features.CrossPlatform</AssemblyName>
     <RootNamespace>Features.CrossPlatform</RootNamespace>
@@ -23,10 +23,10 @@
 
   <ItemGroup>
     <Reference Include="Caliburn.Micro.Core">
-      <HintPath>..\..\..\bin\Caliburn.Micro.Platform\release\net5.0-windows\Caliburn.Micro.Core.dll</HintPath>
+      <HintPath>..\..\..\bin\Caliburn.Micro.Platform\release\net6.0-windows\Caliburn.Micro.Core.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.Platform">
-      <HintPath>..\..\..\bin\Caliburn.Micro.Platform\release\net5.0-windows\Caliburn.Micro.Platform.dll</HintPath>
+      <HintPath>..\..\..\bin\Caliburn.Micro.Platform\release\net6.0-windows\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
   </ItemGroup>
 
