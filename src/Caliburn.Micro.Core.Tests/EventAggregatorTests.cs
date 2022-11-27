@@ -68,7 +68,7 @@ namespace Caliburn.Micro.Core.Tests
         [Fact]
         public async Task A_null_message_causes_an_ArgumentNullException()
         {
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => {await new EventAggregator().PublishOnCurrentThreadAsync(null, CancellationToken.None); });
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => { await new EventAggregator().PublishOnCurrentThreadAsync(null, CancellationToken.None); });
         }
 
         [Fact]
