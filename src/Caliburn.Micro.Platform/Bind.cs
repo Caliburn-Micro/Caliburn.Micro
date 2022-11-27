@@ -198,7 +198,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="dependencyObject">The ui to apply conventions to.</param>
         /// <returns>Whether or not conventions are applied.</returns>
-#if (NET || CAL_NETCORE) && (!AVALONIA && !WINDOWS_UWP)  // not sure this is right      
+#if (NET || CAL_NETCORE) && (!AVALONIA && !WINDOWS_UWP && !MAUI)  // not sure this is right      
         [AttachedPropertyBrowsableForTypeAttribute(typeof(DependencyObject))]
 #endif
         public static bool GetAtDesignTime(DependencyObject dependencyObject) {

@@ -70,6 +70,8 @@
             );
 #endif
 
+
+
         ///<summary>
         /// Causes the action invocation to "double check" if the action should be invoked by executing the guard immediately before hand.
         ///</summary>
@@ -174,7 +176,7 @@
                     // Not yet sure if this will be needed
                     //var trigger = Interaction.GetTriggers(AssociatedObject)
                     //    .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
-                    //if (trigger != null && trigger.EventName == "Loaded")
+                    //if (trigger != null && trigger.EventName == eventName)
                     //    Invoke(new RoutedEventArgs());
                 }
 
@@ -199,10 +201,11 @@
                 if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded))
                 {
 #if AVALONIA
-                    string eventName = "AttachedToVisualTree";
+                    string eventName = "AttachedToLogicalTree";
                     var trigger = Interaction.GetBehaviors(AssociatedObject)
                         .OfType<Trigger>()
                         .FirstOrDefault(t => t.Actions.Contains(this)) as EventTriggerBehavior;
+                    Log.Info($"Trigger is null {trigger == null}");
 #else
                    string eventName = "Loaded";
                    var trigger = Interaction.GetTriggers(AssociatedObject)
@@ -249,7 +252,7 @@
 #else
         void ElementLoaded(object sender, RoutedEventArgs e)
         {
-#endif  
+#endif
             UpdateContext();
 
             DependencyObject currentElement;

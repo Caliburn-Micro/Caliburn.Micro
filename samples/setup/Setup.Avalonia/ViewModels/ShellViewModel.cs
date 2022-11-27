@@ -1,20 +1,20 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Chrome;
 using Caliburn.Micro;
+using ReactiveUI;
 
 namespace Setup.Avalonia.ViewModels
 {
-    public class ShellViewModel : Screen
+    public class ShellViewModel : ReactiveShellScreen
     {
         private readonly SimpleContainer container;
-        private INavigationService navigationService;
 
-        public ShellViewModel(SimpleContainer container, INavigationService navigation)
+        public ShellViewModel(SimpleContainer container)
         {
             this.container = container;
-            navigationService = navigation;
         }
         protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
         {
@@ -22,20 +22,14 @@ namespace Setup.Avalonia.ViewModels
 
             DisplayName = "Welcome to Caliburn.Micro.Avalonia!";
         }
-
-        public void btnSayHello()
+        
+        public async Task btnSayHello()
         {
             DisplayName = "Hello";
+            var mainVM = IoC.GetInstance(typeof(MainViewModel), null) as MainViewModel;
+            mainVM.SetHostScreen(this);
+            Router.Navigate.Execute(mainVM);
         }
-        
-        public void RegisterFrame(SplitView frame)
-        {
-            int x = 1;
-            //navigationService = new FrameAdapter(frame);
 
-            //container.Instance(navigationService);
-            
-            //await navigationService.NavigateToViewModelAsync(typeof(MainViewModel));
-        }
     }
 }
