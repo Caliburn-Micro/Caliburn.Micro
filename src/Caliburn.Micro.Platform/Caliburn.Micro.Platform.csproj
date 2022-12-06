@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;uap10.0.19041;Xamarin.iOS10;MonoAndroid90;netcoreapp3.1;net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net462;uap10.0.19041;Xamarin.iOS10;MonoAndroid90;netcoreapp3.1;net6.0-windows;net7.0-windows</TargetFrameworks>
     <PackageId>Caliburn.Micro</PackageId>
     <Product>Caliburn.Micro</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
@@ -33,6 +33,10 @@
     <None Include="Platforms\**\**\*.cs" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+  
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
     <Reference Include="PresentationCore" />
@@ -49,6 +53,11 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
+    <Compile Include="Platforms\net46-netcore\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-windows'">
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
     <Compile Include="Platforms\net46-netcore\**\*.cs" />
   </ItemGroup>
