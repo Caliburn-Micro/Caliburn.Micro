@@ -4,5 +4,5 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Setup.Avalonia.Views.MainView">
-  Welcome to MainView!
+    <TextBlock Text="{Binding DisplayName}"/>
 </UserControl>

@@ -12,12 +12,13 @@ namespace Setup.Avalonia.ViewModels
 {
     public class MainViewModel : ReactiveScreen
     {
-
+        public MainViewModel() { 
+            DisplayName = "Welcome to Main View Model in Avalonia!";
+        }
         protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             await base.OnInitializeAsync(cancellationToken);
 
-            DisplayName = "Welcome to Main View Model in Avalonia!";
         }
     }
 }
