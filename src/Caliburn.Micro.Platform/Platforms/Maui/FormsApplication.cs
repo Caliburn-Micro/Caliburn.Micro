@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 
@@ -10,9 +11,10 @@ namespace Caliburn.Micro.Maui
     /// <summary>
     /// A slimmed down version of the normal Caliburn Application for MAUI, used to register the navigation service and set up the initial view.
     /// </summary>
-    public class MauiApplication : Application
+    public abstract class MauiApplication : Application
     {
         private bool isInitialized;
+
 
         /// <summary>
         /// Start the framework.
@@ -35,11 +37,20 @@ namespace Caliburn.Micro.Maui
 
                 return baseTypes.Union(elementTypes);
             };
+
+            Configure();
             IoC.GetInstance = GetInstance;
             IoC.GetAllInstances = GetAllInstances;
             IoC.BuildUp = BuildUp;
 
             AssemblySource.Instance.Refresh();
+        }
+
+        /// <summary>
+        /// Override to configure the framework and setup your IoC container.
+        /// </summary>
+        protected virtual void Configure()
+        {
         }
 
         /// <summary>
