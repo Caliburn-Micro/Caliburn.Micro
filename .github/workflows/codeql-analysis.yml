@@ -60,10 +60,7 @@ jobs:
       run: dotnet workload install maui maui-android maui-ios maui-maccatalyst maui-windows android --source https://api.nuget.org/v3/index.json
     - name: list workloads
       run: dotnet workload list
-    - name: Nerdbank.GitVersioning
-      # You may pin to the exact commit or the version.
-      # uses: dotnet/nbgv@49d4f35f34d895d282b99855b2e0034f8f608ba5
-      uses: dotnet/nbgv@v0.4.0
+
     - name: Restore nuget packages
       run:  msbuild src\caliburn.micro.sln -t:restore
 
