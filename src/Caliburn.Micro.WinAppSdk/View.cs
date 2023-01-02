@@ -75,15 +75,15 @@ namespace Caliburn.Micro
                 null, 
                 OnModelChanged
                 );
-
+        
         /// <summary>
         /// Used by the framework to indicate that this element was generated.
         /// </summary>
-        public static readonly DependencyProperty IsGeneratedProperty =
+        public static DependencyProperty IsGeneratedProperty =
             DependencyPropertyHelper.RegisterAttached(
                 "IsGenerated",
                 typeof(bool),
-                typeof(DependencyObject),
+                typeof(View),
                 false
                 );
 
@@ -180,19 +180,26 @@ namespace Caliburn.Micro
         /// </remarks>
         public static Func<object, object> GetFirstNonGeneratedView = view => {
             Log.Debug("GetFirstNonGeneratedView start");
-            var dependencyObject = view as DependencyObject;
+            var dependencyObject = view as FrameworkElement;
             if (dependencyObject == null) {
              Log.Debug("GetFirstNonGeneratedView is not set. Returning the view as is.");
+                
                return view;
             }
+            IsGeneratedProperty.GetMetadata(IsGeneratedProperty.)
             Log.Debug($"GetValue isGeneratedProperty {IsGeneratedProperty}");
             Log.Debug($"GetValue dependencyObject {dependencyObject}");
             try
             {
-                Log.Debug("Here");
-                //dependencyObject.ClearValue(IsGeneratedProperty);
-                var isGenerated = (bool)dependencyObject.GetValue(IsGeneratedProperty);
-                Log.Debug("also here"); 
+                Log.Debug("Get IsGeneratedValue");
+                bool isGenerated = false;
+                if (dependencyObject is View)
+                {
+                    var isGeneratedValue = dependencyObject.GetValue(IsGeneratedProperty);
+                    Log.Debug("Past unset");
+                    isGenerated = isGeneratedValue != DependencyProperty.UnsetValue && (bool)isGeneratedValue;
+                    Log.Debug("also here");
+                }
                 //Log.Debug($"dependencyObject.ReadLocalValue(IsGeneratedProperty) {dependencyObject.ReadLocalValue(IsGeneratedProperty)}");
                 if (isGenerated)
                 {

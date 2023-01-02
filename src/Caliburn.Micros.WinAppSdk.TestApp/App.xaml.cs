@@ -118,21 +118,7 @@ namespace Caliburn.Micros.WinAppSdk.TestApp
         
          private Window m_window;
 
-        /// <summary>
-        /// Creates the root frame and navigates to the specified view.
-        /// </summary>
-        /// <param name="viewType">The view type to navigate to.</param>
-        /// <param name="paramter">The object parameter to pass to the target.</param>
-        protected void DisplayRootView(Type viewType, object paramter = null)
-        {
-            Log.Debug("DisplayRootView");
-            Initialize();
 
-            PrepareViewFirst();
-            //var navService = container.GetInstance<INavigationService>();
-            Log.Debug($"Assemblies in AssemblySource: {AssemblySource.Instance.Count}");
-            //navService.NavigateToViewModel<HomeViewModel>();
-        }
 
         /// <summary>
         /// Allows you to trigger the creation of the RootFrame from Configure if necessary.
@@ -155,6 +141,12 @@ namespace Caliburn.Micros.WinAppSdk.TestApp
         {
             Log.Debug("PrepareViewFirst");
             container.RegisterNavigationService(rootFrame);
+        }
+
+        protected override void OnUnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            Log.Error(e.Exception);
+            base.OnUnhandledException(sender, e);
         }
 
     }

@@ -10,7 +10,7 @@
     mc:Ignorable="d">
 
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <TextBlock Text="{Binding Path=Title}"></TextBlock>
+        <TextBlock Text="{Binding Title}"></TextBlock>
 
         <Button x:Name="myButton" >Click Me</Button>
     </StackPanel>

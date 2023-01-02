@@ -34,7 +34,7 @@ namespace Caliburn.Micro
                 "ConventionsApplied",
                 typeof(bool),
                 typeof(ViewModelBinder),
-                false
+                ApplyConventionsByDefault
                 );
 
 
@@ -44,7 +44,9 @@ namespace Caliburn.Micro
         /// <param name="view">The view to check.</param>
         /// <returns>Whether or not conventions should be applied to the view.</returns>
         public static bool ShouldApplyConventions(FrameworkElement view) {
-            var overriden = View.GetApplyConventions(view);
+            Log.Debug("ShouldApplyConventions: {0}", view);
+            var overriden = (bool?)view.GetValue(ConventionsAppliedProperty);
+            Log.Debug("ShouldApplyConventions: {0} overriden to {1}", view, overriden);
             return overriden.GetValueOrDefault(ApplyConventionsByDefault);
         }
 
@@ -157,6 +159,7 @@ namespace Caliburn.Micro
             }
 
             var element = View.GetFirstNonGeneratedView(view) as FrameworkElement;
+            Log.Debug("After GetFirstNonGeneratedView: {0}", element);
             if (element == null) {
                 return;
             }
@@ -165,7 +168,7 @@ namespace Caliburn.Micro
                 Log.Info("Skipping conventions for {0} and {1}.", element, viewModel);
                 return;
             }
-
+            Log.Debug("Before viewmodel get type");
             var viewModelType = viewModel.GetType();
 
             var namedElements = BindingScope.GetNamedElements(element);

@@ -113,6 +113,7 @@ namespace Caliburn.Micro
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
+            Log.Debug("OnLaunched");
             base.OnLaunched(args);
             PlatformProvider.Current = new XamlPlatformProvider();
         }
@@ -198,6 +199,7 @@ namespace Caliburn.Micro
         /// <param name="e">The event args.</param>
         protected virtual void OnUnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
         {
+            Log.Error(e.Exception);
         }
 
         /// <summary>
@@ -255,7 +257,7 @@ namespace Caliburn.Micro
             // Seems stupid but observed weird behaviour when resetting the Content
             //if (Window.Current.Content == null)
             //    Window.Current.Content = RootFrame;
-            //Log.Debug("Past Window.Current.Content");
+            Log.Debug("Past Window.Current.Content");
             //Window.Current.Activate();
         }
 
