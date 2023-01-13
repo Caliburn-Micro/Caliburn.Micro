@@ -13,10 +13,13 @@
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
     <PackageReference Include="Avalonia.Xaml.Interactivity" Version="0.10.18" />
     <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.18" />
-   </ItemGroup>
+  </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Caliburn.Micro.Avalonia\Caliburn.Micro.Avalonia.csproj" />
-    <ProjectReference Include="..\..\..\src\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
-    <ProjectReference Include="..\..\..\src\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
+    <Reference Include="Caliburn.Micro.Core">
+      <HintPath>..\..\..\bin\Caliburn.Micro.Avalonia\release\net6.0\Caliburn.Micro.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform">
+      <HintPath>..\..\..\bin\Caliburn.Micro.Avalonia\release\net6.0\Caliburn.Micro.Avalonia.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
