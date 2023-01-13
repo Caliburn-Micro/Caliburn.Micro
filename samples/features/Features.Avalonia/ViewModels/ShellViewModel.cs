@@ -10,8 +10,14 @@ using Features.Avalonia.ViewModels;
 
 namespace Features.Avalonia.ViewModels
 {
-    public class ShellViewModel : Screen
+    public class ShellViewModel : ReactiveShellScreen
     {
+        private readonly SimpleContainer _container;
+
+        public ShellViewModel(SimpleContainer container)
+        {
+            _container = container;
+        }
         protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             await base.OnInitializeAsync(cancellationToken);

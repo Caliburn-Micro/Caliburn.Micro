@@ -463,10 +463,30 @@ namespace Caliburn.Micro
 #if XFORMS
             return;
 #elif !WINDOWS_UWP
+            Log.Info("View locator Initialize component");
             var method = element.GetType()
                 .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
+            Log.Info("Trying invoke with null parameters");
+            Log.Info($"Parameters count {method.GetParameters().Count()}");
+            int paramsCount = method.GetParameters().Count();
+            if (paramsCount < 2)
+            {
+                method?.Invoke(element, null);
+            }
+            else
+            {
+                Log.Info("Trying invoke with list of empty parameters");
+                Log.Info($"Element {element}");
+                foreach (var p in method.GetParameters())
+                {
+                    Log.Info($"Parameter {p.Name} {p.ParameterType}");
+                }
+                var myParams = new List<object>(2) { false, false };
+                Log.Info("2 falses");
+                method?.Invoke(element, myParams.ToArray());
+            }
 
-            method?.Invoke(element, null);
+            Log.Info("Invoke done");
 #else
             var method = element.GetType().GetTypeInfo()
                 .GetDeclaredMethods("InitializeComponent")
