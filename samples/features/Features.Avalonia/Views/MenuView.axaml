@@ -4,9 +4,23 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Features.Avalonia.Views.MenuView">
-    <Grid>
+
+    <StackPanel>
         <ScrollViewer>
-            <ItemsControl Name="Features"/>
+            <ItemsControl  Items="{Binding Features}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="20,10">
+                            <Button HorizontalContentAlignment="Left" Name="ShowFeature">
+                                <StackPanel Margin="5">
+                                    <TextBlock Text="{Binding Title}" FontSize="14" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{Binding Description}"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
         </ScrollViewer>
-    </Grid>
+    </StackPanel>
 </UserControl>

@@ -19,7 +19,6 @@
     <PackageReference Include="Avalonia.Desktop" Version="0.10.18" />
     <PackageReference Include="Avalonia.Diagnostics" Version="0.10.18" />
     <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="0.10.18" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
     <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.18" />
     <PackageReference Include="Avalonia.Xaml.Interactivity" Version="0.10.18" />
     <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
@@ -28,15 +27,13 @@
 
   <ItemGroup>
     <Compile Include="..\Caliburn.Micro.Platform\*.cs" />
-     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\AppViewLocator.cs" Link="Platforms\netcore-avalonia\AppViewLocator.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\AttachedCollection.cs" Link="Platforms\netcore-avalonia\AttachedCollection.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\AvaloniaNavigation.cs" Link="Platforms\netcore-avalonia\AvaloniaNavigation.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\BootstrapperBase.cs" Link="Platforms\netcore-avalonia\BootstrapperBase.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\CaliburnFrame.cs" Link="Platforms\netcore-avalonia\CaliburnFrame.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\INavigationService.cs" Link="Platforms\netcore-avalonia\INavigationService.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\IWindowManager.cs" Link="Platforms\netcore-avalonia\IWindowManager.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\Parameter.cs" Link="Platforms\netcore-avalonia\Parameter.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\ReactiveScreen.cs" Link="Platforms\netcore-avalonia\ReactiveScreen.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\ReactiveShellScreen.cs" Link="Platforms\netcore-avalonia\ReactiveShellScreen.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\TriggerAction.cs" Link="Platforms\netcore-avalonia\TriggerAction.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\WindowConductor.cs" Link="Platforms\netcore-avalonia\WindowConductor.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\WindowManager.cs" Link="Platforms\netcore-avalonia\WindowManager.cs" />

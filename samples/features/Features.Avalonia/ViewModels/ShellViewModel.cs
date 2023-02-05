@@ -10,7 +10,7 @@ using Features.Avalonia.ViewModels;
 
 namespace Features.Avalonia.ViewModels
 {
-    public class ShellViewModel : ReactiveShellScreen
+    public class ShellViewModel : Screen
     {
         private readonly SimpleContainer _container;
 
@@ -22,7 +22,8 @@ namespace Features.Avalonia.ViewModels
         {
             await base.OnInitializeAsync(cancellationToken);
 
-            DisplayName = "Welcome to Caliburn.Micro.Avalonia!";
+            var menuVM = IoC.GetInstance(typeof(MenuViewModel), null) as MenuViewModel;
+
         }
     }
 
