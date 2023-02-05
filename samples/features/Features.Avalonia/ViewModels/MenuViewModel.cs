@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Reactive;
+using System.Threading.Tasks;
 using Caliburn.Micro;
-
-
 
 
 namespace Features.Avalonia.ViewModels
@@ -33,9 +33,10 @@ namespace Features.Avalonia.ViewModels
 
         public BindableCollection<FeatureViewModel> Features { get; }
 
-        public async void ShowFeature(FeatureViewModel feature)
+        public async void ShowFeature()
         {
-           await navigationService.NavigateToViewModelAsync(feature.ViewModel);
+            int x = 1;
         }
+
     }
 }

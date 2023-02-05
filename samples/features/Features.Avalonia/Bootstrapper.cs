@@ -15,11 +15,7 @@ namespace Features.Avalonia
         {
             Initialize();
             LogManager.GetLog = type => new DebugLog(type);
-           Task.Run(async()=>
-           {
-               
-               await DisplayRootViewFor<ShellViewModel>();
-           }).Wait();
+           DisplayRootViewFor<ShellViewModel>(); ;
         }
 
         protected override void Configure()

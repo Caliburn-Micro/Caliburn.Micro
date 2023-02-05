@@ -556,7 +556,8 @@
 
                 currentElement = BindingScope.GetVisualParent(currentElement);
             }
-
+            []
+            ;
             if (source != null && source.DataContext != null)
             {
                 var target = source.DataContext;
