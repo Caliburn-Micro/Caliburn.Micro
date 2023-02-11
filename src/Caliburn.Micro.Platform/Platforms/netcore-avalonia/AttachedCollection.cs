@@ -13,7 +13,7 @@ namespace Caliburn.Micro
     public class AttachedCollection<T> : AvaloniaList<T>, IBehavior
         where T : AvaloniaObject, IBehavior
     {
-        IAvaloniaObject associatedObject;
+        AvaloniaObject associatedObject;
 
         /// <summary>
         /// Creates an instance of <see cref="AttachedCollection{T}"/>
@@ -27,7 +27,7 @@ namespace Caliburn.Micro
         /// Attached the collection.
         /// </summary>
         /// <param name="AvaloniaObject">The dependency object to attach the collection to.</param>
-        public void Attach(IAvaloniaObject AvaloniaObject)
+        public void Attach(AvaloniaObject AvaloniaObject)
         {
             associatedObject = AvaloniaObject;
          
@@ -44,7 +44,7 @@ namespace Caliburn.Micro
             associatedObject = null;
         }
 
-        IAvaloniaObject IBehavior.AssociatedObject
+        AvaloniaObject IBehavior.AssociatedObject
         {
             get { return associatedObject; }
         }

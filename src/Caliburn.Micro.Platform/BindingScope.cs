@@ -14,7 +14,7 @@
     using Avalonia.VisualTree;
     using Avalonia.Controls;
     using Avalonia.Controls.Presenters;
-    using DependencyObject = Avalonia.IAvaloniaObject;
+    using DependencyObject = Avalonia.AvaloniaObject;
     using FrameworkElement = Avalonia.Controls.Control;
 #else
     using System.Windows;
@@ -139,7 +139,7 @@
         /// </summary>
         /// <returns>The parent of the given object in the Visual Tree</returns>
 #if AVALONIA
-        public static Func<DependencyObject, DependencyObject> GetVisualParent = e => ((IVisual)e).GetVisualParent() as DependencyObject;
+        public static Func<DependencyObject, DependencyObject> GetVisualParent = e => ((Visual)e).GetVisualParent() as DependencyObject;
 #else
         public static Func<DependencyObject, DependencyObject> GetVisualParent = e => VisualTreeHelper.GetParent(e);
 #endif
@@ -184,7 +184,7 @@
                 }
 
 #if AVALONIA
-                var visual = current as IVisual;
+                var visual = current as Visual;
                 var childCount = visual != null
                     ? visual.GetVisualChildren().Count() : 0;
 

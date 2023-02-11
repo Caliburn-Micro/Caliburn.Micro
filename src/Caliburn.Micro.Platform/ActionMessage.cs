@@ -22,7 +22,7 @@
     using Avalonia.Xaml.Interactivity;
     using Avalonia.VisualTree;
     using Avalonia.Xaml.Interactions.Core;
-    using DependencyObject = Avalonia.IAvaloniaObject;
+    using DependencyObject = Avalonia.AvaloniaObject;
     using XamlReader = Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader;
     using UIElement = Avalonia.Input.InputElement;
     using DependencyPropertyChangedEventArgs = Avalonia.AvaloniaPropertyChangedEventArgs;
@@ -270,20 +270,20 @@
                         break;
                     
 #if AVALONIA
-                    var currentView = ((IVisual)currentElement);
+                    var currentView = ((Visual)currentElement);
                     if (elementToUse == null)
                         elementToUse = currentElement;
                     var currentParent = currentView.GetVisualParent();
-                    if (currentParent?.VisualParent != null)
+                    if (currentParent?.GetVisualParent() != null)
                     {
-                        currentParent = currentParent.VisualParent;
+                        currentParent = currentParent.GetVisualParent();
                     }
                     //if (currentParent != null)
                     //{
                     //    elementToUse = currentElement;
                         
                     //}
-                    currentElement = currentParent as IAvaloniaObject;
+                    currentElement = currentParent as AvaloniaObject;
 #else
                     currentElement = BindingScope.GetVisualParent(currentElement);
 #endif

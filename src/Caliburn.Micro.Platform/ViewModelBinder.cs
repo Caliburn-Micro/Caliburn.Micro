@@ -28,7 +28,7 @@ namespace Caliburn.Micro
     using Avalonia;
     using Avalonia.Controls;
     using FrameworkElement = Avalonia.Controls.Control;
-    using DependencyObject = Avalonia.IAvaloniaObject;
+    using DependencyObject = Avalonia.AvaloniaObject;
     using DependencyProperty = Avalonia.AvaloniaProperty;
 #else
     using System.Windows;

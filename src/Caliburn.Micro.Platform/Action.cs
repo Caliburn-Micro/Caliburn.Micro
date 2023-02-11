@@ -18,7 +18,7 @@ namespace Caliburn.Micro
 #elif AVALONIA
     using System;
     using Avalonia;
-    using DependencyObject = Avalonia.IAvaloniaObject;
+    using DependencyObject = Avalonia.AvaloniaObject;
     using DependencyPropertyChangedEventArgs = Avalonia.AvaloniaPropertyChangedEventArgs;
     using FrameworkElement = Avalonia.Controls.Control;
 #elif MAUI
