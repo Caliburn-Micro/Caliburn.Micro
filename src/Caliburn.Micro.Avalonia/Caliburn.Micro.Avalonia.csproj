@@ -15,13 +15,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.18" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.10.18" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.18" />
-    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="0.10.18" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
-    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.18" />
-    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="0.10.18" />
+    <PackageReference Include="Avalonia" Version="11.0.0-preview5" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview5" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.0.0-preview5" />
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.0.0-preview5" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview5" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.0.0-preview5" />
+    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.0.0-preview5" />
     <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
     <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
   </ItemGroup>

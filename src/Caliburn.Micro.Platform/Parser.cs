@@ -36,7 +36,7 @@ namespace Caliburn.Micro
     using Avalonia.Data;
     using Avalonia.Controls;
     using System.Text.RegularExpressions;
-    using DependencyObject = Avalonia.IAvaloniaObject;
+    using DependencyObject = Avalonia.AvaloniaObject;
     using TriggerBase = Avalonia.Xaml.Interactivity.Trigger;
     using FrameworkElement = Avalonia.Controls.Control;
     using EventTrigger = Avalonia.Xaml.Interactions.Core.EventTriggerBehavior;

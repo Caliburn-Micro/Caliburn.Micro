@@ -23,7 +23,7 @@ namespace Caliburn.Micro
     using Avalonia;
     using Avalonia.Controls;
     using Avalonia.Xaml.Interactivity;
-    using DependencyObject = Avalonia.IAvaloniaObject;
+    using DependencyObject = Avalonia.AvaloniaObject;
     using TriggerBase = Avalonia.Xaml.Interactivity.Trigger;
     using DependencyPropertyChangedEventArgs = Avalonia.AvaloniaPropertyChangedEventArgs;
     using DependencyProperty = Avalonia.AvaloniaProperty;
