@@ -16,7 +16,7 @@ namespace Caliburn.Micro
         public static readonly AvaloniaProperty ValueProperty = 
             AvaloniaProperty.Register<Parameter, object>("Value"); 
 
-        IAvaloniaObject associatedObject;
+        AvaloniaObject associatedObject;
         WeakReference owner;
 
         static Parameter()
@@ -35,7 +35,7 @@ namespace Caliburn.Micro
             set { SetValue(ValueProperty, value); }
         }
 
-        IAvaloniaObject IBehavior.AssociatedObject
+        AvaloniaObject IBehavior.AssociatedObject
         {
             get
             {
@@ -52,7 +52,7 @@ namespace Caliburn.Micro
             set { owner = new WeakReference(value); }
         }
 
-        void IBehavior.Attach(IAvaloniaObject AvaloniaObject)
+        void IBehavior.Attach(AvaloniaObject AvaloniaObject)
         {
             associatedObject = AvaloniaObject;
         }
