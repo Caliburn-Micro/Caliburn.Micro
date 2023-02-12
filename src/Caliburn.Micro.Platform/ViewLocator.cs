@@ -20,7 +20,7 @@ namespace Caliburn.Micro
     using Avalonia;
     using Avalonia.Controls;
     using UIElement = Avalonia.Controls.Control;
-    using DependencyObject = Avalonia.IAvaloniaObject;
+    using DependencyObject = Avalonia.AvaloniaObject;
 #elif MAUI
     using global::Microsoft.Maui.Controls;
     using UIElement = global::Microsoft.Maui.Controls.Element;
