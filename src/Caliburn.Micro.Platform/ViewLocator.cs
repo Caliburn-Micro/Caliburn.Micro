@@ -20,7 +20,7 @@ namespace Caliburn.Micro
     using Avalonia;
     using Avalonia.Controls;
     using UIElement = Avalonia.Controls.Control;
-    using DependencyObject = Avalonia.IAvaloniaObject;
+    using DependencyObject = Avalonia.AvaloniaObject;
 #elif MAUI
     using global::Microsoft.Maui.Controls;
     using UIElement = global::Microsoft.Maui.Controls.Element;
@@ -512,28 +512,9 @@ namespace Caliburn.Micro
 #elif !WINDOWS_UWP
             var method = element.GetType()
                 .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
-#if AVALONIA
-            var methodParameters = method.GetParameters();
-            var myParams = new List<object>();
-            Log.Info($"Method parameters {method.GetParameters().Count()}");
-            foreach(var p in method.GetParameters())
-            {
-                    Log.Info($"Parameter name {p.Name} - {p.ParameterType}");
-                    if(p.Name == "loadXaml")
-                    {
-                        myParams.Add(true);
-                    }
-                    else if(p.Name == "attachDevTools")
-                    {
-                        myParams.Add(System.Diagnostics.Debugger.IsAttached);
-                    }
-            }
-            method?.Invoke(element, myParams.ToArray());
 
-
-#else
             method?.Invoke(element, null);
-#endif
+
 #else
             var method = element.GetType().GetTypeInfo()
                 .GetDeclaredMethods("InitializeComponent")
