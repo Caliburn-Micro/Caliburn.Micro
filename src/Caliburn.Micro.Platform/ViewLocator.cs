@@ -508,7 +508,13 @@ namespace Caliburn.Micro
         {
 #if XFORMS
             return;
-#elif !WINDOWS_UWP
+#elif WINDOWS_UWP
+            var method = element.GetType().GetTypeInfo()
+                .GetDeclaredMethods("InitializeComponent")
+                .SingleOrDefault(m => m.GetParameters().Length == 0);
+
+            method?.Invoke(element, null);
+#elif AVALONIA
             var method = element.GetType()
                 .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
 #if AVALONIA
@@ -530,13 +536,13 @@ namespace Caliburn.Micro
             method?.Invoke(element, myParams.ToArray());
 
 
+            var arguments = Enumerable.Repeat(Type.Missing, method.GetParameters().Length).ToArray();
+
+            method?.Invoke(element, arguments);
 #else
-            method?.Invoke(element, null);
-#endif
-#else
-            var method = element.GetType().GetTypeInfo()
-                .GetDeclaredMethods("InitializeComponent")
-                .SingleOrDefault(m => m.GetParameters().Length == 0);
+            var method = element.GetType()
+                .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
+
 
             method?.Invoke(element, null);
 #endif
