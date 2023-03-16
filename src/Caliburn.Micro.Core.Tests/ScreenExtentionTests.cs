@@ -37,6 +37,10 @@ namespace Caliburn.Micro.Core.Tests
 
             await ScreenExtensions.TryActivateAsync(root).ConfigureAwait(false);
 
+            Assert.True(child1.WasActivated, "child 1 should be active");
+            Assert.True(child2.WasActivated, "child 2 should be active");
+            Assert.True(child3.WasActivated, "child 3 should be active");
+
             await ScreenExtensions.TryDeactivateAsync(root, true).ConfigureAwait(false);
 
             Assert.True(child1.IsClosed, "child 1 should be closed");
@@ -55,7 +59,8 @@ namespace Caliburn.Micro.Core.Tests
             };
             var child2 = new StateScreen(TimeSpan.FromSeconds(3))
             {
-                DisplayName = "screen2"
+                DisplayName = "screen2",
+                IsClosable = false,
             };
 
             var child3 = new StateScreen()
@@ -68,6 +73,10 @@ namespace Caliburn.Micro.Core.Tests
             root.Items.Add(child3);
 
             await ScreenExtensions.TryActivateAsync(root).ConfigureAwait(false);
+
+            Assert.True(child1.WasActivated, "child 1 should be active");
+            Assert.True(child2.WasActivated, "child 2 should be active");
+            Assert.True(child3.WasActivated, "child 3 should be active");
 
             await ScreenExtensions.TryDeactivateAsync(root, true).ConfigureAwait(false);
 
@@ -87,12 +96,26 @@ namespace Caliburn.Micro.Core.Tests
                 this.deactivationDelay = deactivationDelay;
             }
 
+            public bool WasActivated { get; private set; }
             public bool IsClosed { get; private set; }
             public bool IsClosable { get; set; }
 
             public override Task<bool> CanCloseAsync(CancellationToken cancellationToken = default)
             {
                 return Task.FromResult(IsClosable);
+            }
+
+            protected override async Task OnActivateAsync(CancellationToken cancellationToken)
+            {
+                if (deactivationDelay.HasValue)
+                {
+                    await Task.Delay(deactivationDelay.Value, cancellationToken).ConfigureAwait(false);
+                }
+
+                await base.OnActivateAsync(cancellationToken);
+
+                WasActivated = true;
+                IsClosable = false;
             }
 
             protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken = default(CancellationToken))
