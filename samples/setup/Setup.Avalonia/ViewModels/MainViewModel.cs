@@ -11,13 +11,22 @@ namespace Setup.Avalonia.ViewModels
 {
     public class MainViewModel : Screen
     {
-        public MainViewModel() { 
+        public MainViewModel()
+        {
             DisplayName = "Welcome to Main View Model in Avalonia!";
         }
+
         protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             await base.OnInitializeAsync(cancellationToken);
+        }
 
+        public async Task OnOkButtonClick()
+        {
+            DisplayName = "Button Clicked... waiting";
+            await Task.Delay(1500);
+
+            DisplayName = "Wait over!";
         }
     }
 }
