@@ -6,11 +6,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using ReactiveUI;
 
 namespace Setup.Avalonia.ViewModels
 {
-    public class MainViewModel : ReactiveScreen
+    public class MainViewModel : Screen
     {
         public MainViewModel() { 
             DisplayName = "Welcome to Main View Model in Avalonia!";
