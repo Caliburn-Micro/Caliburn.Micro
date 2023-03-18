@@ -4,8 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>Caliburn_Micro.Platform.Core.Tests</RootNamespace>
     <Nullable>enable</Nullable>
-
     <IsPackable>false</IsPackable>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
