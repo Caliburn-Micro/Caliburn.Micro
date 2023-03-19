@@ -12,11 +12,18 @@ namespace Features.Avalonia.ViewModels
 {
     public class ShellViewModel : Screen
     {
+        private readonly SimpleContainer _container;
+
+        public ShellViewModel(SimpleContainer container)
+        {
+            _container = container;
+        }
         protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             await base.OnInitializeAsync(cancellationToken);
 
-            DisplayName = "Welcome to Caliburn.Micro.Avalonia!";
+            var menuVM = IoC.GetInstance(typeof(MenuViewModel), null) as MenuViewModel;
+
         }
     }
 

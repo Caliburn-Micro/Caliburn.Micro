@@ -7,7 +7,7 @@ using Windows.UI.Xaml;
 using System.Windows;
 #endif
 #if AVALONIA
-using DependencyObject = Avalonia.IAvaloniaObject;
+using DependencyObject = Avalonia.AvaloniaObject;
 #endif
 
 namespace Caliburn.Micro

@@ -1,20 +1,20 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;uap10.0.18362;Xamarin.iOS10;MonoAndroid80;netcoreapp3.1;net5.0-windows;net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net462;uap10.0.19041;Xamarin.iOS10;MonoAndroid90;net7.0-windows;net6.0-windows</TargetFrameworks>
     <PackageId>Caliburn.Micro</PackageId>
     <Product>Caliburn.Micro</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
     <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
-
+    <LangVersion>10</LangVersion>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
 
   </PropertyGroup>
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
     <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'all'))" />
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'all'))" />
     </ItemGroup>
   </Target>
 
@@ -29,10 +29,12 @@
     </ProjectReference>
     <Compile Remove="Platforms\**\*.cs" />
     <None Include="Platforms\**\*.cs" />
+    <Compile Remove="Platforms\**\**\*.cs" />
+    <None Include="Platforms\**\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Xaml" />
@@ -40,13 +42,8 @@
     <Compile Include="Platforms\net46-netcore\**\*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
-    <Compile Include="Platforms\net46-netcore\**\*.cs" />
-  </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-windows'">
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
     <Compile Include="Platforms\net46-netcore\**\*.cs" />
   </ItemGroup>
@@ -60,12 +57,12 @@
     <None Include="Platforms\uap\Caliburn.Micro.Platform.rd.xml" PackagePath="lib\uap10.0.16299\Caliburn.Micro.Platform\Properties\Caliburn.Micro.Platform.rd.xml" Pack="true" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.18362'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.19041'">
     <Compile Include="Platforms\uap\**\*.cs" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid80'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid90'">
     <Compile Remove="*.cs" />
     <Compile Include="Platforms\android\**\*.cs" />
     <Compile Include="ViewModelLocator.cs" />
@@ -76,6 +73,5 @@
     <Compile Include="Platforms\ios\**\*.cs" />
     <Compile Include="ViewModelLocator.cs" />
   </ItemGroup>
-
 
 </Project>

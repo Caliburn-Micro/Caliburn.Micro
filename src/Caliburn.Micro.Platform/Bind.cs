@@ -1,5 +1,7 @@
 ﻿#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
 #endif
@@ -14,10 +16,16 @@ namespace Caliburn.Micro
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using DependencyObject =global::Xamarin.Forms.BindableObject;
+#elif MAUI
+    using global::Microsoft.Maui;
+    using UIElement = global::Microsoft.Maui.Controls.Element;
+    using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
+    using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
+    using DependencyObject =global::Microsoft.Maui.Controls.BindableObject;
 #elif AVALONIA
     using Avalonia;
     using Avalonia.Data;
-    using DependencyObject = Avalonia.IAvaloniaObject;
+    using DependencyObject = Avalonia.AvaloniaObject;
     using DependencyPropertyChangedEventArgs = Avalonia.AvaloniaPropertyChangedEventArgs;
     using FrameworkElement = Avalonia.Controls.Control;
     using DependencyProperty = Avalonia.AvaloniaProperty;
@@ -115,9 +123,9 @@ namespace Caliburn.Micro
         public static void SetModel(DependencyObject dependencyObject, object value) {
             dependencyObject.SetValue(ModelProperty, value);
         }
-
+        
         static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (Caliburn.Micro.View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
+            if (View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
                 return;
             }
 
@@ -126,12 +134,12 @@ namespace Caliburn.Micro
                 return;
             }
 
-            Caliburn.Micro.View.ExecuteOnLoad(fe, delegate {
+            View.ExecuteOnLoad(fe, delegate {
                 var target = e.NewValue;
 
-                d.SetValue(Caliburn.Micro.View.IsScopeRootProperty, true);
+                d.SetValue(View.IsScopeRootProperty, true);
 
-#if XFORMS
+#if XFORMS || MAUI
                 var context = fe.Id.ToString("N");
 #else
                 var context = string.IsNullOrEmpty(fe.Name)
@@ -142,9 +150,9 @@ namespace Caliburn.Micro
                 ViewModelBinder.Bind(target, d, context);
             });
         }
-
+        
         static void ModelWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (Caliburn.Micro.View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
+            if (View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
                 return;
             }
 
@@ -153,11 +161,11 @@ namespace Caliburn.Micro
                 return;
             }
 
-            Caliburn.Micro.View.ExecuteOnLoad(fe, delegate {
+            View.ExecuteOnLoad(fe, delegate {
                 var target = e.NewValue;
-                d.SetValue(Caliburn.Micro.View.IsScopeRootProperty, true);
+                d.SetValue(View.IsScopeRootProperty, true);
 
-#if XFORMS
+#if XFORMS || MAUI
                 var context = fe.Id.ToString("N");
 #else
                 var context = string.IsNullOrEmpty(fe.Name)
@@ -190,7 +198,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="dependencyObject">The ui to apply conventions to.</param>
         /// <returns>Whether or not conventions are applied.</returns>
-#if (NET || NETCORE) && (!AVALONIA && !WINDOWS_UWP)  // not sure this is right      
+#if (NET || CAL_NETCORE) && (!AVALONIA && !WINDOWS_UWP && !MAUI)  // not sure this is right      
         [AttachedPropertyBrowsableForTypeAttribute(typeof(DependencyObject))]
 #endif
         public static bool GetAtDesignTime(DependencyObject dependencyObject) {
@@ -207,7 +215,7 @@ namespace Caliburn.Micro
         }
 
         static void AtDesignTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (!Caliburn.Micro.View.InDesignMode)
+            if (!View.InDesignMode)
                 return;
 
             var atDesignTime = (bool) e.NewValue;
@@ -215,6 +223,8 @@ namespace Caliburn.Micro
                 return;
 #if XFORMS
             d.SetBinding(DataContextProperty, String.Empty);
+#elif MAUI
+            d.SetBinding(DataContextProperty, null);
 #elif AVALONIA
             d.Bind(DataContextProperty, new Binding());
 #else
@@ -234,7 +244,7 @@ namespace Caliburn.Micro
 #endif
 
         static void DataContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (!Caliburn.Micro.View.InDesignMode)
+            if (!View.InDesignMode)
                 return;
 
             var enable = d.GetValue(AtDesignTimeProperty);
@@ -244,7 +254,7 @@ namespace Caliburn.Micro
             var fe = d as FrameworkElement;
             if (fe == null)
                 return;
-#if XFORMS
+#if XFORMS || MAUI
             ViewModelBinder.Bind(e.NewValue, d, fe.Id.ToString("N"));
 #else
             ViewModelBinder.Bind(e.NewValue, d, string.IsNullOrEmpty(fe.Name) ? fe.GetHashCode().ToString() : fe.Name);

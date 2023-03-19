@@ -1,16 +1,14 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Avalonia"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="600"
+        Height="450"
         x:Class="Features.Avalonia.Views.ShellView"
         Title="ShellView">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50"></RowDefinition>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions>
-        <TextBlock Name="DisplayName"/>
-        <TransitioningContentControl Grid.Row="1"></TransitioningContentControl>
+    <Grid >
+        <cal:CaliburnFrame></cal:CaliburnFrame>
     </Grid>
 </Window>

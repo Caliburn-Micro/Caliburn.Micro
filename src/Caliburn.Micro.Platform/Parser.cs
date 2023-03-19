@@ -1,5 +1,7 @@
 ﻿#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
 #endif
@@ -23,12 +25,18 @@ namespace Caliburn.Micro
     using global::Xamarin.Forms;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
+#elif MAUI
+    using System.Reflection;
+    using System.Text.RegularExpressions;
+    using global::Microsoft.Maui.Controls;
+    using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
+    using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
 #elif AVALONIA
     using Avalonia;
     using Avalonia.Data;
     using Avalonia.Controls;
     using System.Text.RegularExpressions;
-    using DependencyObject = Avalonia.IAvaloniaObject;
+    using DependencyObject = Avalonia.AvaloniaObject;
     using TriggerBase = Avalonia.Xaml.Interactivity.Trigger;
     using FrameworkElement = Avalonia.Controls.Control;
     using EventTrigger = Avalonia.Xaml.Interactions.Core.EventTriggerBehavior;
@@ -81,7 +89,7 @@ namespace Caliburn.Micro
                 var trigger = CreateTrigger(target, triggerPlusMessage.Length == 1 ? null : triggerPlusMessage[0]);
                 var message = CreateMessage(target, messageDetail);
 
-#if WINDOWS_UWP || XFORMS
+#if WINDOWS_UWP || XFORMS || MAUI
                 AddActionToTrigger(target, message, trigger);
 #else
                 trigger.Actions.Add(message);
@@ -93,7 +101,7 @@ namespace Caliburn.Micro
             return triggers;
         }
 
-#if XFORMS
+#if XFORMS || MAUI
         private static void AddActionToTrigger(DependencyObject target, TriggerAction message, TriggerBase trigger) {
 
             if (trigger is EventTrigger) {
@@ -211,7 +219,7 @@ namespace Caliburn.Micro
                 .Replace("]", string.Empty)
                 .Replace("Event", string.Empty)
                 .Trim();
-#if XFORMS
+#if XFORMS || MAUI
             return new EventTrigger { Event = triggerDetail };
 #else
             return new EventTrigger { EventName = triggerDetail };
@@ -285,7 +293,7 @@ namespace Caliburn.Micro
                 var nameAndBindingMode = parameterText.Split(':').Select(x => x.Trim()).ToArray();
                 var index = nameAndBindingMode[0].IndexOf('.');
 
-                Caliburn.Micro.View.ExecuteOnLoad(fe, delegate
+                View.ExecuteOnLoad(fe, delegate
                 {
                     BindParameter(
                         fe,
@@ -311,7 +319,7 @@ namespace Caliburn.Micro
         /// <param name="bindingMode">The binding mode to use.</param>
         public static void BindParameter(FrameworkElement target, Parameter parameter, string elementName, string path, BindingMode bindingMode)
         {
-#if XFORMS
+#if XFORMS || MAUI
             var element = elementName == "$this" ? target : null;
 
             if (element == null)

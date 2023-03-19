@@ -14,10 +14,49 @@ namespace Features.Avalonia
         public Bootstrapper()
         {
             Initialize();
+            LogManager.GetLog = type => new DebugLog(type);
+           DisplayRootViewFor<ShellViewModel>(); ;
+        }
 
-            DisplayRootViewFor<ShellViewModel>();
+        protected override void Configure()
+        {
+            container = new SimpleContainer();
+
+            container.Instance(container);
+
+            container
+                .Singleton<IWindowManager, WindowManager>()
+                .Singleton<IEventAggregator, EventAggregator>();
+
+            container
+                .PerRequest<ShellViewModel>()
+                .PerRequest<MenuViewModel>()
+                .PerRequest<BindingsViewModel>()
+                .PerRequest<ActionsViewModel>()
+                .PerRequest<CoroutineViewModel>()
+                .PerRequest<ExecuteViewModel>()
+                .PerRequest<EventAggregationViewModel>()
+                .PerRequest<DesignTimeViewModel>()
+                .PerRequest<ConductorViewModel>()
+                .PerRequest<BubblingViewModel>()
+                .PerRequest<NavigationSourceViewModel>()
+                .PerRequest<NavigationTargetViewModel>();
         }
 
 
+        protected override object GetInstance(Type service, string key)
+        {
+            return container.GetInstance(service, key);
+        }
+
+        protected override IEnumerable<object> GetAllInstances(Type service)
+        {
+            return container.GetAllInstances(service);
+        }
+
+        protected override void BuildUp(object instance)
+        {
+            container.BuildUp(instance);
+        }
     }
 }

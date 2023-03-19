@@ -22,7 +22,7 @@
     using Avalonia.Xaml.Interactivity;
     using Avalonia.VisualTree;
     using Avalonia.Xaml.Interactions.Core;
-    using DependencyObject = Avalonia.IAvaloniaObject;
+    using DependencyObject = Avalonia.AvaloniaObject;
     using XamlReader = Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader;
     using UIElement = Avalonia.Input.InputElement;
     using DependencyPropertyChangedEventArgs = Avalonia.AvaloniaPropertyChangedEventArgs;
@@ -39,10 +39,6 @@
     using EventTrigger = Microsoft.Xaml.Behaviors.EventTrigger;
 #endif
 
-#if NET5_0_WINDOWS || NET6_0_WINDOWS
-    using System.IO;
-    using System.Xml;
-#endif
 
     /// <summary>
     /// Used to send a message from the UI to a presentation model class, indicating that a particular Action should be invoked.
@@ -73,6 +69,8 @@
             new PropertyMetadata(null, HandlerPropertyChanged)
             );
 #endif
+
+
 
         ///<summary>
         /// Causes the action invocation to "double check" if the action should be invoked by executing the guard immediately before hand.
@@ -178,7 +176,7 @@
                     // Not yet sure if this will be needed
                     //var trigger = Interaction.GetTriggers(AssociatedObject)
                     //    .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
-                    //if (trigger != null && trigger.EventName == "Loaded")
+                    //if (trigger != null && trigger.EventName == eventName)
                     //    Invoke(new RoutedEventArgs());
                 }
 
@@ -203,10 +201,11 @@
                 if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded))
                 {
 #if AVALONIA
-                    string eventName = "AttachedToVisualTree";
+                    string eventName = "AttachedToLogicalTree";
                     var trigger = Interaction.GetBehaviors(AssociatedObject)
                         .OfType<Trigger>()
                         .FirstOrDefault(t => t.Actions.Contains(this)) as EventTriggerBehavior;
+                    Log.Info($"Trigger is null {trigger == null}");
 #else
                    string eventName = "Loaded";
                    var trigger = Interaction.GetTriggers(AssociatedObject)
@@ -253,7 +252,7 @@
 #else
         void ElementLoaded(object sender, RoutedEventArgs e)
         {
-#endif  
+#endif
             UpdateContext();
 
             DependencyObject currentElement;
@@ -266,20 +265,20 @@
                         break;
                     
 #if AVALONIA
-                    var currentView = ((IVisual)currentElement);
+                    var currentView = ((Visual)currentElement);
                     if (elementToUse == null)
                         elementToUse = currentElement;
                     var currentParent = currentView.GetVisualParent();
-                    if (currentParent?.VisualParent != null)
+                    if (currentParent?.GetVisualParent() != null)
                     {
-                        currentParent = currentParent.VisualParent;
+                        currentParent = currentParent.GetVisualParent();
                     }
                     //if (currentParent != null)
                     //{
                     //    elementToUse = currentElement;
                         
                     //}
-                    currentElement = currentParent as IAvaloniaObject;
+                    currentElement = currentParent as AvaloniaObject;
 #else
                     currentElement = BindingScope.GetVisualParent(currentElement);
 #endif
@@ -298,7 +297,7 @@
                 },
                 Source = elementToUse
             };
-#elif (NET || NETCORE && !WINDOWS_UWP)
+#elif (NET || CAL_NETCORE && !WINDOWS_UWP)
             var binding = new Binding {
                 Path = new PropertyPath(Message.HandlerProperty), 
                 Source = currentElement
@@ -307,12 +306,6 @@
             var binding = new Binding {
                 Source = currentElement
             };
-#elif NET5_0_WINDOWS || NET6_0_WINDOWS
-            const string bindingText = "<Binding xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation\' xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform' Path='(cal:Message.Handler)' />";
-            StringReader stringReader = new StringReader(bindingText);
-            XmlReader xmlReader = XmlReader.Create(stringReader);
-            var binding = (Binding)XamlReader.Load(xmlReader);
-            binding.Source = currentElement;
 #else
             const string bindingText = "<Binding xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation\' xmlns:cal='clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform' Path='(cal:Message.Handler)' />";
 
@@ -557,7 +550,6 @@
 
                 currentElement = BindingScope.GetVisualParent(currentElement);
             }
-
             if (source != null && source.DataContext != null)
             {
                 var target = source.DataContext;
