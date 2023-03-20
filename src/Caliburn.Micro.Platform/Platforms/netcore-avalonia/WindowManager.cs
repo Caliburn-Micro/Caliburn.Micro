@@ -131,7 +131,6 @@ namespace Caliburn.Micro
         public virtual async Task<Window> CreateWindowAsync(object rootModel, object context, IDictionary<string, object> settings)
         {
             var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context));
-            ViewModelBinder.Bind(rootModel, view, context);
 
             var haveDisplayName = rootModel as IHaveDisplayName;
             if (string.IsNullOrEmpty(view.Title) && haveDisplayName != null && !ConventionManager.HasBinding(view, Window.TitleProperty))
@@ -145,6 +144,7 @@ namespace Caliburn.Micro
             var conductor = new WindowConductor(rootModel, view);
 
             await conductor.InitialiseAsync();
+            ViewModelBinder.Bind(rootModel, view, context);
 
             return view;
         }
