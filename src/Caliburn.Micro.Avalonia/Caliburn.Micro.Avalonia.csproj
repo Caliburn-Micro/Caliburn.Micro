@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <Compile Include="..\Caliburn.Micro.Platform\*.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\AssemblyInfo.cs" Link="Platforms\netcore-avalonia\AssemblyInfo.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\AttachedCollection.cs" Link="Platforms\netcore-avalonia\AttachedCollection.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\AvaloniaNavigation.cs" Link="Platforms\netcore-avalonia\AvaloniaNavigation.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\BootstrapperBase.cs" Link="Platforms\netcore-avalonia\BootstrapperBase.cs" />
