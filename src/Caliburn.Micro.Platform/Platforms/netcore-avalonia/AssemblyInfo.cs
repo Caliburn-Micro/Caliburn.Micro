@@ -1,5 +1,5 @@
 ﻿using System.Runtime.InteropServices;
-using System.Windows.Markup;
+using Avalonia.Metadata;
 
 [assembly: Guid("6449e9cb-4d4d-4d79-8f73-71a2fc647109")]
 [assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.Micro")]
