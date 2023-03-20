@@ -506,7 +506,7 @@ namespace Caliburn.Micro
         /// <param name = "element">The element to initialize</param>
         public static void InitializeComponent(object element)
         {
-#if XFORMS
+#if XFORMS || AVALONIA
             return;
 #elif WINDOWS_UWP
             var method = element.GetType().GetTypeInfo()
