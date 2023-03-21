@@ -23,11 +23,11 @@ namespace Caliburn.Micro
         /// <param name="context">The context.</param>
         /// <param name="settings">The dialog popup settings.</param>
         /// <returns>The dialog result.</returns>
-        public virtual async Task ShowDialogAsync(object rootModel, object context = null, IDictionary<string, object> settings = null)
+        public virtual async Task<bool?> ShowDialogAsync(object rootModel, object context = null, IDictionary<string, object> settings = null)
         {
             var window = await CreateWindowAsync(rootModel, context, settings);
             
-            await window.ShowDialog(InferOwnerOf(window));
+            return await window.ShowDialog<bool?>(InferOwnerOf(window));
         }
 
         /// <summary>
