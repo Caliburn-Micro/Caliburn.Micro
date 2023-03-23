@@ -8,7 +8,7 @@
     <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <LangVersion>10</LangVersion>
-    <AvaloniaVersion>11.0.0-preview6</AvaloniaVersion>
+    <AvaloniaVersion>11.0.999-cibuild0032174-beta</AvaloniaVersion>
   </PropertyGroup>
 
   <PropertyGroup>
