@@ -4,11 +4,10 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Chrome;
 using Caliburn.Micro;
-using ReactiveUI;
 
 namespace Setup.Avalonia.ViewModels
 {
-    public class ShellViewModel : ReactiveShellScreen
+    public class ShellViewModel : Conductor<Screen>
     {
         private readonly SimpleContainer container;
 
@@ -26,9 +25,9 @@ namespace Setup.Avalonia.ViewModels
         public async Task btnSayHello()
         {
             DisplayName = "Hello";
+            
             var mainVM = IoC.GetInstance(typeof(MainViewModel), null) as MainViewModel;
-            mainVM.SetHostScreen(this);
-            Router.Navigate.Execute(mainVM);
+            await ActivateItemAsync(mainVM);
         }
 
     }

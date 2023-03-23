@@ -3,28 +3,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Avalonia"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:rxui="clr-namespace:Avalonia.ReactiveUI;assembly=Avalonia.ReactiveUI"
+        xmlns:viewModels="clr-namespace:Setup.Avalonia.ViewModels"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Setup.Avalonia.Views.ShellView"
-        Title="ShellView">
-    <Grid Name="myGrid">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50"></RowDefinition>
-            <RowDefinition Height="50"></RowDefinition>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions>
-        <TextBlock Name="DisplayName"/>
-        <Button Name="btnSayHello" Grid.Row="1">Say Hello</Button>
-        <rxui:RoutedViewHost Grid.Row="2" Router="{Binding Router}">
-            <rxui:RoutedViewHost.DefaultContent>
-                <TextBlock Text="Default content"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center" />
-            </rxui:RoutedViewHost.DefaultContent>
-            <rxui:RoutedViewHost.ViewLocator>
-                <!-- See AppViewLocator.cs section below -->
-                <cal:AppViewLocator />
-            </rxui:RoutedViewHost.ViewLocator>
-        </rxui:RoutedViewHost>
-    </Grid>
+        Title="ShellView"
+        x:CompileBindings="True"
+        x:DataType="viewModels:ShellViewModel">
+    <DockPanel>
+        <TextBlock Name="DisplayName" DockPanel.Dock="Top" />
+        <Button DockPanel.Dock="Top" Name="btnSayHello">Say Hello</Button>
+        <Border>
+            <ContentControl cal:View.Model="{Binding ActiveItem}" x:Name="MainView" />
+        </Border>    
+    </DockPanel>
 </Window>

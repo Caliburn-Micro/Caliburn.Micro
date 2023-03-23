@@ -10,7 +10,6 @@
     <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview5" />
     <PackageReference Include="Avalonia.Diagnostics" Version="11.0.0-preview5" />
     <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.0.0-preview5" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview5" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview5" />
     <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.0.0-preview5" />
     <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.0.0-preview5" />
