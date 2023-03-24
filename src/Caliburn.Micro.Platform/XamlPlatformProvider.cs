@@ -197,12 +197,23 @@
                 var viewType = contextualView.GetType();
 #if WINDOWS_UWP
                 var closeMethod = viewType.GetRuntimeMethod("Close", new Type[0]);
+#elif AVALONIA
+                var closeMethod = dialogResult != null ? viewType.GetMethod("Close", new Type[] { typeof(object) }) : viewType.GetMethod("Close", new Type[0]);
 #else
                 var closeMethod = viewType.GetMethod("Close", new Type[0]);
 #endif
                 if (closeMethod != null)
                     return ct => {
-#if !WINDOWS_UWP
+#if AVALONIA
+                        if (dialogResult != null)
+                        {
+                            closeMethod.Invoke(contextualView, new object[] { dialogResult });
+                        }
+                        else
+                        {
+                            closeMethod.Invoke(contextualView, null);
+                        }
+#elif !WINDOWS_UWP
                         var isClosed = false;
                         if (dialogResult != null) {
                             var resultProperty = contextualView.GetType().GetProperty("DialogResult");
