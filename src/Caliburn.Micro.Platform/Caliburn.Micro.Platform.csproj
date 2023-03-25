@@ -53,6 +53,18 @@
     <Compile Include="Platforms\net46-netcore\**\*.cs" />
   </ItemGroup>
   
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <UseWpf>True</UseWpf>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
+    <UseWpf>True</UseWpf>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net7.0-windows'">
+    <UseWpf>True</UseWpf>
+  </PropertyGroup>
+  
   <ItemGroup Label="Package">
     <None Include="Platforms\uap\Caliburn.Micro.Platform.rd.xml" PackagePath="lib\uap10.0.16299\Caliburn.Micro.Platform\Properties\Caliburn.Micro.Platform.rd.xml" Pack="true" />
   </ItemGroup>

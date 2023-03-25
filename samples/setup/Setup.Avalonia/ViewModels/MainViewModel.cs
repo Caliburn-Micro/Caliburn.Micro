@@ -6,19 +6,28 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using ReactiveUI;
+
 
 namespace Setup.Avalonia.ViewModels
 {
-    public class MainViewModel : ReactiveScreen
+    public class MainViewModel : Screen
     {
-        public MainViewModel() { 
+        public MainViewModel()
+        {
             DisplayName = "Welcome to Main View Model in Avalonia!";
         }
+
         protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             await base.OnInitializeAsync(cancellationToken);
+        }
 
+        public async Task OnOkButtonClick()
+        {
+            DisplayName = "Button Clicked... waiting";
+            await Task.Delay(1500);
+
+            DisplayName = "Wait over!";
         }
     }
 }

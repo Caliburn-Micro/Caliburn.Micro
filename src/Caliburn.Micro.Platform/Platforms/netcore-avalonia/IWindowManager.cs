@@ -17,6 +17,7 @@ namespace Caliburn.Micro
         /// <param name="settings">The optional dialog settings.</param>
         Task ShowDialogAsync(object rootModel, object context = null, IDictionary<string, object> settings = null);
 
+
         /// <summary>
         /// Shows a non-modal window for the specified model.
         /// </summary>

@@ -507,18 +507,26 @@ namespace Caliburn.Micro
         /// <param name = "element">The element to initialize</param>
         public static void InitializeComponent(object element)
         {
-#if XFORMS
+#if XFORMS || AVALONIA
             return;
-#elif !WINDOWS_UWP
-            var method = element.GetType()
-                .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
-
-            method?.Invoke(element, null);
-
-#else
+#elif WINDOWS_UWP
             var method = element.GetType().GetTypeInfo()
                 .GetDeclaredMethods("InitializeComponent")
                 .SingleOrDefault(m => m.GetParameters().Length == 0);
+
+            method?.Invoke(element, null);
+#elif AVALONIA
+            var method = element.GetType()
+                .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
+
+
+            var arguments = Enumerable.Repeat(Type.Missing, method.GetParameters().Length).ToArray();
+
+            method?.Invoke(element, arguments);
+#else
+            var method = element.GetType()
+                .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
+
 
             method?.Invoke(element, null);
 #endif

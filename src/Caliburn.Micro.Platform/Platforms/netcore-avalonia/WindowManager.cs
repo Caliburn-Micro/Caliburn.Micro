@@ -21,11 +21,13 @@ namespace Caliburn.Micro
         /// <param name="context">The context.</param>
         /// <param name="settings">The dialog popup settings.</param>
         /// <returns>The dialog result.</returns>
-        public virtual async Task ShowDialogAsync(object rootModel, object context = null, IDictionary<string, object> settings = null)
+
+        public virtual async Task<bool?> ShowDialogAsync(object rootModel, object context = null, IDictionary<string, object> settings = null)
         {
             var window = await CreateWindowAsync(rootModel, context, settings);
             
-            await window.ShowDialog(InferOwnerOf(window));
+            return await window.ShowDialog<bool?>(InferOwnerOf(window));
+
         }
 
         /// <summary>
@@ -131,7 +133,7 @@ namespace Caliburn.Micro
         public virtual async Task<Window> CreateWindowAsync(object rootModel, object context, IDictionary<string, object> settings)
         {
             var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context));
-            ViewModelBinder.Bind(rootModel, view, context);
+
 
             var haveDisplayName = rootModel as IHaveDisplayName;
             if (string.IsNullOrEmpty(view.Title) && haveDisplayName != null && !ConventionManager.HasBinding(view, Window.TitleProperty))
@@ -145,6 +147,8 @@ namespace Caliburn.Micro
             var conductor = new WindowConductor(rootModel, view);
 
             await conductor.InitialiseAsync();
+
+            ViewModelBinder.Bind(rootModel, view, context);
 
             return view;
         }
