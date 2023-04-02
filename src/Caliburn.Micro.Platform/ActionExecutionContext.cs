@@ -21,6 +21,9 @@ namespace Caliburn.Micro
     using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
     using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
     using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
+#elif AVALONIA
+    using FrameworkElement = Avalonia.Controls.Control;
+    using DependencyObject = Avalonia.AvaloniaObject;
 #else
     using System.Windows;
 #endif

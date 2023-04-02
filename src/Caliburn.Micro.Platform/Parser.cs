@@ -31,6 +31,15 @@ namespace Caliburn.Micro
     using global::Microsoft.Maui.Controls;
     using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
     using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Data;
+    using Avalonia.Controls;
+    using System.Text.RegularExpressions;
+    using DependencyObject = Avalonia.AvaloniaObject;
+    using TriggerBase = Avalonia.Xaml.Interactivity.Trigger;
+    using FrameworkElement = Avalonia.Controls.Control;
+    using EventTrigger = Avalonia.Xaml.Interactions.Core.EventTriggerBehavior;
 #else
     using System.Reflection;
     using System.Text.RegularExpressions;
@@ -350,17 +359,22 @@ namespace Caliburn.Micro
                 Mode = bindingMode
             };
 #else
-            var binding = new Binding(path) {
+            var binding = new Binding(path)
+            {
                 Source = element,
                 Mode = bindingMode
             };
 #endif
 
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !AVALONIA
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
 
+#if AVALONIA
+            parameter.Bind(Parameter.ValueProperty, binding);
+#else
             BindingOperations.SetBinding(parameter, Parameter.ValueProperty, binding);
+#endif
 #endif
         }
     }

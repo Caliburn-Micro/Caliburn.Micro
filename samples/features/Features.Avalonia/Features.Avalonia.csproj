@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>10</LangVersion>
+    <AvaloniaVersion>11.0.999-cibuild0032174-beta</AvaloniaVersion>
+    <AvaloniaNameGeneratorIsEnabled>false</AvaloniaNameGeneratorIsEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove=".gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="$(AvaloniaVersion)" />
+
+    <PackageReference Include="Avalonia.Themes.FLuent" Version="11.0.0-preview6" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.0.0-preview6" />
+    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.0.0-preview6" />
+    <PackageReference Include="System.Reactive" Version="5.0.0" />
+    <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="MessageBox.Avalonia" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Caliburn.Micro.Avalonia">
+      <HintPath>..\..\..\bin\Caliburn.Micro.Avalonia\Release\net6.0\Caliburn.Micro.Avalonia.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Core">
+      <HintPath>..\..\..\bin\Caliburn.Micro.Avalonia\Release\net6.0\Caliburn.Micro.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
