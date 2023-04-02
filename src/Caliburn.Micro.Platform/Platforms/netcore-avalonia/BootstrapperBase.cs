@@ -11,6 +11,7 @@ namespace Caliburn.Micro
 {
     public class BootstrapperBase
     {
+        static readonly ILog Log = LogManager.GetLog(typeof(BootstrapperBase));
         bool isInitialized;
 
         /// <summary>
@@ -104,7 +105,7 @@ namespace Caliburn.Micro
             if (Application.ApplicationLifetime is IControlledApplicationLifetime controlledApplicationLifetime)
             {
                 controlledApplicationLifetime.Startup += OnStartup;
-
+               
                 controlledApplicationLifetime.Exit += OnExit;
             }
         }
@@ -182,6 +183,7 @@ namespace Caliburn.Micro
         /// <param name="settings">The optional window settings.</param>
         protected async Task DisplayRootViewForAsync(Type viewModelType, IDictionary<string, object> settings = null)
         {
+            Log.Info("Displaying RootView: {0}", viewModelType.FullName);
             var windowManager = IoC.Get<IWindowManager>();
             var window = await windowManager.CreateWindowAsync(IoC.GetInstance(viewModelType, null), null, settings);
             if (Application.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow == null)
@@ -195,9 +197,9 @@ namespace Caliburn.Micro
         /// </summary>
         /// <typeparam name="TViewModel">The view model type.</typeparam>
         /// <param name="settings">The optional window settings.</param>
-        protected Task DisplayRootViewFor<TViewModel>(IDictionary<string, object> settings = null)
+        protected async Task DisplayRootViewFor<TViewModel>(IDictionary<string, object> settings = null)
         {
-            return DisplayRootViewForAsync(typeof(TViewModel), settings);
+            await DisplayRootViewForAsync(typeof(TViewModel), settings);
         }
     }
 }

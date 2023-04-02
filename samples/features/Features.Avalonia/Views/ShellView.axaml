@@ -8,7 +8,9 @@
         Height="450"
         x:Class="Features.Avalonia.Views.ShellView"
         Title="ShellView">
-    <Grid >
-        <cal:CaliburnFrame></cal:CaliburnFrame>
-    </Grid>
+    <DockPanel>
+        <Border>
+            <ContentControl cal:View.Model="{Binding ActiveItem}" x:Name="MainView" />
+        </Border>
+    </DockPanel>
 </Window>

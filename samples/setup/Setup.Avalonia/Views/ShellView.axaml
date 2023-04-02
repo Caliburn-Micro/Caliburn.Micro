@@ -7,8 +7,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Setup.Avalonia.Views.ShellView"
         Title="ShellView"
-        x:CompileBindings="True"
-        x:DataType="viewModels:ShellViewModel">
+        Width="800"
+        Height="600">
     <DockPanel>
         <TextBlock Name="DisplayName" DockPanel.Dock="Top" />
         <Button DockPanel.Dock="Top" Name="btnSayHello">Say Hello</Button>

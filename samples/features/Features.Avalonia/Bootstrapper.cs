@@ -13,17 +13,17 @@ namespace Features.Avalonia
 
         public Bootstrapper()
         {
-            Initialize();
             LogManager.GetLog = type => new DebugLog(type);
-           DisplayRootViewFor<ShellViewModel>(); ;
+            container = new SimpleContainer();
+            container.Instance(container); 
+            
+            Initialize();
+
+            (DisplayRootViewFor<ShellViewModel>()).ConfigureAwait(false);
         }
 
         protected override void Configure()
         {
-            container = new SimpleContainer();
-
-            container.Instance(container);
-
             container
                 .Singleton<IWindowManager, WindowManager>()
                 .Singleton<IEventAggregator, EventAggregator>();
@@ -58,5 +58,7 @@ namespace Features.Avalonia
         {
             container.BuildUp(instance);
         }
+
+
     }
 }

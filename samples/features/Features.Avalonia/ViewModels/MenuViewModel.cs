@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reactive;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 
@@ -8,11 +7,11 @@ namespace Features.Avalonia.ViewModels
 {
     public class MenuViewModel : Screen
     {
-        private readonly INavigationService navigationService;
+        private readonly IEventAggregator _eventAggregator;
 
-        public MenuViewModel(INavigationService navigationService)
+        public MenuViewModel(IEventAggregator eventAggregator)
         {
-            this.navigationService = navigationService;
+            _eventAggregator = eventAggregator;
 
             Features = new BindableCollection<FeatureViewModel>
             {
@@ -33,9 +32,9 @@ namespace Features.Avalonia.ViewModels
 
         public BindableCollection<FeatureViewModel> Features { get; }
 
-        public async void ShowFeature()
+        public async void ShowFeature(FeatureViewModel feature)
         {
-            int x = 1;
+            await _eventAggregator.PublishOnUIThreadAsync(feature);
         }
 
     }

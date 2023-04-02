@@ -55,6 +55,7 @@ namespace Caliburn.Micro
                 null
                 );
 #endif
+        static readonly ILog Log = LogManager.GetLog(typeof(Message));
 
         static readonly DependencyProperty MessageTriggersProperty =
 #if AVALONIA
@@ -74,6 +75,7 @@ namespace Caliburn.Micro
         /// <param name="d"> The element. </param>
         /// <param name="value"> The message handler. </param>
         public static void SetHandler(DependencyObject d, object value) {
+            Log.Info("Setting handler for {0} to {1}.", d, value);
             d.SetValue(HandlerProperty, value);
         }
 

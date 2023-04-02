@@ -9,11 +9,8 @@ namespace Setup.Avalonia.ViewModels
 {
     public class ShellViewModel : Conductor<Screen>
     {
-        private readonly SimpleContainer container;
-
-        public ShellViewModel(SimpleContainer container)
+        public ShellViewModel()
         {
-            this.container = container;
         }
         protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
         {

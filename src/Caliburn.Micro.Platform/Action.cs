@@ -204,7 +204,6 @@ namespace Caliburn.Micro
                 ((FrameworkElement)d).DataContext = target;
             }
 
-             Log.Info("Attaching message handler {0} to {1}.", target, d);
              Message.SetHandler(d, target);
 #endif
             

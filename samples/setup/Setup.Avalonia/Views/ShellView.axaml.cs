@@ -7,7 +7,7 @@ using Caliburn.Micro;
 
 namespace Setup.Avalonia.Views
 {
-    public class ShellView : Window
+    public partial class ShellView : Window
     {
         public ShellView()
         {
