@@ -16,6 +16,7 @@ namespace Caliburn.Micro
     /// </summary>
     public class WindowManager : IWindowManager
     {
+        static readonly ILog Log = LogManager.GetLog(typeof(WindowManager));
         /// <summary>
         /// Shows a modal dialog for the specified model.
         /// </summary>
@@ -26,7 +27,7 @@ namespace Caliburn.Micro
         public virtual async Task<bool?> ShowDialogAsync(object rootModel, object context = null, IDictionary<string, object> settings = null)
         {
             var window = await CreateWindowAsync(rootModel, context, settings);
-            
+
             return await window.ShowDialog<bool?>(InferOwnerOf(window));
         }
 
@@ -55,9 +56,9 @@ namespace Caliburn.Micro
             else
             {
             */
-                var window = await CreateWindowAsync(rootModel, context, settings);
+            var window = await CreateWindowAsync(rootModel, context, settings);
 
-                window.Show();
+            window.Show();
             /*}*/
         }
 
@@ -132,7 +133,10 @@ namespace Caliburn.Micro
         /// <returns>The window.</returns>
         public virtual async Task<Window> CreateWindowAsync(object rootModel, object context, IDictionary<string, object> settings)
         {
-            var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context));
+            Log.Info("Creating window for {0}.", rootModel);
+            Control view1 = ViewLocator.LocateForModel(rootModel, null, context);
+            Log.Info("Calling EnsureWindow");
+            var view = EnsureWindow(rootModel, view1);
 
             var haveDisplayName = rootModel as IHaveDisplayName;
             if (string.IsNullOrEmpty(view.Title) && haveDisplayName != null && !ConventionManager.HasBinding(view, Window.TitleProperty))
@@ -142,12 +146,10 @@ namespace Caliburn.Micro
             }
 
             ApplySettings(view, settings);
-
             var conductor = new WindowConductor(rootModel, view);
 
             await conductor.InitialiseAsync();
             ViewModelBinder.Bind(rootModel, view, context);
-
             return view;
         }
 
@@ -166,14 +168,11 @@ namespace Caliburn.Micro
                     Content = view,
                     SizeToContent = SizeToContent.WidthAndHeight
                 };
-
                 window.SetValue(View.IsGeneratedProperty, true);
-
                 window.WindowStartupLocation = InferOwnerOf(window) != null
                     ? WindowStartupLocation.CenterOwner
                     : WindowStartupLocation.CenterScreen;
             }
-
             return window;
         }
 
@@ -200,62 +199,7 @@ namespace Caliburn.Micro
             return active == window ? null : active;
         }
 
-        /*
-        /// <summary>
-        /// Creates the page.
-        /// </summary>
-        /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The context.</param>
-        /// <param name="settings">The optional popup settings.</param>
-        /// <returns>The page.</returns>
-        public virtual async Task<Page> CreatePageAsync(object rootModel, object context, IDictionary<string, object> settings)
-        {
-            var view = EnsurePage(rootModel, ViewLocator.LocateForModel(rootModel, null, context));
-            ViewModelBinder.Bind(rootModel, view, context);
 
-            var haveDisplayName = rootModel as IHaveDisplayName;
-            if (string.IsNullOrEmpty(view.Title) && haveDisplayName != null && !ConventionManager.HasBinding(view, Page.TitleProperty))
-            {
-                var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
-                view.SetBinding(Page.TitleProperty, binding);
-            }
-
-            ApplySettings(view, settings);
-
-            if (rootModel is IActivate activator)
-            {
-                await activator.ActivateAsync();
-            }
-
-            if (rootModel is IDeactivate deactivatable)
-            {
-                view.Unloaded += async (s, e) => await deactivatable.DeactivateAsync(true);
-            }
-
-            return view;
-        }
-        */
-
-        /*
-        /// <summary>
-        /// Ensures the view is a page or provides one.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <param name="view">The view.</param>
-        /// <returns>The page.</returns>
-        protected virtual Page EnsurePage(object model, object view)
-        {
-            if (view is Page page)
-            {
-                return page;
-            }
-
-            page = new Page { Content = view };
-            page.SetValue(View.IsGeneratedProperty, true);
-
-            return page;
-        }
-        */
 
         private bool ApplySettings(object target, IEnumerable<KeyValuePair<string, object>> settings)
         {

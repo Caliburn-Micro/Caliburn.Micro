@@ -26,7 +26,7 @@ namespace Caliburn.Micro
     using UIElement = global::Microsoft.Maui.Controls.Element;
     using TextBlock = global::Microsoft.Maui.Controls.Label;
     using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
-#elif !WINDOWS_UWP
+#elif !WINDOWS_UWP 
     using System.Windows;
     using System.Windows.Controls;
 #else
@@ -92,7 +92,10 @@ namespace Caliburn.Micro
                 throw new ArgumentException("NameFormat field cannot be blank.");
             }
 
-            NameTransformer.Clear();
+            if (NameTransformer.Any())
+            {
+                NameTransformer.Clear();
+            }
             ViewSuffixList.Clear();
 
             defaultSubNsViews = config.DefaultSubNamespaceForViews;
@@ -506,7 +509,7 @@ namespace Caliburn.Micro
         /// <param name = "element">The element to initialize</param>
         public static void InitializeComponent(object element)
         {
-#if XFORMS || AVALONIA
+#if XFORMS
             return;
 #elif WINDOWS_UWP
             var method = element.GetType().GetTypeInfo()
@@ -517,28 +520,22 @@ namespace Caliburn.Micro
 #elif AVALONIA
             var method = element.GetType()
                 .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
-#if AVALONIA
             var methodParameters = method.GetParameters();
             var myParams = new List<object>();
             Log.Info($"Method parameters {method.GetParameters().Count()}");
-            foreach(var p in method.GetParameters())
+            foreach (var p in method.GetParameters())
             {
-                    Log.Info($"Parameter name {p.Name} - {p.ParameterType}");
-                    if(p.Name == "loadXaml")
-                    {
-                        myParams.Add(true);
-                    }
-                    else if(p.Name == "attachDevTools")
-                    {
-                        myParams.Add(System.Diagnostics.Debugger.IsAttached);
-                    }
+                Log.Info($"Parameter name {p.Name} - {p.ParameterType}");
+                if (p.Name == "loadXaml")
+                {
+                    myParams.Add(true);
+                }
+                else if (p.Name == "attachDevTools")
+                {
+                    myParams.Add(System.Diagnostics.Debugger.IsAttached);
+                }
             }
             method?.Invoke(element, myParams.ToArray());
-
-
-            var arguments = Enumerable.Repeat(Type.Missing, method.GetParameters().Length).ToArray();
-
-            method?.Invoke(element, arguments);
 #else
             var method = element.GetType()
                 .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
