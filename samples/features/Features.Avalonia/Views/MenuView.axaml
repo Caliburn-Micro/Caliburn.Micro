@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Features.Avalonia.Views.MenuView">
+
+    <StackPanel>
+        <ScrollViewer>
+            <ItemsControl  Items="{Binding Features}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="20,10">
+                            <Button cal:Message.Attach="ShowFeature($dataContext)"  HorizontalContentAlignment="Left">
+                                <StackPanel Margin="5">
+                                    <TextBlock Text="{Binding Title}" FontSize="14" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{Binding Description}"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+        </ScrollViewer>
+    </StackPanel>
+</UserControl>
