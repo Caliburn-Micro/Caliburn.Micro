@@ -8,7 +8,7 @@
     <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <LangVersion>10</LangVersion>
-    <AvaloniaVersion>11.0.999-cibuild0032174-beta</AvaloniaVersion>
+    <AvaloniaVersion>11.0.999-cibuild0032488-beta</AvaloniaVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -22,7 +22,6 @@
     <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.0.0-preview6" />
     <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.0.0-preview6" />
-    <PackageReference Include="System.Reactive" Version="5.0.0" />
     <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
     <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
   </ItemGroup>
