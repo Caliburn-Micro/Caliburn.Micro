@@ -222,14 +222,14 @@ namespace Caliburn.Micro
         {
             return new Window();
         }
-#endif
+
 
         public void InitializeWindow()
         {
             if(Window == null)
                 Window = CreateWindow();
         }
-
+#endif
         /// <summary>
         /// Creates the root frame used by the application.
         /// </summary>
