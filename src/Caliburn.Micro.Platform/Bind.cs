@@ -10,6 +10,9 @@ namespace Caliburn.Micro
 #if WINDOWS_UWP
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Data;
+#elif WinUI3
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Data;
 #elif XFORMS
     using global::Xamarin.Forms;
     using UIElement = global::Xamarin.Forms.Element;
@@ -166,7 +169,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="dependencyObject">The ui to apply conventions to.</param>
         /// <returns>Whether or not conventions are applied.</returns>
-#if !MAUI && (NET || CAL_NETCORE) 
+#if !MAUI && (NET || CAL_NETCORE) && !WinUI3
         [AttachedPropertyBrowsableForTypeAttribute(typeof(DependencyObject))]
 #endif
         public static bool GetAtDesignTime(DependencyObject dependencyObject) {

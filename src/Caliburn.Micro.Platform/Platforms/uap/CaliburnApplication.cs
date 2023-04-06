@@ -5,8 +5,15 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
+
+#if WinUI3
+using Microsoft.UI.Xaml;
+
+    using Microsoft.UI.Xaml.Controls;
+#else
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+#endif
 
 namespace Caliburn.Micro
 {
@@ -21,6 +28,10 @@ namespace Caliburn.Micro
         /// The root frame of the application.
         /// </summary>
         protected Frame RootFrame { get; private set; }
+
+#if WinUI3
+        public Window Window { get; private set; }
+#endif
 
         /// <summary>
         /// Called by the bootstrapper's constructor at design time to start the framework.
@@ -99,11 +110,13 @@ namespace Caliburn.Micro
             }
         }
 
+#if WINDOWS_UWP
         /// <summary>
         /// Invoked when the application creates a window.
         /// </summary>
         /// <param name="args">Event data for the event.</param>
         protected override void OnWindowCreated(WindowCreatedEventArgs args)
+
         {
             base.OnWindowCreated(args);
 
@@ -113,14 +126,17 @@ namespace Caliburn.Micro
 
             args.Window.Activated += (s, e) => PlatformProvider.Current = new XamlPlatformProvider();
         }
+#endif
 
         /// <summary>
         /// Provides an opportunity to hook into the application object.
         /// </summary>
         protected virtual void PrepareApplication()
         {
+#if WINDOWS_UWP
             Resuming += OnResuming;
             Suspending += OnSuspending;
+#endif
             UnhandledException += OnUnhandledException;
         }
 
@@ -192,8 +208,26 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event args.</param>
+#if WinUI3
+        protected virtual void OnUnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+#else
+
         protected virtual void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+#endif
         {
+        }
+
+#if WinUI3
+        protected virtual Window CreateWindow()
+        {
+            return new Window();
+        }
+#endif
+
+        public void InitializeWindow()
+        {
+            if(Window == null)
+                Window = CreateWindow();
         }
 
         /// <summary>
@@ -225,6 +259,30 @@ namespace Caliburn.Micro
         {
         }
 
+
+#if WinUI3
+        /// <summary>
+        /// Creates the root frame and navigates to the specified view.
+        /// </summary>
+        /// <param name="viewType">The view type to navigate to.</param>
+        /// <param name="paramter">The object parameter to pass to the target.</param>
+        protected void DisplayRootView(Type viewType, object paramter = null)
+        {
+            Initialize();
+
+            InitializeWindow();
+
+            PrepareViewFirst();
+
+            RootFrame.Navigate(viewType, paramter);
+
+            // Seems stupid but observed weird behaviour when resetting the Content
+            Window.Content = RootFrame;
+
+            Window.Activate();
+        }
+#else
+
         /// <summary>
         /// Creates the root frame and navigates to the specified view.
         /// </summary>
@@ -244,6 +302,7 @@ namespace Caliburn.Micro
 
             Window.Current.Activate();
         }
+#endif
 
         /// <summary>
         /// Creates the root frame and navigates to the specified view.
@@ -254,6 +313,33 @@ namespace Caliburn.Micro
         {
             DisplayRootView(typeof(T), parameter);
         }
+
+
+#if WinUI3
+        /// <summary>
+        /// Locates the view model, locates the associate view, binds them and shows it as the root view.
+        /// </summary>
+        /// <param name="viewModelType">The view model type.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        protected async Task DisplayRootViewForAsync(Type viewModelType, CancellationToken cancellationToken)
+        {
+            Initialize();
+
+            var viewModel = IoC.GetInstance(viewModelType, null);
+            var view = ViewLocator.LocateForModel(viewModel, null, null);
+
+            ViewModelBinder.Bind(viewModel, view, null);
+
+            if (viewModel is IActivate activator)
+                await activator.ActivateAsync(cancellationToken);
+
+            InitializeWindow();
+
+            Window.Content = view;
+            Window.Activate();
+        }
+#else
 
         /// <summary>
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
@@ -276,7 +362,7 @@ namespace Caliburn.Micro
             Window.Current.Content = view;
             Window.Current.Activate();
         }
-
+#endif
         /// <summary>
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
         /// </summary>
