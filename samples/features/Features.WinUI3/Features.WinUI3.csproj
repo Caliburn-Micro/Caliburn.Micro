@@ -60,13 +60,13 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Caliburn.Micro.Core">
-      <HintPath>..\..\..\bin\Caliburn.Micro.WinUI3\debug\net6.0-windows10.0.19041.0\Caliburn.Micro.Core.dll</HintPath>
+      <HintPath>..\..\..\bin\Caliburn.Micro.WinUI3\release\net6.0-windows10.0.19041.0\Caliburn.Micro.Core.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.Platform.Core">
-      <HintPath>..\..\..\bin\Caliburn.Micro.WinUI3\debug\net6.0-windows10.0.19041.0\Caliburn.Micro.Platform.Core.dll</HintPath>
+      <HintPath>..\..\..\bin\Caliburn.Micro.WinUI3\release\net6.0-windows10.0.19041.0\Caliburn.Micro.Platform.Core.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.WinUI3">
-      <HintPath>..\..\..\bin\Caliburn.Micro.WinUI3\debug\net6.0-windows10.0.19041.0\Caliburn.Micro.WinUI3.dll</HintPath>
+      <HintPath>..\..\..\bin\Caliburn.Micro.WinUI3\release\net6.0-windows10.0.19041.0\Caliburn.Micro.WinUI3.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
