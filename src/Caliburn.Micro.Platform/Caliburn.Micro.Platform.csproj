@@ -14,7 +14,7 @@
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
     <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'all'))" />
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'all'))" />
     </ItemGroup>
   </Target>
 
@@ -81,6 +81,10 @@
     <Compile Remove="*.cs" />
     <Compile Include="Platforms\ios\**\*.cs" />
     <Compile Include="ViewModelLocator.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Platforms\WinUI3\" />
   </ItemGroup>
 
 </Project>

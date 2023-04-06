@@ -1,11 +1,15 @@
 ﻿namespace Caliburn.Micro {
     using System;
+#if WinUI3
+    using Microsoft.UI.Xaml;
+#else
     using Windows.UI.Xaml;
+#endif
 
     /// <summary>
     /// Represents a parameter of an <see cref="ActionMessage"/>.
     /// </summary>
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
     public class Parameter : DependencyObject, IAttachedObject {
         DependencyObject associatedObject;
 #else
@@ -34,7 +38,7 @@
             set { SetValue(ValueProperty, value); }
         }
 
-#if WINDOWS_UWP
+#if WINDOWS_UWP ||   WinUI3
         DependencyObject IAttachedObject.AssociatedObject {
 #else
         FrameworkElement IAttachedObject.AssociatedObject {
@@ -51,7 +55,7 @@
             set { owner = new WeakReference(value); }
         }
 
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
         void IAttachedObject.Attach(DependencyObject dependencyObject) {
 #else
         void IAttachedObject.Attach(FrameworkElement dependencyObject) {

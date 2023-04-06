@@ -11,6 +11,14 @@
     using Windows.UI.Xaml.Markup;
     using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
     using Windows.UI.Xaml.Shapes;
+#elif WinUI3
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Controls.Primitives;
+    using Microsoft.UI.Xaml.Data;
+    using Microsoft.UI.Xaml.Markup;
+    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    using Microsoft.UI.Xaml.Shapes;
 #else
     using System.ComponentModel;
     using System.Windows;
@@ -21,7 +29,7 @@
     using System.Windows.Shapes;    
     using EventTrigger = Microsoft.Xaml.Behaviors.EventTrigger;
 #endif
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !WinUI3
     using System.Windows.Documents;
 #endif
 
@@ -52,12 +60,12 @@
         /// The default DataTemplate used for ItemsControls when required.
         /// </summary>
         public static DataTemplate DefaultItemTemplate = (DataTemplate)
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
         XamlReader.Load(
 #else
         XamlReader.Parse(
 #endif
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
             "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' xmlns:cal='using:Caliburn.Micro'>" +
                 "<ContentControl cal:View.Model=\"{Binding}\" VerticalContentAlignment=\"Stretch\" HorizontalContentAlignment=\"Stretch\" IsTabStop=\"False\" />" +
             "</DataTemplate>"
@@ -73,7 +81,7 @@
         /// The default DataTemplate used for Headered controls when required.
         /// </summary>
         public static DataTemplate DefaultHeaderTemplate = (DataTemplate)
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
         XamlReader.Load(
 #else
         XamlReader.Parse(
@@ -109,7 +117,7 @@
         /// </summary>
         public static Action<Type, string, PropertyInfo, FrameworkElement, ElementConvention, DependencyProperty> SetBinding =
             (viewModelType, path, property, element, convention, bindableProperty) => {
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
                 var binding = new Binding { Path = new PropertyPath(path) };
 #else
                 var binding = new Binding(path);
@@ -147,7 +155,7 @@
                 binding.ValidatesOnExceptions = true;
             }
 #endif
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !WinUI3
             if (typeof(IDataErrorInfo).IsAssignableFrom(viewModelType)) {
                 binding.ValidatesOnDataErrors = true;
                 binding.ValidatesOnExceptions = true;
@@ -167,7 +175,7 @@
         /// Determines whether a custom string format is needed and applies it to the binding.
         /// </summary>
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyStringFormat = (binding, convention, property) => {
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !WinUI3
             if (typeof(DateTime).IsAssignableFrom(property.PropertyType))
                 binding.StringFormat = "{0:d}";
 #endif
@@ -183,7 +191,7 @@
         };
 
         static ConventionManager() {
-#if WINDOWS_UWP
+#if WINDOWS_UWP //TODO: new if for WinUI
             AddElementConvention<SplitView>(SplitView.ContentProperty, "IsPaneOpen", "PaneClosing").GetBindableProperty =
                 delegate (DependencyObject foundControl)
                 {
@@ -195,18 +203,19 @@
                     Log.Info("ViewModel bound on {0}.", element.Name);
                     return View.ModelProperty;
                };
+            AddElementConvention<SearchBox>(SearchBox.QueryTextProperty, "QueryText", "QuerySubmitted");
+
 #endif
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !WinUI3
             AddElementConvention<DatePicker>(DatePicker.SelectedDateProperty, "SelectedDate", "SelectedDateChanged");
 #endif
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
             AddElementConvention<DatePicker>(DatePicker.DateProperty, "Date", "DateChanged");
             AddElementConvention<TimePicker>(TimePicker.TimeProperty, "Time", "TimeChanged");
             AddElementConvention<Hub>(Hub.HeaderProperty, "Header", "Loaded");
             AddElementConvention<HubSection>(HubSection.HeaderProperty, "Header", "SectionsInViewChanged");
             AddElementConvention<MenuFlyoutItem>(MenuFlyoutItem.TextProperty, "Text", "Click");
             AddElementConvention<ToggleMenuFlyoutItem>(ToggleMenuFlyoutItem.IsCheckedProperty, "IsChecked", "Click");
-            AddElementConvention<SearchBox>(SearchBox.QueryTextProperty, "QueryText", "QuerySubmitted");
             AddElementConvention<ToggleSwitch>(ToggleSwitch.IsOnProperty, "IsOn", "Toggled");
             AddElementConvention<ProgressRing>(ProgressRing.IsActiveProperty, "IsActive", "Loaded");
             AddElementConvention<Slider>(Slider.ValueProperty, "Value", "ValueChanged");
@@ -352,7 +361,7 @@
 
             ElementConvention propertyConvention;
             ElementConventions.TryGetValue(elementType, out propertyConvention);
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
             return propertyConvention ?? GetElementConvention(elementType.GetTypeInfo().BaseType);
 #else
             return propertyConvention ?? GetElementConvention(elementType.BaseType);
@@ -363,7 +372,7 @@
         /// Determines whether a particular dependency property already has a binding on the provided element.
         /// </summary>
         public static bool HasBinding(FrameworkElement element, DependencyProperty property) {
-#if NET || CAL_NETCORE
+#if (NET || CAL_NETCORE) && !WinUI3
             return BindingOperations.GetBindingBase(element, property) != null;
 #else
             return element.GetBindingExpression(property) != null;
@@ -460,7 +469,7 @@
                 foreach (var potentialName in DerivePotentialSelectionNames(baseName)) {
                     if (viewModelType.GetPropertyCaseInsensitive(potentialName) != null) {
                         var selectionPath = path.Replace(baseName, potentialName);
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
                         var binding = new Binding { Mode = BindingMode.TwoWay, Path = new PropertyPath(selectionPath) };
 #else
                         var binding = new Binding(selectionPath) { Mode = BindingMode.TwoWay };
