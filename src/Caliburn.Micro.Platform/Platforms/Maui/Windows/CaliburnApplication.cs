@@ -36,9 +36,6 @@ namespace Caliburn.Micro.Maui
             AssemblySource.AddRange(SelectAssemblies());
 
             Configure();
-            IoC.GetInstance = GetInstance;
-            IoC.GetAllInstances = GetAllInstances;
-            IoC.BuildUp = BuildUp;
         }
 
         /// <summary>
@@ -52,9 +49,6 @@ namespace Caliburn.Micro.Maui
             PrepareApplication();
             Configure();
 
-            IoC.GetInstance = GetInstance;
-            IoC.GetAllInstances = GetAllInstances;
-            IoC.BuildUp = BuildUp;
         }
 
         /// <summary>
@@ -145,34 +139,6 @@ namespace Caliburn.Micro.Maui
             return new[] {GetType().GetTypeInfo().Assembly};
         }
 
-        /// <summary>
-        /// Override this to provide an IoC specific implementation.
-        /// </summary>
-        /// <param name="service">The service to locate.</param>
-        /// <param name="key">The key to locate.</param>
-        /// <returns>The located service.</returns>
-        protected virtual object GetInstance(Type service, string key)
-        {
-            return System.Activator.CreateInstance(service);
-        }
-
-        /// <summary>
-        /// Override this to provide an IoC specific implementation
-        /// </summary>
-        /// <param name="service">The service to locate.</param>
-        /// <returns>The located services.</returns>
-        protected virtual IEnumerable<object> GetAllInstances(Type service)
-        {
-            return new[] {System.Activator.CreateInstance(service)};
-        }
-
-        /// <summary>
-        /// Override this to provide an IoC specific implementation.
-        /// </summary>
-        /// <param name="instance">The instance to perform injection on.</param>
-        protected virtual void BuildUp(object instance)
-        {
-        }
 
         /// <summary>
         /// Override this to add custom behavior when the application transitions from Suspended state to Running state.
