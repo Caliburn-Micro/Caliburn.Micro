@@ -215,12 +215,11 @@
         };
 
         static ConventionManager() {
+            var itemsControlSourceProperty = ItemsControl.ItemsSourceProperty;
 #if AVALONIA
-            var itemsControlSourceProperty = ItemsControl.ItemsProperty;
             var loadedEvent = "AttachedToLogicalTree";
             var contentControlBindTo = "Content";
 #else
-            var itemsControlSourceProperty = ItemsControl.ItemsSourceProperty;
             var loadedEvent = "Loaded";
             var contentControlBindTo = "DataContext";
 #endif
@@ -273,14 +272,11 @@
             AddElementConvention<PasswordBox>(null, "Password", "PasswordChanged");
             AddElementConvention<Hyperlink>(Hyperlink.DataContextProperty, "DataContext", "Click");
             AddElementConvention<RichTextBox>(RichTextBox.DataContextProperty, "DataContext", "TextChanged");
-            
-            AddElementConvention<Menu>(Menu.ItemsSourceProperty,"DataContext", "Click");
-            AddElementConvention<MenuItem>(MenuItem.ItemsSourceProperty, "DataContext", "Click");
 #else
-            AddElementConvention<Menu>(Menu.ItemsProperty, "DataContext", "Click");
-            AddElementConvention<MenuItem>(MenuItem.ItemsProperty, "DataContext", "Click");
             AddElementConvention<SplitView>(SplitView.ContentProperty, "Content", loadedEvent);
 #endif
+            AddElementConvention<Menu>(Menu.ItemsSourceProperty, "DataContext", "Click");
+            AddElementConvention<MenuItem>(MenuItem.ItemsSourceProperty, "DataContext", "Click");
             AddElementConvention<Label>(Label.ContentProperty, "Content", "DataContextChanged");
             AddElementConvention<Slider>(Slider.ValueProperty, "Value", "ValueChanged");
             AddElementConvention<Expander>(Expander.IsExpandedProperty, "IsExpanded", "Expanded");
@@ -288,15 +284,9 @@
             AddElementConvention<StatusBar>(StatusBar.ItemsSourceProperty, "DataContext", loadedEvent);
             AddElementConvention<ToolBar>(ToolBar.ItemsSourceProperty, "DataContext", loadedEvent);
             AddElementConvention<ToolBarTray>(ToolBarTray.VisibilityProperty, "DataContext", loadedEvent);
+#endif
             AddElementConvention<TreeView>(TreeView.ItemsSourceProperty, "SelectedItem", "SelectedItemChanged");
-#else
-            AddElementConvention<TreeView>(TreeView.ItemsProperty, "SelectedItem", "SelectedItemChanged");
-#endif
-#if AVALONIA
-            AddElementConvention<TabControl>(TabControl.ItemsProperty, "Items", "SelectionChanged")
-#else
             AddElementConvention<TabControl>(TabControl.ItemsSourceProperty, "ItemsSource", "SelectionChanged")
-#endif
                 .ApplyBinding = (viewModelType, path, property, element, convention) => {
                     var bindableProperty = convention.GetBindableProperty(element);
                     if(!SetBindingWithoutBindingOverwrite(viewModelType, path, property, element, convention, bindableProperty))
