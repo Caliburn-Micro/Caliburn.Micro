@@ -8,7 +8,7 @@
 
     <StackPanel>
         <ScrollViewer>
-            <ItemsControl  ItemsSource="{Binding Features}">
+            <ItemsControl ItemsSource="{Binding Features}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="20,10">
