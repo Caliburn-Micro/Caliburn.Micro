@@ -5,7 +5,7 @@ using Features.Avalonia.ViewModels;
 
 namespace Features.Avalonia.Views
 {
-    public partial class BindingsView : UserControl
+    public partial class BindingsView : Window
     {
  
         public BindingsView()

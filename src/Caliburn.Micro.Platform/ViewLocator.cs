@@ -509,7 +509,7 @@ namespace Caliburn.Micro
         /// <param name = "element">The element to initialize</param>
         public static void InitializeComponent(object element)
         {
-#if XFORMS
+#if XFORMS || AVALONIA
             return;
 #elif WINDOWS_UWP
             var method = element.GetType().GetTypeInfo()
@@ -517,25 +517,6 @@ namespace Caliburn.Micro
                 .SingleOrDefault(m => m.GetParameters().Length == 0);
 
             method?.Invoke(element, null);
-#elif AVALONIA
-            var method = element.GetType()
-                .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
-            var methodParameters = method.GetParameters();
-            var myParams = new List<object>();
-            Log.Info($"Method parameters {method.GetParameters().Count()}");
-            foreach (var p in method.GetParameters())
-            {
-                Log.Info($"Parameter name {p.Name} - {p.ParameterType}");
-                if (p.Name == "loadXaml")
-                {
-                    myParams.Add(true);
-                }
-                else if (p.Name == "attachDevTools")
-                {
-                    myParams.Add(System.Diagnostics.Debugger.IsAttached);
-                }
-            }
-            method?.Invoke(element, myParams.ToArray());
 #else
             var method = element.GetType()
                 .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);

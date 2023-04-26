@@ -10,7 +10,7 @@
         Title="ShellView">
     <DockPanel>
         <Border>
-            <ContentControl cal:View.Model="{Binding ActiveItem}" x:Name="MainView" />
+            <ContentControl cal:Message.Attach="RegisterFrame($source)" cal:View.Model="{Binding ActiveItem}" x:Name="MainView" />
         </Border>
     </DockPanel>
 </Window>
