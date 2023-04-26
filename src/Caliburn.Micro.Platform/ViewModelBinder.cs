@@ -146,6 +146,7 @@ namespace Caliburn.Micro
             
 
             foreach (var method in methods) {
+            Log.Info($"Searching for methods control {method.Name} unmatchedElements count {unmatchedElements.Count}");
                 var foundControl = unmatchedElements.FindName(method.Name);
                 if (foundControl == null && IsAsyncMethod(method)) {
                     var methodNameWithoutAsyncSuffix = method.Name.Substring(0, method.Name.Length - AsyncSuffix.Length);
@@ -153,7 +154,11 @@ namespace Caliburn.Micro
                 }
 
                 if(foundControl == null) {
-                    Log.Info("Action Convention Not Applied: No actionable element for {0}.", method.Name);
+                    Log.Info("Action Convention Not Applied: No actionable element for {0}. {1}", method.Name, unmatchedElements.Count);
+                    foreach(var element in unmatchedElements)
+                    {
+                    Log.Info($"Unnamed element {element.Name}");
+                    }
                     continue;
                 }
 

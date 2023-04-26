@@ -8,11 +8,11 @@
 
     <StackPanel>
         <ScrollViewer>
-            <ItemsControl  Items="{Binding Features}">
+            <ItemsControl  ItemsSource="{Binding Features}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="20,10">
-                            <Button cal:Message.Attach="ShowFeature($dataContext)"  HorizontalContentAlignment="Left">
+                            <Button cal:Message.Attach="ShowFeature($dataContext)"  Classes="FeatureButton">
                                 <StackPanel Margin="5">
                                     <TextBlock Text="{Binding Title}" FontSize="14" FontWeight="SemiBold"/>
                                     <TextBlock Text="{Binding Description}"/>
@@ -24,4 +24,12 @@
                 </ItemsControl>
         </ScrollViewer>
     </StackPanel>
+    <Control.Styles>
+        <Style Selector="Button.FeatureButton">
+            <Setter Property="HorizontalContentAlignment" Value="Left"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="BorderThickness" Value="1"></Setter>
+            <Setter Property="BorderBrush" Value="Black"></Setter>
+        </Style>
+    </Control.Styles>
 </UserControl>

@@ -8,9 +8,20 @@ namespace Features.Avalonia.ViewModels
 {
     public class CoroutineViewModel : Screen
     {
+        private bool _showProgressBar;
+
+        public bool ShowProgressBar
+        {
+            get { return _showProgressBar; }
+            set
+            {
+                _showProgressBar = value;
+                NotifyOfPropertyChange(() => ShowProgressBar);
+            }
+        }
         public IEnumerable<IResult> Execute()
         {
-
+            ShowProgressBar = true;
             yield return new VisualStateResult("Loading");
 
             yield return TaskHelper.Delay(2000).AsResult();

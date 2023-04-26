@@ -222,6 +222,7 @@
 
         static void HandlerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            Log.Info($"Handler property changed {d}");
             ((ActionMessage)d).UpdateContext();
         }
 
@@ -273,11 +274,6 @@
                     {
                         currentParent = currentParent.GetVisualParent();
                     }
-                    //if (currentParent != null)
-                    //{
-                    //    elementToUse = currentElement;
-                        
-                    //}
                     currentElement = currentParent as AvaloniaObject;
 #else
                     currentElement = BindingScope.GetVisualParent(currentElement);
@@ -297,7 +293,8 @@
                 },
                 Source = elementToUse
             };
-#elif (NET || CAL_NETCORE && !WINDOWS_UWP)
+            Log.Info($"Binding {binding.Source}");
+#elif ( NET || CAL_NETCORE && !WINDOWS_UWP)
             var binding = new Binding {
                 Path = new PropertyPath(Message.HandlerProperty), 
                 Source = currentElement
@@ -315,12 +312,17 @@
 #if AVALONIA
             if (elementToUse != null)
             {
+                Log.Info($"GetObservable {HandlerProperty.Name}");
                 elementToUse.GetObservable(HandlerProperty).Subscribe(x =>
                 {
+                    Log.Info($"GetObservable subscribe {elementToUse}");
                     if (x != null)
+                    {
+                        Log.Info($"GetObservable invoke {elementToUse}");
                         Invoke(new RoutedEventArgs());
+                    }
                 });
-                Log.Info($"Binding event {binding.Path} {binding.ElementName} {HandlerProperty.Name}");
+                Log.Info($"Binding event {binding.Path} {binding.Source} {HandlerProperty.Name}");
                 this.Bind(HandlerProperty, binding);
             }
 #else
@@ -472,6 +474,7 @@
         /// <remarks>Returns a value indicating whether or not the action is available.</remarks>
         public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context =>
         {
+            Log.Info("ApplyAvailabilityEffect");
 
 #if WINDOWS_UWP
             var source = context.Source as Control;
@@ -480,6 +483,7 @@
 #endif
             if (source == null)
             {
+                Log.Info("ApplyAvailabilityEffect source is null");
                 return true;
             }
 
@@ -488,11 +492,21 @@
 #else
             var hasBinding = ConventionManager.HasBinding(source, UIElement.IsEnabledProperty);
 #endif
-            if (!hasBinding && context.CanExecute != null)
+            Log.Info($"ApplyAvailabilityEffect hasBinding {hasBinding}");
+
+#if AVALONIA
+            if(context.CanExecute != null)
             {
+                Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute} - {context.Method.Name}");
                 source.IsEnabled = context.CanExecute();
             }
-
+#else
+            if(!hasBinding && context.CanExecute != null)
+            {
+                Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute} - {context.Method.Name}");
+                source.IsEnabled = context.CanExecute();
+            }
+#endif
             return source.IsEnabled;
         };
 
@@ -550,6 +564,22 @@
 
                 currentElement = BindingScope.GetVisualParent(currentElement);
             }
+#if AVALONIA
+            if (source != null)
+            {
+                currentElement = BindingScope.GetVisualParent(currentElement);
+
+                var target = context.Target;
+                var method = GetTargetMethod(context.Message, target);
+
+                if (method != null)
+                {
+                    context.Target = target;
+                    context.Method = method;
+                    context.View = source;
+                }
+            }
+#else
             if (source != null && source.DataContext != null)
             {
                 var target = source.DataContext;
@@ -562,6 +592,7 @@
                     context.View = source;
                 }
             }
+#endif
         };
 
         /// <summary>
@@ -602,6 +633,7 @@
                 {
                     if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == matchingGuardName)
                     {
+                        Log.Info($"UpdateAvailablilty  {e.PropertyName}"); 
                         Caliburn.Micro.Execute.OnUIThread(() =>
                         {
                             var message = context.Message;
