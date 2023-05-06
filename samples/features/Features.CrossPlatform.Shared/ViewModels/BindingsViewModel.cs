@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Caliburn.Micro;
 using Features.CrossPlatform.ViewModels.Activity;
 

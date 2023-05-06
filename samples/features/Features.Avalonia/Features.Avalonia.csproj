@@ -24,8 +24,12 @@
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
   </ItemGroup>
   <ItemGroup>
-   <ProjectReference Include="..\..\..\src\Caliburn.Micro.Avalonia\Caliburn.Micro.Avalonia.csproj" />
-    <ProjectReference Include="..\..\..\src\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
+    <Reference Include="Caliburn.Micro.Avalonia">
+      <HintPath>..\..\..\bin\Caliburn.Micro.Avalonia\Release\net6.0\Caliburn.Micro.Avalonia.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Core">
+      <HintPath>..\..\..\bin\Caliburn.Micro.Avalonia\Release\net6.0\Caliburn.Micro.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 
