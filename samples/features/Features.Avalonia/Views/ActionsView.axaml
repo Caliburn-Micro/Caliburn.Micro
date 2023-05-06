@@ -4,8 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:cm="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="Features.Avalonia.Views.ActionsView">
-    <Grid>
+        x:Class="Features.CrossPlatform.Views.ActionsView">
         <ScrollViewer>
             <StackPanel Margin="24,12">
                 <TextBlock>
@@ -24,7 +23,6 @@
                 <Button x:Name="SayGoodbye" Content="Say Goodbye (async method)" Classes="ActionButton"  />
             </StackPanel>
         </ScrollViewer>
-    </Grid>
     <Control.Styles>
         <Style Selector="Button.ActionButton">
             <Setter Property="HorizontalAlignment" Value="Stretch"/>

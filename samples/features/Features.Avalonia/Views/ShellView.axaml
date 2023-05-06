@@ -6,11 +6,20 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         Width="600"
         Height="450"
-        x:Class="Features.Avalonia.Views.ShellView"
+        x:Class="Features.CrossPlatform.Views.ShellView"
         Title="ShellView">
-    <DockPanel>
-        <Border>
-            <ContentControl cal:Message.Attach="RegisterFrame($source)" cal:View.Model="{Binding ActiveItem}" x:Name="MainView" />
-        </Border>
-    </DockPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button cal:Message.Attach="GoHome">Home</Button>
+        </StackPanel>
+        <DockPanel Grid.Row="1">
+            <Border>
+                <ContentControl cal:View.Model="{Binding ActiveItem}" x:Name="MainView" />
+            </Border>
+        </DockPanel>
+    </Grid>
 </Window>

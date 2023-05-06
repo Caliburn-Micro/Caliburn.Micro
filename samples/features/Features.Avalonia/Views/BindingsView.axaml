@@ -2,10 +2,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="using:Features.Avalonia.ViewModels.Activity"
+             xmlns:local="using:Features.CrossPlatform.ViewModels.Activity"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Features.Avalonia.Views.BindingsView">
-
+             x:Class="Features.CrossPlatform.Views.BindingsView">
     <UserControl.DataTemplates>
         <DataTemplate DataType="{x:Type local:PhotoActivityViewModel}">
             <StackPanel>
@@ -34,19 +33,20 @@
                 </StackPanel>
             </Grid>
         </DataTemplate>
-      </UserControl.DataTemplates>
-    <Grid Name="ContentPanel" Grid.Row="1" Margin="20,0">
+    </UserControl.DataTemplates>
+
+    <Grid Name="ContentPanel" Margin="20,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ListBox ItemsSource="{Binding Path=Activities}" SelectedItem="{Binding SelectedActivity, Mode=TwoWay}" >
+        <ListBox ItemsSource="{Binding Activities}"  SelectedItem="{Binding SelectedActivity}">
         </ListBox>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,12" DataContext="{Binding SelectedActivity}">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,12">
             <TextBlock Text="Selected:"  Margin="0,0,6,0"/>
-            <TextBlock Text="{Binding Title}"/>
+            <TextBlock Name="SelectedActivity_Title"/>
         </StackPanel>
     </Grid>
 </UserControl>

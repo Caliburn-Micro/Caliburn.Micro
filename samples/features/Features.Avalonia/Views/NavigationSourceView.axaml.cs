@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace Features.Avalonia.Views
+namespace Features.CrossPlatform.Views
 {
     public partial class NavigationSourceView : UserControl
     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Caliburn.Micro;
 using Features.CrossPlatform.ViewModels.Activity;
 
@@ -17,6 +18,8 @@ namespace Features.CrossPlatform.ViewModels
                 new MessageActivityViewModel(Lipsum.Get()),
                 new PhotoActivityViewModel(Lipsum.Get())
             };
+            selectedActivity = Activities.First();
+            NotifyOfPropertyChange("Activities");
         }
 
         public BindableCollection<ActivityBaseViewModel> Activities { get; }
