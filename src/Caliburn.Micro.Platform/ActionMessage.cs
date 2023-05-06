@@ -525,7 +525,7 @@
             return (from method in target.GetType().GetRuntimeMethods()
                     where method.Name == message.MethodName
                     let methodParameters = method.GetParameters()
-                    where message.Parameters.Count == methodParameters.Length
+                    where message.Parameters.Count == methodParameters.Length 
                     select method).FirstOrDefault();
 #else
             return (from method in target.GetType().GetMethods()
@@ -570,10 +570,8 @@
                 currentElement = BindingScope.GetVisualParent(currentElement);
             }
 #if AVALONIA
-            if (source != null)
+            if (source != null  && context.Target != null)
             {
-                currentElement = BindingScope.GetVisualParent(currentElement);
-
                 var target = context.Target;
                 var method = GetTargetMethod(context.Message, target);
 

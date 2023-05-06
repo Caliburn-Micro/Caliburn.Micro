@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
-using Features.Avalonia.ViewModels;
+using Features.CrossPlatform.ViewModels;
+
 
 namespace Features.Avalonia
 {
     public class Bootstrapper : BootstrapperBase
     {
-        private SimpleContainer container;
+        private readonly SimpleContainer _container;
 
         public Bootstrapper()
         {
             LogManager.GetLog = type => new DebugLog(type);
-            container = new SimpleContainer();
-            container.Instance(container); 
+            _container = new SimpleContainer();
+            _container.Instance(_container); 
             
             Initialize();
 
@@ -24,11 +25,11 @@ namespace Features.Avalonia
 
         protected override void Configure()
         {
-            container
+            _container
                 .Singleton<IWindowManager, WindowManager>()
                 .Singleton<IEventAggregator, EventAggregator>();
 
-            container
+            _container
                 .PerRequest<ShellViewModel>()
                 .PerRequest<MenuViewModel>()
                 .PerRequest<BindingsViewModel>()
@@ -46,17 +47,17 @@ namespace Features.Avalonia
 
         protected override object GetInstance(Type service, string key)
         {
-            return container.GetInstance(service, key);
+            return _container.GetInstance(service, key);
         }
 
         protected override IEnumerable<object> GetAllInstances(Type service)
         {
-            return container.GetAllInstances(service);
+            return _container.GetAllInstances(service);
         }
 
         protected override void BuildUp(object instance)
         {
-            container.BuildUp(instance);
+            _container.BuildUp(instance);
         }
 
 

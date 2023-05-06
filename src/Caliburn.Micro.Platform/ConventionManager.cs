@@ -209,7 +209,7 @@
         /// Determines whether a custom update source trigger should be applied to the binding.
         /// </summary>
         public static Action<DependencyProperty, DependencyObject, Binding, PropertyInfo> ApplyUpdateSourceTrigger = (bindableProperty, element, binding, info) => {
-#if WINDOWS_UWP || NET || CAL_NETCORE
+#if (WINDOWS_UWP || NET || CAL_NETCORE) && !AVALONIA
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
         };
@@ -465,7 +465,7 @@
             bool hasBinding = element.IsSet(property);
             //TODO: (Avalonia) Need to find a way to detect existing bindings on an AvaloniaProperty
             return hasBinding;
-#elif (NET || NETCORE) && !WINDOWS_UWP
+#elif (NET || CAL_NETCORE) && !WINDOWS_UWP
             return BindingOperations.GetBindingBase(element, property) != null;
 #else
             return element.GetBindingExpression(property) != null;

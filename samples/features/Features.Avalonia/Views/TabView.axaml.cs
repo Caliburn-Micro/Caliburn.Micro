@@ -3,7 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Features.Avalonia.ViewModels;
 
-namespace Features.Avalonia.Views
+namespace Features.CrossPlatform.Views
 {
     public partial class TabView : UserControl
     {

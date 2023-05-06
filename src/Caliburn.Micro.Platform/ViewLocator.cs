@@ -399,9 +399,10 @@ namespace Caliburn.Micro
             {
                 var viewTypeName = modelType.FullName;
 
-            if (Caliburn.Micro.View.InDesignMode) {
-                viewTypeName = ModifyModelTypeAtDesignTime(viewTypeName);
-            }
+                if (View.InDesignMode)
+                {
+                    viewTypeName = ModifyModelTypeAtDesignTime(viewTypeName);
+                }
 
                 viewTypeName = viewTypeName.Substring(
                     0,

@@ -22,6 +22,18 @@ namespace Caliburn.Micro
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
     using ContentControl = global::Xamarin.Forms.ContentView;
+    using Xamarin.Forms;
+#elif AVALONIA
+    using Avalonia;
+    using FrameworkElement = Avalonia.Controls.Control;
+    using DependencyObject = Avalonia.AvaloniaObject;
+    using DependencyProperty = Avalonia.AvaloniaProperty;
+    using DependencyPropertyChangedEventArgs = Avalonia.AvaloniaPropertyChangedEventArgs;
+    using Avalonia.Controls;
+    using Avalonia.Interactivity;
+    using Avalonia.Metadata;
+    using Avalonia.VisualTree;
+    using Avalonia.LogicalTree;
 #elif MAUI
     using System.Reflection;
     using global::Microsoft.Maui.Controls;
@@ -189,9 +201,7 @@ namespace Caliburn.Micro
         public static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler)
         {
 
-#if XFORMS
-        public static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler) {
-#if XFORMS || MAUI
+#if XFORMS|| MAUI
             handler(element, new RoutedEventArgs());
             return true;
 #else
@@ -236,8 +246,6 @@ namespace Caliburn.Micro
 #else
         public static void ExecuteOnUnload(FrameworkElement element, RoutedEventHandler handler)
         {
-#if !XFORMS
-        public static void ExecuteOnUnload(FrameworkElement element, RoutedEventHandler handler) {
 #if !XFORMS && !MAUI
             RoutedEventHandler unloaded = null;
             unloaded = (s, e) => {

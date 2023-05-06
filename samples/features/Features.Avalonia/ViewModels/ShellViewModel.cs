@@ -1,3 +1,7 @@
+﻿using Caliburn.Micro;
+using ColorTextBlock.Avalonia;
+using System.Threading.Tasks;
+using System.Threading;
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,17 +11,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Avalonia.Controls;
-using Caliburn.Micro;
-using Features.Avalonia.ViewModels;
+using Features.CrossPlatform.ViewModels;
 
-namespace Features.Avalonia.ViewModels
+namespace Features.CrossPlatform.ViewModels
 {
     public class ShellViewModel : Conductor<Screen>, IHandle<FeatureViewModel>
     {
         private readonly IEventAggregator _eventAggregator;
         private INavigationService navigationService;
 
-        public ShellViewModel(IEventAggregator eventAggregator      )
+        public ShellViewModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
             _eventAggregator = eventAggregator;
@@ -34,28 +37,14 @@ namespace Features.Avalonia.ViewModels
         {
             await base.OnInitializeAsync(cancellationToken);
 
-            await ShowMenuPage();
+            await GoHome();
         }
 
-        private async Task ShowMenuPage()
+        public async Task<bool> GoHome()
         {
             var menuVM = IoC.GetInstance(typeof(MenuViewModel), null) as MenuViewModel;
             await ActivateItemAsync(menuVM);
-        }
-
-        public async void GoHome()
-        {
-            await ShowMenuPage();
-        }
-
-        public void RegisterFrame(ContentControl frame)
-        {
-            int x = 1;
-            //navigationService = new FrameAdapter(frame);
-
-            //container.Instance(navigationService);
-
-            //navigationService.NavigateToViewModel(typeof(MenuViewModel));
+            return true;
         }
     }
 

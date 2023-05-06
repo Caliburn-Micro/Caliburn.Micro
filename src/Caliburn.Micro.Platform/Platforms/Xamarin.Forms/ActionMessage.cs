@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Caliburn.Micro;
     using System.Linq;
     using System.Reflection;
     using global::Xamarin.Forms;

@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:cm="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Features.Avalonia.Views.BubblingView">
-    <Grid>
+             x:Class="Features.CrossPlatform.Views.BubblingView">
         <ScrollViewer Padding="24,12">
             <ItemsControl ItemsSource="{Binding Path=Phrases}">
                 <ItemsControl.ItemTemplate>

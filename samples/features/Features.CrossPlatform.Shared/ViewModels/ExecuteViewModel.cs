@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+#if AVALONIA
+using Features.Avalonia.Views;
 using Features.CrossPlatform.Views;
-
+#else
+using Features.CrossPlatform.Views;
+#endif
 namespace Features.CrossPlatform.ViewModels
 {
     public class ExecuteViewModel : Screen
     {
-        private bool safe;
+        private bool _safe;
 
         public bool Safe
         {
-            get { return safe; }
-            set { Set(ref safe, value); }
+            get { return _safe; }
+            set { Set(ref _safe, value); }
         }
 
         public void StartBackgroundWork()

@@ -29,6 +29,13 @@ namespace Caliburn.Micro
     using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
     using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
     using DependencyObject =global::Microsoft.Maui.Controls.BindableObject;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Data;
+    using DependencyObject = Avalonia.AvaloniaObject;
+    using DependencyPropertyChangedEventArgs = Avalonia.AvaloniaPropertyChangedEventArgs;
+    using FrameworkElement = Avalonia.Controls.Control;
+    using DependencyProperty = Avalonia.AvaloniaProperty;
 #else
     using System.Windows;
     using System.Windows.Data;
@@ -123,7 +130,7 @@ namespace Caliburn.Micro
         public static void SetModel(DependencyObject dependencyObject, object value) {
             dependencyObject.SetValue(ModelProperty, value);
         }
-
+        
         static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             if (Caliburn.Micro.View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
                 return;
@@ -150,7 +157,7 @@ namespace Caliburn.Micro
                 ViewModelBinder.Bind(target, d, context);
             });
         }
-
+        
         static void ModelWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             if (Caliburn.Micro.View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
                 return;
@@ -227,6 +234,8 @@ namespace Caliburn.Micro
             d.Bind(DataContextProperty, new Binding());
 #elif MAUI
             d.SetBinding(DataContextProperty, null);
+#elif AVALONIA
+            d.Bind(DataContextProperty, new Binding());
 #else
             BindingOperations.SetBinding(d, DataContextProperty, new Binding());
 #endif

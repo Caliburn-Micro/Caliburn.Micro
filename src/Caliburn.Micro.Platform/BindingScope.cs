@@ -198,8 +198,9 @@
                 }
 #else
 
-#if NET || CAL_NETCORE
-                var childCount = (current is Visual || current is Visual3D)
+
+#if (NET || CAL_NETCORE) && !WINDOWS_UWP
+                var childCount = (current is System.Windows.Media.Visual || current is System.Windows.Media.Media3D.Visual3D)
                     ? VisualTreeHelper.GetChildrenCount(current) : 0;
 #else
                 var childCount = (current is UIElement)

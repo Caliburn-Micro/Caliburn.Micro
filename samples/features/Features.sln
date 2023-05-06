@@ -382,6 +382,7 @@ Global
 		Features.Forms\Features.Forms\Features.Forms.projitems*{aed0f189-e321-4d50-b4dc-36023d91ba0a}*SharedItemsImports = 13
 		Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems*{c22c023a-6b52-4fe3-b98a-57f973d56d4b}*SharedItemsImports = 4
 		Features.Forms\Features.Forms\Features.Forms.projitems*{c22c023a-6b52-4fe3-b98a-57f973d56d4b}*SharedItemsImports = 4
+		Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems*{c2dec486-7fd6-4a37-8a49-c31d4993f180}*SharedItemsImports = 5
 		Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems*{e080007b-0470-4fbe-a01c-79aead3f9dbe}*SharedItemsImports = 5
 		Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems*{ffac51be-42e4-4bd3-96aa-96fe2a7853ac}*SharedItemsImports = 4
 	EndGlobalSection
