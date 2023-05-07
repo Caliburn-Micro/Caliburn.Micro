@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Features.Forms.Android", "F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Features.DotNet", "Features.NetFive\Features.DotNet.csproj", "{E080007B-0470-4FBE-A01C-79AEAD3F9DBE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Features.Avalonia", "Features.Avalonia\Features.Avalonia.csproj", "{C2DEC486-7FD6-4A37-8A49-C31D4993F180}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Features.Avalonia", "Features.Avalonia\Features.Avalonia.csproj", "{C2DEC486-7FD6-4A37-8A49-C31D4993F180}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

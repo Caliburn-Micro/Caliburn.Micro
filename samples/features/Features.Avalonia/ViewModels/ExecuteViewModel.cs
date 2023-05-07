@@ -1,7 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Caliburn.Micro;
-using Features.Avalonia.Views;
+using Features.CrossPlatform.Views;
 
 namespace Features.Avalonia.ViewModels
 {

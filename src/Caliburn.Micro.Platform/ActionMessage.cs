@@ -59,7 +59,7 @@
     public class ActionMessage : TriggerAction<FrameworkElement>, IHaveParameters
     {
         static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
-        ActionExecutionContext context;
+        ActionExecutionContext _context;
 
         internal static readonly DependencyProperty HandlerProperty =
 #if AVALONIA
@@ -262,7 +262,7 @@
             UpdateContext();
 
             DependencyObject currentElement;
-            if (context.View == null)
+            if (_context.View == null)
             {
                 currentElement = AssociatedObject;
                 while (currentElement != null)
@@ -286,7 +286,7 @@
                 }
             }
             else
-                currentElement = context.View;
+                currentElement = _context.View;
 
 #if AVALONIA
             var binding = new Binding
@@ -337,16 +337,16 @@
 
         void UpdateContext()
         {
-            if (context != null)
-                context.Dispose();
+            if (_context != null)
+                _context.Dispose();
 
-            context = new ActionExecutionContext
+            _context = new ActionExecutionContext
             {
                 Message = this,
                 Source = AssociatedObject
             };
 
-            PrepareContext(context);
+            PrepareContext(_context);
             UpdateAvailabilityCore();
         }
 
@@ -358,17 +358,17 @@
         {
             Log.Info("Invoking {0}.", this);
 
-            if (context == null)
+            if (_context == null)
             {
                 UpdateContext();
             }
 
-            if (context.Target == null || context.View == null)
+            if (_context.Target == null || _context.View == null)
             {
-                PrepareContext(context);
-                if (context.Target == null)
+                PrepareContext(_context);
+                if (_context.Target == null)
                 {
-                    var ex = new Exception(string.Format("No target found for method {0}.", context.Message.MethodName));
+                    var ex = new Exception(string.Format("No target found for method {0}.", _context.Message.MethodName));
                     Log.Error(ex);
 
                     if (!ThrowsExceptions)
@@ -382,9 +382,9 @@
                 }
             }
 
-            if (context.Method == null)
+            if (_context.Method == null)
             {
-                var ex = new Exception(string.Format("Method {0} not found on target of type {1}.", context.Message.MethodName, context.Target.GetType()));
+                var ex = new Exception(string.Format("Method {0} not found on target of type {1}.", _context.Message.MethodName, _context.Target.GetType()));
                 Log.Error(ex);
 
                 if (!ThrowsExceptions)
@@ -392,15 +392,15 @@
                 throw ex;
             }
 
-            context.EventArgs = eventArgs;
+            _context.EventArgs = eventArgs;
 
-            if (EnforceGuardsDuringInvocation && context.CanExecute != null && !context.CanExecute())
+            if (EnforceGuardsDuringInvocation && _context.CanExecute != null && !_context.CanExecute())
             {
                 return;
             }
 
-            InvokeAction(context);
-            context.EventArgs = null;
+            InvokeAction(_context);
+            _context.EventArgs = null;
         }
 
         /// <summary>
@@ -408,11 +408,11 @@
         /// </summary>
         public virtual void UpdateAvailability()
         {
-            if (context == null)
+            if (_context == null)
                 return;
 
-            if (context.Target == null || context.View == null)
-                PrepareContext(context);
+            if (_context.Target == null || _context.View == null)
+                PrepareContext(_context);
 
             UpdateAvailabilityCore();
         }
@@ -420,7 +420,7 @@
         bool UpdateAvailabilityCore()
         {
             Log.Info("{0} availability update.", this);
-            return ApplyAvailabilityEffect(context);
+            return ApplyAvailabilityEffect(_context);
         }
 
         /// <summary>

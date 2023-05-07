@@ -32,10 +32,6 @@
     <Compile Remove="Platforms\**\**\*.cs" />
     <None Include="Platforms\**\**\*.cs" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <LangVersion>9.0</LangVersion>
-  </PropertyGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
@@ -43,11 +39,6 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
-    <Compile Include="Platforms\net46-netcore\**\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-windows'">
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
     <Compile Include="Platforms\net46-netcore\**\*.cs" />
   </ItemGroup>
   
@@ -60,10 +51,6 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
     <Compile Include="Platforms\net46-netcore\**\*.cs" />
   </ItemGroup>
-  
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <UseWpf>True</UseWpf>
-  </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
     <UseWpf>True</UseWpf>

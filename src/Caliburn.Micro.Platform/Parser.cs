@@ -302,7 +302,7 @@ namespace Caliburn.Micro
                 var nameAndBindingMode = parameterText.Split(':').Select(x => x.Trim()).ToArray();
                 var index = nameAndBindingMode[0].IndexOf('.');
 
-                Caliburn.Micro.View.ExecuteOnLoad(fe, delegate
+                View.ExecuteOnLoad(fe, delegate
                 {
                     BindParameter(
                         fe,

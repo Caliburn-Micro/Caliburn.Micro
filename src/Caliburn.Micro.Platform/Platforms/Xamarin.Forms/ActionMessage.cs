@@ -19,8 +19,8 @@
     public class ActionMessage : TriggerActionBase<VisualElement>, IHaveParameters
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
-        private ActionExecutionContext context;
-        private object handler;
+        private ActionExecutionContext _context;
+        private object _handler;
 
         ///<summary>
         /// Causes the action invocation to "double check" if the action should be invoked by executing the guard immediately before hand.
@@ -57,13 +57,13 @@
         /// </summary>
         public object Handler
         {
-            get { return handler; }
+            get { return _handler; }
             private set
             {
-                if (handler == value)
+                if (_handler == value)
                     return;
 
-                handler = value;
+                _handler = value;
                 UpdateContext();
             }
         }
@@ -83,7 +83,7 @@
         ///  Called after the action is attached to an AssociatedObject.
         /// </summary>
         protected override void OnAttached() {
-            if (!Caliburn.Micro.View.InDesignMode) {
+            if (!View.InDesignMode) {
                 Parameters.Attach(AssociatedObject);
                 Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
 
@@ -111,7 +111,7 @@
         /// </summary>
         protected override void OnDetaching()
         {
-            if (!Caliburn.Micro.View.InDesignMode)
+            if (!View.InDesignMode)
             {
                 Detaching(this, EventArgs.Empty);
                 Parameters.Detach();
@@ -126,7 +126,7 @@
 
             UIElement currentElement;
 
-            if (context.View == null)
+            if (_context.View == null)
             {
                 currentElement = AssociatedObject;
 
@@ -138,23 +138,23 @@
                     currentElement = currentElement.Parent;
                 }
             }
-            else currentElement = context.View as FrameworkElement;
+            else currentElement = _context.View as FrameworkElement;
 
             Handler = currentElement;
         }
 
         void UpdateContext()
         {
-            if (context != null)
-                context.Dispose();
+            if (_context != null)
+                _context.Dispose();
 
-            context = new ActionExecutionContext
+            _context = new ActionExecutionContext
             {
                 Message = this,
                 Source = AssociatedObject
             };
 
-            PrepareContext(context);
+            PrepareContext(_context);
             UpdateAvailabilityCore();
         }
 
@@ -170,17 +170,17 @@
                 AssociatedObject = sender;
             }
 
-            if (context == null)
+            if (_context == null)
             {
                 UpdateContext();
             }
 
-            if (context.Target == null || context.View == null)
+            if (_context.Target == null || _context.View == null)
             {
-                PrepareContext(context);
-                if (context.Target == null)
+                PrepareContext(_context);
+                if (_context.Target == null)
                 {
-                    var ex = new Exception(string.Format("No target found for method {0}.", context.Message.MethodName));
+                    var ex = new Exception(string.Format("No target found for method {0}.", _context.Message.MethodName));
                     Log.Error(ex);
 
                     if (!ThrowsExceptions)
@@ -194,9 +194,9 @@
                 }
             }
 
-            if (context.Method == null)
+            if (_context.Method == null)
             {
-                var ex = new Exception(string.Format("Method {0} not found on target of type {1}.", context.Message.MethodName, context.Target.GetType()));
+                var ex = new Exception(string.Format("Method {0} not found on target of type {1}.", _context.Message.MethodName, _context.Target.GetType()));
                 Log.Error(ex);
 
                 if (!ThrowsExceptions)
@@ -204,15 +204,15 @@
                 throw ex;
             }
 
-            context.EventArgs = null; // Unfortunately we can't know it :-(
+            _context.EventArgs = null; // Unfortunately we can't know it :-(
 
-            if (EnforceGuardsDuringInvocation && context.CanExecute != null && !context.CanExecute())
+            if (EnforceGuardsDuringInvocation && _context.CanExecute != null && !_context.CanExecute())
             {
                 return;
             }
 
-            InvokeAction(context);
-            context.EventArgs = null;
+            InvokeAction(_context);
+            _context.EventArgs = null;
         }
 
         /// <summary>
@@ -220,11 +220,11 @@
         /// </summary>
         public virtual void UpdateAvailability()
         {
-            if (context == null)
+            if (_context == null)
                 return;
 
-            if (context.Target == null || context.View == null)
-                PrepareContext(context);
+            if (_context.Target == null || _context.View == null)
+                PrepareContext(_context);
 
             UpdateAvailabilityCore();
         }
@@ -232,7 +232,7 @@
         bool UpdateAvailabilityCore()
         {
             Log.Info("{0} availability update.", this);
-            return ApplyAvailabilityEffect(context);
+            return ApplyAvailabilityEffect(_context);
         }
 
         /// <summary>

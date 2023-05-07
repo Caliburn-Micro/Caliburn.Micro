@@ -16,7 +16,6 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-    </Grid>
     <Control.Styles>
         <Style Selector="Button.Bubble">
             <Setter Property="HorizontalAlignment" Value="Stretch"/>

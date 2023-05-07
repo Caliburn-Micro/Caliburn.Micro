@@ -116,12 +116,9 @@
                         exception = ex;
                     }
                 };
-#if AVALONIA
-                //TODO: (Avalonia) Need to check if GetAwaiter().GetResult() is a good solution here
-                dispatcher.InvokeAsync(action).GetAwaiter().GetResult(); 
-#else
+
                 dispatcher.Invoke(method);
-#endif
+
                 if (exception != null)
                 throw new System.Reflection.TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
 #endif

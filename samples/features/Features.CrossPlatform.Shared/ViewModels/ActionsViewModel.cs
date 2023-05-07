@@ -7,6 +7,10 @@ namespace Features.CrossPlatform.ViewModels
     public class ActionsViewModel : Screen
     {
         private string _output;
+        public ActionsViewModel()
+        {
+            Output="Caliburn Micro";
+        }
 
         public void Clear() => Output = string.Empty;
 

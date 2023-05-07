@@ -4,6 +4,7 @@ namespace Caliburn.Micro.Xamarin.Forms
 namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
+#endif
 {
     using System;
     using System.Linq;
@@ -43,7 +44,6 @@ namespace Caliburn.Micro
     using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
     using ContentControl = global::Microsoft.Maui.Controls.ContentView;
     //using Microsoft.UI.Xaml;
-    using Xamarin.Forms;
 #elif AVALONIA
     using Avalonia;
     using FrameworkElement = Avalonia.Controls.Control;
@@ -201,7 +201,7 @@ namespace Caliburn.Micro
         public static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler)
         {
 
-#if XFORMS|| MAUI
+#if XFORMS || MAUI
             handler(element, new RoutedEventArgs());
             return true;
 #else
@@ -295,9 +295,6 @@ namespace Caliburn.Micro
         /// <param name="element">The element.</param>
         /// <param name="handler">The handler.</param>
 #if WINDOWS_UWP //|| MAUI
-        public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler<object> handler) {
-            EventHandler<object> onLayoutUpdate = null;
-#elif false
         public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler<object> handler) {
             EventHandler<object> onLayoutUpdate = null;
 #else
