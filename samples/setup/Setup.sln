@@ -37,8 +37,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Setup.Avalonia", "Setup.Ava
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Setup.Maui", "Setup.Maui\Setup.Maui.csproj", "{7359D7BE-F395-4DA8-88FC-42DE0C2F5D6C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Setup.Avalonia", "Setup.Avalonia\Setup.Avalonia.csproj", "{A6893278-0BD0-4134-831B-7A0384581054}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
