@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cm="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Features.CrossPlatform.Views.ActionsView" >
+        <ScrollViewer>
+            <StackPanel Margin="24,12">
+                <TextBlock>
+                    <Run Text="Output:" FontWeight="Bold"/>
+                    <Run Text="{Binding Output, Mode=OneWay}"/>
+                </TextBlock>
+
+                <TextBlock Text="Name"/>
+                <TextBox x:Name="Name" Margin="0,10,0,0" HorizontalAlignment="Stretch"/>
+                <Button x:Name="Clear" Content="Clear" Classes="ActionButton"/>
+                <Button x:Name="SimpleSayHello" Content="Simple Say Hello" Classes="ActionButton"/>
+                <Button cm:Message.Attach="SimpleSayHello" Content="Simple Say Hello (using Message.Attach)" Classes="ActionButton" />
+                <Button cm:Message.Attach="[Event DoubleTapped] = [SimpleSayHello]" Content="Simple Say Hello (Custom Event - Double Tapped)"  Classes="ActionButton"  />
+                <Button x:Name="SayHello" Content="Say Hello (with parameter)"  Classes="ActionButton" />
+                <Button cm:Message.Attach="SayHello(Name)" Content="Say Hello (with parameter and Message.Attach)" Classes="ActionButton"  />
+                <Button x:Name="SayGoodbye" Content="Say Goodbye (async method)" Classes="ActionButton"  />
+            </StackPanel>
+        </ScrollViewer>
+    <Control.Styles>
+        <Style Selector="Button.ActionButton">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="0,10,0,0"></Setter>
+            <Setter Property="BorderThickness" Value="1"></Setter>
+            <Setter Property="BorderBrush" Value="Black"></Setter>
+        </Style>
+    </Control.Styles>
+</UserControl>
