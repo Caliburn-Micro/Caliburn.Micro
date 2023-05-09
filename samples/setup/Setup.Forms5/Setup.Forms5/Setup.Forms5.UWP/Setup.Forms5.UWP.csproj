@@ -145,7 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Caliburn.Micro">
-      <Version>4.0.173</Version>
+      <Version>4.0.212</Version>
     </PackageReference>
     <PackageReference Include="Caliburn.Micro.Xamarin.Forms">
       <Version>4.0.173</Version>
