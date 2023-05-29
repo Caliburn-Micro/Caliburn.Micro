@@ -10,33 +10,35 @@ namespace Features.CrossPlatform.ViewModels
 {
     public class NavigationSourceViewModel : Screen
     {
-        private readonly INavigationService navigationService;
-        private string text;
-        private bool isEnabled;
+        private readonly INavigationService _navigationService;
+        private string _text;
+        private bool _isEnabled;
 
         public NavigationSourceViewModel(INavigationService navigationService)
         {
-            this.navigationService = navigationService;
+            _navigationService = navigationService;
         }
 
         public string Text
         {
-            get { return text; }
-            set { Set(ref text, value); }
+            get { return _text; }
+            set { Set(ref _text, value); }
         }
 
         public bool IsEnabled
         {
-            get { return isEnabled; }
-            set { Set(ref isEnabled, value); }
+            get { return _isEnabled; }
+            set { Set(ref _isEnabled, value); }
         }
 
         public void Navigate()
         {
-            navigationService.For<NavigationTargetViewModel>()
+#if !AVALONIA
+            _navigationService.For<NavigationTargetViewModel>()
                 .WithParam(v => v.Text, Text)
                 .WithParam(v => v.IsEnabled, IsEnabled)
                 .Navigate();
+#endif
         }
     }
 }
