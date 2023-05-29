@@ -89,7 +89,7 @@
 #if WINDOWS_UWP
             return dispatcher.RunTaskAsync(action);
 #elif AVALONIA
-            return dispatcher.InvokeAsync(action).GetTask().Unwrap();
+            return dispatcher.InvokeAsync(action);
 #else
             return dispatcher.InvokeAsync(action).Task.Unwrap();
 #endif
