@@ -29,8 +29,6 @@
     </ProjectReference>
     <Compile Remove="Platforms\**\*.cs" />
     <None Include="Platforms\**\*.cs" />
-    <Compile Remove="Platforms\**\**\*.cs" />
-    <None Include="Platforms\**\**\*.cs" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">

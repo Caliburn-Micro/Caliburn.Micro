@@ -6,8 +6,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
-using Avalonia.Input;
-using Caliburn.Micro;
 
 namespace Caliburn.Micro
 {
@@ -107,7 +105,7 @@ namespace Caliburn.Micro
             {
                 if (!settings.ContainsKey("PlacementTarget") && !settings.ContainsKey("Placement"))
                 {
-                    popup.PlacementMode = PlacementMode.Pointer;
+                    popup.Placement = PlacementMode.Pointer;
                 }
 
                 //if (!settings.ContainsKey("AllowsTransparency"))
@@ -118,7 +116,7 @@ namespace Caliburn.Micro
             else
             {
                 //popup.AllowsTransparency = true;
-                popup.PlacementMode = PlacementMode.Pointer;
+                popup.Placement = PlacementMode.Pointer;
             }
 
             return popup;

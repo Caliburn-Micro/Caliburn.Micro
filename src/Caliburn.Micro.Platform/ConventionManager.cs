@@ -215,7 +215,6 @@
         };
 
         static ConventionManager() {
-            var itemsControlSourceProperty = ItemsControl.ItemsSourceProperty;
 #if AVALONIA
             var loadedEvent = "AttachedToLogicalTree";
             var contentControlBindTo = "Content";
@@ -328,20 +327,7 @@
             AddElementConvention<TextBox>(TextBox.TextProperty, "Text", "TextChanged");
             AddElementConvention<TextBlock>(TextBlock.TextProperty, "Text", "DataContextChanged");
             AddElementConvention<ProgressBar>(ProgressBar.ValueProperty, "Value", "ValueChanged");
-#if AVALONIA
-            AddElementConvention<Selector>(itemsControlSourceProperty, "SelectedItem", "SelectionChanged")
-    .ApplyBinding = (viewModelType, path, property, element, convention) => {
-        if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, itemsControlSourceProperty))
-        {
-            return false;
-        }
 
-        ConfigureSelectedItem(element, Selector.SelectedItemProperty, viewModelType, path);
-        ApplyItemTemplate((ItemsControl)element, property);
-
-        return true;
-    };
-#else
             AddElementConvention<Selector>(Selector.ItemsSourceProperty, "SelectedItem", "SelectionChanged")
                 .ApplyBinding = (viewModelType, path, property, element, convention) => {
                     if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, ItemsControl.ItemsSourceProperty)) {
@@ -353,20 +339,6 @@
 
                     return true;
                 };
-#endif
-#if AVALONIA
-            AddElementConvention<ItemsControl>(itemsControlSourceProperty, "DataContext", loadedEvent)
-.ApplyBinding = (viewModelType, path, property, element, convention) => {
-    if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, itemsControlSourceProperty))
-    {
-        return false;
-    }
-
-    ApplyItemTemplate((ItemsControl)element, property);
-
-    return true;
-};
-#else
             AddElementConvention<ItemsControl>(ItemsControl.ItemsSourceProperty, "DataContext", loadedEvent)
                 .ApplyBinding = (viewModelType, path, property, element, convention) => {
                     if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, ItemsControl.ItemsSourceProperty)) {
@@ -377,7 +349,6 @@
 
                     return true;
                 };
-#endif
             AddElementConvention<ContentControl>(ContentControl.ContentProperty, contentControlBindTo, loadedEvent).GetBindableProperty =
                 delegate(DependencyObject foundControl) {
                     var element = (ContentControl)foundControl;

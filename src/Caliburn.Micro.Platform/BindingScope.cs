@@ -44,16 +44,12 @@
 #if WINDOWS_UWP
             AddChildResolver<SemanticZoom>(e => new[] { e.ZoomedInView as DependencyObject, e.ZoomedOutView as DependencyObject });
             AddChildResolver<ListViewBase>(e => new[] { e.Header as DependencyObject });
-#endif
-#if WINDOWS_UWP
             AddChildResolver<ListViewBase>(e => new[] { e.Footer as DependencyObject });
             AddChildResolver<Hub>(ResolveHub);
             AddChildResolver<HubSection>(e => new[] { e.Header as DependencyObject });
             AddChildResolver<CommandBar>(ResolveCommandBar);
             AddChildResolver<Button>(e => ResolveFlyoutBase(e.Flyout));
             AddChildResolver<FrameworkElement>(e => ResolveFlyoutBase(FlyoutBase.GetAttachedFlyout(e)));
-#endif
-#if WINDOWS_UWP
             AddChildResolver<SplitView>(e => new[] { e.Pane as DependencyObject, e.Content as DependencyObject });
 #endif
         }
