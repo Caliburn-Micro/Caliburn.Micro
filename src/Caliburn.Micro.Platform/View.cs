@@ -44,17 +44,6 @@ namespace Caliburn.Micro
     using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
     using ContentControl = global::Microsoft.Maui.Controls.ContentView;
     //using Microsoft.UI.Xaml;
-#elif AVALONIA
-    using Avalonia;
-    using FrameworkElement = Avalonia.Controls.Control;
-    using DependencyObject = Avalonia.AvaloniaObject;
-    using DependencyProperty = Avalonia.AvaloniaProperty;
-    using DependencyPropertyChangedEventArgs = Avalonia.AvaloniaPropertyChangedEventArgs;
-    using Avalonia.Controls;
-    using Avalonia.Interactivity;
-    using Avalonia.Metadata;
-    using Avalonia.VisualTree;
-    using Avalonia.LogicalTree;
 #else
     using System.ComponentModel;
     using System.Windows;
