@@ -6,7 +6,6 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Features.CrossPlatform.Views.MenuView">
 
-    <StackPanel>
     <ScrollViewer>
         <ItemsControl ItemsSource="{Binding Features}">
             <ItemsControl.ItemTemplate>
@@ -23,8 +22,7 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
     </ScrollViewer>
-    </StackPanel>
-    <Control.Styles>
+     <Control.Styles>
         <Style Selector="Button.FeatureButton">
             <Setter Property="HorizontalContentAlignment" Value="Left"></Setter>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>

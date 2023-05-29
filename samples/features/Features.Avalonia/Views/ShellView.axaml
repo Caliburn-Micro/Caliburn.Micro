@@ -18,7 +18,7 @@
         </StackPanel>
         <DockPanel Grid.Row="1">
             <Border>
-                <ContentControl cal:View.Model="{Binding ActiveItem}" x:Name="MainView" />
+                <cal:NavigationFrame cal:Message.Attach="[Event NavigationServiceReady] = [NavReady($source)]" />
             </Border>
         </DockPanel>
     </Grid>

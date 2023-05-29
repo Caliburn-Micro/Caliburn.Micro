@@ -2,7 +2,7 @@
 using ColorTextBlock.Avalonia;
 using System.Threading.Tasks;
 using System.Threading;
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -15,36 +15,46 @@ using Features.CrossPlatform.ViewModels;
 
 namespace Features.CrossPlatform.ViewModels
 {
-    public class ShellViewModel : Conductor<Screen>, IHandle<FeatureViewModel>
+    public class ShellViewModel : Screen, IHandle<FeatureViewModel>
     {
         private readonly IEventAggregator _eventAggregator;
-        private INavigationService navigationService;
+        private SimpleContainer _container;
+        private INavigationService _navigationService;
 
-        public ShellViewModel(IEventAggregator eventAggregator)
+        public ShellViewModel(IEventAggregator eventAggregator, SimpleContainer container)
         {
             _eventAggregator = eventAggregator;
-            _eventAggregator = eventAggregator;
             _eventAggregator.SubscribeOnPublishedThread(this);
+            _container = container;
         }
 
         public async Task HandleAsync(FeatureViewModel message, CancellationToken cancellationToken)
         {
-            var vm = IoC.GetInstance(message.ViewModel, null) as Screen;
-            await ActivateItemAsync(vm);
+            await _navigationService.NavigateToViewModelAsync(message.ViewModel);
         }
 
         protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             await base.OnInitializeAsync(cancellationToken);
 
-            await GoHome();
+            GoHome();
         }
 
-        public async Task<bool> GoHome()
+        public void GoHome()
         {
             var menuVM = IoC.GetInstance(typeof(MenuViewModel), null) as MenuViewModel;
-            await ActivateItemAsync(menuVM);
-            return true;
+            if (_navigationService != null)
+            {
+                _navigationService.NavigateToViewModelAsync(typeof(MenuViewModel));
+            }
+        }
+
+        public async void NavReady(NavigationFrame frame)
+        {
+            _navigationService = frame as INavigationService;
+
+            _container.Instance(_navigationService);
+            await _navigationService.NavigateToViewModelAsync(typeof(MenuViewModel));
         }
     }
 

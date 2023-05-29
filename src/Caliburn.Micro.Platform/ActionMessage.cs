@@ -125,6 +125,7 @@
 #if AVALONIA
         static ActionMessage()
         {
+            Log.Info("ActionMessage Avalonia");
             HandlerProperty.Changed.Subscribe(args => HandlerPropertyChanged(args.Sender, args));
         }
 #endif
@@ -318,9 +319,12 @@
             if (elementToUse != null)
             {
                 Log.Info($"GetObservable {HandlerProperty.Name}");
-                elementToUse.GetObservable(HandlerProperty).Subscribe(x =>
+                var myObservable= elementToUse.GetObservable(HandlerProperty);
+                 Log.Info($"myObservable is null  {myObservable == null}");
+               myObservable.Subscribe(x =>
                 {
                     Log.Info($"GetObservable subscribe {elementToUse}");
+                    Log.Info($"GetObservable x is null {x==null}");
                     if (x != null)
                     {
                         Log.Info($"GetObservable invoke {elementToUse}");
@@ -338,8 +342,9 @@
         void UpdateContext()
         {
             if (_context != null)
+            {
                 _context.Dispose();
-
+            }
             _context = new ActionExecutionContext
             {
                 Message = this,
@@ -409,8 +414,10 @@
         public virtual void UpdateAvailability()
         {
             if (_context == null)
+            {
+                Log.Info("{0} availability update. Context is null", this);
                 return;
-
+            }
             if (_context.Target == null || _context.View == null)
                 PrepareContext(_context);
 

@@ -18,7 +18,7 @@ namespace Features.CrossPlatform.ViewModels
 
         public void SayHello(string name) => Output = $"Hello {name}";
 
-        public bool CanSayHello(string name) => !string.IsNullOrEmpty(name);
+        public bool CanSayHello(string name) => !string.IsNullOrWhiteSpace(name);
 
         public Task SayGoodbyeAsync(string name)
         {
@@ -27,7 +27,7 @@ namespace Features.CrossPlatform.ViewModels
             return TaskHelper.FromResult(true);
         }
         
-        public bool CanSayGoodbye(string name) => !string.IsNullOrEmpty(name);
+        public bool CanSayGoodbye(string name) => !string.IsNullOrWhiteSpace(name);
 
         public string Output
         {

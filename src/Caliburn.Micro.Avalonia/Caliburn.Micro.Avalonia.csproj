@@ -31,9 +31,8 @@
     <Compile Include="..\Caliburn.Micro.Platform\*.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\AssemblyInfo.cs" Link="Platforms\netcore-avalonia\AssemblyInfo.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\AttachedCollection.cs" Link="Platforms\netcore-avalonia\AttachedCollection.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\AvaloniaNavigation.cs" Link="Platforms\netcore-avalonia\AvaloniaNavigation.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\BootstrapperBase.cs" Link="Platforms\netcore-avalonia\BootstrapperBase.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\CaliburnFrame.cs" Link="Platforms\netcore-avalonia\CaliburnFrame.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\NavigationFrame.cs" Link="Platforms\netcore-avalonia\CaliburnFrame.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\INavigationService.cs" Link="Platforms\netcore-avalonia\INavigationService.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\IWindowManager.cs" Link="Platforms\netcore-avalonia\IWindowManager.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\Parameter.cs" Link="Platforms\netcore-avalonia\Parameter.cs" />

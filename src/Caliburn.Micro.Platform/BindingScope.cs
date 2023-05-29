@@ -32,6 +32,9 @@
 
         static BindingScope()
         {
+#if AVALONIA
+            AddChildResolver<NavigationFrame>(e => new[] { e.Content as DependencyObject });
+#endif
             AddChildResolver<ContentControl>(e => new[] { e.Content as DependencyObject });
             AddChildResolver<ItemsControl>(e => e.Items.OfType<DependencyObject>().ToArray() );
 #if !WINDOWS_UWP && !AVALONIA

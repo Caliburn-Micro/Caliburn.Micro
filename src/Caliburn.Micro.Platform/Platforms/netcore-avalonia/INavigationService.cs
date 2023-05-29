@@ -47,6 +47,7 @@ namespace Caliburn.Micro
         /// <param name="animated">Animate the transition</param>
         /// <returns>The asynchrous task representing the transition</returns>
         Task NavigateToViewModelAsync<T>(object parameter = null, bool animated = true);
+        Task NavigateToViewModelAsync(Screen viewModel,object  parameter = null, bool animated = true);
 
         /// <summary>
         /// Pops all but the root <see cref="T:Xamarin.Forms.Page"/> off the navigation stack.
