@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace Features.Avalonia.Views.Events
+namespace Features.CrossPlatform.Views.Events
 {
     public partial class EventSourceView : UserControl
     {

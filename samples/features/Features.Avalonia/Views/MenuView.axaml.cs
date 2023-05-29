@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Caliburn.Micro;
-using Features.Avalonia.ViewModels;
 
 namespace Features.CrossPlatform.Views
 {

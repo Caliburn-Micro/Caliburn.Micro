@@ -3,12 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Features.CrossPlatform.Views.Events.EventSourceView">
+             x:Class="Features.CrossPlatform.Views.DesignTimeView">
     <Grid>
-        <StackPanel Margin="20">
-            <TextBlock Text="Text"/>
-            <TextBox x:Name="Text" />
-            <Button x:Name="Publish" Content="Publish" Margin="0,10"/>
-        </StackPanel>
+        <TextBlock x:Name="Text" Margin="20" />
     </Grid>
 </UserControl>

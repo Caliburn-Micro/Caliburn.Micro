@@ -1,12 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Caliburn.Micro;
-#if AVALONIA
-using Features.Avalonia.Views;
 using Features.CrossPlatform.Views;
-#else
-using Features.CrossPlatform.Views;
-#endif
+
 namespace Features.CrossPlatform.ViewModels
 {
     public class ExecuteViewModel : Screen
@@ -44,7 +39,7 @@ namespace Features.CrossPlatform.ViewModels
 
         private Task UpdateView()
         {
-            var view = (ExecuteView) GetView();
+            var view = (ExecuteView)GetView();
 
             view.UpdateView();
 
