@@ -14,6 +14,8 @@ namespace Caliburn.Micro
 
 #if WINDOWS_UWP
     using Windows.UI.Xaml;
+#elif WinUI3 
+    using Microsoft.UI.Xaml;
 #endif
 
 #if XFORMS

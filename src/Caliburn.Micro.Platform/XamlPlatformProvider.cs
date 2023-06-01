@@ -1,4 +1,5 @@
-﻿namespace Caliburn.Micro {
+﻿
+namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.Threading;
@@ -7,6 +8,11 @@
     using System.Reflection;
     using Windows.UI.Core;
     using Windows.UI.Xaml;
+#elif WinUI3
+    using System.Reflection;
+    using Windows.UI.Core;
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Dispatching;
 #else
     using System.Windows;
     using System.Windows.Threading;
@@ -18,6 +24,8 @@
     public class XamlPlatformProvider : IPlatformProvider {
 #if WINDOWS_UWP
         private CoreDispatcher dispatcher;
+#elif WinUI3
+        private DispatcherQueue dispatcher;
 #else
         private Dispatcher dispatcher;
 #endif
@@ -28,6 +36,8 @@
         public XamlPlatformProvider() {
 #if WINDOWS_UWP
             dispatcher = Window.Current.Dispatcher;
+#elif WinUI3
+            dispatcher = DispatcherQueue.GetForCurrentThread();
 #else
             dispatcher = Dispatcher.CurrentDispatcher;
 #endif
@@ -53,6 +63,8 @@
         private bool CheckAccess() {
 #if WINDOWS_UWP
             return dispatcher == null || Window.Current != null;
+#elif WinUI3
+            return dispatcher == null || dispatcher.HasThreadAccess;
 #else
             return dispatcher == null || dispatcher.CheckAccess();
 #endif
@@ -64,8 +76,10 @@
         /// <param name="action">The action to execute.</param>
         public virtual void BeginOnUIThread(System.Action action) {
             ValidateDispatcher();
-#if WINDOWS_UWP
+#if WINDOWS_UWP 
             var dummy = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+#elif WinUI3
+            var dummy = dispatcher.TryEnqueue(() => action());
 #else
             dispatcher.BeginInvoke(action);
 #endif
@@ -80,6 +94,8 @@
             ValidateDispatcher();
 #if WINDOWS_UWP
             return dispatcher.RunTaskAsync(action);
+#elif WinUI3
+            return dispatcher.RunAsync(action);
 #else
             return dispatcher.InvokeAsync(action).Task.Unwrap();
 #endif
@@ -94,8 +110,10 @@
             if (CheckAccess())
                 action();
             else {
-#if WINDOWS_UWP
+#if WINDOWS_UWP 
                 dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask().Wait();
+#elif WinUI3
+                dispatcher.RunAsync(action).Wait();
 #else
                 Exception exception = null;
                 System.Action method = () => {

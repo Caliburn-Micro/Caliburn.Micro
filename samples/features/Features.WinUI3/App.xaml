@@ -1,0 +1,20 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. -->
+<!-- Licensed under the MIT License. See LICENSE in the project root for license information. -->
+
+<cal:CaliburnApplication
+    x:Class="Features.WinUI3.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Features.WinUI3"
+    xmlns:cal="using:Caliburn.Micro">
+    <Application.Resources>
+        <SolidColorBrush x:Key="BackgroundBrush" Color="#FF225378" />
+        <ResourceDictionary x:Key="Resource">
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+                <!-- Other merged dictionaries here -->
+            </ResourceDictionary.MergedDictionaries>
+            <!-- Other app resources here -->
+        </ResourceDictionary>
+    </Application.Resources>
+</cal:CaliburnApplication>

@@ -5,13 +5,10 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
-//using Windows.UI.Xaml;
-//using Windows.UI.Xaml.Controls;
-using Microsoft.Maui;
-//using Microsoft.Maui.Controls;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.Maui;
 
 namespace Caliburn.Micro.Maui
 {

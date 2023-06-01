@@ -3,9 +3,17 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+
+
+#if WinUI3
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Navigation;
+    using Microsoft.UI.Xaml.Controls;
+#else
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+#endif
 
 namespace Caliburn.Micro
 {

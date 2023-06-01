@@ -24,6 +24,9 @@ namespace Caliburn.Micro
 #elif WINDOWS_UWP
     using Windows.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
+#elif WinUI3
+    using Microsoft.UI.Xaml;
+    using Microsoft.Xaml.Interactivity;
 #else
     using System.Windows;
     using Microsoft.Xaml.Behaviors;

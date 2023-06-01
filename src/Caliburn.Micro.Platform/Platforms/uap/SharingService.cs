@@ -1,7 +1,14 @@
 ﻿namespace Caliburn.Micro {
     using Windows.ApplicationModel.DataTransfer;
+
+#if WinUI3
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Controls;
+#else
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
+#endif
+
 
     /// <summary>
     /// Service that handles the <see cref="DataTransferManager.DataRequested"/> event.
@@ -43,6 +50,21 @@
             supportSharing.OnShareRequested(args.Request);
         }
 
+#if WinUI3
+        /// <summary>
+        /// Determines the current view, checks for view first with frame and then view mode first with a shell view.
+        /// </summary>
+        /// <returns>The current view</returns>
+        protected virtual FrameworkElement GetCurrentView() {
+            var frame = (Application.Current as CaliburnApplication)?.Window?.Content as Frame;
+
+            if (frame != null) {
+                return frame.Content as FrameworkElement;
+            }
+
+            return (Application.Current as CaliburnApplication)?.Window?.Content as FrameworkElement;
+        }
+#else
         /// <summary>
         /// Determines the current view, checks for view first with frame and then view mode first with a shell view.
         /// </summary>
@@ -56,5 +78,6 @@
 
             return Window.Current.Content as FrameworkElement;
         }
+#endif
     }
 }

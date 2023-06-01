@@ -14,6 +14,8 @@ namespace Caliburn.Micro
     using System.ComponentModel;
 #if WINDOWS_UWP
     using Windows.UI.Xaml.Controls;
+#elif WinUI3
+    using Microsoft.UI.Xaml.Controls;
 #endif
 
     /// <summary>
@@ -34,7 +36,7 @@ namespace Caliburn.Micro
 #else
                 {"$datacontext", c => c.Source.DataContext},
 #endif
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
                 {"$clickeditem", c => ((ItemClickEventArgs)c.EventArgs).ClickedItem},
 #endif
                 {"$source", c => c.Source},
@@ -164,7 +166,7 @@ namespace Caliburn.Micro
         /// <param name="type">The type.</param>
         /// <returns>The default value.</returns>
         public static object GetDefaultValue(Type type) {
-#if WINDOWS_UWP || XFORMS || MAUI
+#if WINDOWS_UWP || XFORMS || MAUI || WinUI3
             var typeInfo = type.GetTypeInfo();
             return typeInfo.IsClass || typeInfo.IsInterface ? null : System.Activator.CreateInstance(type);
 #else

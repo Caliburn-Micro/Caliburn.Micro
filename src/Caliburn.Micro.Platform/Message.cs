@@ -13,6 +13,10 @@ namespace Caliburn.Micro
     using Windows.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
+#elif WinUI3
+    using Microsoft.UI.Xaml;
+    using Microsoft.Xaml.Interactivity;
+    using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
 #elif XFORMS
     using global::Xamarin.Forms;
     using UIElement = global::Xamarin.Forms.Element;
@@ -107,7 +111,7 @@ namespace Caliburn.Micro
 
             var messageTriggers = (TriggerBase[])d.GetValue(MessageTriggersProperty);
 
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
             var allTriggers = Interaction.GetBehaviors(d);
 
             if (messageTriggers != null)

@@ -21,6 +21,9 @@ namespace Caliburn.Micro
     using UIElement = global::Microsoft.Maui.Controls.Element;
     using TextBlock = global::Microsoft.Maui.Controls.Label;
     using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
+#elif WinUI3
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Controls;
 #elif !WINDOWS_UWP
     using System.Windows;
     using System.Windows.Controls;
@@ -29,7 +32,7 @@ namespace Caliburn.Micro
     using Windows.UI.Xaml.Controls;
 #endif
 
-#if !WINDOWS_UWP && !XFORMS && !MAUI
+#if !WINDOWS_UWP && !XFORMS && !MAUI && !WinUI3
     using System.Windows.Interop;
 #endif
 
@@ -403,7 +406,7 @@ namespace Caliburn.Micro
             if (viewAware != null) {
                 var view = viewAware.GetView(context) as UIElement;
                 if (view != null) {
-#if !WINDOWS_UWP && !XFORMS && !MAUI
+#if !WINDOWS_UWP && !XFORMS && !MAUI && !WinUI3
                     var windowCheck = view as Window;
                     if (windowCheck == null || (!windowCheck.IsLoaded && !(new WindowInteropHelper(windowCheck).Handle == IntPtr.Zero))) {
                         Log.Info("Using cached view for {0}.", model);
