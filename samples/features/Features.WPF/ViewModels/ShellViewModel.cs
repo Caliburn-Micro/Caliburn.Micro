@@ -6,21 +6,21 @@ namespace Features.CrossPlatform.ViewModels
 {
     public class ShellViewModel : Screen
     {
-        private readonly SimpleContainer container;
-        private INavigationService navigationService;
+        private readonly SimpleContainer _container;
+        private INavigationService _navigationService;
 
         public ShellViewModel(SimpleContainer container)
         {
-            this.container = container;
+            _container = container;
         }
 
         public void RegisterFrame(Frame frame)
         {
-            navigationService = new FrameAdapter(frame);
+            _navigationService = new FrameAdapter(frame);
 
-            container.Instance(navigationService);
+            _container.Instance(_navigationService);
 
-            navigationService.NavigateToViewModel(typeof(MenuViewModel));
+            _navigationService.NavigateToViewModel(typeof(MenuViewModel));
         }
     }
 }
