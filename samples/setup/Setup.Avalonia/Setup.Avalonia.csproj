@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
-    <AvaloniaVersion>11.0.0-preview8</AvaloniaVersion>
+    <AvaloniaVersion>11.0.0-rc1.1</AvaloniaVersion>
     <AvaloniaNameGeneratorIsEnabled>false</AvaloniaNameGeneratorIsEnabled>
   </PropertyGroup>
   <ItemGroup>

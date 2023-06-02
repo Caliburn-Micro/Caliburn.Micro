@@ -172,13 +172,16 @@
         /// Called after the action is attached to an AssociatedObject.
         /// </summary>
 #if WINDOWS_UWP
-        protected override void OnAttached() {
-            if (!View.InDesignMode) {
+        protected override void OnAttached()
+        {
+            if (!View.InDesignMode)
+            {
                 Parameters.Attach(AssociatedObject);
                 Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
 
-                
-                if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded)) {
+
+                if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded))
+                {
                     // Not yet sure if this will be needed
                     //var trigger = Interaction.GetTriggers(AssociatedObject)
                     //    .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
@@ -216,9 +219,11 @@
                    string eventName = "Loaded";
                    var trigger = Interaction.GetTriggers(AssociatedObject)
                     .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
-#endif
-                    if (trigger != null && trigger.EventName == eventName)
+#endif     
+                   Log.Info($"Trigger EventName {trigger?.EventName}");
+                   if (trigger != null && trigger.EventName == eventName){
                         Invoke(new RoutedEventArgs());
+                        }
                 }
             }
 
@@ -270,7 +275,7 @@
                 {
                     if (Action.HasTargetSet(currentElement))
                         break;
-                    
+
 #if AVALONIA
                     var currentView = ((Visual)currentElement);
                     if (elementToUse == null)
@@ -306,7 +311,8 @@
                 Source = currentElement
             };
 #elif WINDOWS_UWP
-            var binding = new Binding {
+            var binding = new Binding
+            {
                 Source = currentElement
             };
 #else
@@ -513,7 +519,7 @@
                 source.IsEnabled = context.CanExecute();
             }
 #else
-            if(!hasBinding && context.CanExecute != null)
+            if (!hasBinding && context.CanExecute != null)
             {
                 Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute} - {context.Method.Name}");
                 source.IsEnabled = context.CanExecute();
@@ -532,7 +538,7 @@
             return (from method in target.GetType().GetRuntimeMethods()
                     where method.Name == message.MethodName
                     let methodParameters = method.GetParameters()
-                    where message.Parameters.Count == methodParameters.Length 
+                    where message.Parameters.Count == methodParameters.Length
                     select method).FirstOrDefault();
 #else
             return (from method in target.GetType().GetMethods()
@@ -643,7 +649,7 @@
                 {
                     if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == matchingGuardName)
                     {
-                        Log.Info($"UpdateAvailablilty  {e.PropertyName}"); 
+                        Log.Info($"UpdateAvailablilty  {e.PropertyName}");
                         Caliburn.Micro.Execute.OnUIThread(() =>
                         {
                             var message = context.Message;
