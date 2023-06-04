@@ -22,7 +22,7 @@ Public Class Bootstrapper
     End Sub
 
     Protected Overrides Sub OnStartup(sender As Object, e As StartupEventArgs)
-        DisplayRootViewFor(Of ShellViewModel)()
+        DisplayRootViewForAsync(Of ShellViewModel)()
     End Sub
 
     Protected Overrides Function GetInstance(service As Type, key As String) As Object
