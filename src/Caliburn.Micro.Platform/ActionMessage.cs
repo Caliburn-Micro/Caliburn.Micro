@@ -210,7 +210,8 @@
                 if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded))
                 {
 #if AVALONIA
-                    string eventName = "AttachedToLogicalTree";
+                    //string eventName = "AttachedToLogicalTree";
+                    string eventName = "Activated";
                     var trigger = Interaction.GetBehaviors(AssociatedObject)
                         .OfType<Trigger>()
                         .FirstOrDefault(t => t.Actions.Contains(this)) as EventTriggerBehavior;
@@ -219,11 +220,12 @@
                    string eventName = "Loaded";
                    var trigger = Interaction.GetTriggers(AssociatedObject)
                     .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
-#endif     
-                   Log.Info($"Trigger EventName {trigger?.EventName}");
-                   if (trigger != null && trigger.EventName == eventName){
+#endif
+                    Log.Info($"Trigger EventName '{trigger?.EventName}' event name '{eventName}'");
+                    if (trigger != null && trigger.EventName == eventName)
+                    {
                         Invoke(new RoutedEventArgs());
-                        }
+                    }
                 }
             }
 
@@ -325,18 +327,18 @@
             if (elementToUse != null)
             {
                 Log.Info($"GetObservable {HandlerProperty.Name}");
-                var myObservable= elementToUse.GetObservable(HandlerProperty);
-                 Log.Info($"myObservable is null  {myObservable == null}");
-               myObservable.Subscribe(x =>
-                {
-                    Log.Info($"GetObservable subscribe {elementToUse}");
-                    Log.Info($"GetObservable x is null {x==null}");
-                    if (x != null)
-                    {
-                        Log.Info($"GetObservable invoke {elementToUse}");
-                        Invoke(new RoutedEventArgs());
-                    }
-                });
+                var myObservable = elementToUse.GetObservable(HandlerProperty);
+                Log.Info($"myObservable is null  {myObservable == null}");
+                myObservable.Subscribe(x =>
+                 {
+                     Log.Info($"GetObservable subscribe {elementToUse}");
+                     Log.Info($"GetObservable x is null {x == null}");
+                     if (x != null)
+                     {
+                         Log.Info($"GetObservable invoke {elementToUse}");
+                         Invoke(new RoutedEventArgs());
+                     }
+                 });
                 Log.Info($"Binding event {binding.Path} {binding.Source} {HandlerProperty.Name}");
                 this.Bind(HandlerProperty, binding);
             }
@@ -513,7 +515,7 @@
             Log.Info($"ApplyAvailabilityEffect hasBinding {hasBinding}");
 
 #if AVALONIA
-            if(context.CanExecute != null)
+            if (context.CanExecute != null)
             {
                 Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute} - {context.Method.Name}");
                 source.IsEnabled = context.CanExecute();
@@ -583,7 +585,7 @@
                 currentElement = BindingScope.GetVisualParent(currentElement);
             }
 #if AVALONIA
-            if (source != null  && context.Target != null)
+            if (source != null && context.Target != null)
             {
                 var target = context.Target;
                 var method = GetTargetMethod(context.Message, target);

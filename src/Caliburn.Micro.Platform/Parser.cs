@@ -56,7 +56,7 @@ namespace Caliburn.Micro
     /// </summary>
     public static class Parser
     {
-        static readonly Regex LongFormatRegularExpression = new Regex(@"^[\s]*\[[^\]]*\][\s]*=[\s]*\[[^\]]*\][\s]*$");
+        static readonly Regex LongFormatRegularExpression = new Regex(@"^[\s]*\[[^\]]*\][\s]*=[\s]*\[[^\]]*\][\s]*$", RegexOptions.None, TimeSpan.FromSeconds(10));
         static readonly ILog Log = LogManager.GetLog(typeof(Parser));
 
         /// <summary>

@@ -130,7 +130,7 @@ namespace Caliburn.Micro
             {
                 get
                 {
-                    return globalFilterPatternRegex ?? (globalFilterPatternRegex = new Regex(GlobalFilterPattern, options));
+                    return globalFilterPatternRegex ?? (globalFilterPatternRegex = new Regex(GlobalFilterPattern, options, TimeSpan.FromSeconds(10)));
                 }
             }
 
@@ -141,7 +141,7 @@ namespace Caliburn.Micro
             {
                 get
                 {
-                    return replacePatternRegex ?? (replacePatternRegex = new Regex(ReplacePattern, options));
+                    return replacePatternRegex ?? (replacePatternRegex = new Regex(ReplacePattern, options, TimeSpan.FromSeconds(10)));
                 }
             }
         }

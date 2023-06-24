@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Maui", "Cali
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Avalonia", "Caliburn.Micro.Avalonia\Caliburn.Micro.Avalonia.csproj", "{D076432F-37F6-4532-80D1-46B6666D69ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Avalonia.Tests", "Caliburn.Micro.Avalonia.Tests\Caliburn.Micro.Avalonia.Tests.csproj", "{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -159,6 +161,22 @@ Global
 		{D076432F-37F6-4532-80D1-46B6666D69ED}.Release|x64.Build.0 = Release|Any CPU
 		{D076432F-37F6-4532-80D1-46B6666D69ED}.Release|x86.ActiveCfg = Release|Any CPU
 		{D076432F-37F6-4532-80D1-46B6666D69ED}.Release|x86.Build.0 = Release|Any CPU
+		{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}.Debug|ARM.Build.0 = Debug|Any CPU
+		{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}.Debug|x64.Build.0 = Debug|Any CPU
+		{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}.Debug|x86.Build.0 = Debug|Any CPU
+		{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}.Release|ARM.ActiveCfg = Release|Any CPU
+		{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}.Release|ARM.Build.0 = Release|Any CPU
+		{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}.Release|x64.ActiveCfg = Release|Any CPU
+		{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}.Release|x64.Build.0 = Release|Any CPU
+		{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}.Release|x86.ActiveCfg = Release|Any CPU
+		{22F5B139-D0C3-4A97-9D9D-78B57C4BA7CA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
