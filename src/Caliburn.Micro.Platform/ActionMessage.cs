@@ -211,7 +211,7 @@
                 {
 #if AVALONIA
                     //string eventName = "AttachedToLogicalTree";
-                    string eventName = "Activated";
+                    string eventName = "Loaded";
                     var trigger = Interaction.GetBehaviors(AssociatedObject)
                         .OfType<Trigger>()
                         .FirstOrDefault(t => t.Actions.Contains(this)) as EventTriggerBehavior;
