@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
-    <AvaloniaVersion>11.0.0-rc1.1</AvaloniaVersion>
+    <AvaloniaVersion>11.0.0-rc2.2</AvaloniaVersion>
     <AvaloniaNameGeneratorIsEnabled>false</AvaloniaNameGeneratorIsEnabled>
   </PropertyGroup>
   <ItemGroup>
@@ -13,8 +13,8 @@
     <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="$(AvaloniaVersion)" />
 
     <PackageReference Include="Avalonia.Themes.FLuent" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.0.0-preview7" />
-    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.0.0-preview7" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.0.0-rc1.1" />
+    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.0.0-rc1.1" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->

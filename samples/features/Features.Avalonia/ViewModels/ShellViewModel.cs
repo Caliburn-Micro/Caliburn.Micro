@@ -1,17 +1,6 @@
-﻿using Caliburn.Micro;
-using ColorTextBlock.Avalonia;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using System.Threading;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Avalonia.Controls;
-using Features.CrossPlatform.ViewModels;
+using Caliburn.Micro;
 
 namespace Features.CrossPlatform.ViewModels
 {
