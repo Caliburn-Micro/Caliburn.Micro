@@ -8,7 +8,6 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <LangVersion>10</LangVersion>
-    <AvaloniaVersion>11.0.0-rc1.1</AvaloniaVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,12 +35,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia" Version="11.0.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.0" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.0.0" />
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.0.0" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.0.0" />
+    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.0.0" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
     <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
     <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
