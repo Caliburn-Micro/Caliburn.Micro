@@ -1,6 +1,4 @@
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 
 namespace Features.CrossPlatform.Views
 {
@@ -10,11 +8,6 @@ namespace Features.CrossPlatform.Views
         public ExecuteView()
         {
             InitializeComponent();
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
         }
 
         public void UpdateView()
