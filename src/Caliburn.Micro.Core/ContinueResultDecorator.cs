@@ -20,7 +20,7 @@ namespace Caliburn.Micro
         {
             if (coroutine == null)
             {
-                throw new ArgumentNullException("coroutine");
+                throw new ArgumentNullException(nameof(coroutine));
             }
 
             this.coroutine = coroutine;

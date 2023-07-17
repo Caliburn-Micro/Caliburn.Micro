@@ -29,7 +29,7 @@
                 return this.GetInstance<INavigationService>(null);
 
             if (rootFrame == null)
-                throw new ArgumentNullException("rootFrame");
+                throw new ArgumentNullException(nameof(rootFrame));
 #if WINDOWS_UWP
             var frameAdapter = cacheViewModels ? (INavigationService)
                 new CachingFrameAdapter(rootFrame, treatViewAsLoaded) : 

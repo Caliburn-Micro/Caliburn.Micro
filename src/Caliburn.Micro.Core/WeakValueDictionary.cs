@@ -154,12 +154,12 @@ namespace Caliburn.Micro
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             }
 
             if (arrayIndex < 0 || arrayIndex >= array.Length)
             {
-                throw new ArgumentOutOfRangeException("arrayIndex");
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex));
             }
 
             if ((arrayIndex + Count) > array.Length)
@@ -357,12 +357,12 @@ namespace Caliburn.Micro
             {
                 if (array == null)
                 {
-                    throw new ArgumentNullException("array");
+                    throw new ArgumentNullException(nameof(array));
                 }
 
                 if (arrayIndex < 0 || arrayIndex >= array.Length)
                 {
-                    throw new ArgumentOutOfRangeException("arrayIndex");
+                    throw new ArgumentOutOfRangeException(nameof(arrayIndex));
                 }
 
                 if ((arrayIndex + Count) > array.Length)

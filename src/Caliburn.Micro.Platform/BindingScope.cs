@@ -68,11 +68,11 @@
         /// <param name="resolver">The resolver.</param>
         public static ChildResolver AddChildResolver(Func<Type, bool> filter, Func<DependencyObject, IEnumerable<DependencyObject>> resolver) {
             if (filter == null) {
-                throw new ArgumentNullException("filter");
+                throw new ArgumentNullException(nameof(filter));
             }
 
             if (resolver == null) {
-                throw new ArgumentNullException("resolver");
+                throw new ArgumentNullException(nameof(resolver));
             }
 
             NonResolvableChildTypes.Clear();
@@ -91,7 +91,7 @@
         public static ChildResolver AddChildResolver<T>(Func<T, IEnumerable<DependencyObject>> resolver) where T : DependencyObject
         {
             if (resolver == null) {
-                throw new ArgumentNullException("resolver");
+                throw new ArgumentNullException(nameof(resolver));
             }
 
             NonResolvableChildTypes.Clear();
@@ -110,7 +110,7 @@
         /// <returns>true, when the resolver was (found and) removed.</returns>
         public static bool RemoveChildResolver(ChildResolver resolver) {
             if (resolver == null) {
-                throw new ArgumentNullException("resolver");
+                throw new ArgumentNullException(nameof(resolver));
             }
 
             return ChildResolvers.Remove(resolver);
@@ -142,7 +142,7 @@
         /// </remarks>
         public static Func<ScopeNamingRoute, IEnumerable<FrameworkElement>> FindNamedDescendants = routeHops => {
             if (routeHops == null) {
-                throw new ArgumentNullException("routeHops");
+                throw new ArgumentNullException(nameof(routeHops));
             }
 
             if (routeHops.Root == null) {
@@ -354,11 +354,11 @@
             /// <param name="to">The target dependency object.</param>
             public void AddHop(DependencyObject from, DependencyObject to) {
                 if (@from == null) {
-                    throw new ArgumentNullException("from");
+                    throw new ArgumentNullException(nameof(from));
                 }
 
                 if (to == null) {
-                    throw new ArgumentNullException("to");
+                    throw new ArgumentNullException(nameof(to));
                 }
 
                 if (path.Count > 0 &&
