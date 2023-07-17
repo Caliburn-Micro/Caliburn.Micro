@@ -66,9 +66,9 @@ namespace Caliburn.Micro.Maui
         public static Dictionary<string, string> ParseQueryString(string query, Encoding encoding)
         {
             if (query == null)
-                throw new ArgumentNullException("query");
+                throw new ArgumentNullException(nameof(query));
             if (encoding == null)
-                throw new ArgumentNullException("encoding");
+                throw new ArgumentNullException(nameof(encoding));
             if (query.Length == 0 || (query.Length == 1 && query[0] == '?'))
                 return new HttpQSCollection();
             if (query[0] == '?')

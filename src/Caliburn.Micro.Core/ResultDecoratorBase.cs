@@ -16,7 +16,7 @@ namespace Caliburn.Micro
         /// <param name="result">The result to decorate.</param>
         protected ResultDecoratorBase(IResult result)
         {
-            innerResult = result ?? throw new ArgumentNullException("result");
+            innerResult = result ?? throw new ArgumentNullException(nameof(result));
         }
 
         /// <summary>

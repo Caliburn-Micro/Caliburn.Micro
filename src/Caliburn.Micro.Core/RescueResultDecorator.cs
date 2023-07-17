@@ -20,7 +20,7 @@ namespace Caliburn.Micro
         /// <param name="cancelResult">Set to true to cancel the result after executing rescue.</param>
         public RescueResultDecorator(IResult result, Func<TException, IResult> coroutine, bool cancelResult = true) : base(result)
         {
-            this.coroutine = coroutine ?? throw new ArgumentNullException("coroutine");
+            this.coroutine = coroutine ?? throw new ArgumentNullException(nameof(coroutine));
             this.cancelResult = cancelResult;
         }
 
