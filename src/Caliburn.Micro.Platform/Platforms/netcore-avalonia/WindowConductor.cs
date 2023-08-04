@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Threading;
 
 namespace Caliburn.Micro
 {
@@ -79,14 +80,12 @@ namespace Caliburn.Micro
             return Task.FromResult(true);
         }
 
-        private async void Closing(object sender, CancelEventArgs e)
+        private void Closing(object sender, CancelEventArgs e)
         {
             if (e.Cancel)
             {
                 return;
             }
-
-            var guard = (IGuardClose)model;
 
             if (actuallyClosing)
             {
@@ -98,24 +97,25 @@ namespace Caliburn.Micro
 
             e.Cancel = true;
 
-            await Task.Yield();
+            _ = Dispatcher.UIThread.Invoke(async () =>
+            {
+                var canClose = await ((IGuardClose)model).CanCloseAsync(CancellationToken.None);
 
-            var canClose = await guard.CanCloseAsync(CancellationToken.None);
+                if (!canClose)
+                    return;
 
-            if (!canClose)
-                return;
+                actuallyClosing = true;
+                view.Close();
 
-            actuallyClosing = true;
-            view.Close();
-
-            //if (cachedDialogResult == null)
-            //{
-            //view.Close();
-            //}
-            //else if (view.DialogResult != cachedDialogResult)
-            //{
-            //view.DialogResult = cachedDialogResult;
-            //}
+                //if (cachedDialogResult == null)
+                //{
+                //view.Close();
+                //}
+                //else if (view.DialogResult != cachedDialogResult)
+                //{
+                //view.DialogResult = cachedDialogResult;
+                //}
+            }, DispatcherPriority.Input);
         }
     }
 }
