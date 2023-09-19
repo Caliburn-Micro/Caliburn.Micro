@@ -4,6 +4,8 @@ using Caliburn.Micro;
 using Xamarin.Forms;
 #elif SILVERLIGHT || WPF
 using System.Windows;
+#elif AVALONIA
+using Avalonia.Controls;
 #else
 using Windows.UI.Popups;
 #endif
@@ -12,13 +14,13 @@ namespace Features.CrossPlatform.Results
 {
     public class MessageDialogResult : ResultBase
     {
-        private readonly string content;
-        private readonly string title;
+        private readonly string _content;
+        private readonly string _title;
 
         public MessageDialogResult(string content, string title)
         {
-            this.content = content;
-            this.title = title;
+            _content = content;
+            _title = title;
         }
 #if XAMARINFORMS
         public override async void Execute(CoroutineExecutionContext context)
@@ -28,7 +30,7 @@ namespace Features.CrossPlatform.Results
 
             var page = (Page) context.View;
 
-            await page.DisplayAlert(title, content, "Ok");
+            await page.DisplayAlert(_title, _content, "Ok");
 
             OnCompleted();
         }
@@ -36,14 +38,23 @@ namespace Features.CrossPlatform.Results
 #elif SILVERLIGHT || WPF
         public override void Execute(CoroutineExecutionContext context)
         {
-            MessageBox.Show(content, title, MessageBoxButton.OK);
+            MessageBox.Show(_content, _title, MessageBoxButton.OK);
 
+            OnCompleted();
+        }
+#elif AVALONIA
+        public override async void Execute(CoroutineExecutionContext context)
+        {
+            var dialog = MessageBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandardWindow(_title, _content);
+
+            await dialog.Show();
             OnCompleted();
         }
 #else
         public override async void Execute(CoroutineExecutionContext context)
         { 
-            var dialog = new MessageDialog(content, title);
+            var dialog = new MessageDialog(_content, _title);
 
             await dialog.ShowAsync();
 

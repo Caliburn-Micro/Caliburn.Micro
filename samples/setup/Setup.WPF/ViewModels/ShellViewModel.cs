@@ -38,8 +38,13 @@ namespace Setup.WPF.ViewModels
                 await ActivateItemAsync(new MainViewModel(_eventAggregator));
             });
         }
-
-
+   
+    
+        protected override void OnViewLoaded(object view)
+        {
+            base.OnViewLoaded(view);
+            Application.Current.MainWindow.WindowState = WindowState.Maximized;
+        }
         public Task HandleAsync(string message, CancellationToken cancellationToken)
         {
             this.Message = message.ToString();

@@ -1,0 +1,25 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Avalonia"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="600"
+        Height="450"
+        x:Class="Features.CrossPlatform.Views.ShellView"
+        Title="ShellView">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button cal:Message.Attach="GoHome">Home</Button>
+        </StackPanel>
+        <DockPanel Grid.Row="1">
+            <Border>
+                <cal:NavigationFrame cal:Message.Attach="[Event NavigationServiceReady] = [NavReady($source)]" />
+            </Border>
+        </DockPanel>
+    </Grid>
+</Window>

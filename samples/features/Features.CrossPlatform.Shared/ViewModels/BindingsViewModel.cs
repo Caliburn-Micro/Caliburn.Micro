@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Caliburn.Micro;
 using Features.CrossPlatform.ViewModels.Activity;
 
@@ -6,7 +7,7 @@ namespace Features.CrossPlatform.ViewModels
 {
     public class BindingsViewModel : Screen
     {
-        private ActivityBaseViewModel selectedActivity;
+        private ActivityBaseViewModel _selectedActivity;
 
         public BindingsViewModel()
         {
@@ -17,14 +18,16 @@ namespace Features.CrossPlatform.ViewModels
                 new MessageActivityViewModel(Lipsum.Get()),
                 new PhotoActivityViewModel(Lipsum.Get())
             };
+            _selectedActivity = Activities.First();
+            NotifyOfPropertyChange("Activities");
         }
 
         public BindableCollection<ActivityBaseViewModel> Activities { get; }
 
         public ActivityBaseViewModel SelectedActivity
         {
-            get { return selectedActivity; }
-            set { Set(ref selectedActivity, value); }
+            get { return _selectedActivity; }
+            set { Set(ref _selectedActivity, value); }
         }
     }
 }

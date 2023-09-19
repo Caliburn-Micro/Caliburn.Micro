@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>10</LangVersion>
+    <AvaloniaNameGeneratorIsEnabled>false</AvaloniaNameGeneratorIsEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>AVALONIA</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>AVALONIA</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove=".gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.0.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.0" />
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.0.0" />
+
+    <PackageReference Include="Avalonia.Themes.FLuent" Version="11.0.0" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.0.0" />
+    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.0.0" />
+    <PackageReference Include="MessageBox.Avalonia" Version="2.3.1-rc2" />
+    <PackageReference Include="System.Reactive" Version="5.0.0" />
+    <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Caliburn.Micro.Avalonia">
+      <HintPath>..\..\..\bin\Caliburn.Micro.Avalonia\Release\net6.0\Caliburn.Micro.Avalonia.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Core">
+      <HintPath>..\..\..\bin\Caliburn.Micro.Avalonia\Release\net6.0\Caliburn.Micro.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Update="Views\ActionsView.axaml.cs">
+      <DependentUpon>ActionsView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\BindingsView.axaml.cs">
+      <DependentUpon>BindingsView.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+
+  <Import Project="..\Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems" Label="Shared" />
+</Project>

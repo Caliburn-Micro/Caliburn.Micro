@@ -18,15 +18,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Caliburn.Micro.Core">
-      <HintPath>..\..\..\bin\Caliburn.Micro.Platform\release\net6.0-windows\Caliburn.Micro.Core.dll</HintPath>
+      <HintPath>..\..\..\bin\Caliburn.Micro.Platform\release\net7.0-windows\Caliburn.Micro.Core.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.Platform">
-      <HintPath>..\..\..\bin\Caliburn.Micro.Platform\release\net6.0-windows\Caliburn.Micro.Platform.dll</HintPath>
+      <HintPath>..\..\..\bin\Caliburn.Micro.Platform\release\net7.0-windows\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
   </ItemGroup>
 

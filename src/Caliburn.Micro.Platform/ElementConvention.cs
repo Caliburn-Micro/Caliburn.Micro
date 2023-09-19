@@ -16,6 +16,11 @@ namespace Caliburn.Micro
     using DependencyObject = global::Xamarin.Forms.BindableObject;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
+#elif AVALONIA
+    using DependencyProperty = Avalonia.AvaloniaProperty;
+    using DependencyObject = Avalonia.AvaloniaObject;
+    using FrameworkElement = Avalonia.Controls.Control;
+    using TriggerBase = Avalonia.Xaml.Interactivity.Trigger;
 #elif MAUI
     using global::Microsoft.Maui.Controls;
     using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;

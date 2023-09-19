@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Caliburn.Micro;
 using Features.CrossPlatform.Views;
 
@@ -7,12 +6,12 @@ namespace Features.CrossPlatform.ViewModels
 {
     public class ExecuteViewModel : Screen
     {
-        private bool safe;
+        private bool _safe;
 
         public bool Safe
         {
-            get { return safe; }
-            set { Set(ref safe, value); }
+            get { return _safe; }
+            set { Set(ref _safe, value); }
         }
 
         public void StartBackgroundWork()
@@ -40,7 +39,7 @@ namespace Features.CrossPlatform.ViewModels
 
         private Task UpdateView()
         {
-            var view = (ExecuteView) GetView();
+            var view = (ExecuteView)GetView();
 
             view.UpdateView();
 

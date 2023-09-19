@@ -28,7 +28,7 @@ namespace Caliburn.Micro
         /// <param name="args">Parameters to be injected into the formatted message.</param>
         public void Info(string format, params object[] args)
         {
-            Debug.WriteLine("[{1}] INFO: {0}", string.Format(format, args), typeName);
+            Trace.WriteLine($"[{typeName}] INFO: {string.Format(format, args)}");
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Caliburn.Micro
         /// <param name="args">Parameters to be injected into the formatted message.</param>
         public void Warn(string format, params object[] args)
         {
-            Debug.WriteLine("[{1}] WARN: {0}", string.Format(format, args), typeName);
+            Trace.WriteLine($"[{typeName}] WARN: {string.Format(format, args)}");
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Caliburn.Micro
         /// <param name="exception">The exception.</param>
         public void Error(Exception exception)
         {
-            Debug.WriteLine("[{1}] ERROR: {0}", exception, typeName);
+            Trace.WriteLine($"[{typeName}] ERROR: {exception}" );
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Features.CrossPlatform
 
         public Bootstrapper()
         {
+            LogManager.GetLog = type => new DebugLog(type);
             Initialize();
         }
 

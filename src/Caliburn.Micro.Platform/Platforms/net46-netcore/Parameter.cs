@@ -1,4 +1,5 @@
-﻿namespace Caliburn.Micro {
+﻿namespace Caliburn.Micro 
+{
     using System;
     using System.ComponentModel;
     using System.Windows;
@@ -19,8 +20,8 @@
                 new PropertyMetadata(OnValueChanged)
                 );
 
-        DependencyObject associatedObject;
-        WeakReference owner;
+        DependencyObject _associatedObject;
+        WeakReference _owner;
 
         /// <summary>
         /// Gets or sets the value of the parameter.
@@ -36,7 +37,7 @@
             get
             {
                 ReadPreamble();
-                return associatedObject;
+                return _associatedObject;
             }
         }
 
@@ -44,19 +45,19 @@
         /// Gets or sets the owner.
         /// </summary>
         protected ActionMessage Owner {
-            get { return owner == null ? null : owner.Target as ActionMessage; }
-            set { owner = new WeakReference(value); }
+            get { return _owner == null ? null : _owner.Target as ActionMessage; }
+            set { _owner = new WeakReference(value); }
         }
 
         void IAttachedObject.Attach(DependencyObject dependencyObject) {
             WritePreamble();
-            associatedObject = dependencyObject;
+            _associatedObject = dependencyObject;
             WritePostscript();
         }
 
         void IAttachedObject.Detach() {
             WritePreamble();
-            associatedObject = null;
+            _associatedObject = null;
             WritePostscript();
         }
 

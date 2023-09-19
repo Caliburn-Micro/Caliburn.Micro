@@ -7,12 +7,12 @@
     /// </summary>
 #if WINDOWS_UWP
     public class Parameter : DependencyObject, IAttachedObject {
-        DependencyObject associatedObject;
+        DependencyObject _associatedObject;
 #else
     public class Parameter : FrameworkElement, IAttachedObject {
         FrameworkElement associatedObject;
 #endif
-        WeakReference owner;
+        WeakReference _owner;
 
         /// <summary>
         /// A dependency property representing the parameter's value.
@@ -39,7 +39,7 @@
 #else
         FrameworkElement IAttachedObject.AssociatedObject {
 #endif
-            get { return associatedObject; }
+            get { return _associatedObject; }
         }
 
 
@@ -47,8 +47,8 @@
         /// Gets or sets the owner.
         /// </summary>
         protected ActionMessage Owner {
-            get { return owner == null ? null : owner.Target as ActionMessage; }
-            set { owner = new WeakReference(value); }
+            get { return _owner == null ? null : _owner.Target as ActionMessage; }
+            set { _owner = new WeakReference(value); }
         }
 
 #if WINDOWS_UWP
@@ -56,11 +56,11 @@
 #else
         void IAttachedObject.Attach(FrameworkElement dependencyObject) {
 #endif
-            associatedObject = dependencyObject;
+            _associatedObject = dependencyObject;
         }
 
         void IAttachedObject.Detach() {
-            associatedObject = null;
+            _associatedObject = null;
         }
 
         /// <summary>
