@@ -13,38 +13,26 @@ namespace Caliburn.Micro
         /// <summary>
         /// Indicates whether or not the framework is in design-time mode.
         /// </summary>
-        public virtual bool InDesignMode
-        {
-            get { return true; }
-        }
+        public virtual bool InDesignMode => true;
 
         /// <summary>
         /// Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        public virtual void BeginOnUIThread(Action action)
-        {
-            action();
-        }
+        public virtual void BeginOnUIThread(Action action) => action();
 
         /// <summary>
         /// Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <returns></returns>
-        public virtual Task OnUIThreadAsync(Func<Task> action)
-        {
-            return Task.Factory.StartNew(action);
-        }
+        public virtual Task OnUIThreadAsync(Func<Task> action) => Task.Factory.StartNew(action);
 
         /// <summary>
         /// Executes the action on the UI thread.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        public virtual void OnUIThread(Action action)
-        {
-            action();
-        }
+        public virtual void OnUIThread(Action action) => action();
 
         /// <summary>
         /// Whether or not classes should execute property change notications on the UI thread.
@@ -64,10 +52,7 @@ namespace Caliburn.Micro
         /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
         /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was.
         /// </remarks>
-        public virtual object GetFirstNonGeneratedView(object view)
-        {
-            return view;
-        }
+        public virtual object GetFirstNonGeneratedView(object view) => view;
 
         /// <summary>
         /// Executes the handler the fist time the view is loaded.
@@ -75,20 +60,14 @@ namespace Caliburn.Micro
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
         /// <returns>true if the handler was executed immediately; false otherwise</returns>
-        public virtual void ExecuteOnFirstLoad(object view, Action<object> handler)
-        {
-            handler(view);
-        }
+        public virtual void ExecuteOnFirstLoad(object view, Action<object> handler) => handler(view);
 
         /// <summary>
         /// Executes the handler the next time the view's LayoutUpdated event fires.
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler)
-        {
-            handler(view);
-        }
+        public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler) => handler(view);
 
         /// <summary>
         /// Get the close action for the specified view model.
@@ -99,9 +78,6 @@ namespace Caliburn.Micro
         /// <returns>
         /// An <see cref="Action" /> to close the view model.
         /// </returns>
-        public virtual Func<CancellationToken, Task> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
-        {
-            return ct => Task.FromResult(true);
-        }
+        public virtual Func<CancellationToken, Task> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult) => ct => Task.FromResult(true);
     }
 }

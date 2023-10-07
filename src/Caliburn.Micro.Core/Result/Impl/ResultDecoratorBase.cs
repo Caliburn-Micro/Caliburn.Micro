@@ -7,17 +7,14 @@ namespace Caliburn.Micro
     /// </summary>
     public abstract class ResultDecoratorBase : IResult
     {
-        private readonly IResult innerResult;
-        private CoroutineExecutionContext context;
+        private readonly IResult _innerResult;
+        private CoroutineExecutionContext _context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResultDecoratorBase"/> class.
         /// </summary>
         /// <param name="result">The result to decorate.</param>
-        protected ResultDecoratorBase(IResult result)
-        {
-            innerResult = result ?? throw new ArgumentNullException("result");
-        }
+        protected ResultDecoratorBase(IResult result) => _innerResult = result ?? throw new ArgumentNullException("result");
 
         /// <summary>
         /// Executes the result using the specified context.
@@ -25,25 +22,25 @@ namespace Caliburn.Micro
         /// <param name="context">The context.</param>
         public void Execute(CoroutineExecutionContext context)
         {
-            this.context = context;
+            _context = context;
 
             try
             {
-                innerResult.Completed += InnerResultCompleted;
-                IoC.BuildUp(innerResult);
-                innerResult.Execute(this.context);
+                _innerResult.Completed += InnerResultCompleted;
+                IoC.BuildUp(_innerResult);
+                _innerResult.Execute(_context);
             }
             catch (Exception ex)
             {
-                InnerResultCompleted(innerResult, new ResultCompletionEventArgs { Error = ex });
+                InnerResultCompleted(_innerResult, new ResultCompletionEventArgs { Error = ex });
             }
         }
 
         private void InnerResultCompleted(object sender, ResultCompletionEventArgs args)
         {
-            innerResult.Completed -= InnerResultCompleted;
-            OnInnerResultCompleted(context, innerResult, args);
-            context = null;
+            _innerResult.Completed -= InnerResultCompleted;
+            OnInnerResultCompleted(_context, _innerResult, args);
+            _context = null;
         }
 
         /// <summary>
@@ -63,9 +60,6 @@ namespace Caliburn.Micro
         /// Raises the <see cref="Completed" /> event.
         /// </summary>
         /// <param name="args">The <see cref="ResultCompletionEventArgs"/> instance containing the event data.</param>
-        protected void OnCompleted(ResultCompletionEventArgs args)
-        {
-            Completed(this, args);
-        }
+        protected void OnCompleted(ResultCompletionEventArgs args) => Completed(this, args);
     }
 }

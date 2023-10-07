@@ -9,8 +9,8 @@ namespace Caliburn.Micro
     public class RescueResultDecorator<TException> : ResultDecoratorBase where TException : Exception
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(RescueResultDecorator<>));
-        private readonly bool cancelResult;
-        private readonly Func<TException, IResult> coroutine;
+        private readonly bool _cancelResult;
+        private readonly Func<TException, IResult> _coroutine;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RescueResultDecorator&lt;TException&gt;"/> class.
@@ -20,8 +20,8 @@ namespace Caliburn.Micro
         /// <param name="cancelResult">Set to true to cancel the result after executing rescue.</param>
         public RescueResultDecorator(IResult result, Func<TException, IResult> coroutine, bool cancelResult = true) : base(result)
         {
-            this.coroutine = coroutine ?? throw new ArgumentNullException("coroutine");
-            this.cancelResult = cancelResult;
+            _coroutine = coroutine ?? throw new ArgumentNullException("coroutine");
+            _cancelResult = cancelResult;
         }
 
         /// <summary>
@@ -32,8 +32,7 @@ namespace Caliburn.Micro
         /// <param name="args">The <see cref="ResultCompletionEventArgs" /> instance containing the event data.</param>
         protected override void OnInnerResultCompleted(CoroutineExecutionContext context, IResult innerResult, ResultCompletionEventArgs args)
         {
-            var error = args.Error as TException;
-            if (error == null)
+            if (args.Error is not TException error)
             {
                 OnCompleted(args);
             }
@@ -50,7 +49,7 @@ namespace Caliburn.Micro
             IResult rescueResult;
             try
             {
-                rescueResult = coroutine(exception);
+                rescueResult = _coroutine(exception);
             }
             catch (Exception ex)
             {
@@ -76,7 +75,7 @@ namespace Caliburn.Micro
             OnCompleted(new ResultCompletionEventArgs
             {
                 Error = args.Error,
-                WasCancelled = (args.Error == null && (args.WasCancelled || cancelResult))
+                WasCancelled = (args.Error == null && (args.WasCancelled || _cancelResult))
             });
         }
     }

@@ -26,7 +26,7 @@ namespace Caliburn.Micro
         {
             Log.Info("Executing coroutine.");
 
-            var enumerator = CreateParentEnumerator(coroutine);
+            IResult enumerator = CreateParentEnumerator(coroutine);
             IoC.BuildUp(enumerator);
 
             if (callback != null)
@@ -69,13 +69,13 @@ namespace Caliburn.Micro
 
         private static void ExecuteOnCompleted(IResult result, EventHandler<ResultCompletionEventArgs> handler)
         {
-            EventHandler<ResultCompletionEventArgs> onCompledted = null;
-            onCompledted = (s, e) =>
+            void OnCompledted(object s, ResultCompletionEventArgs e)
             {
-                result.Completed -= onCompledted;
+                result.Completed -= OnCompledted;
                 handler(s, e);
-            };
-            result.Completed += onCompledted;
+            }
+
+            result.Completed += OnCompledted;
         }
 
         /// <summary>

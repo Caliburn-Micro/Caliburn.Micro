@@ -8,17 +8,14 @@ namespace Caliburn.Micro
     /// </summary>
     public class SequentialResult : IResult
     {
-        private readonly IEnumerator<IResult> enumerator;
-        private CoroutineExecutionContext context;
+        private readonly IEnumerator<IResult> _enumerator;
+        private CoroutineExecutionContext _context;
 
         /// <summary>
         ///   Initializes a new instance of the <see cref = "SequentialResult" /> class.
         /// </summary>
         /// <param name = "enumerator">The enumerator.</param>
-        public SequentialResult(IEnumerator<IResult> enumerator)
-        {
-            this.enumerator = enumerator;
-        }
+        public SequentialResult(IEnumerator<IResult> enumerator) => _enumerator = enumerator;
 
         /// <summary>
         ///   Occurs when execution has completed.
@@ -31,14 +28,13 @@ namespace Caliburn.Micro
         /// <param name = "context">The context.</param>
         public void Execute(CoroutineExecutionContext context)
         {
-            this.context = context;
+            _context = context;
             ChildCompleted(null, new ResultCompletionEventArgs());
         }
 
         private void ChildCompleted(object sender, ResultCompletionEventArgs args)
         {
-            var previous = sender as IResult;
-            if (previous != null)
+            if (sender is IResult previous)
             {
                 previous.Completed -= ChildCompleted;
             }
@@ -52,7 +48,7 @@ namespace Caliburn.Micro
             var moveNextSucceeded = false;
             try
             {
-                moveNextSucceeded = enumerator.MoveNext();
+                moveNextSucceeded = _enumerator.MoveNext();
             }
             catch (Exception ex)
             {
@@ -64,10 +60,10 @@ namespace Caliburn.Micro
             {
                 try
                 {
-                    var next = enumerator.Current;
+                    IResult next = _enumerator.Current;
                     IoC.BuildUp(next);
                     next.Completed += ChildCompleted;
-                    next.Execute(context);
+                    next.Execute(_context);
                 }
                 catch (Exception ex)
                 {
@@ -83,7 +79,7 @@ namespace Caliburn.Micro
 
         private void OnComplete(Exception error, bool wasCancelled)
         {
-            enumerator.Dispose();
+            _enumerator.Dispose();
             Completed(this, new ResultCompletionEventArgs { Error = error, WasCancelled = wasCancelled });
         }
     }

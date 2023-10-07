@@ -8,16 +8,13 @@ namespace Caliburn.Micro
     /// <typeparam name="TResult">The type of the result.</typeparam>
     public class DelegateResult<TResult> : IResult<TResult>
     {
-        private readonly Func<TResult> toExecute;
+        private readonly Func<TResult> _toExecute;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DelegateResult&lt;TResult&gt;"/> class.
         /// </summary>
         /// <param name="action">The action.</param>
-        public DelegateResult(Func<TResult> action)
-        {
-            toExecute = action;
-        }
+        public DelegateResult(Func<TResult> action) => _toExecute = action;
 
         /// <summary>
         /// Executes the result using the specified context.
@@ -29,7 +26,7 @@ namespace Caliburn.Micro
 
             try
             {
-                Result = toExecute();
+                Result = _toExecute();
             }
             catch (Exception ex)
             {

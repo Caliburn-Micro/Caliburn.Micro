@@ -7,16 +7,13 @@ namespace Caliburn.Micro
     /// </summary>
     public class DelegateResult : IResult
     {
-        private readonly Action toExecute;
+        private readonly Action _toExecute;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DelegateResult"/> class.
         /// </summary>
         /// <param name="action">The action.</param>
-        public DelegateResult(Action action)
-        {
-            toExecute = action;
-        }
+        public DelegateResult(Action action) => _toExecute = action;
 
         /// <summary>
         /// Executes the result using the specified context.
@@ -28,7 +25,7 @@ namespace Caliburn.Micro
 
             try
             {
-                toExecute();
+                _toExecute();
             }
             catch (Exception ex)
             {

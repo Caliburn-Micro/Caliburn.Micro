@@ -15,20 +15,14 @@ namespace Caliburn.Micro
         /// <summary>
         /// Initializes a new instance of the <see cref = "BindableCollection&lt;T&gt;" /> class.
         /// </summary>
-        public BindableCollection()
-        {
-            IsNotifying = true;
-        }
+        public BindableCollection() => IsNotifying = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref = "BindableCollection&lt;T&gt;" /> class.
         /// </summary>
         /// <param name = "collection">The collection from which the elements are copied.</param>
         public BindableCollection(IEnumerable<T> collection)
-            : base(collection)
-        {
-            IsNotifying = true;
-        }
+            : base(collection) => IsNotifying = true;
 
         /// <summary>
         /// Enables/Disables property change notification.
@@ -101,10 +95,7 @@ namespace Caliburn.Micro
         /// <remarks>
         /// Used to avoid compiler warning regarding unverifiable code.
         /// </remarks>
-        protected virtual void InsertItemBase(int index, T item)
-        {
-            base.InsertItem(index, item);
-        }
+        protected virtual void InsertItemBase(int index, T item) => base.InsertItem(index, item);
 
         /// <summary>
         /// Sets the item at the specified position.
@@ -131,10 +122,7 @@ namespace Caliburn.Micro
         /// <remarks>
         /// Used to avoid compiler warning regarding unverifiable code.
         /// </remarks>
-        protected virtual void SetItemBase(int index, T item)
-        {
-            base.SetItem(index, item);
-        }
+        protected virtual void SetItemBase(int index, T item) => base.SetItem(index, item);
 
         /// <summary>
         /// Removes the item at the specified position.
@@ -159,18 +147,12 @@ namespace Caliburn.Micro
         /// <remarks>
         ///   Used to avoid compiler warning regarding unverifiable code.
         /// </remarks>
-        protected virtual void RemoveItemBase(int index)
-        {
-            base.RemoveItem(index);
-        }
+        protected virtual void RemoveItemBase(int index) => base.RemoveItem(index);
 
         /// <summary>
         /// Clears the items contained by the collection.
         /// </summary>
-        protected override sealed void ClearItems()
-        {
-            OnUIThread(ClearItemsBase);
-        }
+        protected override sealed void ClearItems() => OnUIThread(ClearItemsBase);
 
         /// <summary>
         /// Exposes the base implementation of the <see cref = "ClearItems" /> function.
@@ -178,10 +160,7 @@ namespace Caliburn.Micro
         /// <remarks>
         ///   Used to avoid compiler warning regarding unverifiable code.
         /// </remarks>
-        protected virtual void ClearItemsBase()
-        {
-            base.ClearItems();
-        }
+        protected virtual void ClearItemsBase() => base.ClearItems();
 
         /// <summary>
         /// Raises the <see cref = "E:System.Collections.ObjectModel.ObservableCollection`1.CollectionChanged" /> event with the provided arguments.
@@ -218,7 +197,7 @@ namespace Caliburn.Micro
                 var previousNotificationSetting = IsNotifying;
                 IsNotifying = false;
                 var index = Count;
-                foreach (var item in items)
+                foreach (T item in items)
                 {
                     InsertItemBase(index, item);
                     index++;
@@ -250,7 +229,7 @@ namespace Caliburn.Micro
             {
                 var previousNotificationSetting = IsNotifying;
                 IsNotifying = false;
-                foreach (var item in items)
+                foreach (T item in items)
                 {
                     var index = IndexOf(item);
                     if (index >= 0)

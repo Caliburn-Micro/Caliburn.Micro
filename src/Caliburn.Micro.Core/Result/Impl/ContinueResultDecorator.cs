@@ -8,7 +8,7 @@ namespace Caliburn.Micro
     public class ContinueResultDecorator : ResultDecoratorBase
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(ContinueResultDecorator));
-        private readonly Func<IResult> coroutine;
+        private readonly Func<IResult> _coroutine;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContinueResultDecorator"/> class.
@@ -16,15 +16,8 @@ namespace Caliburn.Micro
         /// <param name="result">The result to decorate.</param>
         /// <param name="coroutine">The coroutine to execute when <paramref name="result"/> was canceled.</param>
         public ContinueResultDecorator(IResult result, Func<IResult> coroutine)
-            : base(result)
-        {
-            if (coroutine == null)
-            {
-                throw new ArgumentNullException("coroutine");
-            }
-
-            this.coroutine = coroutine;
-        }
+            : base(result) 
+            => _coroutine = coroutine ?? throw new ArgumentNullException("coroutine");
 
         /// <summary>
         /// Called when the execution of the decorated result has completed.
@@ -50,7 +43,7 @@ namespace Caliburn.Micro
             IResult continueResult;
             try
             {
-                continueResult = coroutine();
+                continueResult = _coroutine();
             }
             catch (Exception ex)
             {

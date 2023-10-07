@@ -15,10 +15,7 @@ namespace Caliburn.Micro
         /// <remarks>The subscription is invoked on the thread chosen by the publisher.</remarks>
         /// <param name="eventAggregator"></param>
         /// <param name = "subscriber">The instance to subscribe for event publication.</param>
-        public static void SubscribeOnPublishedThread(this IEventAggregator eventAggregator, object subscriber)
-        {
-            eventAggregator.Subscribe(subscriber, f => f());
-        }
+        public static void SubscribeOnPublishedThread(this IEventAggregator eventAggregator, object subscriber) => eventAggregator.Subscribe(subscriber, f => f());
 
         /// <summary>
         /// Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />.
@@ -27,10 +24,7 @@ namespace Caliburn.Micro
         /// <param name="eventAggregator"></param>
         /// <param name = "subscriber">The instance to subscribe for event publication.</param>
         [Obsolete("Use SubscribeOnPublishedThread")]
-        public static void Subscribe(this IEventAggregator eventAggregator, object subscriber)
-        {
-            eventAggregator.SubscribeOnPublishedThread(subscriber);
-        }
+        public static void Subscribe(this IEventAggregator eventAggregator, object subscriber) => eventAggregator.SubscribeOnPublishedThread(subscriber);
 
         /// <summary>
         /// Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />.
@@ -38,10 +32,7 @@ namespace Caliburn.Micro
         /// <remarks>The subscription is invoked on a new background thread.</remarks>
         /// <param name="eventAggregator"></param>
         /// <param name = "subscriber">The instance to subscribe for event publication.</param>
-        public static void SubscribeOnBackgroundThread(this IEventAggregator eventAggregator, object subscriber)
-        {
-            eventAggregator.Subscribe(subscriber, f => Task.Factory.StartNew(f, default, TaskCreationOptions.None, TaskScheduler.Default));
-        }
+        public static void SubscribeOnBackgroundThread(this IEventAggregator eventAggregator, object subscriber) => eventAggregator.Subscribe(subscriber, f => Task.Factory.StartNew(f, default, TaskCreationOptions.None, TaskScheduler.Default));
 
         /// <summary>
         /// Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />.
@@ -49,34 +40,31 @@ namespace Caliburn.Micro
         /// <remarks>The subscription is invoked on the UI thread.</remarks>
         /// <param name="eventAggregator"></param>
         /// <param name = "subscriber">The instance to subscribe for event publication.</param>
-        public static void SubscribeOnUIThread(this IEventAggregator eventAggregator, object subscriber)
-        {
-            eventAggregator.Subscribe(subscriber, f =>
-            {
-                var taskCompletionSource = new TaskCompletionSource<bool>();
+        public static void SubscribeOnUIThread(this IEventAggregator eventAggregator, object subscriber) => eventAggregator.Subscribe(subscriber, f =>
+                                                                                                                     {
+                                                                                                                         var taskCompletionSource = new TaskCompletionSource<bool>();
 
-                Execute.BeginOnUIThread(async () =>
-                {
-                    try
-                    {
-                        await f();
+                                                                                                                         Execute.BeginOnUIThread(async () =>
+                                                                                                                         {
+                                                                                                                             try
+                                                                                                                             {
+                                                                                                                                 await f();
 
-                        taskCompletionSource.SetResult(true);
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        taskCompletionSource.SetCanceled();
-                    }
-                    catch (Exception ex)
-                    {
-                        taskCompletionSource.SetException(ex);
-                    }
-                });
+                                                                                                                                 taskCompletionSource.SetResult(true);
+                                                                                                                             }
+                                                                                                                             catch (OperationCanceledException)
+                                                                                                                             {
+                                                                                                                                 taskCompletionSource.SetCanceled();
+                                                                                                                             }
+                                                                                                                             catch (Exception ex)
+                                                                                                                             {
+                                                                                                                                 taskCompletionSource.SetException(ex);
+                                                                                                                             }
+                                                                                                                         });
 
-                return taskCompletionSource.Task;
+                                                                                                                         return taskCompletionSource.Task;
 
-            });
-        }
+                                                                                                                     });
 
         /// <summary>
         /// Publishes a message on the current thread (synchrone).
@@ -85,10 +73,7 @@ namespace Caliburn.Micro
         /// <param name = "message">The message instance.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task PublishOnCurrentThreadAsync(this IEventAggregator eventAggregator, object message, CancellationToken cancellationToken)
-        {
-            return eventAggregator.PublishAsync(message, f => f(), cancellationToken);
-        }
+        public static Task PublishOnCurrentThreadAsync(this IEventAggregator eventAggregator, object message, CancellationToken cancellationToken) => eventAggregator.PublishAsync(message, f => f(), cancellationToken);
 
         /// <summary>
         /// Publishes a message on the current thread (synchrone).
@@ -96,10 +81,7 @@ namespace Caliburn.Micro
         /// <param name="eventAggregator">The event aggregator.</param>
         /// <param name = "message">The message instance.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task PublishOnCurrentThreadAsync(this IEventAggregator eventAggregator, object message)
-        {
-            return eventAggregator.PublishOnCurrentThreadAsync(message, default);
-        }
+        public static Task PublishOnCurrentThreadAsync(this IEventAggregator eventAggregator, object message) => eventAggregator.PublishOnCurrentThreadAsync(message, default);
 
         /// <summary>
         /// Publishes a message on a background thread (async).
@@ -108,10 +90,7 @@ namespace Caliburn.Micro
         /// <param name = "message">The message instance.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task PublishOnBackgroundThreadAsync(this IEventAggregator eventAggregator, object message, CancellationToken cancellationToken)
-        {
-            return eventAggregator.PublishAsync(message, f => Task.Factory.StartNew(f, default, TaskCreationOptions.None, TaskScheduler.Default), cancellationToken);
-        }
+        public static Task PublishOnBackgroundThreadAsync(this IEventAggregator eventAggregator, object message, CancellationToken cancellationToken) => eventAggregator.PublishAsync(message, f => Task.Factory.StartNew(f, default, TaskCreationOptions.None, TaskScheduler.Default), cancellationToken);
 
         /// <summary>
         /// Publishes a message on a background thread (async).
@@ -119,10 +98,7 @@ namespace Caliburn.Micro
         /// <param name="eventAggregator">The event aggregator.</param>
         /// <param name = "message">The message instance.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task PublishOnBackgroundThreadAsync(this IEventAggregator eventAggregator, object message)
-        {
-            return eventAggregator.PublishOnBackgroundThreadAsync(message, default);
-        }
+        public static Task PublishOnBackgroundThreadAsync(this IEventAggregator eventAggregator, object message) => eventAggregator.PublishOnBackgroundThreadAsync(message, default);
 
         /// <summary>
         /// Publishes a message on the UI thread.
@@ -131,34 +107,31 @@ namespace Caliburn.Micro
         /// <param name = "message">The message instance.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task PublishOnUIThreadAsync(this IEventAggregator eventAggregator, object message, CancellationToken cancellationToken)
-        {
-            return eventAggregator.PublishAsync(message, f =>
-            {
-                var taskCompletionSource = new TaskCompletionSource<bool>();
+        public static Task PublishOnUIThreadAsync(this IEventAggregator eventAggregator, object message, CancellationToken cancellationToken) => eventAggregator.PublishAsync(message, f =>
+                                                                                                                                                          {
+                                                                                                                                                              var taskCompletionSource = new TaskCompletionSource<bool>();
 
-                Execute.BeginOnUIThread(async () =>
-                {
-                    try
-                    {
-                        await f();
+                                                                                                                                                              Execute.BeginOnUIThread(async () =>
+                                                                                                                                                              {
+                                                                                                                                                                  try
+                                                                                                                                                                  {
+                                                                                                                                                                      await f();
 
-                        taskCompletionSource.SetResult(true);
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        taskCompletionSource.SetCanceled();
-                    }
-                    catch (Exception ex)
-                    {
-                        taskCompletionSource.SetException(ex);
-                    }
-                });
+                                                                                                                                                                      taskCompletionSource.SetResult(true);
+                                                                                                                                                                  }
+                                                                                                                                                                  catch (OperationCanceledException)
+                                                                                                                                                                  {
+                                                                                                                                                                      taskCompletionSource.SetCanceled();
+                                                                                                                                                                  }
+                                                                                                                                                                  catch (Exception ex)
+                                                                                                                                                                  {
+                                                                                                                                                                      taskCompletionSource.SetException(ex);
+                                                                                                                                                                  }
+                                                                                                                                                              });
 
-                return taskCompletionSource.Task;
+                                                                                                                                                              return taskCompletionSource.Task;
 
-            }, cancellationToken);
-        }
+                                                                                                                                                          }, cancellationToken);
 
         /// <summary>
         /// Publishes a message on the UI thread.
@@ -166,9 +139,6 @@ namespace Caliburn.Micro
         /// <param name="eventAggregator">The event aggregator.</param>
         /// <param name = "message">The message instance.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task PublishOnUIThreadAsync(this IEventAggregator eventAggregator, object message)
-        {
-            return eventAggregator.PublishOnUIThreadAsync(message, default);
-        }
+        public static Task PublishOnUIThreadAsync(this IEventAggregator eventAggregator, object message) => eventAggregator.PublishOnUIThreadAsync(message, default);
     }
 }

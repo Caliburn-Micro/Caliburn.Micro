@@ -13,16 +13,16 @@ namespace Caliburn.Micro
     internal class WeakValueDictionary<TKey, TValue> : IDictionary<TKey, TValue>
         where TValue : class
     {
-        private readonly Dictionary<TKey, WeakReference> inner;
-        private readonly WeakReference gcSentinel = new WeakReference(new object());
+        private readonly Dictionary<TKey, WeakReference> _inner;
+        private readonly WeakReference _gcSentinel = new(new object());
 
         #region Cleanup handling
 
         private bool IsCleanupNeeded()
         {
-            if (gcSentinel.Target == null)
+            if (_gcSentinel.Target == null)
             {
-                gcSentinel.Target = new object();
+                _gcSentinel.Target = new object();
                 return true;
             }
 
@@ -31,11 +31,11 @@ namespace Caliburn.Micro
 
         private void CleanAbandonedItems()
         {
-            var keysToRemove = inner.Where(pair => !pair.Value.IsAlive)
+            var keysToRemove = _inner.Where(pair => !pair.Value.IsAlive)
                 .Select(pair => pair.Key)
                 .ToList();
 
-            keysToRemove.Apply(key => inner.Remove(key));
+            keysToRemove.Apply(key => _inner.Remove(key));
         }
 
         private void CleanIfNeeded()
@@ -53,10 +53,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Initializes a new instance of the <see cref="WeakValueDictionary&lt;TKey, TValue&gt;"/> class that is empty, has the default initial capacity, and uses the default equality comparer for the key type.
         /// </summary>
-        public WeakValueDictionary()
-        {
-            inner = new Dictionary<TKey, WeakReference>();
-        }
+        public WeakValueDictionary() => _inner = new Dictionary<TKey, WeakReference>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WeakValueDictionary&lt;TKey, TValue&gt;"/> class that contains elements copied from the specified <see cref="IDictionary&lt;TKey, TValue&gt;"/> and uses the default equality comparer for the key type.
@@ -64,8 +61,8 @@ namespace Caliburn.Micro
         /// <param name="dictionary">The <see cref="IDictionary&lt;TKey, TValue&gt;"/> whose elements are copied to the new <see cref="WeakValueDictionary&lt;TKey, TValue&gt;"/>.</param>
         public WeakValueDictionary(IDictionary<TKey, TValue> dictionary)
         {
-            inner = new Dictionary<TKey, WeakReference>();
-            dictionary.Apply(item => inner.Add(item.Key, new WeakReference(item.Value)));
+            _inner = new Dictionary<TKey, WeakReference>();
+            dictionary.Apply(item => _inner.Add(item.Key, new WeakReference(item.Value)));
         }
 
         /// <summary>
@@ -75,37 +72,28 @@ namespace Caliburn.Micro
         /// <param name="comparer">The <see cref="IEqualityComparer&lt;T&gt;"/> implementation to use when comparing keys, or null to use the default <see cref="EqualityComparer&lt;T&gt;"/> for the type of the key.</param>
         public WeakValueDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
         {
-            inner = new Dictionary<TKey, WeakReference>(comparer);
-            dictionary.Apply(item => inner.Add(item.Key, new WeakReference(item.Value)));
+            _inner = new Dictionary<TKey, WeakReference>(comparer);
+            dictionary.Apply(item => _inner.Add(item.Key, new WeakReference(item.Value)));
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WeakValueDictionary&lt;TKey, TValue&gt;"/> class that is empty, has the default initial capacity, and uses the specified <see cref="IEqualityComparer&lt;T&gt;"/>.
         /// </summary>
         /// <param name="comparer">The <see cref="IEqualityComparer&lt;T&gt;"/> implementation to use when comparing keys, or null to use the default <see cref="EqualityComparer&lt;T&gt;"/> for the type of the key.</param>
-        public WeakValueDictionary(IEqualityComparer<TKey> comparer)
-        {
-            inner = new Dictionary<TKey, WeakReference>(comparer);
-        }
+        public WeakValueDictionary(IEqualityComparer<TKey> comparer) => _inner = new Dictionary<TKey, WeakReference>(comparer);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WeakValueDictionary&lt;TKey, TValue&gt;"/> class that is empty, has the specified initial capacity, and uses the default equality comparer for the key type.
         /// </summary>
         /// <param name="capacity">The initial number of elements that the <see cref="WeakValueDictionary&lt;TKey, TValue&gt;"/> can contain.</param>
-        public WeakValueDictionary(int capacity)
-        {
-            inner = new Dictionary<TKey, WeakReference>(capacity);
-        }
+        public WeakValueDictionary(int capacity) => _inner = new Dictionary<TKey, WeakReference>(capacity);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WeakValueDictionary&lt;TKey, TValue&gt;"/> class that is empty, has the specified initial capacity, and uses the specified <see cref="IEqualityComparer&lt;T&gt;"/>.
         /// </summary>
         /// <param name="capacity">The initial number of elements that the <see cref="WeakValueDictionary&lt;TKey, TValue&gt;"/> can contain.</param>
         /// <param name="comparer">The <see cref="IEqualityComparer&lt;T&gt;"/> implementation to use when comparing keys, or null to use the default <see cref="EqualityComparer&lt;T&gt;"/> for the type of the key.</param>
-        public WeakValueDictionary(int capacity, IEqualityComparer<TKey> comparer)
-        {
-            inner = new Dictionary<TKey, WeakReference>(capacity, comparer);
-        }
+        public WeakValueDictionary(int capacity, IEqualityComparer<TKey> comparer) => _inner = new Dictionary<TKey, WeakReference>(capacity, comparer);
 
         #endregion
 
@@ -116,33 +104,23 @@ namespace Caliburn.Micro
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             CleanIfNeeded();
-            var enumerable = inner.Select(pair => new KeyValuePair<TKey, TValue>(pair.Key, (TValue)pair.Value.Target))
+            IEnumerable<KeyValuePair<TKey, TValue>> enumerable = _inner.Select(pair => new KeyValuePair<TKey, TValue>(pair.Key, (TValue)pair.Value.Target))
                 .Where(pair => pair.Value != null);
             return enumerable.GetEnumerator();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
-        {
-            Add(item.Key, item.Value);
-        }
+        void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
 
         /// <summary>
         /// Removes all keys and values from the <see cref="WeakValueDictionary&lt;TKey, TValue&gt;"/>.
         /// </summary>
-        public void Clear()
-        {
-            inner.Clear();
-        }
+        public void Clear() => _inner.Clear();
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
         {
-            TValue value;
-            if (!TryGetValue(item.Key, out value))
+            if (!TryGetValue(item.Key, out TValue value))
             {
                 return false;
             }
@@ -173,8 +151,7 @@ namespace Caliburn.Micro
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
         {
-            TValue value;
-            if (!TryGetValue(item.Key, out value))
+            if (!TryGetValue(item.Key, out TValue value))
             {
                 return false;
             }
@@ -184,7 +161,7 @@ namespace Caliburn.Micro
                 return false;
             }
 
-            return inner.Remove(item.Key);
+            return _inner.Remove(item.Key);
         }
 
         /// <summary>
@@ -200,14 +177,11 @@ namespace Caliburn.Micro
             get
             {
                 CleanIfNeeded();
-                return inner.Count;
+                return _inner.Count;
             }
         }
 
-        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
-        {
-            get { return false; }
-        }
+        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
 
         /// <summary>
         /// Adds the specified key and value to the dictionary.
@@ -217,7 +191,7 @@ namespace Caliburn.Micro
         public void Add(TKey key, TValue value)
         {
             CleanIfNeeded();
-            inner.Add(key, new WeakReference(value));
+            _inner.Add(key, new WeakReference(value));
         }
 
         /// <summary>
@@ -225,11 +199,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="key">The key to locate in the <see cref="WeakValueDictionary&lt;TKey, TValue&gt;"/>.</param>
         /// <returns></returns>
-        public bool ContainsKey(TKey key)
-        {
-            TValue dummy;
-            return TryGetValue(key, out dummy);
-        }
+        public bool ContainsKey(TKey key) => TryGetValue(key, out _);
 
         /// <summary>
         /// Removes the value with the specified key from the <see cref="WeakValueDictionary&lt;TKey, TValue&gt;"/>.
@@ -239,7 +209,7 @@ namespace Caliburn.Micro
         public bool Remove(TKey key)
         {
             CleanIfNeeded();
-            return inner.Remove(key);
+            return _inner.Remove(key);
         }
 
         /// <summary>
@@ -255,8 +225,7 @@ namespace Caliburn.Micro
         {
             CleanIfNeeded();
 
-            WeakReference wr;
-            if (!inner.TryGetValue(key, out wr))
+            if (!_inner.TryGetValue(key, out WeakReference wr))
             {
                 value = null;
                 return false;
@@ -265,7 +234,7 @@ namespace Caliburn.Micro
             var result = (TValue)wr.Target;
             if (result == null)
             {
-                inner.Remove(key);
+                _inner.Remove(key);
                 value = null;
                 return false;
             }
@@ -286,8 +255,7 @@ namespace Caliburn.Micro
         {
             get
             {
-                TValue result;
-                if (!TryGetValue(key, out result))
+                if (!TryGetValue(key, out TValue result))
                 {
                     throw new KeyNotFoundException();
                 }
@@ -297,61 +265,37 @@ namespace Caliburn.Micro
             set
             {
                 CleanIfNeeded();
-                inner[key] = new WeakReference(value);
+                _inner[key] = new WeakReference(value);
             }
         }
 
         /// <summary>
         /// Gets a collection containing the keys in the <see cref="WeakValueDictionary&lt;TKey, TValue&gt;"/>.
         /// </summary>
-        public ICollection<TKey> Keys
-        {
-            get { return inner.Keys; }
-        }
+        public ICollection<TKey> Keys => _inner.Keys;
 
         /// <summary>
         /// Gets a collection containing the values in the <see cref="WeakValueDictionary&lt;TKey, TValue&gt;"/>.
         /// </summary>
-        public ICollection<TValue> Values
-        {
-            get { return new ValueCollection(this); }
-        }
+        public ICollection<TValue> Values => new ValueCollection(this);
 
         #region Inner Types
 
         private sealed class ValueCollection : ICollection<TValue>
         {
-            private readonly WeakValueDictionary<TKey, TValue> inner;
+            private readonly WeakValueDictionary<TKey, TValue> _inner;
 
-            public ValueCollection(WeakValueDictionary<TKey, TValue> dictionary)
-            {
-                inner = dictionary;
-            }
+            public ValueCollection(WeakValueDictionary<TKey, TValue> dictionary) => _inner = dictionary;
 
-            public IEnumerator<TValue> GetEnumerator()
-            {
-                return inner.Select(pair => pair.Value).GetEnumerator();
-            }
+            public IEnumerator<TValue> GetEnumerator() => _inner.Select(pair => pair.Value).GetEnumerator();
 
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-            void ICollection<TValue>.Add(TValue item)
-            {
-                throw new NotSupportedException();
-            }
+            void ICollection<TValue>.Add(TValue item) => throw new NotSupportedException();
 
-            void ICollection<TValue>.Clear()
-            {
-                throw new NotSupportedException();
-            }
+            void ICollection<TValue>.Clear() => throw new NotSupportedException();
 
-            bool ICollection<TValue>.Contains(TValue item)
-            {
-                return inner.Any(pair => pair.Value == item);
-            }
+            bool ICollection<TValue>.Contains(TValue item) => _inner.Any(pair => pair.Value == item);
 
             public void CopyTo(TValue[] array, int arrayIndex)
             {
@@ -374,20 +318,11 @@ namespace Caliburn.Micro
                 this.ToArray().CopyTo(array, arrayIndex);
             }
 
-            bool ICollection<TValue>.Remove(TValue item)
-            {
-                throw new NotSupportedException();
-            }
+            bool ICollection<TValue>.Remove(TValue item) => throw new NotSupportedException();
 
-            public int Count
-            {
-                get { return inner.Count; }
-            }
+            public int Count => _inner.Count;
 
-            bool ICollection<TValue>.IsReadOnly
-            {
-                get { return true; }
-            }
+            bool ICollection<TValue>.IsReadOnly => true;
         }
 
         #endregion

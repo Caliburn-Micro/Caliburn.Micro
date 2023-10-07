@@ -10,7 +10,7 @@ namespace Caliburn.Micro
     /// <inheritdoc />
     public class EventAggregator : IEventAggregator
     {
-        private readonly List<Handler> _handlers = new List<Handler>();
+        private readonly List<Handler> _handlers = new();
 
         /// <inheritdoc />
         public virtual bool HandlerExistsFor(Type messageType)
@@ -55,7 +55,7 @@ namespace Caliburn.Micro
 
             lock (_handlers)
             {
-                var found = _handlers.FirstOrDefault(x => x.Matches(subscriber));
+                Handler found = _handlers.FirstOrDefault(x => x.Matches(subscriber));
 
                 if (found != null)
                 {
@@ -86,9 +86,9 @@ namespace Caliburn.Micro
 
             return marshal(async () =>
             {
-                var messageType = message.GetType();
+                Type messageType = message.GetType();
 
-                var tasks = toNotify.Select(h => h.Handle(messageType, message, cancellationToken));
+                IEnumerable<Task> tasks = toNotify.Select(h => h.Handle(messageType, message, cancellationToken));
 
                 await Task.WhenAll(tasks);
 
@@ -108,7 +108,7 @@ namespace Caliburn.Micro
         {
             private readonly Func<Func<Task>, Task> _marshal;
             private readonly WeakReference _reference;
-            private readonly Dictionary<Type, MethodInfo> _supportedHandlers = new Dictionary<Type, MethodInfo>();
+            private readonly Dictionary<Type, MethodInfo> _supportedHandlers = new();
 
             public Handler(object handler, Func<Func<Task>, Task> marshal)
             {
@@ -118,13 +118,13 @@ namespace Caliburn.Micro
                 //var interfaces = handler.GetType().GetTypeInfo().ImplementedInterfaces
                 //    .Where(x => typeof(IHandle).GetTypeInfo().IsAssignableFrom(x.GetTypeInfo()) && x.GetTypeInfo().IsGenericType);
 
-                var interfaces = handler.GetType().GetTypeInfo().ImplementedInterfaces
+                IEnumerable<Type> interfaces = handler.GetType().GetTypeInfo().ImplementedInterfaces
                     .Where(x => x.GetTypeInfo().IsGenericType && x.GetGenericTypeDefinition() == typeof(IHandle<>));
 
-                foreach (var @interface in interfaces)
+                foreach (Type @interface in interfaces)
                 {
-                    var type = @interface.GetTypeInfo().GenericTypeArguments[0];
-                    var method = @interface.GetRuntimeMethod("HandleAsync", new[] { type, typeof(CancellationToken) });
+                    Type type = @interface.GetTypeInfo().GenericTypeArguments[0];
+                    MethodInfo method = @interface.GetRuntimeMethod("HandleAsync", new[] { type, typeof(CancellationToken) });
 
                     if (method != null)
                     {
@@ -135,10 +135,7 @@ namespace Caliburn.Micro
 
             public bool IsDead => _reference.Target == null;
 
-            public bool Matches(object instance)
-            {
-                return _reference.Target == instance;
-            }
+            public bool Matches(object instance) => _reference.Target == instance;
 
             public Task Handle(Type messageType, object message, CancellationToken cancellationToken)
             {
@@ -161,10 +158,7 @@ namespace Caliburn.Micro
                 });
             }
 
-            public bool Handles(Type messageType)
-            {
-                return _supportedHandlers.Any(pair => pair.Key.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo()));
-            }
+            public bool Handles(Type messageType) => _supportedHandlers.Any(pair => pair.Key.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo()));
         }
     }
 }

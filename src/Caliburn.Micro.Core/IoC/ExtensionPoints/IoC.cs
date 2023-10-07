@@ -30,19 +30,13 @@ namespace Caliburn.Micro
         /// <typeparam name="T">The type to resolve.</typeparam>
         /// <param name="key">The key to look up.</param>
         /// <returns>The resolved instance.</returns>
-        public static T Get<T>(string key = null)
-        {
-            return (T)GetInstance(typeof(T), key);
-        }
+        public static T Get<T>(string key = null) => (T)GetInstance(typeof(T), key);
 
         /// <summary>
         /// Gets all instances of a particular type.
         /// </summary>
         /// <typeparam name="T">The type to resolve.</typeparam>
         /// <returns>The resolved instances.</returns>
-        public static IEnumerable<T> GetAll<T>()
-        {
-            return GetAllInstances(typeof(T)).Cast<T>();
-        }
+        public static IEnumerable<T> GetAll<T>() => GetAllInstances(typeof(T)).Cast<T>();
     }
 }

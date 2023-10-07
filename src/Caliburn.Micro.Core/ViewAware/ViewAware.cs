@@ -9,28 +9,22 @@ namespace Caliburn.Micro
     /// </summary>
     public class ViewAware : PropertyChangedBase, IViewAware
     {
-        private readonly IDictionary<object, object> views;
+        private readonly IDictionary<object, object> _views;
 
         /// <summary>
         /// The default view context.
         /// </summary>
-        public static readonly object DefaultContext = new object();
+        public static readonly object DefaultContext = new();
 
         /// <summary>
         /// The view chache for this instance.
         /// </summary>
-        protected IDictionary<object, object> Views
-        {
-            get { return views; }
-        }
+        protected IDictionary<object, object> Views => _views;
 
         /// <summary>
         /// Creates an instance of <see cref="ViewAware"/>.
         /// </summary>
-        public ViewAware()
-        {
-            views = new WeakValueDictionary<object, object>();
-        }
+        public ViewAware() => _views = new WeakValueDictionary<object, object>();
 
         /// <summary>
         /// Raised when a view is attached.
@@ -46,8 +40,7 @@ namespace Caliburn.Micro
             OnViewAttached(nonGeneratedView, context);
             ViewAttached(this, new ViewAttachedEventArgs { View = nonGeneratedView, Context = context });
 
-            var activatable = this as IActivate;
-            if (activatable == null || activatable.IsActive)
+            if (this is not IActivate activatable || activatable.IsActive)
             {
                 PlatformProvider.Current.ExecuteOnLayoutUpdated(nonGeneratedView, OnViewReady);
             }
@@ -60,10 +53,9 @@ namespace Caliburn.Micro
         private static void AttachViewReadyOnActivated(IActivate activatable, object nonGeneratedView)
         {
             var viewReference = new WeakReference(nonGeneratedView);
-            AsyncEventHandler<ActivationEventArgs> handler = null;
-            handler = (s, e) =>
+            Task OnActivated(object s, ActivationEventArgs e)
             {
-                ((IActivate)s).Activated -= handler;
+                ((IActivate)s).Activated -= OnActivated;
                 var view = viewReference.Target;
                 if (view != null)
                 {
@@ -71,8 +63,9 @@ namespace Caliburn.Micro
                 }
 
                 return Task.CompletedTask;
-            };
-            activatable.Activated += handler;
+            }
+
+            activatable.Activated += OnActivated;
         }
 
         /// <summary>
@@ -107,8 +100,7 @@ namespace Caliburn.Micro
         /// <returns>The view.</returns>
         public virtual object GetView(object context = null)
         {
-            object view;
-            Views.TryGetValue(context ?? DefaultContext, out view);
+            Views.TryGetValue(context ?? DefaultContext, out object view);
             return view;
         }
     }

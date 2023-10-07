@@ -18,33 +18,30 @@ namespace Caliburn.Micro
             /// </summary>
             public class OneActive : ConductorBaseWithActiveItem<T>
             {
-                private readonly BindableCollection<T> _items = new BindableCollection<T>();
+                private readonly BindableCollection<T> _items = new();
 
                 /// <summary>
                 /// Initializes a new instance of the <see cref="Conductor&lt;T&gt;.Collection.OneActive"/> class.
                 /// </summary>
-                public OneActive()
-                {
-                    _items.CollectionChanged += (s, e) =>
-                    {
-                        switch (e.Action)
-                        {
-                            case NotifyCollectionChangedAction.Add:
-                                e.NewItems.OfType<IChild>().Apply(x => x.Parent = this);
-                                break;
-                            case NotifyCollectionChangedAction.Remove:
-                                e.OldItems.OfType<IChild>().Apply(x => x.Parent = null);
-                                break;
-                            case NotifyCollectionChangedAction.Replace:
-                                e.NewItems.OfType<IChild>().Apply(x => x.Parent = this);
-                                e.OldItems.OfType<IChild>().Apply(x => x.Parent = null);
-                                break;
-                            case NotifyCollectionChangedAction.Reset:
-                                _items.OfType<IChild>().Apply(x => x.Parent = this);
-                                break;
-                        }
-                    };
-                }
+                public OneActive() => _items.CollectionChanged += (s, e) =>
+                                                       {
+                                                           switch (e.Action)
+                                                           {
+                                                               case NotifyCollectionChangedAction.Add:
+                                                                   e.NewItems.OfType<IChild>().Apply(x => x.Parent = this);
+                                                                   break;
+                                                               case NotifyCollectionChangedAction.Remove:
+                                                                   e.OldItems.OfType<IChild>().Apply(x => x.Parent = null);
+                                                                   break;
+                                                               case NotifyCollectionChangedAction.Replace:
+                                                                   e.NewItems.OfType<IChild>().Apply(x => x.Parent = this);
+                                                                   e.OldItems.OfType<IChild>().Apply(x => x.Parent = null);
+                                                                   break;
+                                                               case NotifyCollectionChangedAction.Reset:
+                                                                   _items.OfType<IChild>().Apply(x => x.Parent = this);
+                                                                   break;
+                                                           }
+                                                       };
 
                 /// <summary>
                 /// Gets the items that are currently being conducted.
@@ -95,7 +92,7 @@ namespace Caliburn.Micro
                         await ScreenExtensions.TryDeactivateAsync(item, false, cancellationToken);
                     else
                     {
-                        var closeResult = await CloseStrategy.ExecuteAsync(new[] { item }, CancellationToken.None);
+                        ICloseResult<T> closeResult = await CloseStrategy.ExecuteAsync(new[] { item }, CancellationToken.None);
 
                         if (closeResult.CloseCanOccur)
                             await CloseItemCoreAsync(item, cancellationToken);
@@ -107,7 +104,7 @@ namespace Caliburn.Micro
                     if (item.Equals(ActiveItem))
                     {
                         var index = _items.IndexOf(item);
-                        var next = DetermineNextItemToActivate(_items, index);
+                        T next = DetermineNextItemToActivate(_items, index);
 
                         await ChangeActiveItemAsync(next, true);
                     }
@@ -136,7 +133,7 @@ namespace Caliburn.Micro
                     if (toRemoveAt > -1 && toRemoveAt < list.Count - 1)
                         return list[toRemoveAt];
 
-                    return default(T);
+                    return default;
                 }
 
                 /// <summary>
@@ -146,24 +143,24 @@ namespace Caliburn.Micro
                 /// <returns>A task that represents the asynchronous operation.</returns>
                 public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken = default)
                 {
-                    var closeResult = await CloseStrategy.ExecuteAsync(_items.ToList(), cancellationToken);
+                    ICloseResult<T> closeResult = await CloseStrategy.ExecuteAsync(_items.ToList(), cancellationToken);
 
                     if (!closeResult.CloseCanOccur && closeResult.Children.Any())
                     {
-                        var closable = closeResult.Children;
+                        IEnumerable<T> closable = closeResult.Children;
 
                         if (closable.Contains(ActiveItem))
                         {
                             var list = _items.ToList();
-                            var next = ActiveItem;
+                            T next = ActiveItem;
                             do
                             {
-                                var previous = next;
+                                T previous = next;
                                 next = DetermineNextItemToActivate(list, list.IndexOf(previous));
                                 list.Remove(previous);
                             } while (closable.Contains(next));
 
-                            var previousActive = ActiveItem;
+                            T previousActive = ActiveItem;
                             await ChangeActiveItemAsync(next, true);
                             _items.Remove(previousActive);
 
@@ -172,7 +169,7 @@ namespace Caliburn.Micro
                             closable = stillToClose;
                         }
 
-                        foreach(var deactivate in closable.OfType<IDeactivate>())
+                        foreach(IDeactivate deactivate in closable.OfType<IDeactivate>())
                         {
                             await deactivate.DeactivateAsync(true, cancellationToken);
                         }
@@ -188,10 +185,7 @@ namespace Caliburn.Micro
                 /// </summary>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                protected override Task OnActivateAsync(CancellationToken cancellationToken)
-                {
-                    return ScreenExtensions.TryActivateAsync(ActiveItem, cancellationToken);
-                }
+                protected override Task OnActivateAsync(CancellationToken cancellationToken) => ScreenExtensions.TryActivateAsync(ActiveItem, cancellationToken);
 
                 /// <summary>
                 /// Called when deactivating.
@@ -203,7 +197,7 @@ namespace Caliburn.Micro
                 {
                     if (close)
                     {
-                        foreach (var deactivate in _items.OfType<IDeactivate>())
+                        foreach (IDeactivate deactivate in _items.OfType<IDeactivate>())
                         {
                             await deactivate.DeactivateAsync(true, cancellationToken);
                         }
