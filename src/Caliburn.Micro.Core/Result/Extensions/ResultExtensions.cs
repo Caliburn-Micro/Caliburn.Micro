@@ -53,7 +53,7 @@ namespace Caliburn.Micro
         /// <param name="result">The coroutine to execute.</param>
         /// <param name="context">The context to execute the coroutine within.</param>
         /// <returns>A task that represents the asynchronous coroutine.</returns>
-        public static Task ExecuteAsync(this IResult result, CoroutineExecutionContext context = null) 
+        public static Task ExecuteAsync(this IResult result, CoroutineExecutionContext context = null)
             => InternalExecuteAsync<object>(result, context);
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Caliburn.Micro
         /// <param name="result">The coroutine to execute.</param>
         /// <param name="context">The context to execute the coroutine within.</param>
         /// <returns>A task that represents the asynchronous coroutine.</returns>
-        public static Task<TResult> ExecuteAsync<TResult>(this IResult<TResult> result, CoroutineExecutionContext context = null) 
+        public static Task<TResult> ExecuteAsync<TResult>(this IResult<TResult> result, CoroutineExecutionContext context = null)
             => InternalExecuteAsync<TResult>(result, context);
 
 
@@ -72,7 +72,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="task">The task.</param>
         /// <returns>The coroutine that encapsulates the task.</returns>
-        public static TaskResult AsResult(this Task task) 
+        public static TaskResult AsResult(this Task task)
             => new(task);
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Caliburn.Micro
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="task">The task.</param>
         /// <returns>The coroutine that encapsulates the task.</returns>
-        public static TaskResult<TResult> AsResult<TResult>(this Task<TResult> task) 
+        public static TaskResult<TResult> AsResult<TResult>(this Task<TResult> task)
             => new(task);
 
         private static Task<TResult> InternalExecuteAsync<TResult>(IResult result, CoroutineExecutionContext context)
@@ -95,15 +95,18 @@ namespace Caliburn.Micro
                 if (e.Error != null)
                 {
                     taskSource.SetException(e.Error);
+
+                    return;
                 }
-                else if (e.WasCancelled)
+
+                if (e.WasCancelled)
                 {
                     taskSource.SetCanceled();
+
+                    return;
                 }
-                else
-                {
-                    taskSource.SetResult(result is IResult<TResult> rr ? rr.Result : default);
-                }
+
+                taskSource.SetResult(result is IResult<TResult> rr ? rr.Result : default);
             }
 
             try

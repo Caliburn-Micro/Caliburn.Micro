@@ -49,7 +49,6 @@ namespace Caliburn.Micro
                 f =>
                 {
                     var taskCompletionSource = new TaskCompletionSource<bool>();
-
                     Execute.BeginOnUIThread(async () =>
                     {
                         try
@@ -123,7 +122,6 @@ namespace Caliburn.Micro
                 f =>
                 {
                     var taskCompletionSource = new TaskCompletionSource<bool>();
-
                     Execute.BeginOnUIThread(async () =>
                     {
                         try

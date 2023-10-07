@@ -79,10 +79,12 @@ namespace Caliburn.Micro
         public void UnregisterHandler(Type service, string key)
         {
             ContainerEntry entry = GetEntry(service, key);
-            if (entry != null)
+            if (entry == null)
             {
-                _entries.Remove(entry);
+                return;
             }
+
+            _entries.Remove(entry);
         }
 
         /// <summary>
@@ -97,11 +99,12 @@ namespace Caliburn.Micro
             if (entry != null)
             {
                 var instance = entry.Single()(this);
-
-                if (EnablePropertyInjection && instance != null)
+                if (!EnablePropertyInjection || instance == null)
                 {
-                    BuildUp(instance);
+                    return instance;
                 }
+
+                BuildUp(instance);
 
                 return instance;
             }
@@ -110,37 +113,38 @@ namespace Caliburn.Micro
             {
                 return null;
             }
-            TypeInfo serviceTypeInfo = service.GetTypeInfo();
 
+            TypeInfo serviceTypeInfo = service.GetTypeInfo();
             if (DelegateTypeInfo.IsAssignableFrom(serviceTypeInfo))
             {
                 Type typeToCreate = serviceTypeInfo.GenericTypeArguments[0];
                 Type factoryFactoryType = typeof(FactoryFactory<>).MakeGenericType(typeToCreate);
                 var factoryFactoryHost = Activator.CreateInstance(factoryFactoryType);
                 MethodInfo factoryFactoryMethod = factoryFactoryType.GetRuntimeMethod("Create", new Type[] { _simpleContainerType });
+
                 return factoryFactoryMethod.Invoke(factoryFactoryHost, new object[] { this });
             }
 
-            if (EnumerableTypeInfo.IsAssignableFrom(serviceTypeInfo) && serviceTypeInfo.IsGenericType)
+            if (!EnumerableTypeInfo.IsAssignableFrom(serviceTypeInfo) || !serviceTypeInfo.IsGenericType)
             {
-                Type listType = serviceTypeInfo.GenericTypeArguments[0];
-                var instances = GetAllInstances(listType).ToList();
-                var array = Array.CreateInstance(listType, instances.Count);
-
-                for (var i = 0; i < array.Length; i++)
-                {
-                    if (EnablePropertyInjection)
-                    {
-                        BuildUp(instances[i]);
-                    }
-
-                    array.SetValue(instances[i], i);
-                }
-
-                return array;
+                return null;
             }
 
-            return null;
+            Type listType = serviceTypeInfo.GenericTypeArguments[0];
+            var instances = GetAllInstances(listType).ToList();
+            var array = Array.CreateInstance(listType, instances.Count);
+
+            for (var i = 0; i < array.Length; i++)
+            {
+                if (EnablePropertyInjection)
+                {
+                    BuildUp(instances[i]);
+                }
+
+                array.SetValue(instances[i], i);
+            }
+
+            return array;
         }
 
         /// <summary>
@@ -194,11 +198,12 @@ namespace Caliburn.Micro
             foreach (PropertyInfo property in properties)
             {
                 var value = GetInstance(property.PropertyType, null);
-
-                if (value != null)
+                if (value == null)
                 {
-                    property.SetValue(instance, value, null);
+                    continue;
                 }
+                
+                property.SetValue(instance, value, null);
             }
         }
 
@@ -212,11 +217,13 @@ namespace Caliburn.Micro
         private ContainerEntry GetOrCreateEntry(Type service, string key)
         {
             ContainerEntry entry = GetEntry(service, key);
-            if (entry == null)
+            if (entry != null)
             {
-                entry = new ContainerEntry { Service = service, Key = key };
-                _entries.Add(entry);
+                return entry;
             }
+            
+            entry = new ContainerEntry { Service = service, Key = key };
+            _entries.Add(entry);
 
             return entry;
         }
@@ -245,6 +252,7 @@ namespace Caliburn.Micro
         protected object BuildInstance(Type type)
         {
             var args = DetermineConstructorArgs(type);
+
             return ActivateInstance(type, args);
         }
 
@@ -258,6 +266,7 @@ namespace Caliburn.Micro
         {
             var instance = args.Length > 0 ? System.Activator.CreateInstance(type, args) : System.Activator.CreateInstance(type);
             Activated(instance);
+
             return instance;
         }
 
@@ -270,11 +279,12 @@ namespace Caliburn.Micro
         {
             var args = new List<object>();
             ConstructorInfo constructor = SelectEligibleConstructor(implementation);
-
-            if (constructor != null)
+            if (constructor == null)
             {
-                args.AddRange(constructor.GetParameters().Select(info => GetInstance(info.ParameterType, null)));
+                return args.ToArray();
             }
+            
+            args.AddRange(constructor.GetParameters().Select(info => GetInstance(info.ParameterType, null)));
 
             return args.ToArray();
         }
@@ -299,7 +309,7 @@ namespace Caliburn.Micro
 
         private class FactoryFactory<T>
         {
-            public Func<T> Create(SimpleContainer container) 
+            public Func<T> Create(SimpleContainer container)
                 => () => (T)container.GetInstance(typeof(T), null);
         }
     }

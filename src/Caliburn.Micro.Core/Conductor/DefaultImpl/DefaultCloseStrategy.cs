@@ -16,7 +16,7 @@ namespace Caliburn.Micro
         /// Creates an instance of the class.
         /// </summary>
         /// <param name="closeConductedItemsWhenConductorCannotClose">Indicates that even if all conducted items are not closable, those that are should be closed. The default is FALSE.</param>
-        public DefaultCloseStrategy(bool closeConductedItemsWhenConductorCannotClose = false) 
+        public DefaultCloseStrategy(bool closeConductedItemsWhenConductorCannotClose = false)
             => _closeConductedItemsWhenConductorCannotClose = closeConductedItemsWhenConductorCannotClose;
 
         /// <inheritdoc />
@@ -24,24 +24,22 @@ namespace Caliburn.Micro
         {
             var closeable = new List<T>();
             var closeCanOccur = true;
-
-            foreach(T child in toClose)
+            foreach (T child in toClose)
             {
-                if (child is IGuardClose guard)
+                if (child is not IGuardClose guard)
                 {
-                    var canClose = await guard.CanCloseAsync(cancellationToken);
-
-                    if (canClose)
-                    {
-                        closeable.Add(child);
-                    }
-
-                    closeCanOccur = closeCanOccur && canClose;
+                    closeable.Add(child);
+                    continue;
                 }
-                else
+
+
+                var canClose = await guard.CanCloseAsync(cancellationToken);
+                if (canClose)
                 {
                     closeable.Add(child);
                 }
+
+                closeCanOccur = closeCanOccur && canClose;
             }
 
             if (!_closeConductedItemsWhenConductorCannotClose && !closeCanOccur)

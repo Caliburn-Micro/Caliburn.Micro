@@ -15,13 +15,15 @@ namespace Caliburn.Micro
         ///   Initializes a new instance of the <see cref = "SequentialResult" /> class.
         /// </summary>
         /// <param name = "enumerator">The enumerator.</param>
-        public SequentialResult(IEnumerator<IResult> enumerator) 
+        public SequentialResult(IEnumerator<IResult> enumerator)
             => _enumerator = enumerator;
 
         /// <summary>
         ///   Occurs when execution has completed.
         /// </summary>
-        public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
+        public event EventHandler<ResultCompletionEventArgs> Completed
+            = delegate
+            { };
 
         /// <summary>
         ///   Executes the result using the specified context.
@@ -43,6 +45,7 @@ namespace Caliburn.Micro
             if (args.Error != null || args.WasCancelled)
             {
                 OnComplete(args.Error, args.WasCancelled);
+
                 return;
             }
 
@@ -57,31 +60,38 @@ namespace Caliburn.Micro
                 return;
             }
 
-            if (moveNextSucceeded)
-            {
-                try
-                {
-                    IResult next = _enumerator.Current;
-                    IoC.BuildUp(next);
-                    next.Completed += ChildCompleted;
-                    next.Execute(_context);
-                }
-                catch (Exception ex)
-                {
-                    OnComplete(ex, false);
-                    return;
-                }
-            }
-            else
+            if (!moveNextSucceeded)
             {
                 OnComplete(null, false);
+
+                return;
+            }
+
+            try
+            {
+                IResult next = _enumerator.Current;
+                IoC.BuildUp(next);
+                next.Completed += ChildCompleted;
+                next.Execute(_context);
+            }
+            catch (Exception ex)
+            {
+                OnComplete(ex, false);
+
+                return;
             }
         }
 
         private void OnComplete(Exception error, bool wasCancelled)
         {
             _enumerator.Dispose();
-            Completed(this, new ResultCompletionEventArgs { Error = error, WasCancelled = wasCancelled });
+            Completed(
+                this,
+                new ResultCompletionEventArgs
+                {
+                    Error = error,
+                    WasCancelled = wasCancelled,
+                });
         }
     }
 }

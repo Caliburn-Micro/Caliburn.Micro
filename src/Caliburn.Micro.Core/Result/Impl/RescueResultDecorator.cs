@@ -35,13 +35,13 @@ namespace Caliburn.Micro
             if (args.Error is not TException error)
             {
                 OnCompleted(args);
+
+                return;
             }
-            else
-            {
-                Log.Error(error);
-                Log.Info(string.Format("Executing coroutine because {0} threw an exception.", innerResult.GetType().Name));
-                Rescue(context, error);
-            }
+
+            Log.Error(error);
+            Log.Info(string.Format("Executing coroutine because {0} threw an exception.", innerResult.GetType().Name));
+            Rescue(context, error);
         }
 
         private void Rescue(CoroutineExecutionContext context, TException exception)
@@ -75,7 +75,8 @@ namespace Caliburn.Micro
             OnCompleted(new ResultCompletionEventArgs
             {
                 Error = args.Error,
-                WasCancelled = (args.Error == null && (args.WasCancelled || _cancelResult))
+                WasCancelled = args.Error == null && 
+                               (args.WasCancelled || _cancelResult)
             });
         }
     }

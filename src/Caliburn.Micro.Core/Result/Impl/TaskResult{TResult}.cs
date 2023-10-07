@@ -29,10 +29,14 @@ namespace Caliburn.Micro
         /// <param name="task">The completed task.</param>
         protected override void OnCompleted(Task task)
         {
-            if (!task.IsFaulted && !task.IsCanceled)
+            if (task.IsFaulted || task.IsCanceled)
             {
-                Result = ((Task<TResult>)task).Result;
+                base.OnCompleted(task);
+
+                return;
             }
+
+            Result = ((Task<TResult>)task).Result;
 
             base.OnCompleted(task);
         }

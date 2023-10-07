@@ -16,7 +16,7 @@ namespace Caliburn.Micro
         /// <param name="result">The result to decorate.</param>
         /// <param name="coroutine">The coroutine to execute when <paramref name="result"/> was canceled.</param>
         public ContinueResultDecorator(IResult result, Func<IResult> coroutine)
-            : base(result) 
+            : base(result)
             => _coroutine = coroutine ?? throw new ArgumentNullException("coroutine");
 
         /// <summary>
@@ -30,12 +30,12 @@ namespace Caliburn.Micro
             if (args.Error != null || !args.WasCancelled)
             {
                 OnCompleted(new ResultCompletionEventArgs { Error = args.Error });
+
+                return;
             }
-            else
-            {
-                Log.Info(string.Format("Executing coroutine because {0} was cancelled.", innerResult.GetType().Name));
-                Continue(context);
-            }
+
+            Log.Info(string.Format("Executing coroutine because {0} was cancelled.", innerResult.GetType().Name));
+            Continue(context);
         }
 
         private void Continue(CoroutineExecutionContext context)
@@ -66,7 +66,11 @@ namespace Caliburn.Micro
         private void ContinueCompleted(object sender, ResultCompletionEventArgs args)
         {
             ((IResult)sender).Completed -= ContinueCompleted;
-            OnCompleted(new ResultCompletionEventArgs { Error = args.Error, WasCancelled = (args.Error == null) });
+            OnCompleted(new ResultCompletionEventArgs
+            {
+                Error = args.Error,
+                WasCancelled = args.Error == null,
+            });
         }
     }
 }

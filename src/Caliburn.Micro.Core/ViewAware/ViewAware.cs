@@ -14,26 +14,27 @@ namespace Caliburn.Micro
         /// <summary>
         /// The default view context.
         /// </summary>
-        public static readonly object DefaultContext 
+        public static readonly object DefaultContext
             = new();
 
         /// <summary>
         /// The view chache for this instance.
         /// </summary>
-        protected IDictionary<object, object> Views 
+        protected IDictionary<object, object> Views
             => _views;
 
         /// <summary>
         /// Creates an instance of <see cref="ViewAware"/>.
         /// </summary>
-        public ViewAware() 
+        public ViewAware()
             => _views = new WeakValueDictionary<object, object>();
 
         /// <summary>
         /// Raised when a view is attached.
         /// </summary>
-        public event EventHandler<ViewAttachedEventArgs> ViewAttached 
-            = delegate { };
+        public event EventHandler<ViewAttachedEventArgs> ViewAttached
+            = delegate
+            { };
 
         void IViewAware.AttachView(object view, object context)
         {
@@ -44,14 +45,14 @@ namespace Caliburn.Micro
             OnViewAttached(nonGeneratedView, context);
             ViewAttached(this, new ViewAttachedEventArgs { View = nonGeneratedView, Context = context });
 
-            if (this is not IActivate activatable || activatable.IsActive)
-            {
-                PlatformProvider.Current.ExecuteOnLayoutUpdated(nonGeneratedView, OnViewReady);
-            }
-            else
+            if (this is IActivate activatable && !activatable.IsActive)
             {
                 AttachViewReadyOnActivated(activatable, nonGeneratedView);
+
+                return;
             }
+
+            PlatformProvider.Current.ExecuteOnLayoutUpdated(nonGeneratedView, OnViewReady);
         }
 
         private static void AttachViewReadyOnActivated(IActivate activatable, object nonGeneratedView)
@@ -61,10 +62,12 @@ namespace Caliburn.Micro
             {
                 ((IActivate)s).Activated -= OnActivated;
                 var view = viewReference.Target;
-                if (view != null)
+                if (view == null)
                 {
-                    PlatformProvider.Current.ExecuteOnLayoutUpdated(view, ((ViewAware)s).OnViewReady);
+                    return Task.CompletedTask;
                 }
+                
+                PlatformProvider.Current.ExecuteOnLayoutUpdated(view, ((ViewAware)s).OnViewReady);
 
                 return Task.CompletedTask;
             }

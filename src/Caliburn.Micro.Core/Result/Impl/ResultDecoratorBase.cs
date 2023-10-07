@@ -55,7 +55,8 @@ namespace Caliburn.Micro
         /// <summary>
         /// Occurs when execution has completed.
         /// </summary>
-        public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
+        public event EventHandler<ResultCompletionEventArgs> Completed
+            = delegate { };
 
         /// <summary>
         /// Raises the <see cref="Completed" /> event.

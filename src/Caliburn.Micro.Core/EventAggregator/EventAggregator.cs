@@ -56,7 +56,6 @@ namespace Caliburn.Micro
             lock (_handlers)
             {
                 Handler found = _handlers.FirstOrDefault(x => x.Matches(subscriber));
-
                 if (found != null)
                 {
                     _handlers.Remove(found);
@@ -118,18 +117,22 @@ namespace Caliburn.Micro
                 //var interfaces = handler.GetType().GetTypeInfo().ImplementedInterfaces
                 //    .Where(x => typeof(IHandle).GetTypeInfo().IsAssignableFrom(x.GetTypeInfo()) && x.GetTypeInfo().IsGenericType);
 
-                IEnumerable<Type> interfaces = handler.GetType().GetTypeInfo().ImplementedInterfaces
-                    .Where(x => x.GetTypeInfo().IsGenericType && x.GetGenericTypeDefinition() == typeof(IHandle<>));
-
+                IEnumerable<Type> interfaces 
+                    = handler
+                        .GetType()
+                        .GetTypeInfo().ImplementedInterfaces
+                        .Where(x => x.GetTypeInfo().IsGenericType && 
+                                    x.GetGenericTypeDefinition() == typeof(IHandle<>));
                 foreach (Type @interface in interfaces)
                 {
                     Type type = @interface.GetTypeInfo().GenericTypeArguments[0];
                     MethodInfo method = @interface.GetRuntimeMethod("HandleAsync", new[] { type, typeof(CancellationToken) });
-
-                    if (method != null)
+                    if (method == null)
                     {
-                        _supportedHandlers[type] = method;
+                        continue;
                     }
+                    
+                    _supportedHandlers[type] = method;
                 }
             }
 

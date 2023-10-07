@@ -18,14 +18,14 @@ namespace Caliburn.Micro
 
         private bool IsCleanupNeeded()
         {
-            if (_gcSentinel.Target == null)
+            if (_gcSentinel.Target != null)
             {
-                _gcSentinel.Target = new object();
-
-                return true;
+                return false;
             }
 
-            return false;
+            _gcSentinel.Target = new object();
+
+            return true;
         }
 
         private void CleanAbandonedItems()
@@ -39,10 +39,12 @@ namespace Caliburn.Micro
 
         private void CleanIfNeeded()
         {
-            if (IsCleanupNeeded())
+            if (!IsCleanupNeeded())
             {
-                CleanAbandonedItems();
+                return;
             }
+            
+            CleanAbandonedItems();
         }
 
         /// <summary>
@@ -229,7 +231,6 @@ namespace Caliburn.Micro
         public bool TryGetValue(TKey key, out TValue value)
         {
             CleanIfNeeded();
-
             if (!_inner.TryGetValue(key, out WeakReference wr))
             {
                 value = null;
@@ -238,17 +239,17 @@ namespace Caliburn.Micro
             }
 
             var result = (TValue)wr.Target;
-            if (result == null)
+            if (result != null)
             {
-                _inner.Remove(key);
-                value = null;
+                value = result;
 
-                return false;
+                return true;
             }
 
-            value = result;
+            _inner.Remove(key);
+            value = null;
 
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -261,15 +262,9 @@ namespace Caliburn.Micro
         /// </returns>
         public TValue this[TKey key]
         {
-            get
-            {
-                if (!TryGetValue(key, out TValue result))
-                {
-                    throw new KeyNotFoundException();
-                }
-
-                return result;
-            }
+            get => TryGetValue(key, out TValue result) 
+                    ? result 
+                    : throw new KeyNotFoundException();
             set
             {
                 CleanIfNeeded();

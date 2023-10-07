@@ -9,7 +9,7 @@ namespace Caliburn.Micro
     /// </summary>
     public static class Coroutine
     {
-        private static readonly ILog Log 
+        private static readonly ILog Log
             = LogManager.GetLog(typeof(Coroutine));
 
         /// <summary>
@@ -63,22 +63,25 @@ namespace Caliburn.Micro
                     if (e.Error != null)
                     {
                         taskSource.SetException(e.Error);
+
+                        return;
                     }
-                    else if (e.WasCancelled)
+
+                    if (e.WasCancelled)
                     {
                         taskSource.SetCanceled();
+
+                        return;
                     }
-                    else
-                    {
-                        taskSource.SetResult(null);
-                    }
+
+                    taskSource.SetResult(null);
                 });
 
             return taskSource.Task;
         }
 
         private static void ExecuteOnCompleted(
-            IResult result, 
+            IResult result,
             EventHandler<ResultCompletionEventArgs> handler)
         {
             void OnCompledted(object s, ResultCompletionEventArgs e)
@@ -99,15 +102,18 @@ namespace Caliburn.Micro
                 if (e.Error != null)
                 {
                     Log.Error(e.Error);
+
+                    return;
                 }
-                else if (e.WasCancelled)
+
+                if (e.WasCancelled)
                 {
                     Log.Info("Coroutine execution cancelled.");
+
+                    return;
                 }
-                else
-                {
-                    Log.Info("Coroutine execution completed.");
-                }
+
+                Log.Info("Coroutine execution completed.");
             };
     }
 }

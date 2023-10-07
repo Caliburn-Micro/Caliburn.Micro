@@ -16,16 +16,10 @@ namespace Caliburn.Micro
         public static MemberInfo GetMemberInfo(this Expression expression)
         {
             var lambda = (LambdaExpression)expression;
-
-            MemberExpression memberExpression;
-            if (lambda.Body is UnaryExpression unaryExpression)
-            {
-                memberExpression = (MemberExpression)unaryExpression.Operand;
-            }
-            else
-            {
-                memberExpression = (MemberExpression)lambda.Body;
-            }
+            MemberExpression memberExpression 
+                = lambda.Body is UnaryExpression unaryExpression 
+                    ? (MemberExpression)unaryExpression.Operand 
+                    : (MemberExpression)lambda.Body;
 
             return memberExpression.Member;
         }

@@ -59,13 +59,13 @@ namespace Caliburn.Micro
                 /// <summary>
                 /// Gets the items that are currently being conducted.
                 /// </summary>
-                public IObservableCollection<T> Items 
+                public IObservableCollection<T> Items
                     => _items;
 
                 /// <summary>
                 /// Called when activating.
                 /// </summary>
-                protected override Task OnActivateAsync(CancellationToken cancellationToken) 
+                protected override Task OnActivateAsync(CancellationToken cancellationToken)
                     => Task.WhenAll(_items.OfType<IActivate>().Select(x => x.ActivateAsync(cancellationToken)));
 
                 /// <summary>
@@ -94,15 +94,17 @@ namespace Caliburn.Micro
                 {
                     ICloseResult<T> closeResult = await CloseStrategy.ExecuteAsync(_items.ToList(), cancellationToken);
 
-                    if (!closeResult.CloseCanOccur && closeResult.Children.Any())
+                    if (closeResult.CloseCanOccur || !closeResult.Children.Any())
                     {
-                        foreach (IDeactivate deactivate in closeResult.Children.OfType<IDeactivate>())
-                        {
-                            await deactivate.DeactivateAsync(true, cancellationToken);
-                        }
-
-                        _items.RemoveRange(closeResult.Children);
+                        return closeResult.CloseCanOccur;
                     }
+
+                    foreach (IDeactivate deactivate in closeResult.Children.OfType<IDeactivate>())
+                    {
+                        await deactivate.DeactivateAsync(true, cancellationToken);
+                    }
+
+                    _items.RemoveRange(closeResult.Children);
 
                     return closeResult.CloseCanOccur;
                 }
@@ -151,22 +153,27 @@ namespace Caliburn.Micro
                     if (item == null)
                         return;
 
-                    if (close)
+                    if (!close)
                     {
-                        ICloseResult<T> closeResult = await CloseStrategy.ExecuteAsync(new[] { item }, CancellationToken.None);
-
-                        if (closeResult.CloseCanOccur)
-                            await CloseItemCoreAsync(item, cancellationToken);
-                    }
-                    else
                         await ScreenExtensions.TryDeactivateAsync(item, false, cancellationToken);
+
+                        return;
+                    }
+
+                    ICloseResult<T> closeResult = await CloseStrategy.ExecuteAsync(new[] { item }, CancellationToken.None);
+                    if (!closeResult.CloseCanOccur)
+                    {
+                        return;
+                    }
+                    
+                    await CloseItemCoreAsync(item, cancellationToken);
                 }
 
                 /// <summary>
                 /// Gets the children.
                 /// </summary>
                 /// <returns>The collection of children.</returns>
-                public override IEnumerable<T> GetChildren() 
+                public override IEnumerable<T> GetChildren()
                     => _items;
 
                 private async Task CloseItemCoreAsync(T item, CancellationToken cancellationToken = default)

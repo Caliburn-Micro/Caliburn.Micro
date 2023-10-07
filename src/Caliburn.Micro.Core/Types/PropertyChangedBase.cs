@@ -15,7 +15,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Creates an instance of <see cref = "PropertyChangedBase" />.
         /// </summary>
-        public PropertyChangedBase() 
+        public PropertyChangedBase()
             => IsNotifying = true;
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Raises a change notification indicating that all bindings should be refreshed.
         /// </summary>
-        public virtual void Refresh() 
+        public virtual void Refresh()
             => NotifyOfPropertyChange(string.Empty);
 
         /// <summary>
@@ -41,17 +41,19 @@ namespace Caliburn.Micro
         /// <param name = "propertyName">Name of the property.</param>
         public virtual void NotifyOfPropertyChange([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
         {
-            if (IsNotifying && PropertyChanged != null)
+            if (!IsNotifying || PropertyChanged == null)
             {
-                if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
-                {
-                    OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
-                }
-                else
-                {
-                    OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-                }
+                return;
             }
+
+            if (!PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+            {
+                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+
+                return;
+            }
+
+            OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
         }
 
         /// <summary>
@@ -59,7 +61,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <typeparam name = "TProperty">The type of the property.</typeparam>
         /// <param name = "property">The property expression.</param>
-        public void NotifyOfPropertyChange<TProperty>(Expression<Func<TProperty>> property) 
+        public void NotifyOfPropertyChange<TProperty>(Expression<Func<TProperty>> property)
             => NotifyOfPropertyChange(property.GetMemberInfo().Name);
 
         /// <summary>
@@ -67,7 +69,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="e">The <see cref="PropertyChangedEventArgs"/> instance containing the event data.</param>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        protected void OnPropertyChanged(PropertyChangedEventArgs e) 
+        protected void OnPropertyChanged(PropertyChangedEventArgs e)
             => PropertyChanged?.Invoke(this, e);
 
         /// <summary>
@@ -75,7 +77,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <remarks>An extension point for subclasses to customise how property change notifications are handled.</remarks>
         /// <param name="action"></param>
-        protected virtual void OnUIThread(System.Action action) 
+        protected virtual void OnUIThread(System.Action action)
             => action.OnUIThread();
 
         /// <summary>

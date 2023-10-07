@@ -19,7 +19,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Creates an instance of the screen.
         /// </summary>
-        public Screen() 
+        public Screen()
             => _displayName = GetType().FullName;
 
         /// <summary>
@@ -79,17 +79,27 @@ namespace Caliburn.Micro
         /// <summary>
         /// Raised after activation occurs.
         /// </summary>
-        public virtual event AsyncEventHandler<ActivationEventArgs> Activated = delegate { return Task.FromResult(true); };
+        public virtual event AsyncEventHandler<ActivationEventArgs> Activated
+            = delegate
+            {
+                return Task.FromResult(true);
+            };
 
         /// <summary>
         /// Raised before deactivation.
         /// </summary>
-        public virtual event EventHandler<DeactivationEventArgs> AttemptingDeactivation = delegate { };
+        public virtual event EventHandler<DeactivationEventArgs> AttemptingDeactivation
+            = delegate
+            { };
 
         /// <summary>
         /// Raised after deactivation.
         /// </summary>
-        public virtual event AsyncEventHandler<DeactivationEventArgs> Deactivated = delegate { return Task.FromResult(true); };
+        public virtual event AsyncEventHandler<DeactivationEventArgs> Deactivated
+            = delegate
+            {
+                return Task.FromResult(true);
+            };
 
         async Task IActivate.ActivateAsync(CancellationToken cancellationToken)
         {
@@ -117,28 +127,32 @@ namespace Caliburn.Micro
 
         async Task IDeactivate.DeactivateAsync(bool close, CancellationToken cancellationToken)
         {
-            if (IsActive || IsInitialized && close)
+            if (!IsActive && (!IsInitialized || !close))
             {
-                AttemptingDeactivation?.Invoke(this, new DeactivationEventArgs
-                {
-                    WasClosed = close
-                });
-
-                Log.Info("Deactivating {0}.", this);
-                await OnDeactivateAsync(close, cancellationToken);
-                IsActive = false;
-
-                await (Deactivated?.InvokeAllAsync(this, new DeactivationEventArgs
-                {
-                    WasClosed = close
-                }) ?? Task.FromResult(true));
-
-                if (close)
-                {
-                    Views.Clear();
-                    Log.Info("Closed {0}.", this);
-                }
+                return;
             }
+
+            AttemptingDeactivation?.Invoke(this, new DeactivationEventArgs
+            {
+                WasClosed = close
+            });
+
+            Log.Info("Deactivating {0}.", this);
+            await OnDeactivateAsync(close, cancellationToken);
+            IsActive = false;
+
+            await (Deactivated?.InvokeAllAsync(this, new DeactivationEventArgs
+            {
+                WasClosed = close
+            }) ?? Task.FromResult(true));
+
+            if (!close)
+            {
+                return;
+            }
+            
+            Views.Clear();
+            Log.Info("Closed {0}.", this);
         }
 
         /// <summary>
@@ -146,7 +160,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation and holds the value of the close check..</returns>
-        public virtual Task<bool> CanCloseAsync(CancellationToken cancellationToken = default) 
+        public virtual Task<bool> CanCloseAsync(CancellationToken cancellationToken = default)
             => Task.FromResult(true);
 
         /// <summary>
@@ -169,20 +183,20 @@ namespace Caliburn.Micro
         /// <summary>
         /// Called when initializing.
         /// </summary>
-        protected virtual Task OnInitializeAsync(CancellationToken cancellationToken) 
+        protected virtual Task OnInitializeAsync(CancellationToken cancellationToken)
             => Task.FromResult(true);
 
         /// <summary>
         /// Called when activating.
         /// </summary>
-        protected virtual Task OnActivateAsync(CancellationToken cancellationToken) 
+        protected virtual Task OnActivateAsync(CancellationToken cancellationToken)
             => Task.FromResult(true);
 
 
         /// <summary>
         /// Called when view has been activated.
         /// </summary>
-        protected virtual Task OnActivatedAsync(CancellationToken cancellationToken) 
+        protected virtual Task OnActivatedAsync(CancellationToken cancellationToken)
             => Task.FromResult(true);
 
         /// <summary>
@@ -191,7 +205,7 @@ namespace Caliburn.Micro
         /// <param name = "close">Indicates whether this instance will be closed.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        protected virtual Task OnDeactivateAsync(bool close, CancellationToken cancellationToken) 
+        protected virtual Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
             => Task.FromResult(true);
     }
 }

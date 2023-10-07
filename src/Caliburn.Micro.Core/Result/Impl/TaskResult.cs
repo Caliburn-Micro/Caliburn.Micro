@@ -26,14 +26,14 @@ namespace Caliburn.Micro
             if (_innerTask.IsCompleted)
             {
                 OnCompleted(_innerTask);
+
+                return;
             }
-            else
-            {
-                _innerTask.ContinueWith(OnCompleted,
-                    System.Threading.SynchronizationContext.Current != null
-                        ? TaskScheduler.FromCurrentSynchronizationContext()
-                        : TaskScheduler.Current);
-            }
+
+            _innerTask.ContinueWith(OnCompleted,
+                System.Threading.SynchronizationContext.Current != null
+                    ? TaskScheduler.FromCurrentSynchronizationContext()
+                    : TaskScheduler.Current);
         }
 
         /// <summary>
@@ -52,6 +52,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Occurs when execution has completed.
         /// </summary>
-        public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
+        public event EventHandler<ResultCompletionEventArgs> Completed
+            = delegate { };
     }
 }

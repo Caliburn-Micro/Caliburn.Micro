@@ -48,14 +48,14 @@ namespace Caliburn.Micro
                 /// <summary>
                 /// Gets the items that are currently being conducted.
                 /// </summary>
-                public IObservableCollection<T> Items 
+                public IObservableCollection<T> Items
                     => _items;
 
                 /// <summary>
                 /// Gets the children.
                 /// </summary>
                 /// <returns>The collection of children.</returns>
-                public override IEnumerable<T> GetChildren() 
+                public override IEnumerable<T> GetChildren()
                     => _items;
 
                 /// <summary>
@@ -66,18 +66,20 @@ namespace Caliburn.Micro
                 /// <returns>A task that represents the asynchronous operation.</returns>
                 public override async Task ActivateItemAsync(T item, CancellationToken cancellationToken = default)
                 {
-                    if (item != null && item.Equals(ActiveItem))
+                    if (item == null || !item.Equals(ActiveItem))
                     {
-                        if (IsActive)
-                        {
-                            await ScreenExtensions.TryActivateAsync(item, cancellationToken);
-                            OnActivationProcessed(item, true);
-                        }
+                        await ChangeActiveItemAsync(item, false, cancellationToken);
 
                         return;
                     }
 
-                    await ChangeActiveItemAsync(item, false, cancellationToken);
+                    if (!IsActive)
+                    {
+                        return;
+                    }
+                    
+                    await ScreenExtensions.TryActivateAsync(item, cancellationToken);
+                    OnActivationProcessed(item, true);
                 }
 
                 /// <summary>
@@ -90,16 +92,22 @@ namespace Caliburn.Micro
                 public override async Task DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken = default)
                 {
                     if (item == null)
+                    {
                         return;
+                    }
 
                     if (!close)
-                        await ScreenExtensions.TryDeactivateAsync(item, false, cancellationToken);
-                    else
                     {
-                        ICloseResult<T> closeResult = await CloseStrategy.ExecuteAsync(new[] { item }, CancellationToken.None);
+                        await ScreenExtensions.TryDeactivateAsync(item, false, cancellationToken);
 
-                        if (closeResult.CloseCanOccur)
-                            await CloseItemCoreAsync(item, cancellationToken);
+                        return;
+                    }
+
+                    ICloseResult<T> closeResult = await CloseStrategy.ExecuteAsync(new[] { item }, CancellationToken.None);
+
+                    if (closeResult.CloseCanOccur)
+                    {
+                        await CloseItemCoreAsync(item, cancellationToken);
                     }
                 }
 
@@ -148,38 +156,39 @@ namespace Caliburn.Micro
                 public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken = default)
                 {
                     ICloseResult<T> closeResult = await CloseStrategy.ExecuteAsync(_items.ToList(), cancellationToken);
-
-                    if (!closeResult.CloseCanOccur && closeResult.Children.Any())
+                    if (closeResult.CloseCanOccur || !closeResult.Children.Any())
                     {
-                        IEnumerable<T> closable = closeResult.Children;
-
-                        if (closable.Contains(ActiveItem))
-                        {
-                            var list = _items.ToList();
-                            T next = ActiveItem;
-                            do
-                            {
-                                T previous = next;
-                                next = DetermineNextItemToActivate(list, list.IndexOf(previous));
-                                list.Remove(previous);
-                            } while (closable.Contains(next));
-
-                            T previousActive = ActiveItem;
-                            await ChangeActiveItemAsync(next, true);
-                            _items.Remove(previousActive);
-
-                            var stillToClose = closable.ToList();
-                            stillToClose.Remove(previousActive);
-                            closable = stillToClose;
-                        }
-
-                        foreach (IDeactivate deactivate in closable.OfType<IDeactivate>())
-                        {
-                            await deactivate.DeactivateAsync(true, cancellationToken);
-                        }
-
-                        _items.RemoveRange(closable);
+                        return closeResult.CloseCanOccur;
                     }
+
+                    IEnumerable<T> closable = closeResult.Children;
+
+                    if (closable.Contains(ActiveItem))
+                    {
+                        var list = _items.ToList();
+                        T next = ActiveItem;
+                        do
+                        {
+                            T previous = next;
+                            next = DetermineNextItemToActivate(list, list.IndexOf(previous));
+                            list.Remove(previous);
+                        } while (closable.Contains(next));
+
+                        T previousActive = ActiveItem;
+                        await ChangeActiveItemAsync(next, true);
+                        _items.Remove(previousActive);
+
+                        var stillToClose = closable.ToList();
+                        stillToClose.Remove(previousActive);
+                        closable = stillToClose;
+                    }
+
+                    foreach (IDeactivate deactivate in closable.OfType<IDeactivate>())
+                    {
+                        await deactivate.DeactivateAsync(true, cancellationToken);
+                    }
+
+                    _items.RemoveRange(closable);
 
                     return closeResult.CloseCanOccur;
                 }
@@ -189,7 +198,7 @@ namespace Caliburn.Micro
                 /// </summary>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                protected override Task OnActivateAsync(CancellationToken cancellationToken) 
+                protected override Task OnActivateAsync(CancellationToken cancellationToken)
                     => ScreenExtensions.TryActivateAsync(ActiveItem, cancellationToken);
 
                 /// <summary>
@@ -200,19 +209,19 @@ namespace Caliburn.Micro
                 /// <returns>A task that represents the asynchronous operation.</returns>
                 protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
                 {
-                    if (close)
-                    {
-                        foreach (IDeactivate deactivate in _items.OfType<IDeactivate>())
-                        {
-                            await deactivate.DeactivateAsync(true, cancellationToken);
-                        }
-
-                        _items.Clear();
-                    }
-                    else
+                    if (!close)
                     {
                         await ScreenExtensions.TryDeactivateAsync(ActiveItem, false, cancellationToken);
+
+                        return;
                     }
+
+                    foreach (IDeactivate deactivate in _items.OfType<IDeactivate>())
+                    {
+                        await deactivate.DeactivateAsync(true, cancellationToken);
+                    }
+
+                    _items.Clear();
                 }
 
                 /// <summary>
@@ -225,16 +234,15 @@ namespace Caliburn.Micro
                     if (newItem == null)
                     {
                         newItem = DetermineNextItemToActivate(_items, ActiveItem != null ? _items.IndexOf(ActiveItem) : 0);
-                    }
-                    else
-                    {
-                        var index = _items.IndexOf(newItem);
 
-                        if (index == -1)
-                            _items.Add(newItem);
-                        else
-                            newItem = _items[index];
+                        return base.EnsureItem(newItem);
                     }
+
+                    var index = _items.IndexOf(newItem);
+                    if (index == -1)
+                        _items.Add(newItem);
+                    else
+                        newItem = _items[index];
 
                     return base.EnsureItem(newItem);
                 }

@@ -32,6 +32,7 @@ namespace Caliburn.Micro
             where TImplementation : TService
         {
             container.RegisterSingleton(typeof(TService), key, typeof(TImplementation));
+
             return container;
         }
 
@@ -57,6 +58,7 @@ namespace Caliburn.Micro
             where TImplementation : TService
         {
             container.RegisterPerRequest(typeof(TService), key, typeof(TImplementation));
+
             return container;
         }
 
@@ -70,6 +72,7 @@ namespace Caliburn.Micro
         public static SimpleContainer Instance<TService>(this SimpleContainer container, TService instance)
         {
             container.RegisterInstance(typeof(TService), null, instance);
+
             return container;
         }
 
@@ -84,6 +87,7 @@ namespace Caliburn.Micro
                                                         Func<SimpleContainer, object> handler)
         {
             container.RegisterHandler(typeof(TService), null, handler);
+
             return container;
         }
 
@@ -95,19 +99,20 @@ namespace Caliburn.Micro
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The type filter.</param>
         /// <returns>The container.</returns>
-        public static SimpleContainer AllTypesOf<TService>(this SimpleContainer container, Assembly assembly,
-                                                           Func<Type, bool> filter = null)
+        public static SimpleContainer AllTypesOf<TService>(
+            this SimpleContainer container,
+            Assembly assembly,
+            Func<Type, bool> filter = null)
         {
             filter ??= type => true;
-
             Type serviceType = typeof(TService);
-            IEnumerable<TypeInfo> types = from type in assembly.DefinedTypes
-                                          where serviceType.GetTypeInfo().IsAssignableFrom(type)
-                                                && !type.IsAbstract
-                                                && !type.IsInterface
-                                                && filter(type.AsType())
-                                          select type;
-
+            IEnumerable<TypeInfo> types
+                = from type in assembly.DefinedTypes
+                  where serviceType.GetTypeInfo().IsAssignableFrom(type)
+                        && !type.IsAbstract
+                        && !type.IsInterface
+                        && filter(type.AsType())
+                  select type;
             foreach (TypeInfo type in types)
             {
                 container.RegisterSingleton(typeof(TService), null, type.AsType());
@@ -124,7 +129,8 @@ namespace Caliburn.Micro
         /// <param name="key">The key.</param>
         /// <returns>The instance.</returns>
         public static TService GetInstance<TService>(this SimpleContainer container, string key = null)
-            => (TService)container.GetInstance(typeof(TService), key);
+            => (TService)container
+                .GetInstance(typeof(TService), key);
 
         /// <summary>
         /// Gets all instances of a particular type and the given key (default null).
@@ -134,7 +140,9 @@ namespace Caliburn.Micro
         /// <param name = "key">The key shared by those instances</param>
         /// <returns>The resolved instances.</returns>
         public static IEnumerable<TService> GetAllInstances<TService>(this SimpleContainer container, string key = null)
-            => container.GetAllInstances(typeof(TService), key).Cast<TService>();
+            => container
+                .GetAllInstances(typeof(TService), key)
+                .Cast<TService>();
 
         /// <summary>
         /// Determines if a handler for the service/key has previously been registered.

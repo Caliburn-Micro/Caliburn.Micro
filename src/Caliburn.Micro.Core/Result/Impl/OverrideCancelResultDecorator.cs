@@ -30,7 +30,10 @@
                 Log.Info(string.Format("Overriding WasCancelled from {0}.", innerResult.GetType().Name));
             }
 
-            OnCompleted(new ResultCompletionEventArgs { Error = args.Error });
+            OnCompleted(new ResultCompletionEventArgs
+            {
+                Error = args.Error,
+            });
         }
     }
 }
