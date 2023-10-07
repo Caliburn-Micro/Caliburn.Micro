@@ -12,6 +12,7 @@ public static class EventAggregatorExtensions {
     /// Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />.
     /// </summary>
     /// <remarks>The subscription is invoked on the thread chosen by the publisher.</remarks>
+    /// <param name="eventAggregator">The EventAggregator.</param>
     /// <param name = "subscriber">The instance to subscribe for event publication.</param>
     public static void SubscribeOnPublishedThread(this IEventAggregator eventAggregator, object subscriber)
         => eventAggregator.Subscribe(subscriber, f => f());
@@ -20,6 +21,7 @@ public static class EventAggregatorExtensions {
     /// Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />.
     /// </summary>
     /// <remarks>The subscription is invoked on the thread chosen by the publisher.</remarks>
+    /// <param name="eventAggregator">The event aggregator.</param>
     /// <param name = "subscriber">The instance to subscribe for event publication.</param>
     [Obsolete("Use SubscribeOnPublishedThread")]
     public static void Subscribe(this IEventAggregator eventAggregator, object subscriber)
@@ -29,6 +31,7 @@ public static class EventAggregatorExtensions {
     /// Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />.
     /// </summary>
     /// <remarks>The subscription is invoked on a new background thread.</remarks>
+    /// <param name="eventAggregator">The event aggregator.</param>
     /// <param name = "subscriber">The instance to subscribe for event publication.</param>
     public static void SubscribeOnBackgroundThread(this IEventAggregator eventAggregator, object subscriber)
         => eventAggregator.Subscribe(subscriber, f => Task.Factory.StartNew(f, default, TaskCreationOptions.None, TaskScheduler.Default));
@@ -37,6 +40,7 @@ public static class EventAggregatorExtensions {
     /// Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />.
     /// </summary>
     /// <remarks>The subscription is invoked on the UI thread.</remarks>
+    /// <param name="eventAggregator">The event aggregator.</param>
     /// <param name = "subscriber">The instance to subscribe for event publication.</param>
     public static void SubscribeOnUIThread(this IEventAggregator eventAggregator, object subscriber)
         => eventAggregator.Subscribe(

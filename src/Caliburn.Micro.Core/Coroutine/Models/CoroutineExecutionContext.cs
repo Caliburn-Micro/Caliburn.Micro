@@ -5,17 +5,17 @@
 /// </summary>
 public class CoroutineExecutionContext {
     /// <summary>
-    /// The source from which the message originates.
+    /// Gets or sets the source from which the message originates.
     /// </summary>
     public object Source { get; set; }
 
     /// <summary>
-    /// The view associated with the target.
+    /// Gets or sets the view associated with the target.
     /// </summary>
     public object View { get; set; }
 
     /// <summary>
-    /// The instance on which the action is invoked.
+    /// Gets or sets the instance on which the action is invoked.
     /// </summary>
     public object Target { get; set; }
 }

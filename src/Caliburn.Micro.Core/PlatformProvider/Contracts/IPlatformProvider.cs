@@ -10,12 +10,12 @@ namespace Caliburn.Micro;
 /// </summary>
 public interface IPlatformProvider {
     /// <summary>
-    ///   Indicates whether or not the framework is in design-time mode.
+    ///   Gets a value indicating whether or not the framework is in design-time mode.
     /// </summary>
     bool InDesignMode { get; }
 
     /// <summary>
-    /// Whether or not classes should execute property change notications on the UI thread.
+    /// Gets a value indicating whether or not classes should execute property change notications on the UI thread.
     /// </summary>
     bool PropertyChangeNotificationsOnUIThread { get; }
 

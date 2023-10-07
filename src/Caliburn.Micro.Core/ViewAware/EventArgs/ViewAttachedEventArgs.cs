@@ -7,12 +7,12 @@ namespace Caliburn.Micro;
 /// </summary>
 public class ViewAttachedEventArgs : EventArgs {
     /// <summary>
-    /// The view.
+    /// Gets or sets the view.
     /// </summary>
     public object View { get; set; }
 
     /// <summary>
-    /// The context.
+    /// Gets or sets the context.
     /// </summary>
     public object Context { get; set; }
 }

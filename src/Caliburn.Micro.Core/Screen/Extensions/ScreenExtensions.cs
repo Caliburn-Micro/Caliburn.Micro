@@ -83,11 +83,11 @@ public static class ScreenExtensions {
         where T : class
         => conductor.DeactivateItemAsync(item, true, cancellationToken);
 
-    ///<summary>
+    /// <summary>
     /// Activates a child whenever the specified parent is activated.
-    ///</summary>
-    ///<param name="child">The child to activate.</param>
-    ///<param name="parent">The parent whose activation triggers the child's activation.</param>
+    /// </summary>
+    /// <param name="child">The child to activate.</param>
+    /// <param name="parent">The parent whose activation triggers the child's activation.</param>
     public static void ActivateWith(this IActivate child, IActivate parent) {
         var childReference = new WeakReference(child);
 
@@ -103,11 +103,11 @@ public static class ScreenExtensions {
         parent.Activated += OnParentActivated;
     }
 
-    ///<summary>
+    /// <summary>
     /// Deactivates a child whenever the specified parent is deactivated.
-    ///</summary>
-    ///<param name="child">The child to deactivate.</param>
-    ///<param name="parent">The parent whose deactivation triggers the child's deactivation.</param>
+    /// </summary>
+    /// <param name="child">The child to deactivate.</param>
+    /// <param name="parent">The parent whose deactivation triggers the child's deactivation.</param>
     public static void DeactivateWith(this IDeactivate child, IDeactivate parent) {
         var childReference = new WeakReference(child);
 
@@ -123,11 +123,11 @@ public static class ScreenExtensions {
         parent.Deactivated += OnParentDeactivated;
     }
 
-    ///<summary>
+    /// <summary>
     /// Activates and Deactivates a child whenever the specified parent is Activated or Deactivated.
-    ///</summary>
-    ///<param name="child">The child to activate/deactivate.</param>
-    ///<param name="parent">The parent whose activation/deactivation triggers the child's activation/deactivation.</param>
+    /// </summary>
+    /// <param name="child">The child to activate/deactivate.</param>
+    /// <param name="parent">The parent whose activation/deactivation triggers the child's activation/deactivation.</param>
     public static void ConductWith<TChild, TParent>(this TChild child, TParent parent)
         where TChild : IActivate, IDeactivate
         where TParent : IActivate, IDeactivate {

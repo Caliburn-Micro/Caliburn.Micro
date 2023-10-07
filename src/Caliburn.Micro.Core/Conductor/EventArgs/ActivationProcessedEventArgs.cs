@@ -7,7 +7,7 @@ namespace Caliburn.Micro;
 /// </summary>
 public class ActivationProcessedEventArgs : EventArgs {
     /// <summary>
-    /// The item whose activation was processed.
+    /// Gets or sets the item whose activation was processed.
     /// </summary>
     public object Item { get; set; }
 

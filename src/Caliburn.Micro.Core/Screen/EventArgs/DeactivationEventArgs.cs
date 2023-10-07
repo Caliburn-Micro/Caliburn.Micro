@@ -7,7 +7,7 @@ namespace Caliburn.Micro;
 /// </summary>
 public class DeactivationEventArgs : EventArgs {
     /// <summary>
-    /// Indicates whether the sender was closed in addition to being deactivated.
+    /// Gets or sets a value indicating whether the sender was closed in addition to being deactivated.
     /// </summary>
     public bool WasClosed { get; set; }
 }

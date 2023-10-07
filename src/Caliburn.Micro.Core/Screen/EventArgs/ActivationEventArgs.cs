@@ -7,7 +7,7 @@ namespace Caliburn.Micro;
 /// </summary>
 public class ActivationEventArgs : EventArgs {
     /// <summary>
-    /// Indicates whether the sender was initialized in addition to being activated.
+    /// Gets or sets a value indicating whether the sender was initialized in addition to being activated.
     /// </summary>
     public bool WasInitialized { get; set; }
 }

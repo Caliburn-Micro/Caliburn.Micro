@@ -7,7 +7,7 @@ namespace Caliburn.Micro;
 /// </summary>
 public interface INotifyPropertyChangedEx : INotifyPropertyChanged {
     /// <summary>
-    /// Enables/Disables property change notification.
+    /// Gets or sets a value indicating whether to enable/Disable property change notification.
     /// </summary>
     bool IsNotifying { get; set; }
 

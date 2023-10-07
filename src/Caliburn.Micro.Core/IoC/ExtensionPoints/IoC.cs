@@ -9,21 +9,21 @@ namespace Caliburn.Micro;
 /// </summary>
 public static class IoC {
     /// <summary>
-    /// Gets an instance by type and key.
+    /// Gets or sets func to get an instance by type and key.
     /// </summary>
     public static Func<Type, string, object> GetInstance { get; set; }
         = (service, key)
             => throw new InvalidOperationException("IoC is not initialized.");
 
     /// <summary>
-    /// Gets all instances of a particular type.
+    /// Gets or sets func to get all instances of a particular type.
     /// </summary>
     public static Func<Type, IEnumerable<object>> GetAllInstances { get; set; }
         = service
             => throw new InvalidOperationException("IoC is not initialized.");
 
     /// <summary>
-    /// Passes an existing instance to the IoC container to enable dependencies to be injected.
+    /// Gets or sets action to be passes an existing instance to the IoC container to enable dependencies to be injected.
     /// </summary>
     public static Action<object> BuildUp { get; set; }
         = instance

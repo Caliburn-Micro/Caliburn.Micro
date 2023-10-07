@@ -8,7 +8,7 @@ namespace Caliburn.Micro;
 /// </summary>
 public static class Execute {
     /// <summary>
-    ///   Indicates whether or not the framework is in design-time mode.
+    ///   Gets a value indicating whether or not the framework is in design-time mode.
     /// </summary>
     public static bool InDesignMode
         => PlatformProvider.Current.InDesignMode;

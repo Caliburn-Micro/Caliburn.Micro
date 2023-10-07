@@ -70,6 +70,7 @@ public class ViewAware : PropertyChangedBase, IViewAware {
     /// <summary>
     /// Called when an attached view's Loaded event fires.
     /// </summary>
+    /// <param name="view">The loaded view.</param>
     protected virtual void OnViewLoaded(object view) {
     }
 

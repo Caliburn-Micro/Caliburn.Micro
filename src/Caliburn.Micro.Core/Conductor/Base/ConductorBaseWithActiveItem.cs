@@ -12,7 +12,7 @@ public abstract class ConductorBaseWithActiveItem<T> : ConductorBase<T>, IConduc
     private T _activeItem;
 
     /// <summary>
-    /// The currently active item.
+    /// Gets or sets the currently active item.
     /// </summary>
     public T ActiveItem {
         get => _activeItem;
@@ -20,9 +20,11 @@ public abstract class ConductorBaseWithActiveItem<T> : ConductorBase<T>, IConduc
     }
 
     /// <summary>
-    /// The currently active item.
+    /// Gets or sets the currently active item.
     /// </summary>
-    /// <value></value>
+    /// <value>
+    /// The currently active item.
+    /// </value>
     object IHaveActiveItem.ActiveItem {
         get => ActiveItem;
         set => ActiveItem = (T)value;

@@ -7,12 +7,12 @@ namespace Caliburn.Micro;
 /// </summary>
 public interface ICloseResult<T> {
     /// <summary>
-    /// Indicates which children shbould close if the parent cannot.
+    /// Gets list of children that should close if the parent cannot.
     /// </summary>
     IEnumerable<T> Children { get; }
 
     /// <summary>
-    /// Indicates whether a close can occur.
+    /// Gets a value indicating whether a close can occur.
     /// </summary>
     bool CloseCanOccur { get; }
 }

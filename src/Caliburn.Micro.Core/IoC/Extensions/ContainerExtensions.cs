@@ -15,7 +15,7 @@ public static class ContainerExtensions {
     /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
     /// <param name="container">The container.</param>
     /// <param name="key">The key.</param>
-    /// <returns>The container.</returns>
+    /// <returns>The <paramref name="container"/>.</returns>
     public static SimpleContainer Singleton<TImplementation>(this SimpleContainer container, string key = null)
         => Singleton<TImplementation, TImplementation>(container, key);
 
@@ -26,7 +26,7 @@ public static class ContainerExtensions {
     /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
     /// <param name="container">The container.</param>
     /// <param name="key">The key.</param>
-    /// <returns>The container.</returns>
+    /// <returns>The <paramref name="container"/>.</returns>
     public static SimpleContainer Singleton<TService, TImplementation>(this SimpleContainer container, string key = null)
         where TImplementation : TService {
         container.RegisterSingleton(typeof(TService), key, typeof(TImplementation));
@@ -40,7 +40,7 @@ public static class ContainerExtensions {
     /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
     /// <param name="container">The container.</param>
     /// <param name="key">The key.</param>
-    /// <returns>The container.</returns>
+    /// <returns>The <paramref name="container"/>.</returns>
     public static SimpleContainer PerRequest<TImplementation>(this SimpleContainer container, string key = null)
         => PerRequest<TImplementation, TImplementation>(container, key);
 
@@ -51,7 +51,7 @@ public static class ContainerExtensions {
     /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
     /// <param name="container">The container.</param>
     /// <param name="key">The key.</param>
-    /// <returns>The container.</returns>
+    /// <returns>The <paramref name="container"/>.</returns>
     public static SimpleContainer PerRequest<TService, TImplementation>(this SimpleContainer container, string key = null)
         where TImplementation : TService {
         container.RegisterPerRequest(typeof(TService), key, typeof(TImplementation));
@@ -65,7 +65,7 @@ public static class ContainerExtensions {
     /// <typeparam name="TService">The type of the service.</typeparam>
     /// <param name="container">The container.</param>
     /// <param name="instance">The instance.</param>
-    /// <returns>The container.</returns>
+    /// <returns>The <paramref name="container"/>.</returns>
     public static SimpleContainer Instance<TService>(this SimpleContainer container, TService instance) {
         container.RegisterInstance(typeof(TService), null, instance);
 
@@ -78,7 +78,7 @@ public static class ContainerExtensions {
     /// <typeparam name="TService">The type of the service.</typeparam>
     /// <param name="container">The container.</param>
     /// <param name="handler">The handler.</param>
-    /// <returns>The container.</returns>
+    /// <returns>The <paramref name="container"/>.</returns>
     public static SimpleContainer Handler<TService>(
         this SimpleContainer container,
         Func<SimpleContainer, object> handler) {
@@ -94,7 +94,7 @@ public static class ContainerExtensions {
     /// <param name="container">The container.</param>
     /// <param name="assembly">The assembly.</param>
     /// <param name="filter">The type filter.</param>
-    /// <returns>The container.</returns>
+    /// <returns>The <paramref name="container"/>.</returns>
     public static SimpleContainer AllTypesOf<TService>(
         this SimpleContainer container,
         Assembly assembly,
