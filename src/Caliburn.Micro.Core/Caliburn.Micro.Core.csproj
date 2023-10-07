@@ -41,6 +41,7 @@
   <PropertyGroup>
     <SetupCodeAnalysis>true</SetupCodeAnalysis>
     <SuppressCodeAnalysisWarnings>true</SuppressCodeAnalysisWarnings>
+    <AddStyleCop>true</AddStyleCop>
   </PropertyGroup>
   
   <PropertyGroup Condition=" '$(SuppressCodeAnalysisWarnings)' == 'true' ">
@@ -83,4 +84,10 @@
     <PackageReference Update="Nerdbank.GitVersioning" Version="3.3.37" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(AddStyleCop)' == 'true' ">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507" PrivateAssets="all" />
+    <None Remove="stylecop.json" />
+    <AdditionalFiles Include="..\stylecop.json" />
+  </ItemGroup>
+  
 </Project>

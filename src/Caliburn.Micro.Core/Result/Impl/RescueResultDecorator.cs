@@ -1,84 +1,72 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Caliburn.Micro
-{
+namespace Caliburn.Micro;
+
+/// <summary>
+/// A result decorator which rescues errors from the decorated result by executing a rescue coroutine.
+/// </summary>
+/// <typeparam name="TException">The type of the exception we want to perform the rescue on.</typeparam>
+public class RescueResultDecorator<TException> : ResultDecoratorBase
+    where TException : Exception {
+    private static readonly ILog Log = LogManager.GetLog(typeof(RescueResultDecorator<>));
+    private readonly bool _cancelResult;
+    private readonly Func<TException, IResult> _coroutine;
+
     /// <summary>
-    /// A result decorator which rescues errors from the decorated result by executing a rescue coroutine.
+    /// Initializes a new instance of the <see cref="RescueResultDecorator&lt;TException&gt;"/> class.
     /// </summary>
-    /// <typeparam name="TException">The type of the exception we want to perform the rescue on</typeparam>
-    public class RescueResultDecorator<TException> : ResultDecoratorBase where TException : Exception
-    {
-        private static readonly ILog Log = LogManager.GetLog(typeof(RescueResultDecorator<>));
-        private readonly bool _cancelResult;
-        private readonly Func<TException, IResult> _coroutine;
+    /// <param name="result">The result to decorate.</param>
+    /// <param name="coroutine">The rescue coroutine.</param>
+    /// <param name="cancelResult">Set to true to cancel the result after executing rescue.</param>
+    public RescueResultDecorator(IResult result, Func<TException, IResult> coroutine, bool cancelResult = true)
+        : base(result) {
+        _coroutine = coroutine ?? throw new ArgumentNullException(nameof(coroutine));
+        _cancelResult = cancelResult;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RescueResultDecorator&lt;TException&gt;"/> class.
-        /// </summary>
-        /// <param name="result">The result to decorate.</param>
-        /// <param name="coroutine">The rescue coroutine.</param>
-        /// <param name="cancelResult">Set to true to cancel the result after executing rescue.</param>
-        public RescueResultDecorator(IResult result, Func<TException, IResult> coroutine, bool cancelResult = true) : base(result)
-        {
-            _coroutine = coroutine ?? throw new ArgumentNullException(nameof(coroutine));
-            _cancelResult = cancelResult;
+    /// <summary>
+    /// Called when the execution of the decorated result has completed.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="innerResult">The decorated result.</param>
+    /// <param name="args">The <see cref="ResultCompletionEventArgs" /> instance containing the event data.</param>
+    protected override void OnInnerResultCompleted(CoroutineExecutionContext context, IResult innerResult, ResultCompletionEventArgs args) {
+        if (args.Error is not TException error) {
+            OnCompleted(args);
+
+            return;
         }
 
-        /// <summary>
-        /// Called when the execution of the decorated result has completed.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="innerResult">The decorated result.</param>
-        /// <param name="args">The <see cref="ResultCompletionEventArgs" /> instance containing the event data.</param>
-        protected override void OnInnerResultCompleted(CoroutineExecutionContext context, IResult innerResult, ResultCompletionEventArgs args)
-        {
-            if (args.Error is not TException error)
-            {
-                OnCompleted(args);
+        Log.Error(error);
+        Log.Info(string.Format(CultureInfo.InvariantCulture, "Executing coroutine because {0} threw an exception.", innerResult.GetType().Name));
+        Rescue(context, error);
+    }
 
-                return;
-            }
-
-            Log.Error(error);
-            Log.Info(string.Format(CultureInfo.InvariantCulture, "Executing coroutine because {0} threw an exception.", innerResult.GetType().Name));
-            Rescue(context, error);
+    private void Rescue(CoroutineExecutionContext context, TException exception) {
+        IResult rescueResult;
+        try {
+            rescueResult = _coroutine(exception);
+        } catch (Exception ex) {
+            OnCompleted(new ResultCompletionEventArgs { Error = ex });
+            return;
         }
 
-        private void Rescue(CoroutineExecutionContext context, TException exception)
-        {
-            IResult rescueResult;
-            try
-            {
-                rescueResult = _coroutine(exception);
-            }
-            catch (Exception ex)
-            {
-                OnCompleted(new ResultCompletionEventArgs { Error = ex });
-                return;
-            }
-
-            try
-            {
-                rescueResult.Completed += RescueCompleted;
-                IoC.BuildUp(rescueResult);
-                rescueResult.Execute(context);
-            }
-            catch (Exception ex)
-            {
-                RescueCompleted(rescueResult, new ResultCompletionEventArgs { Error = ex });
-            }
+        try {
+            rescueResult.Completed += RescueCompleted;
+            IoC.BuildUp(rescueResult);
+            rescueResult.Execute(context);
+        } catch (Exception ex) {
+            RescueCompleted(rescueResult, new ResultCompletionEventArgs { Error = ex });
         }
+    }
 
-        private void RescueCompleted(object sender, ResultCompletionEventArgs args)
-        {
-            ((IResult)sender).Completed -= RescueCompleted;
-            OnCompleted(new ResultCompletionEventArgs
-            {
-                Error = args.Error,
-                WasCancelled = args.Error == null && 
-                               (args.WasCancelled || _cancelResult)
-            });
-        }
+    private void RescueCompleted(object sender, ResultCompletionEventArgs args) {
+        ((IResult)sender).Completed -= RescueCompleted;
+        OnCompleted(new ResultCompletionEventArgs {
+            Error = args.Error,
+            WasCancelled = args.Error == null &&
+                           (args.WasCancelled || _cancelResult),
+        });
     }
 }

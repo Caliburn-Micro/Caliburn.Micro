@@ -1,13 +1,11 @@
-namespace Caliburn.Micro
-{
+namespace Caliburn.Micro;
+
+/// <summary>
+/// Denotes a node within a parent/child hierarchy.
+/// </summary>
+public interface IChild {
     /// <summary>
-    /// Denotes a node within a parent/child hierarchy.
+    /// Gets or Sets the Parent.
     /// </summary>
-    public interface IChild
-    {
-        /// <summary>
-        /// Gets or Sets the Parent
-        /// </summary>
-        object Parent { get; set; }
-    }
+    object Parent { get; set; }
 }

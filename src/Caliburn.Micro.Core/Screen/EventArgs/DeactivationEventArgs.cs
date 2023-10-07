@@ -1,15 +1,13 @@
 ﻿using System;
 
-namespace Caliburn.Micro
-{
+namespace Caliburn.Micro;
+
+/// <summary>
+/// EventArgs sent during deactivation.
+/// </summary>
+public class DeactivationEventArgs : EventArgs {
     /// <summary>
-    /// EventArgs sent during deactivation.
+    /// Indicates whether the sender was closed in addition to being deactivated.
     /// </summary>
-    public class DeactivationEventArgs : EventArgs
-    {
-        /// <summary>
-        /// Indicates whether the sender was closed in addition to being deactivated.
-        /// </summary>
-        public bool WasClosed { get; set; }
-    }
+    public bool WasClosed { get; set; }
 }
