@@ -14,7 +14,8 @@ namespace Caliburn.Micro
         /// Initializes a new instance of the <see cref="TaskResult"/> class.
         /// </summary>
         /// <param name="task">The task.</param>
-        public TaskResult(Task task) => _innerTask = task;
+        public TaskResult(Task task)
+            => _innerTask = task;
 
         /// <summary>
         /// Executes the result using the specified context.
@@ -39,7 +40,14 @@ namespace Caliburn.Micro
         /// Called when the asynchronous task has completed.
         /// </summary>
         /// <param name="task">The completed task.</param>
-        protected virtual void OnCompleted(Task task) => Completed(this, new ResultCompletionEventArgs { WasCancelled = task.IsCanceled, Error = task.Exception });
+        protected virtual void OnCompleted(Task task)
+            => Completed(
+                this,
+                new ResultCompletionEventArgs
+                {
+                    WasCancelled = task.IsCanceled,
+                    Error = task.Exception,
+                });
 
         /// <summary>
         /// Occurs when execution has completed.

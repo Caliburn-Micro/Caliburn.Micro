@@ -133,9 +133,11 @@ namespace Caliburn.Micro
                 }
             }
 
-            public bool IsDead => _reference.Target == null;
+            public bool IsDead 
+                => _reference.Target == null;
 
-            public bool Matches(object instance) => _reference.Target == instance;
+            public bool Matches(object instance) 
+                => _reference.Target == instance;
 
             public Task Handle(Type messageType, object message, CancellationToken cancellationToken)
             {
@@ -158,7 +160,8 @@ namespace Caliburn.Micro
                 });
             }
 
-            public bool Handles(Type messageType) => _supportedHandlers.Any(pair => pair.Key.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo()));
+            public bool Handles(Type messageType) 
+                => _supportedHandlers.Any(pair => pair.Key.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo()));
         }
     }
 }

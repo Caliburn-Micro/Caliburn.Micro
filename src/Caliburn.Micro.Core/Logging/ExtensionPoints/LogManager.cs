@@ -12,7 +12,8 @@ namespace Caliburn.Micro
         /// <summary>
         /// Creates an <see cref="ILog"/> for the provided type.
         /// </summary>
-        public static Func<Type, ILog> GetLog = type => NullLogInstance;
+        public static Func<Type, ILog> GetLog 
+            = type => NullLogInstance;
 
         private class NullLog : ILog
         {

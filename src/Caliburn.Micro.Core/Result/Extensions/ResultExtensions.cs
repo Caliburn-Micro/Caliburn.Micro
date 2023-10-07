@@ -14,14 +14,16 @@ namespace Caliburn.Micro
         /// <param name="result">The result to decorate.</param>
         /// <param name="coroutine">The coroutine to execute when <paramref name="result"/> was canceled.</param>
         /// <returns></returns>
-        public static IResult WhenCancelled(this IResult result, Func<IResult> coroutine) => new ContinueResultDecorator(result, coroutine);
+        public static IResult WhenCancelled(this IResult result, Func<IResult> coroutine)
+            => new ContinueResultDecorator(result, coroutine);
 
         /// <summary>
         /// Overrides <see cref="ResultCompletionEventArgs.WasCancelled"/> of the decorated <paramref name="result"/> instance.
         /// </summary>
         /// <param name="result">The result to decorate.</param>
         /// <returns></returns>
-        public static IResult OverrideCancel(this IResult result) => new OverrideCancelResultDecorator(result);
+        public static IResult OverrideCancel(this IResult result)
+            => new OverrideCancelResultDecorator(result);
 
         /// <summary>
         /// Rescues <typeparamref name="TException"/> from the decorated <paramref name="result"/> by executing a <paramref name="rescue"/> coroutine.
@@ -31,9 +33,9 @@ namespace Caliburn.Micro
         /// <param name="rescue">The rescue coroutine.</param>
         /// <param name="cancelResult">Set to true to cancel the result after executing rescue.</param>
         /// <returns></returns>
-        public static IResult Rescue<TException>(this IResult result, Func<TException, IResult> rescue,
-            bool cancelResult = true)
-            where TException : Exception => new RescueResultDecorator<TException>(result, rescue, cancelResult);
+        public static IResult Rescue<TException>(this IResult result, Func<TException, IResult> rescue, bool cancelResult = true)
+            where TException : Exception
+            => new RescueResultDecorator<TException>(result, rescue, cancelResult);
 
         /// <summary>
         /// Rescues any exception from the decorated <paramref name="result"/> by executing a <paramref name="rescue"/> coroutine.
@@ -42,8 +44,8 @@ namespace Caliburn.Micro
         /// <param name="rescue">The rescue coroutine.</param>
         /// <param name="cancelResult">Set to true to cancel the result after executing rescue.</param>
         /// <returns></returns>
-        public static IResult Rescue(this IResult result, Func<Exception, IResult> rescue,
-            bool cancelResult = true) => Rescue<Exception>(result, rescue, cancelResult);
+        public static IResult Rescue(this IResult result, Func<Exception, IResult> rescue, bool cancelResult = true)
+            => Rescue<Exception>(result, rescue, cancelResult);
 
         /// <summary>
         /// Executes an <see cref="Caliburn.Micro.IResult"/> asynchronous.
@@ -51,7 +53,8 @@ namespace Caliburn.Micro
         /// <param name="result">The coroutine to execute.</param>
         /// <param name="context">The context to execute the coroutine within.</param>
         /// <returns>A task that represents the asynchronous coroutine.</returns>
-        public static Task ExecuteAsync(this IResult result, CoroutineExecutionContext context = null) => InternalExecuteAsync<object>(result, context);
+        public static Task ExecuteAsync(this IResult result, CoroutineExecutionContext context = null) 
+            => InternalExecuteAsync<object>(result, context);
 
         /// <summary>
         /// Executes an <see cref="Caliburn.Micro.IResult&lt;TResult&gt;"/> asynchronous.
@@ -60,8 +63,8 @@ namespace Caliburn.Micro
         /// <param name="result">The coroutine to execute.</param>
         /// <param name="context">The context to execute the coroutine within.</param>
         /// <returns>A task that represents the asynchronous coroutine.</returns>
-        public static Task<TResult> ExecuteAsync<TResult>(this IResult<TResult> result,
-                                                          CoroutineExecutionContext context = null) => InternalExecuteAsync<TResult>(result, context);
+        public static Task<TResult> ExecuteAsync<TResult>(this IResult<TResult> result, CoroutineExecutionContext context = null) 
+            => InternalExecuteAsync<TResult>(result, context);
 
 
         /// <summary>
@@ -69,7 +72,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="task">The task.</param>
         /// <returns>The coroutine that encapsulates the task.</returns>
-        public static TaskResult AsResult(this Task task) => new(task);
+        public static TaskResult AsResult(this Task task) 
+            => new(task);
 
         /// <summary>
         /// Encapsulates a task inside a couroutine.
@@ -77,7 +81,8 @@ namespace Caliburn.Micro
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="task">The task.</param>
         /// <returns>The coroutine that encapsulates the task.</returns>
-        public static TaskResult<TResult> AsResult<TResult>(this Task<TResult> task) => new(task);
+        public static TaskResult<TResult> AsResult<TResult>(this Task<TResult> task) 
+            => new(task);
 
         private static Task<TResult> InternalExecuteAsync<TResult>(IResult result, CoroutineExecutionContext context)
         {

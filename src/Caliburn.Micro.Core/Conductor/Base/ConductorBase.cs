@@ -24,9 +24,11 @@ namespace Caliburn.Micro
             set => _closeStrategy = value;
         }
 
-        Task IConductor.DeactivateItemAsync(object item, bool close, CancellationToken cancellationToken) => DeactivateItemAsync((T)item, close, cancellationToken);
+        Task IConductor.DeactivateItemAsync(object item, bool close, CancellationToken cancellationToken) 
+            => DeactivateItemAsync((T)item, close, cancellationToken);
 
-        IEnumerable IParent.GetChildren() => GetChildren();
+        IEnumerable IParent.GetChildren() 
+            => GetChildren();
 
         /// <summary>
         /// Occurs when an activation request is processed.
@@ -39,7 +41,8 @@ namespace Caliburn.Micro
         /// <returns>The collection of children.</returns>
         public abstract IEnumerable<T> GetChildren();
 
-        Task IConductor.ActivateItemAsync(object item, CancellationToken cancellationToken) => ActivateItemAsync((T)item, cancellationToken);
+        Task IConductor.ActivateItemAsync(object item, CancellationToken cancellationToken) 
+            => ActivateItemAsync((T)item, cancellationToken);
 
         /// <summary>
         /// Activates the specified item.

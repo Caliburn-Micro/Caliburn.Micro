@@ -16,7 +16,8 @@ namespace Caliburn.Micro
         /// Creates an instance of the class.
         /// </summary>
         /// <param name="closeConductedItemsWhenConductorCannotClose">Indicates that even if all conducted items are not closable, those that are should be closed. The default is FALSE.</param>
-        public DefaultCloseStrategy(bool closeConductedItemsWhenConductorCannotClose = false) => _closeConductedItemsWhenConductorCannotClose = closeConductedItemsWhenConductorCannotClose;
+        public DefaultCloseStrategy(bool closeConductedItemsWhenConductorCannotClose = false) 
+            => _closeConductedItemsWhenConductorCannotClose = closeConductedItemsWhenConductorCannotClose;
 
         /// <inheritdoc />
         public async Task<ICloseResult<T>> ExecuteAsync(IEnumerable<T> toClose, CancellationToken cancellationToken = default)

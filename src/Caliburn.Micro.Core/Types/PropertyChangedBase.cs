@@ -15,7 +15,8 @@ namespace Caliburn.Micro
         /// <summary>
         /// Creates an instance of <see cref = "PropertyChangedBase" />.
         /// </summary>
-        public PropertyChangedBase() => IsNotifying = true;
+        public PropertyChangedBase() 
+            => IsNotifying = true;
 
         /// <summary>
         /// Occurs when a property value changes.
@@ -31,7 +32,8 @@ namespace Caliburn.Micro
         /// <summary>
         /// Raises a change notification indicating that all bindings should be refreshed.
         /// </summary>
-        public virtual void Refresh() => NotifyOfPropertyChange(string.Empty);
+        public virtual void Refresh() 
+            => NotifyOfPropertyChange(string.Empty);
 
         /// <summary>
         /// Notifies subscribers of the property change.
@@ -57,21 +59,24 @@ namespace Caliburn.Micro
         /// </summary>
         /// <typeparam name = "TProperty">The type of the property.</typeparam>
         /// <param name = "property">The property expression.</param>
-        public void NotifyOfPropertyChange<TProperty>(Expression<Func<TProperty>> property) => NotifyOfPropertyChange(property.GetMemberInfo().Name);
+        public void NotifyOfPropertyChange<TProperty>(Expression<Func<TProperty>> property) 
+            => NotifyOfPropertyChange(property.GetMemberInfo().Name);
 
         /// <summary>
         /// Raises the <see cref="PropertyChanged" /> event directly.
         /// </summary>
         /// <param name="e">The <see cref="PropertyChangedEventArgs"/> instance containing the event data.</param>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        protected void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
+        protected void OnPropertyChanged(PropertyChangedEventArgs e) 
+            => PropertyChanged?.Invoke(this, e);
 
         /// <summary>
         /// Executes the given action on the UI thread
         /// </summary>
         /// <remarks>An extension point for subclasses to customise how property change notifications are handled.</remarks>
         /// <param name="action"></param>
-        protected virtual void OnUIThread(System.Action action) => action.OnUIThread();
+        protected virtual void OnUIThread(System.Action action) 
+            => action.OnUIThread();
 
         /// <summary>
         /// Sets a backing field value and if it's changed raise a notification.

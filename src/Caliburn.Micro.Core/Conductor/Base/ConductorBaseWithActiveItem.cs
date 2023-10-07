@@ -57,6 +57,7 @@ namespace Caliburn.Micro
         /// <param name="newItem">The new item to activate.</param>
         /// <param name="closePrevious">Indicates whether or not to close the previous active item.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        protected Task ChangeActiveItemAsync(T newItem, bool closePrevious) => ChangeActiveItemAsync(newItem, closePrevious, default);
+        protected Task ChangeActiveItemAsync(T newItem, bool closePrevious) 
+            => ChangeActiveItemAsync(newItem, closePrevious, default);
     }
 }

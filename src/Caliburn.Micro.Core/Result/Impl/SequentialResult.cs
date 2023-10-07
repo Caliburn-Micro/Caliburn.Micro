@@ -15,7 +15,8 @@ namespace Caliburn.Micro
         ///   Initializes a new instance of the <see cref = "SequentialResult" /> class.
         /// </summary>
         /// <param name = "enumerator">The enumerator.</param>
-        public SequentialResult(IEnumerator<IResult> enumerator) => _enumerator = enumerator;
+        public SequentialResult(IEnumerator<IResult> enumerator) 
+            => _enumerator = enumerator;
 
         /// <summary>
         ///   Occurs when execution has completed.

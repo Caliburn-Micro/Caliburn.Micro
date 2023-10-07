@@ -14,6 +14,7 @@ namespace Caliburn.Micro
         /// <param name="conductor">The conductor to activate the item with.</param>
         /// <param name="item">The item to activate.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task ActivateItemAsync(this IConductor conductor, object item) => conductor.ActivateItemAsync(item, default);
+        public static Task ActivateItemAsync(this IConductor conductor, object item) 
+            => conductor.ActivateItemAsync(item, default);
     }
 }

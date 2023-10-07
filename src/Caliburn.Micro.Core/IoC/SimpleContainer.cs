@@ -21,9 +21,11 @@ namespace Caliburn.Micro
         /// <summary>
         ///   Initializes a new instance of the <see cref = "SimpleContainer" /> class.
         /// </summary>
-        public SimpleContainer() => _entries = new List<ContainerEntry>();
+        public SimpleContainer()
+            => _entries = new List<ContainerEntry>();
 
-        private SimpleContainer(IEnumerable<ContainerEntry> entries) => _entries = new List<ContainerEntry>(entries);
+        private SimpleContainer(IEnumerable<ContainerEntry> entries)
+            => _entries = new List<ContainerEntry>(entries);
 
         /// <summary>
         /// Whether to enable recursive property injection for all resolutions.
@@ -36,7 +38,8 @@ namespace Caliburn.Micro
         /// <param name = "service">The service.</param>
         /// <param name = "key">The key.</param>
         /// <param name = "implementation">The implementation.</param>
-        public void RegisterInstance(Type service, string key, object implementation) => RegisterHandler(service, key, container => implementation);
+        public void RegisterInstance(Type service, string key, object implementation)
+            => RegisterHandler(service, key, container => implementation);
 
         /// <summary>
         ///   Registers the class so that a new instance is created on every request.
@@ -44,7 +47,8 @@ namespace Caliburn.Micro
         /// <param name = "service">The service.</param>
         /// <param name = "key">The key.</param>
         /// <param name = "implementation">The implementation.</param>
-        public void RegisterPerRequest(Type service, string key, Type implementation) => RegisterHandler(service, key, container => container.BuildInstance(implementation));
+        public void RegisterPerRequest(Type service, string key, Type implementation)
+            => RegisterHandler(service, key, container => container.BuildInstance(implementation));
 
         /// <summary>
         ///   Registers the class so that it is created once, on first request, and the same instance is returned to all requestors thereafter.
@@ -64,7 +68,8 @@ namespace Caliburn.Micro
         /// <param name = "service">The service.</param>
         /// <param name = "key">The key.</param>
         /// <param name = "handler">The handler.</param>
-        public void RegisterHandler(Type service, string key, Func<SimpleContainer, object> handler) => GetOrCreateEntry(service, key).Add(handler);
+        public void RegisterHandler(Type service, string key, Func<SimpleContainer, object> handler)
+            => GetOrCreateEntry(service, key).Add(handler);
 
         /// <summary>
         ///   Unregisters any handlers for the service/key that have previously been registered.
@@ -144,7 +149,8 @@ namespace Caliburn.Micro
         /// <param name="service">The service.</param>
         /// <param name="key">The key.</param>
         /// <returns>True if a handler is registere; false otherwise.</returns>
-        public bool HasHandler(Type service, string key) => GetEntry(service, key) != null;
+        public bool HasHandler(Type service, string key)
+            => GetEntry(service, key) != null;
 
         /// <summary>
         ///   Requests all instances of a given type and the given key (default null).
@@ -200,7 +206,8 @@ namespace Caliburn.Micro
         /// Creates a child container.
         /// </summary>
         /// <returns>A new container.</returns>
-        public SimpleContainer CreateChildContainer() => new(_entries);
+        public SimpleContainer CreateChildContainer()
+            => new(_entries);
 
         private ContainerEntry GetOrCreateEntry(Type service, string key)
         {
@@ -272,16 +279,17 @@ namespace Caliburn.Micro
             return args.ToArray();
         }
 
-        private ConstructorInfo SelectEligibleConstructor(Type type) => type.GetTypeInfo().DeclaredConstructors
-                .Where(c => c.IsPublic)
-                .Select(c => new
-                {
-                    Constructor = c,
-                    HandledParamters = c.GetParameters().Count(p => HasHandler(p.ParameterType, null))
-                })
-                .OrderByDescending(c => c.HandledParamters)
-                .Select(c => c.Constructor)
-                .FirstOrDefault();
+        private ConstructorInfo SelectEligibleConstructor(Type type)
+            => type.GetTypeInfo().DeclaredConstructors
+                   .Where(c => c.IsPublic)
+                   .Select(c => new
+                   {
+                       Constructor = c,
+                       HandledParamters = c.GetParameters().Count(p => HasHandler(p.ParameterType, null))
+                   })
+                   .OrderByDescending(c => c.HandledParamters)
+                   .Select(c => c.Constructor)
+                   .FirstOrDefault();
 
         private class ContainerEntry : List<Func<SimpleContainer, object>>
         {
@@ -291,7 +299,8 @@ namespace Caliburn.Micro
 
         private class FactoryFactory<T>
         {
-            public Func<T> Create(SimpleContainer container) => () => (T)container.GetInstance(typeof(T), null);
+            public Func<T> Create(SimpleContainer container) 
+                => () => (T)container.GetInstance(typeof(T), null);
         }
     }
 }

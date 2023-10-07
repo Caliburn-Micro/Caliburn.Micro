@@ -14,7 +14,8 @@ namespace Caliburn.Micro
         /// Initializes a new instance of the <see cref="DelegateResult&lt;TResult&gt;"/> class.
         /// </summary>
         /// <param name="action">The action.</param>
-        public DelegateResult(Func<TResult> action) => _toExecute = action;
+        public DelegateResult(Func<TResult> action) 
+            => _toExecute = action;
 
         /// <summary>
         /// Executes the result using the specified context.

@@ -8,6 +8,7 @@
         /// <summary>
         /// Gets or sets the current <see cref="IPlatformProvider"/>.
         /// </summary>
-        public static IPlatformProvider Current { get; set; } = new DefaultPlatformProvider();
+        public static IPlatformProvider Current { get; set; }
+            = new DefaultPlatformProvider();
     }
 }

@@ -17,7 +17,8 @@ namespace Caliburn.Micro
         /// <param name="container">The container.</param>
         /// <param name="key">The key.</param>
         /// <returns>The container.</returns>
-        public static SimpleContainer Singleton<TImplementation>(this SimpleContainer container, string key = null) => Singleton<TImplementation, TImplementation>(container, key);
+        public static SimpleContainer Singleton<TImplementation>(this SimpleContainer container, string key = null)
+            => Singleton<TImplementation, TImplementation>(container, key);
 
         /// <summary>
         /// Registers a singleton.
@@ -41,7 +42,8 @@ namespace Caliburn.Micro
         /// <param name="container">The container.</param>
         /// <param name="key">The key.</param>
         /// <returns>The container.</returns>
-        public static SimpleContainer PerRequest<TImplementation>(this SimpleContainer container, string key = null) => PerRequest<TImplementation, TImplementation>(container, key);
+        public static SimpleContainer PerRequest<TImplementation>(this SimpleContainer container, string key = null)
+            => PerRequest<TImplementation, TImplementation>(container, key);
 
         /// <summary>
         /// Registers an service to be created on each request.
@@ -100,11 +102,11 @@ namespace Caliburn.Micro
 
             Type serviceType = typeof(TService);
             IEnumerable<TypeInfo> types = from type in assembly.DefinedTypes
-                        where serviceType.GetTypeInfo().IsAssignableFrom(type)
-                              && !type.IsAbstract
-                              && !type.IsInterface
-                              && filter(type.AsType())
-                        select type;
+                                          where serviceType.GetTypeInfo().IsAssignableFrom(type)
+                                                && !type.IsAbstract
+                                                && !type.IsInterface
+                                                && filter(type.AsType())
+                                          select type;
 
             foreach (TypeInfo type in types)
             {
@@ -121,7 +123,8 @@ namespace Caliburn.Micro
         /// <param name="container">The container.</param>
         /// <param name="key">The key.</param>
         /// <returns>The instance.</returns>
-        public static TService GetInstance<TService>(this SimpleContainer container, string key = null) => (TService)container.GetInstance(typeof(TService), key);
+        public static TService GetInstance<TService>(this SimpleContainer container, string key = null)
+            => (TService)container.GetInstance(typeof(TService), key);
 
         /// <summary>
         /// Gets all instances of a particular type and the given key (default null).
@@ -130,7 +133,8 @@ namespace Caliburn.Micro
         /// <param name="container">The container.</param>
         /// <param name = "key">The key shared by those instances</param>
         /// <returns>The resolved instances.</returns>
-        public static IEnumerable<TService> GetAllInstances<TService>(this SimpleContainer container, string key = null) => container.GetAllInstances(typeof(TService), key).Cast<TService>();
+        public static IEnumerable<TService> GetAllInstances<TService>(this SimpleContainer container, string key = null)
+            => container.GetAllInstances(typeof(TService), key).Cast<TService>();
 
         /// <summary>
         /// Determines if a handler for the service/key has previously been registered.
@@ -139,7 +143,8 @@ namespace Caliburn.Micro
         /// <param name="container">The container.</param>
         /// <param name="key">The key.</param>
         /// <returns>True if a handler is registere; false otherwise.</returns>
-        public static bool HasHandler<TService>(this SimpleContainer container, string key = null) => container.HasHandler(typeof(TService), key);
+        public static bool HasHandler<TService>(this SimpleContainer container, string key = null)
+            => container.HasHandler(typeof(TService), key);
 
         /// <summary>
         ///   Unregisters any handlers for the service/key that have previously been registered.
@@ -147,6 +152,7 @@ namespace Caliburn.Micro
         /// <typeparam name="TService">The service type.</typeparam>
         /// <param name="container">The container.</param>
         /// <param name = "key">The key.</param>
-        public static void UnregisterHandler<TService>(this SimpleContainer container, string key = null) => container.UnregisterHandler(typeof(TService), key);
+        public static void UnregisterHandler<TService>(this SimpleContainer container, string key = null)
+            => container.UnregisterHandler(typeof(TService), key);
     }
 }

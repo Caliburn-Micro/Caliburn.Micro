@@ -19,7 +19,8 @@ namespace Caliburn.Micro
         /// <summary>
         /// Creates an instance of the screen.
         /// </summary>
-        public Screen() => _displayName = GetType().FullName;
+        public Screen() 
+            => _displayName = GetType().FullName;
 
         /// <summary>
         /// Indicates whether or not this instance is currently initialized.
@@ -145,7 +146,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation and holds the value of the close check..</returns>
-        public virtual Task<bool> CanCloseAsync(CancellationToken cancellationToken = default) => Task.FromResult(true);
+        public virtual Task<bool> CanCloseAsync(CancellationToken cancellationToken = default) 
+            => Task.FromResult(true);
 
         /// <summary>
         /// Tries to close this instance by asking its Parent to initiate shutdown or by asking its corresponding view to close.
@@ -167,18 +169,21 @@ namespace Caliburn.Micro
         /// <summary>
         /// Called when initializing.
         /// </summary>
-        protected virtual Task OnInitializeAsync(CancellationToken cancellationToken) => Task.FromResult(true);
+        protected virtual Task OnInitializeAsync(CancellationToken cancellationToken) 
+            => Task.FromResult(true);
 
         /// <summary>
         /// Called when activating.
         /// </summary>
-        protected virtual Task OnActivateAsync(CancellationToken cancellationToken) => Task.FromResult(true);
+        protected virtual Task OnActivateAsync(CancellationToken cancellationToken) 
+            => Task.FromResult(true);
 
 
         /// <summary>
         /// Called when view has been activated.
         /// </summary>
-        protected virtual Task OnActivatedAsync(CancellationToken cancellationToken) => Task.FromResult(true);
+        protected virtual Task OnActivatedAsync(CancellationToken cancellationToken) 
+            => Task.FromResult(true);
 
         /// <summary>
         /// Called when deactivating.
@@ -186,6 +191,7 @@ namespace Caliburn.Micro
         /// <param name = "close">Indicates whether this instance will be closed.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        protected virtual Task OnDeactivateAsync(bool close, CancellationToken cancellationToken) => Task.FromResult(true);
+        protected virtual Task OnDeactivateAsync(bool close, CancellationToken cancellationToken) 
+            => Task.FromResult(true);
     }
 }

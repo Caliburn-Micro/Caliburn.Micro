@@ -12,6 +12,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="activate">The instance to activate</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task ActivateAsync(this IActivate activate) => activate.ActivateAsync(default);
+        public static Task ActivateAsync(this IActivate activate) 
+            => activate.ActivateAsync(default);
     }
 }

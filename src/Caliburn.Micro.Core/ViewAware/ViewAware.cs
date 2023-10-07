@@ -14,22 +14,26 @@ namespace Caliburn.Micro
         /// <summary>
         /// The default view context.
         /// </summary>
-        public static readonly object DefaultContext = new();
+        public static readonly object DefaultContext 
+            = new();
 
         /// <summary>
         /// The view chache for this instance.
         /// </summary>
-        protected IDictionary<object, object> Views => _views;
+        protected IDictionary<object, object> Views 
+            => _views;
 
         /// <summary>
         /// Creates an instance of <see cref="ViewAware"/>.
         /// </summary>
-        public ViewAware() => _views = new WeakValueDictionary<object, object>();
+        public ViewAware() 
+            => _views = new WeakValueDictionary<object, object>();
 
         /// <summary>
         /// Raised when a view is attached.
         /// </summary>
-        public event EventHandler<ViewAttachedEventArgs> ViewAttached = delegate { };
+        public event EventHandler<ViewAttachedEventArgs> ViewAttached 
+            = delegate { };
 
         void IViewAware.AttachView(object view, object context)
         {
@@ -101,6 +105,7 @@ namespace Caliburn.Micro
         public virtual object GetView(object context = null)
         {
             Views.TryGetValue(context ?? DefaultContext, out object view);
+
             return view;
         }
     }

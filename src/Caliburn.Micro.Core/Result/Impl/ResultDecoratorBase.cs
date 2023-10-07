@@ -14,7 +14,8 @@ namespace Caliburn.Micro
         /// Initializes a new instance of the <see cref="ResultDecoratorBase"/> class.
         /// </summary>
         /// <param name="result">The result to decorate.</param>
-        protected ResultDecoratorBase(IResult result) => _innerResult = result ?? throw new ArgumentNullException("result");
+        protected ResultDecoratorBase(IResult result) 
+            => _innerResult = result ?? throw new ArgumentNullException("result");
 
         /// <summary>
         /// Executes the result using the specified context.
@@ -60,6 +61,7 @@ namespace Caliburn.Micro
         /// Raises the <see cref="Completed" /> event.
         /// </summary>
         /// <param name="args">The <see cref="ResultCompletionEventArgs"/> instance containing the event data.</param>
-        protected void OnCompleted(ResultCompletionEventArgs args) => Completed(this, args);
+        protected void OnCompleted(ResultCompletionEventArgs args) 
+            => Completed(this, args);
     }
 }

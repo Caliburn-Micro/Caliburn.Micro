@@ -5,14 +5,17 @@
     /// </summary>
     public class OverrideCancelResultDecorator : ResultDecoratorBase
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(OverrideCancelResultDecorator));
+        private static readonly ILog Log
+            = LogManager.GetLog(typeof(OverrideCancelResultDecorator));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OverrideCancelResultDecorator"/> class.
         /// </summary>
         /// <param name="result">The result to decorate.</param>
         public OverrideCancelResultDecorator(IResult result)
-            : base(result) { }
+            : base(result)
+        {
+        }
 
         /// <summary>
         /// Called when the execution of the decorated result has completed.

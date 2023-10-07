@@ -23,36 +23,40 @@ namespace Caliburn.Micro
                 /// <summary>
                 /// Initializes a new instance of the <see cref="Conductor&lt;T&gt;.Collection.OneActive"/> class.
                 /// </summary>
-                public OneActive() => _items.CollectionChanged += (s, e) =>
-                                                       {
-                                                           switch (e.Action)
-                                                           {
-                                                               case NotifyCollectionChangedAction.Add:
-                                                                   e.NewItems.OfType<IChild>().Apply(x => x.Parent = this);
-                                                                   break;
-                                                               case NotifyCollectionChangedAction.Remove:
-                                                                   e.OldItems.OfType<IChild>().Apply(x => x.Parent = null);
-                                                                   break;
-                                                               case NotifyCollectionChangedAction.Replace:
-                                                                   e.NewItems.OfType<IChild>().Apply(x => x.Parent = this);
-                                                                   e.OldItems.OfType<IChild>().Apply(x => x.Parent = null);
-                                                                   break;
-                                                               case NotifyCollectionChangedAction.Reset:
-                                                                   _items.OfType<IChild>().Apply(x => x.Parent = this);
-                                                                   break;
-                                                           }
-                                                       };
+                public OneActive()
+                    => _items.CollectionChanged +=
+                        (s, e) =>
+                        {
+                            switch (e.Action)
+                            {
+                                case NotifyCollectionChangedAction.Add:
+                                    e.NewItems.OfType<IChild>().Apply(x => x.Parent = this);
+                                    break;
+                                case NotifyCollectionChangedAction.Remove:
+                                    e.OldItems.OfType<IChild>().Apply(x => x.Parent = null);
+                                    break;
+                                case NotifyCollectionChangedAction.Replace:
+                                    e.NewItems.OfType<IChild>().Apply(x => x.Parent = this);
+                                    e.OldItems.OfType<IChild>().Apply(x => x.Parent = null);
+                                    break;
+                                case NotifyCollectionChangedAction.Reset:
+                                    _items.OfType<IChild>().Apply(x => x.Parent = this);
+                                    break;
+                            }
+                        };
 
                 /// <summary>
                 /// Gets the items that are currently being conducted.
                 /// </summary>
-                public IObservableCollection<T> Items => _items;
+                public IObservableCollection<T> Items 
+                    => _items;
 
                 /// <summary>
                 /// Gets the children.
                 /// </summary>
                 /// <returns>The collection of children.</returns>
-                public override IEnumerable<T> GetChildren() => _items;
+                public override IEnumerable<T> GetChildren() 
+                    => _items;
 
                 /// <summary>
                 /// Activates the specified item.
@@ -169,7 +173,7 @@ namespace Caliburn.Micro
                             closable = stillToClose;
                         }
 
-                        foreach(IDeactivate deactivate in closable.OfType<IDeactivate>())
+                        foreach (IDeactivate deactivate in closable.OfType<IDeactivate>())
                         {
                             await deactivate.DeactivateAsync(true, cancellationToken);
                         }
@@ -185,7 +189,8 @@ namespace Caliburn.Micro
                 /// </summary>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                protected override Task OnActivateAsync(CancellationToken cancellationToken) => ScreenExtensions.TryActivateAsync(ActiveItem, cancellationToken);
+                protected override Task OnActivateAsync(CancellationToken cancellationToken) 
+                    => ScreenExtensions.TryActivateAsync(ActiveItem, cancellationToken);
 
                 /// <summary>
                 /// Called when deactivating.
