@@ -4,9 +4,10 @@ using System.Collections.Generic;
 namespace Caliburn.Micro
 {
     /// <summary>
-    ///   Interface used to define an object associated to a collection of children.
+    /// Interface used to define a specialized parent.
     /// </summary>
-    public interface IParent
+    /// <typeparam name="T">The type of children.</typeparam>
+    public interface IParent<out T> : IParent
     {
         /// <summary>
         ///   Gets the children.
@@ -14,6 +15,6 @@ namespace Caliburn.Micro
         /// <returns>
         ///   The collection of children.
         /// </returns>
-        IEnumerable GetChildren();
+        new IEnumerable<T> GetChildren();
     }
 }

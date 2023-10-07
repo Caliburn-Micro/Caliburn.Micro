@@ -3,17 +3,18 @@
 namespace Caliburn.Micro
 {
     /// <summary>
-    /// A result that executes an <see cref="System.Action"/>.
+    /// A result that executes a <see cref="System.Func&lt;TResult&gt;"/>
     /// </summary>
-    public class DelegateResult : IResult
+    /// <typeparam name="TResult">The type of the result.</typeparam>
+    public class DelegateResult<TResult> : IResult<TResult>
     {
-        private readonly Action toExecute;
+        private readonly Func<TResult> toExecute;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DelegateResult"/> class.
+        /// Initializes a new instance of the <see cref="DelegateResult&lt;TResult&gt;"/> class.
         /// </summary>
         /// <param name="action">The action.</param>
-        public DelegateResult(Action action)
+        public DelegateResult(Func<TResult> action)
         {
             toExecute = action;
         }
@@ -28,7 +29,7 @@ namespace Caliburn.Micro
 
             try
             {
-                toExecute();
+                Result = toExecute();
             }
             catch (Exception ex)
             {
@@ -37,6 +38,11 @@ namespace Caliburn.Micro
 
             Completed(this, eventArgs);
         }
+
+        /// <summary>
+        /// Gets the result.
+        /// </summary>
+        public TResult Result { get; private set; }
 
         /// <summary>
         /// Occurs when execution has completed.

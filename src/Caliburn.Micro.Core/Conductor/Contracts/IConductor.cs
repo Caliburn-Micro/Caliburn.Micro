@@ -31,11 +31,4 @@ namespace Caliburn.Micro
         /// </summary>
         event EventHandler<ActivationProcessedEventArgs> ActivationProcessed;
     }
-
-    /// <summary>
-    /// An <see cref="IConductor"/> that also implements <see cref="IHaveActiveItem"/>.
-    /// </summary>
-    public interface IConductActiveItem : IConductor, IHaveActiveItem
-    {
-    }
 }
