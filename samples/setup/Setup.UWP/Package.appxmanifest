@@ -8,14 +8,14 @@
 
   <Identity
     Name="afb0de23-a7f3-4993-b30b-ddf847a1e914"
-    Publisher="CN=nigel"
+    Publisher="CN=Caliburn.Micro"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="afb0de23-a7f3-4993-b30b-ddf847a1e914" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>Setup.UWP</DisplayName>
-    <PublisherDisplayName>nigel</PublisherDisplayName>
+    <PublisherDisplayName>Caliburn.Micro</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
