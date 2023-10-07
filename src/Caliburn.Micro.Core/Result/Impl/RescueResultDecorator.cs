@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Caliburn.Micro
 {
@@ -20,7 +21,7 @@ namespace Caliburn.Micro
         /// <param name="cancelResult">Set to true to cancel the result after executing rescue.</param>
         public RescueResultDecorator(IResult result, Func<TException, IResult> coroutine, bool cancelResult = true) : base(result)
         {
-            _coroutine = coroutine ?? throw new ArgumentNullException("coroutine");
+            _coroutine = coroutine ?? throw new ArgumentNullException(nameof(coroutine));
             _cancelResult = cancelResult;
         }
 
@@ -40,7 +41,7 @@ namespace Caliburn.Micro
             }
 
             Log.Error(error);
-            Log.Info(string.Format("Executing coroutine because {0} threw an exception.", innerResult.GetType().Name));
+            Log.Info(string.Format(CultureInfo.InvariantCulture, "Executing coroutine because {0} threw an exception.", innerResult.GetType().Name));
             Rescue(context, error);
         }
 

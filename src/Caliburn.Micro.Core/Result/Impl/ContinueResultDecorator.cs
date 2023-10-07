@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Caliburn.Micro
 {
@@ -17,7 +18,7 @@ namespace Caliburn.Micro
         /// <param name="coroutine">The coroutine to execute when <paramref name="result"/> was canceled.</param>
         public ContinueResultDecorator(IResult result, Func<IResult> coroutine)
             : base(result)
-            => _coroutine = coroutine ?? throw new ArgumentNullException("coroutine");
+            => _coroutine = coroutine ?? throw new ArgumentNullException(nameof(coroutine));
 
         /// <summary>
         /// Called when the execution of the decorated result has completed.
@@ -34,7 +35,7 @@ namespace Caliburn.Micro
                 return;
             }
 
-            Log.Info(string.Format("Executing coroutine because {0} was cancelled.", innerResult.GetType().Name));
+            Log.Info(string.Format(CultureInfo.InvariantCulture, "Executing coroutine because {0} was cancelled.", innerResult.GetType().Name));
             Continue(context);
         }
 

@@ -1,4 +1,6 @@
-﻿namespace Caliburn.Micro
+﻿using System.Globalization;
+
+namespace Caliburn.Micro
 {
     /// <summary>
     /// A result decorator that overrides <see cref="ResultCompletionEventArgs.WasCancelled"/> of the decorated <see cref="IResult"/> instance.
@@ -27,7 +29,7 @@
         {
             if (args.WasCancelled)
             {
-                Log.Info(string.Format("Overriding WasCancelled from {0}.", innerResult.GetType().Name));
+                Log.Info(string.Format(CultureInfo.InvariantCulture, "Overriding WasCancelled from {0}.", innerResult.GetType().Name));
             }
 
             OnCompleted(new ResultCompletionEventArgs

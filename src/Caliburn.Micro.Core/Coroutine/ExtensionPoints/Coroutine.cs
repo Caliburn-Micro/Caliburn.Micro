@@ -15,7 +15,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Creates the parent enumerator.
         /// </summary>
-        public static Func<IEnumerator<IResult>, IResult> CreateParentEnumerator
+        public static Func<IEnumerator<IResult>, IResult> CreateParentEnumerator { get; set; }
             = inner => new SequentialResult(inner);
 
         /// <summary>

@@ -2,6 +2,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace Caliburn.Micro
 {
@@ -25,7 +26,7 @@ namespace Caliburn.Micro
         /// <param name="format">A formatted message.</param>
         /// <param name="args">Parameters to be injected into the formatted message.</param>
         public void Info(string format, params object[] args) 
-            => Debug.WriteLine("[{1}] INFO: {0}", string.Format(format, args), _typeName);
+            => Debug.WriteLine("[{1}] INFO: {0}", string.Format(CultureInfo.InvariantCulture, format, args), _typeName);
 
         /// <summary>
         /// Logs the message as a warning.
@@ -33,7 +34,7 @@ namespace Caliburn.Micro
         /// <param name="format">A formatted message.</param>
         /// <param name="args">Parameters to be injected into the formatted message.</param>
         public void Warn(string format, params object[] args) 
-            => Debug.WriteLine("[{1}] WARN: {0}", string.Format(format, args), _typeName);
+            => Debug.WriteLine("[{1}] WARN: {0}", string.Format(CultureInfo.InvariantCulture, format, args), _typeName);
 
         /// <summary>
         /// Logs the exception.

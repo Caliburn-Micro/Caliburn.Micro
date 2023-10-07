@@ -12,10 +12,11 @@ namespace Caliburn.Micro
         /// <summary>
         /// Creates an <see cref="ILog"/> for the provided type.
         /// </summary>
-        public static Func<Type, ILog> GetLog 
-            = type => NullLogInstance;
+        public static Func<Type, ILog> GetLog { get; set; }
+            = type 
+                => NullLogInstance;
 
-        private class NullLog : ILog
+        private sealed class NullLog : ILog
         {
             public void Info(string format, params object[] args) { }
             public void Warn(string format, params object[] args) { }

@@ -168,7 +168,7 @@ namespace Caliburn.Micro
 
             if (entries == null)
             {
-                return new object[0];
+                return Array.Empty<object>();
             }
 
             IEnumerable<object> instances = entries.Select(e => e(this));
@@ -301,13 +301,13 @@ namespace Caliburn.Micro
                    .Select(c => c.Constructor)
                    .FirstOrDefault();
 
-        private class ContainerEntry : List<Func<SimpleContainer, object>>
+        private sealed class ContainerEntry : List<Func<SimpleContainer, object>>
         {
             public string Key;
             public Type Service;
         }
 
-        private class FactoryFactory<T>
+        private sealed class FactoryFactory<T>
         {
             public Func<T> Create(SimpleContainer container)
                 => () => (T)container.GetInstance(typeof(T), null);

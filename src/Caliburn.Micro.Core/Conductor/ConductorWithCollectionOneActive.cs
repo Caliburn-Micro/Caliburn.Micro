@@ -118,7 +118,7 @@ namespace Caliburn.Micro
                         var index = _items.IndexOf(item);
                         T next = DetermineNextItemToActivate(_items, index);
 
-                        await ChangeActiveItemAsync(next, true);
+                        await ChangeActiveItemAsync(next, true, cancellationToken);
                     }
                     else
                     {
@@ -175,7 +175,7 @@ namespace Caliburn.Micro
                         } while (closable.Contains(next));
 
                         T previousActive = ActiveItem;
-                        await ChangeActiveItemAsync(next, true);
+                        await ChangeActiveItemAsync(next, true, cancellationToken);
                         _items.Remove(previousActive);
 
                         var stillToClose = closable.ToList();

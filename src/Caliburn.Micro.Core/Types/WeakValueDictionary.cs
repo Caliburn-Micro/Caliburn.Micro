@@ -10,7 +10,7 @@ namespace Caliburn.Micro
     /// </summary>
     /// <typeparam name="TKey">The type of keys in the dictionary.</typeparam>
     /// <typeparam name="TValue">The type of values in the dictionary.</typeparam>
-    internal class WeakValueDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+    internal sealed class WeakValueDictionary<TKey, TValue> : IDictionary<TKey, TValue>
         where TValue : class
     {
         private readonly Dictionary<TKey, WeakReference> _inner;
@@ -136,12 +136,12 @@ namespace Caliburn.Micro
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             }
 
             if (arrayIndex < 0 || arrayIndex >= array.Length)
             {
-                throw new ArgumentOutOfRangeException("arrayIndex");
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex));
             }
 
             if ((arrayIndex + Count) > array.Length)
@@ -310,12 +310,12 @@ namespace Caliburn.Micro
             {
                 if (array == null)
                 {
-                    throw new ArgumentNullException("array");
+                    throw new ArgumentNullException(nameof(array));
                 }
 
                 if (arrayIndex < 0 || arrayIndex >= array.Length)
                 {
-                    throw new ArgumentOutOfRangeException("arrayIndex");
+                    throw new ArgumentOutOfRangeException(nameof(arrayIndex));
                 }
 
                 if ((arrayIndex + Count) > array.Length)

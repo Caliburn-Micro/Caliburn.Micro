@@ -103,7 +103,7 @@ namespace Caliburn.Micro
             });
         }
 
-        private class Handler
+        private sealed class Handler
         {
             private readonly Func<Func<Task>, Task> _marshal;
             private readonly WeakReference _reference;

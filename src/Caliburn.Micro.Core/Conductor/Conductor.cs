@@ -56,7 +56,7 @@ namespace Caliburn.Micro
                 return;
             }
             
-            await ChangeActiveItemAsync(default, close);
+            await ChangeActiveItemAsync(default, close, cancellationToken);
         }
 
         /// <summary>
