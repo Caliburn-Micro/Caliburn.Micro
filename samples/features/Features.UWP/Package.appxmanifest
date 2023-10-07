@@ -4,7 +4,7 @@
   <mp:PhoneIdentity PhoneProductId="a004c07d-d3fb-47f8-9cb2-29928144196c" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Features.CrossPlatform</DisplayName>
-    <PublisherDisplayName>nigel</PublisherDisplayName>
+    <PublisherDisplayName>Caliburn.Micro</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
