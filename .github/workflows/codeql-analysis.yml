@@ -15,11 +15,11 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v2
       with:
         # We must fetch at least the immediate parents so that if this is
         # a pull request then we can checkout the head.
-        fetch-depth: 2
+        fetch-depth: 0
 
 
     # Initializes the CodeQL tools for scanning.
