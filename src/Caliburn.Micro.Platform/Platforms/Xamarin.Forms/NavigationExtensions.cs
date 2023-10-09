@@ -1,12 +1,8 @@
-﻿namespace Caliburn.Micro.Xamarin.Forms
-{
-    using System;
-
+﻿namespace Caliburn.Micro.Xamarin.Forms {
     /// <summary>
-    /// Extension methods for <see cref="INavigationService"/>
+    /// Extension methods for <see cref="INavigationService"/>.
     /// </summary>
-    public static class NavigationExtensions
-    {
+    public static class NavigationExtensions {
         /// <summary>
         /// Creates a Uri builder based on a view model type.
         /// </summary>
@@ -14,8 +10,6 @@
         /// <param name="navigationService">The navigation service.</param>
         /// <returns>The builder.</returns>
         public static NavigateHelper<TViewModel> For<TViewModel>(this INavigationService navigationService)
-        {
-            return new NavigateHelper<TViewModel>().AttachTo(navigationService);
-        }
+            => new NavigateHelper<TViewModel>().AttachTo(navigationService);
     }
 }

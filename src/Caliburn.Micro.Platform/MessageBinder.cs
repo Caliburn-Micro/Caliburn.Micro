@@ -1,4 +1,17 @@
-﻿#if XFORMS
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+
+#if WINDOWS_UWP
+using Windows.UI.Xaml.Controls;
+
+#else
+using System.ComponentModel;
+#endif
+
+#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
 #elif MAUI
 namespace Caliburn.Micro.Maui
@@ -6,40 +19,30 @@ namespace Caliburn.Micro.Maui
 namespace Caliburn.Micro
 #endif
 {
-    using System;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-#if WINDOWS_UWP
-    using Windows.UI.Xaml.Controls;
-#endif
-
     /// <summary>
     /// A service that is capable of properly binding values to a method's parameters and creating instances of <see cref="IResult"/>.
     /// </summary>
     public static class MessageBinder {
         /// <summary>
         /// The special parameter values recognized by the message binder along with their resolvers.
-        /// Parameter names are case insensitive so the specified names are unique and can be used with different case variations
+        /// Parameter names are case insensitive so the specified names are unique and can be used with different case variations.
         /// </summary>
         public static readonly Dictionary<string, Func<ActionExecutionContext, object>> SpecialValues =
             new Dictionary<string, Func<ActionExecutionContext, object>>(StringComparer.OrdinalIgnoreCase)
             {
-                {"$eventargs", c => c.EventArgs},
+                { "$eventargs", c => c.EventArgs },
 #if XFORMS || MAUI
-                {"$datacontext", c => c.Source.BindingContext},
-                {"$bindingcontext", c => c.Source.BindingContext},
+                { "$datacontext", c => c.Source.BindingContext },
+                { "$bindingcontext", c => c.Source.BindingContext },
 #else
-                {"$datacontext", c => c.Source.DataContext},
+                { "$datacontext", c => c.Source.DataContext },
 #endif
 #if WINDOWS_UWP
-                {"$clickeditem", c => ((ItemClickEventArgs)c.EventArgs).ClickedItem},
+                { "$clickeditem", c => ((ItemClickEventArgs)c.EventArgs).ClickedItem },
 #endif
-                {"$source", c => c.Source},
-                {"$executioncontext", c => c},
-                {"$view", c => c.View}
+                { "$source", c => c.Source },
+                { "$executioncontext", c => c },
+                { "$view", c => c.View },
             };
 
         /// <summary>
@@ -50,13 +53,20 @@ namespace Caliburn.Micro
             new Dictionary<Type, Func<object, object, object>>
             {
                 {
-                    typeof (DateTime), (value, context) => {
-                        DateTime result;
-                        DateTime.TryParse(value.ToString(), out result);
+                    typeof(DateTime), (value, context) => {
+                        DateTime.TryParse(value.ToString(), out DateTime result);
+
                         return result;
                     }
-                }
+                },
             };
+
+        /// <summary>
+        /// Gets or sets func to transforms the textual parameter into the actual parameter.
+        /// </summary>
+        public static Func<string, Type, ActionExecutionContext, object> EvaluateParameter { get; set; }
+            = (text, parameterType, context)
+                => SpecialValues.TryGetValue(text, out Func<ActionExecutionContext, object> resolver) ? resolver(context) : text;
 
         /// <summary>
         /// Determines the parameters that a method should be invoked with.
@@ -65,31 +75,20 @@ namespace Caliburn.Micro
         /// <param name="requiredParameters">The parameters required to complete the invocation.</param>
         /// <returns>The actual parameter values.</returns>
         public static object[] DetermineParameters(ActionExecutionContext context, ParameterInfo[] requiredParameters) {
-            var providedValues = context.Message.Parameters.OfType<Parameter>().Select(x => x.Value).ToArray();
-            var finalValues = new object[requiredParameters.Length];
+            object[] providedValues = context.Message.Parameters.OfType<Parameter>().Select(x => x.Value).ToArray();
+            object[] finalValues = new object[requiredParameters.Length];
 
             for (int i = 0; i < requiredParameters.Length; i++) {
-                var parameterType = requiredParameters[i].ParameterType;
-                var parameterValue = providedValues[i];
-                var parameterAsString = parameterValue as string;
+                Type parameterType = requiredParameters[i].ParameterType;
+                object parameterValue = providedValues[i];
 
-                if (parameterAsString != null)
-                    finalValues[i] = CoerceValue(parameterType,
-                        EvaluateParameter(parameterAsString, parameterType, context), context);
-                else finalValues[i] = CoerceValue(parameterType, parameterValue, context);
+                finalValues[i] = parameterValue is string parameterAsString
+                    ? CoerceValue(parameterType, EvaluateParameter(parameterAsString, parameterType, context), context)
+                    : CoerceValue(parameterType, parameterValue, context);
             }
 
             return finalValues;
         }
-
-        /// <summary>
-        /// Transforms the textual parameter into the actual parameter.
-        /// </summary>
-        public static Func<string, Type, ActionExecutionContext, object> EvaluateParameter =
-            (text, parameterType, context) => {
-                Func<ActionExecutionContext, object> resolver;
-                return SpecialValues.TryGetValue(text, out resolver) ? resolver(context) : text;
-            };
 
         /// <summary>
         /// Coerces the provided value to the destination type.
@@ -103,18 +102,18 @@ namespace Caliburn.Micro
                 return GetDefaultValue(destinationType);
             }
 
-            var providedType = providedValue.GetType();
+            Type providedType = providedValue.GetType();
             if (destinationType.GetTypeInfo().IsAssignableFrom(providedType.GetTypeInfo())) {
                 return providedValue;
             }
 
-            if (CustomConverters.ContainsKey(destinationType)) {
-                return CustomConverters[destinationType](providedValue, context);
+            if (CustomConverters.TryGetValue(destinationType, out Func<object, object, object> valueFunc)) {
+                return valueFunc(providedValue, context);
             }
 
             try {
 #if !WINDOWS_UWP && !XFORMS && !MAUI
-                var converter = TypeDescriptor.GetConverter(destinationType);
+                TypeConverter converter = TypeDescriptor.GetConverter(destinationType);
 
                 if (converter.CanConvertFrom(providedType)) {
                     return converter.ConvertFrom(providedValue);
@@ -131,29 +130,23 @@ namespace Caliburn.Micro
 #else
                 if (destinationType.IsEnum) {
 #endif
-                    var stringValue = providedValue as string;
-                    if (stringValue != null) {
-                        return Enum.Parse(destinationType, stringValue, true);
-                    }
-
-                    return Enum.ToObject(destinationType, providedValue);
+                    return providedValue is string stringValue
+                        ? Enum.Parse(destinationType, stringValue, true)
+                        : Enum.ToObject(destinationType, providedValue);
                 }
 
-                if (typeof (Guid).GetTypeInfo().IsAssignableFrom(destinationType.GetTypeInfo())) {
-                    var stringValue = providedValue as string;
-                    if (stringValue != null) {
+                if (typeof(Guid).GetTypeInfo().IsAssignableFrom(destinationType.GetTypeInfo())) {
+                    if (providedValue is string stringValue) {
                         return new Guid(stringValue);
                     }
                 }
-            }
-            catch {
+            } catch {
                 return GetDefaultValue(destinationType);
             }
 
             try {
                 return Convert.ChangeType(providedValue, destinationType, CultureInfo.CurrentCulture);
-            }
-            catch {
+            } catch {
                 return GetDefaultValue(destinationType);
             }
         }
@@ -165,10 +158,16 @@ namespace Caliburn.Micro
         /// <returns>The default value.</returns>
         public static object GetDefaultValue(Type type) {
 #if WINDOWS_UWP || XFORMS || MAUI
-            var typeInfo = type.GetTypeInfo();
-            return typeInfo.IsClass || typeInfo.IsInterface ? null : System.Activator.CreateInstance(type);
+            TypeInfo typeInfo = type.GetTypeInfo();
+            return typeInfo.IsClass || typeInfo.IsInterface
+                ? null
+                : System.Activator.CreateInstance(type);
 #else
-            return type.IsClass || type.IsInterface ? null : Activator.CreateInstance(type);
+            _ = string.Empty;
+
+            return type.IsClass || type.IsInterface
+                ? null
+                : System.Activator.CreateInstance(type);
 #endif
         }
     }

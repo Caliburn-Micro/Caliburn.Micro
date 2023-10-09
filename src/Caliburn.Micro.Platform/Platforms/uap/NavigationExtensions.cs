@@ -1,8 +1,9 @@
-﻿namespace Caliburn.Micro {
-    using System;
+﻿using System;
+using System.Globalization;
 
+namespace Caliburn.Micro {
     /// <summary>
-    /// Extension methods for <see cref="INavigationService"/>
+    /// Extension methods for <see cref="INavigationService"/>.
     /// </summary>
     public static class NavigationExtensions {
         /// <summary>
@@ -12,9 +13,7 @@
         /// <param name="parameter">The object parameter to pass to the target.</param>
         /// <typeparam name="T">The <see cref="System.Type" /> to navigate to.</typeparam>
         /// <returns>Whether or not navigation succeeded.</returns>
-        public static bool Navigate<T>(this INavigationService navigationService, object parameter = null) {
-            return navigationService.Navigate(typeof (T), parameter);
-        }
+        public static bool Navigate<T>(this INavigationService navigationService, object parameter = null) => navigationService.Navigate(typeof(T), parameter);
 
         /// <summary>
         /// Navigate to the specified model type.
@@ -23,15 +22,11 @@
         /// <param name="viewModelType">The model type to navigate to.</param>
         /// <param name="parameter">The object parameter to pass to the target.</param>
         /// <returns>Whether or not navigation succeeded.</returns>
-        public static bool NavigateToViewModel(this INavigationService navigationService, Type viewModelType,
-            object parameter = null) {
-            var viewType = ViewLocator.LocateTypeForModelType(viewModelType, null, null);
-            if (viewType == null) {
-                throw new InvalidOperationException(
-                    string.Format("No view was found for {0}. See the log for searched views.", viewModelType.FullName));
-            }
-
-            return navigationService.Navigate(viewType, parameter);
+        public static bool NavigateToViewModel(this INavigationService navigationService, Type viewModelType, object parameter = null) {
+            Type viewType = ViewLocator.LocateTypeForModelType(viewModelType, null, null);
+            return viewType == null
+                ? throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "No view was found for {0}. See the log for searched views.", viewModelType.FullName))
+                : navigationService.Navigate(viewType, parameter);
         }
 
         /// <summary>
@@ -41,9 +36,8 @@
         /// <param name="parameter">The object parameter to pass to the target.</param>
         /// <typeparam name="T">The model type to navigate to.</typeparam>
         /// <returns>Whether or not navigation succeeded.</returns>
-        public static bool NavigateToViewModel<T>(this INavigationService navigationService, object parameter = null) {
-            return navigationService.NavigateToViewModel(typeof (T), parameter);
-        }
+        public static bool NavigateToViewModel<T>(this INavigationService navigationService, object parameter = null)
+            => navigationService.NavigateToViewModel(typeof(T), parameter);
 
         /// <summary>
         /// Creates a Uri builder based on a view model type.
@@ -52,9 +46,8 @@
         /// <param name="navigationService">The navigation service.</param>
         /// <returns>The builder.</returns>
         [Obsolete("Use For instead of UriFor")]
-        public static NavigateHelper<TViewModel> UriFor<TViewModel>(this INavigationService navigationService) {
-            return navigationService.For<TViewModel>();
-        }
+        public static NavigateHelper<TViewModel> UriFor<TViewModel>(this INavigationService navigationService)
+            => navigationService.For<TViewModel>();
 
         /// <summary>
         /// Creates a Uri builder based on a view model type.
@@ -62,8 +55,7 @@
         /// <typeparam name="TViewModel">The type of the view model.</typeparam>
         /// <param name="navigationService">The navigation service.</param>
         /// <returns>The builder.</returns>
-        public static NavigateHelper<TViewModel> For<TViewModel>(this INavigationService navigationService){
-            return new NavigateHelper<TViewModel>().AttachTo(navigationService);
-        }
+        public static NavigateHelper<TViewModel> For<TViewModel>(this INavigationService navigationService)
+            => new NavigateHelper<TViewModel>().AttachTo(navigationService);
     }
 }

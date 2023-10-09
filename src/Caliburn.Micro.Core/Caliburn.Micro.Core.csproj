@@ -10,84 +10,21 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
-  <!--
-  Errors:
-  CA1711 // Identifiers should not have incorrect suffix
-  CA1003 // Use generic event handler instances
-  CA1070 // Do not declare event fields as virtual
-  CA1034 // Nested types should not be visible
-  CA1052 // Static holder types should be Static or NotInheritable
-  CA1062 // Validate arguments of public methods
-  CA2007 // Consider calling ConfigureAwait on the awaited task
-  CA1033 // Interface methods should be callable by child types
-  CA1031 // Do not catch general exception types
-  CA1716 // Identifiers should not match keywords
-  CA2008 // Do not create tasks without passing a TaskScheduler
-  CA1849 // Call async methods when in an async method
-  CA1822 // Mark members as static
-  CA1812 // Avoid uninstantiated internal classes
-  -->
-
-  <!--
-  Fixed:
-  CA1825 // Avoid zero-length array allocations
-  CA1507 // Use nameof to express symbol names
-  CA2016 // Forward the 'CancellationToken' parameter to methods
-  CA1852 // Seal internal types
-  CA1305 // Specify IFormatProvider
-  CA1051 // Do not declare visible instance fields
-  -->
-
-  <PropertyGroup>
-    <SetupCodeAnalysis>true</SetupCodeAnalysis>
-    <SuppressCodeAnalysisWarnings>true</SuppressCodeAnalysisWarnings>
-    <AddStyleCop>true</AddStyleCop>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition=" '$(SuppressCodeAnalysisWarnings)' == 'true' ">
-    <NoWarn>$(NoWarn);CA1711;CA1003;CA1070;CA1034;CA1052;CA1062;CA2007</NoWarn>
-    <NoWarn>$(NoWarn);CA1033;CA1031;CA1716;CA2008;CA1849;CA1822;CA1812</NoWarn>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition=" '$(SetupCodeAnalysis)' == 'true' ">
-    <WarningLevel>7</WarningLevel>
-    <ErrorReport>prompt</ErrorReport>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <AnalysisMode>All</AnalysisMode>
-    <AnalysisLevel>latest-all</AnalysisLevel>
-    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-    <EnableNETAnalyzers>True</EnableNETAnalyzers>
-    <RunAnalyzersDuringLiveAnalysis>True</RunAnalyzersDuringLiveAnalysis>
-    <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
-    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-  </PropertyGroup>
-  
-  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
-    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
-    <Reference Include="System.Runtime.Serialization" />
-  </ItemGroup>
-
   <PropertyGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <AndroidResgenNamespace>Caliburn.Micro.Core</AndroidResgenNamespace>
   </PropertyGroup>
-
-  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
-    <Reference Include="System.Runtime.Serialization" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.0.0" />
     <PackageReference Update="Nerdbank.GitVersioning" Version="3.3.37" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(AddStyleCop)' == 'true' ">
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507" PrivateAssets="all" />
-    <None Remove="stylecop.json" />
-    <AdditionalFiles Include="..\stylecop.json" />
+  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
+    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
   </ItemGroup>
-  
+
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) or $(TargetFramework.StartsWith('Xamarin.iOS')) ">
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+
 </Project>

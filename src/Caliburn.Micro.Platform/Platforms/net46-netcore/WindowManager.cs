@@ -10,44 +10,11 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Navigation;
 
-namespace Caliburn.Micro
-{
+namespace Caliburn.Micro {
     /// <summary>
     /// A service that manages windows.
     /// </summary>
-    public interface IWindowManager
-    {
-        /// <summary>
-        /// Shows a modal dialog for the specified model.
-        /// </summary>
-        /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The context.</param>
-        /// <param name="settings">The optional dialog settings.</param>
-        /// <returns>The dialog result.</returns>
-        Task<bool?> ShowDialogAsync(object rootModel, object context = null, IDictionary<string, object> settings = null);
-
-        /// <summary>
-        /// Shows a non-modal window for the specified model.
-        /// </summary>
-        /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The context.</param>
-        /// <param name="settings">The optional window settings.</param>
-        Task ShowWindowAsync(object rootModel, object context = null, IDictionary<string, object> settings = null);
-
-        /// <summary>
-        /// Shows a popup at the current mouse position.
-        /// </summary>
-        /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The view context.</param>
-        /// <param name="settings">The optional popup settings.</param>
-        Task ShowPopupAsync(object rootModel, object context = null, IDictionary<string, object> settings = null);
-    }
-
-    /// <summary>
-    /// A service that manages windows.
-    /// </summary>
-    public class WindowManager : IWindowManager
-    {
+    public class WindowManager : IWindowManager {
         /// <summary>
         /// Shows a modal dialog for the specified model.
         /// </summary>
@@ -55,10 +22,9 @@ namespace Caliburn.Micro
         /// <param name="context">The context.</param>
         /// <param name="settings">The dialog popup settings.</param>
         /// <returns>The dialog result.</returns>
-        public virtual async Task<bool?> ShowDialogAsync(object rootModel, object context = null, IDictionary<string, object> settings = null)
-        {
-            var window = await CreateWindowAsync(rootModel, true, context, settings);
-                
+        public virtual async Task<bool?> ShowDialogAsync(object rootModel, object context = null, IDictionary<string, object> settings = null) {
+            Window window = await CreateWindowAsync(rootModel, true, context, settings);
+
             return window.ShowDialog();
         }
 
@@ -68,24 +34,19 @@ namespace Caliburn.Micro
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
         /// <param name="settings">The optional window settings.</param>
-        public virtual async Task ShowWindowAsync(object rootModel, object context = null, IDictionary<string, object> settings = null)
-        {
+        public virtual async Task ShowWindowAsync(object rootModel, object context = null, IDictionary<string, object> settings = null) {
             NavigationWindow navWindow = null;
 
-            var application = Application.Current;
-            if (application != null && application.MainWindow != null)
-            {
+            Application application = Application.Current;
+            if (application != null && application.MainWindow != null) {
                 navWindow = application.MainWindow as NavigationWindow;
             }
 
-            if (navWindow != null)
-            {
-                var window = await CreatePageAsync(rootModel, context, settings);
+            if (navWindow != null) {
+                Page window = await CreatePageAsync(rootModel, context, settings);
                 navWindow.Navigate(window);
-            }
-            else
-            {
-                var window = await CreateWindowAsync(rootModel, false, context, settings);
+            } else {
+                Window window = await CreateWindowAsync(rootModel, false, context, settings);
 
                 window.Show();
             }
@@ -97,10 +58,9 @@ namespace Caliburn.Micro
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The view context.</param>
         /// <param name="settings">The optional popup settings.</param>
-        public virtual async Task ShowPopupAsync(object rootModel, object context = null, IDictionary<string, object> settings = null)
-        {
-            var popup = CreatePopup(rootModel, settings);
-            var view = ViewLocator.LocateForModel(rootModel, popup, context);
+        public virtual async Task ShowPopupAsync(object rootModel, object context = null, IDictionary<string, object> settings = null) {
+            Popup popup = CreatePopup(rootModel, settings);
+            UIElement view = ViewLocator.LocateForModel(rootModel, popup, context);
 
             popup.Child = view;
             popup.SetValue(View.IsGeneratedProperty, true);
@@ -108,13 +68,11 @@ namespace Caliburn.Micro
             ViewModelBinder.Bind(rootModel, popup, null);
             Action.SetTargetWithoutContext(view, rootModel);
 
-            if (rootModel is IActivate activator)
-            {
+            if (rootModel is IActivate activator) {
                 await activator.ActivateAsync();
             }
 
-            if (rootModel is IDeactivate deactivator)
-            {
+            if (rootModel is IDeactivate deactivator) {
                 popup.Closed += async (s, e) => await deactivator.DeactivateAsync(true);
             }
 
@@ -123,29 +81,52 @@ namespace Caliburn.Micro
         }
 
         /// <summary>
+        /// Creates the page.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="context">The context.</param>
+        /// <param name="settings">The optional popup settings.</param>
+        /// <returns>The page.</returns>
+        public virtual async Task<Page> CreatePageAsync(object rootModel, object context, IDictionary<string, object> settings) {
+            Page view = EnsurePage(rootModel, ViewLocator.LocateForModel(rootModel, null, context));
+            ViewModelBinder.Bind(rootModel, view, context);
+
+            if (string.IsNullOrEmpty(view.Title) && rootModel is IHaveDisplayName haveDisplayName && !ConventionManager.HasBinding(view, Page.TitleProperty)) {
+                var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
+                view.SetBinding(Page.TitleProperty, binding);
+            }
+
+            ApplySettings(view, settings);
+
+            if (rootModel is IActivate activator) {
+                await activator.ActivateAsync();
+            }
+
+            if (rootModel is IDeactivate deactivatable) {
+                view.Unloaded += async (s, e) => await deactivatable.DeactivateAsync(true);
+            }
+
+            return view;
+        }
+
+        /// <summary>
         /// Creates a popup for hosting a popup window.
         /// </summary>
         /// <param name="rootModel">The model.</param>
         /// <param name="settings">The optional popup settings.</param>
         /// <returns>The popup.</returns>
-        protected virtual Popup CreatePopup(object rootModel, IDictionary<string, object> settings)
-        {
+        protected virtual Popup CreatePopup(object rootModel, IDictionary<string, object> settings) {
             var popup = new Popup();
 
-            if (ApplySettings(popup, settings))
-            {
-                if (!settings.ContainsKey("PlacementTarget") && !settings.ContainsKey("Placement"))
-                {
+            if (ApplySettings(popup, settings)) {
+                if (!settings.ContainsKey("PlacementTarget") && !settings.ContainsKey("Placement")) {
                     popup.Placement = PlacementMode.MousePoint;
                 }
 
-                if (!settings.ContainsKey("AllowsTransparency"))
-                {
+                if (!settings.ContainsKey("AllowsTransparency")) {
                     popup.AllowsTransparency = true;
                 }
-            }
-            else
-            {
+            } else {
                 popup.AllowsTransparency = true;
                 popup.Placement = PlacementMode.MousePoint;
             }
@@ -161,14 +142,10 @@ namespace Caliburn.Micro
         /// <param name="context">The view context.</param>
         /// <param name="settings">The optional popup settings.</param>
         /// <returns>The window.</returns>
-        protected virtual async Task<Window> CreateWindowAsync(object rootModel, bool isDialog, object context, IDictionary<string, object> settings)
-        {
-            var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context), isDialog);
+        protected virtual async Task<Window> CreateWindowAsync(object rootModel, bool isDialog, object context, IDictionary<string, object> settings) {
+            Window view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context), isDialog);
             ViewModelBinder.Bind(rootModel, view, context);
-
-            var haveDisplayName = rootModel as IHaveDisplayName;
-            if (string.IsNullOrEmpty(view.Title) && haveDisplayName != null && !ConventionManager.HasBinding(view, Window.TitleProperty))
-            {
+            if (string.IsNullOrEmpty(view.Title) && rootModel is IHaveDisplayName && !ConventionManager.HasBinding(view, Window.TitleProperty)) {
                 var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
                 view.SetBinding(Window.TitleProperty, binding);
             }
@@ -189,35 +166,25 @@ namespace Caliburn.Micro
         /// <param name="view">The view.</param>
         /// <param name="isDialog">Whethor or not the window is being shown as a dialog.</param>
         /// <returns>The window.</returns>
-        protected virtual Window EnsureWindow(object model, object view, bool isDialog)
-        {
-
-            if (view is Window window)
-            {
-                var owner = InferOwnerOf(window);
-                if (owner != null && isDialog)
-                {
+        protected virtual Window EnsureWindow(object model, object view, bool isDialog) {
+            if (view is Window window) {
+                Window owner = InferOwnerOf(window);
+                if (owner != null && isDialog) {
                     window.Owner = owner;
                 }
-            }
-            else
-            {
-                window = new Window
-                {
+            } else {
+                window = new Window {
                     Content = view,
-                    SizeToContent = SizeToContent.WidthAndHeight
+                    SizeToContent = SizeToContent.WidthAndHeight,
                 };
 
                 window.SetValue(View.IsGeneratedProperty, true);
 
-                var owner = InferOwnerOf(window);
-                if (owner != null)
-                {
+                Window owner = InferOwnerOf(window);
+                if (owner != null) {
                     window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     window.Owner = owner;
-                }
-                else
-                {
+                } else {
                     window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                 }
             }
@@ -230,51 +197,15 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="window">The window to whose owner needs to be determined.</param>
         /// <returns>The owner.</returns>
-        protected virtual Window InferOwnerOf(Window window)
-        {
-            var application = Application.Current;
-            if (application == null)
-            {
+        protected virtual Window InferOwnerOf(Window window) {
+            Application application = Application.Current;
+            if (application == null) {
                 return null;
             }
 
-            var active = application.Windows.OfType<Window>().FirstOrDefault(x => x.IsActive);
-            active = active ?? (PresentationSource.FromVisual(application.MainWindow) == null ? null : application.MainWindow);
+            Window active = application.Windows.OfType<Window>().FirstOrDefault(x => x.IsActive);
+            active ??= PresentationSource.FromVisual(application.MainWindow) == null ? null : application.MainWindow;
             return active == window ? null : active;
-        }
-
-        /// <summary>
-        /// Creates the page.
-        /// </summary>
-        /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The context.</param>
-        /// <param name="settings">The optional popup settings.</param>
-        /// <returns>The page.</returns>
-        public virtual async Task<Page> CreatePageAsync(object rootModel, object context, IDictionary<string, object> settings)
-        {
-            var view = EnsurePage(rootModel, ViewLocator.LocateForModel(rootModel, null, context));
-            ViewModelBinder.Bind(rootModel, view, context);
-
-            var haveDisplayName = rootModel as IHaveDisplayName;
-            if (string.IsNullOrEmpty(view.Title) && haveDisplayName != null && !ConventionManager.HasBinding(view, Page.TitleProperty))
-            {
-                var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
-                view.SetBinding(Page.TitleProperty, binding);
-            }
-
-            ApplySettings(view, settings);
-
-            if (rootModel is IActivate activator)
-            {
-                await activator.ActivateAsync();
-            }
-
-            if (rootModel is IDeactivate deactivatable)
-            {
-                view.Unloaded += async (s, e) => await deactivatable.DeactivateAsync(true);
-            }
-
-            return view;
         }
 
         /// <summary>
@@ -283,10 +214,8 @@ namespace Caliburn.Micro
         /// <param name="model">The model.</param>
         /// <param name="view">The view.</param>
         /// <returns>The page.</returns>
-        protected virtual Page EnsurePage(object model, object view)
-        {
-            if (view is Page page)
-            {
+        protected virtual Page EnsurePage(object model, object view) {
+            if (view is Page page) {
                 return page;
             }
 
@@ -296,20 +225,14 @@ namespace Caliburn.Micro
             return page;
         }
 
-        private bool ApplySettings(object target, IEnumerable<KeyValuePair<string, object>> settings)
-        {
-            if (settings != null)
-            {
-                var type = target.GetType();
+        private bool ApplySettings(object target, IEnumerable<KeyValuePair<string, object>> settings) {
+            if (settings != null) {
+                Type type = target.GetType();
 
-                foreach (var pair in settings)
-                {
-                    var propertyInfo = type.GetProperty(pair.Key);
+                foreach (KeyValuePair<string, object> pair in settings) {
+                    System.Reflection.PropertyInfo propertyInfo = type.GetProperty(pair.Key);
 
-                    if (propertyInfo != null)
-                    {
-                        propertyInfo.SetValue(target, pair.Value, null);
-                    }
+                    propertyInfo?.SetValue(target, pair.Value, null);
                 }
 
                 return true;

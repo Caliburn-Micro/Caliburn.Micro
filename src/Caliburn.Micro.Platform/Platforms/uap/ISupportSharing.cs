@@ -1,6 +1,6 @@
-﻿namespace Caliburn.Micro {
-    using Windows.ApplicationModel.DataTransfer;
+﻿using Windows.ApplicationModel.DataTransfer;
 
+namespace Caliburn.Micro {
     /// <summary>
     /// Denotes a class which is aware of sharing data with the Share charm.
     /// </summary>
