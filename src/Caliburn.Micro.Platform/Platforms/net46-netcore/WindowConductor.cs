@@ -4,117 +4,132 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Caliburn.Micro
-{
-    public class WindowConductor
-    {
+namespace Caliburn.Micro {
+    /// <summary>
+    /// Window conductor to manage Closing and Deactivation of view model.
+    /// Guard closing event if the view model implements <see cref="IGuardClose"/>.
+    /// </summary>
+    public class WindowConductor {
+        private readonly Window _view;
+        private readonly object _model;
+
         private bool deactivatingFromView;
         private bool deactivateFromViewModel;
         private bool actuallyClosing;
-        private readonly Window view;
-        private readonly object model;
 
-        public WindowConductor(object model, Window view)
-        {
-            this.model = model;
-            this.view = view;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WindowConductor"/> class.
+        /// </summary>
+        /// <param name="model">The view model.</param>
+        /// <param name="view">The window.</param>
+        public WindowConductor(object model, Window view) {
+            _model = model;
+            _view = view;
         }
 
-        public async Task InitialiseAsync()
-        {
-            if (model is IActivate activator)
-            {
-                await activator.ActivateAsync();
-            }
-
-            if (model is IDeactivate deactivatable)
-            {
-                view.Closed += Closed;
-                deactivatable.Deactivated += Deactivated;
-            }
-
-            if (model is IGuardClose guard)
-            {
-                view.Closing += Closing;
-            }
+        /// <summary>
+        /// Activate the view model and subscribe to closing and closed events.
+        /// </summary>
+        /// <returns>Task.</returns>
+        public async Task InitialiseAsync() {
+            await ActivateViewModel();
+            SubscribeToCloseEvetns();
+            GuardClosing();
         }
 
-        private async void Closed(object sender, EventArgs e)
-        {
-            view.Closed -= Closed;
-            view.Closing -= Closing;
-
-            if (deactivateFromViewModel)
-            {
+        private async Task ActivateViewModel() {
+            if (_model is not IActivate activator) {
                 return;
             }
 
-            var deactivatable = (IDeactivate)model;
+            await activator.ActivateAsync();
+        }
+
+        private void SubscribeToCloseEvetns() {
+            if (_model is not IDeactivate deactivatable) {
+                return;
+            }
+
+            _view.Closed += Closed;
+            deactivatable.Deactivated += Deactivated;
+        }
+
+        private void GuardClosing() {
+            if (_model is not IGuardClose guard) {
+                return;
+            }
+
+            _view.Closing += Closing;
+        }
+
+        private async void Closed(object sender, EventArgs e) {
+            _view.Closed -= Closed;
+            _view.Closing -= Closing;
+
+            if (deactivateFromViewModel ||
+                _model is not IDeactivate deactivatable) {
+                return;
+            }
 
             deactivatingFromView = true;
             await deactivatable.DeactivateAsync(true);
             deactivatingFromView = false;
         }
 
-        private Task Deactivated(object sender, DeactivationEventArgs e)
-        {
-            if (!e.WasClosed)
-            {
+        private Task Deactivated(object sender, DeactivationEventArgs e) {
+            if (!e.WasClosed) {
                 return Task.FromResult(false);
             }
 
-            ((IDeactivate)model).Deactivated -= Deactivated;
+            ((IDeactivate)_model).Deactivated -= Deactivated;
 
-            if (deactivatingFromView)
-            {
+            if (deactivatingFromView) {
                 return Task.FromResult(true);
             }
 
             deactivateFromViewModel = true;
             actuallyClosing = true;
-            view.Close();
+            _view.Close();
             actuallyClosing = false;
             deactivateFromViewModel = false;
 
             return Task.FromResult(true);
         }
 
-        private async void Closing(object sender, CancelEventArgs e)
-        {
-            if (e.Cancel)
-            {
+        private async void Closing(object sender, CancelEventArgs e) {
+            if (e.Cancel) {
                 return;
             }
 
-            var guard = (IGuardClose)model;
-
-            if (actuallyClosing)
-            {
+            if (actuallyClosing) {
                 actuallyClosing = false;
+
                 return;
             }
-
-            var cachedDialogResult = view.DialogResult;
 
             e.Cancel = true;
 
             await Task.Yield();
 
-            var canClose = await guard.CanCloseAsync(CancellationToken.None);
-
-            if (!canClose)
+            var guard = (IGuardClose)_model;
+            if (!await guard.CanCloseAsync(CancellationToken.None)) {
                 return;
+            }
 
             actuallyClosing = true;
 
-            if (cachedDialogResult == null)
-            {
-                view.Close();
+            bool? cachedDialogResult = _view.DialogResult;
+            if (cachedDialogResult == null) {
+                _view.Close();
+
+                return;
             }
-            else if (view.DialogResult != cachedDialogResult)
-            {
-                view.DialogResult = cachedDialogResult;
+
+            if (_view.DialogResult == cachedDialogResult) {
+                return;
             }
+
+            _view.DialogResult = cachedDialogResult;
         }
     }
 }

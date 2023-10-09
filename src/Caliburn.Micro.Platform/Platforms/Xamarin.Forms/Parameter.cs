@@ -1,31 +1,26 @@
-﻿#if XFORMS
+﻿using System;
+
+#if XFORMS
+using DependencyObject = Xamarin.Forms.BindableObject;
+using DependencyProperty = Xamarin.Forms.BindableProperty;
+#else
+    using Windows.UI.Xaml;
+#endif
+
+#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
 #else
 namespace Caliburn.Micro
 #endif
 {
-    using System;
-#if XFORMS
-    using global::Xamarin.Forms;
-    using DependencyObject = global::Xamarin.Forms.BindableObject;
-    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
-    using FrameworkElement = global::Xamarin.Forms.VisualElement;
-#else
-    using Windows.UI.Xaml;
-#endif
-
     /// <summary>
     /// Represents a parameter of an <see cref="ActionMessage"/>.
     /// </summary>
 #if WINDOWS_UWP || XFORMS
     public class Parameter : DependencyObject, IAttachedObject {
-        DependencyObject associatedObject;
 #else
-    public class Parameter : FrameworkElement, IAttachedObject
-    {
-        FrameworkElement associatedObject;
+    public class Parameter : FrameworkElement, IAttachedObject {
 #endif
-        WeakReference owner;
 
         /// <summary>
         /// A dependency property representing the parameter's value.
@@ -35,71 +30,61 @@ namespace Caliburn.Micro
                 "Value",
                 typeof(object),
                 typeof(Parameter),
-                null, 
-                OnValueChanged
-                );
+                null,
+                OnValueChanged);
+
+#if WINDOWS_UWP || XFORMS
+        private DependencyObject associatedObject;
+#else
+        FrameworkElement associatedObject;
+#endif
+        private WeakReference owner;
 
         /// <summary>
         /// Gets or sets the value of the parameter.
         /// </summary>
         /// <value>The value.</value>
-        public object Value
-        {
-            get { return GetValue(ValueProperty); }
-            set { SetValue(ValueProperty, value); }
+        public object Value {
+            get => GetValue(ValueProperty);
+            set => SetValue(ValueProperty, value);
         }
 
 #if WINDOWS_UWP || XFORMS
-        DependencyObject IAttachedObject.AssociatedObject {
+        DependencyObject IAttachedObject.AssociatedObject
 #else
         FrameworkElement IAttachedObject.AssociatedObject
-        {
 #endif
-            get { return associatedObject; }
-        }
-
+            => associatedObject;
 
         /// <summary>
         /// Gets or sets the owner.
         /// </summary>
-        protected ActionMessage Owner
-        {
-            get { return owner == null ? null : owner.Target as ActionMessage; }
-            set { owner = new WeakReference(value); }
+        protected ActionMessage Owner {
+            get => owner == null ? null : owner.Target as ActionMessage;
+            set => owner = new WeakReference(value);
         }
 
 #if WINDOWS_UWP || XFORMS
-        void IAttachedObject.Attach(DependencyObject dependencyObject) {
+        void IAttachedObject.Attach(DependencyObject dependencyObject) =>
 #else
-        void IAttachedObject.Attach(FrameworkElement dependencyObject)
-        {
+        void IAttachedObject.Attach(FrameworkElement dependencyObject) =>
 #endif
             associatedObject = dependencyObject;
-        }
 
         void IAttachedObject.Detach()
-        {
-            associatedObject = null;
-        }
+            => associatedObject = null;
 
         /// <summary>
         /// Makes the parameter aware of the <see cref="ActionMessage"/> that it's attached to.
         /// </summary>
         /// <param name="owner">The action message.</param>
         internal void MakeAwareOf(ActionMessage owner)
-        {
-            Owner = owner;
-        }
+            => Owner = owner;
 
-        static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
+        private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             var parameter = (Parameter)d;
-            var owner = parameter.Owner;
-
-            if (owner != null)
-            {
-                owner.UpdateAvailability();
-            }
+            ActionMessage owner = parameter.Owner;
+            owner?.UpdateAvailability();
         }
     }
 }

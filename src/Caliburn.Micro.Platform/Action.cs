@@ -1,4 +1,22 @@
-﻿#if XFORMS
+﻿#if WINDOWS_UWP
+using System.Linq;
+using System.Reflection;
+
+using Windows.UI.Xaml;
+#elif XFORMS
+using DependencyObject = Xamarin.Forms.BindableObject;
+using DependencyProperty = Xamarin.Forms.BindableProperty;
+using FrameworkElement = Xamarin.Forms.VisualElement;
+using UIElement = Xamarin.Forms.Element;
+#elif MAUI
+using DependencyObject = Microsoft.Maui.Controls.BindableObject;
+using DependencyProperty = Microsoft.Maui.Controls.BindableProperty;
+using FrameworkElement = Microsoft.Maui.Controls.VisualElement;
+#else
+using System.Windows;
+#endif
+
+#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
 #elif MAUI
 namespace Caliburn.Micro.Maui
@@ -6,30 +24,10 @@ namespace Caliburn.Micro.Maui
 namespace Caliburn.Micro
 #endif
 {
-#if WINDOWS_UWP
-    using System.Linq;
-    using Windows.UI.Xaml;
-    using System.Reflection;
-#elif XFORMS
-    using UIElement = global::Xamarin.Forms.Element;
-    using FrameworkElement = global::Xamarin.Forms.VisualElement;
-    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
-    using DependencyObject = global::Xamarin.Forms.BindableObject;
-#elif MAUI
-    using UIElement = global::Microsoft.Maui.Controls.Element;
-    using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
-    using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
-    using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
-#else
-    using System.Windows;
-#endif
-
     /// <summary>
     ///   A host for action related attached properties.
     /// </summary>
     public static class Action {
-        static readonly ILog Log = LogManager.GetLog(typeof(Action));
-
         /// <summary>
         ///   A property definition representing the target of an <see cref="ActionMessage" /> . The DataContext of the element will be set to this instance.
         /// </summary>
@@ -38,9 +36,8 @@ namespace Caliburn.Micro
                 "Target",
                 typeof(object),
                 typeof(Action),
-                null, 
-                OnTargetChanged
-                );
+                null,
+                OnTargetChanged);
 
         /// <summary>
         ///   A property definition representing the target of an <see cref="ActionMessage" /> . The DataContext of the element is not set to this instance.
@@ -50,27 +47,26 @@ namespace Caliburn.Micro
                 "TargetWithoutContext",
                 typeof(object),
                 typeof(Action),
-                null, 
-                OnTargetWithoutContextChanged
-                );
+                null,
+                OnTargetWithoutContextChanged);
+
+        private static readonly ILog Log = LogManager.GetLog(typeof(Action));
 
         /// <summary>
         ///   Sets the target of the <see cref="ActionMessage" /> .
         /// </summary>
         /// <param name="d"> The element to attach the target to. </param>
         /// <param name="target"> The target for instances of <see cref="ActionMessage" /> . </param>
-        public static void SetTarget(DependencyObject d, object target) {
-            d.SetValue(TargetProperty, target);
-        }
+        public static void SetTarget(DependencyObject d, object target)
+            => d.SetValue(TargetProperty, target);
 
         /// <summary>
         ///   Gets the target for instances of <see cref="ActionMessage" /> .
         /// </summary>
         /// <param name="d"> The element to which the target is attached. </param>
-        /// <returns> The target for instances of <see cref="ActionMessage" /> </returns>
-        public static object GetTarget(DependencyObject d) {
-            return d.GetValue(TargetProperty);
-        }
+        /// <returns> The target for instances of <see cref="ActionMessage" />. </returns>
+        public static object GetTarget(DependencyObject d)
+            => d.GetValue(TargetProperty);
 
         /// <summary>
         ///   Sets the target of the <see cref="ActionMessage" /> .
@@ -80,53 +76,47 @@ namespace Caliburn.Micro
         /// <remarks>
         ///   The DataContext will not be set.
         /// </remarks>
-        public static void SetTargetWithoutContext(DependencyObject d, object target) {
-            d.SetValue(TargetWithoutContextProperty, target);
-        }
+        public static void SetTargetWithoutContext(DependencyObject d, object target)
+            => d.SetValue(TargetWithoutContextProperty, target);
 
         /// <summary>
         ///   Gets the target for instances of <see cref="ActionMessage" /> .
         /// </summary>
         /// <param name="d"> The element to which the target is attached. </param>
-        /// <returns> The target for instances of <see cref="ActionMessage" /> </returns>
-        public static object GetTargetWithoutContext(DependencyObject d) {
-            return d.GetValue(TargetWithoutContextProperty);
-        }
+        /// <returns> The target for instances of <see cref="ActionMessage" />. </returns>
+        public static object GetTargetWithoutContext(DependencyObject d)
+            => d.GetValue(TargetWithoutContextProperty);
 
-        ///<summary>
+        /// <summary>
         ///  Checks if the <see cref="ActionMessage" /> -Target was set.
-        ///</summary>
-        ///<param name="element"> DependencyObject to check </param>
-        ///<returns> True if Target or TargetWithoutContext was set on <paramref name="element" /> </returns>
+        /// </summary>
+        /// <param name="element"> DependencyObject to check. </param>
+        /// <returns> True if Target or TargetWithoutContext was set on <paramref name="element" />. </returns>
         public static bool HasTargetSet(DependencyObject element) {
-            if (GetTarget(element) != null || GetTargetWithoutContext(element) != null)
+            if (GetTarget(element) != null || GetTargetWithoutContext(element) != null) {
                 return true;
+            }
 #if XFORMS
             return false;
 #else
-            var frameworkElement = element as FrameworkElement;
-            if (frameworkElement == null)
-                return false;
-
-            return ConventionManager.HasBinding(frameworkElement, TargetProperty)
-                   || ConventionManager.HasBinding(frameworkElement, TargetWithoutContextProperty);
+            return element is FrameworkElement frameworkElement &&
+                   (ConventionManager.HasBinding(frameworkElement, TargetProperty) ||
+                   ConventionManager.HasBinding(frameworkElement, TargetWithoutContextProperty));
 #endif
         }
 
 #if !XFORMS
-        ///<summary>
+        /// <summary>
         ///  Uses the action pipeline to invoke the method.
-        ///</summary>
-        ///<param name="target"> The object instance to invoke the method on. </param>
-        ///<param name="methodName"> The name of the method to invoke. </param>
-        ///<param name="view"> The view. </param>
-        ///<param name="source"> The source of the invocation. </param>
-        ///<param name="eventArgs"> The event args. </param>
-        ///<param name="parameters"> The method parameters. </param>
+        /// </summary>
+        /// <param name="target"> The object instance to invoke the method on. </param>
+        /// <param name="methodName"> The name of the method to invoke. </param>
+        /// <param name="view"> The view. </param>
+        /// <param name="source"> The source of the invocation. </param>
+        /// <param name="eventArgs"> The event args. </param>
+        /// <param name="parameters"> The method parameters. </param>
         public static void Invoke(object target, string methodName, DependencyObject view = null, FrameworkElement source = null, object eventArgs = null, object[] parameters = null) {
-
-            var message = new ActionMessage {MethodName = methodName};
-
+            var message = new ActionMessage { MethodName = methodName };
             var context = new ActionExecutionContext {
                 Target = target,
 #if WINDOWS_UWP
@@ -137,12 +127,10 @@ namespace Caliburn.Micro
                 Message = message,
                 View = view,
                 Source = source,
-                EventArgs = eventArgs
+                EventArgs = eventArgs,
             };
 
-            if (parameters != null) {
-                parameters.Apply(x => context.Message.Parameters.Add(x as Parameter ?? new Parameter { Value = x }));
-            }
+            parameters?.Apply(x => context.Message.Parameters.Add(x as Parameter ?? new Parameter { Value = x }));
 
             ActionMessage.InvokeAction(context);
 
@@ -151,38 +139,33 @@ namespace Caliburn.Micro
         }
 #endif
 
-        static void OnTargetWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            SetTargetCore(e, d, false);
-        }
+        private static void OnTargetWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => SetTargetCore(e, d, false);
 
-        static void OnTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            SetTargetCore(e, d, true);
-        }
+        private static void OnTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => SetTargetCore(e, d, true);
 
-        static void SetTargetCore(DependencyPropertyChangedEventArgs e, DependencyObject d, bool setContext) {
+        private static void SetTargetCore(DependencyPropertyChangedEventArgs e, DependencyObject d, bool setContext) {
             if (e.NewValue == e.OldValue || (Execute.InDesignMode && e.NewValue is string)) {
                 return;
             }
 
-            var target = e.NewValue;
+            object target = e.NewValue;
 #if XFORMS || MAUI
             Log.Info("Attaching message handler {0} to {1}.", target, d);
             Message.SetHandler(d, target);
 
-            if (setContext && d is FrameworkElement) {
+            if (setContext && d is FrameworkElement element) {
                 Log.Info("Setting DC of {0} to {1}.", d, target);
-                ((FrameworkElement)d).BindingContext = target;
+                element.BindingContext = target;
             }
 #else
-            if (setContext && d is FrameworkElement) {
+            if (setContext && d is FrameworkElement element) {
                 Log.Info("Setting DC of {0} to {1}.", d, target);
-                ((FrameworkElement)d).DataContext = target;
+                element.DataContext = target;
             }
 
-             Log.Info("Attaching message handler {0} to {1}.", target, d);
-             Message.SetHandler(d, target);
+            Log.Info("Attaching message handler {0} to {1}.", target, d);
+            Message.SetHandler(d, target);
 #endif
-            
 
         }
     }

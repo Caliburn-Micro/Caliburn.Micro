@@ -1,4 +1,23 @@
-﻿#if XFORMS
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+
+#if WINDOWS_UWP
+using Windows.UI.Xaml;
+#elif XFORMS
+using Xamarin.Forms;
+
+using DependencyObject = Xamarin.Forms.BindableObject;
+using DependencyProperty = Xamarin.Forms.BindableProperty;
+using FrameworkElement = Xamarin.Forms.VisualElement;
+#elif MAUI
+using DependencyObject = Microsoft.Maui.Controls.BindableObject;
+using FrameworkElement = Microsoft.Maui.Controls.VisualElement;
+#else
+using System.Windows;
+#endif
+
+#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
 #elif MAUI
 namespace Caliburn.Micro.Maui
@@ -6,25 +25,6 @@ namespace Caliburn.Micro.Maui
 namespace Caliburn.Micro
 #endif
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-#if WINDOWS_UWP
-    using Windows.UI.Xaml;
-#elif XFORMS
-    using global::Xamarin.Forms;
-    using DependencyObject = global::Xamarin.Forms.BindableObject;
-    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
-    using FrameworkElement = global::Xamarin.Forms.VisualElement;
-#elif MAUI
-    using global::Microsoft.Maui;
-    using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
-    using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
-    using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
-#else
-    using System.Windows;
-#endif
-
     /// <summary>
     /// The context used during the execution of an Action or its guard.
     /// </summary>
@@ -34,53 +34,59 @@ namespace Caliburn.Micro
         private WeakReference target;
         private WeakReference view;
         private Dictionary<string, object> values;
+        private bool _isDisposed;
 
         /// <summary>
-        /// Determines whether the action can execute.
+        /// Called when the execution context is disposed
+        /// </summary>
+        public event EventHandler Disposing = (sender, e) => { };
+
+        /// <summary>
+        /// Gets or sets func to determines whether the action can execute.
         /// </summary>
         /// <remarks>Returns true if the action can execute, false otherwise.</remarks>
-        public Func<bool> CanExecute;
+        public Func<bool> CanExecute { get; set; }
 
         /// <summary>
-        /// Any event arguments associated with the action's invocation.
+        /// Gets or sets any event arguments associated with the action's invocation.
         /// </summary>
-        public object EventArgs;
+        public object EventArgs { get; set; }
 
         /// <summary>
-        /// The actual method info to be invoked.
+        /// Gets or sets the actual method info to be invoked.
         /// </summary>
-        public MethodInfo Method;
+        public MethodInfo Method { get; set; }
 
         /// <summary>
-        /// The message being executed.
+        /// Gets or sets the message being executed.
         /// </summary>
         public ActionMessage Message {
-            get { return message == null ? null : message.Target as ActionMessage; }
-            set { message = new WeakReference(value); }
+            get => message == null ? null : message.Target as ActionMessage;
+            set => message = new WeakReference(value);
         }
 
         /// <summary>
-        /// The source from which the message originates.
+        /// Gets or sets the source from which the message originates.
         /// </summary>
         public FrameworkElement Source {
-            get { return source == null ? null : source.Target as FrameworkElement; }
-            set { source = new WeakReference(value); }
+            get => source == null ? null : source.Target as FrameworkElement;
+            set => source = new WeakReference(value);
         }
 
         /// <summary>
-        /// The instance on which the action is invoked.
+        /// Gets or sets the instance on which the action is invoked.
         /// </summary>
         public object Target {
-            get { return target == null ? null : target.Target; }
-            set { target = new WeakReference(value); }
+            get => target?.Target;
+            set => target = new WeakReference(value);
         }
 
         /// <summary>
-        /// The view associated with the target.
+        /// Gets or sets the view associated with the target.
         /// </summary>
         public DependencyObject View {
-            get { return view == null ? null : view.Target as DependencyObject; }
-            set { view = new WeakReference(value); }
+            get => view == null ? null : view.Target as DependencyObject;
+            set => view = new WeakReference(value);
         }
 
         /// <summary>
@@ -90,17 +96,19 @@ namespace Caliburn.Micro
         /// <returns>Custom data associated with the context.</returns>
         public object this[string key] {
             get {
-                if (values == null)
+                if (values == null) {
                     values = new Dictionary<string, object>();
+                }
 
-                object result;
-                values.TryGetValue(key, out result);
+                values.TryGetValue(key, out object result);
 
                 return result;
             }
+
             set {
-                if (values == null)
+                if (values == null) {
                     values = new Dictionary<string, object>();
+                }
 
                 values[key] = value;
             }
@@ -110,12 +118,30 @@ namespace Caliburn.Micro
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose() {
-            Disposing(this, System.EventArgs.Empty);
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
-        /// Called when the execution context is disposed
+        /// Perform Dispose.
         /// </summary>
-        public event EventHandler Disposing = delegate { };
+        /// <param name="disposing">Dispose managed resources.</param>
+        protected virtual void Dispose(bool disposing) {
+            if (_isDisposed) {
+                return;
+            }
+
+            if (disposing) {
+                Disposing(this, System.EventArgs.Empty);
+            }
+
+            message = null;
+            source = null;
+            target = null;
+            view = null;
+            values = null;
+
+            _isDisposed = true;
+        }
     }
 }

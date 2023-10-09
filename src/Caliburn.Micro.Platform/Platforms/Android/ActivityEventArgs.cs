@@ -1,28 +1,22 @@
 using System;
+
 using Android.App;
 
-namespace Caliburn.Micro
-{
+namespace Caliburn.Micro {
     /// <summary>
-    /// Arguments for activity events
+    /// Arguments for activity events.
     /// </summary>
-    public class ActivityEventArgs : EventArgs
-    {
-        private readonly Activity activity;
-
+    public class ActivityEventArgs : EventArgs {
         /// <summary>
-        /// Creates a new ActivityEventArgs.
+        /// Initializes a new instance of the <see cref="ActivityEventArgs"/> class.
         /// </summary>
         /// <param name="activity">The activity this event corresponds to.</param>
-        public ActivityEventArgs(Activity activity) {
-            this.activity = activity;
-        }
+        public ActivityEventArgs(Activity activity)
+            => Activity = activity;
 
         /// <summary>
-        /// The activity this event corresponds to.
+        /// Gets the activity this event corresponds to.
         /// </summary>
-        public Activity Activity {
-            get { return activity; }
-        }
+        public Activity Activity { get; }
     }
 }

@@ -1,17 +1,10 @@
 using System;
 
-namespace Caliburn.Micro
-{
+namespace Caliburn.Micro {
     /// <summary>
-    /// An interface to allow the IOSPlatformProvider provide view lifecycle events
+    /// An interface to allow the IOSPlatformProvider provide view lifecycle events.
     /// </summary>
-    public interface IUIViewController
-    {
-        /// <summary>
-        /// Returns if the current view is already loaded
-        /// </summary>
-        bool IsViewLoaded { get; }
-
+    public interface IUIViewController {
         /// <summary>
         /// Invoked when the view is loaded
         /// </summary>
@@ -21,5 +14,10 @@ namespace Caliburn.Micro
         /// Invoked the view appears
         /// </summary>
         event EventHandler ViewAppeared;
+
+        /// <summary>
+        /// Gets a value indicating whether returns if the current view is already loaded.
+        /// </summary>
+        bool IsViewLoaded { get; }
     }
 }

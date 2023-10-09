@@ -1,6 +1,4 @@
-﻿using System;
-using DependencyObject = Xamarin.Forms.BindableObject;
-using DependencyProperty = Xamarin.Forms.BindableProperty;
+﻿using DependencyProperty = Xamarin.Forms.BindableProperty;
 
 namespace Caliburn.Micro.Xamarin.Forms
 {
@@ -10,11 +8,8 @@ namespace Caliburn.Micro.Xamarin.Forms
     public class DependencyPropertyChangedEventArgs
     {
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="DependencyPropertyChangedEventArgs"/> class.
         /// </summary>
-        /// <param name="newValue"></param>
-        /// <param name="oldValue"></param>
-        /// <param name="property"></param>
         public DependencyPropertyChangedEventArgs(object newValue, object oldValue, DependencyProperty property) {
             NewValue = newValue;
             OldValue = oldValue;
@@ -24,23 +19,22 @@ namespace Caliburn.Micro.Xamarin.Forms
         /// <summary>
         /// Gets the value of the dependency property after the reported change.
         /// </summary>
-        /// 
         /// <returns>
         /// The dependency property value after the change.
         /// </returns>
         public object NewValue { get; private set; }
+
         /// <summary>
         /// Gets the value of the dependency property before the reported change.
         /// </summary>
-        /// 
         /// <returns>
         /// The dependency property value before the change.
         /// </returns>
         public object OldValue { get; private set; }
+
         /// <summary>
         /// Gets the identifier for the dependency property where the value change occurred.
         /// </summary>
-        /// 
         /// <returns>
         /// The identifier field of the dependency property where the value change occurred.
         /// </returns>
