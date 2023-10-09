@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+
 using Xunit;
 
 namespace Caliburn.Micro.Platform.Tests
@@ -16,7 +17,7 @@ namespace Caliburn.Micro.Platform.Tests
             var d3 = new DependencyObject();
             var d4 = new DependencyObject();
 
-            // d1 -> d2 and d3 -> d4, but d2 doesn't lead to d3, so d3 -> d4 is rejected
+            /* d1 -> d2 and d3 -> d4, but d2 doesn't lead to d3, so d3 -> d4 is rejected */
             route.AddHop(d1, d2);
             Assert.Throws<ArgumentException>(() => route.AddHop(d3, d4));
         }
@@ -29,7 +30,7 @@ namespace Caliburn.Micro.Platform.Tests
             var d2 = new DependencyObject();
             route.AddHop(d1, d2);
             DependencyObject target;
-            var result = route.TryGetHop(d1, out target);
+            bool result = route.TryGetHop(d1, out target);
             Assert.True(result);
             Assert.Same(d2, target);
         }
@@ -51,10 +52,10 @@ namespace Caliburn.Micro.Platform.Tests
             {
                 d2,
                 d3,
-                d4
+                d4,
             };
 
-            var source = d1;
+            DependencyObject source = d1;
             DependencyObject target;
 
             while (route.TryGetHop(source, out target))

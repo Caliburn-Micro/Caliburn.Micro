@@ -1,4 +1,46 @@
-﻿#if XFORMS
+﻿using System;
+
+#if WINDOWS_UWP
+using System.Reflection;
+
+using Windows.ApplicationModel;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Markup;
+using Windows.UI.Xaml.Media;
+
+#elif XFORMS
+using System.Reflection;
+
+using Xamarin.Forms;
+
+using ContentControl = Xamarin.Forms.ContentView;
+using DependencyObject = Xamarin.Forms.BindableObject;
+using DependencyProperty = Xamarin.Forms.BindableProperty;
+using FrameworkElement = Xamarin.Forms.VisualElement;
+using UIElement = Xamarin.Forms.Element;
+
+#elif MAUI
+using System.Reflection;
+
+/* using Microsoft.UI.Xaml; */
+using Microsoft.Maui.Controls;
+
+using ContentControl = Microsoft.Maui.Controls.ContentView;
+using DependencyObject = Microsoft.Maui.Controls.BindableObject;
+using DependencyProperty = Microsoft.Maui.Controls.BindableProperty;
+using FrameworkElement = Microsoft.Maui.Controls.VisualElement;
+using UIElement = Microsoft.Maui.Controls.Element;
+
+#else
+using System.ComponentModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Markup;
+#endif
+
+#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
 #elif MAUI
 namespace Caliburn.Micro.Maui
@@ -6,50 +48,10 @@ namespace Caliburn.Micro.Maui
 namespace Caliburn.Micro
 #endif
 {
-    using System;
-    using System.Linq;
-#if WINDOWS_UWP
-    using System.Reflection;
-    using Windows.ApplicationModel;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
-    using Windows.UI.Xaml.Markup;
-    using Windows.UI.Xaml.Media;
-#elif XFORMS
-    using System.Reflection;
-    using global::Xamarin.Forms;
-    using UIElement = global::Xamarin.Forms.Element;
-    using FrameworkElement = global::Xamarin.Forms.VisualElement;
-    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
-    using DependencyObject = global::Xamarin.Forms.BindableObject;
-    using ContentControl = global::Xamarin.Forms.ContentView;
-#elif MAUI
-    using System.Reflection;
-    using global::Microsoft.Maui.Controls;
-    using UIElement = global::Microsoft.Maui.Controls.Element;
-    using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
-    using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
-    using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
-    using ContentControl = global::Microsoft.Maui.Controls.ContentView;
-    //using Microsoft.UI.Xaml;
-#else
-    using System.ComponentModel;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Markup;
-#endif
-
     /// <summary>
     /// Hosts attached properties related to view models.
     /// </summary>
     public static class View {
-        static readonly ILog Log = LogManager.GetLog(typeof(View));
-#if WINDOWS_UWP || XFORMS || MAUI
-        const string DefaultContentPropertyName = "Content";
-#else
-        static readonly ContentPropertyAttribute DefaultContentProperty = new ContentPropertyAttribute("Content");
-#endif
-
         /// <summary>
         /// A dependency property which allows the framework to track whether a certain element has already been loaded in certain scenarios.
         /// </summary>
@@ -58,8 +60,7 @@ namespace Caliburn.Micro
                 "IsLoaded",
                 typeof(bool),
                 typeof(View),
-                false
-                );
+                false);
 
         /// <summary>
         /// A dependency property which marks an element as a name scope root.
@@ -69,8 +70,7 @@ namespace Caliburn.Micro
                 "IsScopeRoot",
                 typeof(bool),
                 typeof(View),
-                false
-                );
+                false);
 
         /// <summary>
         /// A dependency property which allows the override of convention application behavior.
@@ -79,8 +79,7 @@ namespace Caliburn.Micro
             DependencyPropertyHelper.RegisterAttached(
                 "ApplyConventions",
                 typeof(bool?),
-                typeof(View)
-                );
+                typeof(View));
 
         /// <summary>
         /// A dependency property for assigning a context to a particular portion of the UI.
@@ -90,21 +89,8 @@ namespace Caliburn.Micro
                 "Context",
                 typeof(object),
                 typeof(View),
-                null, 
-                OnContextChanged
-                );
-
-        /// <summary>
-        /// A dependency property for attaching a model to the UI.
-        /// </summary>
-        public static DependencyProperty ModelProperty =
-            DependencyPropertyHelper.RegisterAttached(
-                "Model",
-                typeof(object),
-                typeof(View),
-                null, 
-                OnModelChanged
-                );
+                null,
+                OnContextChanged);
 
         /// <summary>
         /// Used by the framework to indicate that this element was generated.
@@ -114,15 +100,95 @@ namespace Caliburn.Micro
                 "IsGenerated",
                 typeof(bool),
                 typeof(View),
-                false
-                );
+                false);
+
+        /// <summary>
+        /// A dependency property for attaching a model to the UI.
+        /// </summary>
+        public static readonly DependencyProperty ModelProperty =
+            DependencyPropertyHelper.RegisterAttached(
+                "Model",
+                typeof(object),
+                typeof(View),
+                null,
+                OnModelChanged);
+
+#if WINDOWS_UWP || XFORMS || MAUI
+        private const string DefaultContentPropertyName = "Content";
+#else
+        private static readonly ContentPropertyAttribute DefaultContentProperty
+            = new ContentPropertyAttribute("Content");
+#endif
+
+        private static readonly ILog Log = LogManager.GetLog(typeof(View));
+
+        private static bool? inDesignMode;
+
+        /// <summary>
+        /// Gets a value indicating whether the process is running in design mode.
+        /// </summary>
+        public static bool InDesignMode {
+            get {
+                if (inDesignMode == null) {
+#if XFORMS || MAUI
+                    inDesignMode = false;
+#elif WINDOWS_UWP
+                    inDesignMode = DesignMode.DesignModeEnabled;
+#else
+                    var descriptor = DependencyPropertyDescriptor.FromProperty(DesignerProperties.IsInDesignModeProperty, typeof(FrameworkElement));
+                    inDesignMode = (bool)descriptor.Metadata.DefaultValue;
+#endif
+                }
+
+                return inDesignMode.GetValueOrDefault(false);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets func used to retrieve the root, non-framework-created view.
+        /// </summary>
+        /// <remarks>In certain instances the services create UI elements.
+        /// For example, if you ask the window manager to show a UserControl as a dialog, it creates a window to host the UserControl in.
+        /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
+        /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was.
+        /// </remarks>
+        public static Func<object, object> GetFirstNonGeneratedView { get; set; }
+            = view => {
+                if (!(view is DependencyObject dependencyObject)) {
+                    return view;
+                }
+
+                if ((bool)dependencyObject.GetValue(IsGeneratedProperty)) {
+                    if (dependencyObject is ContentControl control) {
+                        return control.Content;
+                    }
+
+#if WINDOWS_UWP || XFORMS || MAUI
+                    Type type = dependencyObject.GetType();
+                    string contentPropertyName = GetContentPropertyName(type);
+
+                    return type.GetRuntimeProperty(contentPropertyName)
+                        .GetValue(dependencyObject, null);
+#else
+                    Type type = dependencyObject.GetType();
+                    ContentPropertyAttribute contentProperty = type.GetCustomAttributes(typeof(ContentPropertyAttribute), true)
+                                              .OfType<ContentPropertyAttribute>()
+                                              .FirstOrDefault() ?? DefaultContentProperty;
+
+                    return type.GetProperty(contentProperty.Name)
+                        .GetValue(dependencyObject, null);
+#endif
+                }
+
+                return dependencyObject;
+            };
 
         /// <summary>
         /// Executes the handler immediately if the element is loaded, otherwise wires it to the Loaded event.
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="handler">The handler.</param>
-        /// <returns>true if the handler was executed immediately; false otherwise</returns>
+        /// <returns>true if the handler was executed immediately; false otherwise.</returns>
         public static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler) {
 #if XFORMS || MAUI
             handler(element, new RoutedEventArgs());
@@ -137,15 +203,15 @@ namespace Caliburn.Micro
                 return true;
             }
 
-            RoutedEventHandler loaded = null;
-            loaded = (s, e) => {
-                element.Loaded -= loaded;
+            void OnLoaded(object s, RoutedEventArgs e) {
+                element.Loaded -= OnLoaded;
                 handler(s, e);
-            };
-            element.Loaded += loaded;
+            }
+
+            element.Loaded += OnLoaded;
+
             return false;
 #endif
-
         }
 
         /// <summary>
@@ -155,12 +221,12 @@ namespace Caliburn.Micro
         /// <param name="handler">The handler.</param>
         public static void ExecuteOnUnload(FrameworkElement element, RoutedEventHandler handler) {
 #if !XFORMS && !MAUI
-            RoutedEventHandler unloaded = null;
-            unloaded = (s, e) => {
-                element.Unloaded -= unloaded;
+            void OnUnloaded(object s, RoutedEventArgs e) {
+                element.Unloaded -= OnUnloaded;
                 handler(s, e);
-            };
-            element.Unloaded += unloaded;
+            }
+
+            element.Unloaded += OnUnloaded;
 #endif
         }
 
@@ -172,29 +238,21 @@ namespace Caliburn.Micro
         /// <returns>true if the element is loaded; otherwise, false.
         /// </returns>
         public static bool IsElementLoaded(FrameworkElement element) {
-            try
-            {
-                if ((element.Parent ?? VisualTreeHelper.GetParent(element)) != null)
-                {
+            try {
+                if ((element.Parent ?? VisualTreeHelper.GetParent(element)) != null) {
                     return true;
                 }
 
-                var rootVisual = Window.Current.Content;
+                UIElement rootVisual = Window.Current.Content;
 
-                if (rootVisual != null)
-                {
-                    return element == rootVisual;
-                }
-
-                return false;
-
-            }
-            catch
-            {
+                return rootVisual != null &&
+                       rootVisual == element;
+            } catch {
                 return false;
             }
         }
 #endif
+
 #if !XFORMS && !MAUI
         /// <summary>
         /// Executes the handler the next time the elements's LayoutUpdated event fires.
@@ -216,140 +274,88 @@ namespace Caliburn.Micro
                 handler(element, e);
             };
             element.LayoutUpdated += onLayoutUpdate;
-
         }
 #endif
-
-        /// <summary>
-        /// Used to retrieve the root, non-framework-created view.
-        /// </summary>
-        /// <remarks>In certain instances the services create UI elements.
-        /// For example, if you ask the window manager to show a UserControl as a dialog, it creates a window to host the UserControl in.
-        /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
-        /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was. 
-        /// </remarks>
-        public static Func<object, object> GetFirstNonGeneratedView = view => {
-            var dependencyObject = view as DependencyObject;
-            if (dependencyObject == null) {
-                return view;
-            }
-
-            if ((bool)dependencyObject.GetValue(IsGeneratedProperty)) {
-                if (dependencyObject is ContentControl) {
-                    return ((ContentControl)dependencyObject).Content;
-                }
-#if WINDOWS_UWP || XFORMS || MAUI
-                var type = dependencyObject.GetType();
-                var contentPropertyName = GetContentPropertyName(type);
-
-                return type.GetRuntimeProperty(contentPropertyName)
-                    .GetValue(dependencyObject, null);
-#else
-                var type = dependencyObject.GetType();
-                var contentProperty = type.GetCustomAttributes(typeof(ContentPropertyAttribute), true)
-                                          .OfType<ContentPropertyAttribute>()
-                                          .FirstOrDefault() ?? DefaultContentProperty;
-
-                return type.GetProperty(contentProperty.Name)
-                    .GetValue(dependencyObject, null);
-#endif
-            }
-
-            return dependencyObject;
-        };
 
         /// <summary>
         /// Gets the convention application behavior.
         /// </summary>
         /// <param name="d">The element the property is attached to.</param>
         /// <returns>Whether or not to apply conventions.</returns>
-        public static bool? GetApplyConventions(DependencyObject d) {
-            return (bool?)d.GetValue(ApplyConventionsProperty);
-        }
+        public static bool? GetApplyConventions(DependencyObject d)
+            => (bool?)d.GetValue(ApplyConventionsProperty);
 
         /// <summary>
         /// Sets the convention application behavior.
         /// </summary>
         /// <param name="d">The element to attach the property to.</param>
         /// <param name="value">Whether or not to apply conventions.</param>
-        public static void SetApplyConventions(DependencyObject d, bool? value) {
-            d.SetValue(ApplyConventionsProperty, value);
-        }
+        public static void SetApplyConventions(DependencyObject d, bool? value)
+            => d.SetValue(ApplyConventionsProperty, value);
 
         /// <summary>
         /// Sets the model.
         /// </summary>
         /// <param name="d">The element to attach the model to.</param>
         /// <param name="value">The model.</param>
-        public static void SetModel(DependencyObject d, object value) {
-            d.SetValue(ModelProperty, value);
-        }
+        public static void SetModel(DependencyObject d, object value) => d.SetValue(ModelProperty, value);
 
         /// <summary>
         /// Gets the model.
         /// </summary>
         /// <param name="d">The element the model is attached to.</param>
         /// <returns>The model.</returns>
-        public static object GetModel(DependencyObject d) {
-            return d.GetValue(ModelProperty);
-        }
+        public static object GetModel(DependencyObject d) => d.GetValue(ModelProperty);
 
         /// <summary>
         /// Gets the context.
         /// </summary>
         /// <param name="d">The element the context is attached to.</param>
         /// <returns>The context.</returns>
-        public static object GetContext(DependencyObject d) {
-            return d.GetValue(ContextProperty);
-        }
+        public static object GetContext(DependencyObject d) => d.GetValue(ContextProperty);
 
         /// <summary>
         /// Sets the context.
         /// </summary>
         /// <param name="d">The element to attach the context to.</param>
         /// <param name="value">The context.</param>
-        public static void SetContext(DependencyObject d, object value) {
-            d.SetValue(ContextProperty, value);
-        }
+        public static void SetContext(DependencyObject d, object value) => d.SetValue(ContextProperty, value);
 
-        static void OnModelChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs args) {
+        private static void OnModelChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs args) {
             if (args.OldValue == args.NewValue) {
                 return;
             }
 
             if (args.NewValue != null) {
-                var context = GetContext(targetLocation);
-                
-                var view = ViewLocator.LocateForModel(args.NewValue, targetLocation, context);
+                object context = GetContext(targetLocation);
+
+                UIElement view = ViewLocator.LocateForModel(args.NewValue, targetLocation, context);
                 ViewModelBinder.Bind(args.NewValue, view, context);
                 if (!SetContentProperty(targetLocation, view)) {
-
                     Log.Warn("SetContentProperty failed for ViewLocator.LocateForModel, falling back to LocateForModelType");
 
                     view = ViewLocator.LocateForModelType(args.NewValue.GetType(), targetLocation, context);
 
                     SetContentProperty(targetLocation, view);
                 }
-            }
-            else {
+            } else {
                 SetContentProperty(targetLocation, args.NewValue);
             }
         }
 
-        static void OnContextChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs e) {
+        private static void OnContextChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs e) {
             if (e.OldValue == e.NewValue) {
                 return;
             }
 
-            var model = GetModel(targetLocation);
+            object model = GetModel(targetLocation);
             if (model == null) {
                 return;
             }
 
-            var view = ViewLocator.LocateForModel(model, targetLocation, e.NewValue);
+            UIElement view = ViewLocator.LocateForModel(model, targetLocation, e.NewValue);
 
             if (!SetContentProperty(targetLocation, view)) {
-
                 Log.Warn("SetContentProperty failed for ViewLocator.LocateForModel, falling back to LocateForModelType");
 
                 view = ViewLocator.LocateForModelType(model.GetType(), targetLocation, e.NewValue);
@@ -360,9 +366,8 @@ namespace Caliburn.Micro
             ViewModelBinder.Bind(model, view, e.NewValue);
         }
 
-        static bool SetContentProperty(object targetLocation, object view) {
-            var fe = view as FrameworkElement;
-            if (fe != null && fe.Parent != null) {
+        private static bool SetContentProperty(object targetLocation, object view) {
+            if (view is FrameworkElement fe && fe.Parent != null) {
                 SetContentPropertyCore(fe.Parent, null);
             }
 
@@ -370,17 +375,16 @@ namespace Caliburn.Micro
         }
 
 #if WINDOWS_UWP || XFORMS || MAUI
-        static bool SetContentPropertyCore(object targetLocation, object view) {
+        private static bool SetContentPropertyCore(object targetLocation, object view) {
             try {
-                var type = targetLocation.GetType();
-                var contentPropertyName = GetContentPropertyName(type);
+                Type type = targetLocation.GetType();
+                string contentPropertyName = GetContentPropertyName(type);
 
                 type.GetRuntimeProperty(contentPropertyName)
                     .SetValue(targetLocation, view, null);
 
                 return true;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Log.Error(e);
 
                 return false;
@@ -388,16 +392,16 @@ namespace Caliburn.Micro
         }
 
         private static string GetContentPropertyName(Type type) {
-            var typeInfo = type.GetTypeInfo();
-            var contentProperty = typeInfo.GetCustomAttribute<ContentPropertyAttribute>();
-            
+            TypeInfo typeInfo = type.GetTypeInfo();
+            ContentPropertyAttribute contentProperty = typeInfo.GetCustomAttribute<ContentPropertyAttribute>();
+
             return contentProperty?.Name ?? DefaultContentPropertyName;
         }
 #else
-        static bool SetContentPropertyCore(object targetLocation, object view) {
+        private static bool SetContentPropertyCore(object targetLocation, object view) {
             try {
-                var type = targetLocation.GetType();
-                var contentProperty = type.GetCustomAttributes(typeof(ContentPropertyAttribute), true)
+                Type type = targetLocation.GetType();
+                ContentPropertyAttribute contentProperty = type.GetCustomAttributes(typeof(ContentPropertyAttribute), true)
                                           .OfType<ContentPropertyAttribute>()
                                           .FirstOrDefault() ?? DefaultContentProperty;
 
@@ -405,38 +409,12 @@ namespace Caliburn.Micro
                     .SetValue(targetLocation, view, null);
 
                 return true;
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 Log.Error(e);
 
                 return false;
             }
         }
 #endif
-
-        private static bool? inDesignMode;
-
-        /// <summary>
-        /// Gets a value that indicates whether the process is running in design mode.
-        /// </summary>
-        public static bool InDesignMode
-        {
-            get
-            {
-                if (inDesignMode == null)
-                {
-#if XFORMS || MAUI
-                    inDesignMode = false;
-#elif WINDOWS_UWP
-                    inDesignMode = DesignMode.DesignModeEnabled;
-#else
-                    var descriptor = DependencyPropertyDescriptor.FromProperty(DesignerProperties.IsInDesignModeProperty, typeof(FrameworkElement));
-                    inDesignMode = (bool)descriptor.Metadata.DefaultValue;
-#endif
-                }
-
-                return inDesignMode.GetValueOrDefault(false);
-            }
-        }
     }
 }

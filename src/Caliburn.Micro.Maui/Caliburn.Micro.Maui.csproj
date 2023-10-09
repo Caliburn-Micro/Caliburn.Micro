@@ -1,35 +1,35 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net6.0-windows10.0.19041</TargetFrameworks>
-    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-    
-    <UseMaui>true</UseMaui>
-		<SingleProject>true</SingleProject>
-
+  <PropertyGroup Label="Caliburn.Micro.Maui framework target list">
+    <TargetList>
+      net6.0;
+      net6.0-android;
+      net6.0-ios;
+      net6.0-maccatalyst
+    </TargetList>
+  </PropertyGroup>
+  
+  <PropertyGroup>
     <DefineConstants>MAUI</DefineConstants>
 
-		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">14.2</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
-
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <Nullable>disable</Nullable>
+    <LangVersion>8.0</LangVersion>
     <PackageId>Caliburn.Micro.Maui</PackageId>
     <Product>Caliburn.Micro.Maui</Product>
-  </PropertyGroup>
 
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
+    <TargetFrameworks>$(TargetList)</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net6.0-windows10.0.19041</TargetFrameworks>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
 
-  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
-    <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'all'))" />
-    </ItemGroup>
-  </Target>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">14.2</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</SupportedOSPlatformVersion>
+
+    <TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" AdditionalProperties="TargetFramework=netstandard2.0" PrivateAssets="all">
@@ -52,23 +52,9 @@
     <Compile Include="..\Caliburn.Micro.Platform\Message.cs" Link="Message.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\MessageBinder.cs" Link="MessageBinder.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Parser.cs" Link="Parser.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\ActionMessage.cs" Link="Platforms\Maui\ActionMessage.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\AttachedCollection.cs" Link="Platforms\Maui\AttachedCollection.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\ConventionManager.cs" Link="Platforms\Maui\ConventionManager.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\DependencyPropertyChangedEventArgs.cs" Link="Platforms\Maui\DependencyPropertyChangedEventArgs.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\FormsApplication.cs" Link="Platforms\Maui\FormsApplication.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\FormsPlatformProvider.cs" Link="Platforms\Maui\FormsPlatformProvider.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\HttpUtility.cs" Link="Platforms\Maui\HttpUtility.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\IAttachedObject.cs" Link="Platforms\Maui\IAttachedObject.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\INavigationService.cs" Link="Platforms\Maui\INavigationService.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\NavigationExtensions.cs" Link="Platforms\Maui\NavigationExtensions.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\NavigationHelper.cs" Link="Platforms\Maui\NavigationHelper.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\NavigationPageAdapter.cs" Link="Platforms\Maui\NavigationPageAdapter.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\Parameter.cs" Link="Platforms\Maui\Parameter.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\PropertyChangedCallback.cs" Link="Platforms\Maui\PropertyChangedCallback.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\RoutedEventArgs.cs" Link="Platforms\Maui\RoutedEventArgs.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\RoutedEventHandler.cs" Link="Platforms\Maui\RoutedEventHandler.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\TriggerActionBase.cs" Link="Platforms\Maui\TriggerActionBase.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\*.cs">
+      <Link>Platforms\Maui\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </Compile>
     <Compile Include="..\Caliburn.Micro.Platform\View.cs" Link="View.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\ViewLocator.cs" Link="ViewLocator.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\ViewModelBinder.cs" Link="ViewModelBinder.cs" />
@@ -77,22 +63,28 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-android'">
     <Compile Remove="*.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\Android\**\*.cs" Link="Platforms\Maui\Android\**\*.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\Android\**\*.cs">
+      <Link>Platforms\Maui\Android\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </Compile>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-ios'">
+  <ItemGroup Condition=" ('$(TargetFramework)' == 'net6.0-ios') or ('$(TargetFramework)' == 'net6.0-maccatalyst')">
     <Compile Remove="*.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\ios\**\*.cs" Link="Platforms\Maui\ios\**\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">
-    <Compile Remove="*.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\ios\**\*.cs" Link="Platforms\Maui\ios\**\*.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\ios\**\*.cs">
+      <Link>Platforms\Maui\ios\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\Windows\**\*.cs" />
-    <!--<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />-->
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\Windows\**\*.cs">
+      <Link>Platforms\Maui\Windows\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </Compile>
   </ItemGroup>
 
+  <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'all'))" />
+    </ItemGroup>
+  </Target>
+  
 </Project>

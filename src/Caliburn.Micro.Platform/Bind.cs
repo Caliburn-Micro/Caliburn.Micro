@@ -1,4 +1,28 @@
-﻿#if XFORMS
+﻿#if WINDOWS_UWP
+using System.Globalization;
+
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Data;
+#elif XFORMS
+using System;
+
+using Xamarin.Forms;
+
+using DependencyObject =Xamarin.Forms.BindableObject;
+using DependencyProperty = Xamarin.Forms.BindableProperty;
+using FrameworkElement = Xamarin.Forms.VisualElement;
+
+#elif MAUI
+using DependencyObject = Microsoft.Maui.Controls.BindableObject;
+using DependencyProperty = Microsoft.Maui.Controls.BindableProperty;
+using FrameworkElement = Microsoft.Maui.Controls.VisualElement;
+#else
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
+#endif
+
+#if XFORMS
 namespace Caliburn.Micro.Xamarin.Forms
 #elif MAUI
 namespace Caliburn.Micro.Maui
@@ -6,27 +30,6 @@ namespace Caliburn.Micro.Maui
 namespace Caliburn.Micro
 #endif
 {
-    using System;
-#if WINDOWS_UWP
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Data;
-#elif XFORMS
-    using global::Xamarin.Forms;
-    using UIElement = global::Xamarin.Forms.Element;
-    using FrameworkElement = global::Xamarin.Forms.VisualElement;
-    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
-    using DependencyObject =global::Xamarin.Forms.BindableObject;
-#elif MAUI
-    using global::Microsoft.Maui;
-    using UIElement = global::Microsoft.Maui.Controls.Element;
-    using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
-    using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
-    using DependencyObject =global::Microsoft.Maui.Controls.BindableObject;
-#else
-    using System.Windows;
-    using System.Windows.Data;
-#endif
-
     /// <summary>
     ///   Hosts dependency properties for binding.
     /// </summary>
@@ -34,88 +37,120 @@ namespace Caliburn.Micro
         /// <summary>
         ///   Allows binding on an existing view. Use this on root UserControls, Pages and Windows; not in a DataTemplate.
         /// </summary>
-        public static DependencyProperty ModelProperty =
-            DependencyPropertyHelper.RegisterAttached(
+        public static readonly DependencyProperty ModelProperty
+            = DependencyPropertyHelper.RegisterAttached(
                 "Model",
                 typeof(object),
                 typeof(Bind),
-                null, 
+                null,
                 ModelChanged);
 
         /// <summary>
         ///   Allows binding on an existing view without setting the data context. Use this from within a DataTemplate.
         /// </summary>
-        public static DependencyProperty ModelWithoutContextProperty =
-            DependencyPropertyHelper.RegisterAttached(
+        public static readonly DependencyProperty ModelWithoutContextProperty
+            = DependencyPropertyHelper.RegisterAttached(
                 "ModelWithoutContext",
                 typeof(object),
                 typeof(Bind),
-                null, 
+                null,
                 ModelWithoutContextChanged);
 
-        internal static DependencyProperty NoContextProperty =
-            DependencyPropertyHelper.RegisterAttached(
+        /// <summary>
+        /// Allows application of conventions at design-time.
+        /// </summary>
+        public static readonly DependencyProperty AtDesignTimeProperty
+            = DependencyPropertyHelper.RegisterAttached(
+                "AtDesignTime",
+                typeof(bool),
+                typeof(Bind),
+                false,
+                AtDesignTimeChanged);
+
+        internal static readonly DependencyProperty NoContextProperty
+            = DependencyPropertyHelper.RegisterAttached(
                 "NoContext",
                 typeof(bool),
                 typeof(Bind),
                 false);
 
-        /// <summary>
-        ///   Gets the model to bind to.
-        /// </summary>
-        /// <param name = "dependencyObject">The dependency object to bind to.</param>
-        /// <returns>The model.</returns>
-        public static object GetModelWithoutContext(DependencyObject dependencyObject) {
-            return dependencyObject.GetValue(ModelWithoutContextProperty);
-        }
-
-        /// <summary>
-        ///   Sets the model to bind to.
-        /// </summary>
-        /// <param name = "dependencyObject">The dependency object to bind to.</param>
-        /// <param name = "value">The model.</param>
-        public static void SetModelWithoutContext(DependencyObject dependencyObject, object value) {
-            dependencyObject.SetValue(ModelWithoutContextProperty, value);
-        }
+        private static readonly DependencyProperty DataContextProperty
+            = DependencyPropertyHelper.RegisterAttached(
+                "DataContext",
+                typeof(object),
+                typeof(Bind),
+                null,
+                DataContextChanged);
 
         /// <summary>
         ///   Gets the model to bind to.
         /// </summary>
         /// <param name = "dependencyObject">The dependency object to bind to.</param>
         /// <returns>The model.</returns>
-        public static object GetModel(DependencyObject dependencyObject) {
-            return dependencyObject.GetValue(ModelProperty);
-        }
+        public static object GetModelWithoutContext(DependencyObject dependencyObject)
+            => dependencyObject.GetValue(ModelWithoutContextProperty);
 
         /// <summary>
         ///   Sets the model to bind to.
         /// </summary>
         /// <param name = "dependencyObject">The dependency object to bind to.</param>
         /// <param name = "value">The model.</param>
-        public static void SetModel(DependencyObject dependencyObject, object value) {
-            dependencyObject.SetValue(ModelProperty, value);
-        }
+        public static void SetModelWithoutContext(DependencyObject dependencyObject, object value)
+            => dependencyObject.SetValue(ModelWithoutContextProperty, value);
 
-        static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        /// <summary>
+        ///   Gets the model to bind to.
+        /// </summary>
+        /// <param name = "dependencyObject">The dependency object to bind to.</param>
+        /// <returns>The model.</returns>
+        public static object GetModel(DependencyObject dependencyObject) => dependencyObject.GetValue(ModelProperty);
+
+        /// <summary>
+        ///   Sets the model to bind to.
+        /// </summary>
+        /// <param name = "dependencyObject">The dependency object to bind to.</param>
+        /// <param name = "value">The model.</param>
+        public static void SetModel(DependencyObject dependencyObject, object value)
+            => dependencyObject.SetValue(ModelProperty, value);
+
+        /// <summary>
+        /// Gets whether or not conventions are being applied at design-time.
+        /// </summary>
+        /// <param name="dependencyObject">The ui to apply conventions to.</param>
+        /// <returns>Whether or not conventions are applied.</returns>
+#if !MAUI && (NET || CAL_NETCORE)
+        [AttachedPropertyBrowsableForTypeAttribute(typeof(DependencyObject))]
+#endif
+        public static bool GetAtDesignTime(DependencyObject dependencyObject)
+            => (bool)dependencyObject.GetValue(AtDesignTimeProperty);
+
+        /// <summary>
+        /// Sets whether or not do bind conventions at design-time.
+        /// </summary>
+        /// <param name="dependencyObject">The ui to apply conventions to.</param>
+        /// <param name="value">Whether or not to apply conventions.</param>
+        public static void SetAtDesignTime(DependencyObject dependencyObject, bool value)
+            => dependencyObject.SetValue(AtDesignTimeProperty, value);
+
+        private static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             if (View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
                 return;
             }
 
-            var fe = d as FrameworkElement;
-            if (fe == null) {
+            if (!(d is FrameworkElement fe)) {
                 return;
             }
 
             View.ExecuteOnLoad(fe, delegate {
-                var target = e.NewValue;
+                object target = e.NewValue;
 
                 d.SetValue(View.IsScopeRootProperty, true);
 
 #if XFORMS || MAUI
-                var context = fe.Id.ToString("N");
+                string context = fe.Id.ToString("N");
 #else
-                var context = string.IsNullOrEmpty(fe.Name)
-                                  ? fe.GetHashCode().ToString()
+                string context = string.IsNullOrEmpty(fe.Name)
+                                  ? fe.GetHashCode().ToString(CultureInfo.InvariantCulture)
                                   : fe.Name;
 #endif
 
@@ -123,25 +158,24 @@ namespace Caliburn.Micro
             });
         }
 
-        static void ModelWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        private static void ModelWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             if (View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
                 return;
             }
 
-            var fe = d as FrameworkElement;
-            if (fe == null) {
+            if (!(d is FrameworkElement fe)) {
                 return;
             }
 
             View.ExecuteOnLoad(fe, delegate {
-                var target = e.NewValue;
+                object target = e.NewValue;
                 d.SetValue(View.IsScopeRootProperty, true);
 
 #if XFORMS || MAUI
-                var context = fe.Id.ToString("N");
+                string context = fe.Id.ToString("N");
 #else
-                var context = string.IsNullOrEmpty(fe.Name)
-                                  ? fe.GetHashCode().ToString()
+                string context = string.IsNullOrEmpty(fe.Name)
+                                  ? fe.GetHashCode().ToString(CultureInfo.InvariantCulture)
                                   : fe.Name;
 #endif
 
@@ -150,47 +184,17 @@ namespace Caliburn.Micro
             });
         }
 
-        /// <summary>
-        /// Allows application of conventions at design-time.
-        /// </summary>
-        public static DependencyProperty AtDesignTimeProperty =
-            DependencyPropertyHelper.RegisterAttached(
-                "AtDesignTime",
-                typeof(bool),
-                typeof(Bind),
-                false, 
-                AtDesignTimeChanged);
-
-        /// <summary>
-        /// Gets whether or not conventions are being applied at design-time.
-        /// </summary>
-        /// <param name="dependencyObject">The ui to apply conventions to.</param>
-        /// <returns>Whether or not conventions are applied.</returns>
-#if !MAUI && (NET || CAL_NETCORE) 
-        [AttachedPropertyBrowsableForTypeAttribute(typeof(DependencyObject))]
-#endif
-        public static bool GetAtDesignTime(DependencyObject dependencyObject) {
-            return (bool)dependencyObject.GetValue(AtDesignTimeProperty);
-        }
-
-        /// <summary>
-        /// Sets whether or not do bind conventions at design-time.
-        /// </summary>
-        /// <param name="dependencyObject">The ui to apply conventions to.</param>
-        /// <param name="value">Whether or not to apply conventions.</param>
-        public static void SetAtDesignTime(DependencyObject dependencyObject, bool value) {
-            dependencyObject.SetValue(AtDesignTimeProperty, value);
-        }
-
-        static void AtDesignTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (!View.InDesignMode)
+        private static void AtDesignTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (!View.InDesignMode) {
                 return;
+            }
 
-            var atDesignTime = (bool) e.NewValue;
-            if (!atDesignTime)
+            bool atDesignTime = (bool)e.NewValue;
+            if (!atDesignTime) {
                 return;
+            }
 #if XFORMS
-            d.SetBinding(DataContextProperty, String.Empty);
+            d.SetBinding(DataContextProperty, string.Empty);
 #elif MAUI
             d.SetBinding(DataContextProperty, null);
 #else
@@ -198,28 +202,25 @@ namespace Caliburn.Micro
 #endif
         }
 
-        static readonly DependencyProperty DataContextProperty =
-            DependencyPropertyHelper.RegisterAttached(
-                "DataContext",
-                typeof(object),
-                typeof(Bind),
-                null, DataContextChanged);
-
-        static void DataContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (!View.InDesignMode)
+        private static void DataContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (!View.InDesignMode) {
                 return;
+            }
 
-            var enable = d.GetValue(AtDesignTimeProperty);
-            if (enable == null || ((bool)enable) == false || e.NewValue == null)
+            object enable = d.GetValue(AtDesignTimeProperty);
+            if (enable == null ||
+                (enable is bool isEnabled && !isEnabled) ||
+                e.NewValue == null) {
                 return;
+            }
 
-            var fe = d as FrameworkElement;
-            if (fe == null)
+            if (!(d is FrameworkElement fe)) {
                 return;
+            }
 #if XFORMS || MAUI
             ViewModelBinder.Bind(e.NewValue, d, fe.Id.ToString("N"));
 #else
-            ViewModelBinder.Bind(e.NewValue, d, string.IsNullOrEmpty(fe.Name) ? fe.GetHashCode().ToString() : fe.Name);
+            ViewModelBinder.Bind(e.NewValue, d, string.IsNullOrEmpty(fe.Name) ? fe.GetHashCode().ToString(CultureInfo.InvariantCulture) : fe.Name);
 #endif
         }
     }

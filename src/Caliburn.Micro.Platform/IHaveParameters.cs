@@ -11,7 +11,7 @@ namespace Caliburn.Micro
     /// </summary>
     public interface IHaveParameters {
         /// <summary>
-        /// Represents the parameters of a message.
+        /// Gets value represents the parameters of a message.
         /// </summary>
         AttachedCollection<Parameter> Parameters { get; }
     }
