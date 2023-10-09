@@ -1,15 +1,14 @@
 ﻿#if WINDOWS_UWP
-namespace Caliburn.Micro
-{
-    using System;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Data;
+using System;
 
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Data;
+
+namespace Caliburn.Micro {
     /// <summary>
     /// An <see cref="IValueConverter"/> which converts <see cref="bool"/> to <see cref="Visibility"/>.
     /// </summary>
-    public class BooleanToVisibilityConverter : IValueConverter
-    {
+    public class BooleanToVisibilityConverter : IValueConverter {
         /// <summary>
         /// Converts a boolean value to a <see cref="Visibility"/> value.
         /// </summary>
@@ -21,9 +20,9 @@ namespace Caliburn.Micro
         /// A converted value. If the method returns null, the valid null value is used.
         /// </returns>
         public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            return ((bool)value) ? Visibility.Visible : Visibility.Collapsed;
-        }
+            => ((bool)value)
+                ? Visibility.Visible
+                : Visibility.Collapsed;
 
         /// <summary>
         /// Converts a value <see cref="Visibility"/> value to a boolean value.
@@ -36,9 +35,7 @@ namespace Caliburn.Micro
         /// A converted value. If the method returns null, the valid null value is used.
         /// </returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            return ((Visibility)value) == Visibility.Visible;
-        }
+            => ((Visibility)value) == Visibility.Visible;
     }
 }
 #endif
