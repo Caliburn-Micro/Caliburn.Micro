@@ -1,27 +1,23 @@
-﻿using System;
-using Microsoft.Maui.Controls;
+﻿using Microsoft.Maui.Controls;
 
-namespace Caliburn.Micro.Maui
-{
+namespace Caliburn.Micro.Maui {
     /// <summary>
-    /// Helper class to try and abtract the differences in TriggerAction across platforms
+    /// Helper class to try and abtract the differences in TriggerAction across platforms.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public abstract class TriggerActionBase<T> : TriggerAction<T> 
+    /// <typeparam name="T">The bindable object type.</typeparam>
+    public abstract class TriggerActionBase<T> : TriggerAction<T>
         where T : BindableObject {
-
         private VisualElement associatedObject;
 
         /// <summary>
-        /// Gets or sets the object to which this <see cref="TriggerActionBase{T}"/> is attached. 
+        /// Gets or sets the object to which this <see cref="TriggerActionBase{T}"/> is attached.
         /// </summary>
-        public VisualElement AssociatedObject
-        {
-            get { return associatedObject; }
-            set
-            {
-                if (associatedObject == value)
+        public VisualElement AssociatedObject {
+            get => associatedObject;
+            set {
+                if (associatedObject == value) {
                     return;
+                }
 
                 OnDetaching();
 
@@ -34,15 +30,13 @@ namespace Caliburn.Micro.Maui
         /// <summary>
         ///  Called after the action is attached to an AssociatedObject.
         /// </summary>
-        protected virtual void OnAttached()
-        {
+        protected virtual void OnAttached() {
         }
 
         /// <summary>
         /// Called when the action is being detached from its AssociatedObject, but before it has actually occurred.
         /// </summary>
-        protected virtual void OnDetaching()
-        {
+        protected virtual void OnDetaching() {
         }
     }
 }

@@ -1,24 +1,43 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
+  <PropertyGroup Label="Caliburn framework target list">
+    <TargetList>
+      net462;
+      netcoreapp3.1;
+      net6.0-windows;
+      net7.0-windows;
+      uap10.0.19041;
+      MonoAndroid90;
+      Xamarin.iOS10;
+    </TargetList>
+  </PropertyGroup>
+
   <PropertyGroup>
-    <TargetFrameworks>net462;uap10.0.19041;Xamarin.iOS10;MonoAndroid90;netcoreapp3.1;net6.0-windows;net7.0-windows</TargetFrameworks>
+    <TargetFrameworks>$(TargetList)</TargetFrameworks>
     <PackageId>Caliburn.Micro</PackageId>
     <Product>Caliburn.Micro</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
     <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
-
+    <LangVersion>9.0</LangVersion>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-
   </PropertyGroup>
 
-  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
-    <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'all'))" />
-    </ItemGroup>
-  </Target>
+  <ItemGroup Label="Nuget Package Reference List">
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" Condition=" ('$(TargetFramework)' == 'net462') or ('$(TargetFramework)' == 'netcoreapp3.1') " />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" Condition=" ('$(TargetFramework)' == 'net6.0-windows') or ('$(TargetFramework)' == 'net7.0-windows') " />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" Condition=" '$(TargetFramework)' == 'netcoreapp3.1' " />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" Condition="'$(TargetFramework)' == 'uap10.0.19041'" />
+  </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Label="Library DLL Reference" Condition="'$(TargetFramework)' == 'net462'">
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  
+  <ItemGroup Label="Project Reference List">
     <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" AdditionalProperties="TargetFramework=netstandard2.0" PrivateAssets="all">
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <IncludeAssets>Caliburn.Micro.Platform.Core.dll</IncludeAssets>
@@ -27,60 +46,43 @@
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <ExcludeAssets>Caliburn.Micro.Core.dll</ExcludeAssets>
     </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup Label="Exclude ALL by default (include them as None)">
     <Compile Remove="Platforms\**\*.cs" />
     <None Include="Platforms\**\*.cs" />
-    <Compile Remove="Platforms\**\**\*.cs" />
-    <None Include="Platforms\**\**\*.cs" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <LangVersion>9.0</LangVersion>
-  </PropertyGroup>
-  
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
+  <ItemGroup Label="Include .net source files" Condition=" ('$(TargetFramework)' == 'net462') or ('$(TargetFramework)' == 'netcoreapp3.1') or ('$(TargetFramework)' == 'net6.0-windows') or ('$(TargetFramework)' == 'net7.0-windows')">
     <Compile Include="Platforms\net46-netcore\**\*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
-    <Compile Include="Platforms\net46-netcore\**\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
-    <Compile Include="Platforms\net46-netcore\**\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-windows'">
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
-    <Compile Include="Platforms\net46-netcore\**\*.cs" />
-  </ItemGroup>
-  
-  <ItemGroup Label="Package">
-    <None Include="Platforms\uap\Caliburn.Micro.Platform.rd.xml" PackagePath="lib\uap10.0.16299\Caliburn.Micro.Platform\Properties\Caliburn.Micro.Platform.rd.xml" Pack="true" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.19041'">
+  <ItemGroup Label="Include Univeral Windows Application source files" Condition="'$(TargetFramework)' == 'uap10.0.19041'">
     <Compile Include="Platforms\uap\**\*.cs" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid90'">
+  <ItemGroup Label="Include Android source files" Condition="'$(TargetFramework)' == 'MonoAndroid90'">
     <Compile Remove="*.cs" />
     <Compile Include="Platforms\android\**\*.cs" />
     <Compile Include="ViewModelLocator.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'Xamarin.iOS10'">
+  <ItemGroup Label="Include iOS source files" Condition="'$(TargetFramework)' == 'Xamarin.iOS10'">
     <Compile Remove="*.cs" />
     <Compile Include="Platforms\ios\**\*.cs" />
     <Compile Include="ViewModelLocator.cs" />
   </ItemGroup>
+
+  <ItemGroup Label="Package Additional Files">
+    <None Include="Platforms\uap\Caliburn.Micro.Platform.rd.xml"
+          PackagePath="lib\uap10.0.19041\Caliburn.Micro.Platform\Properties\Caliburn.Micro.Platform.rd.xml"
+          Pack="true" />
+  </ItemGroup>
+
+  <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'all'))" />
+    </ItemGroup>
+  </Target>
 
 </Project>

@@ -1,46 +1,57 @@
-﻿namespace Caliburn.Micro
-{
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
+namespace Caliburn.Micro {
     /// <summary>
-    /// Class to specify settings for configuring type mappings by the ViewLocator or ViewModelLocator
+    /// Class to specify settings for configuring type mappings by the ViewLocator or ViewModelLocator.
     /// </summary>
-    public class TypeMappingConfiguration
-    {
+    public class TypeMappingConfiguration {
         /// <summary>
-        /// The default subnamespace for Views. Used for creating default subnamespace mappings. Defaults to "Views".
+        /// Initializes a new instance of the <see cref="TypeMappingConfiguration"/> class.
         /// </summary>
-        public string DefaultSubNamespaceForViews { get; set; } = "Views";
+        public TypeMappingConfiguration() {
+            DefaultSubNamespaceForViews = "Views";
+            DefaultSubNamespaceForViewModels = "ViewModels";
+            UseNameSuffixesInMappings = true;
+            NameFormat = @"{0}{1}";
+            IncludeViewSuffixInViewModelNames = true;
+            ViewSuffixList = new List<string>(new[] { "View", "Page" });
+            ViewModelSuffix = "ViewModel";
+        }
 
         /// <summary>
-        /// The default subnamespace for ViewModels. Used for creating default subnamespace mappings. Defaults to "ViewModels".
+        /// Gets or sets the default subnamespace for Views. Used for creating default subnamespace mappings. Defaults to "Views".
         /// </summary>
-        public string DefaultSubNamespaceForViewModels { get; set; } = "ViewModels";
+        public string DefaultSubNamespaceForViews { get; set; }
 
         /// <summary>
-        /// Flag to indicate whether or not the name of the Type should be transformed when adding a type mapping. Defaults to true.
+        /// Gets or sets the default subnamespace for ViewModels. Used for creating default subnamespace mappings. Defaults to "ViewModels".
         /// </summary>
-        public bool UseNameSuffixesInMappings { get; set; } = true;
+        public string DefaultSubNamespaceForViewModels { get; set; }
 
         /// <summary>
-        /// The format string used to compose the name of a type from base name and name suffix
+        /// Gets or sets a value indicating whether flag to indicate whether or not the name of the Type should be transformed when adding a type mapping. Defaults to true.
         /// </summary>
-        public string NameFormat { get; set; } = @"{0}{1}";
+        public bool UseNameSuffixesInMappings { get; set; }
 
         /// <summary>
-        /// Flag to indicate if ViewModel names should include View suffixes (i.e. CustomerPageViewModel vs. CustomerViewModel)
+        /// Gets or sets the format string used to compose the name of a type from base name and name suffix.
         /// </summary>
-        public bool IncludeViewSuffixInViewModelNames { get; set; } = true;
+        public string NameFormat { get; set; }
 
         /// <summary>
-        /// List of View suffixes for which default type mappings should be created. Applies only when UseNameSuffixesInMappings = true.
-        /// Default values are "View", "Page"
+        /// Gets or sets a value indicating whether flag to indicate if ViewModel names should include View suffixes (i.e. CustomerPageViewModel vs. CustomerViewModel).
         /// </summary>
-        public List<string> ViewSuffixList { get; set; } = new List<string>(new[] { "View", "Page" });
+        public bool IncludeViewSuffixInViewModelNames { get; set; }
 
         /// <summary>
-        /// The name suffix for ViewModels. Applies only when UseNameSuffixesInMappings = true. The default is "ViewModel".
+        /// Gets or sets list of View suffixes for which default type mappings should be created. Applies only when UseNameSuffixesInMappings = true.
+        /// Default values are "View", "Page".
         /// </summary>
-        public string ViewModelSuffix { get; set; } = "ViewModel";
+        public List<string> ViewSuffixList { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name suffix for ViewModels. Applies only when UseNameSuffixesInMappings = true. The default is "ViewModel".
+        /// </summary>
+        public string ViewModelSuffix { get; set; }
     }
 }

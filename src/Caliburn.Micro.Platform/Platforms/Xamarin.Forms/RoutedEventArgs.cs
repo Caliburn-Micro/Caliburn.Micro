@@ -8,7 +8,7 @@ namespace Caliburn.Micro.Xamarin.Forms
     public class RoutedEventArgs : EventArgs
     {
         /// <summary>
-        /// Source of the event
+        /// Gets or sets source of the event.
         /// </summary>
         public object OriginalSource { get; set; }
     }
