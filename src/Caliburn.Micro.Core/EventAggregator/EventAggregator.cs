@@ -114,7 +114,7 @@ public class EventAggregator : IEventAggregator {
             => _reference.Target == null;
 
         public bool Matches(object instance)
-            => _reference.Target == instance;
+            => _reference.Target.Equals(instance);
 
         public bool Handles(Type messageType)
             => _supportedHandlers.Any(pair => pair.Key.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo()));

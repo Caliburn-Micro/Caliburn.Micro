@@ -432,35 +432,44 @@ namespace Caliburn.Micro {
         /// </summary>
 #if WINDOWS_UWP
         protected override void OnAttached() {
-            if (!View.InDesignMode) {
-                Parameters.Attach(AssociatedObject);
-                Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
+            if (View.InDesignMode) {
+                base.OnAttached();
 
-                if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded)) {
-                    // Not yet sure if this will be needed
-                    // var trigger = Interaction.GetTriggers(AssociatedObject)
-                    //    .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
-                    // if (trigger != null && trigger.EventName == "Loaded")
-                    //    Invoke(new RoutedEventArgs());
-                }
-
-                View.ExecuteOnUnload(AssociatedObject, (s, e) => OnDetaching());
+                return;
             }
 
+            Parameters.Attach(AssociatedObject);
+            Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
+
+            _ = View.ExecuteOnLoad(AssociatedObject, ElementLoaded);
+            /*
+            if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded)) {
+                // Not yet sure if this will be needed
+                // var trigger = Interaction.GetTriggers(AssociatedObject)
+                //    .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
+                // if (trigger != null && trigger.EventName == "Loaded")
+                //    Invoke(new RoutedEventArgs());
+            }
+            */
+
+            View.ExecuteOnUnload(AssociatedObject, (s, e) => OnDetaching());
             base.OnAttached();
         }
 #else
         protected override void OnAttached() {
-            if (!View.InDesignMode) {
-                Parameters.Attach(AssociatedObject);
-                Parameters.Apply(x => x.MakeAwareOf(this));
+            if (View.InDesignMode) {
+                base.OnAttached();
 
-                if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded)) {
-                    if (Interaction.GetTriggers(AssociatedObject)
-                        .FirstOrDefault(t => t.Actions.Contains(this)) is EventTrigger trigger && trigger.EventName == "Loaded") {
-                        Invoke(new RoutedEventArgs());
-                    }
-                }
+                return;
+            }
+
+            Parameters.Attach(AssociatedObject);
+            Parameters.Apply(x => x.MakeAwareOf(this));
+            if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded) &&
+                Interaction.GetTriggers(AssociatedObject)
+                           .FirstOrDefault(t => t.Actions.Contains(this)) is EventTrigger trigger &&
+                trigger.EventName == "Loaded") {
+                Invoke(new RoutedEventArgs());
             }
 
             base.OnAttached();

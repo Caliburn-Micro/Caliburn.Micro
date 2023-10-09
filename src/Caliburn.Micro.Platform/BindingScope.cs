@@ -35,7 +35,7 @@ namespace Caliburn.Micro {
             AddChildResolver<CommandBar>(ResolveCommandBar);
             AddChildResolver<Button>(e => ResolveFlyoutBase(e.Flyout));
             AddChildResolver<FrameworkElement>(e => ResolveFlyoutBase(FlyoutBase.GetAttachedFlyout(e)));
-            AddChildResolver<SplitView>(e => new[] { e.Pane, e.Content as DependencyObject });
+            AddChildResolver<SplitView>(e => new[] { e.Pane, e.Content });
 #else
             AddChildResolver<HeaderedContentControl>(e => new[] { e.Header as DependencyObject });
             AddChildResolver<HeaderedItemsControl>(e => new[] { e.Header as DependencyObject });
@@ -98,14 +98,13 @@ namespace Caliburn.Micro {
                         }
 
 #if WINDOWS_UWP
-                        if (root is AppBar) {
-                            if (Window.Current.Content is Frame frame1 &&
-                                frame1.Content is Page page1 &&
-                                (page1.TopAppBar == root || page1.BottomAppBar == root)) {
-                                root = page1;
+                        if (root is AppBar &&
+                            Window.Current.Content is Frame frame1 &&
+                            frame1.Content is Page page1 &&
+                            (page1.TopAppBar == root || page1.BottomAppBar == root)) {
+                            root = page1;
 
-                                break;
-                            }
+                            break;
                         }
 #endif
                         if (root is ContentPresenter) {

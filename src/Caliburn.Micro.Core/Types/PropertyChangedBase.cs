@@ -12,12 +12,6 @@ namespace Caliburn.Micro;
 [DataContract]
 public class PropertyChangedBase : INotifyPropertyChangedEx {
     /// <summary>
-    /// Initializes a new instance of the <see cref="PropertyChangedBase"/> class.
-    /// </summary>
-    public PropertyChangedBase()
-        => IsNotifying = true;
-
-    /// <summary>
     /// Occurs when a property value changes.
     /// </summary>
     public virtual event PropertyChangedEventHandler PropertyChanged;
@@ -27,6 +21,7 @@ public class PropertyChangedBase : INotifyPropertyChangedEx {
     /// Virtualized in order to help with document oriented view models.
     /// </summary>
     public virtual bool IsNotifying { get; set; }
+        = true;
 
     /// <summary>
     /// Raises a change notification indicating that all bindings should be refreshed.

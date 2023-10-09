@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 
 namespace Caliburn.Micro;
 
@@ -105,12 +106,10 @@ public class BindableCollection<T> : ObservableCollection<T>, IObservableCollect
         void RemoveRange() {
             bool previousNotificationSetting = IsNotifying;
             IsNotifying = false;
-            foreach (T item in items) {
-                int index = IndexOf(item);
-                if (index >= 0) {
-                    RemoveItemBase(index);
-                }
-            }
+
+            items.Select(IndexOf)
+                 .Where(index => index >= 0)
+                 .Apply(RemoveItemBase);
 
             IsNotifying = previousNotificationSetting;
 

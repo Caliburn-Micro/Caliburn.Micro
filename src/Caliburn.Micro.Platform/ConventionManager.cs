@@ -341,9 +341,10 @@ namespace Caliburn.Micro {
                     index = index == -1 ? 0 : index + 1;
                     string baseName = path.Substring(index);
 
-                    foreach (string potentialName in DerivePotentialSelectionNames(baseName)) {
-                        if (viewModelType.GetPropertyCaseInsensitive(potentialName) != null) {
-                            string selectionPath = path.Replace(baseName, potentialName);
+                    IEnumerable<string> selectionPathList = DerivePotentialSelectionNames(baseName)
+                        .Where(potentialName => viewModelType.GetPropertyCaseInsensitive(potentialName) != null)
+                        .Select(potentialName => path.Replace(baseName, potentialName));
+                    foreach (string selectionPath in selectionPathList) {
 #if WINDOWS_UWP
                             var binding = new Binding { Mode = BindingMode.TwoWay, Path = new PropertyPath(selectionPath) };
 #else
@@ -353,11 +354,11 @@ namespace Caliburn.Micro {
                             if (shouldApplyBinding) {
                                 BindingOperations.SetBinding(selector, selectedItemProperty, binding);
                                 Log.Info("SelectedItem binding applied to {0}.", selector.Name);
+
                                 return;
                             }
 
                             Log.Info("SelectedItem binding not applied to {0} due to 'ConfigureSelectedItemBinding' customization.", selector.Name);
-                        }
                     }
                 };
 

@@ -208,7 +208,9 @@ namespace Caliburn.Micro
             }
 
             object enable = d.GetValue(AtDesignTimeProperty);
-            if (enable == null || ((bool)enable) == false || e.NewValue == null) {
+            if (enable == null ||
+                (enable is bool isEnabled && !isEnabled) ||
+                e.NewValue == null) {
                 return;
             }
 

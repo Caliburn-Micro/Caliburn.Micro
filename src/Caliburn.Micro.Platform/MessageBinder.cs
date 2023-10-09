@@ -130,15 +130,14 @@ namespace Caliburn.Micro
 #else
                 if (destinationType.IsEnum) {
 #endif
-                    return providedValue is string stringValue
-                        ? Enum.Parse(destinationType, stringValue, true)
+                    return providedValue is string stringValueLocal
+                        ? Enum.Parse(destinationType, stringValueLocal, true)
                         : Enum.ToObject(destinationType, providedValue);
                 }
 
-                if (typeof(Guid).GetTypeInfo().IsAssignableFrom(destinationType.GetTypeInfo())) {
-                    if (providedValue is string stringValue) {
-                        return new Guid(stringValue);
-                    }
+                if (typeof(Guid).GetTypeInfo().IsAssignableFrom(destinationType.GetTypeInfo()) &&
+                    providedValue is string stringValue) {
+                    return new Guid(stringValue);
                 }
             } catch {
                 return GetDefaultValue(destinationType);

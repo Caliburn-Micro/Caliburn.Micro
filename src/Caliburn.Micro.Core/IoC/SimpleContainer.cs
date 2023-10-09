@@ -158,17 +158,17 @@ public class SimpleContainer {
     /// <returns>All the instances or an empty enumerable if none are found.</returns>
     public IEnumerable<object> GetAllInstances(Type service, string key = null) {
         ContainerEntry entries = GetEntry(service, key);
-
         if (entries == null) {
             return Array.Empty<object>();
         }
 
         IEnumerable<object> instances = entries.Select(e => e(this));
+        if (!EnablePropertyInjection) {
+            return instances;
+        }
 
-        foreach (object instance in instances) {
-            if (EnablePropertyInjection && instance != null) {
-                BuildUp(instance);
-            }
+        foreach (object instance in instances.Where(instance => instance != null)) {
+            BuildUp(instance);
         }
 
         return instances;

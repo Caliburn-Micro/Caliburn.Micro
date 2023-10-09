@@ -130,11 +130,12 @@ namespace Caliburn.Micro
             var triggers = new List<TriggerBase>();
             string[] messageTexts = StringSplitter.Split(text, ';');
 
-            foreach (string messageText in messageTexts) {
-                string[] triggerPlusMessage = LongFormatRegularExpression.IsMatch(messageText)
-                                             ? StringSplitter.Split(messageText, '=')
-                                             : new[] { null, messageText };
-
+            IEnumerable<string[]> triggerPlusMessageList = messageTexts
+                .Select(messageText =>
+                    LongFormatRegularExpression.IsMatch(messageText)
+                        ? StringSplitter.Split(messageText, '=')
+                        : new[] { null, messageText });
+            foreach (string[] triggerPlusMessage in triggerPlusMessageList) {
                 string messageDetail = triggerPlusMessage.Last()
                     .Replace("[", string.Empty)
                     .Replace("]", string.Empty)
@@ -174,14 +175,12 @@ namespace Caliburn.Micro
 
             string core = messageText.Substring(0, openingParenthesisIndex).Trim();
             TriggerAction message = InterpretMessageText(target, core);
-            if (message is IHaveParameters withParameters) {
-                if (closingParenthesisIndex - openingParenthesisIndex > 1) {
-                    string paramString = messageText.Substring(openingParenthesisIndex + 1, closingParenthesisIndex - openingParenthesisIndex - 1);
-                    string[] parameters = StringSplitter.SplitParameters(paramString);
-
-                    foreach (string parameter in parameters) {
-                        withParameters.Parameters.Add(CreateParameter(target, parameter.Trim()));
-                    }
+            if (message is IHaveParameters withParameters &&
+                closingParenthesisIndex - openingParenthesisIndex > 1) {
+                string paramString = messageText.Substring(openingParenthesisIndex + 1, closingParenthesisIndex - openingParenthesisIndex - 1);
+                string[] parameters = StringSplitter.SplitParameters(paramString);
+                foreach (string parameter in parameters) {
+                    withParameters.Parameters.Add(CreateParameter(target, parameter.Trim()));
                 }
             }
 
