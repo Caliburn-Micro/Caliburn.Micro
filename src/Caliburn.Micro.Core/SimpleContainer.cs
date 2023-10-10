@@ -15,7 +15,7 @@ namespace Caliburn.Micro
         private static readonly Type enumerableType = typeof(IEnumerable);
         private static readonly TypeInfo enumerableTypeInfo = enumerableType.GetTypeInfo();
         private static readonly TypeInfo delegateTypeInfo = delegateType.GetTypeInfo();
-        private Type simpleContainerType = typeof(SimpleContainer);
+        private readonly Type simpleContainerType = typeof(SimpleContainer);
         private readonly List<ContainerEntry> entries;
 
         /// <summary>

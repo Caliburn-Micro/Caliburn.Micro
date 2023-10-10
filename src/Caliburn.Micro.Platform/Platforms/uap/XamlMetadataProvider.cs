@@ -86,9 +86,9 @@
             return xamlMember;
         }
 
-        private Dictionary<string, IXamlType> _xamlTypes = new Dictionary<string, IXamlType>();
-        private Dictionary<string, IXamlMember> _xamlMembers = new Dictionary<string, IXamlMember>();
-        private Dictionary<Type, string> _xamlTypeToStandardName = new Dictionary<Type, string>();
+        private readonly Dictionary<string, IXamlType> _xamlTypes = new Dictionary<string, IXamlType>();
+        private readonly Dictionary<string, IXamlMember> _xamlMembers = new Dictionary<string, IXamlMember>();
+        private readonly Dictionary<Type, string> _xamlTypeToStandardName = new Dictionary<Type, string>();
 
         private void AddToMapOfTypeToStandardName(Type t, String str) {
             if (!_xamlTypeToStandardName.ContainsKey(t)) {
@@ -152,8 +152,8 @@
 
 
     internal class XamlSystemBaseType : IXamlType {
-        private string _fullName;
-        private Type _underlyingType;
+        private readonly string _fullName;
+        private readonly Type _underlyingType;
 
         public XamlSystemBaseType(string fullName, Type underlyingType) {
             _fullName = fullName;

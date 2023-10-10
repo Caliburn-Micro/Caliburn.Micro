@@ -53,7 +53,7 @@ namespace Caliburn.Micro
                 null, 
                 ModelWithoutContextChanged);
 
-        internal static DependencyProperty NoContextProperty =
+        internal static readonly DependencyProperty NoContextProperty =
             DependencyPropertyHelper.RegisterAttached(
                 "NoContext",
                 typeof(bool),
