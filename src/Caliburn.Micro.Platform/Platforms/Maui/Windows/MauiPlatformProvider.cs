@@ -16,7 +16,7 @@
     /// </summary>
     public class MauiPlatformProvider : IPlatformProvider 
     {
-        private CoreDispatcher dispatcher;
+        private readonly CoreDispatcher dispatcher;
 
 
         /// <summary>
