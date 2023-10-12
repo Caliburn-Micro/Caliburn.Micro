@@ -2,30 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Foundation;
 using UIKit;
 
-namespace Caliburn.Micro.Maui
-{
+namespace Caliburn.Micro.Maui {
     /// <summary>
     /// A <see cref="IPlatformProvider"/> implementation for the Xamarin iOS platfrom.
     /// </summary>
-    public class IOSPlatformProvider : IPlatformProvider
-    {
-        private bool CheckAccess() {
-            return NSThread.IsMain;
-        }
-
+    public class IOSPlatformProvider : IPlatformProvider {
         /// <summary>
-        ///   Indicates whether or not the framework is in design-time mode.
+        ///   Gets a value indicating whether or not the framework is in design-time mode.
         /// </summary>
-        public virtual bool InDesignMode
-        {
-            get { return false; }
-        }
+        public virtual bool InDesignMode => false;
 
         /// <summary>
-        /// Whether or not classes should execute property change notications on the UI thread.
+        /// Gets a value indicating whether or not classes should execute property change notications on the UI thread.
         /// </summary>
         public virtual bool PropertyChangeNotificationsOnUIThread => true;
 
@@ -34,37 +26,37 @@ namespace Caliburn.Micro.Maui
         /// </summary>
         /// <param name="action">The action to execute.</param>
         public virtual void BeginOnUIThread(System.Action action)
-        {
-            UIApplication.SharedApplication.InvokeOnMainThread(action);
-        }
+            => UIApplication.SharedApplication.InvokeOnMainThread(action);
+
+        /// <summary>
+        /// Used to retrieve the root, non-framework-created view.
+        /// </summary>
+        /// <param name="view">The view to search.</param>
+        /// <returns>The root element that was not created by the framework.</returns>
+        /// <remarks>In certain instances the services create UI elements.
+        /// For example, if you ask the window manager to show a UserControl as a dialog, it creates a window to host the UserControl in.
+        /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
+        /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was.
+        /// </remarks>
+        public virtual object GetFirstNonGeneratedView(object view)
+            => view;
 
         /// <summary>
         ///   Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name = "action">The action to execute.</param>
-        public virtual Task OnUIThreadAsync(Func<Task> action)
-        {
+        public virtual Task OnUIThreadAsync(Func<Task> action) {
             var completionSource = new TaskCompletionSource<bool>();
 
-            UIApplication.SharedApplication.InvokeOnMainThread(async () =>
-            {
-
-                try
-                {
+            UIApplication.SharedApplication.InvokeOnMainThread(async () => {
+                try {
                     await action();
-
                     completionSource.SetResult(true);
-
-                }
-                catch (TaskCanceledException)
-                {
+                } catch (TaskCanceledException) {
                     completionSource.SetCanceled();
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     completionSource.SetException(ex);
                 }
-
             });
 
             return completionSource.Task;
@@ -75,29 +67,17 @@ namespace Caliburn.Micro.Maui
         /// </summary>
         /// <param name = "action">The action to execute.</param>
         public virtual void OnUIThread(System.Action action) {
-            if (CheckAccess())
+            if (CheckAccess()) {
                 action();
-            else
-                OnUIThreadAsync(() =>
-                {
-                    action();
-                    return Task.CompletedTask;
-                }).Wait();
-        }
 
-        /// <summary>
-        /// Used to retrieve the root, non-framework-created view.
-        /// </summary>
-        /// <param name="view">The view to search.</param>
-        /// <returns>The root element that was not created by the framework.</returns>
-        /// <remarks>In certain instances the services create UI elements.
-        /// For example, if you ask the window manager to show a UserControl as a dialog, it creates a window to host the UserControl in.
-        /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
-        /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was. 
-        /// </remarks>
-        public virtual object GetFirstNonGeneratedView(object view)
-        {
-            return view;
+                return;
+            }
+
+            OnUIThreadAsync(() => {
+                action();
+
+                return Task.CompletedTask;
+            }).Wait();
         }
 
         /// <summary>
@@ -105,23 +85,18 @@ namespace Caliburn.Micro.Maui
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public virtual void ExecuteOnFirstLoad(object view, Action<object> handler)
-        {
-            var viewController = view as IUIViewController;
-
-            if (viewController != null) {
-
-                EventHandler created = null;
-
-                created = (s, e) =>
-                {
-                    viewController.ViewLoaded -= created;
-
-                    handler(view);
-                };
-
-                viewController.ViewLoaded += created;
+        public virtual void ExecuteOnFirstLoad(object view, Action<object> handler) {
+            if (!(view is IUIViewController viewController)) {
+                return;
             }
+
+            void OnCreated(object s, EventArgs e) {
+                viewController.ViewLoaded -= OnCreated;
+
+                handler(view);
+            }
+
+            viewController.ViewLoaded += OnCreated;
         }
 
         /// <summary>
@@ -129,23 +104,18 @@ namespace Caliburn.Micro.Maui
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler)
-        {
-            var viewController = view as IUIViewController;
-
-            if (viewController != null)
-            {
-                EventHandler appeared = null;
-
-                appeared = (s, e) =>
-                {
-                    viewController.ViewAppeared -= appeared;
-
-                    handler(view);
-                };
-
-                viewController.ViewAppeared += appeared;
+        public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler) {
+            if (!(view is IUIViewController viewController)) {
+                return;
             }
+
+            void OnAppeared(object s, EventArgs e) {
+                viewController.ViewAppeared -= OnAppeared;
+
+                handler(view);
+            }
+
+            viewController.ViewAppeared += OnAppeared;
         }
 
         /// <summary>
@@ -156,12 +126,14 @@ namespace Caliburn.Micro.Maui
         /// <param name="dialogResult">The dialog result.</param>
         /// <returns>An <see cref="Action"/> to close the view model.</returns>
         public virtual Func<CancellationToken, Task> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
-        {
-            return ct =>
-            {
-                LogManager.GetLog(typeof(Screen)).Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
-                return Task.FromResult(true);
-            };
-        }
+            => ctx
+                => {
+                    LogManager.GetLog(typeof(Screen)).Info("TryClose requires a parent IConductor or a view with a Close method or IsOpen property.");
+
+                    return Task.FromResult(true);
+                };
+
+        private bool CheckAccess()
+            => NSThread.IsMain;
     }
 }

@@ -1,27 +1,27 @@
-﻿namespace Caliburn.Micro.Maui 
-{
-    using System;
-    using System.Collections.Specialized;
-    using System.Linq;
-    using global::Microsoft.Maui.Controls;
+﻿using System.Collections.Specialized;
+using System.Linq;
 
+using Microsoft.Maui.Controls;
+
+namespace Caliburn.Micro.Maui {
     /// <summary>
     /// A collection that can exist as part of a behavior.
     /// </summary>
     /// <typeparam name="T">The type of item in the attached collection.</typeparam>
     public class AttachedCollection<T> : BindableCollection<BindableObject>, IAttachedObject
-        where T : BindableObject, IAttachedObject 
-    {
-        private BindableObject associatedObject;
+        where T : BindableObject, IAttachedObject {
+        /// <summary>
+        /// Gets the currently attached object.
+        /// </summary>
+        public BindableObject AssociatedObject { get; private set; }
 
         /// <summary>
         /// Attaches the collection.
         /// </summary>
         /// <param name="dependencyObject">The dependency object to attach the collection to.</param>
-        public void Attach(BindableObject dependencyObject)
-        {
-            associatedObject = dependencyObject;
-            this.OfType<IAttachedObject>().Apply(x => x.Attach(associatedObject));
+        public void Attach(BindableObject dependencyObject) {
+            AssociatedObject = dependencyObject;
+            this.OfType<IAttachedObject>().Apply(x => x.Attach(AssociatedObject));
         }
 
         /// <summary>
@@ -29,14 +29,7 @@
         /// </summary>
         public void Detach() {
             this.OfType<IAttachedObject>().Apply(x => x.Detach());
-            associatedObject = null;
-        }
-
-        /// <summary>
-        /// The currently attached object.
-        /// </summary>
-        public BindableObject AssociatedObject {
-            get { return associatedObject; }
+            AssociatedObject = null;
         }
 
         /// <summary>
@@ -44,10 +37,12 @@
         /// </summary>
         /// <param name="item">The item that was added.</param>
         protected virtual void OnItemAdded(BindableObject item) {
-            if (associatedObject != null) {
-                if (item is IAttachedObject)
-                    ((IAttachedObject) item).Attach(associatedObject);
+            if (AssociatedObject == null ||
+                !(item is IAttachedObject attachedObject)) {
+                return;
             }
+
+            attachedObject.Attach(AssociatedObject);
         }
 
         /// <summary>
@@ -55,24 +50,23 @@
         /// </summary>
         /// <param name="item">The item that was removed.</param>
         protected virtual void OnItemRemoved(BindableObject item) {
-            if (item is IAttachedObject) {
-                if (((IAttachedObject) item).AssociatedObject != null)
-                    ((IAttachedObject) item).Detach();
+            if (!(item is IAttachedObject attachedObject) ||
+                attachedObject.AssociatedObject == null) {
+                return;
             }
+
+            attachedObject.Detach();
         }
 
         /// <summary>
-        /// Raises the <see cref = "E:System.Collections.ObjectModel.ObservableCollection`1.CollectionChanged" /> event with the provided arguments.
+        /// Raises the <see cref = "System.Collections.ObjectModel.ObservableCollection{T}.CollectionChanged" /> event with the provided arguments.
         /// </summary>
         /// <param name = "e">Arguments of the event being raised.</param>
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e) {
             base.OnCollectionChanged(e);
 
-            if (e.OldItems != null)
-                e.OldItems.OfType<BindableObject>().Apply(OnItemRemoved);
-
-            if (e.NewItems != null)
-                e.NewItems.OfType<BindableObject>().Apply(OnItemAdded);
+            e.OldItems?.OfType<BindableObject>().Apply(OnItemRemoved);
+            e.NewItems?.OfType<BindableObject>().Apply(OnItemAdded);
         }
     }
 }

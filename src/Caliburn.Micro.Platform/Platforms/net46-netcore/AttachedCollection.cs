@@ -1,23 +1,26 @@
-﻿namespace Caliburn.Micro {
-    using System.Collections.Specialized;
-    using System.Linq;
-    using System.Windows;
-    using Microsoft.Xaml.Behaviors;
+﻿using System.Collections.Specialized;
+using System.Linq;
+using System.Windows;
 
+using Microsoft.Xaml.Behaviors;
+
+namespace Caliburn.Micro {
     /// <summary>
     /// A collection that can exist as part of a behavior.
     /// </summary>
     /// <typeparam name="T">The type of item in the attached collection.</typeparam>
     public class AttachedCollection<T> : FreezableCollection<T>, IAttachedObject
         where T : DependencyObject, IAttachedObject {
-        DependencyObject associatedObject;
+        private DependencyObject associatedObject;
 
         /// <summary>
-        /// Creates an instance of <see cref="AttachedCollection{T}"/>
+        /// Initializes a new instance of the <see cref="AttachedCollection{T}"/> class.
         /// </summary>
-        public AttachedCollection() {
-            ((INotifyCollectionChanged)this).CollectionChanged += OnCollectionChanged;
-        }
+        public AttachedCollection()
+            => ((INotifyCollectionChanged)this).CollectionChanged += OnCollectionChanged;
+
+        DependencyObject IAttachedObject.AssociatedObject
+            => associatedObject;
 
         /// <summary>
         /// Attached the collection.
@@ -41,17 +44,16 @@
             WritePostscript();
         }
 
-        DependencyObject IAttachedObject.AssociatedObject {
-            get { return associatedObject; }
-        }
-
         /// <summary>
         /// Called when an item is added from the collection.
         /// </summary>
         /// <param name="item">The item that was added.</param>
         protected virtual void OnItemAdded(T item) {
-            if (associatedObject != null)
-                item.Attach(associatedObject);
+            if (associatedObject == null) {
+                return;
+            }
+
+            item.Attach(associatedObject);
         }
 
         /// <summary>
@@ -59,12 +61,15 @@
         /// </summary>
         /// <param name="item">The item that was removed.</param>
         protected virtual void OnItemRemoved(T item) {
-            if(item.AssociatedObject != null)
-                item.Detach();
+            if (item.AssociatedObject == null) {
+                return;
+            }
+
+            item.Detach();
         }
 
-        void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
-            switch(e.Action) {
+        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
+            switch (e.Action) {
                 case NotifyCollectionChangedAction.Add:
                     e.NewItems.OfType<T>().Where(x => !Contains(x)).Apply(OnItemAdded);
                     break;

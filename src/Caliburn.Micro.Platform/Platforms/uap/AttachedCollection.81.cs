@@ -1,30 +1,33 @@
-﻿namespace Caliburn.Micro {
-    using System.Linq;
-    using Windows.Foundation.Collections;
-    using Windows.UI.Xaml;
+﻿using System.Linq;
 
+using Windows.Foundation.Collections;
+using Windows.UI.Xaml;
+
+namespace Caliburn.Micro {
     /// <summary>
     /// A collection that can exist as part of a behavior.
     /// </summary>
     /// <typeparam name="T">The type of item in the attached collection.</typeparam>
     public class AttachedCollection<T> : DependencyObjectCollection, IAttachedObject
         where T : DependencyObject, IAttachedObject {
-        private DependencyObject associatedObject;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AttachedCollection{T}"/> class.
+        /// </summary>
+        public AttachedCollection()
+            => VectorChanged += OnVectorChanged;
 
         /// <summary>
-        /// Creates an instance of <see cref="AttachedCollection&lt;T&gt;"/>
+        /// Gets the currently attached object.
         /// </summary>
-        public AttachedCollection() {
-            VectorChanged += OnVectorChanged;
-        }
+        public DependencyObject AssociatedObject { get; private set; }
 
         /// <summary>
         /// Attaches the collection.
         /// </summary>
         /// <param name="dependencyObject">The dependency object to attach the collection to.</param>
         public void Attach(DependencyObject dependencyObject) {
-            associatedObject = dependencyObject;
-            this.OfType<IAttachedObject>().Apply(x => x.Attach(associatedObject));
+            AssociatedObject = dependencyObject;
+            this.OfType<IAttachedObject>().Apply(x => x.Attach(AssociatedObject));
         }
 
         /// <summary>
@@ -32,14 +35,7 @@
         /// </summary>
         public void Detach() {
             this.OfType<IAttachedObject>().Apply(x => x.Detach());
-            associatedObject = null;
-        }
-
-        /// <summary>
-        /// The currently attached object.
-        /// </summary>
-        public DependencyObject AssociatedObject {
-            get { return associatedObject; }
+            AssociatedObject = null;
         }
 
         /// <summary>
@@ -47,10 +43,12 @@
         /// </summary>
         /// <param name="item">The item that was added.</param>
         protected virtual void OnItemAdded(DependencyObject item) {
-            if (associatedObject != null) {
-                if (item is IAttachedObject)
-                    ((IAttachedObject) item).Attach(associatedObject);
+            if (AssociatedObject == null ||
+                item is not IAttachedObject @object) {
+                return;
             }
+
+            @object.Attach(AssociatedObject);
         }
 
         /// <summary>
@@ -58,19 +56,21 @@
         /// </summary>
         /// <param name="item">The item that was removed.</param>
         protected virtual void OnItemRemoved(DependencyObject item) {
-            if (item is IAttachedObject) {
-                if (((IAttachedObject) item).AssociatedObject != null)
-                    ((IAttachedObject) item).Detach();
+            if (item is not IAttachedObject @object ||
+                @object.AssociatedObject == null) {
+                return;
             }
+
+            @object.Detach();
         }
 
         private void OnVectorChanged(IObservableVector<DependencyObject> sender, IVectorChangedEventArgs @event) {
             switch (@event.CollectionChange) {
                 case CollectionChange.ItemInserted:
-                    OnItemAdded(this[(int) @event.Index]);
+                    OnItemAdded(this[(int)@event.Index]);
                     break;
                 case CollectionChange.ItemRemoved:
-                    OnItemRemoved(this[(int) @event.Index]);
+                    OnItemRemoved(this[(int)@event.Index]);
                     break;
                 case CollectionChange.Reset:
                     this.Apply(OnItemRemoved);

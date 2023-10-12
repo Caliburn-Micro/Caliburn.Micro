@@ -1,112 +1,104 @@
 using System;
+
 using Android.App;
 using Android.OS;
 
-namespace Caliburn.Micro
-{
+namespace Caliburn.Micro {
     /// <summary>
-    /// Handles callbacks for the activity lifecycle and exposes them as events
+    /// Handles callbacks for the activity lifecycle and exposes them as events.
     /// </summary>
     public class ActivityLifecycleCallbackHandler : Java.Lang.Object, Application.IActivityLifecycleCallbacks {
-
         /// <summary>
         /// Invoked when an activity is created
         /// </summary>
-        public event EventHandler<ActivityEventArgs> ActivityCreated = delegate { };
+        public event EventHandler<ActivityEventArgs> ActivityCreated
+            = (sender, e) => { };
 
         /// <summary>
         /// Invoked when an acitivty is destroyed
         /// </summary>
-        public event EventHandler<ActivityEventArgs> ActivityDestoryed = delegate { };
+        public event EventHandler<ActivityEventArgs> ActivityDestoryed
+            = (sender, e) => { };
 
         /// <summary>
         /// Invoked when an acitivty is paused
         /// </summary>
-        public event EventHandler<ActivityEventArgs> ActivityPaused = delegate { };
+        public event EventHandler<ActivityEventArgs> ActivityPaused
+            = (sender, e) => { };
 
         /// <summary>
         /// Invoked when an acitivty is resumed
         /// </summary>
-        public event EventHandler<ActivityEventArgs> ActivityResumed = delegate { };
+        public event EventHandler<ActivityEventArgs> ActivityResumed
+            = (sender, e) => { };
 
         /// <summary>
         /// Invoked when an acitities instance state is saved
         /// </summary>
-        public event EventHandler<ActivityEventArgs> ActivitySaveInstanceState = delegate { };
+        public event EventHandler<ActivityEventArgs> ActivitySaveInstanceState
+            = (sender, e) => { };
 
         /// <summary>
         /// Invoked when an activity is started
         /// </summary>
-        public event EventHandler<ActivityEventArgs> ActivityStarted = delegate { };
+        public event EventHandler<ActivityEventArgs> ActivityStarted
+            = (sender, e) => { };
 
         /// <summary>
         /// Invoked when an activity is stopped
         /// </summary>
-        public event EventHandler<ActivityEventArgs> ActivityStopped = delegate { };
+        public event EventHandler<ActivityEventArgs> ActivityStopped
+            = (sender, e) => { };
 
         /// <summary>
-        /// Invokes the ActivityCreated event
+        /// Invokes the ActivityCreated event.
         /// </summary>
-        /// <param name="activity">The activity</param>
-        /// <param name="savedInstanceState">The saved instance state</param>
-        public void OnActivityCreated(Activity activity, Bundle savedInstanceState) 
-        {
-            ActivityCreated(this, new ActivityEventArgs(activity));
-        }
+        /// <param name="activity">The activity.</param>
+        /// <param name="savedInstanceState">The saved instance state.</param>
+        public void OnActivityCreated(Activity activity, Bundle savedInstanceState)
+            => ActivityCreated(this, new ActivityEventArgs(activity));
 
         /// <summary>
-        /// Invokes the ActivityDestroyed event
+        /// Invokes the ActivityDestroyed event.
         /// </summary>
-        /// <param name="activity">The activity</param>
-        public void OnActivityDestroyed(Activity activity) 
-        {
-            ActivityDestoryed(this, new ActivityEventArgs(activity));
-        }
+        /// <param name="activity">The activity.</param>
+        public void OnActivityDestroyed(Activity activity)
+            => ActivityDestoryed(this, new ActivityEventArgs(activity));
 
         /// <summary>
-        /// Invokes the ActivityPaused event
+        /// Invokes the ActivityPaused event.
         /// </summary>
-        /// <param name="activity">The activity</param>
-        public void OnActivityPaused(Activity activity) 
-        {
-            ActivityPaused(this, new ActivityEventArgs(activity));
-        }
+        /// <param name="activity">The activity.</param>
+        public void OnActivityPaused(Activity activity)
+            => ActivityPaused(this, new ActivityEventArgs(activity));
 
         /// <summary>
-        /// Invokes the ActivityResumed event
+        /// Invokes the ActivityResumed event.
         /// </summary>
-        /// <param name="activity">The activity</param>
-        public void OnActivityResumed(Activity activity) 
-        {
-            ActivityResumed(this, new ActivityEventArgs(activity));
-        }
+        /// <param name="activity">The activity.</param>
+        public void OnActivityResumed(Activity activity)
+            => ActivityResumed(this, new ActivityEventArgs(activity));
 
         /// <summary>
-        /// Invokes the ActivitySaveInstanceState event
+        /// Invokes the ActivitySaveInstanceState event.
         /// </summary>
-        /// <param name="activity">The activity</param>
-        /// <param name="outState">The output state</param>
-        public void OnActivitySaveInstanceState(Activity activity, Bundle outState) 
-        {
-            ActivitySaveInstanceState(this, new ActivityEventArgs(activity));
-        }
+        /// <param name="activity">The activity.</param>
+        /// <param name="outState">The output state.</param>
+        public void OnActivitySaveInstanceState(Activity activity, Bundle outState)
+            => ActivitySaveInstanceState(this, new ActivityEventArgs(activity));
 
         /// <summary>
-        /// Invokes the ActivityStarted event
+        /// Invokes the ActivityStarted event.
         /// </summary>
-        /// <param name="activity">The activity</param>
-        public void OnActivityStarted(Activity activity) 
-        {
-            ActivityStarted(this, new ActivityEventArgs(activity));
-        }
+        /// <param name="activity">The activity.</param>
+        public void OnActivityStarted(Activity activity)
+            => ActivityStarted(this, new ActivityEventArgs(activity));
 
         /// <summary>
-        /// Invokes the ActivityStopped event
+        /// Invokes the ActivityStopped event.
         /// </summary>
-        /// <param name="activity">The activity</param>
-        public void OnActivityStopped(Activity activity) 
-        {
-            ActivityStopped(this, new ActivityEventArgs(activity));
-        }
+        /// <param name="activity">The activity.</param>
+        public void OnActivityStopped(Activity activity)
+            => ActivityStopped(this, new ActivityEventArgs(activity));
     }
 }
