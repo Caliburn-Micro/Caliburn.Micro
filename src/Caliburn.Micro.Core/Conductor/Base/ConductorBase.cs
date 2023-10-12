@@ -83,9 +83,12 @@ public abstract class ConductorBase<T> : Screen, IConductor, IParent<T>
     /// <param name="newItem">The item that is about to be activated.</param>
     /// <returns>The item to be activated.</returns>
     protected virtual T EnsureItem(T newItem) {
-        if (newItem is IChild node && !node.Parent.Equals(this)) {
-            node.Parent = this;
+        if (newItem is not IChild child ||
+            (child.Parent != null && child.Parent.Equals(this))) {
+            return newItem;
         }
+
+        child.Parent = this;
 
         return newItem;
     }
