@@ -1,35 +1,136 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<PropertyGroup>
-		<Copyright>Copyright (c) 2010 Blue Spire Consulting, Inc.</Copyright>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageProjectUrl>http://caliburnmicro.com</PackageProjectUrl>
-		<PackageIconUrl>https://raw.githubusercontent.com/Caliburn-Micro/Caliburn.Micro/master/CaliburnIcon.png</PackageIconUrl>
-		<Authors>Nigel Sampson, Rob Eisenberg, Thomas Ibel, Marco Amendola, Chin Bae, Ryan Cromwell, Matt Hidinger, Ken Tucker, Kasper Sejer Kristensen</Authors>
-		<Owners>Nigel Sampson, Rob Eisenberg, Thomas Ibel</Owners>
-		<PackageTags>MVVM;WPF;WinRT;UWP;Xamarin;Android;iOS;CoC;Convention;MVP;PM;Screen;Coroutine;Behavior;Model-View-ViewModel;Presentation;UI;ViewModel;;Caliburn</PackageTags>
-		<PackageReleaseNotes>http://caliburnmicro.com</PackageReleaseNotes>
-		<Description>A small, yet powerful framework designed for Xaml platforms, Caliburn.Micro implements a variety of UI patterns for solving real-world problems. Patterns that are highlighted include MVVM (Presentation Model), MVP and MVC.</Description>
+
+  <PropertyGroup Label="General settings">
+    <LangVersion>7.3</LangVersion>
+    <OutputPath>..\..\bin\$(MSBuildProjectName)\$(Configuration.ToLower())\</OutputPath>
+    <IsTestProject>$(MSBuildProjectName.Contains('Tests'))</IsTestProject>
+    <SourceLinkEnabled>true</SourceLinkEnabled>
+    <GenerateDocumentationFile Condition=" '$(IsTestProject)' != 'true' ">true</GenerateDocumentationFile>
+  </PropertyGroup>
+  
+  <PropertyGroup Label="Packaging">
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageOutputPath>..\..\packages</PackageOutputPath>
+    <Authors>Nigel Sampson, Rob Eisenberg, Thomas Ibel, Marco Amendola, Chin Bae, Ryan Cromwell, Matt Hidinger, Ken Tucker, Kasper Sejer Kristensen</Authors>
+    <Owners>Nigel Sampson, Rob Eisenberg, Thomas Ibel</Owners>
+    <Copyright>Copyright (c) 2010 Blue Spire Consulting, Inc.</Copyright>
+    <Description>A small, yet powerful framework designed for Xaml platforms, Caliburn.Micro implements a variety of UI patterns for solving real-world problems. Patterns that are highlighted include MVVM (Presentation Model), MVP and MVC.</Description>
+    <PackageTags>MVVM;WPF;WinRT;UWP;Xamarin;Android;iOS;CoC;Convention;MVP;PM;Screen;Coroutine;Behavior;Model-View-ViewModel;Presentation;UI;ViewModel;;Caliburn</PackageTags>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>http://caliburnmicro.com</PackageProjectUrl>
+    <PackageReleaseNotes>http://caliburnmicro.com</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/Caliburn-Micro/Caliburn.Micro</RepositoryUrl>
+    <PackageIcon>CaliburnIcon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
+  <!--
+  Errors:
+  
+  ** Assembly **
+  NETSDK1202 // The workload ('maccatalyst', 'ios' and 'android') is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.
+  CS8002     // Referenced assembly 'XXX, Version=A.B.C.D, Culture=neutral, PublicKeyToken=null' does not have a strong name
+  
+  #
+  # Fixing some of these errors will introduce breaking change.
+  #
+  
+  ** Task **
+  CA2007 (Fix is Non-breaking) // Consider calling ConfigureAwait on the awaited task
+  CA2008 (Fix is Non-breaking) // Do not create tasks without passing a TaskScheduler
+  CA1849 (Fix is Non-breaking) // Call async methods when in an async method
+  
+  ** Exception **
+  CA1031 (Fix is Non-breaking) // Do not catch general exception types
+  CA2201 (Fix is Breaking)     // Do not raise reserved exception types
+  
+  ** List **
+  CA1002 (Fix is Breaking)     // Do not expose generic lists
+  CA2227 (Fix is Breaking)     // Collection properties should be read only
+  
+  ** Event **
+  CA1070 (Fix is Breaking)     // Do not declare event fields as virtual
+  CA1003 (Fix is Breaking)     // Use generic event handler instances
+  CA2109 (Fix is Breaking)     // Review visible event handlers
+
+  ** Class **
+  CA1034 (Fix is Breaking)     // Nested types should not be visible
+  CA1052 (Fix is Breaking)     // Static holder types should be Static or NotInheritable
+  CA1812 (Fix is Non-breaking) // Avoid uninstantiated internal classes
+  CA1033 (Fix is Non-breaking) // Interface methods should be callable by child types
+  CA2000 (Fix is Non-breaking) // Dispose objects before losing scope
+  CA1001 // Types that own disposable fields should be disposable
+  
+  ** Method **
+  CA1062 (Fix is Non-breaking) // Validate arguments of public methods
+  CA1045 (Fix is Breaking)     // Do not pass types by reference
+  CA1508 (Fix is Non-breaking) // Avoid dead conditional code
+  CS0618                       // Type or member is obsolete
+
+  ** Naming **
+  CA1724 (Fix is Breaking)     // Type names should not match namespaces
+  CA1716 (Fix is Breaking)     // Identifiers should not match keywords
+  CA1711 (Fix is Breaking)     // Identifiers should not have incorrect suffix
+  CA1721 (Fix is Breaking)     // Property names should not match get methods
+  
+  ** String **
+  CA1307 (Fix is Non-breaking) // Specify StringComparison for clarity
+  CA1308 (Fix is Non-breaking) // Normalize strings to uppercase
+  CA1845 (Fix is Non-breaking) // Use span-based 'string.Concat'
+  -->
+
+  <PropertyGroup>
+    <SetupCodeAnalysis>true</SetupCodeAnalysis>
+    <AddStyleCop>true</AddStyleCop>
+    <SuppressCodeAnalysisWarnings>true</SuppressCodeAnalysisWarnings>
+  </PropertyGroup>
+ 
+  <PropertyGroup Condition=" '$(SuppressCodeAnalysisWarnings)' == 'true' ">
+    <NoWarn>$(NoWarn);NETSDK1202;CS8002</NoWarn>
+    <NoWarn>$(NoWarn);CA2007;CA1034;CA1062;CA1031;CA2008</NoWarn>
+    <NoWarn>$(NoWarn);CA1849;CA1070;CA1003;CA1711;CA1716</NoWarn>
+    <NoWarn>$(NoWarn);CA1033;CA1052;CA1812;CA1002;CA2227</NoWarn>
+    <NoWarn>$(NoWarn);CA2201;CA1724;CA1307;CA1308;CA1721</NoWarn>
+    <NoWarn>$(NoWarn);CA2109;CA2000;CA1001;CA1845;CA1045</NoWarn>
+    <NoWarn>$(NoWarn);CA1508;CS0618</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(SetupCodeAnalysis)' == 'true' ">
+    <WarningLevel>7</WarningLevel>
+    <ErrorReport>prompt</ErrorReport>
+    <AnalysisMode>All</AnalysisMode>
+    <AnalysisLevel>latest-all</AnalysisLevel>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <RunAnalyzersDuringLiveAnalysis>True</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(BuildingInsideVisualStudio)' != 'true' ">
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	</PropertyGroup>
 
-	<PropertyGroup>
-		<LangVersion>7.3</LangVersion>
-		<OutputPath>..\..\bin\$(MSBuildProjectName)\$(Configuration.ToLower())\</OutputPath>
-		<RepositoryUrl>https://github.com/Caliburn-Micro/Caliburn.Micro</RepositoryUrl>
-		<RepositoryType>git</RepositoryType>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<IsTestProject>$(MSBuildProjectName.Contains('Tests'))</IsTestProject>
-		<SourceLinkEnabled>true</SourceLinkEnabled>
-		<GenerateDocumentationFile Condition="'$(Configuration)' == 'Release' and '$(IsTestProject)' != 'true'">true</GenerateDocumentationFile>
-		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-		<PackageOutputPath>..\..\packages</PackageOutputPath>
-	</PropertyGroup>
-
-	<ItemGroup>
+  <ItemGroup>
 		<PackageReference Include="Nerdbank.GitVersioning" Version="3.3.37" PrivateAssets="All" /> 
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(IsTestProject)' != 'true' and '$(SourceLinkEnabled)' != 'false'">
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" /> 
 	</ItemGroup>
+
+  <ItemGroup Condition=" '$(AddStyleCop)' == 'true' ">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507" PrivateAssets="all" />
+    <AdditionalFiles Include="..\stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\CaliburnIcon.png" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
+  
 </Project>
