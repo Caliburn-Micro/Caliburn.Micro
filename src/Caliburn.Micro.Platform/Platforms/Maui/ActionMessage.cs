@@ -253,7 +253,8 @@ namespace Caliburn.Micro.Maui {
         public object Handler {
             get => handler;
             private set {
-                if (handler.Equals(value)) {
+                if (handler != null &&
+                    handler.Equals(value)) {
                     return;
                 }
 
