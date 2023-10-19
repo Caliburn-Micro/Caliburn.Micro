@@ -368,14 +368,17 @@ namespace Caliburn.Micro
         {
             var container = GetSettingsContainer();
 
-            if (!container.Values.ContainsKey(FrameStateKey))
+            object tempFrameState = null;
+            if (!container.Values.TryGetValue(FrameStateKey, out tempFrameState))
                 return false;
 
-            var frameState = (string)container.Values[FrameStateKey];
+            var frameState = (string)tempFrameState;
 
-            CurrentParameter = container.Values.ContainsKey(ParameterKey) ?
-                container.Values[ParameterKey] :
-                null;
+            object tempParameter = null;
+            if (container.Values.TryGetValue(ParameterKey, out tempParameter))
+            {
+                CurrentParameter = tempParameter;
+            }
 
             if (String.IsNullOrEmpty(frameState))
                 return false;

@@ -85,7 +85,7 @@ namespace Caliburn.Micro.Platform.Tests
             Assert.Same(userControl, route.Root);
         }
 
-        [WpfFact]
+        [Fact]
         public void Any_DependencyObject_is_ScopeRoot_if_IsScopeRoot_is_true()
         {
             var dependencyObject = new DependencyObject();
