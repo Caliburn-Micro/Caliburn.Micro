@@ -15,7 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Platform.Cor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Xamarin.Forms", "Caliburn.Micro.Xamarin.Forms\Caliburn.Micro.Xamarin.Forms.csproj", "{A570D69E-B33E-4CDE-86BF-E5B66DF4B0AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Maui", "Caliburn.Micro.Maui\Caliburn.Micro.Maui.csproj", "{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Maui", "Caliburn.Micro.Maui\Caliburn.Micro.Maui.csproj", "{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Net.Tests", "Caliburn.Micro.Net.Tests\Caliburn.Micro.Net.Tests.csproj", "{A9F326B0-FFA8-43BC-B025-3D9E3B9E468B}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Caliburn.Micro.Platform.Tests.Shared", "Caliburn.Micro.Platform.Tests.Shared\Caliburn.Micro.Platform.Tests.Shared.shproj", "{B8615B2F-22EA-44A3-A424-E47963673837}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,11 +115,28 @@ Global
 		{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}.Release|x64.Build.0 = Release|Any CPU
 		{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}.Release|x86.ActiveCfg = Release|Any CPU
 		{50F9A3FD-FCC8-40CD-906E-A4FC6FC40286}.Release|x86.Build.0 = Release|Any CPU
+		{A9F326B0-FFA8-43BC-B025-3D9E3B9E468B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9F326B0-FFA8-43BC-B025-3D9E3B9E468B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9F326B0-FFA8-43BC-B025-3D9E3B9E468B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A9F326B0-FFA8-43BC-B025-3D9E3B9E468B}.Debug|x64.Build.0 = Debug|Any CPU
+		{A9F326B0-FFA8-43BC-B025-3D9E3B9E468B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A9F326B0-FFA8-43BC-B025-3D9E3B9E468B}.Debug|x86.Build.0 = Debug|Any CPU
+		{A9F326B0-FFA8-43BC-B025-3D9E3B9E468B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9F326B0-FFA8-43BC-B025-3D9E3B9E468B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9F326B0-FFA8-43BC-B025-3D9E3B9E468B}.Release|x64.ActiveCfg = Release|Any CPU
+		{A9F326B0-FFA8-43BC-B025-3D9E3B9E468B}.Release|x64.Build.0 = Release|Any CPU
+		{A9F326B0-FFA8-43BC-B025-3D9E3B9E468B}.Release|x86.ActiveCfg = Release|Any CPU
+		{A9F326B0-FFA8-43BC-B025-3D9E3B9E468B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {99BBF104-8050-4AE7-BC95-117C12BB4AD9}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Caliburn.Micro.Platform.Tests.Shared\Caliburn.Micro.Platform.Tests.Shared.projitems*{a9f326b0-ffa8-43bc-b025-3d9e3b9e468b}*SharedItemsImports = 5
+		Caliburn.Micro.Platform.Tests.Shared\Caliburn.Micro.Platform.Tests.Shared.projitems*{ad615ed9-9ec4-42b6-b52c-1cd6c8051be0}*SharedItemsImports = 5
+		Caliburn.Micro.Platform.Tests.Shared\Caliburn.Micro.Platform.Tests.Shared.projitems*{b8615b2f-22ea-44a3-a424-e47963673837}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
