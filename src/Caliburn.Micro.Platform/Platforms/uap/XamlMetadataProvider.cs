@@ -128,14 +128,6 @@
                     xamlType = new XamlSystemBaseType(typeName, typeof(Object));
                     break;
 
-                //case "Caliburn.Micro.Message":
-                //    userType = new XamlUserType(this, typeName, typeof(Caliburn.Micro.Message), GetXamlTypeByName("Object"));
-                //    userType.AddMemberName("Handler");
-                //    AddToMapOfTypeToStandardName(typeof(System.Object),
-                //                                       "Object");
-                //    xamlType = userType;
-                //    break;
-
                 case "Caliburn.Micro.View":
                     userType = new XamlUserType(this, typeName, typeof(View), GetXamlTypeByName("Object"));
                     userType.AddMemberName("Model");
@@ -160,12 +152,10 @@
         private IXamlMember CreateXamlMember(string longMemberName)
         {
             XamlMember xamlMember = null;
-            XamlUserType userType;
 
             switch (longMemberName)
             {
                 case "Caliburn.Micro.View.Model":
-                    userType = (XamlUserType)GetXamlTypeByName("Caliburn.Micro.View");
                     xamlMember = new XamlMember(this, "Model", "Object");
                     xamlMember.SetTargetTypeName("Windows.UI.Xaml.DependencyObject");
                     xamlMember.SetIsAttachable();
