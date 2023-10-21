@@ -1,19 +1,26 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+
     <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
+    <PackageReference Include="Moq" Version="4.15.2" />
     <PackageReference Include="xunit" Version="2.5.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3">
-      <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Moq" Version="4.15.2" />
+    <PackageReference Include="coverlet.collector" Version="3.2.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Xunit.StaFact" Version="1.1.11" />
   </ItemGroup>
 
@@ -21,16 +28,6 @@
     <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
     <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
     <ProjectReference Include="..\Caliburn.Micro.Platform\Caliburn.Micro.Platform.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="Nerdbank.GitVersioning" Version="3.3.37" />
   </ItemGroup>
 
   <Import Project="..\Caliburn.Micro.Platform.Tests.Shared\Caliburn.Micro.Platform.Tests.Shared.projitems" Label="Shared" />
