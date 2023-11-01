@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>b8615b2f-22ea-44a3-a424-e47963673837</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Caliburn.Micro.Platform.Tests.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AssemblyCacheTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BindingScopeTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MessageBinderTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ParserTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ScopeNamingRouteTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringSplitterTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewLocatorTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModelLocatorTests.cs" />
+  </ItemGroup>
+</Project>
