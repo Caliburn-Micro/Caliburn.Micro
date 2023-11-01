@@ -54,10 +54,9 @@
         /// <param name="item">The item that was added.</param>
         protected virtual void OnItemAdded(DependencyObject item)
         {
-            if (associatedObject != null)
+            if (associatedObject != null && (item is IAttachedObject))
             {
-                if (item is IAttachedObject)
-                    ((IAttachedObject)item).Attach(associatedObject);
+                ((IAttachedObject)item).Attach(associatedObject);
             }
         }
 
