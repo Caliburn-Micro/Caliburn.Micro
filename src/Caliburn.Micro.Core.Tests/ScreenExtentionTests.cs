@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Caliburn.Micro.Core;
 using Xunit;
 
 namespace Caliburn.Micro.Core.Tests
@@ -35,13 +31,13 @@ namespace Caliburn.Micro.Core.Tests
             child2.ConductWith(root);
             child3.ConductWith(root);
 
-            await ScreenExtensions.TryActivateAsync(root).ConfigureAwait(false);
+            await ScreenExtensions.TryActivateAsync(root);
 
             Assert.True(child1.WasActivated, "child 1 should be active");
             Assert.True(child2.WasActivated, "child 2 should be active");
             Assert.True(child3.WasActivated, "child 3 should be active");
 
-            await ScreenExtensions.TryDeactivateAsync(root, true).ConfigureAwait(false);
+            await ScreenExtensions.TryDeactivateAsync(root, true);
 
             Assert.True(child1.IsClosed, "child 1 should be closed");
             Assert.True(child2.IsClosed, "child 2 should be closed");
@@ -72,13 +68,13 @@ namespace Caliburn.Micro.Core.Tests
             root.Items.Add(child2);
             root.Items.Add(child3);
 
-            await ScreenExtensions.TryActivateAsync(root).ConfigureAwait(false);
+            await ScreenExtensions.TryActivateAsync(root);
 
             Assert.True(child1.WasActivated, "child 1 should be active");
             Assert.True(child2.WasActivated, "child 2 should be active");
             Assert.True(child3.WasActivated, "child 3 should be active");
 
-            await ScreenExtensions.TryDeactivateAsync(root, true).ConfigureAwait(false);
+            await ScreenExtensions.TryDeactivateAsync(root, true);
 
             Assert.True(child1.IsClosed, "child 1 should be closed");
             Assert.True(child2.IsClosed, "child 2 should be closed");
@@ -109,7 +105,7 @@ namespace Caliburn.Micro.Core.Tests
             {
                 if (deactivationDelay.HasValue)
                 {
-                    await Task.Delay(deactivationDelay.Value, cancellationToken).ConfigureAwait(false);
+                    await Task.Delay(deactivationDelay.Value, cancellationToken);
                 }
 
                 await base.OnActivateAsync(cancellationToken);
@@ -120,11 +116,11 @@ namespace Caliburn.Micro.Core.Tests
 
             protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken = default(CancellationToken))
             {
-                await base.OnDeactivateAsync(close, cancellationToken).ConfigureAwait(false);
+                await base.OnDeactivateAsync(close, cancellationToken);
 
                 if (deactivationDelay.HasValue)
                 {
-                    await Task.Delay(deactivationDelay.Value, cancellationToken).ConfigureAwait(false);
+                    await Task.Delay(deactivationDelay.Value, cancellationToken);
                 }
 
                 IsClosed = close;
