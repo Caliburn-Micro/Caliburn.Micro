@@ -15,7 +15,9 @@ jobs:
     runs-on:  windows-2022
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0 # avoid shallow clone so nbgv can do its work
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
