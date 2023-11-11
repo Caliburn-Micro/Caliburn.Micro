@@ -61,6 +61,6 @@ jobs:
 
         # (Optional) Whether to skip the build using the '--no-build' flag.
         # If not specified, defaults to true.
-        skip-build: true
+        skip-build: false
 
 
