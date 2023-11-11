@@ -50,8 +50,14 @@ jobs:
       run: msbuild src\caliburn.micro.sln /t:Build 
 
     - name: Restore nuget packages for setup
-      run:  msbuild samples\setup\Setup.sln -t:restore
+      run:  msbuild samples\setup\Setup.sln -t:restore -p:RestoreConfigFile=samples\setup\.nuget\nuget.config
       
     - name: Build setup apps
       run: msbuild samples\setup\Setup.sln /t:Build 
+      
+    - name: Restore nuget packages for features
+      run:  msbuild samples\features\Features.sln -t:restore 
+      
+    - name: Build feature apps
+      run: msbuild samples\features\Features.sln /t:Build 
 
