@@ -48,19 +48,10 @@ jobs:
 
     - name: Build app for release
       run: msbuild src\caliburn.micro.sln /t:Build 
-    - name: Dotnet Tests
-      uses: EasyDesk/action-dotnet-test@v1.0.0
-      with:
-        # (Optional) The root where the 'dotnet test' command should look for a project or a solution.
-        # If not specified, defaults to the current directory.
-        path: src\caliburn.micro.sln
-        # (Optional) Additional command line arguments to be passed to 'dotnet test'.
-        # Emtpy by default.
-        # test-args: '<additional-test-args>'
 
-
-        # (Optional) Whether to skip the build using the '--no-build' flag.
-        # If not specified, defaults to true.
-        skip-build: false
-
+    - name: Restore nuget packages for setup
+      run:  msbuild samples\setup\Setup.sln -t:restore
+      
+    - name: Build setup apps
+      run: msbuild samples\setup\Setup.sln /t:Build 
 
