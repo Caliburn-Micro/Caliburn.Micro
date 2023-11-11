@@ -49,11 +49,7 @@ jobs:
     - name: Build app for release
       run: msbuild src\caliburn.micro.sln /t:Build 
 
-    - name: Restore nuget packages for setup
-      run:  msbuild samples\setup\Setup.sln -t:restore -p:RestoreConfigFile=samples\setup\.nuget\nuget.config
-      
-    - name: Build setup apps
-      run: msbuild samples\setup\Setup.sln /t:Build 
+ 
       
     - name: Restore nuget packages for features
       run:  msbuild samples\features\Features.sln -t:restore 
