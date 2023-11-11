@@ -47,7 +47,7 @@ jobs:
       run:  msbuild src\caliburn.micro.sln -t:restore
 
     - name: Build app for release
-      run: msbuild src\caliburn.micro.sln /t:Build 
+      run: msbuild src\caliburn.micro.sln /t:Build /p:Configuration=Release
 
  
       
@@ -55,5 +55,5 @@ jobs:
       run:  msbuild samples\features\Features.sln -t:restore 
       
     - name: Build feature apps
-      run: msbuild samples\features\Features.sln /t:Build 
+      run: msbuild samples\features\Features.sln /t:Build /p:Configuration=Release
 
