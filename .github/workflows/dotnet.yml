@@ -57,3 +57,5 @@ jobs:
     - name: Build feature tutorial
       run: msbuild samples\tutorals\WPF\Wpf.Tutorial\Caliburn.Micro.Tutorial.App.sln /t:Build /p:Configuration=Release
 
+    - name: Pack Nuget
+      run: msbuild ../src/Caliburn.Micro.sln /t:package /p:Configuration=Release
