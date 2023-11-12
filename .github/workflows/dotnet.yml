@@ -51,9 +51,9 @@ jobs:
 
  
       
-    - name: Restore nuget packages for features
-      run:  msbuild samples\tutorals\WPF\Wpf.Tutorial\Caliburn.Micro.Tutorial.Wpf.sln -t:restore 
+    - name: Restore nuget packages for tutorial
+      run:  msbuild samples\tutorals\WPF\Wpf.Tutorial\Caliburn.Micro.Tutorial.App.sln -t:restore 
       
-    - name: Build feature apps
-      run: msbuild samples\tutorals\WPF\Wpf.Tutorial\Caliburn.Micro.Tutorial.Wpf.sln /t:Build /p:Configuration=Release
+    - name: Build feature tutorial
+      run: msbuild samples\tutorals\WPF\Wpf.Tutorial\Caliburn.Micro.Tutorial.App.sln /t:Build /p:Configuration=Release
 
