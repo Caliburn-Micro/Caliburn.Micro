@@ -47,18 +47,18 @@ jobs:
       run: dotnet workload list
 
     - name: Restore nuget packages
-      run:  msbuild {{env.caliburn_sln}} -t:restore
+      run:  msbuild ${{env.caliburn_sln}} -t:restore
 
     - name: Build app for release
-      run: msbuild {{env.caliburn_sln}} /t:Build /p:Configuration=Release
+      run: msbuild ${{env.caliburn_sln}} /t:Build /p:Configuration=Release
 
  
       
     - name: Restore nuget packages for tutorial
-      run:  msbuild {{env.caliburn_tutorial}} -t:restore 
+      run:  msbuild ${{env.caliburn_tutorial}} -t:restore 
       
     - name: Build feature tutorial
-      run: msbuild {{env.caliburn_tutorial}} /t:Build /p:Configuration=Release
+      run: msbuild ${{env.caliburn_tutorial}} /t:Build /p:Configuration=Release
 
     - name: Pack Nuget
-      run: msbuild {{env.caliburn_sln}} /t:package /p:Configuration=Release
+      run: msbuild ${{env.caliburn_sln}} /t:package /p:Configuration=Release
