@@ -8,7 +8,10 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-
+env:
+  caliburn_sln : "src\caliburn.micro.sln"
+  caliburn_tutorial: "samples\tutorals\WPF\Wpf.Tutorial\Caliburn.Micro.Tutorial.App.sln"
+  
 jobs:
   build:
 
