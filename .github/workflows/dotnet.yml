@@ -11,6 +11,8 @@ on:
 env:
   caliburn_sln : "src\\caliburn.micro.sln"
   caliburn_tutorial: "samples\\tutorals\\WPF\\Wpf.Tutorial\\Caliburn.Micro.Tutorial.App.sln"
+  package_feed: "https://nuget.pkg.github.com/ken-tucker/index.json"
+  nuget_folder: "\\packages"
   
 jobs:
   build:
@@ -62,3 +64,6 @@ jobs:
 
     - name: Pack Nuget
       run: msbuild ${{env.caliburn_sln}} /t:package /p:Configuration=Release
+      
+    - name: publish Nuget Packages to GitHub
+      run: dotnet nuget publish ${{env.nuget_folder}} --source ${{env.package_feed}} --api-key ${{secrets.PUBLISH_NUGET_PACKAGE}}
