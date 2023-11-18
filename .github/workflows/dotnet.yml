@@ -44,7 +44,7 @@ jobs:
     - name: search workloads
       run: dotnet workload search
     - name: restore workloads
-      run: dotnet workload install maui maui-android maui-ios maui-maccatalyst maui-windows android --source https://api.nuget.org/v3/index.json
+      run: dotnet workload install maui maui-android maui-ios maui-tizen maui-maccatalyst maui-windows android --source https://api.nuget.org/v3/index.json
     - name: list workloads
       run: dotnet workload list
 
