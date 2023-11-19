@@ -40,8 +40,9 @@ jobs:
         dotnet-version: 7.0.100
       
     - name: Setup Java SDK
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v3
       with:
+        distribution: 'microsoft' 
         java-version: 17
 
       
