@@ -11,7 +11,7 @@ on:
 env:
   caliburn_sln : "src\\caliburn.micro.sln"
   caliburn_tutorial: "samples\\tutorals\\WPF\\Wpf.Tutorial\\Caliburn.Micro.Tutorial.App.sln"
-  package_feed: "https://nuget.pkg.github.com/ken-tucker/index.json"
+  package_feed: "https://nuget.pkg.github.com/caliburn-micro/index.json"
   nuget_folder: "\\packages"
   
 jobs:
