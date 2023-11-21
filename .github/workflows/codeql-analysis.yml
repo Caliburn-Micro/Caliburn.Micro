@@ -42,7 +42,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         distribution: 'microsoft' 
-        java-version: 17
+        java-version: 11
 
       
     - name: Setup NuGet.exe for use with actions
