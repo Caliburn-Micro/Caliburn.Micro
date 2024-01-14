@@ -17,7 +17,7 @@ namespace Caliburn.Micro
     public class FrameAdapter : INavigationService, IDisposable
     {
 #if WINDOWS_UWP
-        private SystemNavigationManager navigationManager;
+        private readonly SystemNavigationManager navigationManager;
 #endif 
         private static readonly ILog Log = LogManager.GetLog(typeof(FrameAdapter));
         private const string FrameStateKey = "FrameState";
