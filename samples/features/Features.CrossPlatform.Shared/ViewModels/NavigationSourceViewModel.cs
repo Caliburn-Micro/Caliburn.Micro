@@ -1,5 +1,4 @@
-﻿using System;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 
 #if XAMARINFORMS
 using Caliburn.Micro.Xamarin.Forms;
