@@ -42,6 +42,7 @@ namespace Caliburn.Micro
         //These fields are used for configuring the default type mappings. They can be changed using ConfigureTypeMappings().
         static string defaultSubNsViews;
         static string defaultSubNsViewModels;
+        static string defaultSubNsDesignViewModels;
         static bool useNameSuffixesInMappings;
         static string nameFormat;
         static string viewModelSuffix;
@@ -77,6 +78,11 @@ namespace Caliburn.Micro
                 throw new ArgumentException("DefaultSubNamespaceForViewModels field cannot be blank.");
             }
 
+            if (Execute.InDesignMode && String.IsNullOrEmpty(config.DefaultSubNamespaceForDesignViewModels))
+            {
+                throw new ArgumentException("DefaultSubNamespaceForDesignViewModels field cannot be blank.");
+            }
+
             if (String.IsNullOrEmpty(config.NameFormat)) {
                 throw new ArgumentException("NameFormat field cannot be blank.");
             }
@@ -86,6 +92,7 @@ namespace Caliburn.Micro
 
             defaultSubNsViews = config.DefaultSubNamespaceForViews;
             defaultSubNsViewModels = config.DefaultSubNamespaceForViewModels;
+            if (Execute.InDesignMode) defaultSubNsDesignViewModels = config.DefaultSubNamespaceForDesignViewModels;
             nameFormat = config.NameFormat;
             useNameSuffixesInMappings = config.UseNameSuffixesInMappings;
             viewModelSuffix = config.ViewModelSuffix;
@@ -93,6 +100,12 @@ namespace Caliburn.Micro
             includeViewSuffixInVmNames = config.IncludeViewSuffixInViewModelNames;
 
             SetAllDefaults();
+
+            if (Execute.InDesignMode) {
+                foreach (var designSuffix in config.DesignViewModelSuffixList) {
+                    NameTransformer.AddRule($"{designSuffix}$", config.ViewSuffixList);
+                }
+            }
         }
 
 
@@ -103,6 +116,7 @@ namespace Caliburn.Micro
             }
             else {
                 AddSubNamespaceMapping(defaultSubNsViewModels, defaultSubNsViews);
+                if (Execute.InDesignMode) AddSubNamespaceMapping(defaultSubNsDesignViewModels, defaultSubNsViews);
             }
         }
 
@@ -120,6 +134,9 @@ namespace Caliburn.Micro
 
             //Check for <Namespace>.ViewModels.<NameSpace>.<BaseName><ViewSuffix> construct
             AddSubNamespaceMapping(defaultSubNsViewModels, defaultSubNsViews, viewSuffix);
+
+            //Check for <Namespace>.DesignViewModels.<NameSpace>.<BaseName><ViewSuffix> construct
+            if (Execute.InDesignMode) AddSubNamespaceMapping(defaultSubNsDesignViewModels, defaultSubNsViews, viewSuffix);
         }
 
         /// <summary>

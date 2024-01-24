@@ -7,8 +7,14 @@ namespace Caliburn.Micro
     /// <summary>
     /// Used by the framework to pull instances from an IoC container and to inject dependencies into certain existing classes.
     /// </summary>
-    public static class IoC
-    {
+    public static class IoC {
+        static IoC() {
+            if (Execute.InDesignMode) {
+                GetInstance = (service, key) => Activator.CreateInstance(service);
+                GetAllInstances = service => new[] { Activator.CreateInstance(service) };
+                BuildUp = o => { };
+            }
+        }
         /// <summary>
         /// Gets an instance by type and key.
         /// </summary>
