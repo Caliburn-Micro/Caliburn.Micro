@@ -50,10 +50,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Caliburn.Micro.Maui" Version="5.0.5-beta" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Folder Include="Views\" />
 	  <Folder Include="ViewModels\" />
 	</ItemGroup>
