@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using Windows.ApplicationModel;
-//using Windows.UI.Xaml;
-//using Windows.UI.Xaml.Controls;
 using Microsoft.Maui;
-//using Microsoft.Maui.Controls;
-using Microsoft.UI;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using Windows.ApplicationModel;
 
 namespace Caliburn.Micro.Maui
 {
@@ -136,7 +128,7 @@ namespace Caliburn.Micro.Maui
         /// <returns>A list of assemblies to inspect.</returns>
         protected virtual IEnumerable<Assembly> SelectAssemblies()
         {
-            return new[] {GetType().GetTypeInfo().Assembly};
+            return new[] { GetType().GetTypeInfo().Assembly };
         }
 
 

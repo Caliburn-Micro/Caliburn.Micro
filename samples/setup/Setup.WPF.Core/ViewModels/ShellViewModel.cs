@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 
 namespace Setup.WPF.Core.ViewModels
 {
@@ -23,7 +18,7 @@ namespace Setup.WPF.Core.ViewModels
 
         public ShellViewModel()
         {
-            Title = "Welcome to Caliburn Micro in .net 5 WPF";
+            Title = "Welcome to Caliburn Micro in .net 8 WPF";
         }
 
     }

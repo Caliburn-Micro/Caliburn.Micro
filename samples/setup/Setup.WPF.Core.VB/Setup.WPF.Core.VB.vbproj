@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <RootNamespace>Setup.WPF.Core.VB</RootNamespace>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
@@ -21,6 +21,10 @@
 
   <ItemGroup>
     <PackageReference Include="Caliburn.Micro" Version="4.0.173" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Setup.WPF.VB\Setup.WPF.VB.vbproj" />
   </ItemGroup>
 
 </Project>

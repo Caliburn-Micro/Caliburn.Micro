@@ -15,7 +15,8 @@ steps:
   displayName: 'Install .NET'
   inputs:
     packageType: 'sdk'
-    useGlobalJson: true
+    version: '8.0.x' 
+
 
 - task: PowerShell@2
   displayName: 'Install MAUI'
