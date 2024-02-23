@@ -48,7 +48,7 @@ jobs:
     - name: Setup NuGet.exe for use with actions
         # You may pin to the exact commit or the version.
         # uses: NuGet/setup-nuget@fd9fffd6ca4541cf4152a9565835ca1a88a6eb37
-      uses: NuGet/setup-nuget@v1.1.1
+      uses: NuGet/setup-nuget@v2
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
       
