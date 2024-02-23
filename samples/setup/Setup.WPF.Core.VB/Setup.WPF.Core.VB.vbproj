@@ -23,4 +23,8 @@
     <PackageReference Include="Caliburn.Micro" Version="4.0.173" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Setup.WPF.VB\Setup.WPF.VB.vbproj" />
+  </ItemGroup>
+
 </Project>

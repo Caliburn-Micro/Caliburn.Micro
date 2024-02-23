@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0;net8.0;</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Caliburn.Micro.Xamarin.Forms</PackageId>
     <Product>Caliburn.Micro.Xamarin.Forms</Product>
     <RootNamespace>Caliburn.Micro.Xamarin.Forms</RootNamespace>
