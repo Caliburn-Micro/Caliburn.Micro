@@ -104,6 +104,7 @@ namespace Caliburn.Micro
             {
                 await OnInitializeAsync(cancellationToken);
                 IsInitialized = initialized = true;
+                await OnInitializedAsync(cancellationToken);
             }
 
             Log.Info("Activating {0}.", this);
@@ -174,6 +175,14 @@ namespace Caliburn.Micro
         /// Called when initializing.
         /// </summary>
         protected virtual Task OnInitializeAsync(CancellationToken cancellationToken)
+        {
+            return Task.FromResult(true);
+        }
+
+        /// <summary>
+        /// Called when view has been initialized
+        /// </summary>
+        protected virtual Task OnInitializedAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(true);
         }
