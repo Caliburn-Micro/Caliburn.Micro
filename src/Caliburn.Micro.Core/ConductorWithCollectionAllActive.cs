@@ -65,9 +65,9 @@ namespace Caliburn.Micro
                 public IObservableCollection<T> Items => _items;
 
                 /// <summary>
-                /// Called when activating.
+                /// Called when view has been activated.
                 /// </summary>
-                protected override Task OnActivateAsync(CancellationToken cancellationToken)
+                protected override Task OnActivatedAsync(CancellationToken cancellationToken)
                 {
                     return Task.WhenAll(_items.OfType<IActivate>().Select(x => x.ActivateAsync(cancellationToken)));
                 }
