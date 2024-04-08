@@ -174,6 +174,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Called when initializing.
         /// </summary>
+        [Obsolete("Override OnInitializedAsync")]
         protected virtual Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(true);
@@ -190,6 +191,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Called when activating.
         /// </summary>
+        [Obsolete("Override OnActivatedAsync")]
         protected virtual Task OnActivateAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(true);
