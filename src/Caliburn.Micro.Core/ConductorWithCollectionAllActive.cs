@@ -112,9 +112,9 @@ namespace Caliburn.Micro
                 }
 
                 /// <summary>
-                /// Called when initializing.
+                /// Called when view has been initialized
                 /// </summary>
-                protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
+                protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
                 {
                     if (_openPublicItems)
                         await Task.WhenAll(GetType().GetRuntimeProperties()
