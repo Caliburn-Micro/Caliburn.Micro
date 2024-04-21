@@ -51,12 +51,12 @@ jobs:
       run: dotnet workload list
 
     - name: Ensure GitHub NuGet Source
-      run: |
-            dotnet nuget add source ${{ env.package_feed }} \
-            -n github \
-            -u ${{ secrets.NUGET_USER }} \
-            -p ${{ secrets.CONSUME_CALIBURN_FEED }} \
-            -store-password-in-clear-text
+      run: dotnet nuget add source ${{ env.package_feed }} 
+            -n github 
+            -u ${{ secrets.NUGET_USER }} 
+            -p ${{ secrets.CONSUME_CALIBURN_FEED }} 
+            --store-password-in-clear-text
+            
     - name: Restore nuget packages
       run:  msbuild ${{env.caliburn_sln}} -t:restore
 
