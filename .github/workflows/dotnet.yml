@@ -70,11 +70,11 @@ jobs:
     - name: Build feature tutorial
       run: msbuild ${{env.caliburn_tutorial}} /t:Build /p:Configuration=Release
 
-    - name: Restore nuget packages for setup
-      run:  msbuild ${{env.caliburn_setup}} -t:restore 
+    - name: Restore nuget packages for features
+      run:  msbuild ${{env.caliburn_features}} -t:restore 
       
-    - name: Build feature setup
-      run: msbuild ${{env.caliburn_setup}} /t:Build /p:Configuration=Release
+    - name: Build feature features
+      run: msbuild ${{env.caliburn_features}} /t:Build /p:Configuration=Release
       
     - name: Pack Nuget
       run: msbuild ${{env.caliburn_sln}} /t:package /p:Configuration=Release
