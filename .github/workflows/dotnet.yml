@@ -1,0 +1,70 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+env:
+  caliburn_sln : "src\\caliburn.micro.sln"
+  caliburn_tutorial: "samples\\tutorals\\WPF\\Wpf.Tutorial\\Caliburn.Micro.Tutorial.App.sln"
+  package_feed: "https://nuget.pkg.github.com/caliburn-micro/index.json"
+  nuget_folder: "\\packages"
+  
+jobs:
+  build:
+
+    runs-on:  windows-2022
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # avoid shallow clone so nbgv can do its work
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 8.0.x
+    - name: Setup Java SDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'microsoft' 
+        java-version: 11
+
+      
+    - name: Setup NuGet.exe for use with actions
+        # You may pin to the exact commit or the version.
+        # uses: NuGet/setup-nuget@fd9fffd6ca4541cf4152a9565835ca1a88a6eb37
+      uses: NuGet/setup-nuget@v1.1.1
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+      
+    - name: search workloads
+      run: dotnet workload search
+    - name: restore workloads
+      run: dotnet workload install maui maui-android maui-ios maui-tizen maui-maccatalyst maui-windows android --source https://api.nuget.org/v3/index.json
+    - name: list workloads
+      run: dotnet workload list
+
+    - name: Restore nuget packages
+      run:  msbuild ${{env.caliburn_sln}} -t:restore
+
+    - name: Build app for release
+      run: msbuild ${{env.caliburn_sln}} /t:Build /p:Configuration=Release
+
+ 
+      
+    - name: Restore nuget packages for tutorial
+      run:  msbuild ${{env.caliburn_tutorial}} -t:restore 
+      
+    - name: Build feature tutorial
+      run: msbuild ${{env.caliburn_tutorial}} /t:Build /p:Configuration=Release
+
+    - name: Pack Nuget
+      run: msbuild ${{env.caliburn_sln}} /t:package /p:Configuration=Release
+      
+    - name: publish Nuget Packages to GitHub
+      run: dotnet nuget publish ${{env.nuget_folder}} --source ${{env.package_feed}} --api-key ${{secrets.PUBLISH_NUGET_PACKAGE}} --skip-duplicate
+      if: github.event_name != 'pull_request'
