@@ -11,6 +11,8 @@ on:
 env:
   caliburn_sln : "src\\caliburn.micro.sln"
   caliburn_tutorial: "samples\\tutorals\\WPF\\Wpf.Tutorial\\Caliburn.Micro.Tutorial.App.sln"
+  caliburn_setup: "samples\\setup\\setup.sln"
+  caliburn_features: "samples\\features\\features.sln"
   package_feed: "https://nuget.pkg.github.com/caliburn-micro/index.json"
   nuget_folder: "\\packages"
   
@@ -54,7 +56,13 @@ jobs:
     - name: Build app for release
       run: msbuild ${{env.caliburn_sln}} /t:Build /p:Configuration=Release
 
- 
+    - name: Ensure GitHub NuGet Source
+      run: |
+            dotnet nuget add source ${{ env.package_feed }} \
+            -n github \
+            -u ${{ secrets.NUGET_USER }} \
+            -p ${{ secrets.CONSUME_CALIBURN_FEED }} \
+            --store-password-in-clear-text
       
     - name: Restore nuget packages for tutorial
       run:  msbuild ${{env.caliburn_tutorial}} -t:restore 
