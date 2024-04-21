@@ -50,19 +50,19 @@ jobs:
     - name: list workloads
       run: dotnet workload list
 
-    - name: Restore nuget packages
-      run:  msbuild ${{env.caliburn_sln}} -t:restore
-
-    - name: Build app for release
-      run: msbuild ${{env.caliburn_sln}} /t:Build /p:Configuration=Release
-
     - name: Ensure GitHub NuGet Source
       run: |
             dotnet nuget add source ${{ env.package_feed }} \
             -n github \
             -u ${{ secrets.NUGET_USER }} \
             -p ${{ secrets.CONSUME_CALIBURN_FEED }} \
-            --store-password-in-clear-text
+            -store-password-in-clear-text
+    - name: Restore nuget packages
+      run:  msbuild ${{env.caliburn_sln}} -t:restore
+
+    - name: Build app for release
+      run: msbuild ${{env.caliburn_sln}} /t:Build /p:Configuration=Release
+
       
     - name: Restore nuget packages for tutorial
       run:  msbuild ${{env.caliburn_tutorial}} -t:restore 
