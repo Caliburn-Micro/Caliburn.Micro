@@ -8,11 +8,13 @@
     xmlns:local="using:Features.WinUI3"
     xmlns:cal="using:Caliburn.Micro">
     <Application.Resources>
-        <SolidColorBrush x:Key="BackgroundBrush" Color="#FF225378" />
-        <ResourceDictionary x:Key="Resource">
+        <ResourceDictionary >
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Other merged dictionaries here -->
+                <ResourceDictionary>
+                    <SolidColorBrush x:Key="BackgroundBrush" Color="#FF225378" />
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
         </ResourceDictionary>

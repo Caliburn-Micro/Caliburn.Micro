@@ -22,7 +22,7 @@
     <None Remove="Views\CoroutineView.xaml" />
     <None Remove="Views\DesignTimeView.xaml" />
     <None Remove="Views\EventAggregationView.xaml" />
-    <None Remove="Views\Events\EventDesitinationView.xaml" />
+    <None Remove="Views\Events\EventDestinationView.xaml" />
     <None Remove="Views\Events\EventSourceView.xaml" />
     <None Remove="Views\ExecuteView.xaml" />
     <None Remove="Views\FeatureView.xaml" />
@@ -44,8 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.220902.1-preview1" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
@@ -80,7 +79,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\Events\EventDesitinationView.xaml">
+    <Page Update="Views\Events\EventDestinationView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

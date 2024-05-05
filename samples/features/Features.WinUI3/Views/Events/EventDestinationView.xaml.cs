@@ -24,9 +24,9 @@ namespace Features.CrossPlatform.Views.Events
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class EventDesitinationView : Page
+    public sealed partial class EventDestinationView : Page
     {
-        public EventDesitinationView()
+        public EventDestinationView()
         {
             this.InitializeComponent();
         }
