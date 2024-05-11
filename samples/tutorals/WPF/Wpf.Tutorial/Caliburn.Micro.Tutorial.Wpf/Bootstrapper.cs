@@ -43,7 +43,7 @@ namespace Caliburn.Micro.Tutorial.Wpf
 
     protected override async void OnStartup(object sender, StartupEventArgs e)
       {
-      var c= IoC.Get<SimpleContainer>();
+      IoC.Get<SimpleContainer>();
       await DisplayRootViewForAsync(typeof(ShellViewModel));
       }
 
