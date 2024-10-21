@@ -22,15 +22,15 @@ jobs:
     runs-on:  windows-2022
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0 # avoid shallow clone so nbgv can do its work
     - name: Setup .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
     - name: Setup Java SDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         distribution: 'microsoft' 
         java-version: 11
@@ -41,7 +41,7 @@ jobs:
         # uses: NuGet/setup-nuget@fd9fffd6ca4541cf4152a9565835ca1a88a6eb37
       uses: NuGet/setup-nuget@v1.1.1
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
+      uses: microsoft/setup-msbuild@v2
       
     - name: search workloads
       run: dotnet workload search
