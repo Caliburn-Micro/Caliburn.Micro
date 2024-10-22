@@ -55,7 +55,7 @@ jobs:
         # uses: NuGet/setup-nuget@fd9fffd6ca4541cf4152a9565835ca1a88a6eb37
       uses: NuGet/setup-nuget@v2
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
+      uses: microsoft/setup-msbuild@v2
       
     - name: search workloads
       run: dotnet workload search
