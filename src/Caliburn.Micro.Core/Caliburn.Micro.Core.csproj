@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;</TargetFrameworks>
     <PackageId>Caliburn.Micro.Core</PackageId>
     <Product>Caliburn.Micro Core</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
@@ -27,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.0.0" />
-    <PackageReference Update="Nerdbank.GitVersioning" Version="3.3.37" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.6.146" />
   </ItemGroup>
 
 </Project>
