@@ -24,6 +24,45 @@ namespace Caliburn.Micro.Core.Tests
             }
         }
 
+        private class AsyncActivationScreen : Screen
+        {
+            private readonly bool _simulateAsyncOnActivate;
+
+            private readonly bool _simulateAsyncOnDeactivate;
+
+            private readonly TimeSpan _simulateAsyncTaskDuration;
+
+            public AsyncActivationScreen(bool simulateAsyncOnActivate, bool simulateAsyncOnDeactivate,
+                TimeSpan simulateAsyncTaskDuration)
+            {
+                _simulateAsyncOnActivate = simulateAsyncOnActivate;
+                _simulateAsyncOnDeactivate = simulateAsyncOnDeactivate;
+                _simulateAsyncTaskDuration = simulateAsyncTaskDuration;
+            }
+
+            protected override async Task OnActivateAsync(CancellationToken cancellationToken)
+            {
+                await base.OnActivateAsync(cancellationToken);
+
+                if (_simulateAsyncOnActivate)
+                {
+                    // Task.Delay doesn't run within captured context
+                    await Task.Delay(_simulateAsyncTaskDuration, cancellationToken);
+                }
+            }
+
+            protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+            {
+                if (_simulateAsyncOnDeactivate)
+                {
+                    // Task.Delay doesn't run within captured context
+                    await Task.Delay(_simulateAsyncTaskDuration, cancellationToken);
+                }
+
+                await base.OnDeactivateAsync(close, cancellationToken);
+            }
+        }
+
         [Fact]
         public void AddedItemAppearsInChildren()
         {
@@ -149,6 +188,34 @@ namespace Caliburn.Micro.Core.Tests
             conductor.Items[0] = conducted2;
             Assert.NotEqual(conductor, conducted.Parent);
             Assert.Equal(conductor, conducted2.Parent);
+        }
+
+        [Fact]
+        public async Task ActiveItemSetterShouldSetThePropertySynchronouslyWhenOnActivateIsLongRunningTask()
+        {
+            var conductor = new Conductor<IScreen>.Collection.OneActive();
+            var conducted = new AsyncActivationScreen(true, false, TimeSpan.FromSeconds(1));
+            conductor.Items.Add(conducted);
+            await ((IActivate)conductor).ActivateAsync(CancellationToken.None);
+            conductor.ActiveItem = conducted;
+            Assert.NotNull(conductor.ActiveItem);
+            Assert.Equal(conducted, conductor.ActiveItem);
+        }
+
+        [Fact]
+        public async Task ActiveItemSetterShouldSetThePropertySynchronouslyWhenOnDeactivateIsLongRunningTask()
+        {
+            var conductor = new Conductor<IScreen>.Collection.OneActive();
+            var conducted1 = new AsyncActivationScreen(false, true, TimeSpan.FromSeconds(1));
+            conductor.Items.Add(conducted1);
+            var conducted2 = new Screen();
+            conductor.Items.Add(conducted2);
+            await((IActivate)conductor).ActivateAsync(CancellationToken.None);
+            conductor.ActiveItem = conducted1;
+            conductor.ActiveItem = conducted2;
+            Assert.NotNull(conductor.ActiveItem);
+            Assert.NotEqual(conducted1, conductor.ActiveItem);
+            Assert.Equal(conducted2, conductor.ActiveItem);
         }
     }
 }
