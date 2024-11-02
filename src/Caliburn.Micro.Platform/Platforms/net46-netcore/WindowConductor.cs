@@ -6,6 +6,9 @@ using System.Windows;
 
 namespace Caliburn.Micro
 {
+    /// <summary>
+    /// Manages the lifecycle of a window and its associated view model.
+    /// </summary>
     public class WindowConductor
     {
         private bool deactivatingFromView;
@@ -14,12 +17,21 @@ namespace Caliburn.Micro
         private readonly Window view;
         private readonly object model;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WindowConductor"/> class.
+        /// </summary>
+        /// <param name="model">The view model associated with the window.</param>
+        /// <param name="view">The window being managed.</param>
         public WindowConductor(object model, Window view)
         {
             this.model = model;
             this.view = view;
         }
 
+        /// <summary>
+        /// Initializes the conductor asynchronously.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task InitialiseAsync()
         {
             if (model is IActivate activator)
@@ -39,6 +51,9 @@ namespace Caliburn.Micro
             }
         }
 
+        /// <summary>
+        /// Handles the window's Closed event.
+        /// </summary>
         private async void Closed(object sender, EventArgs e)
         {
             view.Closed -= Closed;
@@ -56,6 +71,9 @@ namespace Caliburn.Micro
             deactivatingFromView = false;
         }
 
+        /// <summary>
+        /// Handles the view model's Deactivated event.
+        /// </summary>
         private Task Deactivated(object sender, DeactivationEventArgs e)
         {
             if (!e.WasClosed)
@@ -79,6 +97,9 @@ namespace Caliburn.Micro
             return Task.FromResult(true);
         }
 
+        /// <summary>
+        /// Handles the window's Closing event.
+        /// </summary>
         private async void Closing(object sender, CancelEventArgs e)
         {
             if (e.Cancel)

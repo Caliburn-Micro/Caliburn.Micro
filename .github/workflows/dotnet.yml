@@ -81,5 +81,5 @@ jobs:
       run: msbuild ${{env.caliburn_sln}} /t:package /p:Configuration=${{env.build_configuration}}
       
     - name: publish Nuget Packages to GitHub
-      run: dotnet nuget publish ${{env.nuget_folder}} --source ${{env.package_feed}} --api-key ${{secrets.PUBLISH_NUGET_PACKAGE}} --skip-duplicate
+      run: dotnet nuget push ${{env.nuget_folder}} --source ${{env.package_feed}} --api-key ${{secrets.PUBLISH_NUGET_PACKAGE}} --skip-duplicate
       if: github.event_name != 'pull_request'
