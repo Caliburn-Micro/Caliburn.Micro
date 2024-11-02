@@ -5,6 +5,12 @@ using System.Threading.Tasks;
 
 namespace Caliburn.Micro
 {
+    /// <summary>
+    /// AsyncEventHandlerExtensions class.
+    /// </summary>
+    /// <remarks>
+    /// Contains helper functions to run Invoke methods asynchronously.
+    /// </remarks>
     public static class AsyncEventHandlerExtensions
     {
         /// <summary>

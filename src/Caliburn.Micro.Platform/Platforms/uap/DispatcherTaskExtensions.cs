@@ -4,6 +4,12 @@ using Windows.UI.Core;
 
 namespace Caliburn.Micro
 {
+    /// <summary>
+    /// DispatcherTaskExtensions class.
+    /// </summary>
+    /// <remarks>
+    /// Contains helper functions to run  tasks asynchronously on a <see cref="CoreDispatcher"/>.
+    /// </remarks>
     public static class DispatcherTaskExtensions
     {
         /// <summary>
