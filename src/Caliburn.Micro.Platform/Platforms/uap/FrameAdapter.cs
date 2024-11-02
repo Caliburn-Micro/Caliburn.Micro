@@ -435,6 +435,9 @@ namespace Caliburn.Micro
                 ApplicationDataCreateDisposition.Always);
         }
 
+        /// <summary>
+        /// Disposes the FrameAdapter instance, detaching event handlers to prevent memory leaks.
+        /// </summary>
         public void Dispose()
         {
             this.frame.Navigating -= OnNavigating;
