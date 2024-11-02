@@ -12,7 +12,7 @@ on:
 jobs:
   analyse:
     name: Analyse
-    runs-on: windows-latest
+    runs-on: windows-2022
     permissions:
         # required for all workflows
         security-events: write
@@ -47,7 +47,7 @@ jobs:
       uses: actions/setup-java@v4
       with:
         distribution: 'microsoft' 
-        java-version: 11
+        java-version: 17
 
       
     - name: Setup NuGet.exe for use with actions

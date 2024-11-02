@@ -15,6 +15,7 @@ env:
   caliburn_features: "samples\\features\\features.sln"
   package_feed: "https://nuget.pkg.github.com/caliburn-micro/index.json"
   nuget_folder: "\\packages"
+  build_configuration: "Release"
   
 jobs:
   build:
@@ -33,7 +34,7 @@ jobs:
       uses: actions/setup-java@v4
       with:
         distribution: 'microsoft' 
-        java-version: 11
+        java-version: 17
 
       
     - name: Setup NuGet.exe for use with actions
@@ -61,23 +62,23 @@ jobs:
       run:  msbuild ${{env.caliburn_sln}} -t:restore
 
     - name: Build app for release
-      run: msbuild ${{env.caliburn_sln}} /t:Build /p:Configuration=Release
+      run: msbuild ${{env.caliburn_sln}} /t:Build /p:Configuration=${{env.build_configuration}}
 
       
     - name: Restore nuget packages for tutorial
       run:  msbuild ${{env.caliburn_tutorial}} -t:restore 
       
     - name: Build feature tutorial
-      run: msbuild ${{env.caliburn_tutorial}} /t:Build /p:Configuration=Release
+      run: msbuild ${{env.caliburn_tutorial}} /t:Build /p:Configuration=${{env.build_configuration}}
 
     - name: Restore nuget packages for features
       run:  msbuild ${{env.caliburn_features}} -t:restore 
       
     - name: Build feature features
-      run: msbuild ${{env.caliburn_features}} /t:Build /p:Configuration=Release
+      run: msbuild ${{env.caliburn_features}} /t:Build /p:Configuration=${{env.build_configuration}}
       
     - name: Pack Nuget
-      run: msbuild ${{env.caliburn_sln}} /t:package /p:Configuration=Release
+      run: msbuild ${{env.caliburn_sln}} /t:package /p:Configuration=${{env.build_configuration}}
       
     - name: publish Nuget Packages to GitHub
       run: dotnet nuget publish ${{env.nuget_folder}} --source ${{env.package_feed}} --api-key ${{secrets.PUBLISH_NUGET_PACKAGE}} --skip-duplicate
