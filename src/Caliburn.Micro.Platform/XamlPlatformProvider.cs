@@ -21,9 +21,9 @@
     /// </summary>
     public class XamlPlatformProvider : IPlatformProvider {
 #if WINDOWS_UWP
-        private CoreDispatcher dispatcher;
+        private readonly CoreDispatcher dispatcher;
 #else
-        private Dispatcher dispatcher;
+        private readonly Dispatcher dispatcher;
 #endif
 
         /// <summary>

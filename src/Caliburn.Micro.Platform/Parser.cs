@@ -56,7 +56,7 @@ namespace Caliburn.Micro
     /// </summary>
     public static class Parser
     {
-        static readonly Regex LongFormatRegularExpression = new Regex(@"^[\s]*\[[^\]]*\][\s]*=[\s]*\[[^\]]*\][\s]*$", RegexOptions.None, TimeSpan.FromSeconds(10));
+        static readonly Regex LongFormatRegularExpression = new Regex(@"^[\s]*\[[^\]]*\][\s]*=[\s]*\[[^\]]*\][\s]*$", RegexOptions.Compiled);
         static readonly ILog Log = LogManager.GetLog(typeof(Parser));
 
         /// <summary>
@@ -102,10 +102,12 @@ namespace Caliburn.Micro
         }
 
 #if XFORMS || MAUI
-        private static void AddActionToTrigger(DependencyObject target, TriggerAction message, TriggerBase trigger) {
+        private static void AddActionToTrigger(DependencyObject target, TriggerAction message, TriggerBase trigger)
+        {
 
-            if (trigger is EventTrigger) {
-                var eventTrigger = (EventTrigger) trigger;
+            if (trigger is EventTrigger)
+            {
+                var eventTrigger = (EventTrigger)trigger;
 
                 eventTrigger.Actions.Add(message);
             }
@@ -332,7 +334,8 @@ namespace Caliburn.Micro
                 path = ConventionManager.GetElementConvention(element.GetType()).ParameterProperty;
             }
 
-            var binding = new Binding(path) {
+            var binding = new Binding(path)
+            {
                 Source = element,
                 Mode = bindingMode
             };
