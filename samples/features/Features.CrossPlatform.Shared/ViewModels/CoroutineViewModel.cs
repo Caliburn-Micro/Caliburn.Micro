@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Caliburn.Micro;
 using Features.CrossPlatform.Results;
 
@@ -17,7 +15,7 @@ namespace Features.CrossPlatform.ViewModels
 
             yield return new BusyResult(false);
 #else
-            yield return new VisualStateResult("Loading");
+            yield return new VisualStateResult("ShowLoading");
 
             yield return TaskHelper.Delay(2000).AsResult();
 

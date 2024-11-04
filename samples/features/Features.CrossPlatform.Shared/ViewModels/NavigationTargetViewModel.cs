@@ -1,5 +1,4 @@
-﻿using System;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 
 namespace Features.CrossPlatform.ViewModels
 {
@@ -14,7 +13,7 @@ namespace Features.CrossPlatform.ViewModels
             set { Set(ref text, value); }
         }
 
-        public bool IsEnabled
+        public bool IsNavigationEnabled
         {
             get { return isEnabled; }
             set { Set(ref isEnabled, value); }

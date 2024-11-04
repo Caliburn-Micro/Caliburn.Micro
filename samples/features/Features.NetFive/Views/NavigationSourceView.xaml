@@ -11,7 +11,7 @@
     <Grid>
         <StackPanel Margin="20">
             <TextBox x:Name="Text" />
-            <CheckBox x:Name="IsEnabled" Content="Is Enabled" Margin="0,10" />
+            <CheckBox x:Name="IsNavigationEnabled" Content="Is Enabled" Margin="0,10" />
             <Button x:Name="Navigate" Content="Navigate" />
         </StackPanel>
     </Grid>
