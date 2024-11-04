@@ -6,6 +6,7 @@ using Xamarin.Forms;
 using System.Windows;
 #elif AVALONIA
 using Avalonia.Controls;
+using MsBox.Avalonia;
 #else
 using Windows.UI.Popups;
 #endif
@@ -45,15 +46,14 @@ namespace Features.CrossPlatform.Results
 #elif AVALONIA
         public override async void Execute(CoroutineExecutionContext context)
         {
-            var dialog = MessageBox.Avalonia.MessageBoxManager
-                        .GetMessageBoxStandardWindow(_title, _content);
+            var dialog = MessageBoxManager.GetMessageBoxStandard(_title, _content);
 
-            await dialog.Show();
+            await dialog.ShowAsync();
             OnCompleted();
         }
 #else
         public override async void Execute(CoroutineExecutionContext context)
-        { 
+        {
             var dialog = new MessageDialog(_content, _title);
 
             await dialog.ShowAsync();

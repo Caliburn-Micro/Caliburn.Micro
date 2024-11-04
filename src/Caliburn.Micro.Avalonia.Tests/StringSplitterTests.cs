@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Caliburn.Micro.Platform.Tests
+﻿namespace Caliburn.Micro.Avalonia.Tests
 {
     public class StringSplitterTests
     {
@@ -17,7 +15,7 @@ namespace Caliburn.Micro.Platform.Tests
         {
             var output = StringSplitter.Split("First;Second", ';');
 
-            Assert.Collection(output, 
+            Assert.Collection(output,
                 o => Assert.Equal("First", o),
                 o => Assert.Equal("Second", o));
         }

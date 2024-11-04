@@ -27,6 +27,7 @@ namespace Caliburn.Micro
     using TriggerBase = Avalonia.Xaml.Interactivity.Trigger;
     using DependencyPropertyChangedEventArgs = Avalonia.AvaloniaPropertyChangedEventArgs;
     using DependencyProperty = Avalonia.AvaloniaProperty;
+    using EventTrigger = Avalonia.Xaml.Interactions.Core.EventTriggerBehavior;
 #elif MAUI
     using global::Microsoft.Maui.Controls;
     using UIElement = global::Microsoft.Maui.Controls.Element;
@@ -43,7 +44,8 @@ namespace Caliburn.Micro
     /// <summary>
     ///   Host's attached properties related to routed UI messaging.
     /// </summary>
-    public static class Message {
+    public static class Message
+    {
         internal static readonly DependencyProperty HandlerProperty =
 #if AVALONIA
         AvaloniaProperty.RegisterAttached<AvaloniaObject, object>("Handler", typeof(Message));
@@ -59,7 +61,7 @@ namespace Caliburn.Micro
 
         static readonly DependencyProperty MessageTriggersProperty =
 #if AVALONIA
-            AvaloniaProperty.RegisterAttached<AvaloniaObject, TriggerBase[]>("MessageTriggers", typeof(Message));
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, EventTrigger[]>("MessageTriggers", typeof(Message));
 #else
             DependencyPropertyHelper.RegisterAttached(
                 "MessageTriggers",
@@ -74,7 +76,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="d"> The element. </param>
         /// <param name="value"> The message handler. </param>
-        public static void SetHandler(DependencyObject d, object value) {
+        public static void SetHandler(DependencyObject d, object value)
+        {
             Log.Info("Setting handler for {0} to {1}.", d, value);
             d.SetValue(HandlerProperty, value);
         }
@@ -84,7 +87,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="d"> The element. </param>
         /// <returns> The message handler. </returns>
-        public static object GetHandler(DependencyObject d) {
+        public static object GetHandler(DependencyObject d)
+        {
             return d.GetValue(HandlerProperty);
         }
 
@@ -115,7 +119,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="d"> The element to attach to. </param>
         /// <param name="attachText"> The parsable attachment text. </param>
-        public static void SetAttach(DependencyObject d, string attachText) {
+        public static void SetAttach(DependencyObject d, string attachText)
+        {
             d.SetValue(AttachProperty, attachText);
         }
 
@@ -124,12 +129,15 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="d"> The element that was attached to. </param>
         /// <returns> The parsable attachment text. </returns>
-        public static string GetAttach(DependencyObject d) {
+        public static string GetAttach(DependencyObject d)
+        {
             return d.GetValue(AttachProperty) as string;
         }
 
-        static void OnAttachChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (e.NewValue == e.OldValue) {
+        static void OnAttachChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue == e.OldValue)
+            {
                 return;
             }
 
@@ -163,7 +171,8 @@ namespace Caliburn.Micro
 #else
             var allTriggers = Interaction.GetTriggers(d);
 #endif
-            if (messageTriggers != null) {
+            if (messageTriggers != null)
+            {
                 messageTriggers.Apply(x => allTriggers.Remove(x));
             }
 
@@ -181,10 +190,12 @@ namespace Caliburn.Micro
 #endif
 #endif
 
-            if (newTriggers.Length > 0) {
+            if (newTriggers.Length > 0)
+            {
                 d.SetValue(MessageTriggersProperty, newTriggers);
             }
-            else {
+            else
+            {
                 d.ClearValue(MessageTriggersProperty);
             }
         }

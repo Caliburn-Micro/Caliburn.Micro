@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using System.Globalization;
 
-namespace Caliburn.Micro.Platform.Tests
+namespace Caliburn.Micro.Avalonia.Tests
 {
     public class ParserTests
     {

@@ -15,7 +15,7 @@ namespace Caliburn.Micro
     using UIElement = global::Xamarin.Forms.Element;
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
-    using DependencyObject =global::Xamarin.Forms.BindableObject;
+    using DependencyObject = global::Xamarin.Forms.BindableObject;
 #elif AVALONIA
     using Avalonia;
     using Avalonia.Data;
@@ -37,7 +37,8 @@ namespace Caliburn.Micro
     /// <summary>
     ///   Hosts dependency properties for binding.
     /// </summary>
-    public static class Bind {
+    public static class Bind
+    {
         /// <summary>
         ///   Allows binding on an existing view. Use this on root UserControls, Pages and Windows; not in a DataTemplate.
         /// </summary>
@@ -93,7 +94,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name = "dependencyObject">The dependency object to bind to.</param>
         /// <returns>The model.</returns>
-        public static object GetModelWithoutContext(DependencyObject dependencyObject) {
+        public static object GetModelWithoutContext(DependencyObject dependencyObject)
+        {
             return dependencyObject.GetValue(ModelWithoutContextProperty);
         }
 
@@ -102,7 +104,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name = "dependencyObject">The dependency object to bind to.</param>
         /// <param name = "value">The model.</param>
-        public static void SetModelWithoutContext(DependencyObject dependencyObject, object value) {
+        public static void SetModelWithoutContext(DependencyObject dependencyObject, object value)
+        {
             dependencyObject.SetValue(ModelWithoutContextProperty, value);
         }
 
@@ -111,7 +114,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name = "dependencyObject">The dependency object to bind to.</param>
         /// <returns>The model.</returns>
-        public static object GetModel(DependencyObject dependencyObject) {
+        public static object GetModel(DependencyObject dependencyObject)
+        {
             return dependencyObject.GetValue(ModelProperty);
         }
 
@@ -120,21 +124,26 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name = "dependencyObject">The dependency object to bind to.</param>
         /// <param name = "value">The model.</param>
-        public static void SetModel(DependencyObject dependencyObject, object value) {
+        public static void SetModel(DependencyObject dependencyObject, object value)
+        {
             dependencyObject.SetValue(ModelProperty, value);
         }
-        
-        static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
+
+        static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue)
+            {
                 return;
             }
 
             var fe = d as FrameworkElement;
-            if (fe == null) {
+            if (fe == null)
+            {
                 return;
             }
 
-            View.ExecuteOnLoad(fe, delegate {
+            View.ExecuteOnLoad(fe, delegate
+            {
                 var target = e.NewValue;
 
                 d.SetValue(View.IsScopeRootProperty, true);
@@ -150,18 +159,22 @@ namespace Caliburn.Micro
                 ViewModelBinder.Bind(target, d, context);
             });
         }
-        
-        static void ModelWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue) {
+
+        static void ModelWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (View.InDesignMode || e.NewValue == null || e.NewValue == e.OldValue)
+            {
                 return;
             }
 
             var fe = d as FrameworkElement;
-            if (fe == null) {
+            if (fe == null)
+            {
                 return;
             }
 
-            View.ExecuteOnLoad(fe, delegate {
+            View.ExecuteOnLoad(fe, delegate
+            {
                 var target = e.NewValue;
                 d.SetValue(View.IsScopeRootProperty, true);
 
@@ -201,7 +214,8 @@ namespace Caliburn.Micro
 #if (NET || CAL_NETCORE) && (!AVALONIA && !WINDOWS_UWP && !MAUI)  // not sure this is right      
         [AttachedPropertyBrowsableForTypeAttribute(typeof(DependencyObject))]
 #endif
-        public static bool GetAtDesignTime(DependencyObject dependencyObject) {
+        public static bool GetAtDesignTime(DependencyObject dependencyObject)
+        {
             return (bool)dependencyObject.GetValue(AtDesignTimeProperty);
         }
 
@@ -210,15 +224,17 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="dependencyObject">The ui to apply conventions to.</param>
         /// <param name="value">Whether or not to apply conventions.</param>
-        public static void SetAtDesignTime(DependencyObject dependencyObject, bool value) {
+        public static void SetAtDesignTime(DependencyObject dependencyObject, bool value)
+        {
             dependencyObject.SetValue(AtDesignTimeProperty, value);
         }
 
-        static void AtDesignTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        static void AtDesignTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
             if (!View.InDesignMode)
                 return;
 
-            var atDesignTime = (bool) e.NewValue;
+            var atDesignTime = (bool)e.NewValue;
             if (!atDesignTime)
                 return;
 #if XFORMS
@@ -243,7 +259,8 @@ namespace Caliburn.Micro
                 null, DataContextChanged);
 #endif
 
-        static void DataContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        static void DataContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
             if (!View.InDesignMode)
                 return;
 
@@ -252,6 +269,7 @@ namespace Caliburn.Micro
                 return;
 
             var fe = d as FrameworkElement;
+
             if (fe == null)
                 return;
 #if XFORMS || MAUI

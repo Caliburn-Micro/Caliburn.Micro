@@ -14,11 +14,11 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Button cal:Message.Attach="GoHome">Home</Button>
+            <Button >Home</Button>
         </StackPanel>
         <DockPanel Grid.Row="1">
             <Border>
-                <cal:NavigationFrame cal:Message.Attach="[Event NavigationServiceReady] = [NavReady($source)]" />
+                <cal:NavigationFrame />
             </Border>
         </DockPanel>
     </Grid>

@@ -213,8 +213,8 @@
                     //string eventName = "AttachedToLogicalTree";
                     string eventName = "Loaded";
                     var trigger = Interaction.GetBehaviors(AssociatedObject)
-                        .OfType<Trigger>()
-                        .FirstOrDefault(t => t.Actions.Contains(this)) as EventTriggerBehavior;
+                        .OfType<EventTrigger>()
+                        .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
                     Log.Info($"Trigger is null {trigger == null}");
 #else
                    string eventName = "Loaded";
@@ -407,7 +407,7 @@
 
             _context.EventArgs = eventArgs;
 
-            if (EnforceGuardsDuringInvocation && _context.CanExecute != null && !_context.CanExecute())
+            if (EnforceGuardsDuringInvocation && !(_context?.CanExecute() == true))
             {
                 return;
             }

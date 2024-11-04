@@ -1,7 +1,4 @@
-using System;
-using Xunit;
-
-namespace Caliburn.Micro.Platform.Tests
+namespace Caliburn.Micro.Avalonia.Tests
 {
     public class ViewLocatorTests
     {

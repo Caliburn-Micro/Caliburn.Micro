@@ -1,23 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using Xunit;
+﻿using Avalonia;
+using Avalonia.Controls;
 
-namespace Caliburn.Micro.Platform.Tests
+namespace Caliburn.Micro.Avalonia.Tests
 {
     public class BindingScopeFindName
     {
-        [WpfFact]
+
+        [UIFact]
         public void A_given_match_is_always_the_first_instance_found()
         {
-            var elements = new List<FrameworkElement>
+            var elements = new List<Control>
             {
-                new FrameworkElement
+                new Control
                 {
                     Name = "Foo"
                 },
-                new FrameworkElement
+                new Control
                 {
                     Name = "Foo"
                 }
@@ -27,12 +25,12 @@ namespace Caliburn.Micro.Platform.Tests
             Assert.NotSame(elements.Last(), found);
         }
 
-        [WpfFact]
+        [UIFact]
         public void A_given_name_is_found_regardless_of_case_sensitivity()
         {
-            var elements = new List<FrameworkElement>
+            var elements = new List<Control>
             {
-                new FrameworkElement
+                new Control
                 {
                     Name = "FOO"
                 }
@@ -42,16 +40,16 @@ namespace Caliburn.Micro.Platform.Tests
             Assert.NotNull(found);
         }
 
-        [WpfFact]
+        [UIFact]
         public void A_given_name_is_matched_correctly()
         {
-            var elements = new List<FrameworkElement>
+            var elements = new List<Control>
             {
-                new FrameworkElement
+                new Control
                 {
                     Name = "Bar"
                 },
-                new FrameworkElement
+                new Control
                 {
                     Name = "Foo"
                 }
@@ -60,14 +58,16 @@ namespace Caliburn.Micro.Platform.Tests
             var found = BindingScope.FindName(elements, "Foo");
             Assert.NotNull(found);
         }
+
     }
 
     public class BindingScope_FindScopeNamingRoute
     {
-        [WpfFact]
+
+        [UIFact]
         public void A_given_Pages_Content_is_ScopeRoute_if_it_is_a_dependency_object()
         {
-            var page = new Page
+            var page = new UserControl
             {
                 Content = new Control()
             };
@@ -76,7 +76,7 @@ namespace Caliburn.Micro.Platform.Tests
             Assert.Same(page.Content, route.Root);
         }
 
-        [WpfFact]
+        [UIFact]
         public void A_given_UserControl_is_ScopeRoute()
         {
             var userControl = new UserControl();
@@ -85,14 +85,15 @@ namespace Caliburn.Micro.Platform.Tests
             Assert.Same(userControl, route.Root);
         }
 
-        [WpfFact]
+        [UIFact]
         public void Any_DependencyObject_is_ScopeRoot_if_IsScopeRoot_is_true()
         {
-            var dependencyObject = new DependencyObject();
+            var dependencyObject = new AvaloniaObject();
             dependencyObject.SetValue(View.IsScopeRootProperty, true);
             var route = BindingScope.FindScopeNamingRoute(dependencyObject);
 
             Assert.Same(dependencyObject, route.Root);
         }
+
     }
 }
