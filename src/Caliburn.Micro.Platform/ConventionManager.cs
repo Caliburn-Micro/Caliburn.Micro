@@ -457,7 +457,6 @@
         {
 #if AVALONIA
             Log.Info("Checking for binding on {0} for {1}.", element.Name, property.Name);
-            Log.Info("{element.Tag}");
             bool hasBinding = element.IsSet(property);
             //TODO: (Avalonia) Need to find a way to detect existing bindings on an AvaloniaProperty
             return hasBinding;

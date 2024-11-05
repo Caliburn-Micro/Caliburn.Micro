@@ -64,7 +64,7 @@
       <HintPath>..\..\..\bin\Caliburn.Micro.Platform\release\net462\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.Platform.Core">
-      <HintPath>..\..\..\bin\Caliburn.Micro.Platform.Core\debug\netstandard2.0\Caliburn.Micro.Platform.Core.dll</HintPath>
+      <HintPath>..\..\..\bin\Caliburn.Micro.Platform.Core\release\netstandard2.0\Caliburn.Micro.Platform.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>

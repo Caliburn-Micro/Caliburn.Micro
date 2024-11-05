@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 
+
 namespace Caliburn.Micro.Avalonia.Tests
 {
     public class BindingScopeFindName
@@ -65,15 +66,41 @@ namespace Caliburn.Micro.Avalonia.Tests
     {
 
         [UIFact]
-        public void A_given_Pages_Content_is_ScopeRoute_if_it_is_a_dependency_object()
+        public void A_given_Pages_Content_is_ScopeRoute_if_it_is_a_dependency_object_and_IViewAware()
         {
             var page = new UserControl
             {
-                Content = new Control()
+                Content = new Control(),
+                DataContext = new Screen()
             };
             var route = BindingScope.FindScopeNamingRoute(page);
 
             Assert.Same(page.Content, route.Root);
+        }
+
+        [UIFact]
+        public void A_given_Pages_Content_is_ScopeRoute_if_it_is_a_dependency_object_and_IConductor()
+        {
+            var page = new UserControl
+            {
+                Content = new Control(),
+                DataContext = new Conductor<string>()
+            };
+            var route = BindingScope.FindScopeNamingRoute(page);
+
+            Assert.Same(page.Content, route.Root);
+        }
+
+        [UIFact]
+        public void A_given_Pages_Content_is_ScopeRoute_if_it_is_a_dependency_object_and_No_DataContext()
+        {
+            var page = new UserControl
+            {
+                Content = new Control(),
+            };
+            var route = BindingScope.FindScopeNamingRoute(page);
+
+            Assert.NotSame(page.Content, route.Root);
         }
 
         [UIFact]
