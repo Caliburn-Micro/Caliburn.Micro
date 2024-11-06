@@ -171,14 +171,15 @@ namespace Caliburn.Micro
 #if AVALONIA
         public static bool ExecuteOnLoad(FrameworkElement element, EventHandler handler)
         {
-            if (((ILogical) element).IsAttachedToLogicalTree)
+            if (((ILogical)element).IsAttachedToLogicalTree)
             {
                 handler(element, new RoutedEventArgs());
                 return true;
             }
 
             EventHandler<LogicalTreeAttachmentEventArgs> loaded = null;
-            loaded = (s, e) => {
+            loaded = (s, e) =>
+            {
                 element.AttachedToLogicalTree -= loaded;
                 handler(s, e);
             };
@@ -291,7 +292,8 @@ namespace Caliburn.Micro
         {
             EventHandler onLayoutUpdate = null;
 #endif
-            onLayoutUpdate = (s, e) => {
+            onLayoutUpdate = (s, e) =>
+            {
                 element.LayoutUpdated -= onLayoutUpdate;
                 handler(element, e);
             };
@@ -308,7 +310,8 @@ namespace Caliburn.Micro
         /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
         /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was. 
         /// </remarks>
-        public static Func<object, object> GetFirstNonGeneratedView = view => {
+        public static Func<object, object> GetFirstNonGeneratedView = view =>
+        {
             var dependencyObject = view as DependencyObject;
             if (dependencyObject == null)
             {
@@ -410,7 +413,7 @@ namespace Caliburn.Micro
 
         static void OnModelChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs args)
         {
-            if (args.OldValue == args.NewValue)
+            if (args.OldValue.Equals(args.NewValue))
             {
                 return;
             }
@@ -439,7 +442,7 @@ namespace Caliburn.Micro
 
         static void OnContextChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs e)
         {
-            if (e.OldValue == e.NewValue)
+            if (e.OldValue.Equals(e.NewValue))
             {
                 return;
             }

@@ -136,7 +136,7 @@ namespace Caliburn.Micro
 
         static void OnAttachChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue == e.OldValue)
+            if (e.NewValue.Equals(e.OldValue))
             {
                 return;
             }
