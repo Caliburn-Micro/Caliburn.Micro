@@ -217,9 +217,9 @@
                         .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
                     Log.Info($"Trigger is null {trigger == null}");
 #else
-                   string eventName = "Loaded";
-                   var trigger = Interaction.GetTriggers(AssociatedObject)
-                    .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
+                    string eventName = "Loaded";
+                    var trigger = Interaction.GetTriggers(AssociatedObject)
+                     .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
 #endif
                     Log.Info($"Trigger EventName '{trigger?.EventName}' event name '{eventName}'");
                     if (trigger != null && trigger.EventName == eventName)
@@ -285,9 +285,9 @@
                     var currentParent = currentView.GetVisualParent();
                     if (currentParent?.GetVisualParent() != null)
                     {
-                        currentParent = currentParent.GetVisualParent();
+                        currentParent = currentParent?.GetVisualParent();
                     }
-                    currentElement = currentParent as AvaloniaObject;
+                    currentElement = currentParent;
 #else
                     currentElement = BindingScope.GetVisualParent(currentElement);
 #endif
@@ -308,8 +308,9 @@
             };
             Log.Info($"Binding {binding.Source}");
 #elif ( NET || CAL_NETCORE && !WINDOWS_UWP)
-            var binding = new Binding {
-                Path = new PropertyPath(Message.HandlerProperty), 
+            var binding = new Binding
+            {
+                Path = new PropertyPath(Message.HandlerProperty),
                 Source = currentElement
             };
 #elif WINDOWS_UWP
@@ -329,7 +330,7 @@
                 Log.Info($"GetObservable {HandlerProperty.Name}");
                 var myObservable = elementToUse.GetObservable(HandlerProperty);
                 Log.Info($"myObservable is null  {myObservable == null}");
-                myObservable.Subscribe(x =>
+                myObservable?.Subscribe(x =>
                  {
                      Log.Info($"GetObservable subscribe {elementToUse}");
                      Log.Info($"GetObservable x is null {x == null}");
@@ -407,7 +408,7 @@
 
             _context.EventArgs = eventArgs;
 
-            if (EnforceGuardsDuringInvocation && !(_context?.CanExecute() == true))
+            if (EnforceGuardsDuringInvocation && (_context?.CanExecute() != true))
             {
                 return;
             }

@@ -34,7 +34,7 @@ namespace Caliburn.Micro
                 deactivatable.Deactivated += Deactivated;
             }
 
-            if (model is IGuardClose guard)
+            if (model is IGuardClose)
             {
                 view.Closing += Closing;
             }
@@ -104,7 +104,7 @@ namespace Caliburn.Micro
 
                 actuallyClosing = true;
                 view.Close();
-            // On macOS a crash occurs when view.Close() is called after a suspension with DispatcherPriority higher than Input.
+                // On macOS a crash occurs when view.Close() is called after a suspension with DispatcherPriority higher than Input.
             }, DispatcherPriority.Input);
         }
     }
