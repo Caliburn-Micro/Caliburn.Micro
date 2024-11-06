@@ -274,8 +274,7 @@
 
 #if AVALONIA
                     var currentView = ((Visual)currentElement);
-                    if (elementToUse == null)
-                        elementToUse = currentElement;
+
                     var currentParent = currentView.GetVisualParent();
                     if (currentParent?.GetVisualParent() != null)
                     {
@@ -287,13 +286,14 @@
 #endif
                 }
             }
-#if !AVALONIA
             else
             {
                 currentElement = _context.View;
             }
-#endif
+
 #if AVALONIA
+            if (elementToUse == null)
+                elementToUse = currentElement;
             var binding = new Binding
             {
                 Path = "(cal:Message.Handler)",

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Concurrent;
     using System.Linq;
 #if WINDOWS_UWP
     using System.ServiceModel;
@@ -30,7 +31,7 @@
     public static class BindingScope
     {
         static readonly List<ChildResolver> ChildResolvers = new List<ChildResolver>();
-        static readonly Dictionary<Type, Object> NonResolvableChildTypes = new Dictionary<Type, Object>();
+        static readonly ConcurrentDictionary<Type, Object> NonResolvableChildTypes = new ConcurrentDictionary<Type, Object>();
 
         static BindingScope()
         {

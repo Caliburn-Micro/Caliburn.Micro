@@ -13,13 +13,13 @@
                 </TextBlock>
 
                 <TextBlock Text="Name"/>
-                <TextBox x:Name="Name" Margin="0,10,0,0" HorizontalAlignment="Stretch"/>
+                <TextBox x:Name="UserName" Margin="0,10,0,0" HorizontalAlignment="Stretch"/>
                 <Button x:Name="Clear" Content="Clear" Classes="ActionButton"/>
                 <Button x:Name="SimpleSayHello" Content="Simple Say Hello" Classes="ActionButton"/>
                 <Button cm:Message.Attach="SimpleSayHello" Content="Simple Say Hello (using Message.Attach)" Classes="ActionButton" />
                 <Button cm:Message.Attach="[Event DoubleTapped] = [SimpleSayHello]" Content="Simple Say Hello (Custom Event - Double Tapped)"  Classes="ActionButton"  />
                 <Button x:Name="SayHello" Content="Say Hello (with parameter)"  Classes="ActionButton" />
-                <Button cm:Message.Attach="SayHello(Name)" Content="Say Hello (with parameter and Message.Attach)" Classes="ActionButton"  />
+                <Button cm:Message.Attach="SayHello(UserName)" Content="Say Hello (with parameter and Message.Attach)" Classes="ActionButton"  />
                 <Button x:Name="SayGoodbye" Content="Say Goodbye (async method)" Classes="ActionButton"  />
             </StackPanel>
         </ScrollViewer>
