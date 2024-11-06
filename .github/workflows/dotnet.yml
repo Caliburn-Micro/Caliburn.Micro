@@ -57,7 +57,8 @@ jobs:
             -u ${{ secrets.NUGET_USER }} 
             -p ${{ secrets.CONSUME_CALIBURN_FEED }} 
             --store-password-in-clear-text
-            
+      if: github.event_name != 'pull_request'
+      
     - name: Restore nuget packages
       run:  msbuild ${{env.caliburn_sln}} -t:restore
 
@@ -81,5 +82,5 @@ jobs:
       run: msbuild ${{env.caliburn_sln}} /t:package /p:Configuration=${{env.build_configuration}}
       
     - name: publish Nuget Packages to GitHub
-      run: dotnet nuget push ${{env.nuget_folder}} --source ${{env.package_feed}} --api-key ${{secrets.PUBLISH_NUGET_PACKAGE}} --skip-duplicate
+      run: dotnet nuget push ${{env.nuget_folder}}\**\*.nupkg --source ${{env.package_feed}} --api-key ${{secrets.PUBLISH_NUGET_PACKAGE}} --skip-duplicate
       if: github.event_name != 'pull_request'

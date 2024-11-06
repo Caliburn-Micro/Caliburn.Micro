@@ -11,7 +11,7 @@ namespace Features.CrossPlatform.ViewModels
     {
         private readonly INavigationService _navigationService;
         private string _text;
-        private bool _isEnabled;
+        private bool _isNavigationEnabled;
 
         public NavigationSourceViewModel(INavigationService navigationService)
         {
@@ -24,18 +24,17 @@ namespace Features.CrossPlatform.ViewModels
             set { Set(ref _text, value); }
         }
 
-        public bool IsEnabled
+        public bool IsNavigationEnabled
         {
-            get { return _isEnabled; }
-            set { Set(ref _isEnabled, value); }
+            get { return _isNavigationEnabled; }
+            set { Set(ref _isNavigationEnabled, value); }
         }
 
         public void Navigate()
         {
-#if !AVALONIA
             _navigationService.For<NavigationTargetViewModel>()
                 .WithParam(v => v.Text, Text)
-                .WithParam(v => v.IsEnabled, IsEnabled)
+                .WithParam(v => v.IsNavigationEnabled, IsNavigationEnabled)
                 .Navigate();
 #endif
         }

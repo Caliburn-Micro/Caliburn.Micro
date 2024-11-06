@@ -179,15 +179,9 @@
                 Parameters.Attach(AssociatedObject);
                 Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
 
+                
+                View.ExecuteOnLoad(AssociatedObject, ElementLoaded);
 
-                if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded))
-                {
-                    // Not yet sure if this will be needed
-                    //var trigger = Interaction.GetTriggers(AssociatedObject)
-                    //    .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
-                    //if (trigger != null && trigger.EventName == eventName)
-                    //    Invoke(new RoutedEventArgs());
-                }
 
                 View.ExecuteOnUnload(AssociatedObject, ElementUnloaded);
             }
