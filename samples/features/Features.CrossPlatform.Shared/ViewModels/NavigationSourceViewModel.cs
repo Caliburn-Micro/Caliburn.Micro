@@ -16,6 +16,7 @@ namespace Features.CrossPlatform.ViewModels
         public NavigationSourceViewModel(INavigationService navigationService)
         {
             _navigationService = navigationService;
+            _text = string.Empty;
         }
 
         public string Text
@@ -36,7 +37,7 @@ namespace Features.CrossPlatform.ViewModels
                 .WithParam(v => v.Text, Text)
                 .WithParam(v => v.IsNavigationEnabled, IsNavigationEnabled)
                 .Navigate();
-#endif
+
         }
     }
 }

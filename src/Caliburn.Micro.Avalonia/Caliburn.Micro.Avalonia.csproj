@@ -37,6 +37,8 @@
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\BootstrapperBase.cs" Link="Platforms\netcore-avalonia\BootstrapperBase.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\NavigationFrame.cs" Link="Platforms\netcore-avalonia\CaliburnFrame.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\INavigationService.cs" Link="Platforms\netcore-avalonia\INavigationService.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\NavigationHelper.cs" Link="Platforms\netcore-avalonia\NavigationHelper.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\NavigationExtensions.cs" Link="Platforms\netcore-avalonia\NavigationExtensions.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\IWindowManager.cs" Link="Platforms\netcore-avalonia\IWindowManager.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\Parameter.cs" Link="Platforms\netcore-avalonia\Parameter.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\TriggerAction.cs" Link="Platforms\netcore-avalonia\TriggerAction.cs" />
