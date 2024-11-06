@@ -14,6 +14,22 @@
     using Microsoft.Xaml.Interactivity;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
     using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Data;
+    using Avalonia.Data.Core;
+    using Avalonia.Interactivity;
+    using Avalonia.Xaml.Interactivity;
+    using Avalonia.VisualTree;
+    using Avalonia.Xaml.Interactions.Core;
+    using DependencyObject = Avalonia.AvaloniaObject;
+    using XamlReader = Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader;
+    using UIElement = Avalonia.Input.InputElement;
+    using DependencyPropertyChangedEventArgs = Avalonia.AvaloniaPropertyChangedEventArgs;
+    using DependencyProperty = Avalonia.AvaloniaProperty;
+    using EventTrigger = Avalonia.Xaml.Interactions.Core.EventTriggerBehavior;
+    using FrameworkElement = Avalonia.Controls.Control;
+    using Avalonia.Input;
 #else
     using System.Windows;
     using System.Windows.Controls.Primitives;
@@ -23,13 +39,18 @@
     using EventTrigger = Microsoft.Xaml.Behaviors.EventTrigger;
 #endif
 
+#if NET5_0_WINDOWS || NET6_0_WINDOWS
+    using System.IO;
+    using System.Xml;
+#endif
+
 
     /// <summary>
     /// Used to send a message from the UI to a presentation model class, indicating that a particular Action should be invoked.
     /// </summary>
 #if WINDOWS_UWP
     [ContentProperty(Name = "Parameters")]
-#else
+#elif !AVALONIA
     [ContentProperty("Parameters")]
     [DefaultTrigger(typeof(FrameworkElement), typeof(EventTrigger), "MouseLeftButtonDown")]
     [DefaultTrigger(typeof(ButtonBase), typeof(EventTrigger), "Click")]
@@ -38,14 +59,23 @@
     public class ActionMessage : TriggerAction<FrameworkElement>, IHaveParameters
     {
         static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
-        ActionExecutionContext context;
+        ActionExecutionContext _context;
 
-        internal static readonly DependencyProperty HandlerProperty = DependencyProperty.RegisterAttached(
+        internal static readonly DependencyProperty HandlerProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, object>(
+                "Handler", typeof(ActionMessage)
+                );
+#else
+            DependencyProperty.RegisterAttached(
             "Handler",
             typeof(object),
             typeof(ActionMessage),
             new PropertyMetadata(null, HandlerPropertyChanged)
             );
+#endif
+
+
 
         ///<summary>
         /// Causes the action invocation to "double check" if the action should be invoked by executing the guard immediately before hand.
@@ -63,23 +93,42 @@
         /// Represents the method name of an action message.
         /// </summary>
         public static readonly DependencyProperty MethodNameProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, string>("MethodName", typeof(ActionMessage));
+#else
             DependencyProperty.Register(
                 "MethodName",
                 typeof(string),
                 typeof(ActionMessage),
                 null
                 );
+#endif
 
         /// <summary>
         /// Represents the parameters of an action message.
         /// </summary>
         public static readonly DependencyProperty ParametersProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, AttachedCollection<Parameter>>(
+                "Parameters",
+                typeof(ActionMessage)
+                );
+#else
             DependencyProperty.Register(
             "Parameters",
             typeof(AttachedCollection<Parameter>),
             typeof(ActionMessage),
             null
             );
+#endif
+
+#if AVALONIA
+        static ActionMessage()
+        {
+            Log.Info("ActionMessage Avalonia");
+            HandlerProperty.Changed.Subscribe(args => HandlerPropertyChanged(args.Sender, args));
+        }
+#endif
 
         /// <summary>
         /// Creates an instance of <see cref="ActionMessage"/>.
@@ -123,8 +172,10 @@
         /// Called after the action is attached to an AssociatedObject.
         /// </summary>
 #if WINDOWS_UWP
-        protected override void OnAttached() {
-            if (!View.InDesignMode) {
+        protected override void OnAttached()
+        {
+            if (!View.InDesignMode)
+            {
                 Parameters.Attach(AssociatedObject);
                 Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
 
@@ -152,10 +203,23 @@
 
                 if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded))
                 {
-                    var trigger = Interaction.GetTriggers(AssociatedObject)
+#if AVALONIA
+                    //string eventName = "AttachedToLogicalTree";
+                    string eventName = "Loaded";
+                    var trigger = Interaction.GetBehaviors(AssociatedObject)
+                        .OfType<EventTrigger>()
                         .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
-                    if (trigger != null && trigger.EventName == "Loaded")
+                    Log.Info($"Trigger is null {trigger == null}");
+#else
+                    string eventName = "Loaded";
+                    var trigger = Interaction.GetTriggers(AssociatedObject)
+                     .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
+#endif
+                    Log.Info($"Trigger EventName '{trigger?.EventName}' event name '{eventName}'");
+                    if (trigger != null && trigger.EventName == eventName)
+                    {
                         Invoke(new RoutedEventArgs());
+                    }
                 }
             }
 
@@ -165,6 +229,7 @@
 
         static void HandlerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            Log.Info($"Handler property changed {d}");
             ((ActionMessage)d).UpdateContext();
         }
 
@@ -176,19 +241,30 @@
             if (!View.InDesignMode)
             {
                 Detaching(this, EventArgs.Empty);
+#if AVALONIA
+                //TODO: (Avalonia) Remove the ElementLoaded handler added in OnAttached
+#else
+                //TODO: Fix this: cannot remove ElementLoaded here because a wrapper handler was added instead (in View.ExecuteOnLoad() called from this.OnAttached())
                 AssociatedObject.Loaded -= ElementLoaded;
+#endif
                 Parameters.Detach();
             }
 
             base.OnDetaching();
         }
 
+#if AVALONIA
+        void ElementLoaded(object sender, EventArgs e)
+        {
+            DependencyObject elementToUse = null;
+#else
         void ElementLoaded(object sender, RoutedEventArgs e)
         {
+#endif
             UpdateContext();
 
             DependencyObject currentElement;
-            if (context.View == null)
+            if (_context.View == null)
             {
                 currentElement = AssociatedObject;
                 while (currentElement != null)
@@ -196,20 +272,44 @@
                     if (Action.HasTargetSet(currentElement))
                         break;
 
+#if AVALONIA
+                    var currentView = ((Visual)currentElement);
+                    if (elementToUse == null)
+                        elementToUse = currentElement;
+                    var currentParent = currentView.GetVisualParent();
+                    if (currentParent?.GetVisualParent() != null)
+                    {
+                        currentParent = currentParent?.GetVisualParent();
+                    }
+                    currentElement = currentParent;
+#else
                     currentElement = BindingScope.GetVisualParent(currentElement);
+#endif
                 }
             }
             else
-                currentElement = context.View;
+                currentElement = _context.View;
 
-#if NET || CAL_NETCORE
+#if AVALONIA
+            var binding = new Binding
+            {
+                Path = "(cal:Message.Handler)",
+                TypeResolver = (s, s1) =>
+                {
+                    return typeof(Message);
+                },
+                Source = elementToUse
+            };
+            Log.Info($"Binding {binding.Source}");
+#elif ( NET || CAL_NETCORE && !WINDOWS_UWP)
             var binding = new Binding
             {
                 Path = new PropertyPath(Message.HandlerProperty),
                 Source = currentElement
             };
 #elif WINDOWS_UWP
-            var binding = new Binding {
+            var binding = new Binding
+            {
                 Source = currentElement
             };
 #else
@@ -218,21 +318,43 @@
             var binding = (Binding)XamlReader.Load(bindingText);
             binding.Source = currentElement;
 #endif
+#if AVALONIA
+            if (elementToUse != null)
+            {
+                Log.Info($"GetObservable {HandlerProperty.Name}");
+                var myObservable = elementToUse.GetObservable(HandlerProperty);
+                Log.Info($"myObservable is null  {myObservable == null}");
+                myObservable?.Subscribe(x =>
+                 {
+                     Log.Info($"GetObservable subscribe {elementToUse}");
+                     Log.Info($"GetObservable x is null {x == null}");
+                     if (x != null)
+                     {
+                         Log.Info($"GetObservable invoke {elementToUse}");
+                         Invoke(new RoutedEventArgs());
+                     }
+                 });
+                Log.Info($"Binding event {binding.Path} {binding.Source} {HandlerProperty.Name}");
+                this.Bind(HandlerProperty, binding);
+            }
+#else
             BindingOperations.SetBinding(this, HandlerProperty, binding);
+#endif
         }
 
         void UpdateContext()
         {
-            if (context != null)
-                context.Dispose();
-
-            context = new ActionExecutionContext
+            if (_context != null)
+            {
+                _context.Dispose();
+            }
+            _context = new ActionExecutionContext
             {
                 Message = this,
                 Source = AssociatedObject
             };
 
-            PrepareContext(context);
+            PrepareContext(_context);
             UpdateAvailabilityCore();
         }
 
@@ -244,17 +366,17 @@
         {
             Log.Info("Invoking {0}.", this);
 
-            if (context == null)
+            if (_context == null)
             {
                 UpdateContext();
             }
 
-            if (context.Target == null || context.View == null)
+            if (_context.Target == null || _context.View == null)
             {
-                PrepareContext(context);
-                if (context.Target == null)
+                PrepareContext(_context);
+                if (_context.Target == null)
                 {
-                    var ex = new Exception(string.Format("No target found for method {0}.", context.Message.MethodName));
+                    var ex = new Exception(string.Format("No target found for method {0}.", _context.Message.MethodName));
                     Log.Error(ex);
 
                     if (!ThrowsExceptions)
@@ -268,9 +390,9 @@
                 }
             }
 
-            if (context.Method == null)
+            if (_context.Method == null)
             {
-                var ex = new Exception(string.Format("Method {0} not found on target of type {1}.", context.Message.MethodName, context.Target.GetType()));
+                var ex = new Exception(string.Format("Method {0} not found on target of type {1}.", _context.Message.MethodName, _context.Target.GetType()));
                 Log.Error(ex);
 
                 if (!ThrowsExceptions)
@@ -278,15 +400,15 @@
                 throw ex;
             }
 
-            context.EventArgs = eventArgs;
+            _context.EventArgs = eventArgs;
 
-            if (EnforceGuardsDuringInvocation && context.CanExecute != null && !context.CanExecute())
+            if (EnforceGuardsDuringInvocation && (_context?.CanExecute() != true))
             {
                 return;
             }
 
-            InvokeAction(context);
-            context.EventArgs = null;
+            InvokeAction(_context);
+            _context.EventArgs = null;
         }
 
         /// <summary>
@@ -294,11 +416,13 @@
         /// </summary>
         public virtual void UpdateAvailability()
         {
-            if (context == null)
+            if (_context == null)
+            {
+                Log.Info("{0} availability update. Context is null", this);
                 return;
-
-            if (context.Target == null || context.View == null)
-                PrepareContext(context);
+            }
+            if (_context.Target == null || _context.View == null)
+                PrepareContext(_context);
 
             UpdateAvailabilityCore();
         }
@@ -306,7 +430,7 @@
         bool UpdateAvailabilityCore()
         {
             Log.Info("{0} availability update.", this);
-            return ApplyAvailabilityEffect(context);
+            return ApplyAvailabilityEffect(_context);
         }
 
         /// <summary>
@@ -365,6 +489,7 @@
         /// <remarks>Returns a value indicating whether or not the action is available.</remarks>
         public static Func<ActionExecutionContext, bool> ApplyAvailabilityEffect = context =>
         {
+            Log.Info("ApplyAvailabilityEffect");
 
 #if WINDOWS_UWP
             var source = context.Source as Control;
@@ -373,6 +498,7 @@
 #endif
             if (source == null)
             {
+                Log.Info("ApplyAvailabilityEffect source is null");
                 return true;
             }
 
@@ -381,11 +507,21 @@
 #else
             var hasBinding = ConventionManager.HasBinding(source, UIElement.IsEnabledProperty);
 #endif
-            if (!hasBinding && context.CanExecute != null)
+            Log.Info($"ApplyAvailabilityEffect hasBinding {hasBinding}");
+
+#if AVALONIA
+            if (context.CanExecute != null)
             {
+                Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute()} - {context.Method.Name}");
                 source.IsEnabled = context.CanExecute();
             }
-
+#else
+            if (!hasBinding && context.CanExecute != null)
+            {
+                Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute()} - {context.Method.Name}");
+                source.IsEnabled = context.CanExecute();
+            }
+#endif
             return source.IsEnabled;
         };
 
@@ -443,7 +579,20 @@
 
                 currentElement = BindingScope.GetVisualParent(currentElement);
             }
+#if AVALONIA
+            if (source != null && context.Target != null)
+            {
+                var target = context.Target;
+                var method = GetTargetMethod(context.Message, target);
 
+                if (method != null)
+                {
+                    context.Target = target;
+                    context.Method = method;
+                    context.View = source;
+                }
+            }
+#else
             if (source != null && source.DataContext != null)
             {
                 var target = source.DataContext;
@@ -456,6 +605,7 @@
                     context.View = source;
                 }
             }
+#endif
         };
 
         /// <summary>
@@ -496,6 +646,7 @@
                 {
                     if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == matchingGuardName)
                     {
+                        Log.Info($"UpdateAvailablilty  {e.PropertyName}");
                         Caliburn.Micro.Execute.OnUIThread(() =>
                         {
                             var message = context.Message;
