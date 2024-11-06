@@ -512,13 +512,13 @@
 #if AVALONIA
             if (context.CanExecute != null)
             {
-                Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute} - {context.Method.Name}");
+                Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute()} - {context.Method.Name}");
                 source.IsEnabled = context.CanExecute();
             }
 #else
             if (!hasBinding && context.CanExecute != null)
             {
-                Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute} - {context.Method.Name}");
+                Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute()} - {context.Method.Name}");
                 source.IsEnabled = context.CanExecute();
             }
 #endif

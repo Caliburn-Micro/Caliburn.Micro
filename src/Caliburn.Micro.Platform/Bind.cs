@@ -69,7 +69,7 @@ namespace Caliburn.Micro
                 ModelWithoutContextChanged);
 #endif
 
-        internal static DependencyProperty NoContextProperty =
+        internal static readonly DependencyProperty NoContextProperty =
 #if AVALONIA
             AvaloniaProperty.RegisterAttached<AvaloniaObject, bool>("Handler", typeof(Bind));
 #else

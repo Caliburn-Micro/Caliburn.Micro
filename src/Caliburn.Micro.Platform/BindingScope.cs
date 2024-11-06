@@ -204,7 +204,7 @@
 
                 if (childCount > 0)
                 {
-                    foreach (var childDo in visual.GetVisualChildren().OfType<AvaloniaObject>())
+                    foreach (var childDo in visual?.GetVisualChildren().OfType<AvaloniaObject>())
                     {
                         queue.Enqueue(childDo);
                     }
