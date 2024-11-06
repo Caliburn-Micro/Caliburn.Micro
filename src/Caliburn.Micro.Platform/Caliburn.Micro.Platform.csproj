@@ -7,7 +7,7 @@
     <RootNamespace>Caliburn.Micro</RootNamespace>
     <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
-
+    <LangVersion>10</LangVersion>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
 
   </PropertyGroup>
@@ -29,13 +29,7 @@
     </ProjectReference>
     <Compile Remove="Platforms\**\*.cs" />
     <None Include="Platforms\**\*.cs" />
-    <Compile Remove="Platforms\**\**\*.cs" />
-    <None Include="Platforms\**\**\*.cs" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <LangVersion>9.0</LangVersion>
-  </PropertyGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />

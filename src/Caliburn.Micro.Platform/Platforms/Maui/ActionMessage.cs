@@ -6,10 +6,8 @@
     using System.Linq;
     using System.Reflection;
     using global::Microsoft.Maui.Controls;
-    using UIElement = global::Microsoft.Maui.Controls.Element;
     using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
-    using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
-    using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
+    using UIElement = global::Microsoft.Maui.Controls.Element;
 
     /// <summary>
     /// Used to send a message from the UI to a presentation model class, indicating that a particular Action should be invoked.
@@ -81,8 +79,10 @@
         /// <summary>
         ///  Called after the action is attached to an AssociatedObject.
         /// </summary>
-        protected override void OnAttached() {
-            if (!View.InDesignMode) {
+        protected override void OnAttached()
+        {
+            if (!View.InDesignMode)
+            {
                 Parameters.Attach(AssociatedObject);
                 Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
 
@@ -92,14 +92,15 @@
 
                 EventHandler bindingContextChanged = null;
 
-                bindingContextChanged = (s, e) => {
+                bindingContextChanged = (s, e) =>
+                {
                     AssociatedObject.BindingContextChanged -= bindingContextChanged;
                     ElementLoaded();
                 };
 
                 AssociatedObject.BindingContextChanged += bindingContextChanged;
 
-               
+
             }
 
             base.OnAttached();
@@ -137,7 +138,8 @@
                     currentElement = currentElement.Parent;
                 }
             }
-            else currentElement = context.View as FrameworkElement;
+            else
+                currentElement = context.View as FrameworkElement;
 
             Handler = currentElement;
         }
@@ -165,7 +167,8 @@
         {
             Log.Info("Invoking {0}.", this);
 
-            if (AssociatedObject == null) {
+            if (AssociatedObject == null)
+            {
                 AssociatedObject = sender;
             }
 
@@ -375,7 +378,8 @@
         public static Action<ActionExecutionContext> PrepareContext = context =>
         {
             SetMethodBinding(context);
-            if (context.Target == null || context.Method == null) {
+            if (context.Target == null || context.Method == null)
+            {
                 return;
             }
 
@@ -395,17 +399,20 @@
                 {
                     matchingGuardName = possibleGuardName;
                     guard = GetMethodInfo(targetType, "get_" + matchingGuardName);
-                    if (guard != null) break;
+                    if (guard != null)
+                        break;
                 }
 
                 if (guard == null)
                     return;
 
                 PropertyChangedEventHandler handler = null;
-                handler = (s, e) => {
+                handler = (s, e) =>
+                {
                     if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == matchingGuardName)
                     {
-                        Caliburn.Micro.Execute.OnUIThread(() => {
+                        Caliburn.Micro.Execute.OnUIThread(() =>
+                        {
                             var message = context.Message;
                             if (message == null)
                             {
@@ -418,8 +425,10 @@
                 };
 
                 inpc.PropertyChanged += handler;
-                context.Disposing += delegate { inpc.PropertyChanged -= handler; };
-                context.Message.Detaching += delegate { inpc.PropertyChanged -= handler; };
+                context.Disposing += delegate
+                { inpc.PropertyChanged -= handler; };
+                context.Message.Detaching += delegate
+                { inpc.PropertyChanged -= handler; };
             }
 
             context.CanExecute = () => (bool)guard.Invoke(
@@ -438,23 +447,30 @@
         /// <param name="context">The execution context</param>
         /// <param name="possibleGuardNames">Method names to look for.</param>
         /// <returns>A MethodInfo, if found; null otherwise</returns>
-        static MethodInfo TryFindGuardMethod(ActionExecutionContext context, IEnumerable<string> possibleGuardNames) {
+        static MethodInfo TryFindGuardMethod(ActionExecutionContext context, IEnumerable<string> possibleGuardNames)
+        {
             var targetType = context.Target.GetType();
             MethodInfo guard = null;
             foreach (string possibleGuardName in possibleGuardNames)
             {
                 guard = GetMethodInfo(targetType, possibleGuardName);
-                if (guard != null) break;
+                if (guard != null)
+                    break;
             }
 
-            if (guard == null) return null;
-            if (guard.ContainsGenericParameters) return null;
-            if (!typeof(bool).Equals(guard.ReturnType)) return null;
+            if (guard == null)
+                return null;
+            if (guard.ContainsGenericParameters)
+                return null;
+            if (!typeof(bool).Equals(guard.ReturnType))
+                return null;
 
             var guardPars = guard.GetParameters();
             var actionPars = context.Method.GetParameters();
-            if (guardPars.Length == 0) return guard;
-            if (guardPars.Length != actionPars.Length) return null;
+            if (guardPars.Length == 0)
+                return guard;
+            if (guardPars.Length != actionPars.Length)
+                return null;
 
             var comparisons = guardPars.Zip(
                 context.Method.GetParameters(),
@@ -472,7 +488,8 @@
         /// <summary>
         /// Returns the list of possible names of guard methods / properties for the given method.
         /// </summary>
-        public static Func<MethodInfo, IEnumerable<string>> BuildPossibleGuardNames = method => {
+        public static Func<MethodInfo, IEnumerable<string>> BuildPossibleGuardNames = method =>
+        {
 
             var guardNames = new List<string>();
 
@@ -492,7 +509,8 @@
             return guardNames;
         };
 
-        static MethodInfo GetMethodInfo(Type t, string methodName) {
+        static MethodInfo GetMethodInfo(Type t, string methodName)
+        {
             return t.GetRuntimeMethods().SingleOrDefault(m => m.Name == methodName);
         }
     }
