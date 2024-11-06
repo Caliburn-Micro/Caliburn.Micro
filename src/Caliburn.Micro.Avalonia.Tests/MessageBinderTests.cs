@@ -5,7 +5,7 @@
         [Fact]
         public void EvaluateParameterCaseInsensitive()
         {
-            MessageBinder.SpecialValues.Add("$sampleParameter", context => 42);
+            MessageBinder.SpecialValues.TryAdd("$sampleParameter", context => 42);
             var caseSensitiveValue = MessageBinder.EvaluateParameter("$sampleParameter", typeof(int), new ActionExecutionContext());
 
             Assert.NotEqual("$sampleParameter", caseSensitiveValue);

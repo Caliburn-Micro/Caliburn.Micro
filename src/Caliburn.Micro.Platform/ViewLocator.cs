@@ -174,7 +174,7 @@ namespace Caliburn.Micro
 
             foreach (var t in nsTargetsRegEx)
             {
-                replist.Add(t + String.Format(nameFormat, basegrp, repsuffix));
+                replist.Add(t + GetNameFormat(basegrp, repsuffix));
             }
 
             var rxbase = RegExHelper.GetNameCaptureGroup("basename");
@@ -188,16 +188,27 @@ namespace Caliburn.Micro
                 }
             }
 
-            var rxsrcfilter = String.IsNullOrEmpty(nsSourceFilterRegEx)
+            var rxsrcfilter = string.IsNullOrEmpty(nsSourceFilterRegEx)
                 ? null
-                : String.Concat(nsSourceFilterRegEx, String.Format(nameFormat, RegExHelper.NameRegEx, suffix), "$");
+                : string.Concat(nsSourceFilterRegEx, GetNameFormat(RegExHelper.NameRegEx, suffix), "$");
             var rxsuffix = RegExHelper.GetCaptureGroup("suffix", suffix);
 
             NameTransformer.AddRule(
-                String.Concat(nsSourceReplaceRegEx, String.Format(nameFormat, rxbase, rxsuffix), "$"),
+                String.Concat(nsSourceReplaceRegEx, GetNameFormat(rxbase, rxsuffix), "$"),
                 replist.ToArray(),
                 rxsrcfilter
             );
+        }
+
+        private static string GetNameFormat(string firstParameter, string suffix)
+        {
+            string result = IsNameFormatValidFormat() ? string.Format(nameFormat, firstParameter, suffix) : nameFormat;
+            return result;
+        }
+
+        internal static bool IsNameFormatValidFormat()
+        {
+            return nameFormat.Contains("{0}") && nameFormat.Contains("{1}");
         }
 
         /// <summary>

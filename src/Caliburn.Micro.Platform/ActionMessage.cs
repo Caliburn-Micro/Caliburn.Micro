@@ -208,7 +208,7 @@
                     string eventName = "Loaded";
                     var trigger = Interaction.GetBehaviors(AssociatedObject)
                         .OfType<EventTrigger>()
-                        .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
+                        .FirstOrDefault(t => t.Actions.Contains(this));
                     Log.Info($"Trigger is null {trigger == null}");
 #else
                     string eventName = "Loaded";
