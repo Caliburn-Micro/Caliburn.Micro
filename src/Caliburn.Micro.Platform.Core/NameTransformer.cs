@@ -10,7 +10,7 @@ namespace Caliburn.Micro
     /// </summary>
     public class NameTransformer : BindableCollection<NameTransformer.Rule>
     {
-
+        static readonly ILog Log = LogManager.GetLog(typeof(NameTransformer));
         private const RegexOptions options = RegexOptions.None;
         private bool useEagerRuleSelection = true;
 
@@ -42,12 +42,14 @@ namespace Caliburn.Micro
         /// <param name = "globalFilterPattern">Regular expression pattern for global filtering</param>
         public void AddRule(string replacePattern, IEnumerable<string> replaceValueList, string globalFilterPattern = null)
         {
+            Log.Info("Adding rule");
             Add(new Rule
             {
                 ReplacePattern = replacePattern,
                 ReplacementValues = replaceValueList,
                 GlobalFilterPattern = globalFilterPattern
             });
+            Log.Info("Rule added");
         }
 
         /// <summary>
@@ -128,7 +130,7 @@ namespace Caliburn.Micro
             {
                 get
                 {
-                    return globalFilterPatternRegex ?? (globalFilterPatternRegex = new Regex(GlobalFilterPattern, options));
+                    return globalFilterPatternRegex ?? (globalFilterPatternRegex = new Regex(GlobalFilterPattern, options, TimeSpan.FromSeconds(10)));
                 }
             }
 
@@ -139,7 +141,7 @@ namespace Caliburn.Micro
             {
                 get
                 {
-                    return replacePatternRegex ?? (replacePatternRegex = new Regex(ReplacePattern, options));
+                    return replacePatternRegex ?? (replacePatternRegex = new Regex(ReplacePattern, options, TimeSpan.FromSeconds(10)));
                 }
             }
         }
