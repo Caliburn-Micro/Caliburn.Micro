@@ -458,10 +458,10 @@ namespace Caliburn.Micro
 #if !WINDOWS_UWP && !XFORMS && !MAUI
                         var windowCheck = view as Window;
 #if AVALONIA
-                    if (windowCheck == null)
+                        if (windowCheck == null)
 #else
                         if (windowCheck == null || (!windowCheck.IsLoaded &&
-                                                    !(new WindowInteropHelper(windowCheck).Handle == IntPtr.Zero)))
+                                                    (new WindowInteropHelper(windowCheck).Handle != IntPtr.Zero)))
 #endif
                         {
                             Log.Info("Using cached view for {0}.", model);

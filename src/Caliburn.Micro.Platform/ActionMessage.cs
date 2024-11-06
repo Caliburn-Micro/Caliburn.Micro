@@ -287,9 +287,12 @@
 #endif
                 }
             }
+#if !AVALONIA
             else
+            {
                 currentElement = _context.View;
-
+            }
+#endif
 #if AVALONIA
             var binding = new Binding
             {
@@ -301,7 +304,7 @@
                 Source = elementToUse
             };
             Log.Info($"Binding {binding.Source}");
-#elif ( NET || CAL_NETCORE && !WINDOWS_UWP)
+#elif (NET || CAL_NETCORE && !WINDOWS_UWP)
             var binding = new Binding
             {
                 Path = new PropertyPath(Message.HandlerProperty),
