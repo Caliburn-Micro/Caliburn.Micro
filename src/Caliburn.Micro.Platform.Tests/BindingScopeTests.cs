@@ -8,7 +8,7 @@ namespace Caliburn.Micro.Platform.Tests
 {
     public class BindingScopeFindName
     {
-        [WpfFact]
+        [UIFact]
         public void A_given_match_is_always_the_first_instance_found()
         {
             var elements = new List<FrameworkElement>
@@ -27,7 +27,7 @@ namespace Caliburn.Micro.Platform.Tests
             Assert.NotSame(elements.Last(), found);
         }
 
-        [WpfFact]
+        [UIFact]
         public void A_given_name_is_found_regardless_of_case_sensitivity()
         {
             var elements = new List<FrameworkElement>
@@ -42,7 +42,7 @@ namespace Caliburn.Micro.Platform.Tests
             Assert.NotNull(found);
         }
 
-        [WpfFact]
+        [UIFact]
         public void A_given_name_is_matched_correctly()
         {
             var elements = new List<FrameworkElement>
@@ -64,7 +64,7 @@ namespace Caliburn.Micro.Platform.Tests
 
     public class BindingScope_FindScopeNamingRoute
     {
-        [WpfFact]
+        [UIFact]
         public void A_given_Pages_Content_is_ScopeRoute_if_it_is_a_dependency_object()
         {
             var page = new Page
@@ -76,7 +76,7 @@ namespace Caliburn.Micro.Platform.Tests
             Assert.Same(page.Content, route.Root);
         }
 
-        [WpfFact]
+        [UIFact]
         public void A_given_UserControl_is_ScopeRoute()
         {
             var userControl = new UserControl();
@@ -85,7 +85,7 @@ namespace Caliburn.Micro.Platform.Tests
             Assert.Same(userControl, route.Root);
         }
 
-        [WpfFact]
+        [UIFact]
         public void Any_DependencyObject_is_ScopeRoot_if_IsScopeRoot_is_true()
         {
             var dependencyObject = new DependencyObject();
