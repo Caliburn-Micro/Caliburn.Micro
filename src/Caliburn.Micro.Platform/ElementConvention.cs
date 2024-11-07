@@ -16,6 +16,12 @@ namespace Caliburn.Micro
     using DependencyObject = global::Xamarin.Forms.BindableObject;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
+#elif AVALONIA
+    using DependencyProperty = Avalonia.AvaloniaProperty;
+    using DependencyObject = Avalonia.AvaloniaObject;
+    using FrameworkElement = Avalonia.Controls.Control;
+    using EventTrigger = Avalonia.Xaml.Interactions.Core.EventTriggerBehavior;
+    using TriggerBase = Avalonia.Xaml.Interactivity.Trigger;
 #elif MAUI
     using global::Microsoft.Maui.Controls;
     using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
@@ -40,12 +46,17 @@ namespace Caliburn.Micro
         /// Gets the default property to be used in binding conventions.
         /// </summary>
         public Func<DependencyObject, DependencyProperty> GetBindableProperty;
-
+#if AVALONIA
+        /// <summary>
+        /// The default trigger to be used when wiring actions on this element.
+        /// </summary>
+        public Func<EventTrigger> CreateTrigger;
+#else
         /// <summary>
         /// The default trigger to be used when wiring actions on this element.
         /// </summary>
         public Func<TriggerBase> CreateTrigger;
-
+#endif
         /// <summary>
         /// The default property to be used for parameters of this type in actions.
         /// </summary>
