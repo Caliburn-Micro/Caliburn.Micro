@@ -11,7 +11,7 @@ namespace Caliburn.Micro.Platform.Tests
             var config = new TypeMappingConfiguration
             {
                 DefaultSubNamespaceForViews = "not empty",
-                DefaultSubNamespaceForViewModels = string.Empty,
+                DefaultSubNamespaceForViewModels = "  ",
                 NameFormat = "not Empty"
             };
 

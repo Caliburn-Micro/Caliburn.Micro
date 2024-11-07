@@ -77,19 +77,23 @@ namespace Caliburn.Micro
         /// <param name="config">An instance of TypeMappingConfiguration that provides the settings for configuration</param>
         public static void ConfigureTypeMappings(TypeMappingConfiguration config)
         {
-            if (String.IsNullOrEmpty(config.DefaultSubNamespaceForViews))
+            if (string.IsNullOrEmpty(config.DefaultSubNamespaceForViews))
             {
                 throw new ArgumentException("DefaultSubNamespaceForViews field cannot be blank.");
             }
 
-            if (String.IsNullOrEmpty(config.DefaultSubNamespaceForViewModels))
+            if (string.IsNullOrEmpty(config.DefaultSubNamespaceForViewModels))
             {
                 throw new ArgumentException("DefaultSubNamespaceForViewModels field cannot be blank.");
             }
 
-            if (String.IsNullOrEmpty(config.NameFormat))
+            if (string.IsNullOrEmpty(config.NameFormat))
             {
                 throw new ArgumentException("NameFormat field cannot be blank.");
+            }
+            if (!IsNameFormatValidFormat(config.NameFormat))
+            {
+                throw new ArgumentException("NameFormat field must contain {0} and {1} placeholders.");
             }
 
             if (NameTransformer.Any())
@@ -202,13 +206,13 @@ namespace Caliburn.Micro
 
         private static string GetNameFormat(string firstParameter, string suffix)
         {
-            string result = IsNameFormatValidFormat() ? string.Format(nameFormat, firstParameter, suffix) : nameFormat;
+            string result = string.Format(nameFormat, firstParameter, suffix);
             return result;
         }
 
-        internal static bool IsNameFormatValidFormat()
+        internal static bool IsNameFormatValidFormat(string formatToValidate)
         {
-            return nameFormat.Contains("{0}") && nameFormat.Contains("{1}");
+            return formatToValidate.Contains("{0}") && formatToValidate.Contains("{1}");
         }
 
         /// <summary>
@@ -479,8 +483,8 @@ namespace Caliburn.Micro
                             return view;
                         }
 #else
-                    Log.Info("Using cached view for {0}.", model);
-                    return view;
+                        Log.Info("Using cached view for {0}.", model);
+                        return view;
 #endif
                     }
                 }
