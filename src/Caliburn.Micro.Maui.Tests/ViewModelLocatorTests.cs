@@ -1,9 +1,6 @@
-using System;
-using Xunit;
-
-namespace Caliburn.Micro.Platform.Tests
+﻿namespace Caliburn.Micro.Maui.Tests
 {
-    public class ViewLocatorTests
+    public class ViewModelLocatorTests
     {
         [Fact]
         public void ConfigureTypeMappingsShouldThrowWhenDefaultSubNamespaceForViewModelsIsEmpty()
@@ -11,11 +8,11 @@ namespace Caliburn.Micro.Platform.Tests
             var config = new TypeMappingConfiguration
             {
                 DefaultSubNamespaceForViews = "not empty",
-                DefaultSubNamespaceForViewModels = null,
-                NameFormat = "not{1}{0} Empty"
+                DefaultSubNamespaceForViewModels = string.Empty,
+                NameFormat = "not Empty"
             };
 
-            Assert.Throws<ArgumentException>(() => ViewLocator.ConfigureTypeMappings(config));
+            Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
         }
 
         [Fact]
@@ -25,10 +22,10 @@ namespace Caliburn.Micro.Platform.Tests
             {
                 DefaultSubNamespaceForViews = "not null",
                 DefaultSubNamespaceForViewModels = null,
-                NameFormat = "not{0} null{1}"
+                NameFormat = "not null"
             };
 
-            Assert.Throws<ArgumentException>(() => ViewLocator.ConfigureTypeMappings(config));
+            Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
         }
 
         [Fact]
@@ -38,10 +35,10 @@ namespace Caliburn.Micro.Platform.Tests
             {
                 DefaultSubNamespaceForViews = string.Empty,
                 DefaultSubNamespaceForViewModels = "not Empty",
-                NameFormat = "{0}not Empty{1}"
+                NameFormat = "not Empty"
             };
 
-            Assert.Throws<ArgumentException>(() => ViewLocator.ConfigureTypeMappings(config));
+            Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
         }
 
         [Fact]
@@ -51,10 +48,10 @@ namespace Caliburn.Micro.Platform.Tests
             {
                 DefaultSubNamespaceForViews = null,
                 DefaultSubNamespaceForViewModels = "not null",
-                NameFormat = "{1}not {0}null"
+                NameFormat = "not null"
             };
 
-            Assert.Throws<ArgumentException>(() => ViewLocator.ConfigureTypeMappings(config));
+            Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
         }
 
         [Fact]
@@ -67,7 +64,7 @@ namespace Caliburn.Micro.Platform.Tests
                 NameFormat = string.Empty
             };
 
-            Assert.Throws<ArgumentException>(() => ViewLocator.ConfigureTypeMappings(config));
+            Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
         }
 
         [Fact]
@@ -80,15 +77,15 @@ namespace Caliburn.Micro.Platform.Tests
                 NameFormat = null
             };
 
-            Assert.Throws<ArgumentException>(() => ViewLocator.ConfigureTypeMappings(config));
+            Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
         }
 
         [Fact]
-        public void ConfigureTypeMappingsWithDefaultValuesShouldNotThrow()
+        public void COnfigureTypeMappingsWithDefaultValuesShouldNotThrow()
         {
             var typeMappingConfiguration = new TypeMappingConfiguration();
 
-            ViewLocator.ConfigureTypeMappings(typeMappingConfiguration);
+            ViewModelLocator.ConfigureTypeMappings(typeMappingConfiguration);
         }
     }
 }
