@@ -67,19 +67,7 @@ jobs:
 
     - name: Run Unit Tests
       run: dotnet test ${{env.caliburn_sln}} --configuration Release --no-build --verbosity normal  --collect:"XPlat Code Coverage" --results-directory ./coverage    
- 
-    - name: Code Coverage Report
-      uses: irongut/CodeCoverageSummary@v1.3.0
-      with:
-        filename: coverage/**/coverage.cobertura.xml
-        badge: true
-        fail_below_min: false
-        format: markdown
-        hide_branch_rate: false
-        hide_complexity: true
-        indicators: true
-        output: both
-        thresholds: '30 80'    
+   
          
     - name: Restore nuget packages for tutorial
       run:  msbuild ${{env.caliburn_tutorial}} -t:restore 

@@ -9,7 +9,7 @@ namespace Caliburn.Micro.Avalonia.Tests
             {
                 DefaultSubNamespaceForViews = "not empty",
                 DefaultSubNamespaceForViewModels = string.Empty,
-                NameFormat = "not Empty"
+                NameFormat = "not{0} {1}Empty"
             };
 
             Assert.Throws<ArgumentException>(() => ViewLocator.ConfigureTypeMappings(config));
@@ -22,7 +22,7 @@ namespace Caliburn.Micro.Avalonia.Tests
             {
                 DefaultSubNamespaceForViews = "not null",
                 DefaultSubNamespaceForViewModels = null,
-                NameFormat = "not null"
+                NameFormat = "{1}not {0}null"
             };
 
             Assert.Throws<ArgumentException>(() => ViewLocator.ConfigureTypeMappings(config));
@@ -35,7 +35,7 @@ namespace Caliburn.Micro.Avalonia.Tests
             {
                 DefaultSubNamespaceForViews = string.Empty,
                 DefaultSubNamespaceForViewModels = "not Empty",
-                NameFormat = "not Empty"
+                NameFormat = "{0}not Empty{1}"
             };
 
             Assert.Throws<ArgumentException>(() => ViewLocator.ConfigureTypeMappings(config));
@@ -48,7 +48,7 @@ namespace Caliburn.Micro.Avalonia.Tests
             {
                 DefaultSubNamespaceForViews = null,
                 DefaultSubNamespaceForViewModels = "not null",
-                NameFormat = "not null"
+                NameFormat = "{0}{1}not null"
             };
 
             Assert.Throws<ArgumentException>(() => ViewLocator.ConfigureTypeMappings(config));
