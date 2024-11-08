@@ -4,19 +4,19 @@ namespace Features.CrossPlatform.ViewModels
 {
     public class NavigationTargetViewModel : Screen
     {
-        private string text;
-        private bool isEnabled;
+        private string _text;
+        private bool _isEnabled;
 
         public string Text
         {
-            get { return text; }
-            set { Set(ref text, value); }
+            get { return _text; }
+            set { Set(ref _text, value); }
         }
 
         public bool IsNavigationEnabled
         {
-            get { return isEnabled; }
-            set { Set(ref isEnabled, value); }
+            get { return _isEnabled; }
+            set { Set(ref _isEnabled, value); }
         }
     }
 }

@@ -20,6 +20,12 @@ namespace Caliburn.Micro
     using UIElement = global::Xamarin.Forms.Element;
 #endif
 
+
+#if AVALONIA
+    using FrameworkElement = Avalonia.Controls.Control;
+#endif
+    
+
 #if MAUI
     using UIElement = global::Microsoft.Maui.Controls.Element;
 #endif
