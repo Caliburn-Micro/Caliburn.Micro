@@ -5,6 +5,8 @@ using Caliburn.Micro;
 #if SILVERLIGHT || WPF
 using System.Windows;
 using System.Windows.Controls;
+#elif  AVALONIA
+using Avalonia.Controls;
 #else
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -33,6 +35,13 @@ namespace Features.CrossPlatform.Results
             var view = (FrameworkElement) context.View;
 
             var success = VisualStateManager.GoToElementState(view, StateName, UseTransitions);
+#elif AVALONIA
+            if (!(context.View is Control))
+                throw new System.InvalidOperationException("View must be a Control to use VisualStateResult");
+
+            var view = (Control)context.View;
+            view.Classes.Clear();
+            view.Classes.Add(StateName);
 #else
             if (!(context.View is Control))
                 throw new InvalidOperationException("View must be a Control to use VisualStateResult");

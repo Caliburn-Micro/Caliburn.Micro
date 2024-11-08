@@ -5,6 +5,7 @@
     <PackageId>Caliburn.Micro.Xamarin.Forms</PackageId>
     <Product>Caliburn.Micro.Xamarin.Forms</Product>
     <RootNamespace>Caliburn.Micro.Xamarin.Forms</RootNamespace>
+    <LangVersion>10</LangVersion>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
