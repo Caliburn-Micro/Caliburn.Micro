@@ -1,7 +1,4 @@
-using System;
-using Xunit;
-
-namespace Caliburn.Micro.Platform.Tests
+﻿namespace Caliburn.Micro.Maui.Tests
 {
     public class ViewModelLocatorTests
     {

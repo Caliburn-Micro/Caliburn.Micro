@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
@@ -102,6 +102,12 @@
   <ItemGroup>
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageReference Update="Nerdbank.GitVersioning" Version="3.6.146" />
+  </ItemGroup>
+
+  <ItemGroup>
+   <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Caliburn.Micro.Maui.Tests</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
 
 </Project>
