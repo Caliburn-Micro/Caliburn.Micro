@@ -65,5 +65,33 @@ namespace Caliburn.Micro.Platform.Tests
 
             ViewModelLocator.ConfigureTypeMappings(typeMappingConfiguration);
         }
+        [Fact]
+        public void MakeInterface_ShouldReturnInterfaceName()
+        {
+            // Arrange
+            string typeName = "MyClass";
+            string expectedInterfaceName = "IMyClass";
+
+            // Act
+            string result = ViewModelLocator.MakeInterface(typeName);
+
+            // Assert
+            Assert.Equal(expectedInterfaceName, result);
+        }
+
+        [Fact]
+        public void MakeInterface_ShouldHandleEmptyString()
+        {
+            // Arrange
+            string typeName = "";
+            string expectedInterfaceName = "I";
+
+            // Act
+            string result = ViewModelLocator.MakeInterface(typeName);
+
+            // Assert
+            Assert.Equal(expectedInterfaceName, result);
+        }
+
     }
 }
