@@ -23,7 +23,7 @@ namespace Scenario.Functional.App
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
-            DisplayRootViewFor<ShellViewModel>();
+            DisplayRootViewForAsync<ShellViewModel>();
         }
 
         protected override IEnumerable<Assembly> SelectAssemblies()
