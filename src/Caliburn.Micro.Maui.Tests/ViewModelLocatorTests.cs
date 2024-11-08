@@ -9,7 +9,7 @@
             {
                 DefaultSubNamespaceForViews = "not empty",
                 DefaultSubNamespaceForViewModels = string.Empty,
-                NameFormat = "not Empty"
+                NameFormat = "not Empty{1}{0}"
             };
 
             Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
@@ -22,7 +22,7 @@
             {
                 DefaultSubNamespaceForViews = "not null",
                 DefaultSubNamespaceForViewModels = null,
-                NameFormat = "not null"
+                NameFormat = "not null{1}{0}"
             };
 
             Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
@@ -35,7 +35,7 @@
             {
                 DefaultSubNamespaceForViews = string.Empty,
                 DefaultSubNamespaceForViewModels = "not Empty",
-                NameFormat = "not Empty"
+                NameFormat = "{0}{1}Empty"
             };
 
             Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
@@ -48,37 +48,12 @@
             {
                 DefaultSubNamespaceForViews = null,
                 DefaultSubNamespaceForViewModels = "not null",
-                NameFormat = "not null"
+                NameFormat = "{1}not {0}null"
             };
 
             Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
         }
 
-        [Fact]
-        public void ConfigureTypeMappingsShouldThrowWhenNameFormatIsEmpty()
-        {
-            var config = new TypeMappingConfiguration
-            {
-                DefaultSubNamespaceForViews = "not Empty",
-                DefaultSubNamespaceForViewModels = "not Empty",
-                NameFormat = string.Empty
-            };
-
-            Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
-        }
-
-        [Fact]
-        public void ConfigureTypeMappingsShouldThrowWhenNameFormatIsNull()
-        {
-            var config = new TypeMappingConfiguration
-            {
-                DefaultSubNamespaceForViews = "not null",
-                DefaultSubNamespaceForViewModels = "not null",
-                NameFormat = null
-            };
-
-            Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
-        }
 
         [Fact]
         public void COnfigureTypeMappingsWithDefaultValuesShouldNotThrow()

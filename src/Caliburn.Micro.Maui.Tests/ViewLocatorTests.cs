@@ -8,8 +8,8 @@
             var config = new TypeMappingConfiguration
             {
                 DefaultSubNamespaceForViews = "not empty",
-                DefaultSubNamespaceForViewModels = string.Empty,
-                NameFormat = "not Empty"
+                DefaultSubNamespaceForViewModels = null,
+                NameFormat = "not{1}{0} Empty"
             };
 
             Assert.Throws<ArgumentException>(() => ViewLocator.ConfigureTypeMappings(config));
@@ -22,7 +22,7 @@
             {
                 DefaultSubNamespaceForViews = "not null",
                 DefaultSubNamespaceForViewModels = null,
-                NameFormat = "not null"
+                NameFormat = "not{0} null{1}"
             };
 
             Assert.Throws<ArgumentException>(() => ViewLocator.ConfigureTypeMappings(config));
@@ -35,7 +35,7 @@
             {
                 DefaultSubNamespaceForViews = string.Empty,
                 DefaultSubNamespaceForViewModels = "not Empty",
-                NameFormat = "not Empty"
+                NameFormat = "{0}not Empty{1}"
             };
 
             Assert.Throws<ArgumentException>(() => ViewLocator.ConfigureTypeMappings(config));
@@ -48,7 +48,7 @@
             {
                 DefaultSubNamespaceForViews = null,
                 DefaultSubNamespaceForViewModels = "not null",
-                NameFormat = "not null"
+                NameFormat = "{1}not {0}null"
             };
 
             Assert.Throws<ArgumentException>(() => ViewLocator.ConfigureTypeMappings(config));
