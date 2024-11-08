@@ -180,11 +180,7 @@ namespace Caliburn.Micro
                 Log.Error(ex);
                 return GetDefaultValue(destinationType);
             }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-                return GetDefaultValue(destinationType);
-            }
+
 
 
             try
@@ -209,12 +205,7 @@ namespace Caliburn.Micro
                 Log.Error(ex);
                 return GetDefaultValue(destinationType);
             }
-            catch (Exception ex)
-            {
-                // Log the exception details if necessary
-                Log.Error(ex);
-                return GetDefaultValue(destinationType);
-            }
+
 
         }
 
