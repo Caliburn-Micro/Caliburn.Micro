@@ -35,11 +35,11 @@ namespace Scenario.KeyBinding
                 {
                     case "Key":
                         var key = (Key)Enum.Parse(typeof(Key), splits[1], true);
-                        return new KeyTrigger { Key = key };
+                        return new Microsoft.Xaml.Behaviors.Input.KeyTrigger() { Key = key };
 
                     case "Gesture":
                         var mkg = (MultiKeyGesture)(new MultiKeyGestureConverter()).ConvertFrom(splits[1]);
-                        return new KeyTrigger { Modifiers = mkg.KeySequences[0].Modifiers, Key = mkg.KeySequences[0].Keys[0] };
+                        return new Microsoft.Xaml.Behaviors.Input.KeyTrigger { Modifiers = mkg.KeySequences[0].Modifiers, Key = mkg.KeySequences[0].Keys[0] };
                 }
 
                 return defaultCreateTrigger(target, triggerText);
@@ -48,7 +48,7 @@ namespace Scenario.KeyBinding
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
-            DisplayRootViewFor<ShellViewModel>();
+            DisplayRootViewForAsync<ShellViewModel>();
         }
     }
 }

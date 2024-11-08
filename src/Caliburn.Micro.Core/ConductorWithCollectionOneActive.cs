@@ -184,11 +184,11 @@ namespace Caliburn.Micro
                 }
 
                 /// <summary>
-                /// Called when activating.
+                /// Called when view has been activated.
                 /// </summary>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                protected override Task OnActivateAsync(CancellationToken cancellationToken)
+                protected override Task OnActivatedAsync(CancellationToken cancellationToken)
                 {
                     return ScreenExtensions.TryActivateAsync(ActiveItem, cancellationToken);
                 }

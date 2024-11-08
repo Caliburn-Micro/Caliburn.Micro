@@ -1,14 +1,18 @@
 ﻿namespace Scenario.Functional.Core.ViewModels
 
 open Caliburn.Micro
+open System.Threading.Tasks
 
 type ShellViewModel() = 
     inherit Screen()
 
     let mutable name = "Enter your name"
 
-    override this.OnInitialize () =
-        this.DisplayName <- "Shell"
+    override this.OnInitializedAsync (cancellationToken) =
+        async {
+            this.DisplayName <- "Shell"
+        }
+        |> Async.StartAsTask :> Task
 
     member this.Name
         with get() = name

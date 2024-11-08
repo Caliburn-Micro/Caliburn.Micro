@@ -14,7 +14,7 @@ namespace Features.CrossPlatform.ViewModels
             Items.CollectionChanged += (s, e) => NotifyOfPropertyChange(() => CanCloseTab);
         }
 
-        protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
+        protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
         {
             await AddTabAsync();
             await AddTabAsync();
