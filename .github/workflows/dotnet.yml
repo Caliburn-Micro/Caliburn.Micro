@@ -65,7 +65,10 @@ jobs:
     - name: Build app for release
       run: msbuild ${{env.caliburn_sln}} /t:Build /p:Configuration=${{env.build_configuration}}
 
-      
+    - name: Run Unit Tests
+      run: dotnet test ${{env.caliburn_sln}} --configuration Release --no-build --verbosity normal  --collect:"XPlat Code Coverage" --results-directory ./coverage    
+   
+         
     - name: Restore nuget packages for tutorial
       run:  msbuild ${{env.caliburn_tutorial}} -t:restore 
       
@@ -82,5 +85,6 @@ jobs:
       run: msbuild ${{env.caliburn_sln}} /t:package /p:Configuration=${{env.build_configuration}}
       
     - name: publish Nuget Packages to GitHub
-      run: dotnet nuget push ${{env.nuget_folder}}\**\*.nupkg --source ${{env.package_feed}} --api-key ${{secrets.PUBLISH_NUGET_PACKAGE}} --skip-duplicate
+      run: dotnet nuget push packages\*.nupkg --source ${{env.package_feed}} --api-key ${{secrets.PUBLISH_NUGET_PACKAGE}} --skip-duplicate
       if: github.event_name != 'pull_request'
+ 
