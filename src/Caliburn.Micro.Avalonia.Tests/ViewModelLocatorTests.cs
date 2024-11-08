@@ -9,7 +9,7 @@ namespace Caliburn.Micro.Avalonia.Tests
             {
                 DefaultSubNamespaceForViews = "not empty",
                 DefaultSubNamespaceForViewModels = string.Empty,
-                NameFormat = "not Empty"
+                NameFormat = "{0}{1}not Empty"
             };
 
             Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
@@ -22,7 +22,7 @@ namespace Caliburn.Micro.Avalonia.Tests
             {
                 DefaultSubNamespaceForViews = "not null",
                 DefaultSubNamespaceForViewModels = null,
-                NameFormat = "not null"
+                NameFormat = "{1}{0}not null"
             };
 
             Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
@@ -35,7 +35,7 @@ namespace Caliburn.Micro.Avalonia.Tests
             {
                 DefaultSubNamespaceForViews = string.Empty,
                 DefaultSubNamespaceForViewModels = "not Empty",
-                NameFormat = "not Empty"
+                NameFormat = "{0}{1}not Empty"
             };
 
             Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
@@ -48,37 +48,12 @@ namespace Caliburn.Micro.Avalonia.Tests
             {
                 DefaultSubNamespaceForViews = null,
                 DefaultSubNamespaceForViewModels = "not null",
-                NameFormat = "not null"
+                NameFormat = "{0}{1}not null"
             };
 
             Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
         }
 
-        [Fact]
-        public void ConfigureTypeMappingsShouldThrowWhenNameFormatIsEmpty()
-        {
-            var config = new TypeMappingConfiguration
-            {
-                DefaultSubNamespaceForViews = "not Empty",
-                DefaultSubNamespaceForViewModels = "not Empty",
-                NameFormat = string.Empty
-            };
-
-            Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
-        }
-
-        [Fact]
-        public void ConfigureTypeMappingsShouldThrowWhenNameFormatIsNull()
-        {
-            var config = new TypeMappingConfiguration
-            {
-                DefaultSubNamespaceForViews = "not null",
-                DefaultSubNamespaceForViewModels = "not null",
-                NameFormat = null
-            };
-
-            Assert.Throws<ArgumentException>(() => ViewModelLocator.ConfigureTypeMappings(config));
-        }
 
         [Fact]
         public void COnfigureTypeMappingsWithDefaultValuesShouldNotThrow()

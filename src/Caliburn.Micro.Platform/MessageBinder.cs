@@ -22,6 +22,8 @@ namespace Caliburn.Micro
     /// </summary>
     public static class MessageBinder
     {
+        static readonly ILog Log = LogManager.GetLog(typeof(MessageBinder));
+
         /// <summary>
         /// The special parameter values recognized by the message binder along with their resolvers.
         /// Parameter names are case insensitive so the specified names are unique and can be used with different case variations
@@ -122,7 +124,6 @@ namespace Caliburn.Micro
             {
                 return CustomConverters[destinationType](providedValue, context);
             }
-
             try
             {
 #if !WINDOWS_UWP && !XFORMS && !MAUI
@@ -141,7 +142,7 @@ namespace Caliburn.Micro
                 }
 #endif
 #if WINDOWS_UWP || XFORMS || MAUI
-                if (destinationType.GetTypeInfo().IsEnum) {
+    if (destinationType.GetTypeInfo().IsEnum) {
 #else
                 if (destinationType.IsEnum)
                 {
@@ -164,19 +165,57 @@ namespace Caliburn.Micro
                     }
                 }
             }
-            catch
+            catch (InvalidCastException ex)
             {
+                Log.Error(ex);
                 return GetDefaultValue(destinationType);
             }
+            catch (FormatException ex)
+            {
+                Log.Error(ex);
+                return GetDefaultValue(destinationType);
+            }
+            catch (OverflowException ex)
+            {
+                Log.Error(ex);
+                return GetDefaultValue(destinationType);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                return GetDefaultValue(destinationType);
+            }
+
 
             try
             {
                 return Convert.ChangeType(providedValue, destinationType, CultureInfo.CurrentCulture);
             }
-            catch
+            catch (InvalidCastException ex)
             {
+                // Log the exception details if necessary
+                Log.Error(ex);
                 return GetDefaultValue(destinationType);
             }
+            catch (FormatException ex)
+            {
+                // Log the exception details if necessary
+                Log.Error(ex);
+                return GetDefaultValue(destinationType);
+            }
+            catch (OverflowException ex)
+            {
+                // Log the exception details if necessary
+                Log.Error(ex);
+                return GetDefaultValue(destinationType);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details if necessary
+                Log.Error(ex);
+                return GetDefaultValue(destinationType);
+            }
+
         }
 
         /// <summary>
