@@ -6,9 +6,13 @@ namespace Features.CrossPlatform.ViewModels
 {
     public class ActionsViewModel : Screen
     {
-        private string output;
+        private string _output;
+        public ActionsViewModel()
+        {
+            Output="Caliburn Micro";
+        }
 
-        public void Clear() => Output = String.Empty;
+        public void Clear() => Output = string.Empty;
 
         public void SimpleSayHello() => Output = "Hello from Caliburn.Micro";
 
@@ -27,8 +31,8 @@ namespace Features.CrossPlatform.ViewModels
 
         public string Output
         {
-            get { return output; }
-            set { Set(ref output, value); }
+            get { return _output; }
+            set { Set(ref _output, value); }
         }
     }
 }
