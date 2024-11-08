@@ -1,7 +1,4 @@
-using System;
-using Xunit;
-
-namespace Caliburn.Micro.Platform.Tests
+﻿namespace Caliburn.Micro.Maui.Tests
 {
     public class ViewModelLocatorTests
     {
@@ -65,6 +62,7 @@ namespace Caliburn.Micro.Platform.Tests
 
             ViewModelLocator.ConfigureTypeMappings(typeMappingConfiguration);
         }
+
         [Fact]
         public void MakeInterface_ShouldReturnInterfaceName()
         {
@@ -92,6 +90,7 @@ namespace Caliburn.Micro.Platform.Tests
             // Assert
             Assert.Equal(expectedInterfaceName, result);
         }
+
 
     }
 }
