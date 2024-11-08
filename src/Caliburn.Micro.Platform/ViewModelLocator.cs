@@ -20,6 +20,12 @@ namespace Caliburn.Micro
     using UIElement = global::Xamarin.Forms.Element;
 #endif
 
+
+#if AVALONIA
+    using FrameworkElement = Avalonia.Controls.Control;
+#endif
+
+
 #if MAUI
     using UIElement = global::Microsoft.Maui.Controls.Element;
 #endif
@@ -57,7 +63,8 @@ namespace Caliburn.Micro
         /// </summary>
         public static string InterfaceCaptureGroupName = "isinterface";
 
-        static ViewModelLocator() {
+        static ViewModelLocator()
+        {
             var configuration = new TypeMappingConfiguration();
 
 #if ANDROID
@@ -96,6 +103,10 @@ namespace Caliburn.Micro
                 throw new ArgumentException("NameFormat field cannot be blank.");
             }
 
+            if (!IsNameFormatValidFormat(config.NameFormat))
+            {
+                throw new ArgumentException("NameFormat field must contain {0} and {1} placeholders.");
+            }
             NameTransformer.Clear();
             ViewSuffixList.Clear();
 
@@ -108,6 +119,12 @@ namespace Caliburn.Micro
             includeViewSuffixInVmNames = config.IncludeViewSuffixInViewModelNames;
 
             SetAllDefaults();
+        }
+
+
+        internal static bool IsNameFormatValidFormat(string formatToValidate)
+        {
+            return formatToValidate.Contains("{0}") && formatToValidate.Contains("{1}");
         }
 
         private static void SetAllDefaults()
