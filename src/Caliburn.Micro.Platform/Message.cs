@@ -19,6 +19,15 @@ namespace Caliburn.Micro
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
+#elif AVALONIA  
+    using Avalonia;
+    using Avalonia.Controls;
+    using Avalonia.Xaml.Interactivity;
+    using DependencyObject = Avalonia.AvaloniaObject;
+    using TriggerBase = Avalonia.Xaml.Interactivity.Trigger;
+    using DependencyPropertyChangedEventArgs = Avalonia.AvaloniaPropertyChangedEventArgs;
+    using DependencyProperty = Avalonia.AvaloniaProperty;
+    using EventTrigger = Avalonia.Xaml.Interactions.Core.EventTriggerBehavior;
 #elif MAUI
     using global::Microsoft.Maui.Controls;
     using UIElement = global::Microsoft.Maui.Controls.Element;
@@ -35,29 +44,41 @@ namespace Caliburn.Micro
     /// <summary>
     ///   Host's attached properties related to routed UI messaging.
     /// </summary>
-    public static class Message {
+    public static class Message
+    {
         internal static readonly DependencyProperty HandlerProperty =
+#if AVALONIA
+        AvaloniaProperty.RegisterAttached<AvaloniaObject, object>("Handler", typeof(Message));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "Handler",
                 typeof(object),
                 typeof(Message),
                 null
                 );
+#endif
+        static readonly ILog Log = LogManager.GetLog(typeof(Message));
 
         static readonly DependencyProperty MessageTriggersProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, EventTrigger[]>("MessageTriggers", typeof(Message));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "MessageTriggers",
                 typeof(TriggerBase[]),
                 typeof(Message),
                 null
                 );
+#endif
 
         /// <summary>
         ///   Places a message handler on this element.
         /// </summary>
         /// <param name="d"> The element. </param>
         /// <param name="value"> The message handler. </param>
-        public static void SetHandler(DependencyObject d, object value) {
+        public static void SetHandler(DependencyObject d, object value)
+        {
+            Log.Info("Setting handler for {0} to {1}.", d, value);
             d.SetValue(HandlerProperty, value);
         }
 
@@ -66,7 +87,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="d"> The element. </param>
         /// <returns> The message handler. </returns>
-        public static object GetHandler(DependencyObject d) {
+        public static object GetHandler(DependencyObject d)
+        {
             return d.GetValue(HandlerProperty);
         }
 
@@ -74,6 +96,9 @@ namespace Caliburn.Micro
         ///   A property definition representing attached triggers and messages.
         /// </summary>
         public static readonly DependencyProperty AttachProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, string>("Attach", typeof(Message));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "Attach",
                 typeof(string),
@@ -81,13 +106,21 @@ namespace Caliburn.Micro
                 null, 
                 OnAttachChanged
                 );
+#endif
 
+#if AVALONIA
+        static Message()
+        {
+            AttachProperty.Changed.Subscribe(args => OnAttachChanged(args.Sender, args));
+        }
+#endif
         /// <summary>
         ///   Sets the attached triggers and messages.
         /// </summary>
         /// <param name="d"> The element to attach to. </param>
         /// <param name="attachText"> The parsable attachment text. </param>
-        public static void SetAttach(DependencyObject d, string attachText) {
+        public static void SetAttach(DependencyObject d, string attachText)
+        {
             d.SetValue(AttachProperty, attachText);
         }
 
@@ -96,12 +129,15 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="d"> The element that was attached to. </param>
         /// <returns> The parsable attachment text. </returns>
-        public static string GetAttach(DependencyObject d) {
+        public static string GetAttach(DependencyObject d)
+        {
             return d.GetValue(AttachProperty) as string;
         }
 
-        static void OnAttachChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (e.NewValue == e.OldValue) {
+        static void OnAttachChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue.Equals(e.OldValue))
+            {
                 return;
             }
 
@@ -130,20 +166,36 @@ namespace Caliburn.Micro
             newTriggers.Apply(allTriggers.Add);
 
 #else
+#if AVALONIA
+            var allTriggers = Interaction.GetBehaviors(d);
+#else
             var allTriggers = Interaction.GetTriggers(d);
-
-             if (messageTriggers != null) {
+#endif
+            if (messageTriggers != null)
+            {
                 messageTriggers.Apply(x => allTriggers.Remove(x));
             }
 
             var newTriggers = Parser.Parse(d, e.NewValue as string).ToArray();
             newTriggers.Apply(allTriggers.Add);
+#if AVALONIA
+            //TODO: (Avalonia) Fix this workaround if there is a way to detect Trigger.AssociatedObject changes to update Trigger.Actions[].AssociatedObject 
+            foreach (var t in newTriggers.Where(t => t.Actions != null && t.AssociatedObject != null))
+            {
+                foreach (var a in t.Actions.Cast<TriggerAction>())
+                {
+                    a.AssociatedObject = t.AssociatedObject as Control;
+                }
+            }
+#endif
 #endif
 
-            if (newTriggers.Length > 0) {
+            if (newTriggers.Length > 0)
+            {
                 d.SetValue(MessageTriggersProperty, newTriggers);
             }
-            else {
+            else
+            {
                 d.ClearValue(MessageTriggersProperty);
             }
         }
