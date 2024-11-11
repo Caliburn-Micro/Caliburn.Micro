@@ -80,9 +80,9 @@ namespace Caliburn.Micro.Core.Tests
                 _simulateAsyncTaskDuration = simulateAsyncTaskDuration;
             }
 
-            protected override async Task OnActivateAsync(CancellationToken cancellationToken)
+            protected override async Task OnActivatedAsync(CancellationToken cancellationToken)
             {
-                await base.OnActivateAsync(cancellationToken);
+                await base.OnActivatedAsync(cancellationToken);
 
                 if (_simulateAsyncOnActivate)
                 {
@@ -330,6 +330,7 @@ namespace Caliburn.Micro.Core.Tests
             conductor.ActiveItem = conducted1;
             conductor.ActiveItem = conducted2;
             Assert.NotNull(conductor.ActiveItem);
+            //await Task.Delay(1200);
             Assert.NotEqual(conducted1, conductor.ActiveItem);
             Assert.Equal(conducted2, conductor.ActiveItem);
         }
