@@ -1,27 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net8.0-windows10.0.19041</TargetFrameworks>
+  <PropertyGroup>
+    <TargetFrameworks>
+      net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst;net8.0-windows10.0.19041
+    </TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net8.0-windows10.0.19041</TargetFrameworks>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-    
+
     <UseMaui>true</UseMaui>
-		<SingleProject>true</SingleProject>
+    <SingleProject>true</SingleProject>
 
     <DefineConstants>MAUI</DefineConstants>
 
-		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-ios'">14.2</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-android'">21.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-ios'">14.2</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-android'">21.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
 
     <PackageId>Caliburn.Micro.Maui</PackageId>
     <Product>Caliburn.Micro.Maui</Product>
   </PropertyGroup>
 
   <PropertyGroup>
-    <LangVersion>10.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
@@ -93,21 +95,19 @@
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\Windows\**\*.cs" />
     <!--<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />-->
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.92" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.92" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageReference Update="Nerdbank.GitVersioning" Version="3.6.146" />
   </ItemGroup>
-
   <ItemGroup>
-   <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>Caliburn.Micro.Maui.Tests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
-
 </Project>
