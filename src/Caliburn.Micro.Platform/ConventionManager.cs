@@ -224,11 +224,10 @@
 
         static ConventionManager()
         {
+            var loadedEvent = "Loaded";
 #if AVALONIA
-            var loadedEvent = "AttachedToLogicalTree";
             var contentControlBindTo = "Content";
 #else
-            var loadedEvent = "Loaded";
             var contentControlBindTo = "DataContext";
 #endif
 #if WINDOWS_UWP

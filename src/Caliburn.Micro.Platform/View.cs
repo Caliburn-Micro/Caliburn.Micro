@@ -171,19 +171,19 @@ namespace Caliburn.Micro
 #if AVALONIA
         public static bool ExecuteOnLoad(FrameworkElement element, EventHandler handler)
         {
-            if (((ILogical)element).IsAttachedToLogicalTree)
+            if (((Control)element).IsLoaded)
             {
                 handler(element, new RoutedEventArgs());
                 return true;
             }
 
-            EventHandler<LogicalTreeAttachmentEventArgs> loaded = null;
+            EventHandler<RoutedEventArgs> loaded = null;
             loaded = (s, e) =>
             {
-                element.AttachedToLogicalTree -= loaded;
+                element.Loaded -= loaded;
                 handler(s, e);
             };
-            element.AttachedToLogicalTree += loaded;
+            element.Loaded += loaded;
 
             return false;
         }
@@ -413,7 +413,7 @@ namespace Caliburn.Micro
 
         static void OnModelChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs args)
         {
-            if (args.OldValue.Equals(args.NewValue))
+            if (args.OldValue == (args.NewValue))
             {
                 return;
             }
@@ -442,7 +442,7 @@ namespace Caliburn.Micro
 
         static void OnContextChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs e)
         {
-            if (e.OldValue.Equals(e.NewValue))
+            if (e.OldValue == (e.NewValue))
             {
                 return;
             }
@@ -480,8 +480,10 @@ namespace Caliburn.Micro
         }
 
 #if WINDOWS_UWP || XFORMS || MAUI
-        static bool SetContentPropertyCore(object targetLocation, object view) {
-            try {
+        static bool SetContentPropertyCore(object targetLocation, object view)
+        {
+            try
+            {
                 var type = targetLocation.GetType();
                 var contentPropertyName = GetContentPropertyName(type);
 
@@ -490,17 +492,19 @@ namespace Caliburn.Micro
 
                 return true;
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 Log.Error(e);
 
                 return false;
             }
         }
 
-        private static string GetContentPropertyName(Type type) {
+        private static string GetContentPropertyName(Type type)
+        {
             var typeInfo = type.GetTypeInfo();
             var contentProperty = typeInfo.GetCustomAttribute<ContentPropertyAttribute>();
-            
+
             return contentProperty?.Name ?? DefaultContentPropertyName;
         }
 #else

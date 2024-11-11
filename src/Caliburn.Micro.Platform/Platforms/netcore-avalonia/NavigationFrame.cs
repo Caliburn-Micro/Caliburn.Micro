@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Styling;
 
 namespace Caliburn.Micro
 {
@@ -11,7 +10,7 @@ namespace Caliburn.Micro
     /// Represents a frame that supports navigation to view models.
     /// </summary>
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-    public class NavigationFrame : TransitioningContentControl, IStyleable, INavigationService
+    public class NavigationFrame : ContentControl, INavigationService
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(NavigationFrame));
 
@@ -24,6 +23,47 @@ namespace Caliburn.Micro
         {
             Content = defaultContent;
             this.AttachedToVisualTree += NavigationFrame_AttachedToVisualTree;
+            LayoutUpdated += NavigationFrame_LayoutUpdated;
+            ContentProperty.Changed.AddClassHandler<NavigationFrame>((sender, e) => NavigationFrame_ContentChanged(sender, e));
+        }
+
+        private void NavigationFrame_ContentChanged(NavigationFrame sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            Log.Info("Content changed");
+            Log.Info($"Content {Tag}");
+            Tag = null;
+        }
+
+        private async void NavigationFrame_LayoutUpdated(object sender, EventArgs e)
+        {
+            Log.Info("LayoutUpdated");
+            var control = sender as UserControl;
+            if (control != null)
+            {
+                Log.Info("Control is not null");
+                var viewModel = control.DataContext;
+                if (viewModel != null && viewModel is IActivate activator)
+                {
+                    Log.Info("Activating view model");
+                    await activator.ActivateAsync();
+                }
+            }
+        }
+
+        private async void NavigationFrame_TransitionCompleted(object sender, TransitionCompletedEventArgs e)
+        {
+            Log.Info("Transition completed");
+            var control = e.To as UserControl;
+            if (control != null && e.To != e.From)
+            {
+                Log.Info("Control is not null");
+                var viewModel = control.DataContext;
+                if (viewModel != null && viewModel is IActivate activator)
+                {
+                    Log.Info("Activating view model");
+                    await activator.ActivateAsync();
+                }
+            }
         }
 
         /// <summary>
@@ -31,6 +71,7 @@ namespace Caliburn.Micro
         /// </summary>
         private void NavigationFrame_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
         {
+            Log.Info("Attached to visual tree");
             OnNavigationServiceReady(new EventArgs());
         }
 
@@ -52,13 +93,12 @@ namespace Caliburn.Micro
             }
         }
 
-        Type IStyleable.StyleKey => typeof(TransitioningContentControl);
 
         /// <summary>
         /// Navigates to the specified view model.
         /// </summary>
         /// <param name="viewModel">The view model to navigate to.</param>
-        private void NavigateToViewModel(object? viewModel)
+        private void NavigateToViewModel(object viewModel)
         {
             if (viewModel == null)
             {
@@ -78,8 +118,10 @@ namespace Caliburn.Micro
             ViewModelBinder.Bind(viewModel, viewInstance, null);
             Log.Info($"View Model {viewModel}");
             Log.Info($"View {viewInstance}");
+            Tag = "Navigating";
             viewInstance.DataContext = viewModel;
             Content = viewInstance;
+
         }
 
         /// <inheritdoc/>
@@ -107,6 +149,7 @@ namespace Caliburn.Micro
             var vm = Caliburn.Micro.IoC.GetInstance(viewModelType, null);
             Log.Info($"VM is null {vm == null}");
             NavigateToViewModel(vm);
+
             return Task.CompletedTask;
         }
 

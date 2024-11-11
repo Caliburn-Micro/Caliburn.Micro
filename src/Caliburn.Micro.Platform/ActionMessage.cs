@@ -292,8 +292,7 @@
             }
 
 #if AVALONIA
-            if (elementToUse == null)
-                elementToUse = currentElement;
+
             var binding = new Binding
             {
                 Path = "(cal:Message.Handler)",
@@ -322,6 +321,8 @@
             binding.Source = currentElement;
 #endif
 #if AVALONIA
+            if (elementToUse == null)
+                elementToUse = currentElement;
             if (elementToUse != null)
             {
                 Log.Info($"GetObservable {HandlerProperty.Name}");
@@ -508,14 +509,17 @@
 #if WINDOWS_UWP
             var hasBinding = ConventionManager.HasBinding(source, Control.IsEnabledProperty);
 #else
+            Log.Info($"HasBinding source {source.Name}");
             var hasBinding = ConventionManager.HasBinding(source, UIElement.IsEnabledProperty);
 #endif
             Log.Info($"ApplyAvailabilityEffect hasBinding {hasBinding}");
 
 #if AVALONIA
+            Log.Info($"context.CanExecute is null {context.CanExecute == null} ");
             if (context.CanExecute != null)
             {
-                Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute()} - {context.Method.Name}");
+                Log.Info("HERE");
+                Log.Info($"ApplyAvailabilityEffect CanExecute  {context.Method.Name}");
                 source.IsEnabled = context.CanExecute();
             }
 #else
@@ -525,6 +529,7 @@
                 source.IsEnabled = context.CanExecute();
             }
 #endif
+            Log.Info($"ApplyAvailabilityEffect source enabled {source.IsEnabled}");
             return source.IsEnabled;
         };
 
@@ -554,6 +559,7 @@
         /// </summary>
         public static Action<ActionExecutionContext> SetMethodBinding = context =>
         {
+            Log.Info("SetMethodBinding");
             var source = context.Source;
 
             DependencyObject currentElement = source;
@@ -562,6 +568,7 @@
                 if (Action.HasTargetSet(currentElement))
                 {
                     var target = Message.GetHandler(currentElement);
+                    Log.Info("SetMethodBinding target is null {0}", target == null);
                     if (target != null)
                     {
                         var method = GetTargetMethod(context.Message, target);
@@ -583,13 +590,15 @@
                 currentElement = BindingScope.GetVisualParent(currentElement);
             }
 #if AVALONIA
+            Log.Info("SetMethodBinding avalonia");
             if (source != null && context.Target != null)
             {
                 var target = context.Target;
                 var method = GetTargetMethod(context.Message, target);
-
+                Log.Info("SetMethodBinding avalonia {0}", target);
                 if (method != null)
                 {
+                    Log.Info("SetMethodBinding avalonia {0}", method.Name);
                     context.Target = target;
                     context.Method = method;
                     context.View = source;
@@ -616,17 +625,26 @@
         /// </summary>
         public static Action<ActionExecutionContext> PrepareContext = context =>
         {
+            Log.Info("PrepareContext");
             SetMethodBinding(context);
+            Log.Info("PrepareContext Context is  {0}", context.View);
+            Log.Info("PrepareContext method is null {0}", context.Method == null);
+            Log.Info("PrepareContext target is null {0}", context.Target == null);
             if (context.Target == null || context.Method == null)
             {
                 return;
             }
             var possibleGuardNames = BuildPossibleGuardNames(context.Method).ToList();
-
+            Log.Info($"PrepareContext {possibleGuardNames.Count}");
+            foreach (var methodName in possibleGuardNames)
+            {
+                Log.Info($"PrepareContext {methodName}");
+            }
             var guard = TryFindGuardMethod(context, possibleGuardNames);
 
             if (guard == null)
             {
+                Log.Info("Guard not found");
                 var inpc = context.Target as INotifyPropertyChanged;
                 if (inpc == null)
                     return;
@@ -643,7 +661,7 @@
 
                 if (guard == null)
                     return;
-
+                Log.Info("Found guard 2 try");
                 PropertyChangedEventHandler handler = null;
                 handler = (s, e) =>
                 {
@@ -669,7 +687,7 @@
                 context.Message.Detaching += delegate
                 { inpc.PropertyChanged -= handler; };
             }
-
+            Log.Info("guard create method {0}", guard.Name);
             context.CanExecute = () => (bool)guard.Invoke(
                 context.Target,
                 MessageBinder.DetermineParameters(context, guard.GetParameters()));
@@ -719,7 +737,7 @@
             {
                 return null;
             }
-
+            Log.Info($"TryFindGuardMethod {guard.Name}");
             return guard;
         }
 
