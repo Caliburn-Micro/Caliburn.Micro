@@ -14,14 +14,14 @@ namespace Features.CrossPlatform.ViewModels
             Messages = new BindableCollection<string>();
         }
 
-        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
+        protected override Task OnInitializedAsync(CancellationToken cancellationToken)
         {
             Messages.Add("Initialized");
 
             return Task.CompletedTask;
         }
 
-        protected override Task OnActivateAsync(CancellationToken cancellationToken)
+        protected override Task OnActivatedAsync(CancellationToken cancellationToken)
         {
             Messages.Add("Activated");
 
@@ -35,14 +35,14 @@ namespace Features.CrossPlatform.ViewModels
             return Task.CompletedTask;
         }
 
-        public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken)
+        public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken = default)
         {
             var delay = _random.Next(5) + 1;
             var canClose = _random.Next(2) == 0;
 
             Messages.Add($"Delaying {delay} seconds and allowing close: {canClose}");
 
-            await Task.Delay(TimeSpan.FromSeconds(delay));
+            await Task.Delay(TimeSpan.FromSeconds(delay), cancellationToken);
 
             return canClose;
         }
