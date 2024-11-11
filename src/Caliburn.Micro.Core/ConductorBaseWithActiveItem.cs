@@ -39,12 +39,13 @@ namespace Caliburn.Micro
         /// <returns>A task that represents the asynchronous operation.</returns>
         protected virtual async Task ChangeActiveItemAsync(T newItem, bool closePrevious, CancellationToken cancellationToken)
         {
+            var previousItem = _activeItem;
             newItem = EnsureItem(newItem);
 
             _activeItem = newItem;
             NotifyOfPropertyChange(nameof(ActiveItem));
 
-            await ScreenExtensions.TryDeactivateAsync(_activeItem, closePrevious, cancellationToken);
+            await ScreenExtensions.TryDeactivateAsync(previousItem, closePrevious, cancellationToken);
 
             if (IsActive)
                 await ScreenExtensions.TryActivateAsync(newItem, cancellationToken);

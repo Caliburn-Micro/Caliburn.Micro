@@ -9,32 +9,32 @@ namespace Features.CrossPlatform.ViewModels
 {
     public class NavigationSourceViewModel : Screen
     {
-        private readonly INavigationService navigationService;
-        private string text;
-        private bool isEnabled;
+        private readonly INavigationService _navigationService;
+        private string _text;
+        private bool _isNavigationEnabled;
 
         public NavigationSourceViewModel(INavigationService navigationService)
         {
-            this.navigationService = navigationService;
+            this._navigationService = navigationService;
         }
 
         public string Text
         {
-            get { return text; }
-            set { Set(ref text, value); }
+            get { return _text; }
+            set { Set(ref _text, value); }
         }
 
-        public bool IsEnabled
+        public bool IsNavigationEnabled
         {
-            get { return isEnabled; }
-            set { Set(ref isEnabled, value); }
+            get { return _isNavigationEnabled; }
+            set { Set(ref _isNavigationEnabled, value); }
         }
 
         public void Navigate()
         {
-            navigationService.For<NavigationTargetViewModel>()
+            _navigationService.For<NavigationTargetViewModel>()
                 .WithParam(v => v.Text, Text)
-                .WithParam(v => v.IsEnabled, IsEnabled)
+                .WithParam(v => v.IsNavigationEnabled, IsNavigationEnabled)
                 .Navigate();
         }
     }

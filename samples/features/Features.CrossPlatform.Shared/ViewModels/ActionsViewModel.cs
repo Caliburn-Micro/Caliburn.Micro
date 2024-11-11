@@ -12,18 +12,18 @@ namespace Features.CrossPlatform.ViewModels
 
         public void SimpleSayHello() => Output = "Hello from Caliburn.Micro";
 
-        public void SayHello(string name) => Output = $"Hello {name}";
+        public void SayHello(string username) => Output = $"Hello {username}";
 
-        public bool CanSayHello(string name) => !String.IsNullOrEmpty(name);
+        public bool CanSayHello(string username) => !String.IsNullOrEmpty(username);
 
-        public Task SayGoodbyeAsync(string name)
+        public Task SayGoodbyeAsync(string username)
         {
-            Output = $"Goodbye {name}";
+            Output = $"Goodbye {username}";
 
             return TaskHelper.FromResult(true);
         }
-        
-        public bool CanSayGoodbye(string name) => !String.IsNullOrEmpty(name);
+
+        public bool CanSayGoodbye(string username) => !String.IsNullOrEmpty(username);
 
         public string Output
         {
