@@ -102,13 +102,17 @@ namespace Caliburn.Micro
 
             if (!IsInitialized)
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 await OnInitializeAsync(cancellationToken);
+#pragma warning restore CS0618 // Type or member is obsolete
                 IsInitialized = initialized = true;
                 await OnInitializedAsync(cancellationToken);
             }
 
             Log.Info("Activating {0}.", this);
+#pragma warning disable CS0618 // Type or member is obsolete
             await OnActivateAsync(cancellationToken);
+#pragma warning restore CS0618 // Type or member is obsolete
             IsActive = true;
             await OnActivatedAsync(cancellationToken);
 

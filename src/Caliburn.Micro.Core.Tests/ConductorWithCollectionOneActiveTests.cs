@@ -80,9 +80,9 @@ namespace Caliburn.Micro.Core.Tests
                 _simulateAsyncTaskDuration = simulateAsyncTaskDuration;
             }
 
-            protected override async Task OnActivateAsync(CancellationToken cancellationToken)
+            protected override async Task OnActivatedAsync(CancellationToken cancellationToken)
             {
-                await base.OnActivateAsync(cancellationToken);
+                await base.OnActivatedAsync(cancellationToken);
 
                 if (_simulateAsyncOnActivate)
                 {
