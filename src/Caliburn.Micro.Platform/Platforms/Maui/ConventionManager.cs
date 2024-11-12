@@ -25,12 +25,13 @@
         /// <remarks>False by default.</remarks>
         public static bool OverwriteContent = false;
 
-        private static readonly Func<object> CreateDefaultItemTemplate = () => {
+        private static readonly Func<object> CreateDefaultItemTemplate = () =>
+        {
 
             var content = new ContentView
             {
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                VerticalOptions = LayoutOptions.FillAndExpand,
+                HorizontalOptions = LayoutOptions.Fill,
+                VerticalOptions = LayoutOptions.Fill,
             };
 
             content.SetBinding(View.ModelProperty, new Binding());
@@ -56,12 +57,12 @@
 
             return content;
         };
-        
-        
+
+
         /// <summary>
         /// The default DataTemplate used for Headered controls when required.
         /// </summary>
-        public static DataTemplate DefaultHeaderTemplate =new DataTemplate(CreateDefaultHeaderTemplate);
+        public static DataTemplate DefaultHeaderTemplate = new DataTemplate(CreateDefaultHeaderTemplate);
 
         static readonly Dictionary<Type, ElementConvention> ElementConventions = new Dictionary<Type, ElementConvention>();
 
@@ -127,7 +128,7 @@
         /// </summary>
         public static Action<Binding, BindableProperty, PropertyInfo> ApplyValueConverter = (binding, bindableProperty, property) =>
         {
-            
+
         };
 
         /// <summary>
@@ -248,7 +249,8 @@
         /// <summary>
         /// Determines whether a particular dependency property already has a binding on the provided element.
         /// </summary>
-        public static bool HasBinding(VisualElement element, BindableProperty property) {
+        public static bool HasBinding(VisualElement element, BindableProperty property)
+        {
             return false; // Dman, can't be done
         }
 
@@ -304,9 +306,11 @@
         /// <param name="property">The collection property.</param>
         public static void ApplyItemTemplate<TVisual>(ItemsView<TVisual> itemsControl, PropertyInfo property) where TVisual : BindableObject
         {
-            if (property.PropertyType.GetTypeInfo().IsGenericType) {
+            if (property.PropertyType.GetTypeInfo().IsGenericType)
+            {
                 var itemType = property.PropertyType.GenericTypeArguments.First();
-                if (itemType.GetTypeInfo().IsValueType || typeof (string).GetTypeInfo().IsAssignableFrom(itemType.GetTypeInfo())) {
+                if (itemType.GetTypeInfo().IsValueType || typeof(string).GetTypeInfo().IsAssignableFrom(itemType.GetTypeInfo()))
+                {
                     return;
                 }
             }
@@ -396,7 +400,8 @@
             var typeInfo = type.GetTypeInfo();
             var typeList = new List<Type> { type };
 
-            if (typeInfo.IsInterface) {
+            if (typeInfo.IsInterface)
+            {
                 typeList.AddRange(typeInfo.ImplementedInterfaces);
             }
 
