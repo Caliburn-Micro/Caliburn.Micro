@@ -6,6 +6,8 @@
     <Product>Caliburn.Micro.Xamarin.Forms</Product>
     <RootNamespace>Caliburn.Micro.Xamarin.Forms</RootNamespace>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+    <Title>Caliburn Micro for Xamarin Forms</Title>
+    <PackageIcon>CaliburnIcon.png</PackageIcon>
   </PropertyGroup>
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
@@ -68,6 +70,13 @@
 
   <ItemGroup>
     <Folder Include="Platforms\Xamarin.Forms\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\CaliburnIcon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
