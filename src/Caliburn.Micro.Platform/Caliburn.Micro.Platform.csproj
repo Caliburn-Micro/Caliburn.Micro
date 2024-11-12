@@ -35,6 +35,8 @@
 
   <PropertyGroup>
     <LangVersion>9.0</LangVersion>
+    <Title>Caliburn Micro for WPF, UWP, iOS, and Android</Title>
+    <PackageIcon>CaliburnIcon.png</PackageIcon>
   </PropertyGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
@@ -52,6 +54,10 @@
   </ItemGroup>
 
   <ItemGroup Label="Package">
+    <None Include="..\..\CaliburnIcon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="Platforms\uap\Caliburn.Micro.Platform.rd.xml" PackagePath="lib\uap10.0.16299\Caliburn.Micro.Platform\Properties\Caliburn.Micro.Platform.rd.xml" Pack="true" />
   </ItemGroup>
 
