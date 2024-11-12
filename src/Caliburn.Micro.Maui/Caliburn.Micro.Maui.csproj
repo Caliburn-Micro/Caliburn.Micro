@@ -22,6 +22,8 @@
 
   <PropertyGroup>
     <LangVersion>9.0</LangVersion>
+    <Title>Caliburn Micro for .net Maui</Title>
+    <PackageIcon>CaliburnIcon.png</PackageIcon>
   </PropertyGroup>
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
@@ -92,6 +94,13 @@
   <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\Windows\**\*.cs" />
     <!--<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\CaliburnIcon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
   
   <ItemGroup>
