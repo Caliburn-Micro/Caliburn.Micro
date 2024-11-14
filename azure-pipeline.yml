@@ -15,7 +15,7 @@ steps:
   displayName: 'Install .NET'
   inputs:
     packageType: 'sdk'
-    version: '8.0.x' 
+    version: '9.0.x' 
 
 
 - task: PowerShell@2

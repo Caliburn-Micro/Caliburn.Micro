@@ -15,6 +15,7 @@ env:
   caliburn_features: "samples\\features\\features.sln"
   package_feed: "https://nuget.pkg.github.com/caliburn-micro/index.json"
   nuget_folder: "\\packages"
+  nuget_upload: 'packages\*.nupkg'
   build_configuration: "Release"
   
 jobs:
@@ -29,7 +30,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        global-json-file: src/global.json
     - name: Setup Java SDK
       uses: actions/setup-java@v4
       with:
@@ -50,14 +51,6 @@ jobs:
       run: dotnet workload install maui maui-android maui-ios maui-tizen maui-maccatalyst maui-windows android --source https://api.nuget.org/v3/index.json
     - name: list workloads
       run: dotnet workload list
-
-    - name: Ensure GitHub NuGet Source
-      run: dotnet nuget add source ${{ env.package_feed }} 
-            -n github 
-            -u ${{ secrets.NUGET_USER }} 
-            -p ${{ secrets.CONSUME_CALIBURN_FEED }} 
-            --store-password-in-clear-text
-      if: github.event_name != 'pull_request'
       
     - name: Restore nuget packages
       run:  msbuild ${{env.caliburn_sln}} -t:restore
@@ -65,7 +58,9 @@ jobs:
     - name: Build app for release
       run: msbuild ${{env.caliburn_sln}} /t:Build /p:Configuration=${{env.build_configuration}}
 
-      
+    - name: Run Unit Tests
+      run: dotnet test src/caliburn.micro.sln  --configuration release -p:CollectCoverage=true -p:CoverletOutputFormat=json --no-build --verbosity normal /p:MergeWith=..\Caliburn.Micro.Core.Tests\coverage.json /m:1   
+  
     - name: Restore nuget packages for tutorial
       run:  msbuild ${{env.caliburn_tutorial}} -t:restore 
       
@@ -82,5 +77,5 @@ jobs:
       run: msbuild ${{env.caliburn_sln}} /t:package /p:Configuration=${{env.build_configuration}}
       
     - name: publish Nuget Packages to GitHub
-      run: dotnet nuget push ${{env.nuget_folder}}\**\*.nupkg --source ${{env.package_feed}} --api-key ${{secrets.PUBLISH_NUGET_PACKAGE}} --skip-duplicate
+      run: dotnet nuget push ${{env.nuget_upload}} --source ${{env.package_feed}} --api-key ${{secrets.PUBLISH_NUGET_PACKAGE}} --skip-duplicate
       if: github.event_name != 'pull_request'
