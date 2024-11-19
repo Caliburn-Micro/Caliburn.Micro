@@ -50,7 +50,7 @@ namespace Caliburn.Micro
             if (IsActive)
                 await ScreenExtensions.TryActivateAsync(newItem, cancellationToken);
 
-            OnActivationProcessed(_activeItem, true);
+            OnActivationProcessed(newItem, true);
         }
 
         /// <summary>
