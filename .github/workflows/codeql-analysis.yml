@@ -41,7 +41,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        global-json-file: src/global.json
       
     - name: Setup Java SDK
       uses: actions/setup-java@v4
