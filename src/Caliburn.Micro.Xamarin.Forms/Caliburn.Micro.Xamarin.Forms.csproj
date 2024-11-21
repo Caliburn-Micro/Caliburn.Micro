@@ -7,6 +7,8 @@
     <RootNamespace>Caliburn.Micro.Xamarin.Forms</RootNamespace>
     <LangVersion>10</LangVersion>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+    <Title>Caliburn Micro for Xamarin Forms</Title>
+    <PackageIcon>CaliburnIcon.png</PackageIcon>
   </PropertyGroup>
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
@@ -72,8 +74,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\CaliburnIcon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageReference Update="Nerdbank.GitVersioning" Version="3.6.146" />
   </ItemGroup>
-
+  
 </Project>
