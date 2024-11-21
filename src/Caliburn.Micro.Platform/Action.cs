@@ -15,6 +15,12 @@ namespace Caliburn.Micro
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
+#elif AVALONIA
+    using System;
+    using Avalonia;
+    using DependencyObject = Avalonia.AvaloniaObject;
+    using DependencyPropertyChangedEventArgs = Avalonia.AvaloniaPropertyChangedEventArgs;
+    using FrameworkElement = Avalonia.Controls.Control;
 #elif MAUI
     using UIElement = global::Microsoft.Maui.Controls.Element;
     using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
@@ -33,26 +39,45 @@ namespace Caliburn.Micro
         /// <summary>
         ///   A property definition representing the target of an <see cref="ActionMessage" /> . The DataContext of the element will be set to this instance.
         /// </summary>
+#if AVALONIA
+        public static readonly AvaloniaProperty TargetProperty = 
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, object>("Target", typeof(Action));
+#else
         public static readonly DependencyProperty TargetProperty =
             DependencyPropertyHelper.RegisterAttached(
                 "Target",
                 typeof(object),
                 typeof(Action),
-                null, 
+                null,
                 OnTargetChanged
                 );
+#endif
 
         /// <summary>
         ///   A property definition representing the target of an <see cref="ActionMessage" /> . The DataContext of the element is not set to this instance.
         /// </summary>
+#if AVALONIA
+        public static readonly AvaloniaProperty TargetWithoutContextProperty =
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, object>("TargetWithoutContext", typeof(Action));
+#else
         public static readonly DependencyProperty TargetWithoutContextProperty =
             DependencyPropertyHelper.RegisterAttached(
                 "TargetWithoutContext",
                 typeof(object),
                 typeof(Action),
-                null, 
+                null,
                 OnTargetWithoutContextChanged
                 );
+#endif
+
+#if AVALONIA
+        static Action()
+        {
+            TargetProperty.Changed.Subscribe(args => OnTargetChanged(args.Sender, args));
+            TargetWithoutContextProperty.Changed.Subscribe(args => OnTargetWithoutContextChanged(args.Sender, args));
+        }
+
+#endif
 
         /// <summary>
         ///   Sets the target of the <see cref="ActionMessage" /> .
@@ -179,7 +204,6 @@ namespace Caliburn.Micro
                 ((FrameworkElement)d).DataContext = target;
             }
 
-             Log.Info("Attaching message handler {0} to {1}.", target, d);
              Message.SetHandler(d, target);
 #endif
             
