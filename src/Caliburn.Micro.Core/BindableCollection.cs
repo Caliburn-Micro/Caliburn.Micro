@@ -36,6 +36,11 @@ namespace Caliburn.Micro
         public bool IsNotifying { get; set; }
 
         /// <summary>
+        /// Occurs when the collection has been cleared.
+        /// </summary>
+        public event EventHandler<CollectionClearedEventArgs<T>> CollectionCleared;
+
+        /// <summary>
         /// Notifies subscribers of the property change.
         /// </summary>
         /// <param name = "propertyName">Name of the property.</param>
@@ -180,7 +185,9 @@ namespace Caliburn.Micro
         /// </remarks>
         protected virtual void ClearItemsBase()
         {
+            var clearedItems = new List<T>(collection: this);
             base.ClearItems();
+            CollectionCleared?.Invoke(this, new CollectionClearedEventArgs<T>(clearedItems));
         }
 
         /// <summary>

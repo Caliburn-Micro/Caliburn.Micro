@@ -123,7 +123,7 @@ namespace Caliburn.Micro.Core.Tests
             conductor.Items.Add(conducted);
 
             await ((IActivate)conductor).ActivateAsync(CancellationToken.None);
-            var canClose =await conductor.CanCloseAsync(CancellationToken.None);
+            var canClose = await conductor.CanCloseAsync(CancellationToken.None);
 
             Assert.True(canClose);
             Assert.False(conducted.IsClosed);
@@ -141,7 +141,7 @@ namespace Caliburn.Micro.Core.Tests
                 IsClosable = true
             };
             conductor.Items.Add(conducted);
-            await((IActivate)conductor).ActivateAsync(CancellationToken.None);
+            await ((IActivate)conductor).ActivateAsync(CancellationToken.None);
             var canClose = await conductor.CanCloseAsync(CancellationToken.None);
 
             Assert.True(canClose);
@@ -274,7 +274,7 @@ namespace Caliburn.Micro.Core.Tests
             Assert.Equal(conductor, newConducted.Parent);
         }
 
-        [Fact(Skip = "This is not possible as we don't get the removed items in the event handler.")]
+        [Fact]
         public void ParentItemIsUnsetOnClear()
         {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
