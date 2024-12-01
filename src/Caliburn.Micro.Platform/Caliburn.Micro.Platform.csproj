@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;uap10.0.19041;net8.0-android;net8.0-ios;net8.0-windows;</TargetFrameworks>
+    <TargetFrameworks>net462;uap10.0.19041;net8.0-android;net8.0-ios;net9.0-android;net9.0-ios;net8.0-windows;net9.0-windows</TargetFrameworks>
     <PackageId>Caliburn.Micro</PackageId>
     <Product>Caliburn.Micro</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
@@ -52,6 +52,10 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <Compile Include="Platforms\net46-netcore\**\*.cs" />
   </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-windows'">
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    <Compile Include="Platforms\net46-netcore\**\*.cs" />
+  </ItemGroup>
 
   <ItemGroup Label="Package">
     <None Include="..\..\CaliburnIcon.png">
@@ -74,6 +78,18 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-ios'">
+    <Compile Remove="*.cs" />
+    <Compile Include="Platforms\ios\**\*.cs" />
+    <Compile Include="ViewModelLocator.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
+    <Compile Remove="*.cs" />
+    <Compile Include="Platforms\android\**\*.cs" />
+    <Compile Include="ViewModelLocator.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
     <Compile Remove="*.cs" />
     <Compile Include="Platforms\ios\**\*.cs" />
     <Compile Include="ViewModelLocator.cs" />
