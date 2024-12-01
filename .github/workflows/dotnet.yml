@@ -30,7 +30,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        global-json-file: src/global.json
     - name: Setup Java SDK
       uses: actions/setup-java@v4
       with:
@@ -59,7 +59,7 @@ jobs:
       run: msbuild ${{env.caliburn_sln}} /t:Build /p:Configuration=${{env.build_configuration}}
 
     - name: Run Unit Tests
-      run: dotnet test src/caliburn.micro.sln  --configuration release -p:CollectCoverage=true -p:CoverletOutputFormat=json --no-build --verbosity normal /p:MergeWith=..\Caliburn.Micro.Core.Tests\coverage.json /m:1   
+      run: dotnet test ${{env.caliburn_sln}}  --configuration ${{env.build_configuration}} -p:CollectCoverage=true -p:CoverletOutputFormat=json --no-build --verbosity normal    
   
     - name: Restore nuget packages for tutorial
       run:  msbuild ${{env.caliburn_tutorial}} -t:restore 
