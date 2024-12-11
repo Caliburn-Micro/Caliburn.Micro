@@ -5,7 +5,7 @@
         "semVer": 2
     },
     "publicReleaseRefSpec": [
-        "^refs/heads/master$"
+        "^refs/heads/V4_0_212$"
     ],
     "cloudBuild": {
         "buildNumber": {
