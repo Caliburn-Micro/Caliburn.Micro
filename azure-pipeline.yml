@@ -30,7 +30,7 @@ steps:
 - task: NuGetToolInstaller@1
   displayName: 'Install Nuget'
   inputs:
-    versionSpec: '6.3.0'
+    versionSpec: '6.12.1'
 
 - task: DotNetCoreCLI@2  
   inputs:
