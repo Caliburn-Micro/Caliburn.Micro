@@ -17,7 +17,7 @@
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
         private ActionExecutionContext context;
-        private object handler;
+        internal object handler;
 
         ///<summary>
         /// Causes the action invocation to "double check" if the action should be invoked by executing the guard immediately before hand.
