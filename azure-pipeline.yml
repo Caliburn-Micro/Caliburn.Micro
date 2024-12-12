@@ -62,7 +62,8 @@ steps:
   inputs:
     command: test
     projects: '**/*Test*/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"' --no-build
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    nobuild: true
 
 - task: CopyFiles@2
   displayName: Copy Packages to Artifact Directory
