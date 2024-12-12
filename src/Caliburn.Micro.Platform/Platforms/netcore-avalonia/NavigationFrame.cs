@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
 
 namespace Caliburn.Micro
 {
@@ -54,7 +52,7 @@ namespace Caliburn.Micro
         {
             Log.Info("Transition completed");
             var control = e.To as UserControl;
-            if (control != null && e.To != e.From)
+            if (!object.ReferenceEquals(e.To, e.From))
             {
                 Log.Info("Control is not null");
                 var viewModel = control.DataContext;
