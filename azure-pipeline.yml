@@ -61,9 +61,9 @@ steps:
   displayName: Run Unit Tests
   inputs:
     command: test
-    projects: '**/*Test*/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
-    nobuild: true
+    projects: 'src/caliburn.micro.sln'
+    arguments: '--configuration $(buildConfiguration)  -p:CollectCoverage=true -p:CoverletOutputFormat=json --no-build --verbosity normal'
+
 
 - task: CopyFiles@2
   displayName: Copy Packages to Artifact Directory
