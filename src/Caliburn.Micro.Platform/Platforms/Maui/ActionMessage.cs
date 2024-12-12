@@ -55,7 +55,7 @@
         public object Handler
         {
             get { return handler; }
-            private set
+            internal set
             {
                 if (handler == value)
                     return;
@@ -231,7 +231,7 @@
             UpdateAvailabilityCore();
         }
 
-        bool UpdateAvailabilityCore()
+        internal bool UpdateAvailabilityCore()
         {
             Log.Info("{0} availability update.", this);
             return ApplyAvailabilityEffect(context);
@@ -447,7 +447,7 @@
         /// <param name="context">The execution context</param>
         /// <param name="possibleGuardNames">Method names to look for.</param>
         /// <returns>A MethodInfo, if found; null otherwise</returns>
-        static MethodInfo TryFindGuardMethod(ActionExecutionContext context, IEnumerable<string> possibleGuardNames)
+        internal static MethodInfo TryFindGuardMethod(ActionExecutionContext context, IEnumerable<string> possibleGuardNames)
         {
             var targetType = context.Target.GetType();
             MethodInfo guard = null;

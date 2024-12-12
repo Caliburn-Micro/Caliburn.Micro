@@ -26,12 +26,12 @@ namespace Caliburn.Micro.Core.Tests
         {
             var handlerStub = new Mock<IHandle<object>>().Object;
             var aggregator = new EventAggregator();
-
-            Assert.False(aggregator.HandlerExistsFor(typeof(object)));
+            var messageType = typeof(object);
+            Assert.False(aggregator.HandlerExistsFor(messageType));
 
             aggregator.SubscribeOnPublishedThread(handlerStub);
 
-            Assert.True(aggregator.HandlerExistsFor(typeof(object)));
+            Assert.True(aggregator.HandlerExistsFor(messageType));
         }
     }
 
