@@ -51,7 +51,10 @@ jobs:
       run: dotnet workload install maui maui-android maui-ios maui-tizen maui-maccatalyst maui-windows android --source https://api.nuget.org/v3/index.json
     - name: list workloads
       run: dotnet workload list
-      
+    - name: Install NBGV tool
+      run: dotnet tool install -g nbgv   
+    - name: Set Version
+      run: nbgv prepare-release     
     - name: Restore nuget packages
       run:  msbuild ${{env.caliburn_sln}} -t:restore
 
