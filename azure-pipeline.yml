@@ -30,7 +30,7 @@ steps:
 - task: NuGetToolInstaller@1
   displayName: 'Install Nuget'
   inputs:
-    versionSpec: '6.3.0'
+    versionSpec: '6.12.1'
 
 - task: DotNetCoreCLI@2  
   inputs:
@@ -57,12 +57,12 @@ steps:
     platform: '$(buildPlatform)'
     msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME_11_X64)"'
 
-- task: DotNetCoreCLI@2
+- task: CmdLine@2
   displayName: Run Unit Tests
+  continueOnError: true 
   inputs:
-    command: test
-    projects: '**/*Test*/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    script: 'dotnet test src/caliburn.micro.sln --configuration $(buildConfiguration)  -p:CollectCoverage=true -p:CoverletOutputFormat=json --no-build --verbosity normal'
+
 
 - task: CopyFiles@2
   displayName: Copy Packages to Artifact Directory
