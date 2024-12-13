@@ -61,7 +61,7 @@ steps:
   displayName: Run Unit Tests
   continueOnError: true 
   inputs:
-    script: 'dotnet test src/caliburn.micro.sln --configuration $(buildConfiguration)  -p:CollectCoverage=true -p:CoverletOutputFormat=json --no-build --verbosity normal'
+    script: 'dotnet test src/caliburn.micro.sln --configuration $(buildConfiguration)  --no-build --verbosity normal'
 
 
 - task: CopyFiles@2
