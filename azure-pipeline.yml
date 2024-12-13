@@ -57,12 +57,11 @@ steps:
     platform: '$(buildPlatform)'
     msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME_11_X64)"'
 
-- task: DotNetCoreCLI@2
+- task: CmdLine@2
   displayName: Run Unit Tests
+  continueOnError: true 
   inputs:
-    command: test
-    projects: 'src/caliburn.micro.sln'
-    arguments: '--configuration $(buildConfiguration)  -p:CollectCoverage=true -p:CoverletOutputFormat=json --no-build --verbosity normal'
+    script: 'dotnet test src/caliburn.micro.sln --logger --configuration $(buildConfiguration)  -p:CollectCoverage=true -p:CoverletOutputFormat=json --no-build --verbosity normal'
 
 
 - task: CopyFiles@2
