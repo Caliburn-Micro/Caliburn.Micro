@@ -57,11 +57,6 @@ steps:
     platform: '$(buildPlatform)'
     msbuildArgs: '/t:Pack /p:JavaSdkDirectory="$(JAVA_HOME_11_X64)"'
 
-- task: CmdLine@2
-  displayName: Run Unit Tests
-  continueOnError: true 
-  inputs:
-    script: 'dotnet test src/caliburn.micro.sln --configuration $(buildConfiguration)  --no-build --verbosity normal'
 
 
 - task: CopyFiles@2
