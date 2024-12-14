@@ -22,16 +22,16 @@ namespace Features.CrossPlatform.ViewModels
             await _navigationService.NavigateToViewModelAsync(message.ViewModel);
         }
 
-        protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
+        protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
         {
-            await base.OnInitializeAsync(cancellationToken);
+            await base.OnInitializedAsync(cancellationToken);
 
             GoHome();
         }
 
         public void GoHome()
         {
-            var menuVM = IoC.GetInstance(typeof(MenuViewModel), null) as MenuViewModel;
+            var menuVM = _container.GetInstance<MenuViewModel>();
             if (_navigationService != null)
             {
                 _navigationService.NavigateToViewModelAsync(typeof(MenuViewModel));

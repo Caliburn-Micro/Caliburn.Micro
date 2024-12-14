@@ -18,7 +18,7 @@ namespace Features.Avalonia.Results
         public override async void Execute(CoroutineExecutionContext context)
         {
             var dialog = MessageBoxManager
-                        .GetMessageBoxStandard("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...");
+                        .GetMessageBoxStandard(title, content);
 
             await dialog.ShowAsync();
             OnCompleted();
