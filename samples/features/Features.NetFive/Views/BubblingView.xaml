@@ -8,18 +8,17 @@
       d:DesignHeight="300" d:DesignWidth="300"
       Title="BubblingView">
 
-    <Grid>
-        <ScrollViewer Padding="24,12">
-            <ItemsControl x:Name="Phrases">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid cal:Bind.Model="{Binding}">
-                            <Button x:Name="Message" cal:Message.Attach="SelectPhrase($dataContext)" Margin="0,12" />
-                        </Grid>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-    </Grid>
+    <StackPanel>
+        <TextBlock Text="Here"></TextBlock>
+        <ItemsControl x:Name="Phrases" ItemsSource="{Binding Phrases}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid cal:Bind.Model="{Binding}">
+                        <Button x:Name="Message" cal:Message.Attach="SelectPhrase($dataContext)" Margin="0,12" />
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
 </Page>
 

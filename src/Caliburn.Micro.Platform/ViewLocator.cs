@@ -16,12 +16,17 @@ namespace Caliburn.Micro
     using UIElement = global::Xamarin.Forms.Element;
     using TextBlock = global::Xamarin.Forms.Label;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Controls;
+    using UIElement = Avalonia.Controls.Control;
+    using DependencyObject = Avalonia.AvaloniaObject;
 #elif MAUI
     using global::Microsoft.Maui.Controls;
     using UIElement = global::Microsoft.Maui.Controls.Element;
     using TextBlock = global::Microsoft.Maui.Controls.Label;
     using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
-#elif !WINDOWS_UWP
+#elif !WINDOWS_UWP 
     using System.Windows;
     using System.Windows.Controls;
 #else
@@ -29,14 +34,15 @@ namespace Caliburn.Micro
     using Windows.UI.Xaml.Controls;
 #endif
 
-#if !WINDOWS_UWP && !XFORMS && !MAUI
+#if !WINDOWS_UWP && !XFORMS && !AVALONIA && !MAUI
     using System.Windows.Interop;
 #endif
 
     /// <summary>
     ///   A strategy for determining which view to use for a given model.
     /// </summary>
-    public static class ViewLocator {
+    public static class ViewLocator
+    {
         static readonly ILog Log = LogManager.GetLog(typeof(ViewLocator));
 
         //These fields are used for configuring the default type mappings. They can be changed using ConfigureTypeMappings().
@@ -58,7 +64,8 @@ namespace Caliburn.Micro
         /// </summary>
         public static string ContextSeparator = ".";
 
-        static ViewLocator() {
+        static ViewLocator()
+        {
             ConfigureTypeMappings(new TypeMappingConfiguration());
         }
 
@@ -68,20 +75,31 @@ namespace Caliburn.Micro
         /// configuration.
         /// </summary>
         /// <param name="config">An instance of TypeMappingConfiguration that provides the settings for configuration</param>
-        public static void ConfigureTypeMappings(TypeMappingConfiguration config) {
-            if (String.IsNullOrEmpty(config.DefaultSubNamespaceForViews)) {
+        public static void ConfigureTypeMappings(TypeMappingConfiguration config)
+        {
+            if (string.IsNullOrEmpty(config.DefaultSubNamespaceForViews))
+            {
                 throw new ArgumentException("DefaultSubNamespaceForViews field cannot be blank.");
             }
 
-            if (String.IsNullOrEmpty(config.DefaultSubNamespaceForViewModels)) {
+            if (string.IsNullOrEmpty(config.DefaultSubNamespaceForViewModels))
+            {
                 throw new ArgumentException("DefaultSubNamespaceForViewModels field cannot be blank.");
             }
 
-            if (String.IsNullOrEmpty(config.NameFormat)) {
+            if (string.IsNullOrEmpty(config.NameFormat))
+            {
                 throw new ArgumentException("NameFormat field cannot be blank.");
             }
+            if (!IsNameFormatValidFormat(config.NameFormat))
+            {
+                throw new ArgumentException("NameFormat field must contain {0} and {1} placeholders.");
+            }
 
-            NameTransformer.Clear();
+            if (NameTransformer.Any())
+            {
+                NameTransformer.Clear();
+            }
             ViewSuffixList.Clear();
 
             defaultSubNsViews = config.DefaultSubNamespaceForViews;
@@ -96,12 +114,15 @@ namespace Caliburn.Micro
         }
 
 
-        private static void SetAllDefaults() {
-            if (useNameSuffixesInMappings) {
+        private static void SetAllDefaults()
+        {
+            if (useNameSuffixesInMappings)
+            {
                 //Add support for all view suffixes
                 ViewSuffixList.Apply(AddDefaultTypeMapping);
             }
-            else {
+            else
+            {
                 AddSubNamespaceMapping(defaultSubNsViewModels, defaultSubNsViews);
             }
         }
@@ -110,8 +131,10 @@ namespace Caliburn.Micro
         /// Adds a default type mapping using the standard namespace mapping convention
         /// </summary>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddDefaultTypeMapping(string viewSuffix = "View") {
-            if (!useNameSuffixesInMappings) {
+        public static void AddDefaultTypeMapping(string viewSuffix = "View")
+        {
+            if (!useNameSuffixesInMappings)
+            {
                 return;
             }
 
@@ -129,8 +152,10 @@ namespace Caliburn.Micro
         /// is added directly through the NameTransformer.
         /// </summary>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View".</param>
-        public static void RegisterViewSuffix(string viewSuffix) {
-            if (ViewSuffixList.Count(s => s == viewSuffix) == 0) {
+        public static void RegisterViewSuffix(string viewSuffix)
+        {
+            if (ViewSuffixList.Count(s => s == viewSuffix) == 0)
+            {
                 ViewSuffixList.Add(viewSuffix);
             }
         }
@@ -142,35 +167,46 @@ namespace Caliburn.Micro
         /// <param name="nsSourceFilterRegEx">RegEx filter pattern for source namespace</param>
         /// <param name="nsTargetsRegEx">Array of RegEx replace values for target namespaces</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string[] nsTargetsRegEx, string viewSuffix = "View") {
+        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx,
+            string[] nsTargetsRegEx, string viewSuffix = "View")
+        {
             RegisterViewSuffix(viewSuffix);
 
             var replist = new List<string>();
             var repsuffix = useNameSuffixesInMappings ? viewSuffix : String.Empty;
             const string basegrp = "${basename}";
 
-            foreach (var t in nsTargetsRegEx) {
-                replist.Add(t + String.Format(nameFormat, basegrp, repsuffix));
+            foreach (var t in nsTargetsRegEx)
+            {
+                replist.Add(t + string.Format(nameFormat, basegrp, repsuffix));
             }
 
             var rxbase = RegExHelper.GetNameCaptureGroup("basename");
             var suffix = String.Empty;
-            if (useNameSuffixesInMappings) {
+            if (useNameSuffixesInMappings)
+            {
                 suffix = viewModelSuffix;
-                if (!viewModelSuffix.Contains(viewSuffix) && includeViewSuffixInVmNames) {
+                if (!viewModelSuffix.Contains(viewSuffix) && includeViewSuffixInVmNames)
+                {
                     suffix = viewSuffix + suffix;
                 }
             }
-            var rxsrcfilter = String.IsNullOrEmpty(nsSourceFilterRegEx)
+
+            var rxsrcfilter = string.IsNullOrEmpty(nsSourceFilterRegEx)
                 ? null
-                : String.Concat(nsSourceFilterRegEx, String.Format(nameFormat, RegExHelper.NameRegEx, suffix), "$");
+                : string.Concat(nsSourceFilterRegEx, string.Format(nameFormat, RegExHelper.NameRegEx, suffix), "$");
             var rxsuffix = RegExHelper.GetCaptureGroup("suffix", suffix);
 
             NameTransformer.AddRule(
-                String.Concat(nsSourceReplaceRegEx, String.Format(nameFormat, rxbase, rxsuffix), "$"),
+                String.Concat(nsSourceReplaceRegEx, string.Format(nameFormat, rxbase, rxsuffix), "$"),
                 replist.ToArray(),
                 rxsrcfilter
             );
+        }
+
+        internal static bool IsNameFormatValidFormat(string formatToValidate)
+        {
+            return formatToValidate.Contains("{0}") && formatToValidate.Contains("{1}");
         }
 
         /// <summary>
@@ -180,7 +216,9 @@ namespace Caliburn.Micro
         /// <param name="nsSourceFilterRegEx">RegEx filter pattern for source namespace</param>
         /// <param name="nsTargetRegEx">RegEx replace value for target namespace</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string nsTargetRegEx, string viewSuffix = "View") {
+        public static void AddTypeMapping(string nsSourceReplaceRegEx, string nsSourceFilterRegEx, string nsTargetRegEx,
+            string viewSuffix = "View")
+        {
             AddTypeMapping(nsSourceReplaceRegEx, nsSourceFilterRegEx, new[] { nsTargetRegEx }, viewSuffix);
         }
 
@@ -190,13 +228,15 @@ namespace Caliburn.Micro
         /// <param name="nsSource">Namespace of source type</param>
         /// <param name="nsTargets">Namespaces of target type as an array</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View") {
+        public static void AddNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View")
+        {
             //need to terminate with "." in order to concatenate with type name later
             var nsencoded = RegExHelper.NamespaceToRegEx(nsSource + ".");
 
             //Start pattern search from beginning of string ("^")
             //unless original string was blank (i.e. special case to indicate "append target to source")
-            if (!String.IsNullOrEmpty(nsSource)) {
+            if (!String.IsNullOrEmpty(nsSource))
+            {
                 nsencoded = "^" + nsencoded;
             }
 
@@ -213,7 +253,8 @@ namespace Caliburn.Micro
         /// <param name="nsSource">Namespace of source type</param>
         /// <param name="nsTarget">Namespace of target type</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View") {
+        public static void AddNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View")
+        {
             AddNamespaceMapping(nsSource, new[] { nsTarget }, viewSuffix);
         }
 
@@ -223,7 +264,8 @@ namespace Caliburn.Micro
         /// <param name="nsSource">Subnamespace of source type</param>
         /// <param name="nsTargets">Subnamespaces of target type as an array</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddSubNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View") {
+        public static void AddSubNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View")
+        {
             //need to terminate with "." in order to concatenate with type name later
             var nsencoded = RegExHelper.NamespaceToRegEx(nsSource + ".");
 
@@ -232,12 +274,14 @@ namespace Caliburn.Micro
 
             if (!String.IsNullOrEmpty(nsSource))
             {
-                if (!nsSource.StartsWith("*")) {
+                if (!nsSource.StartsWith("*"))
+                {
                     rxbeforesrc = RegExHelper.GetNamespaceCaptureGroup("nsbefore");
                     rxbeforetgt = @"${nsbefore}";
                 }
 
-                if (!nsSource.EndsWith("*")) {
+                if (!nsSource.EndsWith("*"))
+                {
                     rxaftersrc = RegExHelper.GetNamespaceCaptureGroup("nsafter");
                     rxaftertgt = "${nsafter}";
                 }
@@ -256,7 +300,8 @@ namespace Caliburn.Micro
         /// <param name="nsSource">Subnamespace of source type</param>
         /// <param name="nsTarget">Subnamespace of target type</param>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddSubNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View") {
+        public static void AddSubNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View")
+        {
             AddSubNamespaceMapping(nsSource, new[] { nsTarget }, viewSuffix);
         }
 
@@ -266,11 +311,13 @@ namespace Caliburn.Micro
         /// <remarks>
         ///   Pass the type of view as a parameter and recieve an instance of the view.
         /// </remarks>
-        public static Func<Type, UIElement> GetOrCreateViewType = viewType => {
+        public static Func<Type, UIElement> GetOrCreateViewType = viewType =>
+        {
             var view = IoC.GetAllInstances(viewType)
-                           .FirstOrDefault() as UIElement;
+                .FirstOrDefault() as UIElement;
 
-            if (view != null) {
+            if (view != null)
+            {
                 InitializeComponent(view);
                 return view;
             }
@@ -298,7 +345,8 @@ namespace Caliburn.Micro
         /// </summary>
         public static Func<string, string> ModifyModelTypeAtDesignTime = modelTypeName =>
         {
-            if (modelTypeName.StartsWith("_")) {
+            if (modelTypeName.StartsWith("_"))
+            {
                 var index = modelTypeName.IndexOf('.');
                 modelTypeName = modelTypeName.Substring(index + 1);
                 index = modelTypeName.IndexOf('.');
@@ -317,16 +365,19 @@ namespace Caliburn.Micro
         /// typeName = The name of the ViewModel type being resolved to its companion View.
         /// context = An instance of the context or null.
         /// </remarks>
-        public static Func<string, object, IEnumerable<string>> TransformName = (typeName, context) => {
+        public static Func<string, object, IEnumerable<string>> TransformName = (typeName, context) =>
+        {
             Func<string, string> getReplaceString;
-            if (context == null) {
+            if (context == null)
+            {
                 getReplaceString = r => r;
                 return NameTransformer.Transform(typeName, getReplaceString);
             }
 
             var contextstr = ContextSeparator + context;
             string grpsuffix = String.Empty;
-            if (useNameSuffixesInMappings) {
+            if (useNameSuffixesInMappings)
+            {
                 //Create RegEx for matching any of the synonyms registered
                 var synonymregex = "(" + String.Join("|", ViewSuffixList.ToArray()) + ")";
                 grpsuffix = RegExHelper.GetCaptureGroup("suffix", synonymregex);
@@ -352,29 +403,33 @@ namespace Caliburn.Micro
         /// <remarks>
         ///   Pass the model type, display location (or null) and the context instance (or null) as parameters and receive a view type.
         /// </remarks>
-        public static Func<Type, DependencyObject, object, Type> LocateTypeForModelType = (modelType, displayLocation, context) => {
-            var viewTypeName = modelType.FullName;
+        public static Func<Type, DependencyObject, object, Type> LocateTypeForModelType =
+            (modelType, displayLocation, context) =>
+            {
+                var viewTypeName = modelType.FullName;
 
-            if (View.InDesignMode) {
-                viewTypeName = ModifyModelTypeAtDesignTime(viewTypeName);
-            }
+                if (View.InDesignMode)
+                {
+                    viewTypeName = ModifyModelTypeAtDesignTime(viewTypeName);
+                }
 
-            viewTypeName = viewTypeName.Substring(
-                0,
-                viewTypeName.IndexOf('`') < 0
-                    ? viewTypeName.Length
-                    : viewTypeName.IndexOf('`')
+                viewTypeName = viewTypeName.Substring(
+                    0,
+                    viewTypeName.IndexOf('`') < 0
+                        ? viewTypeName.Length
+                        : viewTypeName.IndexOf('`')
                 );
 
-            var viewTypeList = TransformName(viewTypeName, context);
-            var viewType = AssemblySource.FindTypeByNames(viewTypeList);
+                var viewTypeList = TransformName(viewTypeName, context);
+                var viewType = AssemblySource.FindTypeByNames(viewTypeList);
 
-            if (viewType == null) {
-                Log.Warn("View not found. Searched: {0}.", string.Join(", ", viewTypeList.ToArray()));
-            }
+                if (viewType == null)
+                {
+                    Log.Warn("View not found. Searched: {0}.", string.Join(", ", viewTypeList.ToArray()));
+                }
 
-            return viewType;
-        };
+                return viewType;
+            };
 
         /// <summary>
         ///   Locates the view for the specified model type.
@@ -383,13 +438,15 @@ namespace Caliburn.Micro
         /// <remarks>
         ///   Pass the model type, display location (or null) and the context instance (or null) as parameters and receive a view instance.
         /// </remarks>
-        public static Func<Type, DependencyObject, object, UIElement> LocateForModelType = (modelType, displayLocation, context) => {
-            var viewType = LocateTypeForModelType(modelType, displayLocation, context);
+        public static Func<Type, DependencyObject, object, UIElement> LocateForModelType =
+            (modelType, displayLocation, context) =>
+            {
+                var viewType = LocateTypeForModelType(modelType, displayLocation, context);
 
-            return viewType == null
-                       ? new TextBlock { Text = string.Format("Cannot find view for {0}.", modelType) }
-                       : GetOrCreateViewType(viewType);
-        };
+                return viewType == null
+                    ? new TextBlock { Text = string.Format("Cannot find view for {0}.", modelType) }
+                    : GetOrCreateViewType(viewType);
+            };
 
         /// <summary>
         ///   Locates the view for the specified model instance.
@@ -398,31 +455,42 @@ namespace Caliburn.Micro
         /// <remarks>
         ///   Pass the model instance, display location (or null) and the context (or null) as parameters and receive a view instance.
         /// </remarks>
-        public static Func<object, DependencyObject, object, UIElement> LocateForModel = (model, displayLocation, context) => {
-            var viewAware = model as IViewAware;
-            if (viewAware != null) {
-                var view = viewAware.GetView(context) as UIElement;
-                if (view != null) {
+        public static Func<object, DependencyObject, object, UIElement> LocateForModel =
+            (model, displayLocation, context) =>
+            {
+                var viewAware = model as IViewAware;
+                if (viewAware != null)
+                {
+                    var view = viewAware.GetView(context) as UIElement;
+                    if (view != null)
+                    {
 #if !WINDOWS_UWP && !XFORMS && !MAUI
-                    var windowCheck = view as Window;
-                    if (windowCheck == null || (!windowCheck.IsLoaded && !(new WindowInteropHelper(windowCheck).Handle == IntPtr.Zero))) {
+                        var windowCheck = view as Window;
+#if AVALONIA
+                        if (windowCheck == null)
+#else
+                        if (windowCheck == null || (!windowCheck.IsLoaded &&
+                                                    (new WindowInteropHelper(windowCheck).Handle != IntPtr.Zero)))
+#endif
+                        {
+                            Log.Info("Using cached view for {0}.", model);
+                            return view;
+                        }
+#else
                         Log.Info("Using cached view for {0}.", model);
                         return view;
-                    }
-#else
-                    Log.Info("Using cached view for {0}.", model);
-                    return view;
 #endif
+                    }
                 }
-            }
 
-            return LocateForModelType(model.GetType(), displayLocation, context);
-        };
+                return LocateForModelType(model.GetType(), displayLocation, context);
+            };
 
         /// <summary>
         /// Transforms a view type into a pack uri.
         /// </summary>
-        public static Func<Type, Type, string> DeterminePackUriFromType = (viewModelType, viewType) => {
+        public static Func<Type, Type, string> DeterminePackUriFromType = (viewModelType, viewType) =>
+        {
 #if !WINDOWS_UWP && !XFORMS && !MAUI
             var assemblyName = viewType.Assembly.GetAssemblyName();
             var applicationAssemblyName = Application.Current.GetType().Assembly.GetAssemblyName();
@@ -437,7 +505,8 @@ namespace Caliburn.Micro
 
             var uri = viewTypeName.Replace(".", "/") + ".xaml";
 
-            if(!applicationAssemblyName.Equals(assemblyName)) {
+            if (!applicationAssemblyName.Equals(assemblyName))
+            {
                 return "/" + assemblyName + ";component" + uri;
             }
 
@@ -448,18 +517,20 @@ namespace Caliburn.Micro
         ///   When a view does not contain a code-behind file, we need to automatically call InitializeCompoent.
         /// </summary>
         /// <param name = "element">The element to initialize</param>
-        public static void InitializeComponent(object element) {
-#if XFORMS
+        public static void InitializeComponent(object element)
+        {
+#if XFORMS || AVALONIA
             return;
-#elif !WINDOWS_UWP
-            var method = element.GetType()
-                .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
-
-            method?.Invoke(element, null);
-#else
+#elif WINDOWS_UWP
             var method = element.GetType().GetTypeInfo()
                 .GetDeclaredMethods("InitializeComponent")
                 .SingleOrDefault(m => m.GetParameters().Length == 0);
+
+            method?.Invoke(element, null);
+#else
+            var method = element.GetType()
+                .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
+
 
             method?.Invoke(element, null);
 #endif

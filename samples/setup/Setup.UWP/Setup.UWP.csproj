@@ -104,7 +104,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="Setup.UWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />
@@ -124,7 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Caliburn.Micro">
-      <Version>4.0.173</Version>
+      <Version>4.0.212</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
