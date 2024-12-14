@@ -16,6 +16,9 @@ namespace Caliburn.Micro
     using DependencyObject = global::Xamarin.Forms.BindableObject;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
+#elif AVALONIA
+    using FrameworkElement = Avalonia.Controls.Control;
+    using DependencyObject = Avalonia.AvaloniaObject;
 #elif MAUI
     using global::Microsoft.Maui;
     using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
@@ -29,11 +32,11 @@ namespace Caliburn.Micro
     /// The context used during the execution of an Action or its guard.
     /// </summary>
     public class ActionExecutionContext : IDisposable {
-        private WeakReference message;
-        private WeakReference source;
-        private WeakReference target;
-        private WeakReference view;
-        private Dictionary<string, object> values;
+        private WeakReference _message;
+        private WeakReference _source;
+        private WeakReference _target;
+        private WeakReference _view;
+        private Dictionary<string, object> _values;
 
         /// <summary>
         /// Determines whether the action can execute.
@@ -55,32 +58,32 @@ namespace Caliburn.Micro
         /// The message being executed.
         /// </summary>
         public ActionMessage Message {
-            get { return message == null ? null : message.Target as ActionMessage; }
-            set { message = new WeakReference(value); }
+            get { return _message == null ? null : _message.Target as ActionMessage; }
+            set { _message = new WeakReference(value); }
         }
 
         /// <summary>
         /// The source from which the message originates.
         /// </summary>
         public FrameworkElement Source {
-            get { return source == null ? null : source.Target as FrameworkElement; }
-            set { source = new WeakReference(value); }
+            get { return _source == null ? null : _source.Target as FrameworkElement; }
+            set { _source = new WeakReference(value); }
         }
 
         /// <summary>
         /// The instance on which the action is invoked.
         /// </summary>
         public object Target {
-            get { return target == null ? null : target.Target; }
-            set { target = new WeakReference(value); }
+            get { return _target == null ? null : _target.Target; }
+            set { _target = new WeakReference(value); }
         }
 
         /// <summary>
         /// The view associated with the target.
         /// </summary>
         public DependencyObject View {
-            get { return view == null ? null : view.Target as DependencyObject; }
-            set { view = new WeakReference(value); }
+            get { return _view == null ? null : _view.Target as DependencyObject; }
+            set { _view = new WeakReference(value); }
         }
 
         /// <summary>
@@ -90,19 +93,19 @@ namespace Caliburn.Micro
         /// <returns>Custom data associated with the context.</returns>
         public object this[string key] {
             get {
-                if (values == null)
-                    values = new Dictionary<string, object>();
+                if (_values == null)
+                    _values = new Dictionary<string, object>();
 
                 object result;
-                values.TryGetValue(key, out result);
+                _values.TryGetValue(key, out result);
 
                 return result;
             }
             set {
-                if (values == null)
-                    values = new Dictionary<string, object>();
+                if (_values == null)
+                    _values = new Dictionary<string, object>();
 
-                values[key] = value;
+                _values[key] = value;
             }
         }
 

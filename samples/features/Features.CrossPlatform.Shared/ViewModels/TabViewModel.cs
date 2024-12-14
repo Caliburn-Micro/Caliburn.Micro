@@ -7,7 +7,7 @@ namespace Features.CrossPlatform.ViewModels
 {
     public class TabViewModel : Screen
     {
-        private readonly Random random = new Random();
+        private readonly Random _random = new Random();
 
         public TabViewModel()
         {
@@ -37,8 +37,8 @@ namespace Features.CrossPlatform.ViewModels
 
         public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken = default)
         {
-            var delay = random.Next(5) + 1;
-            var canClose = random.Next(2) == 0;
+            var delay = _random.Next(5) + 1;
+            var canClose = _random.Next(2) == 0;
 
             Messages.Add($"Delaying {delay} seconds and allowing close: {canClose}");
 

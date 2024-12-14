@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;</TargetFrameworks>
+    <PackageId>Caliburn.Micro.Avalonia</PackageId>
+    <Product>Caliburn.Micro</Product>
+    <RootNamespace>Caliburn.Micro</RootNamespace>
+    <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>AVALONIA</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0|AnyCPU'" />
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0|AnyCPU'" />
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.2.2" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.2.2" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.2.2" />
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.2.2" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.2.0" />
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
+    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
+    <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Caliburn.Micro.Platform\*.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\AssemblyInfo.cs" Link="Platforms\netcore-avalonia\AssemblyInfo.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\AttachedCollection.cs" Link="Platforms\netcore-avalonia\AttachedCollection.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\BootstrapperBase.cs" Link="Platforms\netcore-avalonia\BootstrapperBase.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\NavigationFrame.cs" Link="Platforms\netcore-avalonia\CaliburnFrame.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\INavigationService.cs" Link="Platforms\netcore-avalonia\INavigationService.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\NavigationHelper.cs" Link="Platforms\netcore-avalonia\NavigationHelper.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\NavigationExtensions.cs" Link="Platforms\netcore-avalonia\NavigationExtensions.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\IWindowManager.cs" Link="Platforms\netcore-avalonia\IWindowManager.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\Parameter.cs" Link="Platforms\netcore-avalonia\Parameter.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\TriggerAction.cs" Link="Platforms\netcore-avalonia\TriggerAction.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\WindowConductor.cs" Link="Platforms\netcore-avalonia\WindowConductor.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\WindowManager.cs" Link="Platforms\netcore-avalonia\WindowManager.cs" />
+ </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.6.146" />
+  </ItemGroup>
+
+</Project>
