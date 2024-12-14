@@ -57,7 +57,7 @@
             get { return handler; }
             internal set
             {
-                if (handler == value)
+                if (object.ReferenceEquals(handler, value))
                     return;
 
                 handler = value;

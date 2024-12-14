@@ -413,7 +413,7 @@ namespace Caliburn.Micro
 
         static void OnModelChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs args)
         {
-            if (args.OldValue == (args.NewValue))
+            if (object.ReferenceEquals(args.OldValue, args.NewValue))
             {
                 return;
             }
@@ -442,7 +442,7 @@ namespace Caliburn.Micro
 
         static void OnContextChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs e)
         {
-            if (e.OldValue == (e.NewValue))
+            if (object.ReferenceEquals(e.OldValue, e.NewValue))
             {
                 return;
             }

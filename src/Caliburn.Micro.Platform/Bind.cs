@@ -28,7 +28,7 @@ namespace Caliburn.Micro
     using UIElement = global::Microsoft.Maui.Controls.Element;
     using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
     using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
-    using DependencyObject =global::Microsoft.Maui.Controls.BindableObject;
+    using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
 #else
     using System.Windows;
     using System.Windows.Data;
@@ -131,7 +131,7 @@ namespace Caliburn.Micro
 
         static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (View.InDesignMode || e.NewValue == null || e.NewValue.Equals(e.OldValue))
+            if (View.InDesignMode || object.ReferenceEquals(e.NewValue, e.OldValue))
             {
                 return;
             }
@@ -162,7 +162,7 @@ namespace Caliburn.Micro
 
         static void ModelWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (View.InDesignMode || e.NewValue == null || e.NewValue.Equals(e.OldValue))
+            if (View.InDesignMode || object.ReferenceEquals(e.NewValue, e.OldValue))
             {
                 return;
             }
