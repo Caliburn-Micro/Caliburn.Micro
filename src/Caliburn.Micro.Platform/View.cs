@@ -171,7 +171,7 @@ namespace Caliburn.Micro
 #if AVALONIA
         public static bool ExecuteOnLoad(FrameworkElement element, EventHandler handler)
         {
-            if (((Control)element).IsLoaded)
+            if (element.IsLoaded)
             {
                 handler(element, new RoutedEventArgs());
                 return true;

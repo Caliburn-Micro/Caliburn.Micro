@@ -57,7 +57,7 @@ namespace Caliburn.Micro
             if (!object.ReferenceEquals(e.To, e.From))
             {
                 Log.Info("Control is not null");
-                var viewModel = control.DataContext;
+                var viewModel = control?.DataContext;
                 if (viewModel != null && viewModel is IActivate activator)
                 {
                     Log.Info("Activating view model");
