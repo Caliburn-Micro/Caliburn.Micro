@@ -54,7 +54,7 @@ jobs:
     - name: Install NBGV tool
       run: dotnet tool install -g nbgv   
     - name: Set Version
-      run: nbgv prepare-release     
+      run: nbgv cloud    
     - name: Restore nuget packages
       run:  msbuild ${{env.caliburn_sln}} -t:restore
 
