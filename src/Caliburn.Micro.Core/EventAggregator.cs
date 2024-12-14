@@ -142,7 +142,7 @@ namespace Caliburn.Micro
 
             public bool Matches(object instance)
             {
-                return _reference.Target == instance;
+                return object.ReferenceEquals(_reference.Target, instance);
             }
 
             public Task Handle(Type messageType, object message, CancellationToken cancellationToken)

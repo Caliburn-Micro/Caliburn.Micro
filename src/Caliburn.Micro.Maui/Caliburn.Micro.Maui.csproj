@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst;</TargetFrameworks>
+    <TargetFrameworks>net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net8.0-windows10.0.19041</TargetFrameworks>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
 
@@ -94,7 +94,6 @@
 
   <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\Windows\**\*.cs" />
-    <!--<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />-->
   </ItemGroup>
 
   <ItemGroup>
@@ -107,7 +106,7 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.92" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.92" />
@@ -119,14 +118,12 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageReference Update="Nerdbank.GitVersioning" Version="3.7.112" />
   </ItemGroup>
   <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>Caliburn.Micro.Maui.Tests</_Parameter1>
-    </AssemblyAttribute>
+    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
   </ItemGroup>
 </Project>
