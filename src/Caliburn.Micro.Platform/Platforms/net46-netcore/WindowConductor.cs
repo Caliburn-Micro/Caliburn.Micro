@@ -45,7 +45,7 @@ namespace Caliburn.Micro
                 deactivatable.Deactivated += Deactivated;
             }
 
-            if (model is IGuardClose guard)
+            if (model is IGuardClose)
             {
                 view.Closing += Closing;
             }

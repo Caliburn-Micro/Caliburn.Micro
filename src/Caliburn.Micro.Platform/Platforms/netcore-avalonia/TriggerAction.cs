@@ -1,10 +1,12 @@
-﻿using System;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Xaml.Interactivity;
 
 namespace Caliburn.Micro
 {
+    /// <summary>
+    /// Represents an attachable object that encapsulates a unit of functionality.
+    /// </summary>
     public abstract class TriggerAction<T> : TriggerAction
     {
     }
@@ -15,34 +17,10 @@ namespace Caliburn.Micro
     public abstract class TriggerAction : AvaloniaObject, IAction
     {
         private Control _associatedObject;
-        /*
-        /// <summary>
-        /// The associated object property.
-        /// </summary>
-        public static readonly AvaloniaProperty AssociatedObjectProperty =
-            AvaloniaProperty.Register<TriggerAction<T>, Control>("AssociatedObject");
 
-        static TriggerAction()
-        {
-            AssociatedObjectProperty.Changed.Subscribe(OnAssociatedObjectChanged);
-        }
-        
         /// <summary>
         /// Gets or sets the object to which this <see cref="TriggerAction&lt;T&gt;"/> is attached. 
         /// </summary>
-        public Control AssociatedObject
-        {
-            get
-            {
-                return (Control)GetValue(AssociatedObjectProperty);
-            }
-            set
-            {
-                SetValue(AssociatedObjectProperty, value);
-            }
-        }
-        */
-
         public Control AssociatedObject
         {
             get => _associatedObject;
