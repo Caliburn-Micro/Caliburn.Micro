@@ -265,7 +265,7 @@ namespace Caliburn.Micro
                 return;
 
             var enable = d.GetValue(AtDesignTimeProperty);
-            if (enable == null || ((bool)enable) == false || e.NewValue == null)
+            if (enable == null || !((bool)enable) || e.NewValue == null)
                 return;
 
             var fe = d as FrameworkElement;
