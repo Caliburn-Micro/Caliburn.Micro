@@ -27,10 +27,10 @@ namespace Caliburn.Micro
         /// <summary>
         /// Called when the execution of the decorated result has completed.
         /// </summary>
-        /// <param name="context">The context.</param>
+        /// <param name="methodContext">The context.</param>
         /// <param name="methodInnerResult">The decorated result.</param>
         /// <param name="args">The <see cref="ResultCompletionEventArgs" /> instance containing the event data.</param>
-        protected override void OnInnerResultCompleted(CoroutineExecutionContext context, IResult methodInnerResult, ResultCompletionEventArgs args)
+        protected override void OnInnerResultCompleted(CoroutineExecutionContext methodContext, IResult methodInnerResult, ResultCompletionEventArgs args)
         {
             var error = args.Error as TException;
             if (error == null)
@@ -41,7 +41,7 @@ namespace Caliburn.Micro
             {
                 Log.Error(error);
                 Log.Info(string.Format("Executing coroutine because {0} threw an exception.", methodInnerResult.GetType().Name));
-                Rescue(context, error);
+                Rescue(methodContext, error);
             }
         }
 

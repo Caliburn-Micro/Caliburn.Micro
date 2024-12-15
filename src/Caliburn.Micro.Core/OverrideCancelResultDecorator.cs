@@ -17,10 +17,10 @@
         /// <summary>
         /// Called when the execution of the decorated result has completed.
         /// </summary>
-        /// <param name="context">The context.</param>
+        /// <param name="methodContext">The context.</param>
         /// <param name="methodInnerResult">The decorated result.</param>
         /// <param name="args">The <see cref="ResultCompletionEventArgs" /> instance containing the event data.</param>
-        protected override void OnInnerResultCompleted(CoroutineExecutionContext context, IResult methodInnerResult, ResultCompletionEventArgs args)
+        protected override void OnInnerResultCompleted(CoroutineExecutionContext methodContext, IResult methodInnerResult, ResultCompletionEventArgs args)
         {
             if (args.WasCancelled)
             {
