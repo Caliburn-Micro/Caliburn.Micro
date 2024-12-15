@@ -172,14 +172,14 @@ namespace Caliburn.Micro
         /// <returns>All the instances or an empty enumerable if none are found.</returns>
         public IEnumerable<object> GetAllInstances(Type service, string key = null)
         {
-            var entries = GetEntry(service, key);
+            var currentEntry = GetEntry(service, key);
 
-            if (entries == null)
+            if (currentEntry == null)
             {
                 return new object[0];
             }
 
-            var instances = entries.Select(e => e(this));
+            var instances = currentEntry.Select(e => e(this));
 
             foreach (var instance in instances)
             {

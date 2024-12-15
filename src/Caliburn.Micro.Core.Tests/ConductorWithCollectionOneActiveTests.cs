@@ -39,7 +39,16 @@ namespace Caliburn.Micro.Core.Tests
             public int ActivateCalledCount { get; private set; }
             public bool AutoContinue { get; set; }
 
+            [Obsolete("Please use OnActivatedAsync instead.")]
             protected override async Task OnActivateAsync(CancellationToken cancellationToken)
+            {
+                ActivateCalledCount++;
+                await Task.Delay(100, cancellationToken);
+                if (AutoContinue)
+                    RequestContinue?.Invoke(this, EventArgs.Empty);
+            }
+
+            protected override async Task OnActivatedAsync(CancellationToken cancellationToken)
             {
                 ActivateCalledCount++;
                 await Task.Delay(100, cancellationToken);
@@ -54,12 +63,12 @@ namespace Caliburn.Micro.Core.Tests
 
             public int ActivateCalledCount { get; private set; }
             public bool AutoContinue { get; set; }
-            
+
             protected override async Task OnActivatedAsync(CancellationToken cancellationToken)
             {
                 ActivateCalledCount++;
                 await Task.Delay(100, cancellationToken);
-                if(AutoContinue)
+                if (AutoContinue)
                     RequestContinue?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -123,7 +132,7 @@ namespace Caliburn.Micro.Core.Tests
             conductor.Items.Add(conducted);
 
             await ((IActivate)conductor).ActivateAsync(CancellationToken.None);
-            var canClose =await conductor.CanCloseAsync(CancellationToken.None);
+            var canClose = await conductor.CanCloseAsync(CancellationToken.None);
 
             Assert.True(canClose);
             Assert.False(conducted.IsClosed);
@@ -141,7 +150,7 @@ namespace Caliburn.Micro.Core.Tests
                 IsClosable = true
             };
             conductor.Items.Add(conducted);
-            await((IActivate)conductor).ActivateAsync(CancellationToken.None);
+            await ((IActivate)conductor).ActivateAsync(CancellationToken.None);
             var canClose = await conductor.CanCloseAsync(CancellationToken.None);
 
             Assert.True(canClose);
@@ -166,17 +175,17 @@ namespace Caliburn.Micro.Core.Tests
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             var viewModel1 = new ActivateScreen()
             {
-                DisplayName = "ViewModel 1", 
+                DisplayName = "ViewModel 1",
                 AutoContinue = true
             };
             conductor.Items.Add(viewModel1);
             var viewModel2 = new ActivateScreen() { DisplayName = "ViewModel 2" };
             conductor.Items.Add(viewModel2);
             viewModel1.RequestContinue += (sender, e) => { conductor.ActivateItemAsync(viewModel2).Wait(); };
-        
+
             await conductor.ActivateAsync();
             await conductor.ActivateItemAsync(viewModel1);
-        
+
             Assert.False(viewModel1.IsActive);
             Assert.Equal(1, viewModel1.ActivateCalledCount);
             Assert.True(viewModel2.IsActive);
@@ -189,17 +198,17 @@ namespace Caliburn.Micro.Core.Tests
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             var viewModel1 = new ActivatedScreen()
             {
-                DisplayName = "ViewModel 1", 
+                DisplayName = "ViewModel 1",
                 AutoContinue = true
             };
             conductor.Items.Add(viewModel1);
             var viewModel2 = new ActivatedScreen() { DisplayName = "ViewModel 2" };
             conductor.Items.Add(viewModel2);
             viewModel1.RequestContinue += (sender, e) => { conductor.ActivateItemAsync(viewModel2).Wait(); };
-        
+
             await conductor.ActivateAsync();
             await conductor.ActivateItemAsync(viewModel1);
-        
+
             Assert.False(viewModel1.IsActive);
             Assert.Equal(1, viewModel1.ActivateCalledCount);
             Assert.True(viewModel2.IsActive);
@@ -223,7 +232,7 @@ namespace Caliburn.Micro.Core.Tests
             await outerConductor.ActivateAsync();
             await outerConductor.ActivateItemAsync(innerConductor);
             await innerConductor.ActivateItemAsync(viewModel1);
-            
+
             await outerConductor.ChangeActiveItemAsyncPublic(somePage, false);
             Assert.True(somePage.IsActive);
             viewModel1.AutoContinue = true;
@@ -235,7 +244,7 @@ namespace Caliburn.Micro.Core.Tests
             Assert.True(viewModel2.IsActive);
             Assert.Equal(1, viewModel2.ActivateCalledCount);
         }
-        
+
         [Fact(Skip = "ActiveItem currently set regardless of IsActive value. See http://caliburnmicro.codeplex.com/discussions/276375")]
         public async Task ChildrenAreNotActivatedIfConductorIsNotActive()
         {
@@ -326,7 +335,7 @@ namespace Caliburn.Micro.Core.Tests
             conductor.Items.Add(conducted1);
             var conducted2 = new Screen();
             conductor.Items.Add(conducted2);
-            await((IActivate)conductor).ActivateAsync(CancellationToken.None);
+            await ((IActivate)conductor).ActivateAsync(CancellationToken.None);
             conductor.ActiveItem = conducted1;
             conductor.ActiveItem = conducted2;
             Assert.NotNull(conductor.ActiveItem);

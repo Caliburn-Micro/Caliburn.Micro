@@ -12,6 +12,9 @@
 
   <PropertyGroup>
     <DefineConstants>AVALONIA</DefineConstants>
+    <Title>Caliburn.Micro Avalonia UI</Title>
+    <PackageIcon>CaliburnIcon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0|AnyCPU'" />
@@ -45,6 +48,17 @@
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\WindowConductor.cs" Link="Platforms\netcore-avalonia\WindowConductor.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\WindowManager.cs" Link="Platforms\netcore-avalonia\WindowManager.cs" />
  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\CaliburnIcon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
