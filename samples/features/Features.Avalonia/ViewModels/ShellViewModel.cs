@@ -10,7 +10,11 @@ namespace Features.CrossPlatform.ViewModels
         private SimpleContainer _container;
         private INavigationService _navigationService;
 
+        // supressing warning for _navigationService not having a value in the constructor
+        // need NavigationFrame to be passed in from the view
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         public ShellViewModel(IEventAggregator eventAggregator, SimpleContainer container)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         {
             _eventAggregator = eventAggregator;
             _eventAggregator.SubscribeOnPublishedThread(this);

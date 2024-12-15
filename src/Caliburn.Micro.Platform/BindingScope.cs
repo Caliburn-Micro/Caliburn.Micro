@@ -53,7 +53,7 @@
             AddChildResolver<CommandBar>(ResolveCommandBar);
             AddChildResolver<Button>(e => ResolveFlyoutBase(e.Flyout));
             AddChildResolver<FrameworkElement>(e => ResolveFlyoutBase(FlyoutBase.GetAttachedFlyout(e)));
-            AddChildResolver<SplitView>(e => new[] { e.Pane as DependencyObject, e.Content as DependencyObject });
+            AddChildResolver<SplitView>(e => new[] { e.Pane, e.Content });
 #endif
         }
 

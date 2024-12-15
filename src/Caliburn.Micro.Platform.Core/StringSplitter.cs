@@ -89,12 +89,9 @@ namespace Caliburn.Micro
             {
                 var current = parameters[i];
 
-                if (current == '"' || current == '\'')
+                if ((current == '"' || current == '\'') && (i == 0 || parameters[i - 1] != '\\'))
                 {
-                    if (i == 0 || parameters[i - 1] != '\\')
-                    {
-                        isInString = !isInString;
-                    }
+                    isInString = !isInString;
                 }
 
                 if (!isInString)

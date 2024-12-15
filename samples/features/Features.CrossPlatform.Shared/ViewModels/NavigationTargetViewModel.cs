@@ -6,7 +6,10 @@ namespace Features.CrossPlatform.ViewModels
     {
         private string _text;
         private bool _isEnabled;
-
+        public NavigationTargetViewModel()
+        {
+            _text = string.Empty;
+        }
         public string Text
         {
             get { return _text; }
