@@ -9,7 +9,7 @@ namespace Features.CrossPlatform.ViewModels
         private string _output;
         public ActionsViewModel()
         {
-            Output="Caliburn Micro";
+            _output = "Caliburn Micro";
         }
 
         public void Clear() => Output = string.Empty;

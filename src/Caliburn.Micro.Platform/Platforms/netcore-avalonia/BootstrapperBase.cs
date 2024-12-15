@@ -9,6 +9,9 @@ using Avalonia.Controls.ApplicationLifetimes;
 
 namespace Caliburn.Micro
 {
+    /// <summary>
+    /// Base class for bootstrapping the application.
+    /// </summary>
     public class BootstrapperBase
     {
         static readonly ILog Log = LogManager.GetLog(typeof(BootstrapperBase));
@@ -32,7 +35,6 @@ namespace Caliburn.Micro
             isInitialized = true;
 
             PlatformProvider.Current = new XamlPlatformProvider();
-
 
             var baseExtractTypes = AssemblySourceCache.ExtractTypes;
 
@@ -90,7 +92,7 @@ namespace Caliburn.Micro
 
             Application = Application.Current;
             PrepareApplication();
-            
+
             Configure();
             IoC.GetInstance = GetInstance;
             IoC.GetAllInstances = GetAllInstances;
@@ -105,7 +107,7 @@ namespace Caliburn.Micro
             if (Application.ApplicationLifetime is IControlledApplicationLifetime controlledApplicationLifetime)
             {
                 controlledApplicationLifetime.Startup += OnStartup;
-               
+
                 controlledApplicationLifetime.Exit += OnExit;
             }
         }
@@ -190,7 +192,6 @@ namespace Caliburn.Micro
                 desktop.MainWindow = window;
             window.Show();
         }
-
 
         /// <summary>
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
