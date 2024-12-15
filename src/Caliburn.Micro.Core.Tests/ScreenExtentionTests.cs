@@ -101,6 +101,7 @@ namespace Caliburn.Micro.Core.Tests
                 return Task.FromResult(IsClosable);
             }
 
+#pragma warning disable CS0618 // Type or member is obsolete
             protected override async Task OnActivateAsync(CancellationToken cancellationToken)
             {
                 if (deactivationDelay.HasValue)
@@ -109,6 +110,20 @@ namespace Caliburn.Micro.Core.Tests
                 }
 
                 await base.OnActivateAsync(cancellationToken);
+#pragma warning restore CS0618 // Type or member is obsolete
+
+                WasActivated = true;
+                IsClosable = false;
+            }
+
+            protected override async Task OnActivatedAsync(CancellationToken cancellationToken)
+            {
+                if (deactivationDelay.HasValue)
+                {
+                    await Task.Delay(deactivationDelay.Value, cancellationToken).ConfigureAwait(false);
+                }
+
+                await base.OnActivatedAsync(cancellationToken);
 
                 WasActivated = true;
                 IsClosable = false;

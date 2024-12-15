@@ -7,20 +7,32 @@ using Avalonia.Threading;
 
 namespace Caliburn.Micro
 {
+    /// <summary>
+    /// Manages the lifecycle and interactions between a window and its view model.
+    /// </summary>
     public class WindowConductor
     {
-        private bool deactivatingFromView;
-        private bool deactivateFromViewModel;
-        private bool actuallyClosing;
+        private bool _deactivatingFromView;
+        private bool _deactivateFromViewModel;
+        private bool _actuallyClosing;
         private readonly Window view;
         private readonly object model;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WindowConductor"/> class.
+        /// </summary>
+        /// <param name="model">The view model associated with the window.</param>
+        /// <param name="view">The window view to be managed by the conductor.</param>
         public WindowConductor(object model, Window view)
         {
             this.model = model;
             this.view = view;
         }
 
+        /// <summary>
+        /// Initializes the WindowConductor asynchronously.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous initialization operation.</returns>
         public async Task InitialiseAsync()
         {
             if (model is IActivate activator)
@@ -40,24 +52,30 @@ namespace Caliburn.Micro
             }
         }
 
+        /// <summary>
+        /// Handles the window closed event.
+        /// </summary>
         private async void Closed(object sender, EventArgs e)
         {
             view.Closed -= Closed;
             view.Closing -= Closing;
 
-            if (deactivateFromViewModel)
+            if (_deactivateFromViewModel)
             {
                 return;
             }
 
             var deactivatable = (IDeactivate)model;
 
-            deactivatingFromView = true;
+            _deactivatingFromView = true;
             await deactivatable.DeactivateAsync(true);
-            deactivatingFromView = false;
+            _deactivatingFromView = false;
         }
 
-        private Task Deactivated(object sender, DeactivationEventArgs e)
+        /// <summary>
+        /// Handles the view model deactivated event.
+        /// </summary>
+        private Task<bool> Deactivated(object sender, DeactivationEventArgs e)
         {
             if (!e.WasClosed)
             {
@@ -66,20 +84,23 @@ namespace Caliburn.Micro
 
             ((IDeactivate)model).Deactivated -= Deactivated;
 
-            if (deactivatingFromView)
+            if (_deactivatingFromView)
             {
                 return Task.FromResult(true);
             }
 
-            deactivateFromViewModel = true;
-            actuallyClosing = true;
+            _deactivateFromViewModel = true;
+            _actuallyClosing = true;
             view.Close();
-            actuallyClosing = false;
-            deactivateFromViewModel = false;
+            _actuallyClosing = false;
+            _deactivateFromViewModel = false;
 
             return Task.FromResult(true);
         }
 
+        /// <summary>
+        /// Handles the window closing event.
+        /// </summary>
         private void Closing(object sender, CancelEventArgs e)
         {
             if (e.Cancel)
@@ -87,9 +108,9 @@ namespace Caliburn.Micro
                 return;
             }
 
-            if (actuallyClosing)
+            if (_actuallyClosing)
             {
-                actuallyClosing = false;
+                _actuallyClosing = false;
                 return;
             }
 
@@ -102,7 +123,7 @@ namespace Caliburn.Micro
                 if (!canClose)
                     return;
 
-                actuallyClosing = true;
+                _actuallyClosing = true;
                 view.Close();
                 // On macOS a crash occurs when view.Close() is called after a suspension with DispatcherPriority higher than Input.
             }, DispatcherPriority.Input);
