@@ -50,9 +50,9 @@ namespace Caliburn.Micro
         /// Called when the execution of the decorated result has completed.
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <param name="innerResult">The decorated result.</param>
+        /// <param name="methodInnerResult">The decorated result.</param>
         /// <param name="args">The <see cref="ResultCompletionEventArgs"/> instance containing the event data.</param>
-        protected abstract void OnInnerResultCompleted(CoroutineExecutionContext context, IResult innerResult, ResultCompletionEventArgs args);
+        protected abstract void OnInnerResultCompleted(CoroutineExecutionContext context, IResult methodInnerResult, ResultCompletionEventArgs args);
 
         /// <summary>
         /// Occurs when execution has completed.
