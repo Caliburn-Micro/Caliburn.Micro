@@ -155,12 +155,11 @@
         private IXamlMember CreateXamlMember(string longMemberName)
         {
             XamlMember xamlMember = null;
-            XamlUserType userType;
 
             switch (longMemberName)
             {
                 case "Caliburn.Micro.View.Model":
-                    userType = (XamlUserType)GetXamlTypeByName("Caliburn.Micro.View");
+                    _ = (XamlUserType)GetXamlTypeByName("Caliburn.Micro.View");
                     xamlMember = new XamlMember(this, "Model", "Object");
                     xamlMember.SetTargetTypeName("Windows.UI.Xaml.DependencyObject");
                     xamlMember.SetIsAttachable();
