@@ -24,6 +24,12 @@ namespace Caliburn.Micro
 #elif WINDOWS_UWP
     using Windows.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Controls;
+    using FrameworkElement = Avalonia.Controls.Control;
+    using DependencyObject = Avalonia.AvaloniaObject;
+    using DependencyProperty = Avalonia.AvaloniaProperty;
 #elif WinUI3
     using Microsoft.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
@@ -52,12 +58,16 @@ namespace Caliburn.Micro
         /// Indicates whether or not the conventions have already been applied to the view.
         /// </summary>
         public static readonly DependencyProperty ConventionsAppliedProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, bool>("ConventionsApplied", typeof(ViewModelBinder));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "ConventionsApplied",
                 typeof(bool),
                 typeof(ViewModelBinder),
                 false
                 );
+#endif
 
 
         /// <summary>
@@ -139,6 +149,7 @@ namespace Caliburn.Micro
             
 
             foreach (var method in methods) {
+            Log.Info($"Searching for methods control {method.Name} unmatchedElements count {unmatchedElements.Count}");
                 var foundControl = unmatchedElements.FindName(method.Name);
                 if (foundControl == null && IsAsyncMethod(method)) {
                     var methodNameWithoutAsyncSuffix = method.Name.Substring(0, method.Name.Length - AsyncSuffix.Length);
@@ -146,7 +157,11 @@ namespace Caliburn.Micro
                 }
 
                 if(foundControl == null) {
-                    Log.Info("Action Convention Not Applied: No actionable element for {0}.", method.Name);
+                    Log.Info("Action Convention Not Applied: No actionable element for {0}. {1}", method.Name, unmatchedElements.Count);
+                    foreach(var element in unmatchedElements)
+                    {
+                    Log.Info($"Unnamed element {element.Name}");
+                    }
                     continue;
                 }
 

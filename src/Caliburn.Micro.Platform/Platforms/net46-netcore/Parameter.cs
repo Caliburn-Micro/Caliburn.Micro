@@ -1,4 +1,5 @@
-﻿namespace Caliburn.Micro {
+﻿namespace Caliburn.Micro
+{
     using System;
     using System.ComponentModel;
     using System.Windows;
@@ -7,7 +8,8 @@
     /// <summary>
     /// Represents a parameter of an <see cref="ActionMessage"/>.
     /// </summary>
-    public class Parameter : Freezable, IAttachedObject {
+    public class Parameter : Freezable, IAttachedObject
+    {
         /// <summary>
         /// A dependency property representing the parameter's value.
         /// </summary>
@@ -19,44 +21,49 @@
                 new PropertyMetadata(OnValueChanged)
                 );
 
-        DependencyObject associatedObject;
-        WeakReference owner;
+        DependencyObject _associatedObject;
+        WeakReference _owner;
 
         /// <summary>
         /// Gets or sets the value of the parameter.
         /// </summary>
         /// <value>The value.</value>
         [Category("Common Properties")]
-        public object Value {
+        public object Value
+        {
             get { return GetValue(ValueProperty); }
             set { SetValue(ValueProperty, value); }
         }
 
-        DependencyObject IAttachedObject.AssociatedObject {
+        DependencyObject IAttachedObject.AssociatedObject
+        {
             get
             {
                 ReadPreamble();
-                return associatedObject;
+                return _associatedObject;
             }
         }
 
         /// <summary>
         /// Gets or sets the owner.
         /// </summary>
-        protected ActionMessage Owner {
-            get { return owner == null ? null : owner.Target as ActionMessage; }
-            set { owner = new WeakReference(value); }
+        protected ActionMessage Owner
+        {
+            get { return _owner == null ? null : _owner.Target as ActionMessage; }
+            set { _owner = new WeakReference(value); }
         }
 
-        void IAttachedObject.Attach(DependencyObject dependencyObject) {
+        void IAttachedObject.Attach(DependencyObject dependencyObject)
+        {
             WritePreamble();
-            associatedObject = dependencyObject;
+            _associatedObject = dependencyObject;
             WritePostscript();
         }
 
-        void IAttachedObject.Detach() {
+        void IAttachedObject.Detach()
+        {
             WritePreamble();
-            associatedObject = null;
+            _associatedObject = null;
             WritePostscript();
         }
 
@@ -64,23 +71,27 @@
         /// When implemented in a derived class, creates a new instance of the <see cref="T:System.Windows.Freezable"/> derived class.
         /// </summary>
         /// <returns>The new instance.</returns>
-        protected override Freezable CreateInstanceCore() {
+        protected override Freezable CreateInstanceCore()
+        {
             return new Parameter();
         }
 
         /// <summary>
         /// Makes the parameter aware of the <see cref="ActionMessage"/> that it's attached to.
         /// </summary>
-        /// <param name="owner">The action message.</param>
-        internal void MakeAwareOf(ActionMessage owner) {
-            Owner = owner;
+        /// <param name="actionMessageOwner">The action message.</param>
+        internal void MakeAwareOf(ActionMessage actionMessageOwner)
+        {
+            Owner = actionMessageOwner;
         }
 
-        static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
             var parameter = (Parameter)d;
             var owner = parameter.Owner;
 
-            if (owner != null) {
+            if (owner != null)
+            {
                 owner.UpdateAvailability();
             }
         }

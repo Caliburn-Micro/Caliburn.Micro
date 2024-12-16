@@ -6,10 +6,8 @@ namespace Caliburn.Micro
 {
     using System;
 #if MAUI
-    using global::Microsoft.Maui.Controls;
     using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
     using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
-    using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
 #else
     using Windows.UI.Xaml;
 #endif
@@ -18,7 +16,8 @@ namespace Caliburn.Micro
     /// Represents a parameter of an <see cref="ActionMessage"/>.
     /// </summary>
 #if WINDOWS_UWP || MAUI
-    public class Parameter : DependencyObject, IAttachedObject {
+    public class Parameter : DependencyObject, IAttachedObject
+    {
         DependencyObject associatedObject;
 #else
     public class Parameter : FrameworkElement, IAttachedObject
@@ -35,7 +34,7 @@ namespace Caliburn.Micro
                 "Value",
                 typeof(object),
                 typeof(Parameter),
-                null, 
+                null,
                 OnValueChanged
                 );
 
@@ -50,7 +49,8 @@ namespace Caliburn.Micro
         }
 
 #if WINDOWS_UWP || MAUI
-        DependencyObject IAttachedObject.AssociatedObject {
+        DependencyObject IAttachedObject.AssociatedObject
+        {
 #else
         FrameworkElement IAttachedObject.AssociatedObject
         {
@@ -69,7 +69,8 @@ namespace Caliburn.Micro
         }
 
 #if WINDOWS_UWP || MAUI
-        void IAttachedObject.Attach(DependencyObject dependencyObject) {
+        void IAttachedObject.Attach(DependencyObject dependencyObject)
+        {
 #else
         void IAttachedObject.Attach(FrameworkElement dependencyObject)
         {
@@ -85,13 +86,13 @@ namespace Caliburn.Micro
         /// <summary>
         /// Makes the parameter aware of the <see cref="ActionMessage"/> that it's attached to.
         /// </summary>
-        /// <param name="owner">The action message.</param>
-        internal void MakeAwareOf(ActionMessage owner)
+        /// <param name="actionMessageOwner">The action message.</param>
+        internal void MakeAwareOf(ActionMessage actionMessageOwner)
         {
-            Owner = owner;
+            Owner = actionMessageOwner;
         }
 
-        static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        internal static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var parameter = (Parameter)d;
             var owner = parameter.Owner;

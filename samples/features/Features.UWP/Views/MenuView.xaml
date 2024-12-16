@@ -6,17 +6,18 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:cm="using:Caliburn.Micro"
     mc:Ignorable="d">
-
-    <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock Text="features" Style="{StaticResource SubheaderTextBlockStyle}" Margin="40,10,40,0"/>
-        <ListView x:Name="Features" Padding="40,20" SelectionMode="None" IsItemClickEnabled="True"
+    <ScrollViewer>
+        <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <TextBlock Text="features" Style="{StaticResource SubheaderTextBlockStyle}" Margin="40,10,40,0"/>
+            <ListView x:Name="Features" Padding="40,20" SelectionMode="None" IsItemClickEnabled="True"
                   cm:Message.Attach="[Event ItemClick] = [ShowFeature($clickedItem)]" >
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Margin" Value="0,0,0,10"/>
-                    <Setter Property="Padding" Value="10"/>
-                </Style>
-           </ListView.ItemContainerStyle>
-        </ListView>
-    </StackPanel>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Margin" Value="0,0,0,10"/>
+                        <Setter Property="Padding" Value="10"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </StackPanel>
+    </ScrollViewer>
 </Page>

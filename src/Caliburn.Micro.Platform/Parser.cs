@@ -35,6 +35,15 @@ namespace Caliburn.Micro
     using global::Xamarin.Forms;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Data;
+    using Avalonia.Controls;
+    using System.Text.RegularExpressions;
+    using DependencyObject = Avalonia.AvaloniaObject;
+    using TriggerBase = Avalonia.Xaml.Interactivity.Trigger;
+    using FrameworkElement = Avalonia.Controls.Control;
+    using EventTrigger = Avalonia.Xaml.Interactions.Core.EventTriggerBehavior;
 #elif MAUI
     using System.Reflection;
     using System.Text.RegularExpressions;
@@ -57,7 +66,7 @@ namespace Caliburn.Micro
     /// </summary>
     public static class Parser
     {
-        static readonly Regex LongFormatRegularExpression = new Regex(@"^[\s]*\[[^\]]*\][\s]*=[\s]*\[[^\]]*\][\s]*$");
+        static readonly Regex LongFormatRegularExpression = new Regex(@"^[\s]*\[[^\]]*\][\s]*=[\s]*\[[^\]]*\][\s]*$", RegexOptions.Compiled);
         static readonly ILog Log = LogManager.GetLog(typeof(Parser));
 
         /// <summary>
@@ -66,14 +75,26 @@ namespace Caliburn.Micro
         /// <param name="target">The target.</param>
         /// <param name="text">The message text.</param>
         /// <returns>The triggers parsed from the text.</returns>
+#if AVALONIA
+        public static IEnumerable<EventTrigger> Parse(DependencyObject target, string text) 
+#else
         public static IEnumerable<TriggerBase> Parse(DependencyObject target, string text)
+#endif
         {
+
+#if AVALONIA
+            if (string.IsNullOrEmpty(text))
+            {
+                return new EventTrigger[0];
+            }
+            var triggers = new List<EventTrigger>();
+#else
             if (string.IsNullOrEmpty(text))
             {
                 return new TriggerBase[0];
             }
-
             var triggers = new List<TriggerBase>();
+#endif
             var messageTexts = StringSplitter.Split(text, ';');
 
             foreach (var messageText in messageTexts)
@@ -103,10 +124,12 @@ namespace Caliburn.Micro
         }
 
 #if XFORMS || MAUI
-        private static void AddActionToTrigger(DependencyObject target, TriggerAction message, TriggerBase trigger) {
+        private static void AddActionToTrigger(DependencyObject target, TriggerAction message, TriggerBase trigger)
+        {
 
-            if (trigger is EventTrigger) {
-                var eventTrigger = (EventTrigger) trigger;
+            if (trigger is EventTrigger)
+            {
+                var eventTrigger = (EventTrigger)trigger;
 
                 eventTrigger.Actions.Add(message);
             }
@@ -203,11 +226,20 @@ namespace Caliburn.Micro
 
 #endif
 
+#if AVALONIA
+        /// <summary>
+        /// The function used to generate a trigger.
+        /// </summary>
+        /// <remarks>The parameters passed to the method are the the target of the trigger and string representing the trigger.</remarks>
+        public static Func<DependencyObject, string, EventTrigger> CreateTrigger = (target, triggerText) =>
+ 
+#else
         /// <summary>
         /// The function used to generate a trigger.
         /// </summary>
         /// <remarks>The parameters passed to the method are the the target of the trigger and string representing the trigger.</remarks>
         public static Func<DependencyObject, string, TriggerBase> CreateTrigger = (target, triggerText) =>
+#endif
         {
             if (triggerText == null)
             {
@@ -333,7 +365,8 @@ namespace Caliburn.Micro
                 path = ConventionManager.GetElementConvention(element.GetType()).ParameterProperty;
             }
 
-            var binding = new Binding(path) {
+            var binding = new Binding(path)
+            {
                 Source = element,
                 Mode = bindingMode
             };
@@ -360,17 +393,22 @@ namespace Caliburn.Micro
                 Mode = bindingMode
             };
 #else
-            var binding = new Binding(path) {
+            var binding = new Binding(path)
+            {
                 Source = element,
                 Mode = bindingMode
             };
 #endif
 
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !AVALONIA
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
 
+#if AVALONIA
+            parameter.Bind(Parameter.ValueProperty, binding);
+#else
             BindingOperations.SetBinding(parameter, Parameter.ValueProperty, binding);
+#endif
 #endif
         }
     }

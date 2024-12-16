@@ -65,9 +65,9 @@ namespace Caliburn.Micro
                 public IObservableCollection<T> Items => _items;
 
                 /// <summary>
-                /// Called when activating.
+                /// Called when view has been activated.
                 /// </summary>
-                protected override Task OnActivateAsync(CancellationToken cancellationToken)
+                protected override Task OnActivatedAsync(CancellationToken cancellationToken)
                 {
                     return Task.WhenAll(_items.OfType<IActivate>().Select(x => x.ActivateAsync(cancellationToken)));
                 }
@@ -112,9 +112,9 @@ namespace Caliburn.Micro
                 }
 
                 /// <summary>
-                /// Called when initializing.
+                /// Called when view has been initialized
                 /// </summary>
-                protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
+                protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
                 {
                     if (_openPublicItems)
                         await Task.WhenAll(GetType().GetRuntimeProperties()

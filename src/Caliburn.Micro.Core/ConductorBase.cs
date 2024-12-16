@@ -91,7 +91,7 @@ namespace Caliburn.Micro
         /// <returns>The item to be activated.</returns>
         protected virtual T EnsureItem(T newItem)
         {
-            if (newItem is IChild node && node.Parent != this)
+            if (newItem is IChild node && !object.ReferenceEquals(node.Parent, this))
                 node.Parent = this;
 
             return newItem;
