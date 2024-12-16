@@ -62,7 +62,7 @@ jobs:
       run: msbuild ${{env.caliburn_sln}} /t:Build /p:Configuration=${{env.build_configuration}}
 
     - name: Run Unit Tests
-      run: dotnet test ${{env.caliburn_sln}}  --configuration ${{env.build_configuration}} -p:CollectCoverage=true -p:CoverletOutputFormat=json --no-build --verbosity normal    
+      run: dotnet test ${{env.caliburn_sln}}  --configuration ${{env.build_configuration}} --settings coverage.runsettings --no-build --verbosity normal    
   
     - name: Restore nuget packages for tutorial
       run:  msbuild ${{env.caliburn_tutorial}} -t:restore 
