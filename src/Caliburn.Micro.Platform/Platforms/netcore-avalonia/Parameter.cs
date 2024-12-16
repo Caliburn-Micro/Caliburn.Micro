@@ -13,8 +13,8 @@ namespace Caliburn.Micro
         /// <summary>
         /// A dependency property representing the parameter's value.
         /// </summary>
-        public static readonly AvaloniaProperty ValueProperty = 
-            AvaloniaProperty.Register<Parameter, object>("Value"); 
+        public static readonly AvaloniaProperty ValueProperty =
+            AvaloniaProperty.Register<Parameter, object>("Value");
 
         AvaloniaObject associatedObject;
         WeakReference owner;
@@ -65,15 +65,15 @@ namespace Caliburn.Micro
         /// <summary>
         /// Makes the parameter aware of the <see cref="ActionMessage"/> that it's attached to.
         /// </summary>
-        /// <param name="owner">The action message.</param>
-        internal void MakeAwareOf(ActionMessage owner)
+        /// <param name="actionMessageOwner">The action message.</param>
+        internal void MakeAwareOf(ActionMessage actionMessageOwner)
         {
-            Owner = owner;
+            Owner = actionMessageOwner;
         }
 
         static void OnValueChanged(AvaloniaPropertyChangedEventArgs e)
         {
-            var parameter = (Parameter) e.Sender;
+            var parameter = (Parameter)e.Sender;
             var owner = parameter.Owner;
 
             if (owner != null)
