@@ -86,10 +86,10 @@ namespace Caliburn.Micro
         /// <summary>
         /// Makes the parameter aware of the <see cref="ActionMessage"/> that it's attached to.
         /// </summary>
-        /// <param name="owner">The action message.</param>
-        internal void MakeAwareOf(ActionMessage owner)
+        /// <param name="actionMessageOwner">The action message.</param>
+        internal void MakeAwareOf(ActionMessage actionMessageOwner)
         {
-            Owner = owner;
+            Owner = actionMessageOwner;
         }
 
         internal static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
