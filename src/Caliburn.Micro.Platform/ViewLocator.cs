@@ -37,8 +37,7 @@ namespace Caliburn.Micro
     using Windows.UI.Xaml.Controls;
 #endif
 
-#if !WINDOWS_UWP && !XFORMS && !AVALONIA && !MAUI
-#if !WINDOWS_UWP && !XFORMS && !MAUI && !WinUI3
+#if !WINDOWS_UWP && !XFORMS && !MAUI && !WinUI3 && !AVALONIA 
     using System.Windows.Interop;
 #endif
 
@@ -468,7 +467,7 @@ namespace Caliburn.Micro
                     var view = viewAware.GetView(context) as UIElement;
                     if (view != null)
                     {
-#if !WINDOWS_UWP && !XFORMS && !MAUI
+#if !WINDOWS_UWP && !XFORMS && !MAUI && !WinUI3
                         var windowCheck = view as Window;
 #if AVALONIA
                         if (windowCheck == null)
@@ -480,17 +479,6 @@ namespace Caliburn.Micro
                             Log.Info("Using cached view for {0}.", model);
                             return view;
                         }
-        public static Func<object, DependencyObject, object, UIElement> LocateForModel = (model, displayLocation, context) => {
-            var viewAware = model as IViewAware;
-            if (viewAware != null) {
-                var view = viewAware.GetView(context) as UIElement;
-                if (view != null) {
-#if !WINDOWS_UWP && !XFORMS && !MAUI && !WinUI3
-                    var windowCheck = view as Window;
-                    if (windowCheck == null || (!windowCheck.IsLoaded && !(new WindowInteropHelper(windowCheck).Handle == IntPtr.Zero))) {
-                        Log.Info("Using cached view for {0}.", model);
-                        return view;
-                    }
 #else
                         Log.Info("Using cached view for {0}.", model);
                         return view;
@@ -500,6 +488,8 @@ namespace Caliburn.Micro
 
                 return LocateForModelType(model.GetType(), displayLocation, context);
             };
+
+
 
         /// <summary>
         /// Transforms a view type into a pack uri.

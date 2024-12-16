@@ -45,10 +45,11 @@
             AddChildResolver<NavigationFrame>(e => new[] { e.Content as DependencyObject });
 #endif
             AddChildResolver<ContentControl>(e => new[] { e.Content as DependencyObject });
-            AddChildResolver<ItemsControl>(e => e.Items.OfType<DependencyObject>().ToArray());
 #if !WINDOWS_UWP && !AVALONIA
-            AddChildResolver<ItemsControl>(e => e.Items.OfType<DependencyObject>().ToArray() );
-#if !WINDOWS_UWP && !WinUI3
+            AddChildResolver<ItemsControl>(e => e.Items.OfType<DependencyObject>().ToArray());
+
+#endif
+#if !WINDOWS_UWP && !WinUI3 && !AVALONIA
             AddChildResolver<HeaderedContentControl>(e => new[] { e.Header as DependencyObject });
             AddChildResolver<HeaderedItemsControl>(e => new[] { e.Header as DependencyObject });
 #endif
@@ -76,7 +77,8 @@
         /// <param name="elementsToSearch">The named elements to search through.</param>
         /// <param name="name">The name to search for.</param>
         /// <returns>The named element or null if not found.</returns>
-        public static FrameworkElement FindName(this IEnumerable<FrameworkElement> elementsToSearch, string name) {
+        public static FrameworkElement FindName(this IEnumerable<FrameworkElement> elementsToSearch, string name)
+        {
 #if WINDOWS_UWP || WinUI3
             return elementsToSearch.FirstOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 #else
@@ -226,9 +228,7 @@
 #else
 
 
-#if (NET || CAL_NETCORE) && !WINDOWS_UWP
-                var childCount = (current is System.Windows.Media.Visual || current is System.Windows.Media.Media3D.Visual3D)
-#if (NET || CAL_NETCORE) && !WinUI3
+#if (NET || CAL_NETCORE) && !WinUI3 && !WINDOWS_UWP
                 var childCount = (current is Visual || current is Visual3D)
                     ? VisualTreeHelper.GetChildrenCount(current) : 0;
 #else
@@ -246,7 +246,8 @@
 #if WINDOWS_UWP || WinUI3
                     var page = current as Page;
 
-                    if (page != null) {
+                    if (page != null)
+                    {
                         if (page.BottomAppBar != null)
                             queue.Enqueue(page.BottomAppBar);
 
@@ -283,7 +284,8 @@
         };
 
 #if WINDOWS_UWP || WinUI3
-        private static IEnumerable<DependencyObject> ResolveFlyoutBase(FlyoutBase flyoutBase) {
+        private static IEnumerable<DependencyObject> ResolveFlyoutBase(FlyoutBase flyoutBase)
+        {
             if (flyoutBase == null)
                 yield break;
 
@@ -294,28 +296,36 @@
 
             var menuFlyout = flyoutBase as MenuFlyout;
 
-            if (menuFlyout != null && menuFlyout.Items != null) {
-                foreach (var item in menuFlyout.Items) {
-                    foreach (var subItem in ResolveMenuFlyoutItems(item)) {
+            if (menuFlyout != null && menuFlyout.Items != null)
+            {
+                foreach (var item in menuFlyout.Items)
+                {
+                    foreach (var subItem in ResolveMenuFlyoutItems(item))
+                    {
                         yield return subItem;
                     }
                 }
             }
         }
 
-        private static IEnumerable<DependencyObject> ResolveMenuFlyoutItems(MenuFlyoutItemBase item) {
+        private static IEnumerable<DependencyObject> ResolveMenuFlyoutItems(MenuFlyoutItemBase item)
+        {
             yield return item;
             var subItem = item as MenuFlyoutSubItem;
 
-            if (subItem != null && subItem.Items != null) {
-                foreach (var subSubItem in subItem.Items) {
+            if (subItem != null && subItem.Items != null)
+            {
+                foreach (var subSubItem in subItem.Items)
+                {
                     yield return subSubItem;
                 }
             }
         }
 
-        private static IEnumerable<DependencyObject> ResolveCommandBar(CommandBar commandBar) {
-            foreach (var child in commandBar.PrimaryCommands.OfType<DependencyObject>()) {
+        private static IEnumerable<DependencyObject> ResolveCommandBar(CommandBar commandBar)
+        {
+            foreach (var child in commandBar.PrimaryCommands.OfType<DependencyObject>())
+            {
                 yield return child;
             }
 
@@ -325,7 +335,8 @@
             }
         }
 
-        private static IEnumerable<DependencyObject> ResolveHub(Hub hub) {
+        private static IEnumerable<DependencyObject> ResolveHub(Hub hub)
+        {
             yield return hub.Header as DependencyObject;
 
             foreach (var section in hub.Sections)
@@ -367,8 +378,9 @@
                     break;
                 }
 #else
-                if (root is Page) {
-                    root = ((Page) root).Content as DependencyObject ?? root;
+                if (root is Page)
+                {
+                    root = ((Page)root).Content as DependencyObject ?? root;
                     break;
                 }
 #endif
@@ -379,14 +391,16 @@
                     break;
 
 #if WINDOWS_UWP || WinUI3
-                if (root is AppBar) {
+                if (root is AppBar)
+                {
 #if WinUI3
                     var frame = (Application.Current as CaliburnApplication)?.Window?.Content as Frame;
 #else
                     var frame = Window.Current.Content as Frame;
 #endif
                     var page = (frame != null) ? frame.Content as Page : null;
-                    if (page != null && (root == page.TopAppBar || root == page.BottomAppBar)) {
+                    if (page != null && (root == page.TopAppBar || root == page.BottomAppBar))
+                    {
                         root = page;
                         break;
                     }

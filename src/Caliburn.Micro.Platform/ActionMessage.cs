@@ -182,12 +182,14 @@
         /// Called after the action is attached to an AssociatedObject.
         /// </summary>
 #if WINDOWS_UWP || WinUI3
-        protected override void OnAttached() {
-            if (!View.InDesignMode) {
+        protected override void OnAttached()
+        {
+            if (!View.InDesignMode)
+            {
                 Parameters.Attach(AssociatedObject);
                 Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
 
-                
+
                 View.ExecuteOnLoad(AssociatedObject, ElementLoaded);
 
 
@@ -311,17 +313,15 @@
                 Source = elementToUse
             };
             Log.Info($"Binding {binding.Source}");
-#elif (NET || CAL_NETCORE && !WINDOWS_UWP)
-            var binding = new Binding
-            {
-                Path = new PropertyPath(Message.HandlerProperty),
-#if (NET || CAL_NETCORE) && !WinUI3
+
+#elif (NET || CAL_NETCORE) && !WinUI3 && !WINDOWS_UWP
             var binding = new Binding {
                 Path = new PropertyPath(Message.HandlerProperty), 
                 Source = currentElement
             };
 #elif WINDOWS_UWP || WinUI3
-            var binding = new Binding {
+            var binding = new Binding
+            {
                 Source = currentElement
             };
 #else
@@ -547,7 +547,8 @@
         /// Finds the method on the target matching the specified message.
         /// </summary>
         /// <returns>The matching method, if available.</returns>
-        public static Func<ActionMessage, object, MethodInfo> GetTargetMethod = (message, target) => {
+        public static Func<ActionMessage, object, MethodInfo> GetTargetMethod = (message, target) =>
+        {
 #if WINDOWS_UWP || WinUI3
             return (from method in target.GetType().GetRuntimeMethods()
                     where method.Name == message.MethodName

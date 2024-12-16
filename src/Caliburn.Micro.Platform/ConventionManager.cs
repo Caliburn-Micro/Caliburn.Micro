@@ -45,8 +45,8 @@
     using System.Windows.Shapes;
     using EventTrigger = Microsoft.Xaml.Behaviors.EventTrigger;
 #endif
-#if !WINDOWS_UWP && !AVALONIA
-#if !WINDOWS_UWP && !WinUI3
+
+#if !WINDOWS_UWP && !WinUI3 && !AVALONIA
     using System.Windows.Documents;
 #endif
 
@@ -145,7 +145,8 @@
         /// Creates a binding and sets it on the element, applying the appropriate conventions.
         /// </summary>
         public static Action<Type, string, PropertyInfo, FrameworkElement, ElementConvention, DependencyProperty> SetBinding =
-            (viewModelType, path, property, element, convention, bindableProperty) => {
+            (viewModelType, path, property, element, convention, bindableProperty) =>
+            {
 #if WINDOWS_UWP || WinUI3
                 var binding = new Binding { Path = new PropertyPath(path) };
 #else
@@ -190,8 +191,8 @@
                 binding.ValidatesOnExceptions = true;
             }
 #endif
-#if !WINDOWS_UWP && !AVALONIA
-#if !WINDOWS_UWP && !WinUI3
+
+#if !WINDOWS_UWP && !WinUI3 && !AVALONIA
             if (typeof(IDataErrorInfo).IsAssignableFrom(viewModelType)) {
                 binding.ValidatesOnDataErrors = true;
                 binding.ValidatesOnExceptions = true;
@@ -213,7 +214,8 @@
         /// <summary>
         /// Determines whether a custom string format is needed and applies it to the binding.
         /// </summary>
-        public static Action<Binding, ElementConvention, PropertyInfo> ApplyStringFormat = (binding, convention, property) => {
+        public static Action<Binding, ElementConvention, PropertyInfo> ApplyStringFormat = (binding, convention, property) =>
+        {
 #if !WINDOWS_UWP && !WinUI3
             if (typeof(DateTime).IsAssignableFrom(property.PropertyType))
                 binding.StringFormat = "{0:d}";
@@ -386,7 +388,7 @@
 #if AVALONIA
                     AddElementConvention<UserControl>(UserControl.IsVisibleProperty, "DataContext", loadedEvent);
 #else
-            AddElementConvention<UserControl>(UserControl.VisibilityProperty, "DataContext", loadedEvent);
+                    AddElementConvention<UserControl>(UserControl.VisibilityProperty, "DataContext", loadedEvent);
 #endif
 
                     if (useViewModel)
@@ -468,9 +470,7 @@
             bool hasBinding = element.IsSet(property);
             //TODO: (Avalonia) Need to find a way to detect existing bindings on an AvaloniaProperty
             return hasBinding;
-#elif (NET || CAL_NETCORE) && !WINDOWS_UWP
-        public static bool HasBinding(FrameworkElement element, DependencyProperty property) {
-#if (NET || CAL_NETCORE) && !WinUI3
+#elif (NET || CAL_NETCORE) && !WinUI3
             return BindingOperations.GetBindingBase(element, property) != null;
 #else
             return element.GetBindingExpression(property) != null;
@@ -530,9 +530,10 @@
         public static void ApplyItemTemplate(ItemsControl itemsControl, PropertyInfo property)
         {
 #if !AVALONIA
- if (!string.IsNullOrEmpty(itemsControl.DisplayMemberPath)
-                || HasBinding(itemsControl, ItemsControl.DisplayMemberPathProperty)
-                || itemsControl.ItemTemplate != null) {
+            if (!string.IsNullOrEmpty(itemsControl.DisplayMemberPath)
+                           || HasBinding(itemsControl, ItemsControl.DisplayMemberPathProperty)
+                           || itemsControl.ItemTemplate != null)
+            {
                 return;
             }
 #endif
