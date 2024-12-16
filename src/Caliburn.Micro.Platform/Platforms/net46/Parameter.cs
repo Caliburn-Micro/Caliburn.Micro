@@ -77,10 +77,10 @@
         /// <summary>
         /// Makes the parameter aware of the <see cref="ActionMessage"/> that it's attached to.
         /// </summary>
-        /// <param name="actionOwner">The action message.</param>
-        internal void MakeAwareOf(ActionMessage actionOwner)
+        /// <param name="actionMessageOwner">The action message.</param>
+        internal void MakeAwareOf(ActionMessage actionMessageOwner)
         {
-            Owner = actionOwner;
+            Owner = actionMessageOwner;
         }
 
         static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
