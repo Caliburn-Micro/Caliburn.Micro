@@ -15,6 +15,6 @@ Public Class ShellViewModel
     End Property
 
     Public Sub New()
-        Title = "Welcome to Caliburn Micro in WPF using VB and .net 5"
+        Title = "Welcome to Caliburn Micro in WPF using VB and .net 8"
     End Sub
 End Class

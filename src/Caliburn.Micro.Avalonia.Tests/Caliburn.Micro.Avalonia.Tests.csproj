@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.msbuild" Version="6.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="6.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Moq" Version="4.20.72" />
+    <PackageReference Include="Xunit.StaFact" Version="1.1.11" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <DefineConstants>AVALONIA</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+
+
+  <ItemGroup>
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.7.112" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.2.2" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.2.2" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.2.2" />
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.2.2" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.2.0" />
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
+    <ProjectReference Include="..\Caliburn.Micro.Avalonia\Caliburn.Micro.Avalonia.csproj" />
+    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
+    <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
+  </ItemGroup>
+</Project>

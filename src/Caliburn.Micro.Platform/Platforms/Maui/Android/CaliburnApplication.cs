@@ -35,10 +35,6 @@ namespace Caliburn.Micro.Maui
             AssemblySource.AddRange(SelectAssemblies());
 
             Configure();
-
-            IoC.GetInstance = GetInstance;
-            IoC.GetAllInstances = GetAllInstances;
-            IoC.BuildUp = BuildUp;
         }
 
         /// <summary>
@@ -50,10 +46,6 @@ namespace Caliburn.Micro.Maui
             AssemblySource.AddRange(SelectAssemblies());
 
             Configure();
-
-            IoC.GetInstance = GetInstance;
-            IoC.GetAllInstances = GetAllInstances;
-            IoC.BuildUp = BuildUp;
         }
 
         /// <summary>
@@ -105,33 +97,6 @@ namespace Caliburn.Micro.Maui
             return new[] { GetType().GetTypeInfo().Assembly };
         }
 
-        /// <summary>
-        /// Override this to provide an IoC specific implementation.
-        /// </summary>
-        /// <param name="service">The service to locate.</param>
-        /// <param name="key">The key to locate.</param>
-        /// <returns>The located service.</returns>
-        protected virtual object GetInstance(Type service, string key)
-        {
-            return Activator.CreateInstance(service);
-        }
-
-        /// <summary>
-        /// Override this to provide an IoC specific implementation
-        /// </summary>
-        /// <param name="service">The service to locate.</param>
-        /// <returns>The located services.</returns>
-        protected virtual IEnumerable<object> GetAllInstances(Type service)
-        {
-            return new[] { Activator.CreateInstance(service) };
-        }
-
-        /// <summary>
-        /// Override this to provide an IoC specific implementation.
-        /// </summary>
-        /// <param name="instance">The instance to perform injection on.</param>
-        protected virtual void BuildUp(object instance)
-        {
-        }
+ 
     }
 }

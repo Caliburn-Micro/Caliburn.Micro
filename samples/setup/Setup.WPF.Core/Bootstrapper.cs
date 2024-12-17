@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using Setup.WPF.Core.ViewModels;
@@ -11,7 +8,7 @@ namespace Setup.WPF.Core
 {
     public class Bootstrapper : BootstrapperBase
     {
-        private SimpleContainer container;
+        private SimpleContainer _container;
 
         public Bootstrapper()
         {
@@ -21,31 +18,31 @@ namespace Setup.WPF.Core
 
         protected override void Configure()
         {
-            container = new SimpleContainer();
+            _container = new SimpleContainer();
 
-            container.Singleton<IWindowManager, WindowManager>();
+            _container.Singleton<IWindowManager, WindowManager>();
 
-            container.PerRequest<ShellViewModel>();
+            _container.PerRequest<ShellViewModel>();
         }
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
-            DisplayRootViewFor<ShellViewModel>();
+            DisplayRootViewForAsync<ShellViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)
         {
-            return container.GetInstance(service, key);
+            return _container.GetInstance(service, key);
         }
 
         protected override IEnumerable<object> GetAllInstances(Type service)
         {
-            return container.GetAllInstances(service);
+            return _container.GetAllInstances(service);
         }
 
         protected override void BuildUp(object instance)
         {
-            container.BuildUp(instance);
+            _container.BuildUp(instance);
         }
     }
 }

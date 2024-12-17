@@ -10,7 +10,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
     <StackPanel>
         <TextBlock Text="bindings" Style="{StaticResource SubheaderTextBlockStyle}" Margin="40,10,40,0"/>
         <ListView x:Name="Activities" Padding="40,20">

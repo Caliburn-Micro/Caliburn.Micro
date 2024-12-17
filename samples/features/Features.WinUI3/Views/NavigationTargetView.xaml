@@ -15,7 +15,7 @@
         <TextBlock Text="navigation" Style="{StaticResource SubheaderTextBlockStyle}" Margin="40,10,40,0"/>
         <StackPanel Margin="40,20">
             <TextBlock x:Name="Text" Style="{StaticResource BodyTextBlockStyle}" />
-            <TextBlock x:Name="IsEnabled" Style="{StaticResource BodyTextBlockStyle}" />
+            <TextBlock x:Name="IsNavigationEnabled" Style="{StaticResource BodyTextBlockStyle}" />
         </StackPanel>
     </StackPanel>
 </Page>
