@@ -66,12 +66,10 @@ namespace Caliburn.Micro
         static readonly ILog Log = LogManager.GetLog(typeof(View));
 #if WINDOWS_UWP || XFORMS || MAUI
         const string DefaultContentPropertyName = "Content";
-#elif !AVALONIA
-        static readonly ContentPropertyAttribute DefaultContentProperty = new ContentPropertyAttribute("Content");
 #elif WinUI3
         static readonly ContentPropertyAttribute DefaultContentProperty = new ContentPropertyAttribute() { Name = "Content" };
-#else
-        static readonly ContentPropertyAttribute DefaultContentProperty = new ContentPropertyAttribute("Content") ;
+#elif !AVALONIA
+        static readonly ContentPropertyAttribute DefaultContentProperty = new ContentPropertyAttribute("Content");
 #endif
 
         /// <summary>

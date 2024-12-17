@@ -55,7 +55,7 @@ namespace Features.CrossPlatform.Results
 #elif WinUI3
         public override async void Execute(CoroutineExecutionContext context)
         { 
-            var dialog = new MessageDialog(content, title);
+            var dialog = new MessageDialog(_content, _title);
 
             var hWnd = GetActiveWindow();
 

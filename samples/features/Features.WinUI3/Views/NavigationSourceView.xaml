@@ -15,7 +15,7 @@
         <TextBlock Text="navigation" Style="{StaticResource SubheaderTextBlockStyle}" Margin="40,10,40,0"/>
         <StackPanel Margin="40,20">
             <TextBox Header="Text" x:Name="Text" />
-            <CheckBox x:Name="IsEnabled" Content="Is Enabled" />
+            <CheckBox x:Name="IsNavigationEnabled" Content="Is Enabled" />
             <Button x:Name="Navigate" Content="Navigate" />
         </StackPanel>
     </StackPanel>

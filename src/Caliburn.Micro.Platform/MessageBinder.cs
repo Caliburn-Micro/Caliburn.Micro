@@ -36,13 +36,13 @@ namespace Caliburn.Micro
             {
                 ["$eventargs"] = c => c.EventArgs,
 #if XFORMS || MAUI
-            ["$datacontext"] = c => c.Source.BindingContext,
-            ["$bindingcontext"] = c => c.Source.BindingContext,
+                ["$datacontext"] = c => c.Source.BindingContext,
+                ["$bindingcontext"] = c => c.Source.BindingContext,
 #else
                 ["$datacontext"] = c => c.Source.DataContext,
 #endif
 #if WINDOWS_UWP || WinUI3
-                {"$clickeditem", c => ((ItemClickEventArgs)c.EventArgs).ClickedItem},
+                ["$clickeditem"] = c => ((ItemClickEventArgs)c.EventArgs).ClickedItem,
 #endif
                 ["$source"] = c => c.Source,
                 ["$executioncontext"] = c => c,
@@ -144,7 +144,8 @@ namespace Caliburn.Micro
                 }
 #endif
 #if WINDOWS_UWP || XFORMS || MAUI
-    if (destinationType.GetTypeInfo().IsEnum) {
+                if (destinationType.GetTypeInfo().IsEnum)
+                {
 #else
                 if (destinationType.IsEnum)
                 {
@@ -216,7 +217,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>The default value.</returns>
-        public static object GetDefaultValue(Type type) {
+        public static object GetDefaultValue(Type type)
+        {
 #if WINDOWS_UWP || XFORMS || MAUI || WinUI3
             var typeInfo = type.GetTypeInfo();
             return typeInfo.IsClass || typeInfo.IsInterface ? null : System.Activator.CreateInstance(type);

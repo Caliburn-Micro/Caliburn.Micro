@@ -11,8 +11,9 @@
     /// Represents a parameter of an <see cref="ActionMessage"/>.
     /// </summary>
 #if WINDOWS_UWP || WinUI3
-    public class Parameter : DependencyObject, IAttachedObject {
-        DependencyObject associatedObject;
+    public class Parameter : DependencyObject, IAttachedObject
+    {
+        DependencyObject _associatedObject;
 #else
     public class Parameter : FrameworkElement, IAttachedObject {
         FrameworkElement associatedObject;
@@ -41,7 +42,8 @@
         }
 
 #if WINDOWS_UWP ||   WinUI3
-        DependencyObject IAttachedObject.AssociatedObject {
+        DependencyObject IAttachedObject.AssociatedObject
+        {
 #else
         FrameworkElement IAttachedObject.AssociatedObject {
 #endif
@@ -52,14 +54,15 @@
         /// <summary>
         /// Gets or sets the owner.
         /// </summary>
-        protected ActionMessage Owner
+        internal ActionMessage Owner
         {
             get { return _owner == null ? null : _owner.Target as ActionMessage; }
             set { _owner = new WeakReference(value); }
         }
 
 #if WINDOWS_UWP || WinUI3
-        void IAttachedObject.Attach(DependencyObject dependencyObject) {
+        void IAttachedObject.Attach(DependencyObject dependencyObject)
+        {
 #else
         void IAttachedObject.Attach(FrameworkElement dependencyObject) {
 #endif
@@ -80,7 +83,7 @@
             Owner = actionMessageOwner;
         }
 
-        static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        internal static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var parameter = (Parameter)d;
             var owner = parameter.Owner;
