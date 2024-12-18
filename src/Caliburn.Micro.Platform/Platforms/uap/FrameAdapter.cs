@@ -2,12 +2,22 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
+#if WinUI3
+using Windows.Foundation;
+using Windows.Storage;
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+#else
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+#endif
 
 namespace Caliburn.Micro
 {
@@ -377,7 +387,7 @@ namespace Caliburn.Micro
                 container.Values[ParameterKey] :
                 null;
 
-            if (String.IsNullOrEmpty(frameState))
+            if (string.IsNullOrEmpty(frameState))
                 return false;
 
             frame.SetNavigationState(frameState);
@@ -390,11 +400,24 @@ namespace Caliburn.Micro
 
             await BindViewModel(view);
 
+#if WinUI3
+            if (Application.Current is CaliburnApplication ca)
+            {
+                if(ca.Window == null)
+                    ca.InitializeWindow();
+
+                if (ca.Window?.Content != null)
+                    ca.Window.Content = frame;
+
+
+                ca.Window?.Activate();
+            }
+#else
             if (Window.Current.Content == null)
                 Window.Current.Content = frame;
 
             Window.Current.Activate();
-
+#endif
             return true;
         }
 

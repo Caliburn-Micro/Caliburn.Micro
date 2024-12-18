@@ -1,4 +1,5 @@
-﻿namespace Caliburn.Micro {
+﻿
+namespace Caliburn.Micro {
     using System;
     using System.Collections.Generic;
     using System.Threading;
@@ -11,6 +12,11 @@
     using Avalonia;
     using Avalonia.Threading;
     using FrameworkElement = Avalonia.Controls.Control;
+#elif WinUI3
+    using System.Reflection;
+    using Windows.UI.Core;
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Dispatching;
 #else
     using System.Windows;
     using System.Windows.Threading;
@@ -21,7 +27,9 @@
     /// </summary>
     public class XamlPlatformProvider : IPlatformProvider {
 #if WINDOWS_UWP
-        private readonly CoreDispatcher dispatcher;
+        private CoreDispatcher dispatcher;
+#elif WinUI3
+        private DispatcherQueue dispatcher;
 #else
         private readonly Dispatcher dispatcher;
 #endif
@@ -34,6 +42,8 @@
             dispatcher = Window.Current.Dispatcher;
 #elif AVALONIA
             dispatcher = Dispatcher.UIThread;
+#elif WinUI3
+            dispatcher = DispatcherQueue.GetForCurrentThread();
 #else
             dispatcher = Dispatcher.CurrentDispatcher;
 #endif
@@ -59,6 +69,8 @@
         private bool CheckAccess() {
 #if WINDOWS_UWP
             return dispatcher == null || Window.Current != null;
+#elif WinUI3
+            return dispatcher == null || dispatcher.HasThreadAccess;
 #else
             return dispatcher == null || dispatcher.CheckAccess();
 #endif
@@ -70,10 +82,12 @@
         /// <param name="action">The action to execute.</param>
         public virtual void BeginOnUIThread(System.Action action) {
             ValidateDispatcher();
-#if WINDOWS_UWP
+#if WINDOWS_UWP 
             var dummy = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
 #elif AVALONIA
             dispatcher.Post(action);
+#elif WinUI3
+            var dummy = dispatcher.TryEnqueue(() => action());
 #else
             dispatcher.BeginInvoke(action);
 #endif
@@ -90,6 +104,8 @@
             return dispatcher.RunTaskAsync(action);
 #elif AVALONIA
             return dispatcher.InvokeAsync(action);
+#elif WinUI3
+            return dispatcher.RunAsync(action);
 #else
             return dispatcher.InvokeAsync(action).Task.Unwrap();
 #endif
@@ -104,8 +120,10 @@
             if (CheckAccess())
                 action();
             else {
-#if WINDOWS_UWP
+#if WINDOWS_UWP 
                 dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask().Wait();
+#elif WinUI3
+                dispatcher.RunAsync(action).Wait();
 #else
                 Exception exception = null;
                 System.Action method = () => {

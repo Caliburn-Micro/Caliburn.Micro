@@ -15,6 +15,8 @@ namespace Caliburn.Micro
     using System.Reflection;
 #if WINDOWS_UWP
     using Windows.UI.Xaml.Controls;
+#elif WinUI3
+    using Microsoft.UI.Xaml.Controls;
 #endif
 
     /// <summary>
@@ -34,13 +36,13 @@ namespace Caliburn.Micro
             {
                 ["$eventargs"] = c => c.EventArgs,
 #if XFORMS || MAUI
-            ["$datacontext"] = c => c.Source.BindingContext,
-            ["$bindingcontext"] = c => c.Source.BindingContext,
+                ["$datacontext"] = c => c.Source.BindingContext,
+                ["$bindingcontext"] = c => c.Source.BindingContext,
 #else
                 ["$datacontext"] = c => c.Source.DataContext,
 #endif
-#if WINDOWS_UWP
-            ["$clickeditem"] = c => ((ItemClickEventArgs)c.EventArgs).ClickedItem,
+#if WINDOWS_UWP || WinUI3
+                ["$clickeditem"] = c => ((ItemClickEventArgs)c.EventArgs).ClickedItem,
 #endif
                 ["$source"] = c => c.Source,
                 ["$executioncontext"] = c => c,
@@ -142,7 +144,8 @@ namespace Caliburn.Micro
                 }
 #endif
 #if WINDOWS_UWP || XFORMS || MAUI
-    if (destinationType.GetTypeInfo().IsEnum) {
+                if (destinationType.GetTypeInfo().IsEnum)
+                {
 #else
                 if (destinationType.IsEnum)
                 {
@@ -216,7 +219,7 @@ namespace Caliburn.Micro
         /// <returns>The default value.</returns>
         public static object GetDefaultValue(Type type)
         {
-#if WINDOWS_UWP || XFORMS || MAUI
+#if WINDOWS_UWP || XFORMS || MAUI || WinUI3
             var typeInfo = type.GetTypeInfo();
             return typeInfo.IsClass || typeInfo.IsInterface ? null : System.Activator.CreateInstance(type);
 #else

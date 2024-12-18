@@ -1,5 +1,9 @@
 ﻿namespace Caliburn.Micro {
+#if WinUI3
+    using Microsoft.UI.Xaml;
+#else
     using Windows.UI.Xaml;
+#endif
 
     /// <summary>
     /// Interaface usually from the Interactivity SDK's included here for completeness.

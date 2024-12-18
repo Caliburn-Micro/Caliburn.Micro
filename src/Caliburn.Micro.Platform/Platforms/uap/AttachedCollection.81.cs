@@ -1,7 +1,14 @@
 ﻿namespace Caliburn.Micro {
     using System.Linq;
+
+
+#if WinUI3
+    using Windows.Foundation.Collections;
+    using Microsoft.UI.Xaml;
+#else
     using Windows.Foundation.Collections;
     using Windows.UI.Xaml;
+#endif
 
     /// <summary>
     /// A collection that can exist as part of a behavior.

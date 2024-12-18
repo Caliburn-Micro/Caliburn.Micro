@@ -30,6 +30,16 @@
     using EventTrigger = Avalonia.Xaml.Interactions.Core.EventTriggerBehavior;
     using FrameworkElement = Avalonia.Controls.Control;
     using Avalonia.Input;
+#elif WinUI3
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Data;
+    using Microsoft.UI.Xaml.Markup;
+    using Microsoft.UI.Xaml.Media;
+    using Microsoft.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Controls.Primitives;
+    using Microsoft.Xaml.Interactivity;
+    using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
+    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
 #else
     using System.Windows;
     using System.Windows.Controls.Primitives;
@@ -48,7 +58,7 @@
     /// <summary>
     /// Used to send a message from the UI to a presentation model class, indicating that a particular Action should be invoked.
     /// </summary>
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
     [ContentProperty(Name = "Parameters")]
 #elif !AVALONIA
     [ContentProperty("Parameters")]
@@ -142,7 +152,7 @@
         /// Gets or sets the name of the method to be invoked on the presentation model class.
         /// </summary>
         /// <value>The name of the method.</value>
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !WinUI3
         [Category("Common Properties")]
 #endif
         public string MethodName
@@ -155,7 +165,7 @@
         /// Gets the parameters to pass as part of the method invocation.
         /// </summary>
         /// <value>The parameters.</value>
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !WinUI3
         [Category("Common Properties")]
 #endif
         public AttachedCollection<Parameter> Parameters
@@ -171,7 +181,7 @@
         /// <summary>
         /// Called after the action is attached to an AssociatedObject.
         /// </summary>
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
         protected override void OnAttached()
         {
             if (!View.InDesignMode)
@@ -179,7 +189,7 @@
                 Parameters.Attach(AssociatedObject);
                 Parameters.OfType<Parameter>().Apply(x => x.MakeAwareOf(this));
 
-                
+
                 View.ExecuteOnLoad(AssociatedObject, ElementLoaded);
 
 
@@ -303,13 +313,13 @@
                 Source = elementToUse
             };
             Log.Info($"Binding {binding.Source}");
-#elif (NET || CAL_NETCORE && !WINDOWS_UWP)
-            var binding = new Binding
-            {
-                Path = new PropertyPath(Message.HandlerProperty),
+
+#elif (NET || CAL_NETCORE) && !WinUI3 && !WINDOWS_UWP
+            var binding = new Binding {
+                Path = new PropertyPath(Message.HandlerProperty), 
                 Source = currentElement
             };
-#elif WINDOWS_UWP
+#elif WINDOWS_UWP || WinUI3
             var binding = new Binding
             {
                 Source = currentElement
@@ -495,7 +505,7 @@
         {
             Log.Info("ApplyAvailabilityEffect");
 
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
             var source = context.Source as Control;
 #else
             var source = context.Source;
@@ -506,7 +516,7 @@
                 return true;
             }
 
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
             var hasBinding = ConventionManager.HasBinding(source, Control.IsEnabledProperty);
 #else
             Log.Info($"HasBinding source {source.Name}");
@@ -539,7 +549,7 @@
         /// <returns>The matching method, if available.</returns>
         public static Func<ActionMessage, object, MethodInfo> GetTargetMethod = (message, target) =>
         {
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
             return (from method in target.GetType().GetRuntimeMethods()
                     where method.Name == message.MethodName
                     let methodParameters = method.GetParameters()
