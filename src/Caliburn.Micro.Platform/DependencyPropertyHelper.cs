@@ -21,6 +21,7 @@ namespace Caliburn.Micro.Maui
 namespace Caliburn.Micro
 #endif
 {
+#if !AVALONIA
     /// <summary>
     /// Class that abstracts the differences in creating a DepedencyProperty / BindableProperty on the different platforms.
     /// </summary>
@@ -79,4 +80,5 @@ namespace Caliburn.Micro
 #endif
         }
     }
+#endif
 }

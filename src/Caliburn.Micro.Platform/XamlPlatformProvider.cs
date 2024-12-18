@@ -8,6 +8,10 @@ namespace Caliburn.Micro {
     using System.Reflection;
     using Windows.UI.Core;
     using Windows.UI.Xaml;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Threading;
+    using FrameworkElement = Avalonia.Controls.Control;
 #elif WinUI3
     using System.Reflection;
     using Windows.UI.Core;
@@ -27,7 +31,7 @@ namespace Caliburn.Micro {
 #elif WinUI3
         private DispatcherQueue dispatcher;
 #else
-        private Dispatcher dispatcher;
+        private readonly Dispatcher dispatcher;
 #endif
 
         /// <summary>
@@ -36,6 +40,8 @@ namespace Caliburn.Micro {
         public XamlPlatformProvider() {
 #if WINDOWS_UWP
             dispatcher = Window.Current.Dispatcher;
+#elif AVALONIA
+            dispatcher = Dispatcher.UIThread;
 #elif WinUI3
             dispatcher = DispatcherQueue.GetForCurrentThread();
 #else
@@ -78,6 +84,8 @@ namespace Caliburn.Micro {
             ValidateDispatcher();
 #if WINDOWS_UWP 
             var dummy = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+#elif AVALONIA
+            dispatcher.Post(action);
 #elif WinUI3
             var dummy = dispatcher.TryEnqueue(() => action());
 #else
@@ -94,6 +102,8 @@ namespace Caliburn.Micro {
             ValidateDispatcher();
 #if WINDOWS_UWP
             return dispatcher.RunTaskAsync(action);
+#elif AVALONIA
+            return dispatcher.InvokeAsync(action);
 #elif WinUI3
             return dispatcher.RunAsync(action);
 #else
@@ -124,9 +134,11 @@ namespace Caliburn.Micro {
                         exception = ex;
                     }
                 };
+
                 dispatcher.Invoke(method);
+
                 if (exception != null)
-                    throw new System.Reflection.TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
+                throw new System.Reflection.TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
 #endif
             }
         }
@@ -148,12 +160,16 @@ namespace Caliburn.Micro {
             return View.GetFirstNonGeneratedView(view);
         }
 
+#if AVALONIA
+        private static readonly AvaloniaProperty PreviouslyAttachedProperty = AvaloniaProperty.RegisterAttached<AvaloniaObject, bool>("PreviouslyAttached", typeof(XamlPlatformProvider));
+#else
         private static readonly DependencyProperty PreviouslyAttachedProperty = DependencyProperty.RegisterAttached(
             "PreviouslyAttached",
-            typeof (bool),
-            typeof (XamlPlatformProvider),
+            typeof(bool),
+            typeof(XamlPlatformProvider),
             null
             );
+#endif
 
         /// <summary>
         /// Executes the handler the fist time the view is loaded.
@@ -196,12 +212,23 @@ namespace Caliburn.Micro {
                 var viewType = contextualView.GetType();
 #if WINDOWS_UWP
                 var closeMethod = viewType.GetRuntimeMethod("Close", new Type[0]);
+#elif AVALONIA
+                var closeMethod = dialogResult != null ? viewType.GetMethod("Close", new Type[] { typeof(object) }) : viewType.GetMethod("Close", new Type[0]);
 #else
                 var closeMethod = viewType.GetMethod("Close", new Type[0]);
 #endif
                 if (closeMethod != null)
                     return ct => {
-#if !WINDOWS_UWP
+#if AVALONIA
+                        if (dialogResult != null)
+                        {
+                            closeMethod.Invoke(contextualView, new object[] { dialogResult });
+                        }
+                        else
+                        {
+                            closeMethod.Invoke(contextualView, null);
+                        }
+#elif !WINDOWS_UWP
                         var isClosed = false;
                         if (dialogResult != null) {
                             var resultProperty = contextualView.GetType().GetProperty("DialogResult");

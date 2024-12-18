@@ -95,6 +95,7 @@ namespace Caliburn.Micro
 
         async Task IActivate.ActivateAsync(CancellationToken cancellationToken)
         {
+            Log.Info("Activating async {0}.", this.DisplayName);
             if (IsActive)
                 return;
 
@@ -102,13 +103,19 @@ namespace Caliburn.Micro
 
             if (!IsInitialized)
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 await OnInitializeAsync(cancellationToken);
+#pragma warning restore CS0618 // Type or member is obsolete
                 IsInitialized = initialized = true;
+                await OnInitializedAsync(cancellationToken);
             }
 
             Log.Info("Activating {0}.", this);
+#pragma warning disable CS0618 // Type or member is obsolete
             await OnActivateAsync(cancellationToken);
+#pragma warning restore CS0618 // Type or member is obsolete
             IsActive = true;
+            await OnActivatedAsync(cancellationToken);
 
             await (Activated?.InvokeAllAsync(this, new ActivationEventArgs
             {
@@ -118,6 +125,7 @@ namespace Caliburn.Micro
 
         async Task IDeactivate.DeactivateAsync(bool close, CancellationToken cancellationToken)
         {
+            Log.Info("Deactivating async {0}.", this.DisplayName);
             if (IsActive || IsInitialized && close)
             {
                 AttemptingDeactivation?.Invoke(this, new DeactivationEventArgs
@@ -172,7 +180,17 @@ namespace Caliburn.Micro
         /// <summary>
         /// Called when initializing.
         /// </summary>
+        [Obsolete("Override OnInitializedAsync")]
         protected virtual Task OnInitializeAsync(CancellationToken cancellationToken)
+        {
+            Log.Info("Initializing async {0}.", this.DisplayName);
+            return Task.FromResult(true);
+        }
+
+        /// <summary>
+        /// Called when view has been initialized
+        /// </summary>
+        protected virtual Task OnInitializedAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(true);
         }
@@ -180,8 +198,20 @@ namespace Caliburn.Micro
         /// <summary>
         /// Called when activating.
         /// </summary>
+        [Obsolete("Override OnActivatedAsync")]
         protected virtual Task OnActivateAsync(CancellationToken cancellationToken)
         {
+            Log.Info("Task activate");
+            return Task.FromResult(true);
+        }
+
+
+        /// <summary>
+        /// Called when view has been activated.
+        /// </summary>
+        protected virtual Task OnActivatedAsync(CancellationToken cancellationToken)
+        {
+            Log.Info("Task activated");
             return Task.FromResult(true);
         }
 
@@ -193,6 +223,7 @@ namespace Caliburn.Micro
         /// <returns>A task that represents the asynchronous operation.</returns>
         protected virtual Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
+            Log.Info("Task deactivate");
             return Task.FromResult(true);
         }
     }

@@ -11,7 +11,7 @@
     <Grid>
         <StackPanel Margin="20">
             <TextBlock x:Name="Text" />
-            <TextBlock x:Name="IsEnabled" />
+            <TextBlock x:Name="IsNavigationEnabled" />
         </StackPanel>
     </Grid>
 </Page>

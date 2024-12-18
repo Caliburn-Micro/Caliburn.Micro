@@ -1,6 +1,8 @@
-﻿namespace Caliburn.Micro {
+﻿namespace Caliburn.Micro
+{
     using System;
     using System.Collections.Generic;
+    using System.Collections.Concurrent;
     using System.Linq;
 #if WINDOWS_UWP
     using System.ServiceModel;
@@ -8,6 +10,14 @@
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Controls.Primitives;
     using Windows.UI.Xaml.Media;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Diagnostics;
+    using Avalonia.VisualTree;
+    using Avalonia.Controls;
+    using Avalonia.Controls.Presenters;
+    using DependencyObject = Avalonia.AvaloniaObject;
+    using FrameworkElement = Avalonia.Controls.Control;
 #elif WinUI3
     using System.ServiceModel;
     using Microsoft.UI.Xaml;
@@ -24,15 +34,22 @@
     /// <summary>
     /// Provides methods for searching a given scope for named elements.
     /// </summary>
-    public static class BindingScope {
+    public static class BindingScope
+    {
         static readonly List<ChildResolver> ChildResolvers = new List<ChildResolver>();
-        static readonly Dictionary<Type, Object> NonResolvableChildTypes = new Dictionary<Type, Object>();
+        static readonly ConcurrentDictionary<Type, Object> NonResolvableChildTypes = new ConcurrentDictionary<Type, Object>();
 
         static BindingScope()
         {
+#if AVALONIA
+            AddChildResolver<NavigationFrame>(e => new[] { e.Content as DependencyObject });
+#endif
             AddChildResolver<ContentControl>(e => new[] { e.Content as DependencyObject });
-            AddChildResolver<ItemsControl>(e => e.Items.OfType<DependencyObject>().ToArray() );
-#if !WINDOWS_UWP && !WinUI3
+#if !WINDOWS_UWP && !AVALONIA
+            AddChildResolver<ItemsControl>(e => e.Items.OfType<DependencyObject>().ToArray());
+
+#endif
+#if !WINDOWS_UWP && !WinUI3 && !AVALONIA
             AddChildResolver<HeaderedContentControl>(e => new[] { e.Header as DependencyObject });
             AddChildResolver<HeaderedItemsControl>(e => new[] { e.Header as DependencyObject });
 #endif
@@ -47,6 +64,7 @@
             AddChildResolver<CommandBar>(ResolveCommandBar);
             AddChildResolver<Button>(e => ResolveFlyoutBase(e.Flyout));
             AddChildResolver<FrameworkElement>(e => ResolveFlyoutBase(FlyoutBase.GetAttachedFlyout(e)));
+            AddChildResolver<SplitView>(e => new[] { e.Pane, e.Content });
 #endif
 #if WINDOWS_UWP || WinUI3
             AddChildResolver<SplitView>(e => new[] { e.Pane as DependencyObject, e.Content as DependencyObject });
@@ -59,7 +77,8 @@
         /// <param name="elementsToSearch">The named elements to search through.</param>
         /// <param name="name">The name to search for.</param>
         /// <returns>The named element or null if not found.</returns>
-        public static FrameworkElement FindName(this IEnumerable<FrameworkElement> elementsToSearch, string name) {
+        public static FrameworkElement FindName(this IEnumerable<FrameworkElement> elementsToSearch, string name)
+        {
 #if WINDOWS_UWP || WinUI3
             return elementsToSearch.FirstOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 #else
@@ -72,17 +91,20 @@
         /// </summary>
         /// <param name="filter">The type filter.</param>
         /// <param name="resolver">The resolver.</param>
-        public static ChildResolver AddChildResolver(Func<Type, bool> filter, Func<DependencyObject, IEnumerable<DependencyObject>> resolver) {
-            if (filter == null) {
+        public static ChildResolver AddChildResolver(Func<Type, bool> filter, Func<DependencyObject, IEnumerable<DependencyObject>> resolver)
+        {
+            if (filter == null)
+            {
                 throw new ArgumentNullException("filter");
             }
 
-            if (resolver == null) {
+            if (resolver == null)
+            {
                 throw new ArgumentNullException("resolver");
             }
 
             NonResolvableChildTypes.Clear();
-            
+
             var childResolver = new ChildResolver(filter, resolver);
 
             ChildResolvers.Add(childResolver);
@@ -96,7 +118,8 @@
         /// <param name="resolver">The resolver.</param>
         public static ChildResolver AddChildResolver<T>(Func<T, IEnumerable<DependencyObject>> resolver) where T : DependencyObject
         {
-            if (resolver == null) {
+            if (resolver == null)
+            {
                 throw new ArgumentNullException("resolver");
             }
 
@@ -114,8 +137,10 @@
         /// </summary>
         /// <param name="resolver">The resolver to remove.</param>
         /// <returns>true, when the resolver was (found and) removed.</returns>
-        public static bool RemoveChildResolver(ChildResolver resolver) {
-            if (resolver == null) {
+        public static bool RemoveChildResolver(ChildResolver resolver)
+        {
+            if (resolver == null)
+            {
                 throw new ArgumentNullException("resolver");
             }
 
@@ -127,7 +152,8 @@
         /// </summary>
         /// <returns>Named <see cref="FrameworkElement"/> instances in the provided scope.</returns>
         /// <remarks>Pass in a <see cref="DependencyObject"/> and receive a list of named <see cref="FrameworkElement"/> instances in the same scope.</remarks>
-        public static Func<DependencyObject, IEnumerable<FrameworkElement>> GetNamedElements = elementInScope => {
+        public static Func<DependencyObject, IEnumerable<FrameworkElement>> GetNamedElements = elementInScope =>
+        {
             var routeHops = FindScopeNamingRoute(elementInScope);
             return FindNamedDescendants(routeHops);
         };
@@ -136,8 +162,11 @@
         /// Gets the parent of the given object in the Visual Tree.
         /// </summary>
         /// <returns>The parent of the given object in the Visual Tree</returns>
+#if AVALONIA
+        public static Func<DependencyObject, DependencyObject> GetVisualParent = e => ((Visual)e).GetVisualParent() as DependencyObject;
+#else
         public static Func<DependencyObject, DependencyObject> GetVisualParent = e => VisualTreeHelper.GetParent(e);
-
+#endif
         /// <summary>
         /// Finds a set of named <see cref="FrameworkElement"/> instances in each hop in a <see cref="ScopeNamingRoute"/>.
         /// </summary>
@@ -146,24 +175,28 @@
         /// each of these elements, the <see cref="ContentControl.Content"/>, the <c>HeaderedContentControl.Header</c>,
         /// the <see cref="ItemsControl.Items"/>, or the <c>HeaderedItemsControl.Header</c>, if any are found.
         /// </remarks>
-        public static Func<ScopeNamingRoute, IEnumerable<FrameworkElement>> FindNamedDescendants = routeHops => {
-            if (routeHops == null) {
+        public static Func<ScopeNamingRoute, IEnumerable<FrameworkElement>> FindNamedDescendants = routeHops =>
+        {
+            if (routeHops == null)
+            {
                 throw new ArgumentNullException("routeHops");
             }
 
-            if (routeHops.Root == null) {
-                throw new ArgumentException(String.Format("Root is null on the given {0}", typeof (ScopeNamingRoute)));
+            if (routeHops.Root == null)
+            {
+                throw new ArgumentException(String.Format("Root is null on the given {0}", typeof(ScopeNamingRoute)));
             }
 
             var descendants = new List<FrameworkElement>();
             var queue = new Queue<DependencyObject>();
             queue.Enqueue(routeHops.Root);
 
-            while (queue.Count > 0) {
+            while (queue.Count > 0)
+            {
                 var current = queue.Dequeue();
                 if (current == null)
                     continue;
-                    
+
                 var currentElement = current as FrameworkElement;
 
                 if (currentElement != null && !string.IsNullOrEmpty(currentElement.Name))
@@ -173,20 +206,39 @@
                     continue;
 
                 DependencyObject hopTarget;
-                if (routeHops.TryGetHop(current, out hopTarget)) {
+                if (routeHops.TryGetHop(current, out hopTarget))
+                {
                     queue.Enqueue(hopTarget);
                     continue;
                 }
 
-#if (NET || CAL_NETCORE) && !WinUI3
+#if AVALONIA
+                var visual = current as Visual;
+                var childCount = visual != null
+                    ? visual.GetVisualChildren().Count() : 0;
+
+                if (childCount > 0)
+                {
+                    foreach (var childDo in visual?.GetVisualChildren().OfType<AvaloniaObject>())
+                    {
+                        queue.Enqueue(childDo);
+                    }
+
+                }
+#else
+
+
+#if (NET || CAL_NETCORE) && !WinUI3 && !WINDOWS_UWP
                 var childCount = (current is Visual || current is Visual3D)
                     ? VisualTreeHelper.GetChildrenCount(current) : 0;
 #else
                 var childCount = (current is UIElement)
                     ? VisualTreeHelper.GetChildrenCount(current) : 0;
 #endif
-                if (childCount > 0) {
-                    for (var i = 0; i < childCount; i++) {
+                if (childCount > 0)
+                {
+                    for (var i = 0; i < childCount; i++)
+                    {
                         var childDo = VisualTreeHelper.GetChild(current, i);
                         queue.Enqueue(childDo);
                     }
@@ -194,7 +246,8 @@
 #if WINDOWS_UWP || WinUI3
                     var page = current as Page;
 
-                    if (page != null) {
+                    if (page != null)
+                    {
                         if (page.BottomAppBar != null)
                             queue.Enqueue(page.BottomAppBar);
 
@@ -203,16 +256,21 @@
                     }
 #endif
                 }
-                else {
+#endif
+                else
+                {
                     var currentType = current.GetType();
 
-                    if (!NonResolvableChildTypes.ContainsKey(currentType)) {
+                    if (!NonResolvableChildTypes.ContainsKey(currentType))
+                    {
                         var resolvers = ChildResolvers.Where(r => r.CanResolve(currentType)).ToArray();
 
-                        if (!resolvers.Any()) {
+                        if (!resolvers.Any())
+                        {
                             NonResolvableChildTypes[currentType] = null;
                         }
-                        else {
+                        else
+                        {
                             resolvers
                                 .SelectMany(r => r.Resolve(current) ?? Enumerable.Empty<DependencyObject>())
                                 .Where(c => c != null)
@@ -226,7 +284,8 @@
         };
 
 #if WINDOWS_UWP || WinUI3
-        private static IEnumerable<DependencyObject> ResolveFlyoutBase(FlyoutBase flyoutBase) {
+        private static IEnumerable<DependencyObject> ResolveFlyoutBase(FlyoutBase flyoutBase)
+        {
             if (flyoutBase == null)
                 yield break;
 
@@ -237,28 +296,36 @@
 
             var menuFlyout = flyoutBase as MenuFlyout;
 
-            if (menuFlyout != null && menuFlyout.Items != null) {
-                foreach (var item in menuFlyout.Items) {
-                    foreach (var subItem in ResolveMenuFlyoutItems(item)) {
+            if (menuFlyout != null && menuFlyout.Items != null)
+            {
+                foreach (var item in menuFlyout.Items)
+                {
+                    foreach (var subItem in ResolveMenuFlyoutItems(item))
+                    {
                         yield return subItem;
                     }
                 }
             }
         }
 
-        private static IEnumerable<DependencyObject> ResolveMenuFlyoutItems(MenuFlyoutItemBase item) {
+        private static IEnumerable<DependencyObject> ResolveMenuFlyoutItems(MenuFlyoutItemBase item)
+        {
             yield return item;
             var subItem = item as MenuFlyoutSubItem;
 
-            if (subItem != null && subItem.Items != null) {
-                foreach (var subSubItem in subItem.Items) {
+            if (subItem != null && subItem.Items != null)
+            {
+                foreach (var subSubItem in subItem.Items)
+                {
                     yield return subSubItem;
                 }
             }
         }
 
-        private static IEnumerable<DependencyObject> ResolveCommandBar(CommandBar commandBar) {
-            foreach (var child in commandBar.PrimaryCommands.OfType<DependencyObject>()) {
+        private static IEnumerable<DependencyObject> ResolveCommandBar(CommandBar commandBar)
+        {
+            foreach (var child in commandBar.PrimaryCommands.OfType<DependencyObject>())
+            {
                 yield return child;
             }
 
@@ -268,7 +335,8 @@
             }
         }
 
-        private static IEnumerable<DependencyObject> ResolveHub(Hub hub) {
+        private static IEnumerable<DependencyObject> ResolveHub(Hub hub)
+        {
             yield return hub.Header as DependencyObject;
 
             foreach (var section in hub.Sections)
@@ -283,38 +351,56 @@
         /// and <see cref="ItemsPresenter"/> are included in the resulting <see cref="ScopeNamingRoute"/> in order to track which item
         /// in an items control we are scoped to.
         /// </summary>
-        public static Func<DependencyObject, ScopeNamingRoute> FindScopeNamingRoute = elementInScope => {
+        public static Func<DependencyObject, ScopeNamingRoute> FindScopeNamingRoute = elementInScope =>
+        {
             var root = elementInScope;
             var previous = elementInScope;
             DependencyObject contentPresenter = null;
             var routeHops = new ScopeNamingRoute();
 
-            while (true) {
-                if (root == null) {
+            while (true)
+            {
+                if (root == null)
+                {
                     root = previous;
                     break;
                 }
+#if AVALONIA
+                if (root is Window)
+                {
+                    root = ((Window)root).Content as DependencyObject ?? root;
+                    break;
+                }
+                if (root is UserControl && ((UserControl)root).DataContext is IViewAware)
+                {
+                    root = ((UserControl)root).Content as DependencyObject ?? root;
 
+                    break;
+                }
+#else
+                if (root is Page)
+                {
+                    root = ((Page)root).Content as DependencyObject ?? root;
+                    break;
+                }
+#endif
                 if (root is UserControl)
                     break;
 
-                if (root is Page) {
-                    root = ((Page) root).Content as DependencyObject ?? root;
-                    break;
-                }
-
-                if ((bool) root.GetValue(View.IsScopeRootProperty))
+                if ((bool)root.GetValue(View.IsScopeRootProperty))
                     break;
 
 #if WINDOWS_UWP || WinUI3
-                if (root is AppBar) {
+                if (root is AppBar)
+                {
 #if WinUI3
                     var frame = (Application.Current as CaliburnApplication)?.Window?.Content as Frame;
 #else
                     var frame = Window.Current.Content as Frame;
 #endif
                     var page = (frame != null) ? frame.Content as Page : null;
-                    if (page != null && (root == page.TopAppBar || root == page.BottomAppBar)) {
+                    if (page != null && (root == page.TopAppBar || root == page.BottomAppBar))
+                    {
                         root = page;
                         break;
                     }
@@ -323,7 +409,8 @@
 
                 if (root is ContentPresenter)
                     contentPresenter = root;
-                else if (root is ItemsPresenter && contentPresenter != null) {
+                else if (root is ItemsPresenter && contentPresenter != null)
+                {
                     routeHops.AddHop(root, contentPresenter);
                     contentPresenter = null;
                 }
@@ -339,17 +426,21 @@
         /// <summary>
         /// Maintains a connection in the visual tree of dependency objects in order to record a route through it.
         /// </summary>
-        public class ScopeNamingRoute {
+        public class ScopeNamingRoute
+        {
             readonly Dictionary<DependencyObject, DependencyObject> path = new Dictionary<DependencyObject, DependencyObject>();
             DependencyObject root;
 
             /// <summary>
             /// Gets or sets the starting point of the route.
             /// </summary>
-            public DependencyObject Root {
+            public DependencyObject Root
+            {
                 get { return root; }
-                set {
-                    if (path.ContainsValue(value)) {
+                set
+                {
+                    if (path.ContainsValue(value))
+                    {
                         throw new ArgumentException("Value is a target of some route hop; cannot be a root.");
                     }
 
@@ -362,12 +453,15 @@
             /// </summary>
             /// <param name="from">The source dependency object.</param>
             /// <param name="to">The target dependency object.</param>
-            public void AddHop(DependencyObject from, DependencyObject to) {
-                if (@from == null) {
+            public void AddHop(DependencyObject from, DependencyObject to)
+            {
+                if (@from == null)
+                {
                     throw new ArgumentNullException("from");
                 }
 
-                if (to == null) {
+                if (to == null)
+                {
                     throw new ArgumentNullException("to");
                 }
 
@@ -375,11 +469,13 @@
                     !path.ContainsKey(from) &&
                     !path.ContainsKey(to) &&
                     !path.ContainsValue(from) &&
-                    !path.ContainsValue(from)) {
+                    !path.ContainsValue(from))
+                {
                     throw new ArgumentException("Hop pair not part of existing route.");
                 }
 
-                if (path.ContainsKey(to)) {
+                if (path.ContainsKey(to))
+                {
                     throw new ArgumentException("Cycle detected when adding hop.");
                 }
 
@@ -392,7 +488,8 @@
             /// <param name="hopSource">The possible beginning of a route segment (hop).</param>
             /// <param name="hopTarget">The target of a route segment (hop).</param>
             /// <returns><see langword="true"/> if <paramref name="hopSource"/> had a target recorded; <see langword="false"/> otherwise.</returns>
-            public bool TryGetHop(DependencyObject hopSource, out DependencyObject hopTarget) {
+            public bool TryGetHop(DependencyObject hopSource, out DependencyObject hopTarget)
+            {
                 return path.TryGetValue(hopSource, out hopTarget);
             }
         }
