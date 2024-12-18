@@ -80,11 +80,10 @@ namespace Caliburn.Micro
                 var parameterValue = providedValues[i];
                 var parameterAsString = parameterValue as string;
 
-                if (parameterAsString != null)
-                    finalValues[i] = CoerceValue(parameterType,
-                        EvaluateParameter(parameterAsString, parameterType, context), context);
-                else
-                    finalValues[i] = CoerceValue(parameterType, parameterValue, context);
+                finalValues[i] = (parameterAsString != null) ?
+                    CoerceValue(parameterType,
+                        EvaluateParameter(parameterAsString, parameterType, context), context) :
+                    CoerceValue(parameterType, parameterValue, context);
             }
 
             return finalValues;
