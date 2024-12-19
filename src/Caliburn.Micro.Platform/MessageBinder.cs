@@ -34,8 +34,8 @@ namespace Caliburn.Micro
             {
                 ["$eventargs"] = c => c.EventArgs,
 #if XFORMS || MAUI
-            ["$datacontext"] = c => c.Source.BindingContext,
-            ["$bindingcontext"] = c => c.Source.BindingContext,
+                ["$datacontext"] = c => c.Source.BindingContext,
+                ["$bindingcontext"] = c => c.Source.BindingContext,
 #else
                 ["$datacontext"] = c => c.Source.DataContext,
 #endif
@@ -120,9 +120,9 @@ namespace Caliburn.Micro
                 return providedValue;
             }
 
-            if (CustomConverters.ContainsKey(destinationType))
+            if (CustomConverters.TryGetValue(destinationType, out Func<object, object, object> value))
             {
-                return CustomConverters[destinationType](providedValue, context);
+                return value;
             }
             try
             {
@@ -142,7 +142,8 @@ namespace Caliburn.Micro
                 }
 #endif
 #if WINDOWS_UWP || XFORMS || MAUI
-    if (destinationType.GetTypeInfo().IsEnum) {
+                if (destinationType.GetTypeInfo().IsEnum)
+                {
 #else
                 if (destinationType.IsEnum)
                 {
