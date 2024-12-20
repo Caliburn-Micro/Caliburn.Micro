@@ -17,7 +17,7 @@ namespace Caliburn.Micro
     public class FrameAdapter : INavigationService, IDisposable
     {
 #if WINDOWS_UWP
-        private SystemNavigationManager navigationManager;
+        private readonly SystemNavigationManager navigationManager;
 #endif 
         private static readonly ILog Log = LogManager.GetLog(typeof(FrameAdapter));
         private const string FrameStateKey = "FrameState";
@@ -368,14 +368,13 @@ namespace Caliburn.Micro
         {
             var container = GetSettingsContainer();
 
-            if (!container.Values.ContainsKey(FrameStateKey))
+            if (!container.Values.TryGetValue(FrameStateKey, out object stateKeyValue))
                 return false;
 
-            var frameState = (string)container.Values[FrameStateKey];
+            var frameState = (string)stateKeyValue;
 
-            CurrentParameter = container.Values.ContainsKey(ParameterKey) ?
-                container.Values[ParameterKey] :
-                null;
+            CurrentParameter = container.Values.TryGetValue(ParameterKey, out object parameterKeyValue) ?
+                parameterKeyValue : null;
 
             if (String.IsNullOrEmpty(frameState))
                 return false;
@@ -435,6 +434,9 @@ namespace Caliburn.Micro
                 ApplicationDataCreateDisposition.Always);
         }
 
+        /// <summary>
+        /// Disposes the FrameAdapter instance, detaching event handlers to prevent memory leaks.
+        /// </summary>
         public void Dispose()
         {
             this.frame.Navigating -= OnNavigating;

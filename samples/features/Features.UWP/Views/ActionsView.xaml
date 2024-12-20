@@ -25,7 +25,7 @@
                 <Run Text="{Binding Output}"/>
             </TextBlock>
             
-            <TextBox Header="Name" x:Name="Name" Margin="0,10,0,0" Width="600" HorizontalAlignment="Left"/>
+            <TextBox Header="Name" x:Name="UserName" Margin="0,10,0,0" Width="600" HorizontalAlignment="Left"/>
 
             <Button x:Name="Clear" Content="Clear" Style="{StaticResource ActionButtonStyle}"/>
             <Button x:Name="SimpleSayHello" Content="Simple Say Hello" Style="{StaticResource ActionButtonStyle}"/>
@@ -39,7 +39,7 @@
                 </i:Interaction.Behaviors>
             </Button>
             <Button x:Name="SayHello" Content="Say Hello (with parameter)" Style="{StaticResource ActionButtonStyle}"/>
-            <Button cm:Message.Attach="SayHello(Name)" Content="Say Hello (with parameter and Message.Attach)" Style="{StaticResource ActionButtonStyle}"/>
+            <Button cm:Message.Attach="SayHello(UserName)" Content="Say Hello (with parameter and Message.Attach)" Style="{StaticResource ActionButtonStyle}"/>
             <Button x:Name="SayGoodbye" Content="Say Goodbye (async method)" Style="{StaticResource ActionButtonStyle}"/>
         </StackPanel>
     </StackPanel>

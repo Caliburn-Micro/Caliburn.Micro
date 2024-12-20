@@ -1,0 +1,86 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: [master, ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [master]
+  schedule:
+    - cron: '26 22 * * 0'
+env:
+  caliburn_sln : "src\\caliburn.micro.sln"
+jobs:
+  analyse:
+    name: Analyse
+    runs-on: windows-2022
+    permissions:
+        # required for all workflows
+        security-events: write
+        
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        # We must fetch at least the immediate parents so that if this is
+        # a pull request then we can checkout the head.
+        fetch-depth: 0
+
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        config-file: ./.github/codeql/codeql-config.yml  # <-- add this line
+        languages: csharp
+      # Override language selection by uncommenting this and choosing your languages
+      # with:
+      #   languages: go, javascript, csharp, python, cpp, java
+
+    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
+    # If this step fails, then you should remove it and run the build manually (see below)
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        global-json-file: src/global.json
+      
+    - name: Setup Java SDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'microsoft' 
+        java-version: 17
+
+      
+    - name: Setup NuGet.exe for use with actions
+        # You may pin to the exact commit or the version.
+        # uses: NuGet/setup-nuget@fd9fffd6ca4541cf4152a9565835ca1a88a6eb37
+      uses: NuGet/setup-nuget@v2
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v2
+      
+    - name: search workloads
+      run: dotnet workload search
+    - name: restore workloads
+      run: dotnet workload install maui maui-android maui-ios maui-maccatalyst maui-windows android --source https://api.nuget.org/v3/index.json
+    - name: list workloads
+      run: dotnet workload list
+
+    - name: Restore nuget packages
+      run:  msbuild ${{env.caliburn_sln}}  -t:restore
+
+    - name: Build app for release
+      run: msbuild ${{env.caliburn_sln}}  /t:Build 
+
+    # ℹ️ Command-line programs to run using the OS shell.
+    # 📚 https://git.io/JvXDl
+
+    # ✏️ If the Autobuild fails above, remove it and uncomment the following three lines
+    #    and modify them (or add more) to build your code if your project
+    #    uses a compiled language
+
+    #- run: |
+    #   make bootstrap
+    #   make release
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3

@@ -1,7 +1,7 @@
 ﻿<Page x:Class="Features.CrossPlatform.Views.ActionsView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Features.CrossPlatform.Views"
       xmlns:cm="http://caliburnmicro.com"
@@ -26,7 +26,7 @@
                 </TextBlock>
 
                 <TextBlock Text="Name"/>
-                <TextBox x:Name="Name" Margin="0,10,0,0" HorizontalAlignment="Stretch"/>
+                <TextBox x:Name="UserName" Margin="0,10,0,0" HorizontalAlignment="Stretch"/>
 
                 <Button x:Name="Clear" Content="Clear" Style="{StaticResource ActionButtonStyle}"/>
                 <Button x:Name="SimpleSayHello" Content="Simple Say Hello" Style="{StaticResource ActionButtonStyle}"/>
@@ -40,7 +40,7 @@
                     </i:Interaction.Triggers>
                 </Button>
                 <Button x:Name="SayHello" Content="Say Hello (with parameter)" Style="{StaticResource ActionButtonStyle}"/>
-                <Button cm:Message.Attach="SayHello(Name)" Content="Say Hello (with parameter and Message.Attach)" Style="{StaticResource ActionButtonStyle}"/>
+                <Button cm:Message.Attach="SayHello(UserName)" Content="Say Hello (with parameter and Message.Attach)" Style="{StaticResource ActionButtonStyle}"/>
                 <Button x:Name="SayGoodbye" Content="Say Goodbye (async method)" Style="{StaticResource ActionButtonStyle}"/>
             </StackPanel>
         </ScrollViewer>

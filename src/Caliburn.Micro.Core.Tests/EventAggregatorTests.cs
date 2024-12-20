@@ -26,12 +26,12 @@ namespace Caliburn.Micro.Core.Tests
         {
             var handlerStub = new Mock<IHandle<object>>().Object;
             var aggregator = new EventAggregator();
-
-            Assert.False(aggregator.HandlerExistsFor(typeof(object)));
+            var messageType = typeof(object);
+            Assert.False(aggregator.HandlerExistsFor(messageType));
 
             aggregator.SubscribeOnPublishedThread(handlerStub);
 
-            Assert.True(aggregator.HandlerExistsFor(typeof(object)));
+            Assert.True(aggregator.HandlerExistsFor(messageType));
         }
     }
 
@@ -60,15 +60,15 @@ namespace Caliburn.Micro.Core.Tests
     public class EventAggregatorPublishing
     {
         [Fact]
-        public void A_null_marshal_causes_an_ArgumentNullException()
+        public async Task A_null_marshal_causes_an_ArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => { new EventAggregator().PublishAsync(new object(), null, CancellationToken.None); });
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => { await new EventAggregator().PublishAsync(new object(), null, CancellationToken.None); });
         }
 
         [Fact]
-        public void A_null_message_causes_an_ArgumentNullException()
+        public async Task A_null_message_causes_an_ArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => { new EventAggregator().PublishOnCurrentThreadAsync(null, CancellationToken.None); });
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => { await new EventAggregator().PublishOnCurrentThreadAsync(null, CancellationToken.None); });
         }
 
         [Fact]

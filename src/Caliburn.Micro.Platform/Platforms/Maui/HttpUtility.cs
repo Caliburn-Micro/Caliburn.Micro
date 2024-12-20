@@ -46,7 +46,6 @@ namespace Caliburn.Micro.Maui
                 if (count == 0)
                     return "";
                 StringBuilder sb = new StringBuilder();
-                var keys = this.Keys;
                 foreach (var key in this.Keys)
                 {
                     sb.AppendFormat("{0}={1}&", key, this[key]);

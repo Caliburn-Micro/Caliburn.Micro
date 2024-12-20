@@ -109,7 +109,7 @@ namespace Caliburn.Micro
                         var index = _items.IndexOf(item);
                         var next = DetermineNextItemToActivate(_items, index);
 
-                        await ChangeActiveItemAsync(next, true);
+                        await ChangeActiveItemAsync(next, true, cancellationToken);
                     }
                     else
                     {
@@ -164,7 +164,7 @@ namespace Caliburn.Micro
                             } while (closable.Contains(next));
 
                             var previousActive = ActiveItem;
-                            await ChangeActiveItemAsync(next, true);
+                            await ChangeActiveItemAsync(next, true, cancellationToken);
                             _items.Remove(previousActive);
 
                             var stillToClose = closable.ToList();
@@ -184,11 +184,11 @@ namespace Caliburn.Micro
                 }
 
                 /// <summary>
-                /// Called when activating.
+                /// Called when view has been activated.
                 /// </summary>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                protected override Task OnActivateAsync(CancellationToken cancellationToken)
+                protected override Task OnActivatedAsync(CancellationToken cancellationToken)
                 {
                     return ScreenExtensions.TryActivateAsync(ActiveItem, cancellationToken);
                 }
