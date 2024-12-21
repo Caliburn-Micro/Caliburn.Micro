@@ -54,7 +54,7 @@
         public virtual void BeginOnUIThread(System.Action action)
         {
             ValidateDispatcher();
-            var dummy = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+            _ = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
         }
 
         /// <summary>
