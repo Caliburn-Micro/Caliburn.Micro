@@ -6,7 +6,7 @@ namespace Caliburn.Micro.Core.Tests
     public class SimpleContainerCheckingForHandler
     {
         [Fact]
-        public void HasHandlerReturnsRalseWhenHandlerDoesNotExist()
+        public void HasHandlerReturnsFalseWhenHandlerDoesNotExist()
         {
             Assert.False(new SimpleContainer().HasHandler(typeof(object), null));
             Assert.False(new SimpleContainer().HasHandler(null, "Object"));
