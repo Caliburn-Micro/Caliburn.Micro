@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Caliburn.Micro.Core.Tests.Services;
 using Xunit;
 
@@ -7,7 +7,7 @@ namespace Caliburn.Micro.Core.Tests
     public class SimpleContainerRegisteringInstances
     {
         [Fact]
-        public void RegisterInstance_ShouldRegisterInstance()
+        public void RegisterInstanceShouldRegisterInstance()
         {
             var container = new SimpleContainer();
             var instance = new TestService();
@@ -21,7 +21,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void RegisterPerRequest_ShouldRegisterPerRequest()
+        public void RegisterPerRequestShouldRegisterPerRequest()
         {
             var container = new SimpleContainer();
 
@@ -36,7 +36,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void RegisterSingleton_ShouldRegisterSingleton()
+        public void RegisterSingletonShouldRegisterSingleton()
         {
             var container = new SimpleContainer();
 
@@ -88,7 +88,7 @@ namespace Caliburn.Micro.Core.Tests
 
 
         [Fact]
-        public void UnregisterHandler_ShouldUnregisterHandler()
+        public void UnregisterHandlerShouldUnregisterHandler()
         {
             var container = new SimpleContainer();
             var instance = new TestService();
