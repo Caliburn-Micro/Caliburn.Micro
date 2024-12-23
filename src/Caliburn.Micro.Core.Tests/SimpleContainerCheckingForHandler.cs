@@ -6,14 +6,14 @@ namespace Caliburn.Micro.Core.Tests
     public class SimpleContainerCheckingForHandler
     {
         [Fact]
-        public void HasHandler_returns_false_when_handler_does_not_exist()
+        public void HasHandlerReturnsRalseWhenHandlerDoesNotExist()
         {
             Assert.False(new SimpleContainer().HasHandler(typeof(object), null));
             Assert.False(new SimpleContainer().HasHandler(null, "Object"));
         }
 
         [Fact]
-        public void HasHandler_returns_true_when_handler_exists()
+        public void HasHandlerReturnsTrueWhenHandlerExists()
         {
             var container = new SimpleContainer();
             container.RegisterPerRequest(typeof(object), "Object", typeof(object));
@@ -23,7 +23,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void GetInstance_ShouldReturnNullIfNoHandler()
+        public void GetInstanceShouldReturnNullIfNoHandler()
         {
             var container = new SimpleContainer();
 
@@ -33,7 +33,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void HasHandler_ShouldReturnTrueIfHandlerExists()
+        public void HasHandlerShouldReturnTrueIfHandlerExists()
         {
             var container = new SimpleContainer();
             var instance = new TestService();
@@ -46,7 +46,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void HasHandler_ShouldReturnFalseIfHandlerDoesNotExist()
+        public void HasHandlerShouldReturnFalseIfHandlerDoesNotExist()
         {
             var container = new SimpleContainer();
 
