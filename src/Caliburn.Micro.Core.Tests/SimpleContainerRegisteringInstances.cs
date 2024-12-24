@@ -51,7 +51,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void Instances_registed_Singleton_return_the_same_instance_for_each_call()
+        public void InstancesRegistedSingletonReturnTheSameInstanceForEachCall()
         {
             var container = new SimpleContainer();
             container.Singleton<object>();
@@ -63,7 +63,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void Instances_registered_PerRequest_returns_a_different_instance_for_each_call()
+        public void InstancesRegisteredPerRequestReturnsaDifferentInstanceForEachCall()
         {
             var container = new SimpleContainer();
             container.PerRequest<object>();
@@ -75,7 +75,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void Instances_registered_with_different_keys_get_all_instances_return_all()
+        public void InstancesRegisteredWithDifferentKeysGetAllInstancesReturnAll()
         {
             var container = new SimpleContainer();
             container.RegisterInstance(typeof(object), "test", new object());

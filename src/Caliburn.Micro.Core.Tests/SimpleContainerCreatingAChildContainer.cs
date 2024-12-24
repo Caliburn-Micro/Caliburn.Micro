@@ -5,7 +5,7 @@ namespace Caliburn.Micro.Core.Tests
     public class SimpleContainerCreatingAChildContainer
     {
         [Fact]
-        public void Singleton_instances_are_the_same_across_parent_and_child()
+        public void SingletonInstancesAreTheSameAcrossParentAndChild()
         {
             var container = new SimpleContainer();
             container.Singleton<object>();
@@ -18,7 +18,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void The_child_container_returned_contains_parent_entries()
+        public void TheChildContainerReturnedContainsParentEntries()
         {
             var container = new SimpleContainer();
             container.PerRequest<object>();
@@ -28,7 +28,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void The_child_container_returned_is_not_the_same_instance_as_its_parent()
+        public void TheChildContainerReturnedIsNotTheSameInstanceAsItsParent()
         {
             var container = new SimpleContainer();
             var childContainer = container.CreateChildContainer();
@@ -39,7 +39,7 @@ namespace Caliburn.Micro.Core.Tests
 
 
         [Fact]
-        public void CreateChildContainer_ShouldCreateChildContainer()
+        public void CreateChildContainerShouldCreateChildContainer()
         {
             var container = new SimpleContainer();
             var childContainer = container.CreateChildContainer();

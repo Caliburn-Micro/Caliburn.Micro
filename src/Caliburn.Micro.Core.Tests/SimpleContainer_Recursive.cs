@@ -19,7 +19,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void Instances_Are_Recursively_Property_Injected_When_Enabled()
+        public void InstancesAreRecursivelyPropertyInjectedWhenEnabled()
         {
             var container = new SimpleContainer
             {
@@ -34,7 +34,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void BuildUp_Injects_All_Registered_Dependencies_Non_Recursively()
+        public void BuildUpInjectsAllRegisteredDependenciesNonRecursively()
         {
             var container = new SimpleContainer();
             RegisterAllComponents(container);
@@ -46,7 +46,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void BuildUp_Injects_Dependencies_Recursively()
+        public void BuildUpInjectsDependenciesRecursively()
         {
             var container = new SimpleContainer
             {
@@ -62,7 +62,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void BuildUp_Injects_Enumerable_Dependencies()
+        public void BuildUpInjectsEnumerableDependencies()
         {
             var container = new SimpleContainer
             {
@@ -78,7 +78,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void BuildUp_Injects_Properties_Of_Enumerable_Dependencies()
+        public void BuildUpInjectsPropertiesOfEnumerableDependencies()
         {
             var container = new SimpleContainer
             {
@@ -94,7 +94,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void BuildUp_Throws_When_Multiple_Types_Found_For_Component()
+        public void BuildUpThrowsWhenMultipleTypesFoundForComponent()
         {
             var container = new SimpleContainer();
             RegisterAllComponents(container);
