@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
 
 namespace Caliburn.Micro
 {
@@ -75,6 +73,14 @@ namespace Caliburn.Micro
             {
                 StartRuntime();
             }
+
+            Coroutine.Completed += (s, e) =>
+            {
+                if (e.Error != null)
+                {
+                    CoroutineException(s, e);
+                }
+            };
         }
 
         /// <summary>
@@ -136,7 +142,7 @@ namespace Caliburn.Micro
         /// <returns>A list of assemblies to inspect.</returns>
         protected virtual IEnumerable<Assembly> SelectAssemblies()
         {
-            return new[] {GetType().Assembly};
+            return new[] { GetType().Assembly };
         }
 
         /// <summary>
@@ -160,7 +166,7 @@ namespace Caliburn.Micro
         /// <returns>The located services.</returns>
         protected virtual IEnumerable<object> GetAllInstances(Type service)
         {
-            return new[] {Activator.CreateInstance(service)};
+            return new[] { Activator.CreateInstance(service) };
         }
 
         /// <summary>
@@ -218,6 +224,13 @@ namespace Caliburn.Micro
         protected Task DisplayRootViewForAsync<TViewModel>(IDictionary<string, object> settings = null)
         {
             return DisplayRootViewForAsync(typeof(TViewModel), settings);
+        }
+
+        /// <summary>
+        /// Called by the bootstrapper's constructor at design time to start the framework.
+        /// </summary>
+        protected virtual void CoroutineException(object sender, ResultCompletionEventArgs e)
+        {
         }
     }
 }

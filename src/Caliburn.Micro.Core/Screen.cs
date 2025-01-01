@@ -103,20 +103,33 @@ namespace Caliburn.Micro
 
             if (!IsInitialized)
             {
+                try
+                {
+                    Log.Info("Initializing {0}.", this);
 #pragma warning disable CS0618 // Type or member is obsolete
-                await OnInitializeAsync(cancellationToken);
+                    await OnInitializeAsync(cancellationToken);
 #pragma warning restore CS0618 // Type or member is obsolete
-                IsInitialized = initialized = true;
-                await OnInitializedAsync(cancellationToken);
+                    IsInitialized = initialized = true;
+                    await OnInitializedAsync(cancellationToken);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                }
             }
-
-            Log.Info("Activating {0}.", this);
+            try
+            {
+                Log.Info("Activating {0}.", this);
 #pragma warning disable CS0618 // Type or member is obsolete
-            await OnActivateAsync(cancellationToken);
+                await OnActivateAsync(cancellationToken);
 #pragma warning restore CS0618 // Type or member is obsolete
-            IsActive = true;
-            await OnActivatedAsync(cancellationToken);
-
+                IsActive = true;
+                await OnActivatedAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                OnActivatedAsyncException(ex);
+            }
             await (Activated?.InvokeAllAsync(this, new ActivationEventArgs
             {
                 WasInitialized = initialized
@@ -134,7 +147,15 @@ namespace Caliburn.Micro
                 });
 
                 Log.Info("Deactivating {0}.", this);
-                await OnDeactivateAsync(close, cancellationToken);
+                try
+                {
+                    await OnDeactivateAsync(close, cancellationToken);
+                }
+                catch (Exception ex)
+                {
+                    OnDeactivateAsyncException(ex);
+                }
+
                 IsActive = false;
 
                 await (Deactivated?.InvokeAllAsync(this, new DeactivationEventArgs
@@ -207,6 +228,15 @@ namespace Caliburn.Micro
 
 
         /// <summary>
+        /// Called when exception called in OnActivatedAsync.
+        /// </summary>
+        protected virtual void OnActivatedAsyncException(Exception thrownException)
+        {
+            Log.Info("Activated Async Exception");
+            Log.Error(thrownException);
+        }
+
+        /// <summary>
         /// Called when view has been activated.
         /// </summary>
         protected virtual Task OnActivatedAsync(CancellationToken cancellationToken)
@@ -225,6 +255,24 @@ namespace Caliburn.Micro
         {
             Log.Info("Task deactivate");
             return Task.FromResult(true);
+        }
+
+        /// <summary>
+        /// Called when exception called in OnDectivateAsync.
+        /// </summary>
+        protected virtual void OnDeactivateAsyncException(Exception thrownException)
+        {
+            Log.Info("Deactivate Async Exception");
+            Log.Error(thrownException);
+        }
+
+        /// <summary>
+        /// Called when exception called in OnInitializedAsync.
+        /// </summary>
+        protected virtual void OnInitializedAsyncException(Exception thrownException)
+        {
+            Log.Info("Initialized Async Exception");
+            Log.Error(thrownException);
         }
     }
 }
