@@ -18,11 +18,12 @@ namespace Caliburn.Micro
         /// </summary>
         /// <value><c>true</c> if cancelled; otherwise, <c>false</c>.</value>
         public bool WasCancelled;
-        private Exception _exception;
 
-        public ResultCompletionEventArgs(Exception exception)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResultCompletionEventArgs"/> class.
+        /// </summary>
+        public ResultCompletionEventArgs()
         {
-            _exception = exception;
         }
     }
 }
