@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Threading;
 
 namespace Caliburn.Micro
 {
@@ -66,6 +67,13 @@ namespace Caliburn.Micro
             {
                 StartRuntime();
             }
+            Coroutine.Completed += (s, e) =>
+            {
+                if (e.Error != null)
+                {
+                    CoroutineException(s, e);
+                }
+            };
         }
 
         /// <summary>
@@ -117,6 +125,16 @@ namespace Caliburn.Micro
         /// </summary>
         protected virtual void Configure()
         {
+        }
+
+        /// <summary>
+        /// Override this to catch unhandled exceptions.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event args.</param>
+        protected virtual void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            Log.Error(e.Exception);
         }
 
         /// <summary>
@@ -201,6 +219,16 @@ namespace Caliburn.Micro
         protected async Task DisplayRootViewFor<TViewModel>(IDictionary<string, object> settings = null)
         {
             await DisplayRootViewForAsync(typeof(TViewModel), settings);
+        }
+
+        /// <summary>
+        /// Handles coroutine exceptions.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event args.</param>
+        protected virtual void CoroutineException(object sender, ResultCompletionEventArgs e)
+        {
+            Log.Error(e.Error ?? new Exception("Coroutine Error"));
         }
     }
 }
