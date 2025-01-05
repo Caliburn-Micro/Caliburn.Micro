@@ -115,6 +115,7 @@ namespace Caliburn.Micro
                 catch (Exception ex)
                 {
                     Log.Error(ex);
+                    OnInitializedAsyncException(ex);
                 }
             }
             try
@@ -128,6 +129,7 @@ namespace Caliburn.Micro
             }
             catch (Exception ex)
             {
+                Log.Error(ex);
                 OnActivatedAsyncException(ex);
             }
             await (Activated?.InvokeAllAsync(this, new ActivationEventArgs
@@ -153,6 +155,7 @@ namespace Caliburn.Micro
                 }
                 catch (Exception ex)
                 {
+                    Log.Error(ex);
                     OnDeactivateAsyncException(ex);
                 }
 
