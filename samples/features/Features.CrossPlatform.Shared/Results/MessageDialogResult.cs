@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Caliburn.Micro;
 #if XAMARINFORMS
 using Xamarin.Forms;
@@ -51,6 +52,22 @@ namespace Features.CrossPlatform.Results
             await dialog.ShowAsync();
             OnCompleted();
         }
+#elif WinUI3
+        public override async void Execute(CoroutineExecutionContext context)
+        { 
+            var dialog = new MessageDialog(_content, _title);
+
+            var hWnd = GetActiveWindow();
+
+            WinRT.Interop.InitializeWithWindow.Initialize(dialog, hWnd);
+
+            await dialog.ShowAsync();
+
+            OnCompleted();
+        }
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetActiveWindow();
 #else
         public override async void Execute(CoroutineExecutionContext context)
         {
