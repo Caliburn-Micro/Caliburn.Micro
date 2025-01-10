@@ -27,6 +27,14 @@
     using DependencyProperty = Avalonia.AvaloniaProperty;
     using ButtonBase = Avalonia.Controls.Button;
     using Selector = Avalonia.Controls.Primitives.SelectingItemsControl;
+#elif WinUI3
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Controls.Primitives;
+    using Microsoft.UI.Xaml.Data;
+    using Microsoft.UI.Xaml.Markup;
+    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    using Microsoft.UI.Xaml.Shapes;
 #else
     using System.ComponentModel;
     using System.Windows;
@@ -37,7 +45,8 @@
     using System.Windows.Shapes;
     using EventTrigger = Microsoft.Xaml.Behaviors.EventTrigger;
 #endif
-#if !WINDOWS_UWP && !AVALONIA
+
+#if !WINDOWS_UWP && !WinUI3 && !AVALONIA
     using System.Windows.Documents;
 #endif
 
@@ -70,12 +79,12 @@
         /// The default DataTemplate used for ItemsControls when required.
         /// </summary>
         public static DataTemplate DefaultItemTemplate = (DataTemplate)
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
         XamlReader.Load(
 #else
         XamlReader.Parse(
 #endif
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
             "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' xmlns:cal='using:Caliburn.Micro'>" +
                 "<ContentControl cal:View.Model=\"{Binding}\" VerticalContentAlignment=\"Stretch\" HorizontalContentAlignment=\"Stretch\" IsTabStop=\"False\" />" +
             "</DataTemplate>"
@@ -95,7 +104,7 @@
         /// The default DataTemplate used for Headered controls when required.
         /// </summary>
         public static DataTemplate DefaultHeaderTemplate = (DataTemplate)
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
         XamlReader.Load(
 #else
         XamlReader.Parse(
@@ -138,7 +147,7 @@
         public static Action<Type, string, PropertyInfo, FrameworkElement, ElementConvention, DependencyProperty> SetBinding =
             (viewModelType, path, property, element, convention, bindableProperty) =>
             {
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
                 var binding = new Binding { Path = new PropertyPath(path) };
 #else
                 var binding = new Binding(path);
@@ -182,7 +191,8 @@
                 binding.ValidatesOnExceptions = true;
             }
 #endif
-#if !WINDOWS_UWP && !AVALONIA
+
+#if !WINDOWS_UWP && !WinUI3 && !AVALONIA
             if (typeof(IDataErrorInfo).IsAssignableFrom(viewModelType)) {
                 binding.ValidatesOnDataErrors = true;
                 binding.ValidatesOnExceptions = true;
@@ -206,7 +216,7 @@
         /// </summary>
         public static Action<Binding, ElementConvention, PropertyInfo> ApplyStringFormat = (binding, convention, property) =>
         {
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !WinUI3
             if (typeof(DateTime).IsAssignableFrom(property.PropertyType))
                 binding.StringFormat = "{0:d}";
 #endif
@@ -242,18 +252,19 @@
                     Log.Info("ViewModel bound on {0}.", element.Name);
                     return View.ModelProperty;
                };
+            AddElementConvention<SearchBox>(SearchBox.QueryTextProperty, "QueryText", "QuerySubmitted");
+
 #endif
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !WinUI3
             AddElementConvention<DatePicker>(DatePicker.SelectedDateProperty, "SelectedDate", "SelectedDateChanged");
 #endif
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
             AddElementConvention<DatePicker>(DatePicker.DateProperty, "Date", "DateChanged");
             AddElementConvention<TimePicker>(TimePicker.TimeProperty, "Time", "TimeChanged");
             AddElementConvention<Hub>(Hub.HeaderProperty, "Header", loadedEvent);
             AddElementConvention<HubSection>(HubSection.HeaderProperty, "Header", "SectionsInViewChanged");
             AddElementConvention<MenuFlyoutItem>(MenuFlyoutItem.TextProperty, "Text", "Click");
             AddElementConvention<ToggleMenuFlyoutItem>(ToggleMenuFlyoutItem.IsCheckedProperty, "IsChecked", "Click");
-            AddElementConvention<SearchBox>(SearchBox.QueryTextProperty, "QueryText", "QuerySubmitted");
             AddElementConvention<ToggleSwitch>(ToggleSwitch.IsOnProperty, "IsOn", "Toggled");
             AddElementConvention<ProgressRing>(ProgressRing.IsActiveProperty, "IsActive", loadedEvent);
             AddElementConvention<Slider>(Slider.ValueProperty, "Value", "ValueChanged");
@@ -377,7 +388,7 @@
 #if AVALONIA
                     AddElementConvention<UserControl>(UserControl.IsVisibleProperty, "DataContext", loadedEvent);
 #else
-            AddElementConvention<UserControl>(UserControl.VisibilityProperty, "DataContext", loadedEvent);
+                    AddElementConvention<UserControl>(UserControl.VisibilityProperty, "DataContext", loadedEvent);
 #endif
 
                     if (useViewModel)
@@ -442,7 +453,7 @@
 
             ElementConvention propertyConvention;
             ElementConventions.TryGetValue(elementType, out propertyConvention);
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
             return propertyConvention ?? GetElementConvention(elementType.GetTypeInfo().BaseType);
 #else
             return propertyConvention ?? GetElementConvention(elementType.BaseType);
@@ -459,7 +470,7 @@
             bool hasBinding = element.IsSet(property);
             //TODO: (Avalonia) Need to find a way to detect existing bindings on an AvaloniaProperty
             return hasBinding;
-#elif (NET || CAL_NETCORE) && !WINDOWS_UWP
+#elif (NET || CAL_NETCORE) && !WinUI3
             return BindingOperations.GetBindingBase(element, property) != null;
 #else
             return element.GetBindingExpression(property) != null;
@@ -519,9 +530,10 @@
         public static void ApplyItemTemplate(ItemsControl itemsControl, PropertyInfo property)
         {
 #if !AVALONIA
- if (!string.IsNullOrEmpty(itemsControl.DisplayMemberPath)
-                || HasBinding(itemsControl, ItemsControl.DisplayMemberPathProperty)
-                || itemsControl.ItemTemplate != null) {
+            if (!string.IsNullOrEmpty(itemsControl.DisplayMemberPath)
+                           || HasBinding(itemsControl, ItemsControl.DisplayMemberPathProperty)
+                           || itemsControl.ItemTemplate != null)
+            {
                 return;
             }
 #endif
@@ -573,7 +585,7 @@
                     if (viewModelType.GetPropertyCaseInsensitive(potentialName) != null)
                     {
                         var selectionPath = path.Replace(baseName, potentialName);
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
                         var binding = new Binding { Mode = BindingMode.TwoWay, Path = new PropertyPath(selectionPath) };
 #else
                         var binding = new Binding(selectionPath) { Mode = BindingMode.TwoWay };
