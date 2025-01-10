@@ -10,6 +10,10 @@ namespace Caliburn.Micro
     using System.Linq;
     using Windows.UI.Xaml;
     using System.Reflection;
+#elif WinUI3
+    using System.Linq;
+    using Microsoft.UI.Xaml;
+    using System.Reflection;
 #elif XFORMS
     using UIElement = global::Xamarin.Forms.Element;
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
