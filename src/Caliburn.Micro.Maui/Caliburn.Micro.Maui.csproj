@@ -93,6 +93,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+    <Compile Remove="*.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\Windows\**\*.cs" />
   </ItemGroup>
 

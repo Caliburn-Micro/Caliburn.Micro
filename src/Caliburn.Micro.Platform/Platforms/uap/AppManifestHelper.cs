@@ -65,6 +65,7 @@ namespace Caliburn.Micro
         public Uri LogoUri { get; set; }
         public Uri SmallLogoUri { get; set; }
         public string BackgroundColorAsString { get; set; }
+
         public Windows.UI.Color BackgroundColor
         {
             get
@@ -77,9 +78,14 @@ namespace Caliburn.Micro
         {
             // if 'transparent' is entered in the app manifest, return Windows.UI.Colors.Transparent
             // in order to prevent parsing failures
-            if (String.Equals(hexValue, "transparent", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(hexValue, "transparent", StringComparison.OrdinalIgnoreCase))
+#if WinUI3
+                return Microsoft.UI.Colors.Transparent;
+#else
                 return Windows.UI.Colors.Transparent;
-                
+#endif
+
+
             hexValue = hexValue.Replace("#", string.Empty);
 
             // some loose validation (not bullet-proof)

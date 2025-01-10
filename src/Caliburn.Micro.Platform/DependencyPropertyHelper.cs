@@ -7,6 +7,8 @@ using Microsoft.Maui.Controls;
 using DependencyProperty = Microsoft.Maui.Controls.BindableProperty;
 #elif WINDOWS_UWP
 using Windows.UI.Xaml;
+#elif WinUI3
+using Microsoft.UI.Xaml;
 #else
 using System.Windows;
 #endif
