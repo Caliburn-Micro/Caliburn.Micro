@@ -1,12 +1,16 @@
 ﻿namespace Caliburn.Micro
 {
     using System;
+#if WinUI3
+    using Microsoft.UI.Xaml;
+#else
     using Windows.UI.Xaml;
+#endif
 
     /// <summary>
     /// Represents a parameter of an <see cref="ActionMessage"/>.
     /// </summary>
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
     public class Parameter : DependencyObject, IAttachedObject
     {
         DependencyObject _associatedObject;
@@ -37,7 +41,7 @@
             set { SetValue(ValueProperty, value); }
         }
 
-#if WINDOWS_UWP
+#if WINDOWS_UWP ||   WinUI3
         DependencyObject IAttachedObject.AssociatedObject
         {
 #else
@@ -50,13 +54,13 @@
         /// <summary>
         /// Gets or sets the owner.
         /// </summary>
-        protected ActionMessage Owner
+        internal ActionMessage Owner
         {
             get { return _owner == null ? null : _owner.Target as ActionMessage; }
             set { _owner = new WeakReference(value); }
         }
 
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
         void IAttachedObject.Attach(DependencyObject dependencyObject)
         {
 #else
@@ -79,7 +83,7 @@
             Owner = actionMessageOwner;
         }
 
-        static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        internal static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var parameter = (Parameter)d;
             var owner = parameter.Owner;

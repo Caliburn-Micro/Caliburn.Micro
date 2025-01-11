@@ -30,6 +30,9 @@ namespace Caliburn.Micro
     using FrameworkElement = Avalonia.Controls.Control;
     using DependencyObject = Avalonia.AvaloniaObject;
     using DependencyProperty = Avalonia.AvaloniaProperty;
+#elif WinUI3
+    using Microsoft.UI.Xaml;
+    using Microsoft.Xaml.Interactivity;
 #else
     using System.Windows;
     using Microsoft.Xaml.Behaviors;
