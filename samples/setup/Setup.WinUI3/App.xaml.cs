@@ -1,26 +1,13 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Caliburn.Micro;
+using Microsoft.UI.Xaml.Controls;
 using Setup.WinUI3.ViewModels;
 using Setup.WinUI3.Views;
+using Windows.ApplicationModel.Activation;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -32,7 +19,7 @@ namespace Setup.WinUI3
     /// </summary>
     public partial class App : CaliburnApplication
     {
-        private WinRTContainer container;
+        private WinRTContainer container = new WinRTContainer();
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -46,8 +33,6 @@ namespace Setup.WinUI3
 
         protected override void Configure()
         {
-            container = new WinRTContainer();
-
             container.RegisterWinRTServices();
 
             container.PerRequest<HomeViewModel>();
@@ -65,7 +50,7 @@ namespace Setup.WinUI3
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            if(args.UWPLaunchActivatedEventArgs.PreviousExecutionState == ApplicationExecutionState.Running)
+            if (args.UWPLaunchActivatedEventArgs.PreviousExecutionState == ApplicationExecutionState.Running)
                 return;
 
             //DisplayRootViewForAsync<HomeViewModel>();

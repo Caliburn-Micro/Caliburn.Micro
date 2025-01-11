@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 
 namespace Setup.WinUI3.ViewModels
 {
@@ -23,6 +18,7 @@ namespace Setup.WinUI3.ViewModels
 
         public HomeViewModel()
         {
+            _title = string.Empty;
             Title = "Welcome to Caliburn Micro in WinUI3";
         }
     }

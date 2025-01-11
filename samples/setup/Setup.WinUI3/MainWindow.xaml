@@ -1,6 +1,4 @@
-<!-- Copyright (c) Microsoft Corporation. All rights reserved. -->
-<!-- Licensed under the MIT License. See LICENSE in the project root for license information. -->
-
+<?xml version="1.0" encoding="utf-8"?>
 <Window
     x:Class="Setup.WinUI3.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -8,7 +6,8 @@
     xmlns:local="using:Setup.WinUI3"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Title="Setup.WinUI3">
 
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>

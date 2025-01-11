@@ -2,18 +2,21 @@
 
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="bef5dfe8-0fb7-4b67-8f2a-ce70c6d3c1fa"
-    Publisher="CN=ksk"
+    Name="8f95b858-ed4c-4571-bf22-8f7512ab539b"
+    Publisher="CN=vb2ae"
     Version="1.0.0.0" />
+
+  <mp:PhoneIdentity PhoneProductId="8f95b858-ed4c-4571-bf22-8f7512ab539b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>Setup.WinUI3</DisplayName>
-    <PublisherDisplayName>ksk</PublisherDisplayName>
+    <PublisherDisplayName>vb2ae</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

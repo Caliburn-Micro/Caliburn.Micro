@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
-    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>Features.WinUI3</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x86;x64;ARM64</Platforms>
@@ -52,6 +52,7 @@
       <HintPath>..\..\..\bin\Caliburn.Micro.WinUI3\release\net8.0-windows10.0.19041.0\Caliburn.Micro.WinUI3.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <Import Project="..\Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems" Label="Shared" />
 
   <!--
     Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
@@ -69,5 +70,4 @@
     <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
     <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
   </PropertyGroup>
-  <Import Project="..\Features.CrossPlatform.Shared\Features.CrossPlatform.Shared.projitems" Label="Shared" />
 </Project>
