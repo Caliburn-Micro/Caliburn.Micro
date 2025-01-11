@@ -106,7 +106,7 @@ namespace Caliburn.Micro
         /// <returns>A list of assemblies to inspect.</returns>
         protected virtual IEnumerable<Assembly> SelectAssemblies()
         {
-            return new[] {GetType().GetTypeInfo().Assembly};
+            return new[] { GetType().GetTypeInfo().Assembly };
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Caliburn.Micro
         /// <returns>The located services.</returns>
         protected virtual IEnumerable<object> GetAllInstances(Type service)
         {
-            return new[] {Activator.CreateInstance(service)};
+            return new[] { Activator.CreateInstance(service) };
         }
 
         /// <summary>
@@ -135,6 +135,15 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="instance">The instance to perform injection on.</param>
         protected virtual void BuildUp(object instance)
+        {
+        }
+
+        /// <summary>
+        /// Handles exceptions that occur during coroutine execution.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event arguments containing exception details.</param>
+        protected virtual void CoroutineException(object sender, ResultCompletionEventArgs e)
         {
         }
     }

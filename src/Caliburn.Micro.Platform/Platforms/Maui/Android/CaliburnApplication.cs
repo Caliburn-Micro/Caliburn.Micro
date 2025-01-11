@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Android.App;
 using Android.Runtime;
-using Microsoft.Maui;
-using Microsoft.Maui.Hosting;
 
 namespace Caliburn.Micro.Maui
 {
@@ -23,7 +20,7 @@ namespace Caliburn.Micro.Maui
         public CaliburnApplication(IntPtr javaReference, JniHandleOwnership transfer)
             : base(javaReference, transfer)
         {
-            
+
         }
 
         /// <summary>
@@ -39,7 +36,7 @@ namespace Caliburn.Micro.Maui
 
         /// <summary>
         /// Called by the bootstrapper's constructor at runtime to start the framework.
-        /// </summary>B
+        /// </summary>
         protected virtual void StartRuntime()
         {
             AssemblySourceCache.Install();
@@ -79,6 +76,14 @@ namespace Caliburn.Micro.Maui
             {
                 StartRuntime();
             }
+
+            Coroutine.Completed += (s, e) =>
+            {
+                if (e.Error != null)
+                {
+                    CoroutineException(s, e);
+                }
+            };
         }
 
         /// <summary>
@@ -97,6 +102,13 @@ namespace Caliburn.Micro.Maui
             return new[] { GetType().GetTypeInfo().Assembly };
         }
 
- 
+        /// <summary>
+        /// Handles exceptions that occur during coroutine execution.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event arguments containing the exception details.</param>
+        protected virtual void CoroutineException(object sender, ResultCompletionEventArgs e)
+        {
+        }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 
@@ -19,8 +18,10 @@ namespace Caliburn.Micro.Maui
         /// <summary>
         /// Start the framework.
         /// </summary>
-        protected void Initialize() {
-            if (isInitialized) {
+        protected void Initialize()
+        {
+            if (isInitialized)
+            {
                 return;
             }
 
@@ -30,10 +31,11 @@ namespace Caliburn.Micro.Maui
 
             var baseExtractTypes = AssemblySourceCache.ExtractTypes;
 
-            AssemblySourceCache.ExtractTypes = assembly => {
+            AssemblySourceCache.ExtractTypes = assembly =>
+            {
                 var baseTypes = baseExtractTypes(assembly);
                 var elementTypes = assembly.ExportedTypes
-                    .Where(t => typeof (Element).GetTypeInfo().IsAssignableFrom(t.GetTypeInfo()));
+                    .Where(t => typeof(Element).GetTypeInfo().IsAssignableFrom(t.GetTypeInfo()));
 
                 return baseTypes.Union(elementTypes);
             };
@@ -44,6 +46,13 @@ namespace Caliburn.Micro.Maui
             IoC.BuildUp = BuildUp;
 
             AssemblySource.Instance.Refresh();
+            Coroutine.Completed += (s, e) =>
+            {
+                if (e.Error != null)
+                {
+                    CoroutineException(s, e);
+                }
+            };
         }
 
         /// <summary>
@@ -172,6 +181,13 @@ namespace Caliburn.Micro.Maui
         /// </summary>
         /// <param name="instance">The instance to perform injection on.</param>
         protected virtual void BuildUp(object instance)
+        {
+        }
+
+        /// <summary>
+        /// Called by the bootstrapper's constructor at design time to start the framework.
+        /// </summary>
+        protected virtual void CoroutineException(object sender, ResultCompletionEventArgs e)
         {
         }
     }
