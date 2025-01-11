@@ -26,7 +26,10 @@ namespace Caliburn.Micro
     using UIElement = global::Microsoft.Maui.Controls.Element;
     using TextBlock = global::Microsoft.Maui.Controls.Label;
     using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
-#elif !WINDOWS_UWP 
+#elif WinUI3
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Controls;
+#elif !WINDOWS_UWP
     using System.Windows;
     using System.Windows.Controls;
 #else
@@ -34,7 +37,7 @@ namespace Caliburn.Micro
     using Windows.UI.Xaml.Controls;
 #endif
 
-#if !WINDOWS_UWP && !XFORMS && !AVALONIA && !MAUI
+#if !WINDOWS_UWP && !XFORMS && !MAUI && !WinUI3 && !AVALONIA 
     using System.Windows.Interop;
 #endif
 
@@ -464,7 +467,7 @@ namespace Caliburn.Micro
                     var view = viewAware.GetView(context) as UIElement;
                     if (view != null)
                     {
-#if !WINDOWS_UWP && !XFORMS && !MAUI
+#if !WINDOWS_UWP && !XFORMS && !MAUI && !WinUI3
                         var windowCheck = view as Window;
 #if AVALONIA
                         if (windowCheck == null)
@@ -485,6 +488,8 @@ namespace Caliburn.Micro
 
                 return LocateForModelType(model.GetType(), displayLocation, context);
             };
+
+
 
         /// <summary>
         /// Transforms a view type into a pack uri.

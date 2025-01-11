@@ -19,6 +19,16 @@ namespace Caliburn.Micro
     using System.Text;
     using System.Text.RegularExpressions;
     using Windows.UI.Xaml.Data;
+#elif WinUI3
+    using System.Reflection;
+    using Microsoft.UI.Xaml;
+    using Microsoft.Xaml.Interactivity;
+    using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
+    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    using TriggerAction = Microsoft.Xaml.Interactivity.IAction;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using Microsoft.UI.Xaml.Data;
 #elif XFORMS
     using System.Reflection;
     using System.Text.RegularExpressions;
@@ -101,7 +111,7 @@ namespace Caliburn.Micro
                 var trigger = CreateTrigger(target, triggerPlusMessage.Length == 1 ? null : triggerPlusMessage[0]);
                 var message = CreateMessage(target, messageDetail);
 
-#if WINDOWS_UWP || XFORMS || MAUI
+#if WINDOWS_UWP || XFORMS || MAUI || WinUI3
                 AddActionToTrigger(target, message, trigger);
 #else
                 trigger.Actions.Add(message);
@@ -141,7 +151,7 @@ namespace Caliburn.Micro
         }
 #endif
 
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
 
         private static void AddActionToTrigger(DependencyObject target, TriggerAction message, TriggerBase trigger)
         {
@@ -375,7 +385,7 @@ namespace Caliburn.Micro
             {
                 path = ConventionManager.GetElementConvention(element.GetType()).ParameterProperty;
             }
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
             var binding = new Binding
             {
                 Path = new PropertyPath(path),

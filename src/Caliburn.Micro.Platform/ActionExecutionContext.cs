@@ -11,6 +11,8 @@ namespace Caliburn.Micro
     using System.Reflection;
 #if WINDOWS_UWP
     using Windows.UI.Xaml;
+#elif WinUI3
+    using Microsoft.UI.Xaml;
 #elif XFORMS
     using global::Xamarin.Forms;
     using DependencyObject = global::Xamarin.Forms.BindableObject;

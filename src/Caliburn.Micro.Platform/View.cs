@@ -15,6 +15,13 @@ namespace Caliburn.Micro
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Markup;
     using Windows.UI.Xaml.Media;
+#elif WinUI3
+    using System.Reflection;
+    using Windows.ApplicationModel;
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Markup;
+    using Microsoft.UI.Xaml.Media;
 #elif XFORMS
     using System.Reflection;
     using global::Xamarin.Forms;
@@ -59,6 +66,8 @@ namespace Caliburn.Micro
         static readonly ILog Log = LogManager.GetLog(typeof(View));
 #if WINDOWS_UWP || XFORMS || MAUI
         const string DefaultContentPropertyName = "Content";
+#elif WinUI3
+        static readonly ContentPropertyAttribute DefaultContentProperty = new ContentPropertyAttribute() { Name = "Content" };
 #elif !AVALONIA
         static readonly ContentPropertyAttribute DefaultContentProperty = new ContentPropertyAttribute("Content");
 #endif
@@ -284,7 +293,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="handler">The handler.</param>
-#if WINDOWS_UWP //|| MAUI
+#if WINDOWS_UWP || WinUI3
         public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler<object> handler) {
             EventHandler<object> onLayoutUpdate = null;
 #else
@@ -549,7 +558,7 @@ namespace Caliburn.Micro
                 {
 #if XFORMS || MAUI
                     inDesignMode = false;
-#elif WINDOWS_UWP
+#elif WINDOWS_UWP || WinUI3
                     inDesignMode = DesignMode.DesignModeEnabled;
 #elif AVALONIA
                     inDesignMode = Design.IsDesignMode;
