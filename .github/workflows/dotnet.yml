@@ -74,7 +74,7 @@ jobs:
       run:  msbuild ${{env.caliburn_features}} -t:restore 
       
     - name: Build feature features
-      run: msbuild ${{env.caliburn_features}} /t:Build /p:Configuration=${{env.build_configuration}}
+      run: msbuild ${{env.caliburn_features}} /t:Build /p:Configuration=Debug
       
     - name: Pack Nuget
       run: msbuild ${{env.caliburn_sln}} /t:package /p:Configuration=${{env.build_configuration}}
