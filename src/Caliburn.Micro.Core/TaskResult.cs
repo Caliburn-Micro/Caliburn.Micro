@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Caliburn.Micro
 {
     /// <summary>
-    /// A couroutine that encapsulates an <see cref="Task"/>.
+    /// A coroutine that encapsulates an <see cref="Task"/>.
     /// </summary>
     public class TaskResult : IResult
     {
@@ -54,7 +54,7 @@ namespace Caliburn.Micro
     }
 
     /// <summary>
-    /// A couroutine that encapsulates an <see cref="System.Threading.Tasks.Task&lt;TResult&gt;"/>.
+    /// A coroutine that encapsulates an <see cref="Task&lt;TResult&gt;"/>.
     /// </summary>
     /// <typeparam name="TResult">The type of the result.</typeparam>
     public class TaskResult<TResult> : TaskResult, IResult<TResult>

@@ -10,8 +10,6 @@ namespace Caliburn.Micro
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">An object that contains the event data.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public delegate Task AsyncEventHandler<TEventArgs>(
-        object sender,
-        TEventArgs e)
+    public delegate Task AsyncEventHandler<TEventArgs>(object sender, TEventArgs e)
         where TEventArgs : EventArgs;
 }

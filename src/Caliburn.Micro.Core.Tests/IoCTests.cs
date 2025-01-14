@@ -61,7 +61,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void A_null_GetInstance_throws_a_NullRefrenceException()
+        public void A_null_GetInstance_throws_a_NullReferenceException()
         {
             using (IoCReset.Create())
             {
