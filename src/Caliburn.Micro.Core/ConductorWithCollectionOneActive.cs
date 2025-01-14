@@ -25,6 +25,10 @@ namespace Caliburn.Micro
                 /// </summary>
                 public OneActive()
                 {
+                    _items.CollectionCleared += (s, e) =>
+                    {
+                        e.ClearedItems.OfType<IChild>().Apply(x => x.Parent = null);
+                    };
                     _items.CollectionChanged += (s, e) =>
                     {
                         switch (e.Action)
@@ -172,7 +176,7 @@ namespace Caliburn.Micro
                             closable = stillToClose;
                         }
 
-                        foreach(var deactivate in closable.OfType<IDeactivate>())
+                        foreach (var deactivate in closable.OfType<IDeactivate>())
                         {
                             await deactivate.DeactivateAsync(true, cancellationToken);
                         }
