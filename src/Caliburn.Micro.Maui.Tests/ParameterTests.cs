@@ -1,10 +1,7 @@
-﻿namespace Caliburn.Micro.Maui.Tests
+﻿using Moq;
+
+namespace Caliburn.Micro.Maui.Tests
 {
-    using Microsoft.Maui.Controls;
-    using Moq;
-    using Xunit;
-
-
     public class ParameterTests
     {
         [Fact]

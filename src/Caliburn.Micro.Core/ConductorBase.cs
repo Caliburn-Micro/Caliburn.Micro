@@ -20,7 +20,7 @@ namespace Caliburn.Micro
         /// <value>The close strategy.</value>
         public ICloseStrategy<T> CloseStrategy
         {
-            get => _closeStrategy ?? (_closeStrategy = new DefaultCloseStrategy<T>());
+            get => _closeStrategy ??= new DefaultCloseStrategy<T>();
             set => _closeStrategy = value;
         }
 
@@ -91,7 +91,7 @@ namespace Caliburn.Micro
         /// <returns>The item to be activated.</returns>
         protected virtual T EnsureItem(T newItem)
         {
-            if (newItem is IChild node && !object.ReferenceEquals(node.Parent, this))
+            if (newItem is IChild node && !ReferenceEquals(node.Parent, this))
                 node.Parent = this;
 
             return newItem;

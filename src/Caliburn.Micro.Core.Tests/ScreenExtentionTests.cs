@@ -12,20 +12,10 @@ namespace Caliburn.Micro.Core.Tests
         {
             var root = new Screen();
 
-            var child1 = new StateScreen
-            {
-                DisplayName = "screen1"
-            };
+            var child1 = new StateScreen { DisplayName = "screen1" };
             // simulate a long deactivation process 
-            var child2 = new StateScreen(TimeSpan.FromSeconds(3))
-            {
-                DisplayName = "screen2"
-            };
-
-            var child3 = new StateScreen()
-            {
-                DisplayName = "screen3"
-            };
+            var child2 = new StateScreen(TimeSpan.FromSeconds(3)) { DisplayName = "screen2" };
+            var child3 = new StateScreen() { DisplayName = "screen3" };
 
             child1.ConductWith(root);
             child2.ConductWith(root);
@@ -49,20 +39,13 @@ namespace Caliburn.Micro.Core.Tests
         {
             var root = new Conductor<StateScreen>.Collection.AllActive();
 
-            var child1 = new StateScreen
-            {
-                DisplayName = "screen1"
-            };
+            var child1 = new StateScreen { DisplayName = "screen1" };
             var child2 = new StateScreen(TimeSpan.FromSeconds(3))
             {
                 DisplayName = "screen2",
                 IsClosable = false,
             };
-
-            var child3 = new StateScreen()
-            {
-                DisplayName = "screen3"
-            };
+            var child3 = new StateScreen() { DisplayName = "screen3" };
 
             root.Items.Add(child1);
             root.Items.Add(child2);
@@ -81,8 +64,10 @@ namespace Caliburn.Micro.Core.Tests
             Assert.True(child3.IsClosed, "child 3 should be closed");
         }
 
-        class StateScreen : Screen
+        private sealed class StateScreen : Screen
         {
+            private readonly TimeSpan? deactivationDelay;
+
             public StateScreen()
             {
             }
@@ -93,7 +78,9 @@ namespace Caliburn.Micro.Core.Tests
             }
 
             public bool WasActivated { get; private set; }
+
             public bool IsClosed { get; private set; }
+
             public bool IsClosable { get; set; }
 
             public override Task<bool> CanCloseAsync(CancellationToken cancellationToken = default)
@@ -129,7 +116,7 @@ namespace Caliburn.Micro.Core.Tests
                 IsClosable = false;
             }
 
-            protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken = default(CancellationToken))
+            protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken = default)
             {
                 await base.OnDeactivateAsync(close, cancellationToken);
 
@@ -140,8 +127,6 @@ namespace Caliburn.Micro.Core.Tests
 
                 IsClosed = close;
             }
-
-            private readonly TimeSpan? deactivationDelay;
         }
     }
 }

@@ -47,14 +47,7 @@ namespace Caliburn.Micro
         {
             if (IsNotifying && PropertyChanged != null)
             {
-                if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
-                {
-                    OnUIThread(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
-                }
-                else
-                {
-                    OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-                }
+                SafeRun(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
             }
         }
 
@@ -81,7 +74,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Executes the given action on the UI thread
         /// </summary>
-        /// <remarks>An extension point for subclasses to customise how property change notifications are handled.</remarks>
+        /// <remarks>An extension point for subclasses to customize how property change notifications are handled.</remarks>
         /// <param name="action"></param>
         protected virtual void OnUIThread(System.Action action) => action.OnUIThread();
 
@@ -105,6 +98,18 @@ namespace Caliburn.Micro
             NotifyOfPropertyChange(propertyName ?? string.Empty);
 
             return true;
+        }
+
+        private void SafeRun(Action action)
+        {
+            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+            {
+                OnUIThread(action);
+            }
+            else
+            {
+                action();
+            }
         }
     }
 }

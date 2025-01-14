@@ -17,7 +17,7 @@ namespace Caliburn.Micro
         public static readonly object DefaultContext = new object();
 
         /// <summary>
-        /// The view chache for this instance.
+        /// The view cache for this instance.
         /// </summary>
         protected IDictionary<object, object> Views
         {
@@ -46,8 +46,7 @@ namespace Caliburn.Micro
             OnViewAttached(nonGeneratedView, context);
             ViewAttached(this, new ViewAttachedEventArgs { View = nonGeneratedView, Context = context });
 
-            var activatable = this as IActivate;
-            if (activatable == null || activatable.IsActive)
+            if (this is not IActivate activatable || activatable.IsActive)
             {
                 PlatformProvider.Current.ExecuteOnLayoutUpdated(nonGeneratedView, OnViewReady);
             }
@@ -60,10 +59,9 @@ namespace Caliburn.Micro
         private static void AttachViewReadyOnActivated(IActivate activatable, object nonGeneratedView)
         {
             var viewReference = new WeakReference(nonGeneratedView);
-            AsyncEventHandler<ActivationEventArgs> handler = null;
-            handler = (s, e) =>
+            Task OnActivated(object s, ActivationEventArgs e)
             {
-                ((IActivate)s).Activated -= handler;
+                ((IActivate)s).Activated -= OnActivated;
                 var view = viewReference.Target;
                 if (view != null)
                 {
@@ -71,8 +69,9 @@ namespace Caliburn.Micro
                 }
 
                 return Task.CompletedTask;
-            };
-            activatable.Activated += handler;
+            }
+
+            activatable.Activated += OnActivated;
         }
 
         /// <summary>
@@ -107,8 +106,7 @@ namespace Caliburn.Micro
         /// <returns>The view.</returns>
         public virtual object GetView(object context = null)
         {
-            object view;
-            Views.TryGetValue(context ?? DefaultContext, out view);
+            Views.TryGetValue(context ?? DefaultContext, out object view);
             return view;
         }
     }
