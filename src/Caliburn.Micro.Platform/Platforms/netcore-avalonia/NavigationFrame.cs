@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
@@ -15,7 +16,8 @@ namespace Caliburn.Micro
         private static readonly ILog Log = LogManager.GetLog(typeof(NavigationFrame));
 
         private string defaultContent { get; } = "Default Content";
-
+        private List<object> navigationStack = new List<object>();
+        private int navigationStackIndex = 0;
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationFrame"/> class.
         /// </summary>
@@ -121,24 +123,38 @@ namespace Caliburn.Micro
             Tag = "Navigating";
             viewInstance.DataContext = viewModel;
             Content = viewInstance;
-
+            navigationStack.Add(viewModel);
+            navigationStackIndex = navigationStack.Count;
         }
 
         /// <inheritdoc/>
         public Task GoBackAsync(bool animated = true)
         {
-            throw new NotImplementedException();
+            Log.Info("Going back");
+            navigationStackIndex--;
+            if (navigationStackIndex < 1)
+            {
+                Log.Info("Navigation stack index is less than 1");
+                navigationStackIndex = 1;
+            }
+            Log.Info($"Navigating to {navigationStackIndex} of {navigationStack.Count}");
+            Log.Info($"Navigating to {navigationStack[navigationStackIndex - 1]}");
+
+            NavigateToViewModel(navigationStack[navigationStackIndex - 1]);
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
         public Task NavigateToViewAsync(Type viewType, object parameter = null, bool animated = true)
         {
+            Log.Info($"Navigate to View type {viewType}");
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
         public Task NavigateToViewAsync<T>(object parameter = null, bool animated = true)
         {
+            Log.Info($"Navigate to View 2 type {typeof(T)}");
             throw new NotImplementedException();
         }
 
@@ -148,6 +164,7 @@ namespace Caliburn.Micro
             Log.Info($"View model type {viewModelType}");
             var vm = Caliburn.Micro.IoC.GetInstance(viewModelType, null);
             Log.Info($"VM is null {vm == null}");
+            TryInjectParameters(vm, parameter);
             NavigateToViewModel(vm);
 
             return Task.CompletedTask;
@@ -156,7 +173,9 @@ namespace Caliburn.Micro
         /// <inheritdoc/>
         public Task NavigateToViewModelAsync<T>(object parameter = null, bool animated = true)
         {
-            throw new NotImplementedException();
+            Log.Info($"Navigate to View model type {typeof(T)}");
+            Log.Info($"Navigate to View model parameter not null {parameter != null}");
+            return NavigateToViewModelAsync(typeof(T), parameter, animated);
         }
 
         /// <inheritdoc/>
@@ -170,6 +189,7 @@ namespace Caliburn.Micro
         /// <inheritdoc/>
         public Task GoBackToRootAsync(bool animated = true)
         {
+            Log.Info("Going back to root");
             throw new NotImplementedException();
         }
 
@@ -180,6 +200,42 @@ namespace Caliburn.Micro
         private string GetDebuggerDisplay()
         {
             return $"{nameof(NavigationFrame)}: Content={Content}, IsNavigationServiceReady={NavigationServiceReady != null}";
+        }
+
+        /// <summary>
+        ///   Attempts to inject query string parameters from the view into the view model.
+        /// </summary>
+        /// <param name="viewModel"> The view model.</param>
+        /// <param name="parameter"> The parameter.</param>
+        protected virtual void TryInjectParameters(object viewModel, object parameter)
+        {
+            var viewModelType = viewModel.GetType();
+
+            var dictionaryParameter = parameter as IDictionary<string, object>;
+
+            if (dictionaryParameter != null)
+            {
+                foreach (var pair in dictionaryParameter)
+                {
+                    var property = viewModelType.GetPropertyCaseInsensitive(pair.Key);
+
+                    if (property == null)
+                    {
+                        continue;
+                    }
+
+                    property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, pair.Value, null), null);
+                }
+            }
+            else
+            {
+                var property = viewModelType.GetPropertyCaseInsensitive("Parameter");
+
+                if (property == null)
+                    return;
+
+                property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, parameter, null), null);
+            }
         }
     }
 }
