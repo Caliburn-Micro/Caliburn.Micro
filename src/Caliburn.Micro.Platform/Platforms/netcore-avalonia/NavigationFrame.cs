@@ -100,7 +100,7 @@ namespace Caliburn.Micro
         /// Navigates to the specified view model.
         /// </summary>
         /// <param name="viewModel">The view model to navigate to.</param>
-        private void NavigateToViewModel(object viewModel)
+        private void NavigateToViewModel(object viewModel, bool addToStack = true)
         {
             if (viewModel == null)
             {
@@ -123,8 +123,11 @@ namespace Caliburn.Micro
             Tag = "Navigating";
             viewInstance.DataContext = viewModel;
             Content = viewInstance;
-            navigationStack.Add(viewModel);
-            navigationStackIndex = navigationStack.Count;
+            if (addToStack)
+            {
+                navigationStack.Add(viewModel);
+                navigationStackIndex = navigationStack.Count;
+            }
         }
 
         /// <inheritdoc/>
@@ -140,30 +143,26 @@ namespace Caliburn.Micro
             Log.Info($"Navigating to {navigationStackIndex} of {navigationStack.Count}");
             Log.Info($"Navigating to {navigationStack[navigationStackIndex - 1]}");
 
-            NavigateToViewModel(navigationStack[navigationStackIndex - 1]);
+            NavigateToViewModel(navigationStack[navigationStackIndex - 1], false);
             return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
         public Task NavigateToViewAsync(Type viewType, object parameter = null, bool animated = true)
         {
-            Log.Info($"Navigate to View type {viewType}");
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
         public Task NavigateToViewAsync<T>(object parameter = null, bool animated = true)
         {
-            Log.Info($"Navigate to View 2 type {typeof(T)}");
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
         public Task NavigateToViewModelAsync(Type viewModelType, object parameter = null, bool animated = true)
         {
-            Log.Info($"View model type {viewModelType}");
             var vm = Caliburn.Micro.IoC.GetInstance(viewModelType, null);
-            Log.Info($"VM is null {vm == null}");
             TryInjectParameters(vm, parameter);
             NavigateToViewModel(vm);
 
