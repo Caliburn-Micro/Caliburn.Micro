@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 
 namespace Caliburn.Micro
 {
@@ -16,7 +17,7 @@ namespace Caliburn.Micro
         private static readonly ILog Log = LogManager.GetLog(typeof(NavigationFrame));
 
         private string defaultContent { get; } = "Default Content";
-        private List<object> navigationStack = new List<object>();
+        private readonly List<object> navigationStack = new List<object>();
         private int navigationStackIndex = 0;
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationFrame"/> class.
@@ -24,9 +25,14 @@ namespace Caliburn.Micro
         public NavigationFrame()
         {
             Content = defaultContent;
-            this.AttachedToVisualTree += NavigationFrame_AttachedToVisualTree;
-            LayoutUpdated += NavigationFrame_LayoutUpdated;
+            this.Loaded += NavigationFrame_Loaded;
             ContentProperty.Changed.AddClassHandler<NavigationFrame>((sender, e) => NavigationFrame_ContentChanged(sender, e));
+        }
+
+        private void NavigationFrame_Loaded(object sender, RoutedEventArgs e)
+        {
+            Log.Info("Navigation Frame loaded");
+            OnNavigationServiceReady(new EventArgs());
         }
 
         private void NavigationFrame_ContentChanged(NavigationFrame sender, AvaloniaPropertyChangedEventArgs e)
@@ -66,15 +72,6 @@ namespace Caliburn.Micro
                     await activator.ActivateAsync();
                 }
             }
-        }
-
-        /// <summary>
-        /// Handles the event when the frame is attached to the visual tree.
-        /// </summary>
-        private void NavigationFrame_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
-        {
-            Log.Info("Attached to visual tree");
-            OnNavigationServiceReady(new EventArgs());
         }
 
         /// <summary>
@@ -119,7 +116,6 @@ namespace Caliburn.Micro
 
             ViewModelBinder.Bind(viewModel, viewInstance, null);
             Log.Info($"View Model {viewModel}");
-            Log.Info($"View {viewInstance}");
             Tag = "Navigating";
             viewInstance.DataContext = viewModel;
             Content = viewInstance;
@@ -134,14 +130,8 @@ namespace Caliburn.Micro
         public Task GoBackAsync(bool animated = true)
         {
             Log.Info("Going back");
-            navigationStackIndex--;
-            if (navigationStackIndex < 1)
-            {
-                Log.Info("Navigation stack index is less than 1");
-                navigationStackIndex = 1;
-            }
-            Log.Info($"Navigating to {navigationStackIndex} of {navigationStack.Count}");
-            Log.Info($"Navigating to {navigationStack[navigationStackIndex - 1]}");
+            if (navigationStackIndex > 0)
+                navigationStackIndex--;
 
             NavigateToViewModel(navigationStack[navigationStackIndex - 1], false);
             return Task.CompletedTask;
@@ -167,6 +157,14 @@ namespace Caliburn.Micro
             NavigateToViewModel(vm);
 
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Gets or sets the ViewModel.
+        /// </summary>
+        public static string ViewModel
+        {
+            get; set;
         }
 
         /// <inheritdoc/>
