@@ -42,6 +42,15 @@ namespace Features.CrossPlatform.ViewModels
             }
         }
 
+        public void GoBack()
+        {
+            var menuVM = _container.GetInstance<MenuViewModel>();
+            if (_navigationService != null)
+            {
+                _navigationService.GoBackAsync();
+            }
+        }
+
         public async void NavReady(NavigationFrame frame)
         {
             _navigationService = frame as INavigationService;
