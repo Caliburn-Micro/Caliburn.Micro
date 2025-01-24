@@ -43,7 +43,7 @@ namespace Caliburn.Micro
         {
             if (IsNotifying)
             {
-                SafeRun(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
+                Execute.SafeRun(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
             }
         }
 
@@ -52,7 +52,7 @@ namespace Caliburn.Micro
         /// </summary>
         public void Refresh()
         {
-            SafeRun(() =>
+            Execute.SafeRun(() =>
             {
                 OnPropertyChanged(new PropertyChangedEventArgs("Count"));
                 OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
@@ -67,7 +67,7 @@ namespace Caliburn.Micro
         /// <param name = "item">The item to be inserted.</param>
         protected override sealed void InsertItem(int index, T item)
         {
-            SafeRun(() => InsertItemBase(index, item));
+            Execute.SafeRun(() => InsertItemBase(index, item));
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Caliburn.Micro
         /// <param name = "item">The item to set.</param>
         protected override sealed void SetItem(int index, T item)
         {
-            SafeRun(() => SetItemBase(index, item));
+            Execute.SafeRun(() => SetItemBase(index, item));
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Caliburn.Micro
         /// <param name = "index">The position used to identify the item to remove.</param>
         protected override sealed void RemoveItem(int index)
         {
-            SafeRun(() => RemoveItemBase(index));
+            Execute.SafeRun(() => RemoveItemBase(index));
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace Caliburn.Micro
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
 
-            SafeRun(AddRange);
+            Execute.SafeRun(AddRange);
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace Caliburn.Micro
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
 
-            SafeRun(RemoveRange);
+            Execute.SafeRun(RemoveRange);
         }
 
         /// <summary>
@@ -232,17 +232,5 @@ namespace Caliburn.Micro
         /// <remarks>An extension point for subclasses to customize how property change notifications are handled.</remarks>
         /// <param name="action"></param>
         protected virtual void OnUIThread(Action action) => action.OnUIThread();
-
-        private void SafeRun(Action action)
-        {
-            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
-            {
-                OnUIThread(action);
-            }
-            else
-            {
-                action();
-            }
-        }
     }
 }

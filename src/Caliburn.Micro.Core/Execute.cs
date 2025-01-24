@@ -45,5 +45,21 @@ namespace Caliburn.Micro
         {
             PlatformProvider.Current.OnUIThread(action);
         }
+
+        /// <summary>
+        /// Executes the action on safe manner either on UI thread or current Thread
+        /// </summary>
+        /// <param name="action"></param>
+        public static void SafeRun(this Action action)
+        {
+            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+            {
+                OnUIThread(action);
+            }
+            else
+            {
+                action();
+            }
+        }
     }
 }

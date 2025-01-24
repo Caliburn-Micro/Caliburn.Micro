@@ -92,11 +92,11 @@
         public static string NamespaceToRegEx(string srcNamespace)
         {
             // Need to escape the "." as it's a special character in regular expression syntax
-            var namespaceEncoded = srcNamespace.Replace(".", @"\.");
+            var encodedNamespace = srcNamespace.Replace(".", @"\.");
 
             // Replace "*" wildcard with regular expression syntax
-            namespaceEncoded = namespaceEncoded.Replace(@"*\.", NamespaceRegEx);
-            return namespaceEncoded;
+            encodedNamespace = encodedNamespace.Replace(@"*\.", NamespaceRegEx);
+            return encodedNamespace;
         }
 
         /// <summary>

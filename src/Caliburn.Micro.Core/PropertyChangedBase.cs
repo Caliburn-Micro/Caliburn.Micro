@@ -47,7 +47,7 @@ namespace Caliburn.Micro
         {
             if (IsNotifying && PropertyChanged != null)
             {
-                SafeRun(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
+                Execute.SafeRun(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
             }
         }
 
@@ -98,18 +98,6 @@ namespace Caliburn.Micro
             NotifyOfPropertyChange(propertyName ?? string.Empty);
 
             return true;
-        }
-
-        private void SafeRun(Action action)
-        {
-            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
-            {
-                OnUIThread(action);
-            }
-            else
-            {
-                action();
-            }
         }
     }
 }
