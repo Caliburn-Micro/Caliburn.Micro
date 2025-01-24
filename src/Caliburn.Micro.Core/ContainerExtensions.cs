@@ -99,13 +99,9 @@ namespace Caliburn.Micro
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The type filter.</param>
         /// <returns>The container.</returns>
-        public static SimpleContainer AllTypesOf<TService>(this SimpleContainer container, Assembly assembly,
-                                                           Func<Type, bool> filter = null)
+        public static SimpleContainer AllTypesOf<TService>(this SimpleContainer container, Assembly assembly, Func<Type, bool> filter = null)
         {
-            if (filter == null)
-            {
-                filter = type => true;
-            }
+            filter ??= type => true;
 
             var serviceType = typeof(TService);
             var types = from type in assembly.DefinedTypes
@@ -153,7 +149,7 @@ namespace Caliburn.Micro
         /// <typeparam name="TService">The service type.</typeparam>
         /// <param name="container">The container.</param>
         /// <param name="key">The key.</param>
-        /// <returns>True if a handler is registere; false otherwise.</returns>
+        /// <returns>True if a handler is registered; false otherwise.</returns>
         public static bool HasHandler<TService>(this SimpleContainer container, string key = null)
         {
             return container.HasHandler(typeof(TService), key);

@@ -14,11 +14,16 @@ namespace Caliburn.Micro
         /// </summary>
         public static Func<Type, ILog> GetLog = type => NullLogInstance;
 
-        private class NullLog : ILog
+        private sealed class NullLog : ILog
         {
-            public void Info(string format, params object[] args) { }
-            public void Warn(string format, params object[] args) { }
-            public void Error(Exception exception) { }
+            public void Info(string format, params object[] args) {
+            }
+            
+            public void Warn(string format, params object[] args) {
+            }
+            
+            public void Error(Exception exception) {
+            }
         }
     }
 }

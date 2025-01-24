@@ -69,13 +69,13 @@ namespace Caliburn.Micro
 
         private static void ExecuteOnCompleted(IResult result, EventHandler<ResultCompletionEventArgs> handler)
         {
-            EventHandler<ResultCompletionEventArgs> onCompledted = null;
-            onCompledted = (s, e) =>
+            void OnCompleted(object s, ResultCompletionEventArgs e)
             {
-                result.Completed -= onCompledted;
+                result.Completed -= OnCompleted;
                 handler(s, e);
-            };
-            result.Completed += onCompledted;
+            }
+
+            result.Completed += OnCompleted;
         }
 
         /// <summary>

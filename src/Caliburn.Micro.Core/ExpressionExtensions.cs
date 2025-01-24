@@ -17,16 +17,10 @@ namespace Caliburn.Micro
         {
             var lambda = (LambdaExpression)expression;
 
-            MemberExpression memberExpression;
-            if (lambda.Body is UnaryExpression)
-            {
-                var unaryExpression = (UnaryExpression)lambda.Body;
-                memberExpression = (MemberExpression)unaryExpression.Operand;
-            }
-            else
-            {
-                memberExpression = (MemberExpression)lambda.Body;
-            }
+            MemberExpression memberExpression = (MemberExpression)(
+                lambda.Body is UnaryExpression unaryExpression
+                    ? unaryExpression.Operand
+                    : lambda.Body);
 
             return memberExpression.Member;
         }

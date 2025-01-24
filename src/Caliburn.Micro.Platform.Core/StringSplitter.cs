@@ -122,7 +122,7 @@ namespace Caliburn.Micro
                                 //The only commas to be considered as parameter separators are outside:
                                 //- Strings
                                 //- Square brackets (to ignore indexers)
-                                //- Parantheses (to ignore method invocations)
+                                //- Parentheses (to ignore method invocations)
                                 //- Curly brackets (to ignore initializers and Bindings)
                                 list.Add(builder.ToString());
                                 builder.Length = 0;

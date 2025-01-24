@@ -3,7 +3,7 @@
 namespace Caliburn.Micro
 {
     /// <summary>
-    /// A result that executes an <see cref="System.Action"/>.
+    /// A result that executes an <see cref="Action"/>.
     /// </summary>
     public class DelegateResult : IResult
     {
@@ -45,7 +45,7 @@ namespace Caliburn.Micro
     }
 
     /// <summary>
-    /// A result that executes a <see cref="System.Func&lt;TResult&gt;"/>
+    /// A result that executes a <see cref="Func&lt;TResult&gt;"/>
     /// </summary>
     /// <typeparam name="TResult">The type of the result.</typeparam>
     public class DelegateResult<TResult> : IResult<TResult>

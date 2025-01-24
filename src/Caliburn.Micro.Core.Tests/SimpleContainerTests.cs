@@ -89,7 +89,7 @@ namespace Caliburn.Micro.Core.Tests
     public class SimpleContainerRegisteringInstances
     {
         [Fact]
-        public void Instances_registed_Singleton_return_the_same_instance_for_each_call()
+        public void Instances_registered_Singleton_return_the_same_instance_for_each_call()
         {
             var container = new SimpleContainer();
             container.Singleton<object>();
@@ -146,7 +146,7 @@ namespace Caliburn.Micro.Core.Tests
 
         public class SingleNonEmptyConstructorType
         {
-            public SingleNonEmptyConstructorType(SimpleContainer_Find_Constructor.SingleEmptyConstructorType type)
+            public SingleNonEmptyConstructorType(SingleEmptyConstructorType type)
             {
             }
         }
@@ -165,18 +165,18 @@ namespace Caliburn.Micro.Core.Tests
 
             public SingleIntConstructor(int x)
             {
-                this.Value = x;
+                Value = x;
             }
         }
 
         [Fact]
         public void Container_SingleIntConstructor()
         {
-            var container = new SimpleContainer();
-            container.Singleton<SingleIntConstructor>();
-            container.RegisterInstance(typeof(int), "x", 4);
-            var inst = (SingleIntConstructor)container.GetInstance(typeof(SingleIntConstructor), null);
-            Assert.Equal(4, inst.Value);
+            var sut = new SimpleContainer();
+            sut.Singleton<SingleIntConstructor>();
+            sut.RegisterInstance(typeof(int), "x", 4);
+            var result = (SingleIntConstructor)sut.GetInstance(typeof(SingleIntConstructor), null);
+            Assert.Equal(4, result.Value);
         }
 
         public class TwoConstructors
@@ -185,7 +185,7 @@ namespace Caliburn.Micro.Core.Tests
 
             public TwoConstructors()
             {
-                this.Value = 42;
+                Value = 42;
             }
 
             public TwoConstructors(int value)
@@ -197,20 +197,20 @@ namespace Caliburn.Micro.Core.Tests
         [Fact]
         public void Container_ChooseConstructorWithRegisteredParameter()
         {
-            var container = new SimpleContainer();
-            container.Singleton<TwoConstructors>();
-            container.RegisterInstance(typeof(int), null, 23);
-            var inst = (TwoConstructors)container.GetInstance(typeof(TwoConstructors), null);
-            Assert.Equal(23, inst.Value);
+            var sut = new SimpleContainer();
+            sut.Singleton<TwoConstructors>();
+            sut.RegisterInstance(typeof(int), null, 23);
+            var result = (TwoConstructors)sut.GetInstance(typeof(TwoConstructors), null);
+            Assert.Equal(23, result.Value);
         }
 
         [Fact]
         public void Container_ChooseEmptyConstructorWithoutRegisteredParameter()
         {
-            var container = new SimpleContainer();
-            container.Singleton<TwoConstructors>();
-            var inst = (TwoConstructors)container.GetInstance(typeof(TwoConstructors), null);
-            Assert.Equal(42, inst.Value);
+            var sut = new SimpleContainer();
+            sut.Singleton<TwoConstructors>();
+            var result = (TwoConstructors)sut.GetInstance(typeof(TwoConstructors), null);
+            Assert.Equal(42, result.Value);
         }
     }
 

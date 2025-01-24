@@ -1,15 +1,15 @@
-﻿namespace Caliburn.Micro
-{
-    using System;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// Extension methods to bring <see cref="Task"/> and <see cref="IResult"/> together.
     /// </summary>
     public static class TaskExtensions
     {
         /// <summary>
-        /// Executes an <see cref="Caliburn.Micro.IResult"/> asynchronous.
+        /// Executes an <see cref="IResult"/> asynchronous.
         /// </summary>
         /// <param name="result">The coroutine to execute.</param>
         /// <param name="context">The context to execute the coroutine within.</param>
@@ -20,7 +20,7 @@
         }
 
         /// <summary>
-        /// Executes an <see cref="Caliburn.Micro.IResult&lt;TResult&gt;"/> asynchronous.
+        /// Executes an <see cref="IResult&lt;TResult&gt;"/> asynchronous.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="result">The coroutine to execute.</param>
@@ -36,10 +36,9 @@
         {
             var taskSource = new TaskCompletionSource<TResult>();
 
-            EventHandler<ResultCompletionEventArgs> completed = null;
-            completed = (s, e) =>
+            void OnCompleted(object s, ResultCompletionEventArgs e)
             {
-                result.Completed -= completed;
+                result.Completed -= OnCompleted;
 
                 if (e.Error != null)
                 {
@@ -51,20 +50,19 @@
                 }
                 else
                 {
-                    var rr = result as IResult<TResult>;
-                    taskSource.SetResult(rr != null ? rr.Result : default(TResult));
+                    taskSource.SetResult(result is IResult<TResult> rr ? rr.Result : default);
                 }
-            };
+            }
 
             try
             {
                 IoC.BuildUp(result);
-                result.Completed += completed;
+                result.Completed += OnCompleted;
                 result.Execute(context ?? new CoroutineExecutionContext());
             }
             catch (Exception ex)
             {
-                result.Completed -= completed;
+                result.Completed -= OnCompleted;
                 taskSource.SetException(ex);
             }
 
@@ -72,7 +70,7 @@
         }
 
         /// <summary>
-        /// Encapsulates a task inside a couroutine.
+        /// Encapsulates a task inside a coroutine.
         /// </summary>
         /// <param name="task">The task.</param>
         /// <returns>The coroutine that encapsulates the task.</returns>
@@ -82,7 +80,7 @@
         }
 
         /// <summary>
-        /// Encapsulates a task inside a couroutine.
+        /// Encapsulates a task inside a coroutine.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="task">The task.</param>

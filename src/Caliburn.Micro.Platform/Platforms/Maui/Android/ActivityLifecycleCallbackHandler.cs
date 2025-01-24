@@ -109,7 +109,7 @@ namespace Caliburn.Micro.Maui
             ActivityStopped(this, new ActivityEventArgs(activity));
         }
 
-        public void OnActivityPostCreated(Activity activity, Bundle? savedInstanceState)
+        public void OnActivityPostCreated(Activity activity, Bundle savedInstanceState)
         {
 
         }
@@ -144,7 +144,7 @@ namespace Caliburn.Micro.Maui
 
         }
 
-        public void OnActivityPreCreated(Activity activity, Bundle? savedInstanceState)
+        public void OnActivityPreCreated(Activity activity, Bundle savedInstanceState)
         {
 
         }
