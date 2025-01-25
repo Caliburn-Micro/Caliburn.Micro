@@ -122,7 +122,7 @@ namespace Caliburn.Micro
             if (addToStack)
             {
                 navigationStack.Add(viewModel);
-                navigationStackIndex = navigationStack.Count;
+                navigationStackIndex = navigationStack.Count - 1;
             }
         }
 
@@ -133,7 +133,7 @@ namespace Caliburn.Micro
             if (navigationStackIndex > 0)
                 navigationStackIndex--;
 
-            NavigateToViewModel(navigationStack[navigationStackIndex - 1], false);
+            NavigateToViewModel(navigationStack[navigationStackIndex], false);
             return Task.CompletedTask;
         }
 

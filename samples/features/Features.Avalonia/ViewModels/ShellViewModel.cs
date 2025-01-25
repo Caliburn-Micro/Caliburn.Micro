@@ -44,7 +44,6 @@ namespace Features.CrossPlatform.ViewModels
 
         public void GoBack()
         {
-            var menuVM = _container.GetInstance<MenuViewModel>();
             if (_navigationService != null)
             {
                 _navigationService.GoBackAsync();
