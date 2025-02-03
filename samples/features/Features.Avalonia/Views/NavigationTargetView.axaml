@@ -4,5 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Features.CrossPlatform.Views.NavigationTargetView">
-  Welcome to Avalonia!
+    <Grid>
+        <StackPanel Margin="20">
+            <TextBlock x:Name="Text" />
+            <TextBlock x:Name="IsNavigationEnabled" />
+        </StackPanel>
+    </Grid>
 </UserControl>

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 
 namespace Caliburn.Micro
 {
@@ -15,16 +17,22 @@ namespace Caliburn.Micro
         private static readonly ILog Log = LogManager.GetLog(typeof(NavigationFrame));
 
         private string defaultContent { get; } = "Default Content";
-
+        private readonly List<object> navigationStack = new List<object>();
+        private int navigationStackIndex = 0;
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationFrame"/> class.
         /// </summary>
         public NavigationFrame()
         {
             Content = defaultContent;
-            this.AttachedToVisualTree += NavigationFrame_AttachedToVisualTree;
-            LayoutUpdated += NavigationFrame_LayoutUpdated;
+            this.Loaded += NavigationFrame_Loaded;
             ContentProperty.Changed.AddClassHandler<NavigationFrame>((sender, e) => NavigationFrame_ContentChanged(sender, e));
+        }
+
+        private void NavigationFrame_Loaded(object sender, RoutedEventArgs e)
+        {
+            Log.Info("Navigation Frame loaded");
+            OnNavigationServiceReady(new EventArgs());
         }
 
         private void NavigationFrame_ContentChanged(NavigationFrame sender, AvaloniaPropertyChangedEventArgs e)
@@ -67,15 +75,6 @@ namespace Caliburn.Micro
         }
 
         /// <summary>
-        /// Handles the event when the frame is attached to the visual tree.
-        /// </summary>
-        private void NavigationFrame_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
-        {
-            Log.Info("Attached to visual tree");
-            OnNavigationServiceReady(new EventArgs());
-        }
-
-        /// <summary>
         /// Occurs when the navigation service is ready.
         /// </summary>
         public event EventHandler NavigationServiceReady;
@@ -98,7 +97,7 @@ namespace Caliburn.Micro
         /// Navigates to the specified view model.
         /// </summary>
         /// <param name="viewModel">The view model to navigate to.</param>
-        private void NavigateToViewModel(object viewModel)
+        private void NavigateToViewModel(object viewModel, bool addToStack = true)
         {
             if (viewModel == null)
             {
@@ -117,17 +116,25 @@ namespace Caliburn.Micro
 
             ViewModelBinder.Bind(viewModel, viewInstance, null);
             Log.Info($"View Model {viewModel}");
-            Log.Info($"View {viewInstance}");
             Tag = "Navigating";
             viewInstance.DataContext = viewModel;
             Content = viewInstance;
-
+            if (addToStack)
+            {
+                navigationStack.Add(viewModel);
+                navigationStackIndex = navigationStack.Count - 1;
+            }
         }
 
         /// <inheritdoc/>
         public Task GoBackAsync(bool animated = true)
         {
-            throw new NotImplementedException();
+            Log.Info("Going back");
+            if (navigationStackIndex > 0)
+                navigationStackIndex--;
+
+            NavigateToViewModel(navigationStack[navigationStackIndex], false);
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
@@ -145,18 +152,27 @@ namespace Caliburn.Micro
         /// <inheritdoc/>
         public Task NavigateToViewModelAsync(Type viewModelType, object parameter = null, bool animated = true)
         {
-            Log.Info($"View model type {viewModelType}");
             var vm = Caliburn.Micro.IoC.GetInstance(viewModelType, null);
-            Log.Info($"VM is null {vm == null}");
+            TryInjectParameters(vm, parameter);
             NavigateToViewModel(vm);
 
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Gets or sets the ViewModel.
+        /// </summary>
+        public static string ViewModel
+        {
+            get; set;
+        }
+
         /// <inheritdoc/>
         public Task NavigateToViewModelAsync<T>(object parameter = null, bool animated = true)
         {
-            throw new NotImplementedException();
+            Log.Info($"Navigate to View model type {typeof(T)}");
+            Log.Info($"Navigate to View model parameter not null {parameter != null}");
+            return NavigateToViewModelAsync(typeof(T), parameter, animated);
         }
 
         /// <inheritdoc/>
@@ -170,6 +186,7 @@ namespace Caliburn.Micro
         /// <inheritdoc/>
         public Task GoBackToRootAsync(bool animated = true)
         {
+            Log.Info("Going back to root");
             throw new NotImplementedException();
         }
 
@@ -180,6 +197,42 @@ namespace Caliburn.Micro
         private string GetDebuggerDisplay()
         {
             return $"{nameof(NavigationFrame)}: Content={Content}, IsNavigationServiceReady={NavigationServiceReady != null}";
+        }
+
+        /// <summary>
+        ///   Attempts to inject query string parameters from the view into the view model.
+        /// </summary>
+        /// <param name="viewModel"> The view model.</param>
+        /// <param name="parameter"> The parameter.</param>
+        protected virtual void TryInjectParameters(object viewModel, object parameter)
+        {
+            var viewModelType = viewModel.GetType();
+
+            var dictionaryParameter = parameter as IDictionary<string, object>;
+
+            if (dictionaryParameter != null)
+            {
+                foreach (var pair in dictionaryParameter)
+                {
+                    var property = viewModelType.GetPropertyCaseInsensitive(pair.Key);
+
+                    if (property == null)
+                    {
+                        continue;
+                    }
+
+                    property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, pair.Value, null), null);
+                }
+            }
+            else
+            {
+                var property = viewModelType.GetPropertyCaseInsensitive("Parameter");
+
+                if (property == null)
+                    return;
+
+                property.SetValue(viewModel, MessageBinder.CoerceValue(property.PropertyType, parameter, null), null);
+            }
         }
     }
 }
