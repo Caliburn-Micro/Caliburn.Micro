@@ -18,5 +18,12 @@ namespace Caliburn.Micro
         /// </summary>
         /// <value><c>true</c> if cancelled; otherwise, <c>false</c>.</value>
         public bool WasCancelled;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResultCompletionEventArgs"/> class.
+        /// </summary>
+        public ResultCompletionEventArgs()
+        {
+        }
     }
 }

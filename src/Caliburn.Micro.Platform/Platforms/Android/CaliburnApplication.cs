@@ -21,7 +21,7 @@ namespace Caliburn.Micro
         public CaliburnApplication(IntPtr javaReference, JniHandleOwnership transfer)
             : base(javaReference, transfer)
         {
-            
+
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Caliburn.Micro
 
         /// <summary>
         /// Called by the bootstrapper's constructor at runtime to start the framework.
-        /// </summary>B
+        /// </summary>
         protected virtual void StartRuntime()
         {
             AssemblySourceCache.Install();
@@ -129,6 +129,15 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="instance">The instance to perform injection on.</param>
         protected virtual void BuildUp(object instance)
+        {
+        }
+
+        /// <summary>
+        /// Handles exceptions that occur during coroutine execution.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event arguments containing exception details.</param>
+        protected virtual void CoroutineException(object sender, ResultCompletionEventArgs e)
         {
         }
     }
