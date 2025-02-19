@@ -16,8 +16,6 @@ namespace Caliburn.Micro
         private readonly Dictionary<TKey, WeakReference> inner;
         private readonly WeakReference gcSentinel = new WeakReference(new object());
 
-        #region Cleanup handling
-
         private bool IsCleanupNeeded()
         {
             if (gcSentinel.Target == null)
@@ -45,10 +43,6 @@ namespace Caliburn.Micro
                 CleanAbandonedItems();
             }
         }
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WeakValueDictionary&lt;TKey, TValue&gt;"/> class that is empty, has the default initial capacity, and uses the default equality comparer for the key type.
@@ -107,8 +101,6 @@ namespace Caliburn.Micro
             inner = new Dictionary<TKey, WeakReference>(capacity, comparer);
         }
 
-        #endregion
-
         /// <summary>
         /// Returns an enumerator that iterates through the <see cref="WeakValueDictionary&lt;TKey, TValue&gt;"/>.
         /// </summary>
@@ -141,13 +133,8 @@ namespace Caliburn.Micro
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
         {
-            TValue value;
-            if (!TryGetValue(item.Key, out value))
-            {
-                return false;
-            }
-
-            return value == item.Value;
+            return TryGetValue(item.Key, out TValue value) &&
+                   value == item.Value;
         }
 
         void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
@@ -173,18 +160,9 @@ namespace Caliburn.Micro
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
         {
-            TValue value;
-            if (!TryGetValue(item.Key, out value))
-            {
-                return false;
-            }
-
-            if (value != item.Value)
-            {
-                return false;
-            }
-
-            return inner.Remove(item.Key);
+            return TryGetValue(item.Key, out TValue value) &&
+                   value == item.Value &&
+                   inner.Remove(item.Key);
         }
 
         /// <summary>
@@ -227,8 +205,7 @@ namespace Caliburn.Micro
         /// <returns></returns>
         public bool ContainsKey(TKey key)
         {
-            TValue dummy;
-            return TryGetValue(key, out dummy);
+            return TryGetValue(key, out _);
         }
 
         /// <summary>
@@ -255,8 +232,7 @@ namespace Caliburn.Micro
         {
             CleanIfNeeded();
 
-            WeakReference wr;
-            if (!inner.TryGetValue(key, out wr))
+            if (!inner.TryGetValue(key, out WeakReference wr))
             {
                 value = null;
                 return false;
@@ -286,8 +262,7 @@ namespace Caliburn.Micro
         {
             get
             {
-                TValue result;
-                if (!TryGetValue(key, out result))
+                if (!TryGetValue(key, out TValue result))
                 {
                     throw new KeyNotFoundException();
                 }
@@ -316,8 +291,6 @@ namespace Caliburn.Micro
         {
             get { return new ValueCollection(this); }
         }
-
-        #region Inner Types
 
         private sealed class ValueCollection : ICollection<TValue>
         {
@@ -389,7 +362,5 @@ namespace Caliburn.Micro
                 get { return true; }
             }
         }
-
-        #endregion
     }
 }

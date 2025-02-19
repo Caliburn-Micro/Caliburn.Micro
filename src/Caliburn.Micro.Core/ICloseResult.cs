@@ -8,7 +8,7 @@ namespace Caliburn.Micro
     public interface ICloseResult<T>
     {
         /// <summary>
-        /// Indicates which children shbould close if the parent cannot.
+        /// Indicates which children should close if the parent cannot.
         /// </summary>
         IEnumerable<T> Children { get; }
 

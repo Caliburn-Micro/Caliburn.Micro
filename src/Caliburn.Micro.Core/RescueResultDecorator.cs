@@ -6,7 +6,8 @@ namespace Caliburn.Micro
     /// A result decorator which rescues errors from the decorated result by executing a rescue coroutine.
     /// </summary>
     /// <typeparam name="TException">The type of the exception we want to perform the rescue on</typeparam>
-    public class RescueResultDecorator<TException> : ResultDecoratorBase where TException : Exception
+    public class RescueResultDecorator<TException> : ResultDecoratorBase
+        where TException : Exception
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(RescueResultDecorator<>));
         private readonly bool cancelResult;
@@ -32,8 +33,7 @@ namespace Caliburn.Micro
         /// <param name="args">The <see cref="ResultCompletionEventArgs" /> instance containing the event data.</param>
         protected override void OnInnerResultCompleted(CoroutineExecutionContext methodContext, IResult methodInnerResult, ResultCompletionEventArgs args)
         {
-            var error = args.Error as TException;
-            if (error == null)
+            if (args.Error is not TException error)
             {
                 OnCompleted(args);
             }

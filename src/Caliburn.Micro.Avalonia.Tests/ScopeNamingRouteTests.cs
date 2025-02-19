@@ -25,8 +25,7 @@ namespace Caliburn.Micro.Platform.Tests
             var d1 = new AvaloniaObject();
             var d2 = new AvaloniaObject();
             route.AddHop(d1, d2);
-            AvaloniaObject target;
-            var result = route.TryGetHop(d1, out target);
+            var result = route.TryGetHop(d1, out AvaloniaObject target);
             Assert.True(result);
             Assert.Same(d2, target);
         }
@@ -52,9 +51,8 @@ namespace Caliburn.Micro.Platform.Tests
             };
 
             var source = d1;
-            AvaloniaObject target;
 
-            while (route.TryGetHop(source, out target))
+            while (route.TryGetHop(source, out AvaloniaObject target))
             {
                 all.Remove(target);
                 source = target;

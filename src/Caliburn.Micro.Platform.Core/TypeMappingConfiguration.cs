@@ -8,12 +8,12 @@
     public class TypeMappingConfiguration
     {
         /// <summary>
-        /// The default subnamespace for Views. Used for creating default subnamespace mappings. Defaults to "Views".
+        /// The default SubNamespace for Views. Used for creating default SubNamespace mappings. Defaults to "Views".
         /// </summary>
         public string DefaultSubNamespaceForViews { get; set; } = "Views";
 
         /// <summary>
-        /// The default subnamespace for ViewModels. Used for creating default subnamespace mappings. Defaults to "ViewModels".
+        /// The default SubNamespace for ViewModels. Used for creating default SubNamespace mappings. Defaults to "ViewModels".
         /// </summary>
         public string DefaultSubNamespaceForViewModels { get; set; } = "ViewModels";
 

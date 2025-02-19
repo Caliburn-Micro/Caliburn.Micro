@@ -79,7 +79,7 @@ namespace Caliburn.Micro
         }
 
         /// <summary>
-        /// Publishes a message on the current thread (synchrone).
+        /// Publishes a message on the current thread (Synchronous).
         /// </summary>
         /// <param name="eventAggregator">The event aggregator.</param>
         /// <param name = "message">The message instance.</param>
@@ -91,7 +91,7 @@ namespace Caliburn.Micro
         }
 
         /// <summary>
-        /// Publishes a message on the current thread (synchrone).
+        /// Publishes a message on the current thread (Synchronous).
         /// </summary>
         /// <param name="eventAggregator">The event aggregator.</param>
         /// <param name = "message">The message instance.</param>

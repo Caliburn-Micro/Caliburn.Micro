@@ -61,10 +61,10 @@ namespace Caliburn.Micro
     public static class AssemblySourceCache
     {
         private static bool isInstalled;
-        private static readonly IDictionary<String, Type> TypeNameCache = new Dictionary<string, Type>();
+        private static readonly IDictionary<string, Type> TypeNameCache = new Dictionary<string, Type>();
 
         /// <summary>
-        /// Extracts the types from the spezified assembly for storing in the cache.
+        /// Extracts the types from the specified assembly for storing in the cache.
         /// </summary>
         public static Func<Assembly, IEnumerable<Type>> ExtractTypes = assembly =>
             assembly.ExportedTypes

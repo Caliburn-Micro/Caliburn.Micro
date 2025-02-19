@@ -16,7 +16,7 @@ namespace Caliburn.Micro
         bool InDesignMode { get; }
 
         /// <summary>
-        /// Whether or not classes should execute property change notications on the UI thread.
+        /// Whether or not classes should execute property change notifications on the UI thread.
         /// </summary>
         bool PropertyChangeNotificationsOnUIThread { get; }
 

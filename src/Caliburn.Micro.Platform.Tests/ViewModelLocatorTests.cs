@@ -59,7 +59,7 @@ namespace Caliburn.Micro.Platform.Tests
 
 
         [Fact]
-        public void COnfigureTypeMappingsWithDefaultValuesShouldNotThrow()
+        public void ConfigureTypeMappingsWithDefaultValuesShouldNotThrow()
         {
             var typeMappingConfiguration = new TypeMappingConfiguration();
 

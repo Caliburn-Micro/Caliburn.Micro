@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using Xunit;
+﻿using Xunit;
 
 namespace Caliburn.Micro.Platform.Tests
 {
