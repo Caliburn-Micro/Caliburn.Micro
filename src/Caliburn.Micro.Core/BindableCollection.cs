@@ -43,7 +43,7 @@ namespace Caliburn.Micro
         {
             if (IsNotifying)
             {
-                Execute.SafeRun(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
+                Execute.DispatchIfRequired(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
             }
         }
 
@@ -52,7 +52,7 @@ namespace Caliburn.Micro
         /// </summary>
         public void Refresh()
         {
-            Execute.SafeRun(() =>
+            Execute.DispatchIfRequired(() =>
             {
                 OnPropertyChanged(new PropertyChangedEventArgs("Count"));
                 OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
@@ -67,7 +67,7 @@ namespace Caliburn.Micro
         /// <param name = "item">The item to be inserted.</param>
         protected override sealed void InsertItem(int index, T item)
         {
-            Execute.SafeRun(() => InsertItemBase(index, item));
+            Execute.DispatchIfRequired(() => InsertItemBase(index, item));
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Caliburn.Micro
         /// <param name = "item">The item to set.</param>
         protected override sealed void SetItem(int index, T item)
         {
-            Execute.SafeRun(() => SetItemBase(index, item));
+            Execute.DispatchIfRequired(() => SetItemBase(index, item));
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Caliburn.Micro
         /// <param name = "index">The position used to identify the item to remove.</param>
         protected override sealed void RemoveItem(int index)
         {
-            Execute.SafeRun(() => RemoveItemBase(index));
+            Execute.DispatchIfRequired(() => RemoveItemBase(index));
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace Caliburn.Micro
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
 
-            Execute.SafeRun(AddRange);
+            Execute.DispatchIfRequired(AddRange);
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace Caliburn.Micro
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
 
-            Execute.SafeRun(RemoveRange);
+            Execute.DispatchIfRequired(RemoveRange);
         }
 
         /// <summary>

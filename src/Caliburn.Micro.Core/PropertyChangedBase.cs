@@ -47,7 +47,7 @@ namespace Caliburn.Micro
         {
             if (IsNotifying && PropertyChanged != null)
             {
-                Execute.SafeRun(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
+                Execute.DispatchIfRequired(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
             }
         }
 
