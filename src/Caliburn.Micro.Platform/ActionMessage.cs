@@ -315,8 +315,9 @@
             Log.Info($"Binding {binding.Source}");
 
 #elif (NET || CAL_NETCORE) && !WinUI3 && !WINDOWS_UWP
-            var binding = new Binding {
-                Path = new PropertyPath(Message.HandlerProperty), 
+            var binding = new Binding
+            {
+                Path = new PropertyPath(Message.HandlerProperty),
                 Source = currentElement
             };
 #elif WINDOWS_UWP || WinUI3
@@ -536,7 +537,23 @@
             if (!hasBinding && context.CanExecute != null)
             {
                 Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute()} - {context.Method.Name}");
-                source.IsEnabled = context.CanExecute();
+                if (!string.IsNullOrEmpty(source.Name))
+                {
+                    Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute()} - {context.Method.Name} - {source.Name}");
+                    source.IsEnabled = context.CanExecute();
+                }
+                else
+                {
+                    Log.Info("Skipping is enabled because source Name is not set");
+                }
+                if (!source.IsEnabled)
+                {
+                    Log.Info($"Disabled {source.Name}");
+                }
+                else
+                {
+                    Log.Info($"Enabled {source.Name}");
+                }
             }
 #endif
             Log.Info($"ApplyAvailabilityEffect source enabled {source.IsEnabled}");
@@ -615,6 +632,7 @@
                 }
             }
 #else
+
             if (source != null && source.DataContext != null)
             {
                 var target = source.DataContext;
