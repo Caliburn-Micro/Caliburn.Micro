@@ -544,7 +544,7 @@
                 }
                 else
                 {
-                    Log.Info("Skipping is enabled because source Name is not set");
+                    Log.Info("Skipping IsEnabled source because source Name is not set");
                 }
                 if (!source.IsEnabled)
                 {
