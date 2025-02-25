@@ -161,6 +161,8 @@
             set { SetValue(MethodNameProperty, value); }
         }
 
+        public bool IgnoreGuard { get; set; }
+
         /// <summary>
         /// Gets the parameters to pass as part of the method invocation.
         /// </summary>
@@ -366,7 +368,8 @@
             _context = new ActionExecutionContext
             {
                 Message = this,
-                Source = AssociatedObject
+                Source = AssociatedObject,
+                IgnoreGuard = IgnoreGuard
             };
 
             PrepareContext(_context);
@@ -529,7 +532,6 @@
             Log.Info($"context.CanExecute is null {context.CanExecute == null} ");
             if (context.CanExecute != null)
             {
-                Log.Info("HERE");
                 Log.Info($"ApplyAvailabilityEffect CanExecute  {context.Method.Name}");
                 source.IsEnabled = context.CanExecute();
             }
@@ -537,7 +539,7 @@
             if (!hasBinding && context.CanExecute != null)
             {
                 Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute()} - {context.Method.Name}");
-                if (!string.IsNullOrEmpty(source.Name))
+                if (!context.IgnoreGuard)
                 {
                     Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute()} - {context.Method.Name} - {source.Name}");
                     source.IsEnabled = context.CanExecute();
