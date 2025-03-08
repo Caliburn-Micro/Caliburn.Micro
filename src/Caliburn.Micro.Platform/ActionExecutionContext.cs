@@ -57,15 +57,7 @@ namespace Caliburn.Micro
         /// </summary>
         public bool SkipAvailabilityResolution
         {
-            get
-            {
-                if (!_skipAvailabilityResolution)
-                {
-                    //var skipProperty = DependencyPropertyHelper.Get
-                }
-                return _skipAvailabilityResolution;
-            }
-
+            get => _skipAvailabilityResolution;
             set => _skipAvailabilityResolution = value;
         }
 
