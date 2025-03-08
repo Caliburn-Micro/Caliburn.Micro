@@ -32,6 +32,7 @@
         /// <remarks>True by default.</remarks>
         public static bool ThrowsExceptions = true;
 
+        public bool SkipAvailabilityResolution { get; set; } = false;
         /// <summary>
         /// Creates an instance of <see cref="ActionMessage"/>.
         /// </summary>

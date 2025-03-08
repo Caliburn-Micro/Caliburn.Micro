@@ -52,12 +52,28 @@ namespace Caliburn.Micro
         /// </summary>
         public object EventArgs;
 
-        public bool IgnoreGuard { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether to skip availability resolution.
+        /// </summary>
+        public bool SkipAvailabilityResolution
+        {
+            get
+            {
+                if (!_skipAvailabilityResolution)
+                {
+                    //var skipProperty = DependencyPropertyHelper.Get
+                }
+                return _skipAvailabilityResolution;
+            }
+
+            set => _skipAvailabilityResolution = value;
+        }
 
         /// <summary>
         /// The actual method info to be invoked.
         /// </summary>
         public MethodInfo Method;
+        private bool _skipAvailabilityResolution;
 
         /// <summary>
         /// The message being executed.

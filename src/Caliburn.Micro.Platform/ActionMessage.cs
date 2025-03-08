@@ -161,7 +161,7 @@
             set { SetValue(MethodNameProperty, value); }
         }
 
-        public bool IgnoreGuard { get; set; }
+        public bool SkipAvailabilityResolution { get; set; }
 
         /// <summary>
         /// Gets the parameters to pass as part of the method invocation.
@@ -369,7 +369,7 @@
             {
                 Message = this,
                 Source = AssociatedObject,
-                IgnoreGuard = IgnoreGuard
+                SkipAvailabilityResolution = SkipAvailabilityResolution
             };
 
             PrepareContext(_context);
@@ -539,7 +539,7 @@
             if (!hasBinding && context.CanExecute != null)
             {
                 Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute()} - {context.Method.Name}");
-                if (!context.IgnoreGuard)
+                if (!context.SkipAvailabilityResolution)
                 {
                     Log.Info($"ApplyAvailabilityEffect CanExecute {context.CanExecute()} - {context.Method.Name} - {source.Name}");
                     source.IsEnabled = context.CanExecute();
