@@ -114,7 +114,7 @@ namespace Caliburn.Micro
 #endif
 
         /// <summary>
-        ///   A property definition representing weather should check if the function can be executed
+        ///   A property definition representing whether should check if the function can be executed
         /// </summary>
         public static readonly DependencyProperty SkipAvailabilityResolutionProperty =
 #if AVALONIA
