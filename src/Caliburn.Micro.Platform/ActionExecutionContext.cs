@@ -33,7 +33,8 @@ namespace Caliburn.Micro
     /// <summary>
     /// The context used during the execution of an Action or its guard.
     /// </summary>
-    public class ActionExecutionContext : IDisposable {
+    public class ActionExecutionContext : IDisposable
+    {
         private WeakReference _message;
         private WeakReference _source;
         private WeakReference _target;
@@ -52,14 +53,25 @@ namespace Caliburn.Micro
         public object EventArgs;
 
         /// <summary>
+        /// Gets or sets a value indicating whether to skip availability resolution.
+        /// </summary>
+        public bool SkipAvailabilityResolution
+        {
+            get => _skipAvailabilityResolution;
+            set => _skipAvailabilityResolution = value;
+        }
+
+        /// <summary>
         /// The actual method info to be invoked.
         /// </summary>
         public MethodInfo Method;
+        private bool _skipAvailabilityResolution;
 
         /// <summary>
         /// The message being executed.
         /// </summary>
-        public ActionMessage Message {
+        public ActionMessage Message
+        {
             get { return _message == null ? null : _message.Target as ActionMessage; }
             set { _message = new WeakReference(value); }
         }
@@ -67,7 +79,8 @@ namespace Caliburn.Micro
         /// <summary>
         /// The source from which the message originates.
         /// </summary>
-        public FrameworkElement Source {
+        public FrameworkElement Source
+        {
             get { return _source == null ? null : _source.Target as FrameworkElement; }
             set { _source = new WeakReference(value); }
         }
@@ -75,7 +88,8 @@ namespace Caliburn.Micro
         /// <summary>
         /// The instance on which the action is invoked.
         /// </summary>
-        public object Target {
+        public object Target
+        {
             get { return _target == null ? null : _target.Target; }
             set { _target = new WeakReference(value); }
         }
@@ -83,7 +97,8 @@ namespace Caliburn.Micro
         /// <summary>
         /// The view associated with the target.
         /// </summary>
-        public DependencyObject View {
+        public DependencyObject View
+        {
             get { return _view == null ? null : _view.Target as DependencyObject; }
             set { _view = new WeakReference(value); }
         }
@@ -93,8 +108,10 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="key">The data key.</param>
         /// <returns>Custom data associated with the context.</returns>
-        public object this[string key] {
-            get {
+        public object this[string key]
+        {
+            get
+            {
                 if (_values == null)
                     _values = new Dictionary<string, object>();
 
@@ -103,7 +120,8 @@ namespace Caliburn.Micro
 
                 return result;
             }
-            set {
+            set
+            {
                 if (_values == null)
                     _values = new Dictionary<string, object>();
 
@@ -114,7 +132,8 @@ namespace Caliburn.Micro
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public void Dispose() {
+        public void Dispose()
+        {
             Disposing(this, System.EventArgs.Empty);
         }
 
