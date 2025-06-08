@@ -181,12 +181,9 @@ namespace Caliburn.Micro
 
             var instances = currentEntry.Select(e => e(this));
 
-            foreach (var instance in instances)
+            foreach (var instance in instances.Where(instance => EnablePropertyInjection && instance != null))
             {
-                if (EnablePropertyInjection && instance != null)
-                {
-                    BuildUp(instance);
-                }
+                BuildUp(instance);
             }
 
             return instances;
