@@ -108,6 +108,13 @@ namespace Caliburn.Micro
             {
                 StartRuntime();
             }
+            Coroutine.Completed += (s, e) =>
+            {
+                if (e.Error != null)
+                {
+                    CoroutineException(s, e);
+                }
+            };
         }
 
 #if WINDOWS_UWP
@@ -153,7 +160,7 @@ namespace Caliburn.Micro
         /// <returns>A list of assemblies to inspect.</returns>
         protected virtual IEnumerable<Assembly> SelectAssemblies()
         {
-            return new[] {GetType().GetTypeInfo().Assembly};
+            return new[] { GetType().GetTypeInfo().Assembly };
         }
 
         /// <summary>
@@ -174,7 +181,7 @@ namespace Caliburn.Micro
         /// <returns>The located services.</returns>
         protected virtual IEnumerable<object> GetAllInstances(Type service)
         {
-            return new[] {System.Activator.CreateInstance(service)};
+            return new[] { System.Activator.CreateInstance(service) };
         }
 
         /// <summary>
@@ -387,5 +394,12 @@ namespace Caliburn.Micro
         /// <typeparam name="T">The view model type.</typeparam>
         /// <returns>A task that represents the asynchronous operation.</returns>
         protected Task DisplayRootViewForAsync<T>() => DisplayRootViewForAsync<T>(CancellationToken.None);
+
+        /// <summary>
+        /// Called by the bootstrapper's constructor at design time to start the framework.
+        /// </summary>
+        protected virtual void CoroutineException(object sender, ResultCompletionEventArgs e)
+        {
+        }
     }
 }
