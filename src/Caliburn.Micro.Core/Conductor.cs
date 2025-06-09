@@ -52,7 +52,7 @@ namespace Caliburn.Micro
 
             if (closeResult.CloseCanOccur)
             {
-                await ChangeActiveItemAsync(default(T), close, cancellationToken);
+                await ChangeActiveItemAsync(default, close, cancellationToken);
             }
         }
 

@@ -136,7 +136,7 @@ namespace Caliburn.Micro
                     if (toRemoveAt > -1 && toRemoveAt < list.Count - 1)
                         return list[toRemoveAt];
 
-                    return default(T);
+                    return default;
                 }
 
                 /// <summary>

@@ -37,8 +37,7 @@ namespace Caliburn.Micro
 
         private void ChildCompleted(object sender, ResultCompletionEventArgs args)
         {
-            var previous = sender as IResult;
-            if (previous != null)
+            if (sender is IResult previous)
             {
                 previous.Completed -= ChildCompleted;
             }

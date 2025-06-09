@@ -6,7 +6,7 @@ using System.Diagnostics;
 namespace Caliburn.Micro
 {
     /// <summary>
-    ///   A simple logger thats logs everything to the debugger.
+    ///   A simple logger that logs everything to the debugger.
     /// </summary>
     public class DebugLog : ILog
     {

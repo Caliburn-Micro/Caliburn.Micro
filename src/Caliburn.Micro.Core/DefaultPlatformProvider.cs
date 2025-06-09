@@ -47,7 +47,7 @@ namespace Caliburn.Micro
         }
 
         /// <summary>
-        /// Whether or not classes should execute property change notications on the UI thread.
+        /// Whether or not classes should execute property change notifications on the UI thread.
         /// </summary>
         public virtual bool PropertyChangeNotificationsOnUIThread => true;
 

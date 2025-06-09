@@ -18,12 +18,7 @@ namespace Caliburn.Micro
         public ContinueResultDecorator(IResult result, Func<IResult> coroutine)
             : base(result)
         {
-            if (coroutine == null)
-            {
-                throw new ArgumentNullException("coroutine");
-            }
-
-            this.coroutine = coroutine;
+            this.coroutine = coroutine ?? throw new ArgumentNullException(nameof(coroutine));
         }
 
         /// <summary>

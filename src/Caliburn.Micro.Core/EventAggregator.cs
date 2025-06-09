@@ -120,9 +120,6 @@ namespace Caliburn.Micro
                 _marshal = marshal;
                 _reference = new WeakReference(handler);
 
-                //var interfaces = handler.GetType().GetTypeInfo().ImplementedInterfaces
-                //    .Where(x => typeof(IHandle).GetTypeInfo().IsAssignableFrom(x.GetTypeInfo()) && x.GetTypeInfo().IsGenericType);
-
                 var interfaces = handler.GetType().GetTypeInfo().ImplementedInterfaces
                     .Where(x => x.GetTypeInfo().IsGenericType && x.GetGenericTypeDefinition() == typeof(IHandle<>));
 
@@ -142,7 +139,7 @@ namespace Caliburn.Micro
 
             public bool Matches(object instance)
             {
-                return object.ReferenceEquals(_reference.Target, instance);
+                return ReferenceEquals(_reference.Target, instance);
             }
 
             public Task Handle(Type messageType, object message, CancellationToken cancellationToken)

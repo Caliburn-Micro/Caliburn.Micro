@@ -28,8 +28,7 @@ namespace Caliburn.Micro.Platform.Tests
             var d1 = new DependencyObject();
             var d2 = new DependencyObject();
             route.AddHop(d1, d2);
-            DependencyObject target;
-            var result = route.TryGetHop(d1, out target);
+            var result = route.TryGetHop(d1, out DependencyObject target);
             Assert.True(result);
             Assert.Same(d2, target);
         }
@@ -55,9 +54,8 @@ namespace Caliburn.Micro.Platform.Tests
             };
 
             var source = d1;
-            DependencyObject target;
 
-            while (route.TryGetHop(source, out target))
+            while (route.TryGetHop(source, out DependencyObject target))
             {
                 all.Remove(target);
                 source = target;

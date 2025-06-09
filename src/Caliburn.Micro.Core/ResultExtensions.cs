@@ -36,8 +36,7 @@ namespace Caliburn.Micro
         /// <param name="rescue">The rescue coroutine.</param>
         /// <param name="cancelResult">Set to true to cancel the result after executing rescue.</param>
         /// <returns></returns>
-        public static IResult Rescue<TException>(this IResult result, Func<TException, IResult> rescue,
-            bool cancelResult = true)
+        public static IResult Rescue<TException>(this IResult result, Func<TException, IResult> rescue, bool cancelResult = true)
             where TException : Exception
         {
             return new RescueResultDecorator<TException>(result, rescue, cancelResult);
@@ -50,8 +49,7 @@ namespace Caliburn.Micro
         /// <param name="rescue">The rescue coroutine.</param>
         /// <param name="cancelResult">Set to true to cancel the result after executing rescue.</param>
         /// <returns></returns>
-        public static IResult Rescue(this IResult result, Func<Exception, IResult> rescue,
-            bool cancelResult = true)
+        public static IResult Rescue(this IResult result, Func<Exception, IResult> rescue, bool cancelResult = true)
         {
             return Rescue<Exception>(result, rescue, cancelResult);
         }

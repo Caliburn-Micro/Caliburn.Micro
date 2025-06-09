@@ -67,7 +67,7 @@ namespace Caliburn.Micro
         public void RegisterSingleton(Type service, string key, Type implementation)
         {
             object singleton = null;
-            RegisterHandler(service, key, container => singleton ?? (singleton = container.BuildInstance(implementation)));
+            RegisterHandler(service, key, container => (singleton ??= container.BuildInstance(implementation)));
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="service">The service.</param>
         /// <param name="key">The key.</param>
-        /// <returns>True if a handler is registere; false otherwise.</returns>
+        /// <returns>True if a handler is registered; false otherwise.</returns>
         public bool HasHandler(Type service, string key)
         {
             return GetEntry(service, key) != null;

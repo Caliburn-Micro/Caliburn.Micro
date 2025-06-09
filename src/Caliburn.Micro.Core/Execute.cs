@@ -45,5 +45,21 @@ namespace Caliburn.Micro
         {
             PlatformProvider.Current.OnUIThread(action);
         }
+
+        /// <summary>
+        /// Executes the action on the UI thread if required, otherwise executes it immediately.
+        /// </summary>
+        /// <param name="action">The action to execute.</param>
+        public static void DispatchIfRequired(this Action action)
+        {
+            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+            {
+                OnUIThread(action);
+            }
+            else
+            {
+                action();
+            }
+        }
     }
 }
