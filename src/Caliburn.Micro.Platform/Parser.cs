@@ -282,16 +282,13 @@ namespace Caliburn.Micro
             var core = messageText.Substring(0, openingParenthesisIndex).Trim();
             var message = InterpretMessageText(target, core);
             var withParameters = message as IHaveParameters;
-            if (withParameters != null)
+            if (withParameters != null && closingParenthesisIndex - openingParenthesisIndex > 1)
             {
-                if (closingParenthesisIndex - openingParenthesisIndex > 1)
-                {
-                    var paramString = messageText.Substring(openingParenthesisIndex + 1, closingParenthesisIndex - openingParenthesisIndex - 1);
-                    var parameters = StringSplitter.SplitParameters(paramString);
+                var paramString = messageText.Substring(openingParenthesisIndex + 1, closingParenthesisIndex - openingParenthesisIndex - 1);
+                var parameters = StringSplitter.SplitParameters(paramString);
 
-                    foreach (var parameter in parameters)
-                        withParameters.Parameters.Add(CreateParameter(target, parameter.Trim()));
-                }
+                foreach (var parameter in parameters)
+                    withParameters.Parameters.Add(CreateParameter(target, parameter.Trim()));
             }
 
             return message;
