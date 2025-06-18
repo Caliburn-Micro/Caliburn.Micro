@@ -67,7 +67,7 @@
             AddChildResolver<SplitView>(e => new[] { e.Pane, e.Content });
 #endif
 #if WINDOWS_UWP || WinUI3
-            AddChildResolver<SplitView>(e => new[] { e.Pane as DependencyObject, e.Content as DependencyObject });
+            AddChildResolver<SplitView>(e => new[] { e.Pane, e.Content });
 #endif
         }
 
