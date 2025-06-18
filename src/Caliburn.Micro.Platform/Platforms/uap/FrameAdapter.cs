@@ -55,6 +55,7 @@ namespace Caliburn.Micro
             AddEventHandlers();
         }
 
+        // add evenhandlers for navigating and navigated events
         private void AddEventHandlers()
         {
             this.frame.Navigating += OnNavigating;

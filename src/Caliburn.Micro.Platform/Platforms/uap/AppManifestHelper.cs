@@ -95,7 +95,7 @@ namespace Caliburn.Micro
             }
 
             bool isEightCharactersLong = hexValue.Length == 8;
-
+            // if the string is 8 characters it includes the a part
             int startPosition = isEightCharactersLong ? 2 : 0;
 
             // the case where alpha is provided
