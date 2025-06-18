@@ -83,11 +83,11 @@ namespace Caliburn.Micro {
         public virtual void BeginOnUIThread(System.Action action) {
             ValidateDispatcher();
 #if WINDOWS_UWP 
-            var dummy = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+            _ = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
 #elif AVALONIA
             dispatcher.Post(action);
 #elif WinUI3
-            var dummy = dispatcher.TryEnqueue(() => action());
+            _ = dispatcher.TryEnqueue(() => action());
 #else
             dispatcher.BeginInvoke(action);
 #endif
