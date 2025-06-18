@@ -32,7 +32,6 @@ namespace Caliburn.Micro
         private static readonly ILog Log = LogManager.GetLog(typeof(FrameAdapter));
         private const string FrameStateKey = "FrameState";
         private const string ParameterKey = "ParameterKey";
-
         private readonly Frame frame;
         private readonly bool treatViewAsLoaded;
         private event NavigatingCancelEventHandler ExternalNavigatingHandler = delegate { };
@@ -50,16 +49,19 @@ namespace Caliburn.Micro
             this.frame = frame;
             this.treatViewAsLoaded = treatViewAsLoaded;
 
+#if WINDOWS_UWP
+            navigationManager = SystemNavigationManager.GetForCurrentView();
+#endif
+            AddEventHandlers();
+        }
+
+        // add evenhandlers for navigating and navigated events
+        private void AddEventHandlers()
+        {
             this.frame.Navigating += OnNavigating;
             this.frame.Navigated += OnNavigated;
 
 #if WINDOWS_UWP
-
-            // This could leak memory if we're creating and destorying navigation services regularly.
-            // Another unlikely scenario though
-
-            navigationManager = SystemNavigationManager.GetForCurrentView();
-
             navigationManager.BackRequested += OnBackRequested;
 #endif
         }
