@@ -16,9 +16,21 @@ namespace Caliburn.Micro
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(NavigationFrame));
 
+        /// <summary>
+        /// Gets the default content displayed when no view model is set.
+        /// </summary>
         private string defaultContent { get; } = "Default Content";
+
+        /// <summary>
+        /// The navigation stack holding the view models.
+        /// </summary>
         private readonly List<object> navigationStack = new List<object>();
+
+        /// <summary>
+        /// The current index in the navigation stack.
+        /// </summary>
         private int navigationStackIndex = 0;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationFrame"/> class.
         /// </summary>
@@ -29,12 +41,22 @@ namespace Caliburn.Micro
             ContentProperty.Changed.AddClassHandler<NavigationFrame>((sender, e) => NavigationFrame_ContentChanged(sender, e));
         }
 
+        /// <summary>
+        /// Handles the Loaded event of the NavigationFrame.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event data.</param>
         private void NavigationFrame_Loaded(object sender, RoutedEventArgs e)
         {
             Log.Info("Navigation Frame loaded");
             OnNavigationServiceReady(new EventArgs());
         }
 
+        /// <summary>
+        /// Handles the Content changed event of the NavigationFrame.
+        /// </summary>
+        /// <param name="sender">The NavigationFrame instance.</param>
+        /// <param name="e">The event data.</param>
         private void NavigationFrame_ContentChanged(NavigationFrame sender, AvaloniaPropertyChangedEventArgs e)
         {
             Log.Info("Content changed");
@@ -42,6 +64,11 @@ namespace Caliburn.Micro
             Tag = null;
         }
 
+        /// <summary>
+        /// Handles the LayoutUpdated event of the NavigationFrame.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event data.</param>
         private async void NavigationFrame_LayoutUpdated(object sender, EventArgs e)
         {
             Log.Info("LayoutUpdated");
@@ -58,6 +85,11 @@ namespace Caliburn.Micro
             }
         }
 
+        /// <summary>
+        /// Handles the TransitionCompleted event of the NavigationFrame.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event data.</param>
         private async void NavigationFrame_TransitionCompleted(object sender, TransitionCompletedEventArgs e)
         {
             Log.Info("Transition completed");
@@ -92,11 +124,11 @@ namespace Caliburn.Micro
             }
         }
 
-
         /// <summary>
         /// Navigates to the specified view model.
         /// </summary>
         /// <param name="viewModel">The view model to navigate to.</param>
+        /// <param name="addToStack">Whether to add the view model to the navigation stack.</param>
         private void NavigateToViewModel(object viewModel, bool addToStack = true)
         {
             if (viewModel == null)
@@ -149,7 +181,13 @@ namespace Caliburn.Micro
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Navigates to the specified view model type.
+        /// </summary>
+        /// <param name="viewModelType">The type of the view model.</param>
+        /// <param name="parameter">The parameter to pass to the view model.</param>
+        /// <param name="animated">Whether to animate the transition.</param>
+        /// <returns>A completed task.</returns>
         public Task NavigateToViewModelAsync(Type viewModelType, object parameter = null, bool animated = true)
         {
             var vm = Caliburn.Micro.IoC.GetInstance(viewModelType, null);
@@ -200,10 +238,10 @@ namespace Caliburn.Micro
         }
 
         /// <summary>
-        ///   Attempts to inject query string parameters from the view into the view model.
+        /// Attempts to inject query string parameters from the view into the view model.
         /// </summary>
-        /// <param name="viewModel"> The view model.</param>
-        /// <param name="parameter"> The parameter.</param>
+        /// <param name="viewModel">The view model.</param>
+        /// <param name="parameter">The parameter.</param>
         protected virtual void TryInjectParameters(object viewModel, object parameter)
         {
             var viewModelType = viewModel.GetType();
