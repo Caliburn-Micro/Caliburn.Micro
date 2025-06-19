@@ -118,7 +118,6 @@ namespace Caliburn.Micro
                 await activator.ActivateAsync();
             }
 
-            GC.Collect();
         }
 
         /// <summary>
