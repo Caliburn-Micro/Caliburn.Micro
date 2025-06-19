@@ -65,9 +65,9 @@
         /// </summary>
         /// <param name="item">The item that was removed.</param>
         protected virtual void OnItemRemoved(DependencyObject item) {
-            if (item is IAttachedObject) {
-                if (((IAttachedObject) item).AssociatedObject != null)
-                    ((IAttachedObject) item).Detach();
+            var attached = item as IAttachedObject;
+            if (attached != null && attached.AssociatedObject != null) {
+                attached.Detach();
             }
         }
 
