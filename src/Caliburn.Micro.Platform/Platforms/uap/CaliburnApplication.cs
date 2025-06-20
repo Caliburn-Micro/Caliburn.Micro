@@ -30,6 +30,9 @@ namespace Caliburn.Micro
         protected Frame RootFrame { get; private set; }
 
 #if WinUI3
+        /// <summary>
+        /// The Window of the application.
+        /// </summary>
         public Window Window { get; private set; }
 #endif
 
@@ -218,12 +221,17 @@ namespace Caliburn.Micro
         }
 
 #if WinUI3
+        /// <summary>
+        /// Creates a new window for the application.
+        /// </summary>
         protected virtual Window CreateWindow()
         {
             return new Window();
         }
 
-
+        /// <summary>
+        /// Initializes a new window for the application.
+        /// </summary>
         public void InitializeWindow()
         {
             if(Window == null)
