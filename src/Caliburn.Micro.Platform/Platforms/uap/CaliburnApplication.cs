@@ -9,8 +9,8 @@ using Windows.ApplicationModel;
 #if WinUI3
 using Microsoft.UI.Xaml;
 
-    using Microsoft.UI.Xaml.Controls;
-#else
+    using Microsoft.UI.Xaml.Controls;   
+#else       
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endif
@@ -153,7 +153,7 @@ namespace Caliburn.Micro
         /// <returns>A list of assemblies to inspect.</returns>
         protected virtual IEnumerable<Assembly> SelectAssemblies()
         {
-            return new[] {GetType().GetTypeInfo().Assembly};
+            return new[] { GetType().GetTypeInfo().Assembly };
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace Caliburn.Micro
         /// <returns>The located services.</returns>
         protected virtual IEnumerable<object> GetAllInstances(Type service)
         {
-            return new[] {System.Activator.CreateInstance(service)};
+            return new[] { System.Activator.CreateInstance(service) };
         }
 
         /// <summary>
