@@ -218,12 +218,17 @@ namespace Caliburn.Micro
         }
 
 #if WinUI3
+        /// <summary>
+        /// Creates a new window for the application.
+        /// </summary>
         protected virtual Window CreateWindow()
         {
             return new Window();
         }
 
-
+        /// <summary>
+        /// Initializes a new window for the application.
+        /// </summary>
         public void InitializeWindow()
         {
             if(Window == null)
