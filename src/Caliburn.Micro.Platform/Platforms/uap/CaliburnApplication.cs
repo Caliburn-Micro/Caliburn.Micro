@@ -30,6 +30,9 @@ namespace Caliburn.Micro
         protected Frame RootFrame { get; private set; }
 
 #if WinUI3
+        /// <summary>
+        /// The Window of the application.
+        /// </summary>
         public Window Window { get; private set; }
 #endif
 
