@@ -425,13 +425,11 @@
                             {
                                 foreach (var key in _enumValues.Keys)
                                 {
-                                    if (String.Compare(valuePart.Trim(), key, StringComparison.OrdinalIgnoreCase) == 0)
+                                    if (String.Compare(valuePart.Trim(), key, StringComparison.OrdinalIgnoreCase) == 0 &&
+                                        _enumValues.TryGetValue(key.Trim(), out partValue))
                                     {
-                                        if (_enumValues.TryGetValue(key.Trim(), out partValue))
-                                        {
-                                            enumFieldValue = Convert.ToInt32(partValue);
-                                            break;
-                                        }
+                                        enumFieldValue = Convert.ToInt32(partValue);
+                                        break;
                                     }
                                 }
                             }
