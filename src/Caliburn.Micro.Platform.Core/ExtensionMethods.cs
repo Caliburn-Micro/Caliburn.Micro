@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 
 namespace Caliburn.Micro
 {
@@ -30,5 +31,11 @@ namespace Caliburn.Micro
         {
             return dictionary.TryGetValue(key, out TValue result) ? result : default;
         }
+
+        public static bool IsNullOrEmpty(this StringBuilder source)
+        {
+            return source == null || source.Length == 0;
+        }
     }
 }
+
