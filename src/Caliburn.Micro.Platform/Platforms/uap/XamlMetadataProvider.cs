@@ -425,7 +425,7 @@
                             }
                             catch (FormatException)
                             {
-                                foreach (var key in _enumValues.Keys.ToList().Where(key => String.Compare(valuePart.Trim(), key, StringComparison.OrdinalIgnoreCase) == 0))
+                                foreach (var key in _enumValues.Keys.Where(key => String.Compare(valuePart.Trim(), key, StringComparison.OrdinalIgnoreCase) == 0))
                                 {
                                     if (_enumValues.TryGetValue(key.Trim(), out partValue))
                                     {
