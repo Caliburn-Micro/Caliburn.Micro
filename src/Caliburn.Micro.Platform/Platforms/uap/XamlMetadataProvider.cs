@@ -435,8 +435,8 @@
                                 }
                             }
                         }
-                            }
-                        }
+
+
                         value |= enumFieldValue;
                     }
                     catch (FormatException)
