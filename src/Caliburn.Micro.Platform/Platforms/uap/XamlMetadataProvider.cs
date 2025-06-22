@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Linq;
 #if WinUI3
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Markup;
@@ -260,7 +260,8 @@
 
         public virtual IXamlType BoxedType => throw new NotImplementedException();
 
-        public virtual object ActivateInstance() {
+        public virtual object ActivateInstance()
+        {
             throw new NotImplementedException();
         }
 
@@ -319,7 +320,8 @@
 
         public override IXamlType BoxedType { get => _baseType; }
 
-        public override bool IsArray {
+        public override bool IsArray
+        {
             get { return _isArray; }
         }
 
@@ -423,10 +425,9 @@
                             }
                             catch (FormatException)
                             {
-                                foreach (var key in _enumValues.Keys)
+                                foreach (var key in _enumValues.Keys.Where(key => String.Compare(valuePart.Trim(), key, StringComparison.OrdinalIgnoreCase) == 0))
                                 {
-                                    if (String.Compare(valuePart.Trim(), key, StringComparison.OrdinalIgnoreCase) == 0 &&
-                                        _enumValues.TryGetValue(key.Trim(), out partValue))
+                                    if (_enumValues.TryGetValue(key.Trim(), out partValue))
                                     {
                                         enumFieldValue = Convert.ToInt32(partValue);
                                         break;
@@ -434,6 +435,8 @@
                                 }
                             }
                         }
+
+
                         value |= enumFieldValue;
                     }
                     catch (FormatException)
