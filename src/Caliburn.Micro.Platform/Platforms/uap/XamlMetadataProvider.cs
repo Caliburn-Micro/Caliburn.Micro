@@ -412,6 +412,7 @@
                     Int32 enumFieldValue = 0;
                     try
                     {
+                        var trimmedValue = valuePart.Trim();
                         object partValue;
                         if (_enumValues.TryGetValue(valuePart.Trim(), out partValue))
                         {
@@ -425,9 +426,9 @@
                             }
                             catch (FormatException)
                             {
-                                foreach (var key in _enumValues.Keys.Where(key => String.Compare(valuePart.Trim(), key, StringComparison.OrdinalIgnoreCase) == 0))
+                                foreach (var key in _enumValues.Where(kvp => String.Equals(trimmedValue, kvp.Key, StringComparison.OrdinalIgnoreCase)))
                                 {
-                                    if (_enumValues.TryGetValue(key.Trim(), out partValue))
+                                    if (_enumValues.TryGetValue(trimmedValue, out partValue))
                                     {
                                         enumFieldValue = Convert.ToInt32(partValue);
                                         break;
