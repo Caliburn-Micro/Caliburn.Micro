@@ -414,7 +414,7 @@
                     {
                         var trimmedValue = valuePart.Trim();
                         object partValue;
-                        if (_enumValues.TryGetValue(valuePart.Trim(), out partValue))
+                        if (_enumValues.TryGetValue(trimmedValue, out partValue))
                         {
                             enumFieldValue = Convert.ToInt32(partValue);
                         }
@@ -422,17 +422,14 @@
                         {
                             try
                             {
-                                enumFieldValue = Convert.ToInt32(valuePart.Trim());
+                                enumFieldValue = Convert.ToInt32(trimmedValue);
                             }
                             catch (FormatException)
                             {
                                 foreach (var key in _enumValues.Where(kvp => String.Equals(trimmedValue, kvp.Key, StringComparison.OrdinalIgnoreCase)))
                                 {
-                                    if (_enumValues.TryGetValue(trimmedValue, out partValue))
-                                    {
-                                        enumFieldValue = Convert.ToInt32(partValue);
-                                        break;
-                                    }
+                                    enumFieldValue = Convert.ToInt32(key.Value);
+                                    break;
                                 }
                             }
                         }
