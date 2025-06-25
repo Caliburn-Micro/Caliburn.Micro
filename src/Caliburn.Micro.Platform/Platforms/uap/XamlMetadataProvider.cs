@@ -428,11 +428,7 @@
                             {
                                 var key = _enumValues.FirstOrDefault(kvp => String.Equals(trimmedValue, kvp.Key, StringComparison.OrdinalIgnoreCase));
 
-                                if (key.Value != null)
-                                {
-                                    enumFieldValue = Convert.ToInt32(key.Value);
-                                }
-
+                                enumFieldValue = Convert.ToInt32(key.Value ?? 0);
                             }
                         }
 
