@@ -55,9 +55,8 @@
         /// </summary>
         /// <param name="item">The item that was removed.</param>
         protected virtual void OnItemRemoved(BindableObject item) {
-            if (item is IAttachedObject) {
-                if (((IAttachedObject) item).AssociatedObject != null)
-                    ((IAttachedObject) item).Detach();
+            if (item is IAttachedObject && ((IAttachedObject) item).AssociatedObject != null) {
+                ((IAttachedObject) item).Detach();
             }
         }
 
