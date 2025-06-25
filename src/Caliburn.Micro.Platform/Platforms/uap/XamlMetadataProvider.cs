@@ -426,11 +426,13 @@
                             }
                             catch (FormatException)
                             {
-                                foreach (var key in _enumValues.Where(kvp => String.Equals(trimmedValue, kvp.Key, StringComparison.OrdinalIgnoreCase)))
+                                var key = _enumValues.FirstOrDefault(kvp => String.Equals(trimmedValue, kvp.Key, StringComparison.OrdinalIgnoreCase));
+
+                                if (key.Value != null)
                                 {
                                     enumFieldValue = Convert.ToInt32(key.Value);
-                                    break;
                                 }
+
                             }
                         }
 
