@@ -46,9 +46,9 @@
         /// <param name="item">The item that was added.</param>
         protected virtual void OnItemAdded(BindableObject item)
         {
-            if (associatedObject != null && item is IAttachedObject)
+            if (associatedObject != null && item is IAttachedObject attached)
             {
-                ((IAttachedObject)item).Attach(associatedObject);
+                attached.Attach(associatedObject);
             }
         }
 
@@ -58,10 +58,10 @@
         /// <param name="item">The item that was removed.</param>
         protected virtual void OnItemRemoved(BindableObject item)
         {
-            if (item is IAttachedObject &&
-                ((IAttachedObject)item).AssociatedObject != null)
+            if (item is IAttachedObject attached &&
+                attached.AssociatedObject != null)
             {
-                ((IAttachedObject)item).Detach();
+                attached.Detach();
             }
         }
 
