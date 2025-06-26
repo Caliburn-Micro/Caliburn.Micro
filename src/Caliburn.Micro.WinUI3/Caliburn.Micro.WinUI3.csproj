@@ -1,0 +1,72 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>Caliburn.Micro</RootNamespace>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <UseWinUI>true</UseWinUI>
+    <LangVersion>10.0</LangVersion>
+    <DefineConstants>WinUI3</DefineConstants>
+
+    <PackageId>Caliburn.Micro.WinUI3</PackageId>
+    <Product>Caliburn.Micro.WinUI3</Product>
+
+    <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+  </PropertyGroup>
+
+    <ItemGroup>
+    <Compile Include="..\Caliburn.Micro.Platform\Action.cs" Link="Action.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ActionExecutionContext.cs" Link="ActionExecutionContext.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ActionMessage.cs" Link="ActionMessage.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Bind.cs" Link="Bind.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\BindingScope.cs" Link="BindingScope.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\BooleanToVisibilityConverter.cs" Link="BooleanToVisibilityConverter.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ChildResolver.cs" Link="ChildResolver.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ConventionManager.cs" Link="ConventionManager.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\DependencyPropertyHelper.cs" Link="DependencyPropertyHelper.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ElementConvention.cs" Link="ElementConvention.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\IHaveParameters.cs" Link="IHaveParameters.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Message.cs" Link="Message.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\MessageBinder.cs" Link="MessageBinder.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Parser.cs" Link="Parser.cs" />
+
+    <Compile Include="..\Caliburn.Micro.Platform\View.cs" Link="View.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ViewLocator.cs" Link="ViewLocator.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ViewModelBinder.cs" Link="ViewModelBinder.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ViewModelLocator.cs" Link="ViewModelLocator.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\XamlPlatformProvider.cs" Link="XamlPlatformProvider.cs" />
+
+    </ItemGroup>
+
+  <ItemGroup >
+    <Compile Remove="*.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\**\*.cs" />
+  </ItemGroup>
+
+  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'all'))" />
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" AdditionalProperties="TargetFramework=netstandard2.0" PrivateAssets="all">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <IncludeAssets>Caliburn.Micro.Platform.Core.dll</IncludeAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" AdditionalProperties="TargetFramework=netstandard2.0">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <ExcludeAssets>Caliburn.Micro.Core.dll</ExcludeAssets>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.220902.1-preview1" />
+      <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
+
+  </ItemGroup>
+</Project>

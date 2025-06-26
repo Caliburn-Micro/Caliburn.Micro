@@ -1,4 +1,6 @@
-﻿namespace Caliburn.Micro {
+﻿
+namespace Caliburn.Micro
+{
     using System;
     using System.Collections.Generic;
     using System.Threading;
@@ -11,6 +13,11 @@
     using Avalonia;
     using Avalonia.Threading;
     using FrameworkElement = Avalonia.Controls.Control;
+#elif WinUI3
+    using System.Reflection;
+    using Windows.UI.Core;
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Dispatching;
 #else
     using System.Windows;
     using System.Windows.Threading;
@@ -19,9 +26,12 @@
     /// <summary>
     /// A <see cref="IPlatformProvider"/> implementation for the XAML platfrom.
     /// </summary>
-    public class XamlPlatformProvider : IPlatformProvider {
+    public class XamlPlatformProvider : IPlatformProvider
+    {
 #if WINDOWS_UWP
         private readonly CoreDispatcher dispatcher;
+#elif WinUI3
+        private readonly DispatcherQueue dispatcher;
 #else
         private readonly Dispatcher dispatcher;
 #endif
@@ -29,11 +39,14 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="XamlPlatformProvider"/> class.
         /// </summary>
-        public XamlPlatformProvider() {
+        public XamlPlatformProvider()
+        {
 #if WINDOWS_UWP
             dispatcher = Window.Current.Dispatcher;
 #elif AVALONIA
             dispatcher = Dispatcher.UIThread;
+#elif WinUI3
+            dispatcher = DispatcherQueue.GetForCurrentThread();
 #else
             dispatcher = Dispatcher.CurrentDispatcher;
 #endif
@@ -47,18 +60,23 @@
         /// <summary>
         /// Indicates whether or not the framework is in design-time mode.
         /// </summary>
-        public virtual bool InDesignMode {
+        public virtual bool InDesignMode
+        {
             get { return View.InDesignMode; }
         }
 
-        private void ValidateDispatcher() {
+        private void ValidateDispatcher()
+        {
             if (dispatcher == null)
                 throw new InvalidOperationException("Not initialized with dispatcher.");
         }
 
-        private bool CheckAccess() {
+        private bool CheckAccess()
+        {
 #if WINDOWS_UWP
             return dispatcher == null || Window.Current != null;
+#elif WinUI3
+            return dispatcher == null || dispatcher.HasThreadAccess;
 #else
             return dispatcher == null || dispatcher.CheckAccess();
 #endif
@@ -68,12 +86,15 @@
         /// Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        public virtual void BeginOnUIThread(System.Action action) {
+        public virtual void BeginOnUIThread(System.Action action)
+        {
             ValidateDispatcher();
-#if WINDOWS_UWP
-            var dummy = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+#if WINDOWS_UWP 
+            _ = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
 #elif AVALONIA
             dispatcher.Post(action);
+#elif WinUI3
+            _ = dispatcher.TryEnqueue(() => action());
 #else
             dispatcher.BeginInvoke(action);
 #endif
@@ -84,12 +105,15 @@
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <returns></returns>
-        public virtual Task OnUIThreadAsync(Func<Task> action) {
+        public virtual Task OnUIThreadAsync(Func<Task> action)
+        {
             ValidateDispatcher();
 #if WINDOWS_UWP
             return dispatcher.RunTaskAsync(action);
 #elif AVALONIA
             return dispatcher.InvokeAsync(action);
+#elif WinUI3
+            return dispatcher.RunAsync(action);
 #else
             return dispatcher.InvokeAsync(action).Task.Unwrap();
 #endif
@@ -100,12 +124,16 @@
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public virtual void OnUIThread(System.Action action) {
+        public virtual void OnUIThread(System.Action action)
+        {
             if (CheckAccess())
                 action();
-            else {
-#if WINDOWS_UWP
+            else
+            {
+#if WINDOWS_UWP 
                 dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action()).AsTask().Wait();
+#elif WinUI3
+                dispatcher.RunAsync(action).Wait();
 #else
                 Exception exception = null;
                 System.Action method = () => {
@@ -138,7 +166,8 @@
         /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
         /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was.
         /// </remarks>
-        public virtual object GetFirstNonGeneratedView(object view) {
+        public virtual object GetFirstNonGeneratedView(object view)
+        {
             return View.GetFirstNonGeneratedView(view);
         }
 
@@ -158,9 +187,11 @@
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public virtual void ExecuteOnFirstLoad(object view, Action<object> handler) {
+        public virtual void ExecuteOnFirstLoad(object view, Action<object> handler)
+        {
             var element = view as FrameworkElement;
-            if (element != null && !(bool) element.GetValue(PreviouslyAttachedProperty)) {
+            if (element != null && !(bool)element.GetValue(PreviouslyAttachedProperty))
+            {
                 element.SetValue(PreviouslyAttachedProperty, true);
                 View.ExecuteOnLoad(element, (s, e) => handler(s));
             }
@@ -171,9 +202,11 @@
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler) {
+        public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler)
+        {
             var element = view as FrameworkElement;
-            if (element != null) {
+            if (element != null)
+            {
                 View.ExecuteOnLayoutUpdated(element, (s, e) => handler(s));
             }
         }
@@ -190,7 +223,8 @@
         /// <exception cref="System.NotImplementedException"></exception>
         public virtual Func<CancellationToken, Task> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
         {
-            foreach (var contextualView in views) {
+            foreach (var contextualView in views)
+            {
                 var viewType = contextualView.GetType();
 #if WINDOWS_UWP
                 var closeMethod = viewType.GetRuntimeMethod("Close", new Type[0]);
@@ -200,7 +234,8 @@
                 var closeMethod = viewType.GetMethod("Close", new Type[0]);
 #endif
                 if (closeMethod != null)
-                    return ct => {
+                    return ct =>
+                    {
 #if AVALONIA
                         if (dialogResult != null)
                         {
@@ -212,15 +247,18 @@
                         }
 #elif !WINDOWS_UWP
                         var isClosed = false;
-                        if (dialogResult != null) {
+                        if (dialogResult != null)
+                        {
                             var resultProperty = contextualView.GetType().GetProperty("DialogResult");
-                            if (resultProperty != null) {
+                            if (resultProperty != null)
+                            {
                                 resultProperty.SetValue(contextualView, dialogResult, null);
                                 isClosed = true;
                             }
                         }
 
-                        if (!isClosed) {
+                        if (!isClosed)
+                        {
                             closeMethod.Invoke(contextualView, null);
                         }
 #else
@@ -234,7 +272,8 @@
 #else
                 var isOpenProperty = viewType.GetProperty("IsOpen");
 #endif
-                if (isOpenProperty != null) {
+                if (isOpenProperty != null)
+                {
                     return ct =>
                     {
                         isOpenProperty.SetValue(contextualView, false, null);

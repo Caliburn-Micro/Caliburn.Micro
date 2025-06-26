@@ -4,5 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Features.CrossPlatform.Views.NavigationSourceView">
-  Welcome to Avalonia!
+    <Grid>
+        <StackPanel Margin="20">
+            <TextBox x:Name="Text" />
+            <CheckBox x:Name="IsNavigationEnabled" Content="Is Enabled" Margin="0,10" />
+            <Button x:Name="Navigate" Content="Navigate" />
+        </StackPanel>
+    </Grid>
 </UserControl>

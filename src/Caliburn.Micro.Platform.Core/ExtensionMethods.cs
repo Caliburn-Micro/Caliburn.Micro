@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 
 namespace Caliburn.Micro
 {
@@ -9,7 +10,7 @@ namespace Caliburn.Micro
     public static class ExtensionMethods
     {
         /// <summary>
-        /// Get's the name of the assembly.
+        /// Gets the name of the assembly.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <returns>The assembly's name.</returns>
@@ -19,7 +20,7 @@ namespace Caliburn.Micro
         }
 
         /// <summary>
-        /// Gets the value for a key. If the key does not exist, return default(TValue);
+        /// Gets the value for a key. If the key does not exist, returns default(TValue).
         /// </summary>
         /// <typeparam name="TKey">The type of the keys in the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
@@ -30,5 +31,16 @@ namespace Caliburn.Micro
         {
             return dictionary.TryGetValue(key, out TValue result) ? result : default;
         }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="StringBuilder"/> is null or has a length of zero.
+        /// </summary>
+        /// <param name="source">The <see cref="StringBuilder"/> to check.</param>
+        /// <returns><c>true</c> if the <see cref="StringBuilder"/> is null or empty; otherwise, <c>false</c>.</returns>
+        public static bool IsNullOrEmpty(this StringBuilder source)
+        {
+            return source == null || source.Length == 0;
+        }
     }
 }
+

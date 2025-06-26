@@ -1,0 +1,5 @@
+
+Microsoft (R) .NET Framework Strong Name Utility  Version 4.0.30319.0
+Copyright (c) Microsoft Corporation.  All rights reserved.
+
+Failed to convert key to token -- Invalid assembly public key.

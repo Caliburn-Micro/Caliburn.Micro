@@ -18,6 +18,12 @@
     using Avalonia.Controls.Presenters;
     using DependencyObject = Avalonia.AvaloniaObject;
     using FrameworkElement = Avalonia.Controls.Control;
+#elif WinUI3
+    using System.ServiceModel;
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Controls.Primitives;
+    using Microsoft.UI.Xaml.Media;
 #else
     using System.Windows;
     using System.Windows.Controls;
@@ -39,20 +45,28 @@
             AddChildResolver<NavigationFrame>(e => new[] { e.Content as DependencyObject });
 #endif
             AddChildResolver<ContentControl>(e => new[] { e.Content as DependencyObject });
-            AddChildResolver<ItemsControl>(e => e.Items.OfType<DependencyObject>().ToArray());
 #if !WINDOWS_UWP && !AVALONIA
+            AddChildResolver<ItemsControl>(e => e.Items.OfType<DependencyObject>().ToArray());
+
+#endif
+#if !WINDOWS_UWP && !WinUI3 && !AVALONIA
             AddChildResolver<HeaderedContentControl>(e => new[] { e.Header as DependencyObject });
             AddChildResolver<HeaderedItemsControl>(e => new[] { e.Header as DependencyObject });
 #endif
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
             AddChildResolver<SemanticZoom>(e => new[] { e.ZoomedInView as DependencyObject, e.ZoomedOutView as DependencyObject });
             AddChildResolver<ListViewBase>(e => new[] { e.Header as DependencyObject });
+#endif
+#if WINDOWS_UWP || WinUI3
             AddChildResolver<ListViewBase>(e => new[] { e.Footer as DependencyObject });
             AddChildResolver<Hub>(ResolveHub);
             AddChildResolver<HubSection>(e => new[] { e.Header as DependencyObject });
             AddChildResolver<CommandBar>(ResolveCommandBar);
             AddChildResolver<Button>(e => ResolveFlyoutBase(e.Flyout));
             AddChildResolver<FrameworkElement>(e => ResolveFlyoutBase(FlyoutBase.GetAttachedFlyout(e)));
+            AddChildResolver<SplitView>(e => new[] { e.Pane, e.Content });
+#endif
+#if WINDOWS_UWP || WinUI3
             AddChildResolver<SplitView>(e => new[] { e.Pane, e.Content });
 #endif
         }
@@ -65,7 +79,7 @@
         /// <returns>The named element or null if not found.</returns>
         public static FrameworkElement FindName(this IEnumerable<FrameworkElement> elementsToSearch, string name)
         {
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
             return elementsToSearch.FirstOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 #else
             return elementsToSearch.FirstOrDefault(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
@@ -214,8 +228,8 @@
 #else
 
 
-#if (NET || CAL_NETCORE) && !WINDOWS_UWP
-                var childCount = (current is System.Windows.Media.Visual || current is System.Windows.Media.Media3D.Visual3D)
+#if (NET || CAL_NETCORE) && !WinUI3 && !WINDOWS_UWP
+                var childCount = (current is Visual || current is Visual3D)
                     ? VisualTreeHelper.GetChildrenCount(current) : 0;
 #else
                 var childCount = (current is UIElement)
@@ -229,10 +243,11 @@
                         queue.Enqueue(childDo);
                     }
 
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
                     var page = current as Page;
 
-                    if (page != null) {
+                    if (page != null)
+                    {
                         if (page.BottomAppBar != null)
                             queue.Enqueue(page.BottomAppBar);
 
@@ -268,8 +283,9 @@
             return descendants;
         };
 
-#if WINDOWS_UWP
-        private static IEnumerable<DependencyObject> ResolveFlyoutBase(FlyoutBase flyoutBase) {
+#if WINDOWS_UWP || WinUI3
+        private static IEnumerable<DependencyObject> ResolveFlyoutBase(FlyoutBase flyoutBase)
+        {
             if (flyoutBase == null)
                 yield break;
 
@@ -280,28 +296,36 @@
 
             var menuFlyout = flyoutBase as MenuFlyout;
 
-            if (menuFlyout != null && menuFlyout.Items != null) {
-                foreach (var item in menuFlyout.Items) {
-                    foreach (var subItem in ResolveMenuFlyoutItems(item)) {
+            if (menuFlyout != null && menuFlyout.Items != null)
+            {
+                foreach (var item in menuFlyout.Items)
+                {
+                    foreach (var subItem in ResolveMenuFlyoutItems(item))
+                    {
                         yield return subItem;
                     }
                 }
             }
         }
 
-        private static IEnumerable<DependencyObject> ResolveMenuFlyoutItems(MenuFlyoutItemBase item) {
+        private static IEnumerable<DependencyObject> ResolveMenuFlyoutItems(MenuFlyoutItemBase item)
+        {
             yield return item;
             var subItem = item as MenuFlyoutSubItem;
 
-            if (subItem != null && subItem.Items != null) {
-                foreach (var subSubItem in subItem.Items) {
+            if (subItem != null && subItem.Items != null)
+            {
+                foreach (var subSubItem in subItem.Items)
+                {
                     yield return subSubItem;
                 }
             }
         }
 
-        private static IEnumerable<DependencyObject> ResolveCommandBar(CommandBar commandBar) {
-            foreach (var child in commandBar.PrimaryCommands.OfType<DependencyObject>()) {
+        private static IEnumerable<DependencyObject> ResolveCommandBar(CommandBar commandBar)
+        {
+            foreach (var child in commandBar.PrimaryCommands.OfType<DependencyObject>())
+            {
                 yield return child;
             }
 
@@ -311,7 +335,8 @@
             }
         }
 
-        private static IEnumerable<DependencyObject> ResolveHub(Hub hub) {
+        private static IEnumerable<DependencyObject> ResolveHub(Hub hub)
+        {
             yield return hub.Header as DependencyObject;
 
             foreach (var section in hub.Sections)
@@ -353,8 +378,9 @@
                     break;
                 }
 #else
-                if (root is Page) {
-                    root = ((Page) root).Content as DependencyObject ?? root;
+                if (root is Page)
+                {
+                    root = ((Page)root).Content as DependencyObject ?? root;
                     break;
                 }
 #endif
@@ -364,11 +390,17 @@
                 if ((bool)root.GetValue(View.IsScopeRootProperty))
                     break;
 
-#if WINDOWS_UWP
-                if (root is AppBar) {
+#if WINDOWS_UWP || WinUI3
+                if (root is AppBar)
+                {
+#if WinUI3
+                    var frame = (Application.Current as CaliburnApplication)?.Window?.Content as Frame;
+#else
                     var frame = Window.Current.Content as Frame;
+#endif
                     var page = (frame != null) ? frame.Content as Page : null;
-                    if (page != null && (root == page.TopAppBar || root == page.BottomAppBar)) {
+                    if (page != null && (root == page.TopAppBar || root == page.BottomAppBar))
+                    {
                         root = page;
                         break;
                     }

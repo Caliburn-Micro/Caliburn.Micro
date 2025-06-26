@@ -2,8 +2,15 @@
 {
     using System;
     using System.Collections.Generic;
-    using Windows.UI.Xaml;
+    using System.Linq;
+#if WinUI3
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Markup;
+#else
     using Windows.UI.Xaml.Markup;
+    using Windows.UI.Xaml;
+#endif
+
 
     /// <summary>
     /// Implements XAML schema context concepts that support XAML parsing.
@@ -251,6 +258,8 @@
             get { throw new NotImplementedException(); }
         }
 
+        public virtual IXamlType BoxedType => throw new NotImplementedException();
+
         public virtual object ActivateInstance()
         {
             throw new NotImplementedException();
@@ -308,6 +317,8 @@
         {
             get { return _baseType; }
         }
+
+        public override IXamlType BoxedType { get => _baseType; }
 
         public override bool IsArray
         {
@@ -401,8 +412,9 @@
                     Int32 enumFieldValue = 0;
                     try
                     {
+                        var trimmedValue = valuePart.Trim();
                         object partValue;
-                        if (_enumValues.TryGetValue(valuePart.Trim(), out partValue))
+                        if (_enumValues.TryGetValue(trimmedValue, out partValue))
                         {
                             enumFieldValue = Convert.ToInt32(partValue);
                         }
@@ -410,23 +422,17 @@
                         {
                             try
                             {
-                                enumFieldValue = Convert.ToInt32(valuePart.Trim());
+                                enumFieldValue = Convert.ToInt32(trimmedValue);
                             }
                             catch (FormatException)
                             {
-                                foreach (var key in _enumValues.Keys)
-                                {
-                                    if (String.Compare(valuePart.Trim(), key, StringComparison.OrdinalIgnoreCase) == 0)
-                                    {
-                                        if (_enumValues.TryGetValue(key.Trim(), out partValue))
-                                        {
-                                            enumFieldValue = Convert.ToInt32(partValue);
-                                            break;
-                                        }
-                                    }
-                                }
+                                var key = _enumValues.FirstOrDefault(kvp => String.Equals(trimmedValue, kvp.Key, StringComparison.OrdinalIgnoreCase));
+
+                                enumFieldValue = Convert.ToInt32(key.Value ?? 0);
                             }
                         }
+
+
                         value |= enumFieldValue;
                     }
                     catch (FormatException)

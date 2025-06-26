@@ -1,8 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+#if WinUI3
+    using Microsoft.UI;
+    using Microsoft.UI.Xaml.Navigation;
+#else
 using Windows.UI.Core;
 using Windows.UI.Xaml.Navigation;
+#endif
+
 
 namespace Caliburn.Micro
 {
@@ -75,8 +81,8 @@ namespace Caliburn.Micro
         ///   Navigates back.
         /// </summary>
         void GoBack();
-
-#if WINDOWS_UWP
+        //TODO: BackRequestedEventArgs namespace in WinUI?
+#if WINDOWS_UWP 
         /// <summary>
         /// Gets a collection of PageStackEntry instances representing the backward navigation history of the Frame.
         /// </summary>

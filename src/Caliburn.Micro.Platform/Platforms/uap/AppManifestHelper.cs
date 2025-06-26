@@ -1,4 +1,4 @@
-﻿﻿//
+﻿//
 // Copyright (c) 2012 Tim Heuer
 //
 // Licensed under the Microsoft Public License (Ms-PL) (the "License");
@@ -49,8 +49,8 @@ namespace Caliburn.Micro
                                          SmallLogoUri = new Uri(string.Format("ms-appx:///{0}", vel.Attribute("Square30x30Logo").Value.Replace(@"\", @"/"))),
                                          BackgroundColorAsString = vel.Attribute("BackgroundColor").Value
                                      }).FirstOrDefault();
-            
-            if (visualElementNode == null) 
+
+            if (visualElementNode == null)
                 throw new ArgumentNullException("Could not parse the VisualElements from the app manifest.");
 
             return visualElementNode;
@@ -65,6 +65,7 @@ namespace Caliburn.Micro
         public Uri LogoUri { get; set; }
         public Uri SmallLogoUri { get; set; }
         public string BackgroundColorAsString { get; set; }
+
         public Windows.UI.Color BackgroundColor
         {
             get
@@ -77,9 +78,14 @@ namespace Caliburn.Micro
         {
             // if 'transparent' is entered in the app manifest, return Windows.UI.Colors.Transparent
             // in order to prevent parsing failures
-            if (String.Equals(hexValue, "transparent", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(hexValue, "transparent", StringComparison.OrdinalIgnoreCase))
+#if WinUI3
+                return Microsoft.UI.Colors.Transparent;
+#else
                 return Windows.UI.Colors.Transparent;
-                
+#endif
+
+
             hexValue = hexValue.Replace("#", string.Empty);
 
             // some loose validation (not bullet-proof)
@@ -88,23 +94,17 @@ namespace Caliburn.Micro
                 throw new ArgumentException("This does not appear to be a proper hex color number");
             }
 
-            byte a = 255;
-            byte r = 255;
-            byte g = 255;
-            byte b = 255;
-
-            int startPosition = 0;
+            bool isEightCharactersLong = hexValue.Length == 8;
+            // if the string is 8 characters it includes the a part
+            int startPosition = isEightCharactersLong ? 2 : 0;
 
             // the case where alpha is provided
-            if (hexValue.Length == 8)
-            {
-                a = byte.Parse(hexValue.Substring(0, 2), NumberStyles.HexNumber);
-                startPosition = 2;
-            }
 
-            r = byte.Parse(hexValue.Substring(startPosition, 2), NumberStyles.HexNumber);
-            g = byte.Parse(hexValue.Substring(startPosition + 2, 2), NumberStyles.HexNumber);
-            b = byte.Parse(hexValue.Substring(startPosition + 4, 2), NumberStyles.HexNumber);
+            byte a = isEightCharactersLong ? byte.Parse(hexValue.Substring(0, 2), NumberStyles.HexNumber) : (byte)255;
+
+            byte r = byte.Parse(hexValue.Substring(startPosition, 2), NumberStyles.HexNumber);
+            byte g = byte.Parse(hexValue.Substring(startPosition + 2, 2), NumberStyles.HexNumber);
+            byte b = byte.Parse(hexValue.Substring(startPosition + 4, 2), NumberStyles.HexNumber);
 
             return Windows.UI.Color.FromArgb(a, r, g, b);
         }

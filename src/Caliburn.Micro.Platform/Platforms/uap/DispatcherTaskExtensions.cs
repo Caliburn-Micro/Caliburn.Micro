@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+
+#if WinUI3
+    using Windows.UI.Core;
+#else
 using Windows.UI.Core;
+#endif
 
 namespace Caliburn.Micro
 {

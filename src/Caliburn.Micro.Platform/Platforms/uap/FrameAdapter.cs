@@ -2,12 +2,22 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
+#if WinUI3
+using Windows.Foundation;
+using Windows.Storage;
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+#else
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+#endif
 
 namespace Caliburn.Micro
 {
@@ -22,7 +32,6 @@ namespace Caliburn.Micro
         private static readonly ILog Log = LogManager.GetLog(typeof(FrameAdapter));
         private const string FrameStateKey = "FrameState";
         private const string ParameterKey = "ParameterKey";
-
         private readonly Frame frame;
         private readonly bool treatViewAsLoaded;
         private event NavigatingCancelEventHandler ExternalNavigatingHandler = delegate { };
@@ -40,16 +49,19 @@ namespace Caliburn.Micro
             this.frame = frame;
             this.treatViewAsLoaded = treatViewAsLoaded;
 
+#if WINDOWS_UWP
+            navigationManager = SystemNavigationManager.GetForCurrentView();
+#endif
+            AddEventHandlers();
+        }
+
+        // add evenhandlers for navigating and navigated events
+        private void AddEventHandlers()
+        {
             this.frame.Navigating += OnNavigating;
             this.frame.Navigated += OnNavigated;
 
 #if WINDOWS_UWP
-
-            // This could leak memory if we're creating and destorying navigation services regularly.
-            // Another unlikely scenario though
-
-            navigationManager = SystemNavigationManager.GetForCurrentView();
-
             navigationManager.BackRequested += OnBackRequested;
 #endif
         }
@@ -376,7 +388,7 @@ namespace Caliburn.Micro
             CurrentParameter = container.Values.TryGetValue(ParameterKey, out object parameterKeyValue) ?
                 parameterKeyValue : null;
 
-            if (String.IsNullOrEmpty(frameState))
+            if (string.IsNullOrEmpty(frameState))
                 return false;
 
             frame.SetNavigationState(frameState);
@@ -389,11 +401,24 @@ namespace Caliburn.Micro
 
             await BindViewModel(view);
 
+#if WinUI3
+            if (Application.Current is CaliburnApplication ca)
+            {
+                if(ca.Window == null)
+                    ca.InitializeWindow();
+
+                if (ca.Window?.Content != null)
+                    ca.Window.Content = frame;
+
+
+                ca.Window?.Activate();
+            }
+#else
             if (Window.Current.Content == null)
                 Window.Current.Content = frame;
 
             Window.Current.Activate();
-
+#endif
             return true;
         }
 

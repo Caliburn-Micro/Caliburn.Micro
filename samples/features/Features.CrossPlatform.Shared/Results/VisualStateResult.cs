@@ -5,6 +5,9 @@ using Caliburn.Micro;
 #if SILVERLIGHT || WPF
 using System.Windows;
 using System.Windows.Controls;
+#elif WinUI3
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 #elif  AVALONIA
 using Avalonia.Controls;
 #else
