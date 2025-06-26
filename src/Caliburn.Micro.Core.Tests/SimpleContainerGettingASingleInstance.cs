@@ -5,7 +5,7 @@ namespace Caliburn.Micro.Core.Tests
     public class SimpleContainerGettingASingleInstance
     {
         [Fact]
-        public void An_instance_is_returned_for_the_type_specified_if_found()
+        public void AnInstanceIsReturnedForTheTypeSpecifiedIfFound()
         {
             var container = new SimpleContainer();
             container.PerRequest<object>();
@@ -14,7 +14,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void Instances_can_be_found_by_name_only()
+        public void InstancesCanBeFoundByNameOnly()
         {
             var container = new SimpleContainer();
             container.RegisterPerRequest(typeof(object), "AnObject", typeof(object));
@@ -23,7 +23,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void Null_is_returned_when_no_instance_is_found()
+        public void NullIsReturnedWhenNoInstanceIsFound()
         {
             Assert.Null(new SimpleContainer().GetInstance(typeof(object), null));
         }

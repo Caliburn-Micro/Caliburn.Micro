@@ -6,7 +6,7 @@ namespace Caliburn.Micro.Core.Tests
     {
 
         [Fact]
-        public void Container_Finds_Single_Constructor()
+        public void ContainerFindsSingleConstructor()
         {
             var container = new SimpleContainer();
             container.Singleton<SingleEmptyConstructorType>();
@@ -14,7 +14,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void Container_No_EmptyConstructor()
+        public void ContainerNoEmptyConstructor()
         {
             var container = new SimpleContainer();
             container.Singleton<SingleNonEmptyConstructorType>();
@@ -22,7 +22,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void Container_SingleIntConstructor()
+        public void ContainerSingleIntConstructor()
         {
             var container = new SimpleContainer();
             container.Singleton<SingleIntConstructor>();
@@ -32,7 +32,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void Container_ChooseConstructorWithRegisteredParameter()
+        public void ContainerChooseConstructorWithRegisteredParameter()
         {
             var container = new SimpleContainer();
             container.Singleton<TwoConstructors>();
@@ -42,7 +42,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void Container_ChooseEmptyConstructorWithoutRegisteredParameter()
+        public void ContainerChooseEmptyConstructorWithoutRegisteredParameter()
         {
             var container = new SimpleContainer();
             container.Singleton<TwoConstructors>();
@@ -51,7 +51,7 @@ namespace Caliburn.Micro.Core.Tests
         }
 
         [Fact]
-        public void BuildUp_ShouldInjectProperties()
+        public void BuildUpShouldInjectProperties()
         {
             var container = new SimpleContainer();
             var instance = new TestServiceWithDependency();
