@@ -1,6 +1,5 @@
-﻿namespace Caliburn.Micro.Maui 
+﻿namespace Caliburn.Micro.Maui
 {
-    using System;
     using System.Collections.Specialized;
     using System.Linq;
     using global::Microsoft.Maui.Controls;
@@ -10,7 +9,7 @@
     /// </summary>
     /// <typeparam name="T">The type of item in the attached collection.</typeparam>
     public class AttachedCollection<T> : BindableCollection<BindableObject>, IAttachedObject
-        where T : BindableObject, IAttachedObject 
+        where T : BindableObject, IAttachedObject
     {
         private BindableObject associatedObject;
 
@@ -27,7 +26,8 @@
         /// <summary>
         /// Detaches the collection.
         /// </summary>
-        public void Detach() {
+        public void Detach()
+        {
             this.OfType<IAttachedObject>().Apply(x => x.Detach());
             associatedObject = null;
         }
@@ -35,7 +35,8 @@
         /// <summary>
         /// The currently attached object.
         /// </summary>
-        public BindableObject AssociatedObject {
+        public BindableObject AssociatedObject
+        {
             get { return associatedObject; }
         }
 
@@ -43,10 +44,11 @@
         /// Called when an item is added from the collection.
         /// </summary>
         /// <param name="item">The item that was added.</param>
-        protected virtual void OnItemAdded(BindableObject item) {
-            if (associatedObject != null) {
-                if (item is IAttachedObject)
-                    ((IAttachedObject) item).Attach(associatedObject);
+        protected virtual void OnItemAdded(BindableObject item)
+        {
+            if (associatedObject != null && item is IAttachedObject)
+            {
+                ((IAttachedObject)item).Attach(associatedObject);
             }
         }
 
@@ -54,10 +56,12 @@
         /// Called when an item is removed from the collection.
         /// </summary>
         /// <param name="item">The item that was removed.</param>
-        protected virtual void OnItemRemoved(BindableObject item) {
-            if (item is IAttachedObject) {
-                if (((IAttachedObject) item).AssociatedObject != null)
-                    ((IAttachedObject) item).Detach();
+        protected virtual void OnItemRemoved(BindableObject item)
+        {
+            if (item is IAttachedObject &&
+                ((IAttachedObject)item).AssociatedObject != null)
+            {
+                ((IAttachedObject)item).Detach();
             }
         }
 
@@ -65,7 +69,8 @@
         /// Raises the <see cref = "E:System.Collections.ObjectModel.ObservableCollection`1.CollectionChanged" /> event with the provided arguments.
         /// </summary>
         /// <param name = "e">Arguments of the event being raised.</param>
-        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e) {
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
             base.OnCollectionChanged(e);
 
             if (e.OldItems != null)
