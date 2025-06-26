@@ -176,11 +176,10 @@ namespace Caliburn.Micro
 
             if (currentEntry == null)
             {
-                return new object[0];
+                return Enumerable.Empty<object>();
             }
 
             var instances = currentEntry.Select(e => e(this));
-
             foreach (var instance in instances.Where(instance => EnablePropertyInjection && instance != null))
             {
                 BuildUp(instance);
@@ -239,7 +238,7 @@ namespace Caliburn.Micro
                 return entries.FirstOrDefault(x => x.Key == key);
             }
 
-            if (key == null)
+            if (string.IsNullOrEmpty(key))
             {
                 return entries.FirstOrDefault(x => x.Service == service && string.IsNullOrEmpty(x.Key))
                        ?? entries.FirstOrDefault(x => x.Service == service);
