@@ -97,12 +97,11 @@ namespace Caliburn.Micro
 #endif
             var messageTexts = StringSplitter.Split(text, ';');
 
-            foreach (var messageText in messageTexts)
+            foreach (var triggerPlusMessage in messageTexts.Select(messageText =>
+                LongFormatRegularExpression.IsMatch(messageText)
+                    ? StringSplitter.Split(messageText, '=')
+                    : new[] { null, messageText }))
             {
-                var triggerPlusMessage = LongFormatRegularExpression.IsMatch(messageText)
-                                             ? StringSplitter.Split(messageText, '=')
-                                             : new[] { null, messageText };
-
                 var messageDetail = triggerPlusMessage.Last()
                     .Replace("[", string.Empty)
                     .Replace("]", string.Empty)
