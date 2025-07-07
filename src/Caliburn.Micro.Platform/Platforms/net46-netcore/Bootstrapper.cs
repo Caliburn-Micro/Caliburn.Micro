@@ -44,7 +44,6 @@ namespace Caliburn.Micro
 
             PlatformProvider.Current = new XamlPlatformProvider();
 
-
             var baseExtractTypes = AssemblySourceCache.ExtractTypes;
 
             AssemblySourceCache.ExtractTypes = assembly =>
@@ -75,6 +74,13 @@ namespace Caliburn.Micro
             {
                 StartRuntime();
             }
+            Coroutine.Completed += (s, e) =>
+            {
+                if (e.Error != null)
+                {
+                    CoroutineException(s, e);
+                }
+            };
         }
 
         /// <summary>
@@ -136,7 +142,7 @@ namespace Caliburn.Micro
         /// <returns>A list of assemblies to inspect.</returns>
         protected virtual IEnumerable<Assembly> SelectAssemblies()
         {
-            return new[] {GetType().Assembly};
+            return new[] { GetType().Assembly };
         }
 
         /// <summary>
@@ -160,7 +166,7 @@ namespace Caliburn.Micro
         /// <returns>The located services.</returns>
         protected virtual IEnumerable<object> GetAllInstances(Type service)
         {
-            return new[] {Activator.CreateInstance(service)};
+            return new[] { Activator.CreateInstance(service) };
         }
 
         /// <summary>
@@ -209,7 +215,6 @@ namespace Caliburn.Micro
             await windowManager.ShowWindowAsync(IoC.GetInstance(viewModelType, null), null, settings);
         }
 
-
         /// <summary>
         /// Locates the view model, locates the associate view, binds them and shows it as the root view.
         /// </summary>
@@ -218,6 +223,15 @@ namespace Caliburn.Micro
         protected Task DisplayRootViewForAsync<TViewModel>(IDictionary<string, object> settings = null)
         {
             return DisplayRootViewForAsync(typeof(TViewModel), settings);
+        }
+
+        /// <summary>
+        /// Override this to handle coroutine exceptions.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event args.</param>
+        protected virtual void CoroutineException(object sender, ResultCompletionEventArgs e)
+        {
         }
     }
 }
