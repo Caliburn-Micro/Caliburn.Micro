@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 
@@ -14,6 +13,20 @@ namespace Features.CrossPlatform.ViewModels
             Items.CollectionChanged += (s, e) => NotifyOfPropertyChange(() => CanCloseTab);
         }
 
+        protected override async Task OnActivateAsync(CancellationToken cancellationToken)
+        {
+            // Optionally perform any logic before activation here
+            await base.OnActivateAsync(cancellationToken);
+        }
+        protected override async Task OnActivatedAsync(CancellationToken cancellationToken)
+        {
+            // Optionally perform any logic after activation here
+            await AddTabAsync();
+            await AddTabAsync();
+
+            await base.OnActivatedAsync(cancellationToken);
+        }
+
         protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
         {
             await AddTabAsync();
@@ -25,7 +38,7 @@ namespace Features.CrossPlatform.ViewModels
             return ActivateItemAsync(new TabViewModel { DisplayName = $"Tab {count++}" }, CancellationToken.None);
         }
 
-	    public bool CanCloseTab => Items.Count > 1;
+        public bool CanCloseTab => Items.Count > 1;
 
         public Task CloseTab()
         {
