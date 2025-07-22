@@ -18,7 +18,7 @@
         </StackPanel>
 
 
-        <ListBox x:Name="Items" Grid.Row="1" Margin="40,0">
+        <ListBox Name="Items" Grid.Row="1" Margin="40,0" SelectedItem="{Binding ActiveItem, Mode=TwoWay}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel Orientation="Horizontal"/>
@@ -26,16 +26,21 @@
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <Border>
-                            <TextBlock Text="{Binding DisplayName}" Width="150"></TextBlock>
-                        </Border>
-                    </StackPanel>
+                    <TextBlock Text="{Binding DisplayName}"></TextBlock>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <ContentControl cal:View.Model="{Binding ActiveItem}" Grid.Row="2" Margin="40,20"/>
+        <Panel DataContext="{Binding ActiveItem}" Grid.Row="2" Margin="40">
+            <TextBlock  Text="{Binding DisplayName}" FontSize="24" Foreground="Blue"/>
+            <ItemsControl ItemsSource="{Binding Messages}" Margin="30">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Panel>
 
     </Grid>
 </UserControl>

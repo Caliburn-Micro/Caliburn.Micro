@@ -1,10 +1,7 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace Caliburn.Micro.Core.Tests
+﻿namespace Caliburn.Micro.Avalonia.Tests
 {
+
+
     public class ConductWithTests
     {
         [Fact]
@@ -106,7 +103,7 @@ namespace Caliburn.Micro.Core.Tests
             {
                 if (deactivationDelay.HasValue)
                 {
-                    await Task.Delay(deactivationDelay.Value, cancellationToken);
+                    await Task.Delay(deactivationDelay.Value, cancellationToken).ConfigureAwait(false);
                 }
 
                 await base.OnActivateAsync(cancellationToken);
@@ -118,9 +115,10 @@ namespace Caliburn.Micro.Core.Tests
 
             protected override async Task OnActivatedAsync(CancellationToken cancellationToken)
             {
+                
                 if (deactivationDelay.HasValue)
                 {
-                    await Task.Delay(deactivationDelay.Value, cancellationToken);
+                    await Task.Delay(deactivationDelay.Value, cancellationToken).ConfigureAwait(false);
                 }
 
                 await base.OnActivatedAsync(cancellationToken);
@@ -145,3 +143,5 @@ namespace Caliburn.Micro.Core.Tests
         }
     }
 }
+
+
