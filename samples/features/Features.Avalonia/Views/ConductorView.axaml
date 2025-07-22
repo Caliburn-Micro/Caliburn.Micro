@@ -18,7 +18,7 @@
         </StackPanel>
 
 
-        <ListBox Name="Items" Grid.Row="1" Margin="40,0">
+        <ListBox Name="Items" Grid.Row="1" Margin="40,0" SelectedItem="{Binding ActiveItem, Mode=TwoWay}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel Orientation="Horizontal"/>
