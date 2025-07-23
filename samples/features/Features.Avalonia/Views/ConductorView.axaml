@@ -31,16 +31,8 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <Panel DataContext="{Binding ActiveItem}" Grid.Row="2" Margin="40">
-            <TextBlock  Text="{Binding DisplayName}" FontSize="24" Foreground="Blue"/>
-            <ItemsControl ItemsSource="{Binding Messages}" Margin="30">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Panel>
+        <ContentControl cal:View.Model="{Binding ActiveItem}" Grid.Row="2" Margin="40">
+        </ContentControl>
 
     </Grid>
 </UserControl>
