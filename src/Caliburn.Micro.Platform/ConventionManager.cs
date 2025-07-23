@@ -341,6 +341,7 @@
 #if AVALONIA
             AddElementConvention<UserControl>(UserControl.IsVisibleProperty, "DataContext", loadedEvent);
             AddElementConvention<ListBox>(ListBox.ItemsSourceProperty, "DataContext", loadedEvent);
+            AddElementConvention<Panel>(Panel.DataContextProperty, "DataContext", loadedEvent);
 #else
             AddElementConvention<UserControl>(UserControl.VisibilityProperty, "DataContext", loadedEvent);
 #endif
