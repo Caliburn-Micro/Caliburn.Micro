@@ -137,11 +137,11 @@ namespace Caliburn.Micro
             var view = EnsureWindow(rootModel, view1);
 
             var haveDisplayName = rootModel as IHaveDisplayName;
-            if (string.IsNullOrEmpty(view.Title) && haveDisplayName != null && !ConventionManager.HasBinding(view, Window.TitleProperty))
+            if ((string.IsNullOrEmpty(view.Title) || view.Title == "Window") && haveDisplayName != null && !ConventionManager.HasBinding(view, Window.TitleProperty))
             {
                 var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
                 view.Bind(Window.TitleProperty, binding);
-            }
+            }            
 
             ApplySettings(view, settings);
             var conductor = new WindowConductor(rootModel, view);
