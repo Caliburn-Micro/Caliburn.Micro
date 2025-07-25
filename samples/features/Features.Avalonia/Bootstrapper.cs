@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows;
 using Caliburn.Micro;
 using Features.CrossPlatform.ViewModels;
 
@@ -16,13 +15,17 @@ namespace Features.Avalonia
         {
             LogManager.GetLog = type => new DebugLog(type);
             _container = new SimpleContainer();
-            _container.Instance(_container); 
-            
+            _container.Instance(_container);
+
             Initialize();
 
-            (DisplayRootViewFor<ShellViewModel>()).ConfigureAwait(false);
+            InitializeAsync();
         }
 
+        private async void InitializeAsync()
+        {
+            await DisplayRootViewFor<ShellViewModel>();
+        }
         protected override void Configure()
         {
             _container
