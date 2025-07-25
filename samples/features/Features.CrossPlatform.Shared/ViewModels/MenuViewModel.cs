@@ -1,5 +1,4 @@
-﻿using System;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 
 #if XAMARINFORMS
 using Caliburn.Micro.Xamarin.Forms;
@@ -38,10 +37,10 @@ namespace Features.CrossPlatform.ViewModels
 
         public BindableCollection<FeatureViewModel> Features { get; }
 #if AVALONIA
-        public async void ShowFeature(FeatureViewModel feature)
-        {
-            await _eventAggregator.PublishOnUIThreadAsync(feature);
-        }
+                public async void ShowFeature(FeatureViewModel feature)
+                {
+                    await _navigationService.NavigateToViewModelAsync(feature.ViewModel);
+                }
 #else
         public void ShowFeature(FeatureViewModel feature)
         {
