@@ -19,10 +19,13 @@ namespace Features.Avalonia
 
             Initialize();
 
-            Task displayTask = DisplayRootViewFor<ShellViewModel>();
-            displayTask.Wait();
+            InitializeAsync();
         }
 
+        private async void InitializeAsync()
+        {
+            await DisplayRootViewFor<ShellViewModel>();
+        }
         protected override void Configure()
         {
             _container
