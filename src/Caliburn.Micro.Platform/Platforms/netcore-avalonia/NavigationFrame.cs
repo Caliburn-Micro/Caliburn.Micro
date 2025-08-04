@@ -46,32 +46,15 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
-        private void NavigationFrame_Loaded(object sender, RoutedEventArgs e)
+        private async void NavigationFrame_Loaded(object sender, RoutedEventArgs e)
         {
             Log.Info("Navigation Frame loaded");
+            await ActivateItemHelper(sender);
             OnNavigationServiceReady(new EventArgs());
         }
 
-        /// <summary>
-        /// Handles the Content changed event of the NavigationFrame.
-        /// </summary>
-        /// <param name="sender">The NavigationFrame instance.</param>
-        /// <param name="e">The event data.</param>
-        private void NavigationFrame_ContentChanged(NavigationFrame sender, AvaloniaPropertyChangedEventArgs e)
+        private static async Task ActivateItemHelper(object sender)
         {
-            Log.Info("Content changed");
-            Log.Info($"Content {Tag}");
-            Tag = null;
-        }
-
-        /// <summary>
-        /// Handles the LayoutUpdated event of the NavigationFrame.
-        /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event data.</param>
-        private async void NavigationFrame_LayoutUpdated(object sender, EventArgs e)
-        {
-            Log.Info("LayoutUpdated");
             var control = sender as UserControl;
             if (control != null)
             {
@@ -86,6 +69,30 @@ namespace Caliburn.Micro
         }
 
         /// <summary>
+        /// Handles the Content changed event of the NavigationFrame.
+        /// </summary>
+        /// <param name="sender">The NavigationFrame instance.</param>
+        /// <param name="e">The event data.</param>
+        private async void NavigationFrame_ContentChanged(NavigationFrame sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            Log.Info("Content changed");
+            Log.Info($"Content {Tag}");
+            await ActivateItemHelper(e.NewValue);
+            Tag = null;
+        }
+
+        /// <summary>
+        /// Handles the LayoutUpdated event of the NavigationFrame.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event data.</param>
+        private async void NavigationFrame_LayoutUpdated(object sender, EventArgs e)
+        {
+            Log.Info("LayoutUpdated");
+            await ActivateItemHelper(sender);
+        }
+
+        /// <summary>
         /// Handles the TransitionCompleted event of the NavigationFrame.
         /// </summary>
         /// <param name="sender">The event sender.</param>
@@ -93,17 +100,7 @@ namespace Caliburn.Micro
         private async void NavigationFrame_TransitionCompleted(object sender, TransitionCompletedEventArgs e)
         {
             Log.Info("Transition completed");
-            var control = e.To as UserControl;
-            if (!object.ReferenceEquals(e.To, e.From))
-            {
-                Log.Info("Control is not null");
-                var viewModel = control?.DataContext;
-                if (viewModel != null && viewModel is IActivate activator)
-                {
-                    Log.Info("Activating view model");
-                    await activator.ActivateAsync();
-                }
-            }
+            await ActivateItemHelper(e.To);
         }
 
         /// <summary>

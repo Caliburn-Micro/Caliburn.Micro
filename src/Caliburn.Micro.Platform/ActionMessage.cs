@@ -214,7 +214,6 @@
                 if (View.ExecuteOnLoad(AssociatedObject, ElementLoaded))
                 {
 #if AVALONIA
-                    //string eventName = "AttachedToLogicalTree";
                     string eventName = "Loaded";
                     var trigger = Interaction.GetBehaviors(AssociatedObject)
                         .OfType<EventTrigger>()
