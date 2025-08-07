@@ -49,6 +49,7 @@
         /// <value>The name of the method.</value>
         public string MethodName { get; set; }
 
+        public bool SkipAvailabilityResolution { get; set; }
         /// <summary>
         /// The handler for the action.
         /// </summary>
