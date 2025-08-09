@@ -11,6 +11,7 @@ namespace Caliburn.Micro
     using System.Collections.Generic;
     using System.Reflection;
     using System.Threading.Tasks;
+    using System.Text;
 #if XFORMS
     using UIElement = global::Xamarin.Forms.Element;
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
@@ -176,11 +177,11 @@ namespace Caliburn.Micro
                 }
 #endif
 
-                var message = method.Name;
                 var parameters = method.GetParameters();
+                var messageBuilder = new StringBuilder(method.Name);
 
                 if (parameters.Length > 0) {
-                    message += "(";
+                    messageBuilder.Append("(");
 
                     foreach (var parameter in parameters) {
                         var paramName = parameter.Name;
@@ -189,11 +190,15 @@ namespace Caliburn.Micro
                         if (MessageBinder.SpecialValues.ContainsKey(specialValue))
                             paramName = specialValue;
 
-                        message += paramName + ",";
+                        messageBuilder.Append(paramName).Append(",");
                     }
 
-                    message = message.Remove(message.Length - 1, 1);
-                    message += ")";
+                    // Remove the trailing comma
+                    if (parameters.Length > 0)
+                        messageBuilder.Length -= 1;
+                    messageBuilder.Append(")");
+                var message = messageBuilder.ToString();
+
                 }
 
                 Log.Info("Action Convention Applied: Action {0} on element {1}.", method.Name, message);
