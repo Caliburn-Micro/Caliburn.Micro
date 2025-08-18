@@ -63,7 +63,6 @@ namespace Caliburn.Micro.Core.Tests
             mockTarget1.Verify(x => x.HandleAsync(message, cancellationToken), Times.Once);
         }
 
-
         [Fact]
         public async Task PublishOnCurrentThreadAsync_CallsHandleAsyncOnAllSubscribedTargets()
         {
