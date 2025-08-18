@@ -73,7 +73,10 @@ namespace Caliburn.Micro.Core.Tests
             var mockTargets = new Mock<IHandle<object>>[20];
             for (int i = 0; i < mockTargets.Length; i++)
             {
-                mockTargets[i] = new Mock<IHandle<object>>();
+            var mockTargets = new Mock<IHandle<string>>[20];
+            for (int i = 0; i < mockTargets.Length; i++)
+            {
+                mockTargets[i] = new Mock<IHandle<string>>();
                 eventAggregator.SubscribeOnPublishedThread(mockTargets[i].Object);
             }
 
