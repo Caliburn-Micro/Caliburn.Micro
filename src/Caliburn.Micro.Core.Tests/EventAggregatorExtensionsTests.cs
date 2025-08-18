@@ -11,7 +11,6 @@ namespace Caliburn.Micro.Core.Tests
 
 
 
-
         [Fact]
         public void SubscribeOnUIThread_CallsSubscribeWithUIThreadMarshaller()
         {
