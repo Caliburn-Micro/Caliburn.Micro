@@ -48,7 +48,6 @@ namespace Caliburn.Micro.Core.Tests
         }
 
 
-
         [Fact]
         public async Task PublishOnBackgroundThreadAsync_CallsPublishAsyncWithBackgroundMarshaller()
         {
