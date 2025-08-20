@@ -111,6 +111,13 @@ namespace Caliburn.Micro
             {
                 StartRuntime();
             }
+            Coroutine.Completed += (s, e) =>
+            {
+                if (e.Error != null)
+                {
+                    CoroutineException(s, e);
+                }
+            };
         }
 
 #if WINDOWS_UWP
@@ -395,5 +402,12 @@ namespace Caliburn.Micro
         /// <typeparam name="T">The view model type.</typeparam>
         /// <returns>A task that represents the asynchronous operation.</returns>
         protected Task DisplayRootViewForAsync<T>() => DisplayRootViewForAsync<T>(CancellationToken.None);
+
+        /// <summary>
+        /// Called by the bootstrapper's constructor at design time to start the framework.
+        /// </summary>
+        protected virtual void CoroutineException(object sender, ResultCompletionEventArgs e)
+        {
+        }
     }
 }

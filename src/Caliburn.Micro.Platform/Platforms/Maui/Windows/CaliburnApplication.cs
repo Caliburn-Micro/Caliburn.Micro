@@ -145,5 +145,12 @@ namespace Caliburn.Micro.Maui
         {
         }
 
+        /// <summary>
+        /// Called by the bootstrapper's constructor at design time to start the framework.
+        /// </summary>
+        protected virtual void CoroutineException(object sender, ResultCompletionEventArgs e)
+        {
+        }
+
     }
 }

@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Foundation;
-using UIKit;
 using Microsoft.Maui;
 
 namespace Caliburn.Micro.Maui
@@ -86,6 +83,13 @@ namespace Caliburn.Micro.Maui
                 }
             else
                 StartRuntime();
+            Coroutine.Completed += (s, e) =>
+            {
+                if (e.Error != null)
+                {
+                    CoroutineException(s, e);
+                }
+            };
         }
 
         /// <summary>
@@ -101,7 +105,14 @@ namespace Caliburn.Micro.Maui
         /// <returns>A list of assemblies to inspect.</returns>
         protected virtual IEnumerable<Assembly> SelectAssemblies()
         {
-            return new[] {GetType().GetTypeInfo().Assembly};
+            return new[] { GetType().GetTypeInfo().Assembly };
+        }
+
+        /// <summary>
+        /// Called by the bootstrapper's constructor at design time to start the framework.
+        /// </summary>
+        protected virtual void CoroutineException(object sender, ResultCompletionEventArgs e)
+        {
         }
 
     }
