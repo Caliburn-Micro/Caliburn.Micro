@@ -127,8 +127,10 @@ namespace Caliburn.Micro
         /// <c>singleViewPlatform.MainView</c>. Use the provided helper DisplaySingleViewFor(...) for convenience.
         /// </remarks>
         /// <example>
-        /// // Example usage in an override:
-        /// // DisplaySingleViewFor<MainViewModel>(singleViewPlatform);
+        /// Example usage in an override:
+        /// <code>
+        /// DisplaySingleViewFor&lt;MainViewModel&gt;(singleViewPlatform);
+        /// </code>
         /// </example>
         protected virtual void OnSingleViewPlatformStartup(ISingleViewApplicationLifetime singleViewPlatform)
         {
@@ -236,7 +238,7 @@ namespace Caliburn.Micro
         protected void DisplaySingleViewFor(ISingleViewApplicationLifetime singleViewPlatform, Type viewModelType, object context = null, IDictionary<string, object> settings = null)
         {
             //Log.Info("Displaying SingleView: {0}", viewModelType.FullName);
-            var rootModel = _container.GetInstance(viewModelType, null);
+            var rootModel = IoC.GetInstance(viewModelType, null);
             Control view = ViewLocator.LocateForModel(rootModel, null, context);
             ApplySettings(view, settings);
             ViewModelBinder.Bind(rootModel, view, context);
