@@ -22,13 +22,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0|AnyCPU'" />
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.2.2" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.2.2" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="11.2.2" />
-    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.2.2" />
-    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.2.0" />
-    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.2.0" />
+    <PackageReference Include="Avalonia" Version="11.3.5" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.5" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.5" />
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.3.5" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
+    <PackageReference Include="Xaml.Behaviors.Avalonia" Version="11.3.2" />
+    <PackageReference Include="Xaml.Behaviors.Interactivity" Version="11.3.2" />
     <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
     <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
   </ItemGroup>
