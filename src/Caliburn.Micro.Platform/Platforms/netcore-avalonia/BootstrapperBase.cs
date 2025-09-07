@@ -91,12 +91,13 @@ namespace Caliburn.Micro
             AssemblySource.AddRange(SelectAssemblies());
 
             Application = Application.Current;
-            PrepareApplication();
-
-            Configure();
             IoC.GetInstance = GetInstance;
             IoC.GetAllInstances = GetAllInstances;
             IoC.BuildUp = BuildUp;
+            PrepareApplication();
+
+            Configure();
+
         }
 
         /// <summary>
@@ -110,6 +111,29 @@ namespace Caliburn.Micro
 
                 controlledApplicationLifetime.Exit += OnExit;
             }
+            if (Application.ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
+            {
+                OnSingleViewPlatformStartup(singleViewPlatform);
+            }
+        }
+
+        /// <summary>
+        /// Called when the application lifetime is a single-view platform (for example Web Assembly or other single-view hosts).
+        /// Override this method to configure and display the application's main view for single-view platforms.
+        /// </summary>
+        /// <param name="singleViewPlatform">The single-view application lifetime instance.</param>
+        /// <remarks>
+        /// Implementations should locate and bind the view for the root view model and assign it to
+        /// <c>singleViewPlatform.MainView</c>. Use the provided helper DisplaySingleViewFor(...) for convenience.
+        /// </remarks>
+        /// <example>
+        /// Example usage in an override:
+        /// <code>
+        /// DisplaySingleViewFor&lt;MainViewModel&gt;(singleViewPlatform);
+        /// </code>
+        /// </example>
+        protected virtual void OnSingleViewPlatformStartup(ISingleViewApplicationLifetime singleViewPlatform)
+        {
         }
 
         /// <summary>
@@ -201,6 +225,59 @@ namespace Caliburn.Micro
         protected async Task DisplayRootViewFor<TViewModel>(IDictionary<string, object> settings = null)
         {
             await DisplayRootViewForAsync(typeof(TViewModel), settings);
+        }
+
+        /// <summary>
+        /// Locates the view model, locates the associated view, applies optional settings,
+        /// binds the view model to the view and sets it as the MainView on single-view platforms.
+        /// </summary>
+        /// <param name="singleViewPlatform">The single-view application lifetime to host the view.</param>
+        /// <param name="viewModelType">The type of the view model to display.</param>
+        /// <param name="context">An optional context object passed to the view locator and binder.</param>
+        /// <param name="settings">Optional settings to apply to the view (property name/value pairs).</param>
+        protected void DisplaySingleViewFor(ISingleViewApplicationLifetime singleViewPlatform, Type viewModelType, object context = null, IDictionary<string, object> settings = null)
+        {
+            //Log.Info("Displaying SingleView: {0}", viewModelType.FullName);
+            var rootModel = IoC.GetInstance(viewModelType, null);
+            Control view = ViewLocator.LocateForModel(rootModel, null, context);
+            ApplySettings(view, settings);
+            ViewModelBinder.Bind(rootModel, view, context);
+            singleViewPlatform.MainView = view;
+        }
+
+        /// <summary>
+        /// Generic overload. Locates the view model and view for TViewModel, applies settings,
+        /// binds the view model to the view and sets it as the MainView on single-view platforms.
+        /// </summary>
+        /// <typeparam name="TViewModel">The view model type to display.</typeparam>
+        /// <param name="singleViewPlatform">The single-view application lifetime to host the view.</param>
+        /// <param name="context">An optional context object passed to the view locator and binder.</param>
+        /// <param name="settings">Optional settings to apply to the view (property name/value pairs).</param>
+        protected void DisplaySingleViewFor<TViewModel>(ISingleViewApplicationLifetime singleViewPlatform, object context = null, IDictionary<string, object> settings = null)
+        {
+            DisplaySingleViewFor(singleViewPlatform, typeof(TViewModel), context, settings);
+        }
+
+        private bool ApplySettings(object target, IEnumerable<KeyValuePair<string, object>> settings)
+        {
+            if (settings != null)
+            {
+                var type = target.GetType();
+
+                foreach (var pair in settings)
+                {
+                    var propertyInfo = type.GetProperty(pair.Key);
+
+                    if (propertyInfo != null)
+                    {
+                        propertyInfo.SetValue(target, pair.Value, null);
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
         }
     }
 }
