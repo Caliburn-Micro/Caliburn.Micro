@@ -12,22 +12,6 @@
     <PackageIcon>CaliburnIcon.png</PackageIcon>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
-    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
-    <Reference Include="System.Runtime.Serialization" />
-  </ItemGroup>
-
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
-    <AndroidResgenNamespace>Caliburn.Micro.Core</AndroidResgenNamespace>
-  </PropertyGroup>
-
-  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
-    <Reference Include="System.Runtime.Serialization" />
-  </ItemGroup>
-
   <ItemGroup>
     <None Include="..\..\CaliburnIcon.png">
       <Pack>True</Pack>
