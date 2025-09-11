@@ -283,7 +283,7 @@ namespace Caliburn.Micro.Core.Tests
             Assert.Equal(conductor, newConducted.Parent);
         }
 
-        [Fact(Skip = "This is not possible as we don't get the removed items in the event handler.")]
+        [Fact]
         public void ParentItemIsUnsetOnClear()
         {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
