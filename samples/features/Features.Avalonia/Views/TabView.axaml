@@ -4,13 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Features.CrossPlatform.Views.TabView">
-    <Grid>
+    <StackPanel>
+        <TextBlock Text="{Binding DisplayName}"></TextBlock>
         <ItemsControl ItemsSource="{Binding Messages}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding DisplayName}"/>
+                        <TextBlock Text="{Binding}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-    </Grid>
+    </StackPanel>
 </UserControl>

@@ -98,7 +98,7 @@
                 return Task.FromResult(IsClosable);
             }
 
-            [Obsolete("Use OnActivateAsync instead.")]
+            [Obsolete("Use OnActivatedAsync instead.")]
             protected override async Task OnActivateAsync(CancellationToken cancellationToken)
             {
                 if (deactivationDelay.HasValue)
@@ -115,7 +115,7 @@
 
             protected override async Task OnActivatedAsync(CancellationToken cancellationToken)
             {
-                //here
+
                 if (deactivationDelay.HasValue)
                 {
                     await Task.Delay(deactivationDelay.Value, cancellationToken).ConfigureAwait(false);

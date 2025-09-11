@@ -234,13 +234,13 @@ namespace Caliburn.Micro
 #if AVALONIA
         public static void ExecuteOnUnload(FrameworkElement element, EventHandler handler)
         {
-            EventHandler<LogicalTreeAttachmentEventArgs> unloaded = null;
+            EventHandler<RoutedEventArgs> unloaded = null;
             unloaded = (s, e) =>
             {
-                element.DetachedFromLogicalTree -= unloaded;
+                element.Unloaded -= unloaded;
                 handler(s, e);
             };
-            element.DetachedFromLogicalTree += unloaded;
+            element.Unloaded += unloaded;
         }
 #else
         public static void ExecuteOnUnload(FrameworkElement element, RoutedEventHandler handler)
