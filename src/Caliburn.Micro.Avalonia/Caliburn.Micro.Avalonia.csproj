@@ -29,10 +29,18 @@
     <PackageReference Include="System.Reactive" Version="6.0.1" />
     <PackageReference Include="Xaml.Behaviors.Avalonia" Version="11.3.2" />
     <PackageReference Include="Xaml.Behaviors.Interactivity" Version="11.3.2" />
-    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
-    <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" AdditionalProperties="TargetFramework=netstandard2.0" PrivateAssets="all">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <IncludeAssets>Caliburn.Micro.Platform.Core.dll</IncludeAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" AdditionalProperties="TargetFramework=netstandard2.0">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <ExcludeAssets>Caliburn.Micro.Core.dll</ExcludeAssets>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Caliburn.Micro.Platform\*.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\AssemblyInfo.cs" Link="Platforms\netcore-avalonia\AssemblyInfo.cs" />
