@@ -34,11 +34,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" PrivateAssets="all">
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <IncludeAssets>Caliburn.Micro.Platform.Core.dll</IncludeAssets>
+      <IncludeAssets>All</IncludeAssets>
     </ProjectReference>
     <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" >
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <ExcludeAssets>Caliburn.Micro.Core.dll</ExcludeAssets>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
