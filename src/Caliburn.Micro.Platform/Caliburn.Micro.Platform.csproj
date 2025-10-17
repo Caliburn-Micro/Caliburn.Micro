@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;uap10.0.19041;net8.0-android;net8.0-ios;net9.0-android;net9.0-ios;net8.0-windows;net9.0-windows</TargetFrameworks>
+    <TargetFrameworks>net462;uap10.0.19041;net9.0-android;net9.0-ios;net8.0-windows;net9.0-windows</TargetFrameworks>
     <PackageId>Caliburn.Micro</PackageId>
     <Product>Caliburn.Micro</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
@@ -67,18 +67,6 @@
     <Compile Include="Platforms\uap\**\*.cs" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
     <PackageReference Include="StrongNamer" Version="0.2.5" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
-    <Compile Remove="*.cs" />
-    <Compile Include="Platforms\android\**\*.cs" />
-    <Compile Include="ViewModelLocator.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-ios'">
-    <Compile Remove="*.cs" />
-    <Compile Include="Platforms\ios\**\*.cs" />
-    <Compile Include="ViewModelLocator.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
