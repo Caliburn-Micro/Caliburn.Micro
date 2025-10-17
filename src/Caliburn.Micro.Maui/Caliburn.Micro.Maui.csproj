@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net8.0-windows10.0.19041</TargetFrameworks>
+    <TargetFrameworks>net9.0;net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net9.0-windows10.0.19041</TargetFrameworks>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
 
     <UseMaui>true</UseMaui>
@@ -10,9 +10,9 @@
 
     <DefineConstants>MAUI</DefineConstants>
 
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-ios'">14.2</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-android'">21.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net9.0-ios'">14.2</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net9.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net9.0-android'">21.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
 
@@ -77,17 +77,17 @@
     <Compile Include="..\Caliburn.Micro.Platform\ViewModelLocator.cs" Link="ViewModelLocator.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
     <Compile Remove="*.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\Android\**\*.cs" Link="Platforms\Maui\Android\**\*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-ios'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
     <Compile Remove="*.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\ios\**\*.cs" Link="Platforms\Maui\ios\**\*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-maccatalyst'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-maccatalyst'">
     <Compile Remove="*.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\ios\**\*.cs" Link="Platforms\Maui\ios\**\*.cs" />
   </ItemGroup>
@@ -109,7 +109,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.92" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
   </ItemGroup>
 
   <ItemGroup>
