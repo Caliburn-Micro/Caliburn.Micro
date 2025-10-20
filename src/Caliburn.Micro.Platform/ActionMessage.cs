@@ -597,7 +597,16 @@
                     }
                 }
 
-                currentElement = BindingScope.GetVisualParent(currentElement);
+                //currentElement = BindingScope.GetVisualParent(currentElement);
+                var pElement = BindingScope.GetVisualParent(currentElement);
+                if(pElemenet != null && currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase))
+                {
+                  If(currentElement is PopupRoot popupRoot && popupRoot.Parent is Popup popup)
+                  {
+                      pElement = popup.PlacementTarget;
+                  }
+                }
+                currentElement = pElement;
             }
 #if AVALONIA
             Log.Info("SetMethodBinding avalonia");
