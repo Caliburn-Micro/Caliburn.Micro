@@ -27,11 +27,6 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
-  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
-    <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'all'))" />
-    </ItemGroup>
-  </Target>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0|AnyCPU'" />
 
@@ -103,6 +98,7 @@
       <BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths->WithMetadataValue('Extension', '.xml'))" />
     </ItemGroup>
   </Target>
+
 
   <Target Name="IncludeReferenceAssemblies">
     <ItemGroup>
