@@ -6,8 +6,18 @@
     <Product>Caliburn.Micro</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
     <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeProjectReferencesWithPrivateAssetsAttributeInPackage</TargetsForTfmSpecificBuildOutput>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludeReferenceAssemblies</TargetsForTfmSpecificContentInPackage>
     <SignAssembly>true</SignAssembly>
     <LangVersion>latest</LangVersion>
+    <BuildProjectReferences Condition="'$(NoBuild)' == 'true'">false</BuildProjectReferences>
+    <!-- Removed the .xml from DefaultAllowedOutputExtensionsInPackageBuildOutputFolder -->
+    <DefaultAllowedOutputExtensionsInPackageBuildOutputFolder>.dll; .exe; .winmd; .json; .pri</DefaultAllowedOutputExtensionsInPackageBuildOutputFolder>
+
+    <!-- Generate documentation file -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Generate symbols package -->
+    <IncludeSymbols>false</IncludeSymbols>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -39,11 +49,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" PrivateAssets="all">
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <IncludeAssets>All</IncludeAssets>
     </ProjectReference>
     <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" >
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -78,4 +85,29 @@
     <PackageReference Update="Nerdbank.GitVersioning" Version="3.7.112" />
   </ItemGroup>
 
+  <Target Name="IncludeProjectReferencesWithPrivateAssetsAttributeInPackage"
+        Condition="'@(ProjectReference)' != '' and @(ProjectReference->AnyHaveMetadataValue('PrivateAssets', 'all'))"
+        DependsOnTargets="BuildOnlySettings;ResolveReferences">
+    <ItemGroup>
+      <_projectReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'all'))" />
+
+      <BuildOutputInPackage Include="@(_projectReferenceCopyLocalPaths)"
+                            TargetPath="%(_projectReferenceCopyLocalPaths.DestinationSubDirectory)" />
+      <TfmSpecificDebugSymbolsFile Include="@(_projectReferenceCopyLocalPaths->WithMetadataValue('Extension', '.pdb'))"
+                                   TargetPath="%(_projectReferenceCopyLocalPaths.DestinationSubDirectory)"
+                                   TargetFramework="$(TargetFramework)"
+                                   Condition="'$(IncludeSymbols)' == 'true'" />
+
+      <!-- Remove symbol from the non symbol package. -->
+      <BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths->WithMetadataValue('Extension', '.pdb'))" />
+      <BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths->WithMetadataValue('Extension', '.xml'))" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="IncludeReferenceAssemblies">
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="$(TargetRefPath)" PackagePath="ref/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="$(DocumentationFile)" PackagePath="ref/$(TargetFramework)" Condition="'$(GenerateDocumentationFile)' == 'true'" />
+    </ItemGroup>
+  </Target>
 </Project>
