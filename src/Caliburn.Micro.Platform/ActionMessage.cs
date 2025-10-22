@@ -602,16 +602,13 @@
                 }
 
                 var pElement = BindingScope.GetVisualParent(currentElement);
-                if (pElement != null && currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase))
+                if (currentElement is popupUI.Popup popupRoot && popupRoot.Parent is popupUI.Popup popup && pElement != null)
                 {
-                    if (currentElement is popupUI.Popup popupRoot && popupRoot.Parent is popupUI.Popup popup)
-                    {
 #if WINDOWS_UWP
-                        pElement = popup.Parent;
+                    pElement = popup.Parent;
 #else
-                        pElement = popup.PlacementTarget;
+                    pElement = popup.PlacementTarget;
 #endif
-                    }
                 }
                 currentElement = pElement;
 
