@@ -14,6 +14,7 @@
     using Microsoft.Xaml.Interactivity;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
     using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    using popupUI = Windows.UI.Xaml.Controls.Primitives;
 #elif AVALONIA
     using Avalonia;
     using Avalonia.Data;
@@ -30,6 +31,7 @@
     using EventTrigger = Avalonia.Xaml.Interactions.Core.EventTriggerBehavior;
     using FrameworkElement = Avalonia.Controls.Control;
     using Avalonia.Input;
+    using popupUI = Avalonia.Controls.Primitives;
 #elif WinUI3
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Data;
@@ -40,6 +42,7 @@
     using Microsoft.Xaml.Interactivity;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
     using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    using popupUI = Microsoft.UI.Xaml.Controls.Primitives;
 #else
     using System.Windows;
     using System.Windows.Controls.Primitives;
@@ -47,6 +50,7 @@
     using System.Windows.Markup;
     using Microsoft.Xaml.Behaviors;
     using EventTrigger = Microsoft.Xaml.Behaviors.EventTrigger;
+    using popupUI = System.Windows.Controls.Primitives;
 #endif
 
 #if NET5_0_WINDOWS || NET6_0_WINDOWS
@@ -597,7 +601,20 @@
                     }
                 }
 
-                currentElement = BindingScope.GetVisualParent(currentElement);
+                var pElement = BindingScope.GetVisualParent(currentElement);
+                if (pElement != null && currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (currentElement is popupUI.Popup popupRoot && popupRoot.Parent is popupUI.Popup popup)
+                    {
+#if WINDOWS_UWP
+                        pElement = popup.Parent;
+#else
+                        pElement = popup.PlacementTarget;
+#endif
+                    }
+                }
+                currentElement = pElement;
+
             }
 #if AVALONIA
             Log.Info("SetMethodBinding avalonia");
