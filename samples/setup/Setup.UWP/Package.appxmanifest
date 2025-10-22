@@ -8,7 +8,7 @@
 
   <Identity
     Name="afb0de23-a7f3-4993-b30b-ddf847a1e914"
-    Publisher="CN=Caliburn.Micro"
+    Publisher="CN=vb2ae"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="afb0de23-a7f3-4993-b30b-ddf847a1e914" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
