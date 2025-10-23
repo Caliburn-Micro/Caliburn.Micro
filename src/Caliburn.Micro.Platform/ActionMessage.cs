@@ -416,7 +416,7 @@
 
             _context.EventArgs = eventArgs;
 
-            if (EnforceGuardsDuringInvocation && (_context?.CanExecute() != true))
+            if (EnforceGuardsDuringInvocation && _context.CanExecute != null && !_context.CanExecute())
             {
                 return;
             }
