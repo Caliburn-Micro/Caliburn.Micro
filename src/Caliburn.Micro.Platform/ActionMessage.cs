@@ -30,6 +30,7 @@
     using EventTrigger = Avalonia.Xaml.Interactions.Core.EventTriggerBehavior;
     using FrameworkElement = Avalonia.Controls.Control;
     using Avalonia.Input;
+    using Avalonia.Controls.Primitives;
 #elif WinUI3
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Data;
@@ -596,7 +597,21 @@
                     }
                 }
 
-                currentElement = BindingScope.GetVisualParent(currentElement);
+                //currentElement = BindingScope.GetVisualParent(currentElement);
+
+                //Modified parts Begin
+                var pElement = BindingScope.GetVisualParent(currentElement);
+                if (pElement == null
+                    && currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (currentElement is PopupRoot popupRoot && popupRoot.Parent is Popup popup)
+                    {
+                        pElement = popup.PlacementTarget;
+                    }
+                }
+
+                currentElement = pElement;
+                //End
             }
 #if AVALONIA
             Log.Info("SetMethodBinding avalonia");
