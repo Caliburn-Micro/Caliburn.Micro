@@ -604,10 +604,19 @@
                 if (pElement == null
                     && currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase))
                 {
+
+#if AVALONIA
                     if (currentElement is PopupRoot popupRoot && popupRoot.Parent is Popup popup)
                     {
                         pElement = popup.PlacementTarget;
                     }
+
+#else
+                    if (currentElement is FrameworkElement popupRoot && popupRoot.Parent is Popup popup)
+                    {
+                        pElement = popup.PlacementTarget;
+                    }
+#endif
                 }
 
                 currentElement = pElement;
