@@ -611,7 +611,7 @@
                         pElement = popup.PlacementTarget;
                     }
 
-#else
+#elif !WINDOWS_UWP
                     if (currentElement is FrameworkElement popupRoot && popupRoot.Parent is Popup popup)
                     {
                         pElement = popup.PlacementTarget;
