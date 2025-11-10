@@ -58,7 +58,8 @@ namespace Caliburn.Micro
             {
                 AssociatedObject = (Control)sender;
             }
-
+            if (!AssociatedObject.IsLoaded)
+                return null;
             Invoke(parameter);
             return null;
         }
