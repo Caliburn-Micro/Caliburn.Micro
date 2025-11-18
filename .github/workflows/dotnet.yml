@@ -21,7 +21,7 @@ env:
 jobs:
   build:
 
-    runs-on:  windows-2022
+    runs-on:  windows-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -59,25 +59,25 @@ jobs:
       run:  msbuild ${{env.caliburn_sln}} -t:restore
 
     - name: Build app for release
-      run: dotnet msbuild ${{env.caliburn_sln}} /t:Build /p:Configuration=${{env.build_configuration}}
+      run: msbuild ${{env.caliburn_sln}} /t:Build /p:Configuration=${{env.build_configuration}}
 
     - name: Run Unit Tests
       run: dotnet test ${{env.caliburn_sln}}  --configuration ${{env.build_configuration}} --settings coverage.runsettings --no-build --verbosity normal    
   
     - name: Restore nuget packages for tutorial
-      run:  dotnet msbuild ${{env.caliburn_tutorial}} -t:restore 
+      run:  msbuild ${{env.caliburn_tutorial}} -t:restore 
       
     - name: Build feature tutorial
-      run: dotnet msbuild ${{env.caliburn_tutorial}} /t:Build /p:Configuration=${{env.build_configuration}}
+      run:  msbuild ${{env.caliburn_tutorial}} /t:Build /p:Configuration=${{env.build_configuration}}
 
     - name: Restore nuget packages for features
-      run:  dotnet msbuild ${{env.caliburn_features}} -t:restore 
+      run:  msbuild ${{env.caliburn_features}} -t:restore 
       
     - name: Build feature features
-      run: donet msbuild ${{env.caliburn_features}} /t:Build /p:Configuration=Debug
+      run:  msbuild ${{env.caliburn_features}} /t:Build /p:Configuration=Debug
       
     - name: Pack Nuget
-      run: dotnet msbuild ${{env.caliburn_sln}} /t:package /p:Configuration=${{env.build_configuration}}
+      run:  msbuild ${{env.caliburn_sln}} /t:package /p:Configuration=${{env.build_configuration}}
       
     - name: publish Nuget Packages to GitHub
       run: dotnet nuget push ${{env.nuget_upload}} --source ${{env.package_feed}} --api-key ${{secrets.PUBLISH_NUGET_PACKAGE}} --skip-duplicate
