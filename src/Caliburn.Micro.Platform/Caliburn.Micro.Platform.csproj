@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;uap10.0.19041;net9.0-android;net9.0-ios;net8.0-windows;net9.0-windows;net10.0-windows</TargetFrameworks>
+    <TargetFrameworks>net472;uap10.0.19041;net9.0-android;net9.0-ios;net8.0-windows;net9.0-windows;net10.0-windows</TargetFrameworks>
     <PackageId>Caliburn.Micro</PackageId>
     <Product>Caliburn.Micro</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
