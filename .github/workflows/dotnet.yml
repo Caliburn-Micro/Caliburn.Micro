@@ -44,8 +44,7 @@ jobs:
       uses: NuGet/setup-nuget@v2
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v2
-      with:
-        vs-version: '[18.0, 18.1]'
+      
     - name: search workloads
       run: dotnet workload search
     - name: restore workloads
@@ -60,25 +59,25 @@ jobs:
       run:  msbuild ${{env.caliburn_sln}} -t:restore
 
     - name: Build app for release
-      run: msbuild ${{env.caliburn_sln}} /t:Build /p:Configuration=${{env.build_configuration}}
+      run: dotnet msbuild ${{env.caliburn_sln}} /t:Build /p:Configuration=${{env.build_configuration}}
 
     - name: Run Unit Tests
       run: dotnet test ${{env.caliburn_sln}}  --configuration ${{env.build_configuration}} --settings coverage.runsettings --no-build --verbosity normal    
   
     - name: Restore nuget packages for tutorial
-      run:  msbuild ${{env.caliburn_tutorial}} -t:restore 
+      run:  dotnet msbuild ${{env.caliburn_tutorial}} -t:restore 
       
     - name: Build feature tutorial
-      run: msbuild ${{env.caliburn_tutorial}} /t:Build /p:Configuration=${{env.build_configuration}}
+      run: dotnet msbuild ${{env.caliburn_tutorial}} /t:Build /p:Configuration=${{env.build_configuration}}
 
     - name: Restore nuget packages for features
-      run:  msbuild ${{env.caliburn_features}} -t:restore 
+      run:  dotnet msbuild ${{env.caliburn_features}} -t:restore 
       
     - name: Build feature features
-      run: msbuild ${{env.caliburn_features}} /t:Build /p:Configuration=Debug
+      run: donet msbuild ${{env.caliburn_features}} /t:Build /p:Configuration=Debug
       
     - name: Pack Nuget
-      run: msbuild ${{env.caliburn_sln}} /t:package /p:Configuration=${{env.build_configuration}}
+      run: dotnet msbuild ${{env.caliburn_sln}} /t:package /p:Configuration=${{env.build_configuration}}
       
     - name: publish Nuget Packages to GitHub
       run: dotnet nuget push ${{env.nuget_upload}} --source ${{env.package_feed}} --api-key ${{secrets.PUBLISH_NUGET_PACKAGE}} --skip-duplicate
