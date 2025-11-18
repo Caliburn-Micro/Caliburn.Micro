@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>latest</LangVersion>
     <Title>Caliburn Micro for WPF, UWP, iOS, and Android</Title>
     <PackageIcon>CaliburnIcon.png</PackageIcon>
   </PropertyGroup>
