@@ -13,7 +13,7 @@ env:
 jobs:
   analyse:
     name: Analyse
-    runs-on: windows-2022
+    runs-on: windows-latest
     permissions:
         # required for all workflows
         security-events: write
@@ -55,8 +55,7 @@ jobs:
         # You may pin to the exact commit or the version.
         # uses: NuGet/setup-nuget@fd9fffd6ca4541cf4152a9565835ca1a88a6eb37
       uses: NuGet/setup-nuget@v2
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v2
+
       
     - name: search workloads
       run: dotnet workload search
