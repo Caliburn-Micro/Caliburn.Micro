@@ -44,7 +44,8 @@ jobs:
       uses: NuGet/setup-nuget@v2
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v2
-      
+      with:
+       vs-prerelease: true
     - name: search workloads
       run: dotnet workload search
     - name: restore workloads
