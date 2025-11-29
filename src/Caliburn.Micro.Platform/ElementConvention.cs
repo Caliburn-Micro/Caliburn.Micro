@@ -1,6 +1,4 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#elif MAUI
+﻿#if MAUI
 namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
@@ -14,11 +12,6 @@ namespace Caliburn.Micro
 #elif WinUI3
     using Microsoft.UI.Xaml;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
-#elif XFORMS
-    using global::Xamarin.Forms;
-    using DependencyObject = global::Xamarin.Forms.BindableObject;
-    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
-    using FrameworkElement = global::Xamarin.Forms.VisualElement;
 #elif AVALONIA
     using DependencyProperty = Avalonia.AvaloniaProperty;
     using DependencyObject = Avalonia.AvaloniaObject;

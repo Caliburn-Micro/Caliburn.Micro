@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <Nullable>enable</Nullable>
+    <UseUwp>true</UseUwp>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <IsAotCompatible>true</IsAotCompatible>
+    <DisableRuntimeMarshalling>true</DisableRuntimeMarshalling>
+    <DefineConstants>WINDOWS_UWP</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <PackageIcon>CaliburnIcon.png</PackageIcon>
+    <PackageTags>MVVM;WPF;WinRT;UWP;MauilAvalonia;Android;iOS;CoC;Convention;MVP;PM;Screen;Coroutine;Behavior;Model-View-ViewModel;Presentation;UI;ViewModel;;Caliburn</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.0" />
+    <PackageReference Include="StrongNamer" Version="0.2.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Caliburn.Micro.Platform\*.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\AppManifestHelper.cs" Link="Platforms\uap\AppManifestHelper.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\AttachedCollection.81.cs" Link="Platforms\uap\AttachedCollection.81.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\CachingFrameAdapter.cs" Link="Platforms\uap\CachingFrameAdapter.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\CaliburnApplication.cs" Link="Platforms\uap\CaliburnApplication.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\DispatcherQueueExtentions.cs" Link="Platforms\uap\DispatcherQueueExtentions.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\DispatcherTaskExtensions.cs" Link="Platforms\uap\DispatcherTaskExtensions.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\FrameAdapter.cs" Link="Platforms\uap\FrameAdapter.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\IAttachedObject.cs" Link="Platforms\uap\IAttachedObject.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\INavigationService.cs" Link="Platforms\uap\INavigationService.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\ISharingService.cs" Link="Platforms\uap\ISharingService.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\ISupportSharing.cs" Link="Platforms\uap\ISupportSharing.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\NavigateHelper.cs" Link="Platforms\uap\NavigateHelper.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\NavigationExtensions.cs" Link="Platforms\uap\NavigationExtensions.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\Parameter.cs" Link="Platforms\uap\Parameter.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\SharingService.cs" Link="Platforms\uap\SharingService.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\WinRTContainer.cs" Link="Platforms\uap\WinRTContainer.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\TriggerAction.cs" Link="Platforms\uap\TriggerAction.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\XamlMetadataProvider.cs" Link="Platforms\uap\XamlMetadataProvider.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\CaliburnIcon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
+    <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.9.50" />
+  </ItemGroup>
+</Project>

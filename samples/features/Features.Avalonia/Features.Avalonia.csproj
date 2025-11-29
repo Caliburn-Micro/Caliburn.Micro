@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
     <AvaloniaNameGeneratorIsEnabled>false</AvaloniaNameGeneratorIsEnabled>
@@ -23,7 +23,7 @@
 
     <PackageReference Include="Avalonia.Themes.FLuent" Version="11.3.5" />
     <PackageReference Include="MessageBox.Avalonia" Version="3.2.0" />
-    <PackageReference Include="System.Reactive" Version="6.0.1" />
+    <PackageReference Include="System.Reactive" Version="6.1.0" />
     <PackageReference Include="Xaml.Behaviors.Avalonia" Version="11.3.2" />
     <PackageReference Include="Xaml.Behaviors.Interactivity" Version="11.3.2" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />

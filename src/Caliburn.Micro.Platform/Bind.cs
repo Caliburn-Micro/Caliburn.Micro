@@ -1,6 +1,4 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#elif MAUI
+﻿#if MAUI
 namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
@@ -13,12 +11,6 @@ namespace Caliburn.Micro
 #elif WinUI3
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Data;
-#elif XFORMS
-    using global::Xamarin.Forms;
-    using UIElement = global::Xamarin.Forms.Element;
-    using FrameworkElement = global::Xamarin.Forms.VisualElement;
-    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
-    using DependencyObject = global::Xamarin.Forms.BindableObject;
 #elif AVALONIA
     using Avalonia;
     using Avalonia.Data;
@@ -151,7 +143,7 @@ namespace Caliburn.Micro
 
                 d.SetValue(View.IsScopeRootProperty, true);
 
-#if XFORMS || MAUI
+#if MAUI
                 var context = fe.Id.ToString("N");
 #else
                 var context = string.IsNullOrEmpty(fe.Name)
@@ -181,7 +173,7 @@ namespace Caliburn.Micro
                 var target = e.NewValue;
                 d.SetValue(View.IsScopeRootProperty, true);
 
-#if XFORMS || MAUI
+#if MAUI
                 var context = fe.Id.ToString("N");
 #else
                 var context = string.IsNullOrEmpty(fe.Name)
@@ -240,9 +232,8 @@ namespace Caliburn.Micro
             var atDesignTime = (bool)e.NewValue;
             if (!atDesignTime)
                 return;
-#if XFORMS
-            d.SetBinding(DataContextProperty, string.Empty);
-#elif AVALONIA
+
+#if AVALONIA
             d.Bind(DataContextProperty, new Binding());
 #elif MAUI
             d.SetBinding(DataContextProperty, null);
@@ -275,7 +266,7 @@ namespace Caliburn.Micro
 
             if (fe == null)
                 return;
-#if XFORMS || MAUI
+#if MAUI
             ViewModelBinder.Bind(e.NewValue, d, fe.Id.ToString("N"));
 #else
             ViewModelBinder.Bind(e.NewValue, d, string.IsNullOrEmpty(fe.Name) ? fe.GetHashCode().ToString() : fe.Name);

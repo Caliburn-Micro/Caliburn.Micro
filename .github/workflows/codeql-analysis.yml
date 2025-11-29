@@ -13,7 +13,7 @@ env:
 jobs:
   analyse:
     name: Analyse
-    runs-on: windows-2022
+    runs-on: windows-latest
     permissions:
         # required for all workflows
         security-events: write

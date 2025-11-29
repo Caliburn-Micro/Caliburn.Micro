@@ -13,7 +13,7 @@
     using Windows.UI.Xaml.Controls;
     using Microsoft.Xaml.Interactivity;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
-    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    using EventTrigger = Microsoft.Xaml.Interactivity.EventTriggerBehavior;
 #elif AVALONIA
     using Avalonia;
     using Avalonia.Data;
@@ -40,7 +40,7 @@
     using Microsoft.UI.Xaml.Controls.Primitives;
     using Microsoft.Xaml.Interactivity;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
-    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    using EventTrigger = Microsoft.Xaml.Interactivity.EventTriggerBehavior;
 #else
     using System.Windows;
     using System.Windows.Controls.Primitives;
@@ -315,8 +315,9 @@
             Log.Info($"Binding {binding.Source}");
 
 #elif (NET || CAL_NETCORE) && !WinUI3 && !WINDOWS_UWP
-            var binding = new Binding {
-                Path = new PropertyPath(Message.HandlerProperty), 
+            var binding = new Binding
+            {
+                Path = new PropertyPath(Message.HandlerProperty),
                 Source = currentElement
             };
 #elif WINDOWS_UWP || WinUI3
@@ -601,6 +602,7 @@
 
                 //Modified parts Begin
                 var pElement = BindingScope.GetVisualParent(currentElement);
+#if !WINDOWS_UWP
                 if (pElement == null
                     && currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase))
                 {
@@ -611,13 +613,14 @@
                         pElement = popup.PlacementTarget;
                     }
 
-#elif !WINDOWS_UWP
+#else
                     if (currentElement is FrameworkElement popupRoot && popupRoot.Parent is Popup popup)
                     {
                         pElement = popup.PlacementTarget;
                     }
 #endif
                 }
+#endif
 
                 currentElement = pElement;
                 //End

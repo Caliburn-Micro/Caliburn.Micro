@@ -1,6 +1,4 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#elif MAUI
+﻿#if MAUI
 namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
@@ -22,15 +20,6 @@ namespace Caliburn.Micro
     using Microsoft.UI.Xaml.Controls;
     using Microsoft.UI.Xaml.Markup;
     using Microsoft.UI.Xaml.Media;
-#elif XFORMS
-    using System.Reflection;
-    using global::Xamarin.Forms;
-    using UIElement = global::Xamarin.Forms.Element;
-    using FrameworkElement = global::Xamarin.Forms.VisualElement;
-    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
-    using DependencyObject = global::Xamarin.Forms.BindableObject;
-    using ContentControl = global::Xamarin.Forms.ContentView;
-    using Xamarin.Forms;
 #elif AVALONIA
     using Avalonia;
     using FrameworkElement = Avalonia.Controls.Control;
@@ -64,7 +53,7 @@ namespace Caliburn.Micro
     public static class View
     {
         static readonly ILog Log = LogManager.GetLog(typeof(View));
-#if WINDOWS_UWP || XFORMS || MAUI
+#if WINDOWS_UWP || MAUI
         const string DefaultContentPropertyName = "Content";
 #elif WinUI3
         static readonly ContentPropertyAttribute DefaultContentProperty = new ContentPropertyAttribute() { Name = "Content" };
@@ -200,7 +189,7 @@ namespace Caliburn.Micro
         public static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler)
         {
 
-#if XFORMS || MAUI
+#if MAUI
             handler(element, new RoutedEventArgs());
             return true;
 #else
@@ -245,7 +234,7 @@ namespace Caliburn.Micro
 #else
         public static void ExecuteOnUnload(FrameworkElement element, RoutedEventHandler handler)
         {
-#if !XFORMS && !MAUI
+#if !MAUI
             RoutedEventHandler unloaded = null;
             unloaded = (s, e) => {
                 element.Unloaded -= unloaded;
@@ -287,7 +276,7 @@ namespace Caliburn.Micro
             }
         }
 #endif
-#if !XFORMS && !MAUI
+#if !MAUI
         /// <summary>
         /// Executes the handler the next time the elements's LayoutUpdated event fires.
         /// </summary>
@@ -333,7 +322,7 @@ namespace Caliburn.Micro
                 {
                     return ((ContentControl)dependencyObject).Content;
                 }
-#if WINDOWS_UWP || XFORMS || MAUI
+#if WINDOWS_UWP || MAUI
                 var type = dependencyObject.GetType();
                 var contentPropertyName = GetContentPropertyName(type);
 
@@ -488,7 +477,7 @@ namespace Caliburn.Micro
             return SetContentPropertyCore(targetLocation, view);
         }
 
-#if WINDOWS_UWP || XFORMS || MAUI
+#if WINDOWS_UWP || MAUI
         static bool SetContentPropertyCore(object targetLocation, object view)
         {
             try
@@ -556,7 +545,7 @@ namespace Caliburn.Micro
             {
                 if (!inDesignMode.HasValue)
                 {
-#if XFORMS || MAUI
+#if MAUI
                     inDesignMode = false;
 #elif WINDOWS_UWP || WinUI3
                     inDesignMode = DesignMode.DesignModeEnabled;

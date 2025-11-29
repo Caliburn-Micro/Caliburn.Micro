@@ -1,7 +1,7 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project  Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;uap10.0.19041;net9.0-android;net9.0-ios;net8.0-windows;net9.0-windows</TargetFrameworks>
+    <TargetFrameworks>net462;net9.0-android;net9.0-ios;net8.0-windows;net10.0-windows;net9.0-windows;</TargetFrameworks>
     <PackageId>Caliburn.Micro</PackageId>
     <Product>Caliburn.Micro</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>latest</LangVersion>
     <Title>Caliburn Micro for WPF, UWP, iOS, and Android</Title>
     <PackageIcon>CaliburnIcon.png</PackageIcon>
   </PropertyGroup>
@@ -54,6 +54,10 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <Compile Include="Platforms\net46-netcore\**\*.cs" />
   </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-windows'">
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    <Compile Include="Platforms\net46-netcore\**\*.cs" />
+  </ItemGroup>
 
   <ItemGroup Label="Package">
     <None Include="..\..\CaliburnIcon.png">
@@ -63,9 +67,9 @@
     <None Include="Platforms\uap\Caliburn.Micro.Platform.rd.xml" PackagePath="lib\uap10.0.19041\Caliburn.Micro.Platform\Properties\Caliburn.Micro.Platform.rd.xml" Pack="true" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.19041'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.22621.0'">
     <Compile Include="Platforms\uap\**\*.cs" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.0" />
     <PackageReference Include="StrongNamer" Version="0.2.5" />
   </ItemGroup>
 
@@ -83,7 +87,7 @@
 
   <ItemGroup>
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <PackageReference Update="Nerdbank.GitVersioning" Version="3.7.112" />
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.9.50" />
   </ItemGroup>
 
   <ItemGroup>
