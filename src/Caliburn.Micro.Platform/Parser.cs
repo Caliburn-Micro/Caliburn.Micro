@@ -1,6 +1,4 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#elif MAUI
+﻿#if MAUI
 namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
@@ -14,7 +12,7 @@ namespace Caliburn.Micro
     using Windows.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
-    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    using EventTrigger = Microsoft.Xaml.Interactivity.EventTriggerBehavior;
     using TriggerAction = Microsoft.Xaml.Interactivity.IAction;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -24,17 +22,11 @@ namespace Caliburn.Micro
     using Microsoft.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
-    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    using EventTrigger = Microsoft.Xaml.Interactivity.EventTriggerBehavior;
     using TriggerAction = Microsoft.Xaml.Interactivity.IAction;
     using System.Text;
     using System.Text.RegularExpressions;
     using Microsoft.UI.Xaml.Data;
-#elif XFORMS
-    using System.Reflection;
-    using System.Text.RegularExpressions;
-    using global::Xamarin.Forms;
-    using DependencyObject = global::Xamarin.Forms.BindableObject;
-    using FrameworkElement = global::Xamarin.Forms.VisualElement;
 #elif AVALONIA
     using Avalonia;
     using Avalonia.Data;
@@ -76,7 +68,7 @@ namespace Caliburn.Micro
         /// <param name="text">The message text.</param>
         /// <returns>The triggers parsed from the text.</returns>
 #if AVALONIA
-        public static IEnumerable<EventTrigger> Parse(DependencyObject target, string text) 
+        public static IEnumerable<EventTrigger> Parse(DependencyObject target, string text)
 #else
         public static IEnumerable<TriggerBase> Parse(DependencyObject target, string text)
 #endif
@@ -111,7 +103,7 @@ namespace Caliburn.Micro
                 var trigger = CreateTrigger(target, triggerPlusMessage.Length == 1 ? null : triggerPlusMessage[0]);
                 var message = CreateMessage(target, messageDetail);
 
-#if WINDOWS_UWP || XFORMS || MAUI || WinUI3
+#if WINDOWS_UWP || MAUI || WinUI3
                 AddActionToTrigger(target, message, trigger);
 #else
                 trigger.Actions.Add(message);
@@ -123,7 +115,7 @@ namespace Caliburn.Micro
             return triggers;
         }
 
-#if XFORMS || MAUI
+#if MAUI
         private static void AddActionToTrigger(DependencyObject target, TriggerAction message, TriggerBase trigger)
         {
 
@@ -177,7 +169,7 @@ namespace Caliburn.Micro
 
             if (trigger is EventTrigger)
             {
-                var eventTrigger = (EventTrigger) trigger;
+                var eventTrigger = (EventTrigger)trigger;
 
                 eventTrigger.Actions.Add(messageDependencyObject);
             }
@@ -221,7 +213,7 @@ namespace Caliburn.Micro
 
                 actionMessage.AssociatedObject = targetElement;
             }
-            
+
         }
 
 #endif
@@ -232,7 +224,7 @@ namespace Caliburn.Micro
         /// </summary>
         /// <remarks>The parameters passed to the method are the the target of the trigger and string representing the trigger.</remarks>
         public static Func<DependencyObject, string, EventTrigger> CreateTrigger = (target, triggerText) =>
- 
+
 #else
         /// <summary>
         /// The function used to generate a trigger.
@@ -252,7 +244,7 @@ namespace Caliburn.Micro
                 .Replace("]", string.Empty)
                 .Replace("Event", string.Empty)
                 .Trim();
-#if XFORMS || MAUI
+#if MAUI
             return new EventTrigger { Event = triggerDetail };
 #else
             return new EventTrigger { EventName = triggerDetail };
@@ -349,7 +341,7 @@ namespace Caliburn.Micro
         /// <param name="bindingMode">The binding mode to use.</param>
         public static void BindParameter(FrameworkElement target, Parameter parameter, string elementName, string path, BindingMode bindingMode)
         {
-#if XFORMS || MAUI
+#if MAUI
             var element = elementName == "$this" ? target : null;
 
             if (element == null)

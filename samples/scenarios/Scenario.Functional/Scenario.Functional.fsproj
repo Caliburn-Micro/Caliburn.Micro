@@ -15,4 +15,8 @@
       <HintPath>..\..\..\bin\Caliburn.Micro.Platform\release\net462\Caliburn.Micro.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="10.0.100" />
+  </ItemGroup>
 </Project>

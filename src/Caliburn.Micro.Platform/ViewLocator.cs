@@ -1,6 +1,4 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#elif MAUI
+﻿#if MAUI
 namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
@@ -11,12 +9,7 @@ namespace Caliburn.Micro
     using System.Reflection;
     using System.Text.RegularExpressions;
     using System.Collections.Generic;
-#if XFORMS
-    using global::Xamarin.Forms;
-    using UIElement = global::Xamarin.Forms.Element;
-    using TextBlock = global::Xamarin.Forms.Label;
-    using DependencyObject = global::Xamarin.Forms.BindableObject;
-#elif AVALONIA
+#if AVALONIA
     using Avalonia;
     using Avalonia.Controls;
     using UIElement = Avalonia.Controls.Control;
@@ -37,7 +30,7 @@ namespace Caliburn.Micro
     using Windows.UI.Xaml.Controls;
 #endif
 
-#if !WINDOWS_UWP && !XFORMS && !MAUI && !WinUI3 && !AVALONIA 
+#if !WINDOWS_UWP && !MAUI && !WinUI3 && !AVALONIA 
     using System.Windows.Interop;
 #endif
 
@@ -325,7 +318,7 @@ namespace Caliburn.Micro
                 return view;
             }
 
-#if !WINDOWS_UWP && !XFORMS
+#if !WINDOWS_UWP 
             if (viewType.IsInterface || viewType.IsAbstract || !typeof(UIElement).IsAssignableFrom(viewType))
                 return new TextBlock { Text = string.Format("Cannot create {0}.", viewType.FullName) };
 #else
@@ -467,7 +460,7 @@ namespace Caliburn.Micro
                     var view = viewAware.GetView(context) as UIElement;
                     if (view != null)
                     {
-#if !WINDOWS_UWP && !XFORMS && !MAUI && !WinUI3
+#if !WINDOWS_UWP  && !MAUI && !WinUI3
                         var windowCheck = view as Window;
 #if AVALONIA
                         if (windowCheck == null)
@@ -496,7 +489,7 @@ namespace Caliburn.Micro
         /// </summary>
         public static Func<Type, Type, string> DeterminePackUriFromType = (viewModelType, viewType) =>
         {
-#if !WINDOWS_UWP && !XFORMS && !MAUI
+#if !WINDOWS_UWP && !MAUI
             var assemblyName = viewType.Assembly.GetAssemblyName();
             var applicationAssemblyName = Application.Current.GetType().Assembly.GetAssemblyName();
 #else
@@ -524,7 +517,7 @@ namespace Caliburn.Micro
         /// <param name = "element">The element to initialize</param>
         public static void InitializeComponent(object element)
         {
-#if XFORMS || AVALONIA
+#if  AVALONIA
             return;
 #elif WINDOWS_UWP
             var method = element.GetType().GetTypeInfo()
