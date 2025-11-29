@@ -10,7 +10,7 @@
     using Windows.UI.Xaml.Controls.Primitives;
     using Windows.UI.Xaml.Data;
     using Windows.UI.Xaml.Markup;
-    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    using EventTrigger = Microsoft.Xaml.Interactivity.EventTriggerBehavior;
     using Windows.UI.Xaml.Shapes;
 #elif AVALONIA
     using System.Collections.Specialized;
@@ -33,7 +33,7 @@
     using Microsoft.UI.Xaml.Controls.Primitives;
     using Microsoft.UI.Xaml.Data;
     using Microsoft.UI.Xaml.Markup;
-    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    using EventTrigger = Microsoft.Xaml.Interactivity.EventTriggerBehavior;
     using Microsoft.UI.Xaml.Shapes;
 #else
     using System.ComponentModel;
@@ -247,11 +247,11 @@
                     var element = (SplitView)foundControl;
 
                     if (!OverwriteContent)
-                       return null;
+                        return null;
 
                     Log.Info("ViewModel bound on {0}.", element.Name);
                     return View.ModelProperty;
-               };
+                };
             AddElementConvention<SearchBox>(SearchBox.QueryTextProperty, "QueryText", "QuerySubmitted");
 
 #endif
@@ -472,7 +472,7 @@
             bool hasBinding = element.IsSet(property);
             //TODO: (Avalonia) Need to find a way to detect existing bindings on an AvaloniaProperty
             return hasBinding;
-#elif (NET || CAL_NETCORE) && !WinUI3
+#elif (NET || CAL_NETCORE) && !WinUI3 && !WINDOWS_UWP
             return BindingOperations.GetBindingBase(element, property) != null;
 #else
             return element.GetBindingExpression(property) != null;
@@ -550,9 +550,11 @@
                 }
             }
 #else
-            if (property.PropertyType.GetTypeInfo().IsGenericType) {
+            if (property.PropertyType.GetTypeInfo().IsGenericType)
+            {
                 var itemType = property.PropertyType.GenericTypeArguments.First();
-                if (itemType.GetTypeInfo().IsValueType || typeof (string).IsAssignableFrom(itemType)) {
+                if (itemType.GetTypeInfo().IsValueType || typeof(string).IsAssignableFrom(itemType))
+                {
                     return;
                 }
             }
@@ -653,7 +655,8 @@
             var typeInfo = type.GetTypeInfo();
             var typeList = new List<Type> { type };
 
-            if (typeInfo.IsInterface) {
+            if (typeInfo.IsInterface)
+            {
                 typeList.AddRange(typeInfo.ImplementedInterfaces);
             }
 

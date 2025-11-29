@@ -1,24 +1,18 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#elif MAUI
+﻿#if MAUI
 namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
 #endif
 {
-#if WINDOWS_UWP
+#if WINDOWS_UWP 
     using System.Linq;
     using Windows.UI.Xaml;
     using System.Reflection;
+    using DependencyObject = Windows.UI.Xaml.DependencyObject ;
 #elif WinUI3
     using System.Linq;
     using Microsoft.UI.Xaml;
     using System.Reflection;
-#elif XFORMS
-    using UIElement = global::Xamarin.Forms.Element;
-    using FrameworkElement = global::Xamarin.Forms.VisualElement;
-    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
-    using DependencyObject = global::Xamarin.Forms.BindableObject;
 #elif AVALONIA
     using System;
     using Avalonia;
@@ -136,19 +130,15 @@ namespace Caliburn.Micro
         {
             if (GetTarget(element) != null || GetTargetWithoutContext(element) != null)
                 return true;
-#if XFORMS
-            return false;
-#else
+
             var frameworkElement = element as FrameworkElement;
             if (frameworkElement == null)
                 return false;
 
             return ConventionManager.HasBinding(frameworkElement, TargetProperty)
                    || ConventionManager.HasBinding(frameworkElement, TargetWithoutContextProperty);
-#endif
         }
 
-#if !XFORMS
         ///<summary>
         ///  Uses the action pipeline to invoke the method.
         ///</summary>
@@ -187,7 +177,6 @@ namespace Caliburn.Micro
             // This is a bit of hack but keeps message being garbage collected
             Log.Info("Invoking action {0} on {1}.", message.MethodName, target);
         }
-#endif
 
         static void OnTargetWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -207,11 +196,12 @@ namespace Caliburn.Micro
             }
 
             var target = e.NewValue;
-#if XFORMS || MAUI
+#if MAUI
             Log.Info("Attaching message handler {0} to {1}.", target, d);
             Message.SetHandler(d, target);
 
-            if (setContext && d is FrameworkElement) {
+            if (setContext && d is FrameworkElement)
+            {
                 Log.Info("Setting DC of {0} to {1}.", d, target);
                 ((FrameworkElement)d).BindingContext = target;
             }

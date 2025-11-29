@@ -1,6 +1,4 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#elif MAUI
+﻿#if MAUI
 namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
@@ -17,11 +15,6 @@ namespace Caliburn.Micro
 #elif WinUI3 
     using Microsoft.UI.Xaml;
 #endif
-
-#if XFORMS
-    using UIElement = global::Xamarin.Forms.Element;
-#endif
-
 
 #if AVALONIA
     using FrameworkElement = Avalonia.Controls.Control;
@@ -430,14 +423,6 @@ namespace Caliburn.Micro
             }
 
 #if ANDROID || IOS
-             return LocateForViewType(view.GetType());
-#elif XFORMS
-            var frameworkElement = view as UIElement;
-            if (frameworkElement != null && frameworkElement.BindingContext != null)
-            {
-                return frameworkElement.BindingContext;
-            }
-
             return LocateForViewType(view.GetType());
 #elif MAUI
             var frameworkElement = view as UIElement;

@@ -1,6 +1,4 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#elif MAUI
+﻿#if MAUI
 namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
@@ -11,12 +9,7 @@ namespace Caliburn.Micro
     using System.Collections.Generic;
     using System.Reflection;
     using System.Threading.Tasks;
-#if XFORMS
-    using UIElement = global::Xamarin.Forms.Element;
-    using FrameworkElement = global::Xamarin.Forms.VisualElement;
-    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
-    using DependencyObject = global::Xamarin.Forms.BindableObject;
-#elif MAUI
+#if MAUI
     using UIElement = global::Microsoft.Maui.Controls.Element;
     using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
     using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
@@ -41,7 +34,8 @@ namespace Caliburn.Micro
     /// <summary>
     /// Binds a view to a view model.
     /// </summary>
-    public static class ViewModelBinder {
+    public static class ViewModelBinder
+    {
         const string AsyncSuffix = "Async";
 
         static readonly ILog Log = LogManager.GetLog(typeof(ViewModelBinder));
@@ -75,7 +69,8 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="view">The view to check.</param>
         /// <returns>Whether or not conventions should be applied to the view.</returns>
-        public static bool ShouldApplyConventions(FrameworkElement view) {
+        public static bool ShouldApplyConventions(FrameworkElement view)
+        {
             var overriden = View.GetApplyConventions(view);
             return overriden.GetValueOrDefault(ApplyConventionsByDefault);
         }
@@ -84,10 +79,11 @@ namespace Caliburn.Micro
         /// Creates data bindings on the view's controls based on the provided properties.
         /// </summary>
         /// <remarks>Parameters include named Elements to search through and the type of view model to determine conventions for. Returns unmatched elements.</remarks>
-        public static Func<IEnumerable<FrameworkElement>, Type, IEnumerable<FrameworkElement>> BindProperties = (namedElements, viewModelType) => {
+        public static Func<IEnumerable<FrameworkElement>, Type, IEnumerable<FrameworkElement>> BindProperties = (namedElements, viewModelType) =>
+        {
 
             var unmatchedElements = new List<FrameworkElement>();
-#if !XFORMS && !MAUI
+#if !MAUI
             foreach (var element in namedElements) {
                 var cleanName = element.Name.Trim('_');
                 var parts = cleanName.Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
@@ -138,10 +134,11 @@ namespace Caliburn.Micro
         /// Attaches instances of <see cref="ActionMessage"/> to the view's controls based on the provided methods.
         /// </summary>
         /// <remarks>Parameters include the named elements to search through and the type of view model to determine conventions for. Returns unmatched elements.</remarks>
-        public static Func<IEnumerable<FrameworkElement>, Type, IEnumerable<FrameworkElement>> BindActions = (namedElements, viewModelType) => {
+        public static Func<IEnumerable<FrameworkElement>, Type, IEnumerable<FrameworkElement>> BindActions = (namedElements, viewModelType) =>
+        {
             var unmatchedElements = namedElements.ToList();
-#if !XFORMS && !MAUI
-#if WINDOWS_UWP || XFORMS || MAUI
+#if !MAUI
+#if WINDOWS_UWP 
             var methods = viewModelType.GetRuntimeMethods();
 #else
             var methods = viewModelType.GetMethods();
@@ -203,7 +200,8 @@ namespace Caliburn.Micro
             return unmatchedElements;
         };
 
-        static bool IsAsyncMethod(MethodInfo method) {
+        static bool IsAsyncMethod(MethodInfo method)
+        {
             return typeof(Task).GetTypeInfo().IsAssignableFrom(method.ReturnType.GetTypeInfo()) &&
                    method.Name.EndsWith(AsyncSuffix, StringComparison.OrdinalIgnoreCase);
         }
@@ -217,13 +215,16 @@ namespace Caliburn.Micro
         /// Binds the specified viewModel to the view.
         /// </summary>
         ///<remarks>Passes the the view model, view and creation context (or null for default) to use in applying binding.</remarks>
-        public static Action<object, DependencyObject, object> Bind = (viewModel, view, context) => {
-#if !WINDOWS_UWP && !XFORMS && !MAUI
+        public static Action<object, DependencyObject, object> Bind = (viewModel, view, context) =>
+        {
+#if !WINDOWS_UWP 
             // when using d:DesignInstance, Blend tries to assign the DesignInstanceExtension class as the DataContext,
             // so here we get the actual ViewModel which is in the Instance property of DesignInstanceExtension
-            if (View.InDesignMode) {
+            if (View.InDesignMode)
+            {
                 var vmType = viewModel.GetType();
-                if (vmType.FullName == "Microsoft.Expression.DesignModel.InstanceBuilders.DesignInstanceExtension") {
+                if (vmType.FullName == "Microsoft.Expression.DesignModel.InstanceBuilders.DesignInstanceExtension")
+                {
                     var propInfo = vmType.GetProperty("Instance", BindingFlags.Instance | BindingFlags.NonPublic);
                     viewModel = propInfo.GetValue(viewModel, null);
                 }
@@ -232,37 +233,41 @@ namespace Caliburn.Micro
 
             Log.Info("Binding {0} and {1}.", view, viewModel);
 
-#if XFORMS
-            var noContext = Caliburn.Micro.Xamarin.Forms.Bind.NoContextProperty;
-#elif MAUI
+#if MAUI
             var noContext = Caliburn.Micro.Maui.Bind.NoContextProperty;
 #else
             var noContext = Caliburn.Micro.Bind.NoContextProperty;
 #endif
 
-            if ((bool)view.GetValue(noContext)) {
+            if ((bool)view.GetValue(noContext))
+            {
                 Action.SetTargetWithoutContext(view, viewModel);
             }
-            else {
+            else
+            {
                 Action.SetTarget(view, viewModel);
             }
 
             var viewAware = viewModel as IViewAware;
-            if (viewAware != null) {
+            if (viewAware != null)
+            {
                 Log.Info("Attaching {0} to {1}.", view, viewAware);
                 viewAware.AttachView(view, context);
             }
 
-            if ((bool)view.GetValue(ConventionsAppliedProperty)) {
+            if ((bool)view.GetValue(ConventionsAppliedProperty))
+            {
                 return;
             }
 
             var element = View.GetFirstNonGeneratedView(view) as FrameworkElement;
-            if (element == null) {
+            if (element == null)
+            {
                 return;
             }
 
-            if (!ShouldApplyConventions(element)) {
+            if (!ShouldApplyConventions(element))
+            {
                 Log.Info("Skipping conventions for {0} and {1}.", element, viewModel);
                 return;
             }
@@ -274,7 +279,7 @@ namespace Caliburn.Micro
                 viewModelType = viewModelTypeProvider.GetCustomType();
             }
 #endif
-#if XFORMS || MAUI
+#if MAUI
             IEnumerable<FrameworkElement> namedElements = new List<FrameworkElement>();
 #else
             var namedElements = BindingScope.GetNamedElements(element);

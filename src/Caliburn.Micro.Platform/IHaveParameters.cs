@@ -1,6 +1,4 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#elif MAUI
+﻿#if MAUI
 namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
@@ -9,7 +7,8 @@ namespace Caliburn.Micro
     /// <summary>
     /// Indicates that a message is parameterized.
     /// </summary>
-    public interface IHaveParameters {
+    public interface IHaveParameters
+    {
         /// <summary>
         /// Represents the parameters of a message.
         /// </summary>

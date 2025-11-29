@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Windows.ApplicationModel.Activation;
+using System.Threading.Tasks;
 using Autofac;
 using Scenario.Autofac.ViewModels;
+using Windows.ApplicationModel.Activation;
 
 namespace Scenario.Autofac
 {
@@ -26,7 +27,8 @@ namespace Scenario.Autofac
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            DisplayRootViewForAsync<ShellViewModel>();
+            var displayStartPage = Task.Run(async () => await DisplayRootViewForAsync<ShellViewModel>());
+            displayStartPage.Wait();
         }
 
         protected override object GetInstance(Type service, string key)

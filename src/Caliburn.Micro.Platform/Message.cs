@@ -1,6 +1,4 @@
-﻿#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#elif MAUI
+﻿#if MAUI
 namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
@@ -17,12 +15,6 @@ namespace Caliburn.Micro
     using Microsoft.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
-#elif XFORMS
-    using global::Xamarin.Forms;
-    using UIElement = global::Xamarin.Forms.Element;
-    using FrameworkElement = global::Xamarin.Forms.VisualElement;
-    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
-    using DependencyObject = global::Xamarin.Forms.BindableObject;
 #elif AVALONIA  
     using Avalonia;
     using Avalonia.Controls;
@@ -107,7 +99,7 @@ namespace Caliburn.Micro
                 "Attach",
                 typeof(string),
                 typeof(Message),
-                null, 
+                null,
                 OnAttachChanged
                 );
 #endif
@@ -157,12 +149,13 @@ namespace Caliburn.Micro
 
             var newTriggers = Parser.Parse(d, e.NewValue as string).ToArray();
             newTriggers.OfType<DependencyObject>().Apply(allTriggers.Add);
-#elif XFORMS || MAUI
+#elif MAUI
             var visualElement = d as VisualElement;
 
             var allTriggers = visualElement != null ? visualElement.Triggers : new List<TriggerBase>();
 
-            if (messageTriggers != null) {
+            if (messageTriggers != null)
+            {
                 messageTriggers.Apply(x => allTriggers.Remove(x));
             }
 
@@ -204,4 +197,5 @@ namespace Caliburn.Micro
             }
         }
     }
+
 }
