@@ -37,7 +37,8 @@
     <PackageReference Include="Avalonia.Desktop" Version="11.3.5" />
     <PackageReference Include="Avalonia.Diagnostics" Version="11.3.5" />
     <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.3.5" />
-    <PackageReference Include="System.Reactive" Version="6.0.1" />
+    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
+    <PackageReference Include="System.Reactive" Version="6.1.0" />
     <PackageReference Include="Xaml.Behaviors.Avalonia" Version="11.3.2" />
     <PackageReference Include="Xaml.Behaviors.Interactivity" Version="11.3.2" />
   </ItemGroup>
@@ -45,7 +46,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" PrivateAssets="all">
     </ProjectReference>
-    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" >
+    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj">
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -80,22 +81,16 @@
     <PackageReference Update="Nerdbank.GitVersioning" Version="3.9.50" />
   </ItemGroup>
 
-  <Target Name="IncludeProjectReferencesWithPrivateAssetsAttributeInPackage"
-        Condition="'@(ProjectReference)' != '' and @(ProjectReference->AnyHaveMetadataValue('PrivateAssets', 'all'))"
-        DependsOnTargets="BuildOnlySettings;ResolveReferences">
+  <Target Name="IncludeProjectReferencesWithPrivateAssetsAttributeInPackage" Condition="'@(ProjectReference)' != '' and @(ProjectReference-&gt;AnyHaveMetadataValue('PrivateAssets', 'all'))" DependsOnTargets="BuildOnlySettings;ResolveReferences">
     <ItemGroup>
-      <_projectReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'all'))" />
+      <_projectReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'all'))" />
 
-      <BuildOutputInPackage Include="@(_projectReferenceCopyLocalPaths)"
-                            TargetPath="%(_projectReferenceCopyLocalPaths.DestinationSubDirectory)" />
-      <TfmSpecificDebugSymbolsFile Include="@(_projectReferenceCopyLocalPaths->WithMetadataValue('Extension', '.pdb'))"
-                                   TargetPath="%(_projectReferenceCopyLocalPaths.DestinationSubDirectory)"
-                                   TargetFramework="$(TargetFramework)"
-                                   Condition="'$(IncludeSymbols)' == 'true'" />
+      <BuildOutputInPackage Include="@(_projectReferenceCopyLocalPaths)" TargetPath="%(_projectReferenceCopyLocalPaths.DestinationSubDirectory)" />
+      <TfmSpecificDebugSymbolsFile Include="@(_projectReferenceCopyLocalPaths-&gt;WithMetadataValue('Extension', '.pdb'))" TargetPath="%(_projectReferenceCopyLocalPaths.DestinationSubDirectory)" TargetFramework="$(TargetFramework)" Condition="'$(IncludeSymbols)' == 'true'" />
 
       <!-- Remove symbol from the non symbol package. -->
-      <BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths->WithMetadataValue('Extension', '.pdb'))" />
-      <BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths->WithMetadataValue('Extension', '.xml'))" />
+      <BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths-&gt;WithMetadataValue('Extension', '.pdb'))" />
+      <BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths-&gt;WithMetadataValue('Extension', '.xml'))" />
     </ItemGroup>
   </Target>
 

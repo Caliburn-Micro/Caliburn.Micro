@@ -1,8 +1,5 @@
 ﻿using System;
-#if XFORMS
-using Xamarin.Forms;
-using DependencyProperty = Xamarin.Forms.BindableProperty;
-#elif MAUI
+#if MAUI
 using Microsoft.Maui.Controls;
 using DependencyProperty = Microsoft.Maui.Controls.BindableProperty;
 #elif WINDOWS_UWP
@@ -13,9 +10,8 @@ using Microsoft.UI.Xaml;
 using System.Windows;
 #endif
 
-#if XFORMS
-namespace Caliburn.Micro.Xamarin.Forms
-#elif MAUI
+
+#if MAUI
 namespace Caliburn.Micro.Maui
 #else
 namespace Caliburn.Micro
@@ -36,14 +32,11 @@ namespace Caliburn.Micro
         /// <param name="defaultValue">The default value</param>
         /// <param name="propertyChangedCallback">Callback to executed on property changed</param>
         /// <returns>The registred attached dependecy property</returns>
-        public static DependencyProperty RegisterAttached(string name, Type propertyType, Type ownerType, object defaultValue = null, PropertyChangedCallback propertyChangedCallback = null) {
-#if XFORMS
-            return DependencyProperty.CreateAttached(name, propertyType, ownerType, defaultValue, propertyChanged: (obj, oldValue, newValue) => {
-                if (propertyChangedCallback != null)
-                    propertyChangedCallback(obj, new DependencyPropertyChangedEventArgs(newValue, oldValue, null));
-            });
-#elif MAUI
-            return DependencyProperty.CreateAttached(name, propertyType, ownerType, defaultValue, propertyChanged: (obj, oldValue, newValue) => {
+        public static DependencyProperty RegisterAttached(string name, Type propertyType, Type ownerType, object defaultValue = null, PropertyChangedCallback propertyChangedCallback = null)
+        {
+#if MAUI
+            return DependencyProperty.CreateAttached(name, propertyType, ownerType, defaultValue, propertyChanged: (obj, oldValue, newValue) =>
+            {
                 if (propertyChangedCallback != null)
                     propertyChangedCallback(obj, new DependencyPropertyChangedEventArgs(newValue, oldValue, null));
             });
@@ -63,13 +56,7 @@ namespace Caliburn.Micro
         /// <returns>The registred dependecy property</returns>
         public static DependencyProperty Register(string name, Type propertyType, Type ownerType, object defaultValue = null, PropertyChangedCallback propertyChangedCallback = null)
         {
-#if XFORMS
-            return DependencyProperty.Create(name, propertyType, ownerType, defaultValue, propertyChanged: (obj, oldValue, newValue) =>
-            {
-                if (propertyChangedCallback != null)
-                    propertyChangedCallback(obj, new DependencyPropertyChangedEventArgs(newValue, oldValue, null));
-            });
-#elif MAUI
+#if MAUI
             return DependencyProperty.Create(name, propertyType, ownerType, defaultValue, propertyChanged: (obj, oldValue, newValue) =>
             {
                 if (propertyChangedCallback != null)
