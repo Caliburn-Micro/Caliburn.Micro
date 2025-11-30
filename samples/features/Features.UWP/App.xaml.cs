@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Windows.ApplicationModel.Activation;
-using Windows.UI.Core;
-using Windows.UI.Popups;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Caliburn.Micro;
 using Features.CrossPlatform.ViewModels;
 using Features.CrossPlatform.Views;
+using Windows.ApplicationModel.Activation;
+using Windows.UI.Core;
+using Windows.UI.Popups;
+using Windows.UI.Xaml.Controls;
+
 
 namespace Features.CrossPlatform
 {
@@ -47,7 +47,7 @@ namespace Features.CrossPlatform
             navigationService.Navigated += (s, e) =>
             {
                 navigationManager.AppViewBackButtonVisibility = navigationService.CanGoBack ?
-                    AppViewBackButtonVisibility.Visible : 
+                    AppViewBackButtonVisibility.Visible :
                     AppViewBackButtonVisibility.Collapsed;
             };
         }

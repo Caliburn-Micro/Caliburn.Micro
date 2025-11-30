@@ -63,7 +63,7 @@
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\TriggerAction.cs" Link="Platforms\netcore-avalonia\TriggerAction.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\WindowConductor.cs" Link="Platforms\netcore-avalonia\WindowConductor.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\WindowManager.cs" Link="Platforms\netcore-avalonia\WindowManager.cs" />
- </ItemGroup>
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\..\CaliburnIcon.png">

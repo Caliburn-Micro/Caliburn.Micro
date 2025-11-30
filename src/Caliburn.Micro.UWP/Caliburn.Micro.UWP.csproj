@@ -1,27 +1,141 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <Nullable>enable</Nullable>
-    <UseUwp>true</UseUwp>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0A6C1E13-8BE4-4FF1-8F4B-189AFE43E32F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Caliburn.Micro.UWP</RootNamespace>
+    <AssemblyName>Caliburn.Micro.UWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <IsAotCompatible>true</IsAotCompatible>
-    <DisableRuntimeMarshalling>true</DisableRuntimeMarshalling>
-    <DefineConstants>WINDOWS_UWP</DefineConstants>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.26100.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <PlatformTarget>ARM</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <PlatformTarget>ARM</PlatformTarget>
+    <OutputPath>bin\ARM\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
+    <PlatformTarget>ARM64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
+    <PlatformTarget>ARM64</PlatformTarget>
+    <OutputPath>bin\ARM64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup>
-    <LangVersion>latest</LangVersion>
-    <PackageIcon>CaliburnIcon.png</PackageIcon>
-    <PackageTags>MVVM;WPF;WinRT;UWP;MauilAvalonia;Android;iOS;CoC;Convention;MVP;PM;Screen;Coroutine;Behavior;Model-View-ViewModel;Presentation;UI;ViewModel;;Caliburn</PackageTags>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.0" />
-    <PackageReference Include="StrongNamer" Version="0.2.5" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Properties\Caliburn.Micro.UWP.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>6.2.14</Version>
+    </PackageReference>
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+    <VisualStudioVersion>14.0</VisualStudioVersion>
+  </PropertyGroup>
+    <ItemGroup>
     <Compile Include="..\Caliburn.Micro.Platform\*.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\AppManifestHelper.cs" Link="Platforms\uap\AppManifestHelper.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\AttachedCollection.81.cs" Link="Platforms\uap\AttachedCollection.81.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\AttachedCollection.cs" Link="Platforms\uap\AttachedCollection.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\CachingFrameAdapter.cs" Link="Platforms\uap\CachingFrameAdapter.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\CaliburnApplication.cs" Link="Platforms\uap\CaliburnApplication.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\DispatcherQueueExtentions.cs" Link="Platforms\uap\DispatcherQueueExtentions.cs" />
@@ -32,25 +146,18 @@
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\ISharingService.cs" Link="Platforms\uap\ISharingService.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\ISupportSharing.cs" Link="Platforms\uap\ISupportSharing.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\NavigateHelper.cs" Link="Platforms\uap\NavigateHelper.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\NavigationExtensions.cs" Link="Platforms\uap\NavigationExtensions.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\Parameter.cs" Link="Platforms\uap\Parameter.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\SharingService.cs" Link="Platforms\uap\SharingService.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\WinRTContainer.cs" Link="Platforms\uap\WinRTContainer.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\TriggerAction.cs" Link="Platforms\uap\TriggerAction.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\XamlMetadataProvider.cs" Link="Platforms\uap\XamlMetadataProvider.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\CaliburnIcon.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
-    <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <PackageReference Update="Nerdbank.GitVersioning" Version="3.9.50" />
-  </ItemGroup>
+   <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\NavigationExtensions.cs" Link="Platforms\uap\NavigationExtensions.cs" />
+   <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\Parameter.cs" Link="Platforms\uap\Parameter.cs" />
+   <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\SharingService.cs" Link="Platforms\uap\SharingService.cs" />
+   <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\WinRTContainer.cs" Link="Platforms\uap\WinRTContainer.cs" />
+   <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\XamlMetadataProvider.cs" Link="Platforms\uap\XamlMetadataProvider.cs" />
+ </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
 </Project>
