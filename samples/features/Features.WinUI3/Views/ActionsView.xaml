@@ -9,8 +9,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:cal="using:Caliburn.Micro"
-    xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:ii="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -36,11 +35,11 @@
             <Button cal:Message.Attach="SimpleSayHello" Content="Simple Say Hello (using Message.Attach)" Style="{StaticResource ActionButtonStyle}"/>
             <Button cal:Message.Attach="[Event DoubleTapped] = [SimpleSayHello]" Content="Simple Say Hello (Custom Event - Double Tapped)" Style="{StaticResource ActionButtonStyle}"/>
             <Button x:Name="FullSyntax" Content="Simple Say Hello (Full Behaviour Syntax)" Style="{StaticResource ActionButtonStyle}">
-                <i:Interaction.Behaviors>
-                    <ii:EventTriggerBehavior EventName="Click">
+                <Interactivity:Interaction.Behaviors>
+                    <Interactivity:EventTriggerBehavior EventName="Click">
                         <cal:ActionMessage MethodName="SimpleSayHello" AssociatedObject="{Binding ElementName=FullSyntax}" />
-                    </ii:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
+                    </Interactivity:EventTriggerBehavior>
+                 </Interactivity:Interaction.Behaviors>
             </Button>
             <Button x:Name="SayHello" Content="Say Hello (with parameter)" Style="{StaticResource ActionButtonStyle}"/>
             <Button cal:Message.Attach="SayHello(UserName)" Content="Say Hello (with parameter and Message.Attach)" Style="{StaticResource ActionButtonStyle}"/>
