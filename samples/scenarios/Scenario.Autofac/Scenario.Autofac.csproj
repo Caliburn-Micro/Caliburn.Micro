@@ -140,6 +140,9 @@
     <Reference Include="Caliburn.Micro.Platform.Core">
       <HintPath>..\..\..\bin\Caliburn.Micro.Platform\release\uap10.0.19041\Caliburn.Micro.Platform.Core.dll</HintPath>
     </Reference>
+    <PackageReference Include="Caliburn.Micro">
+      <Version>5.0.258</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>

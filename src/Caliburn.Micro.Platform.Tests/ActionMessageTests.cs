@@ -136,7 +136,7 @@ namespace Caliburn.Micro.Platform.Tests
             Assert.NotNull(ctx.Method);
             Assert.Equal(nameof(TargetWithArgs.Bar), ctx.Method.Name);
             // View should be the element on which the handler was found (the parent)
-            Assert.Same((object)parent, ctx.View);
+            Assert.Same(parent, ctx.View);
         }
 
         [StaFact]
@@ -172,7 +172,7 @@ namespace Caliburn.Micro.Platform.Tests
             Assert.NotNull(ctx.Method);
             Assert.Equal(nameof(TargetWithArgs.Bar), ctx.Method.Name);
             // View should be the element on which the handler was found (the parent)
-            Assert.Same((object)child, ctx.View);
+            Assert.Same(child, ctx.View);
         }
         class TargetWithNoArgs
         {
