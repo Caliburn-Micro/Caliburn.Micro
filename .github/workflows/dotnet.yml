@@ -21,7 +21,7 @@ env:
 jobs:
   build:
 
-    runs-on:  windows-preview
+    runs-on:  windows-2025
 
     steps:
     - uses: actions/checkout@v4
