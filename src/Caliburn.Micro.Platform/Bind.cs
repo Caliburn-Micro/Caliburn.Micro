@@ -134,7 +134,7 @@ namespace Caliburn.Micro
 
         static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (View.InDesignMode || object.ReferenceEquals(e.NewValue, e.OldValue))
+            if (View.InDesignMode || e.NewValue == null || object.ReferenceEquals(e.NewValue, e.OldValue))
             {
                 return;
             }
@@ -165,7 +165,7 @@ namespace Caliburn.Micro
 
         static void ModelWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (View.InDesignMode || object.ReferenceEquals(e.NewValue, e.OldValue))
+            if (View.InDesignMode || e.NewValue == null || object.ReferenceEquals(e.NewValue, e.OldValue))
             {
                 return;
             }
