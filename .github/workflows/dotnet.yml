@@ -45,7 +45,7 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v2
       with:
-       vs-prerelease: true
+       vs-version: '[18.0.0]'
     - name: search workloads
       run: dotnet workload search
     - name: restore workloads
