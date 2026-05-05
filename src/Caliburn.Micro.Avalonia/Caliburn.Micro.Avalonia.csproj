@@ -33,8 +33,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0|AnyCPU'" />
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.3.5" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.3.5" />
+    <PackageReference Include="Avalonia" Version="12.0.2" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.2" />
     <PackageReference Include="Avalonia.Diagnostics" Version="11.3.5" />
     <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.3.5" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
