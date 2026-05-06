@@ -50,6 +50,7 @@ namespace Caliburn.Micro
     /// </summary>
     public static class Message
     {
+        internal const string Skip_Availability_Resolution = "SkipAvailabilityResolution";
         internal static readonly DependencyProperty HandlerProperty =
 #if AVALONIA
         AvaloniaProperty.RegisterAttached<AvaloniaObject, object>("Handler", typeof(Message));
@@ -107,10 +108,27 @@ namespace Caliburn.Micro
                 "Attach",
                 typeof(string),
                 typeof(Message),
-                null, 
+                null,
                 OnAttachChanged
                 );
 #endif
+
+        /// <summary>
+        ///   A property definition representing whether should check if the function can be executed
+        /// </summary>
+        public static readonly DependencyProperty SkipAvailabilityResolutionProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, string>(Skip_Availability_Resolution, typeof(Message));
+#else
+            DependencyPropertyHelper.RegisterAttached(
+                Skip_Availability_Resolution,
+                typeof(string),
+                typeof(Message),
+                null,
+                OnAttachChanged
+                );
+#endif
+
 
 #if AVALONIA
         static Message()
@@ -138,6 +156,29 @@ namespace Caliburn.Micro
             return d.GetValue(AttachProperty) as string;
         }
 
+        /// <summary>
+        ///   Sets the attached triggers and messages.
+        /// </summary>
+        /// <param name="d"> The element to attach to. </param>
+        /// <param name="skip"> The parsable attachment text. </param>
+        public static void SetSkipAvailabilityResolution(DependencyObject d, string skip)
+        {
+            d.SetValue(SkipAvailabilityResolutionProperty, skip);
+        }
+
+        /// <summary>
+        ///   Gets the attached triggers and messages.
+        /// </summary>
+        /// <param name="d"> The element that was attached to. </param>
+        /// <returns> The parsable attachment text. </returns>
+        public static bool GetSkipAvailabilityResolution(DependencyObject d)
+        {
+            var value = d.GetValue(SkipAvailabilityResolutionProperty) as string;
+            if (!bool.TryParse(value, out bool result))
+                result = false;
+            return result;
+        }
+
         static void OnAttachChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (object.ReferenceEquals(e.NewValue, e.OldValue))
@@ -162,7 +203,8 @@ namespace Caliburn.Micro
 
             var allTriggers = visualElement != null ? visualElement.Triggers : new List<TriggerBase>();
 
-            if (messageTriggers != null) {
+            if (messageTriggers != null)
+            {
                 messageTriggers.Apply(x => allTriggers.Remove(x));
             }
 
