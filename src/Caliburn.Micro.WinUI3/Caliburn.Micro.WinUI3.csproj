@@ -41,7 +41,7 @@
 
     </ItemGroup>
 
-  <ItemGroup >
+  <ItemGroup>
     <Compile Remove="*.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\**\*.cs" />
   </ItemGroup>
@@ -68,5 +68,10 @@
       <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
 
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.9.50" />
   </ItemGroup>
 </Project>
