@@ -15,11 +15,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-    <PackageReference Include="Xaml.Behaviors.Avalonia" Version="11.3.2" />
-    <PackageReference Include="Xaml.Behaviors.Interactivity" Version="11.3.2" />
-    <PackageReference Include="xunit" Version="2.9.2" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
+    <PackageReference Include="Xaml.Behaviors.Avalonia" Version="12.0.0" />
+    <PackageReference Include="Xaml.Behaviors.Interactivity" Version="12.0.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -41,15 +41,15 @@
 
 
   <ItemGroup>
-    <PackageReference Update="Nerdbank.GitVersioning" Version="3.7.112" />
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.9.50" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.3.5" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.3.5" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.5" />
-    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.3.5" />
-    <PackageReference Include="System.Reactive" Version="6.0.1" />
+    <PackageReference Include="Avalonia" Version="12.0.2" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.2" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.14" />
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="12.0.2" />
+    <PackageReference Include="System.Reactive" Version="6.1.0" />
     <ProjectReference Include="..\Caliburn.Micro.Avalonia\Caliburn.Micro.Avalonia.csproj" />
     <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
     <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
