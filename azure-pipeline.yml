@@ -1,5 +1,5 @@
 pool:
-  vmImage: windows-2022
+  vmImage: windows-2025-vs2026
   demands:
   - MSBuild
 
@@ -15,7 +15,7 @@ steps:
   displayName: 'Install .NET'
   inputs:
     packageType: 'sdk'
-    version: '9.0.x' 
+    version: '10.0.x' 
 
 
 - task: PowerShell@2
@@ -30,7 +30,7 @@ steps:
 - task: NuGetToolInstaller@1
   displayName: 'Install Nuget'
   inputs:
-    versionSpec: '6.12.1'
+    versionSpec: '7.6.0'
 
 - task: DotNetCoreCLI@2  
   inputs:
