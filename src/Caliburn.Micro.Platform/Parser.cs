@@ -91,7 +91,7 @@ namespace Caliburn.Micro
 #else
             if (string.IsNullOrEmpty(text))
             {
-                return new TriggerBase[0];
+                return Array.Empty<TriggerBase>();
             }
             var triggers = new List<TriggerBase>();
 #endif
