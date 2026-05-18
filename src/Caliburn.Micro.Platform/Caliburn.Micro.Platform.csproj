@@ -89,9 +89,4 @@
     <Folder Include="Platforms\WinUI3\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
-    <PackageReference Include="Xunit.StaFact" Version="3.0.13" />
-  </ItemGroup>
-
 </Project>
