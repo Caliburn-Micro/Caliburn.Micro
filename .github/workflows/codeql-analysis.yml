@@ -59,7 +59,7 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v3
       with:
-        vs-version: '17.6' # VS2026 internal version
+        vs-version: '18.0' # VS2026 version
       
     - name: search workloads
       run: dotnet workload search
