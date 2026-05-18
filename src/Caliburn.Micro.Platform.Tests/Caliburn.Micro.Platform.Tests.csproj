@@ -21,6 +21,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Moq" Version="4.20.72" />
+    <PackageReference Include="Xunit.StaFact" Version="3.0.13" />
     <PackageReference Include="xunit.v3" Version="3.2.2" />
   </ItemGroup>
 
