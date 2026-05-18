@@ -37,7 +37,6 @@
     <PackageReference Include="Avalonia.Desktop" Version="11.3.5" />
     <PackageReference Include="Avalonia.Diagnostics" Version="11.3.5" />
     <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.3.5" />
-    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
     <PackageReference Include="Xaml.Behaviors.Avalonia" Version="11.3.2" />
     <PackageReference Include="Xaml.Behaviors.Interactivity" Version="11.3.2" />
