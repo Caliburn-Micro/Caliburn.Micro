@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
@@ -38,6 +37,10 @@ namespace Caliburn.Micro
                 /// </summary>
                 public AllActive()
                 {
+                    _items.CollectionCleared += (s, e) =>
+                    {
+                        e.ClearedItems.OfType<IChild>().Apply(x => x.Parent = null);
+                    };
                     _items.CollectionChanged += (s, e) =>
                     {
                         switch (e.Action)
@@ -80,7 +83,7 @@ namespace Caliburn.Micro
                 /// <returns>A task that represents the asynchronous operation.</returns>
                 protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
                 {
-                    foreach(var deactivate in _items.OfType<IDeactivate>())
+                    foreach (var deactivate in _items.OfType<IDeactivate>())
                     {
                         await deactivate.DeactivateAsync(close, cancellationToken);
                     }
