@@ -36,9 +36,16 @@ namespace Caliburn.Micro
         public bool IsNotifying { get; set; }
 
         /// <summary>
-        /// Occurs when the collection has been cleared.
+        /// Occurs after items have been removed from the collection without
+        /// being included in the standard collection reset notification.
         /// </summary>
-        public event EventHandler<CollectionClearedEventArgs<T>> CollectionCleared;
+        /// <remarks>
+        /// This event is raised by <c>Clear()</c> and <see cref="RemoveRange"/>
+        /// after the corresponding <see cref="ObservableCollection{T}.CollectionChanged"/>
+        /// reset notification has been raised on the same thread. Single-item
+        /// removals are reported by the standard collection change notification.
+        /// </remarks>
+        public event EventHandler<CollectionItemsRemovedEventArgs<T>> CollectionItemsRemoved;
 
         /// <summary>
         /// Notifies subscribers of the property change.
@@ -185,9 +192,17 @@ namespace Caliburn.Micro
         /// </remarks>
         protected virtual void ClearItemsBase()
         {
-            var clearedItems = new List<T>(collection: this);
+            var collectionItemsRemoved = CollectionItemsRemoved;
+            var removedItems = IsNotifying && collectionItemsRemoved != null && Count > 0
+                ? new List<T>(collection: this)
+                : null;
+
             base.ClearItems();
-            CollectionCleared?.Invoke(this, new CollectionClearedEventArgs<T>(clearedItems));
+
+            if (removedItems != null)
+            {
+                collectionItemsRemoved(this, new CollectionItemsRemovedEventArgs<T>(removedItems));
+            }
         }
 
         /// <summary>
@@ -256,12 +271,18 @@ namespace Caliburn.Micro
             void RemoveRange()
             {
                 var previousNotificationSetting = IsNotifying;
+                var collectionItemsRemoved = CollectionItemsRemoved;
+                var removedItems = previousNotificationSetting && collectionItemsRemoved != null
+                    ? new List<T>()
+                    : null;
+
                 IsNotifying = false;
                 foreach (var item in items)
                 {
                     var index = IndexOf(item);
                     if (index >= 0)
                     {
+                        removedItems?.Add(item);
                         RemoveItemBase(index);
                     }
                 }
@@ -270,6 +291,11 @@ namespace Caliburn.Micro
                 OnPropertyChanged(new PropertyChangedEventArgs("Count"));
                 OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+
+                if (removedItems?.Count > 0)
+                {
+                    collectionItemsRemoved(this, new CollectionItemsRemovedEventArgs<T>(removedItems));
+                }
             }
 
             if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
