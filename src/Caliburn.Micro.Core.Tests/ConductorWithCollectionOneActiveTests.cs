@@ -283,14 +283,24 @@ namespace Caliburn.Micro.Core.Tests
             Assert.Equal(conductor, newConducted.Parent);
         }
 
-        [Fact(Skip = "This is not possible as we don't get the removed items in the event handler.")]
+        [Fact]
         public void ParentItemIsUnsetOnClear()
+        {
+            var conductor = new Conductor<IScreen>.Collection.OneActive();
+            var conducted = new[] { new Screen(), new Screen() };
+            conductor.Items.AddRange(conducted);
+            conductor.Items.Clear();
+            Assert.All(conducted, screen => Assert.Null(screen.Parent));
+        }
+
+        [Fact]
+        public void ParentItemIsUnsetOnRemoveRange()
         {
             var conductor = new Conductor<IScreen>.Collection.OneActive();
             var conducted = new Screen();
             conductor.Items.Add(conducted);
-            conductor.Items.Clear();
-            Assert.NotEqual(conductor, conducted.Parent);
+            conductor.Items.RemoveRange(new[] { conducted });
+            Assert.Null(conducted.Parent);
         }
 
         [Fact]
@@ -300,7 +310,7 @@ namespace Caliburn.Micro.Core.Tests
             var conducted = new Screen();
             conductor.Items.Add(conducted);
             conductor.Items.RemoveAt(0);
-            Assert.NotEqual(conductor, conducted.Parent);
+            Assert.Null(conducted.Parent);
         }
 
         [Fact]
@@ -311,7 +321,7 @@ namespace Caliburn.Micro.Core.Tests
             conductor.Items.Add(conducted);
             var conducted2 = new Screen();
             conductor.Items[0] = conducted2;
-            Assert.NotEqual(conductor, conducted.Parent);
+            Assert.Null(conducted.Parent);
             Assert.Equal(conductor, conducted2.Parent);
         }
 
