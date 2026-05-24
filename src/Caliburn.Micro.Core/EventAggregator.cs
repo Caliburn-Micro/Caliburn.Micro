@@ -10,6 +10,8 @@ namespace Caliburn.Micro
     /// <inheritdoc />
     public class EventAggregator : IEventAggregator
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(EventAggregator));
+
         private readonly List<Handler> _handlers = new List<Handler>();
 
         /// <inheritdoc />
@@ -17,6 +19,8 @@ namespace Caliburn.Micro
         {
             lock (_handlers)
             {
+                Log.Info("Checking if handler exists for {0}.", messageType.FullName);
+                Log.Info("There are {0} handlers registered.", _handlers.Count);
                 return _handlers.Any(handler => handler.Handles(messageType) && !handler.IsDead);
             }
         }
@@ -38,9 +42,10 @@ namespace Caliburn.Micro
             {
                 if (_handlers.Any(x => x.Matches(subscriber)))
                 {
+                    Log.Info("Message Handler exists");
                     return;
                 }
-
+                Log.Info("Message Handler Adding it");
                 _handlers.Add(new Handler(subscriber, marshal));
             }
         }
@@ -65,7 +70,7 @@ namespace Caliburn.Micro
         }
 
         /// <inheritdoc />
-        public virtual Task PublishAsync(object message, Func<Func<Task>, Task> marshal, CancellationToken cancellationToken)
+        public virtual Task PublishAsync(object message, Func<Func<Task>, Task> marshal, CancellationToken cancellationToken = default)
         {
             if (message == null)
             {
@@ -88,7 +93,7 @@ namespace Caliburn.Micro
             {
                 var messageType = message.GetType();
 
-                var tasks = toNotify.Select(h => h.Handle(messageType, message, CancellationToken.None));
+                var tasks = toNotify.Select(h => h.Handle(messageType, message, cancellationToken));
 
                 await Task.WhenAll(tasks);
 
@@ -137,7 +142,7 @@ namespace Caliburn.Micro
 
             public bool Matches(object instance)
             {
-                return _reference.Target == instance;
+                return object.ReferenceEquals(_reference.Target, instance);
             }
 
             public Task Handle(Type messageType, object message, CancellationToken cancellationToken)

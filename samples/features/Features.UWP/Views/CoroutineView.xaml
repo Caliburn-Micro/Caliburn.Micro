@@ -17,7 +17,7 @@
         
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="LoadingStateGroup">
-                <VisualState x:Name="Loading">
+                <VisualState x:Name="ShowLoading">
                     <VisualState.Setters>
                         <Setter Target="LoadingRing.IsActive" Value="True"/>
                     </VisualState.Setters>

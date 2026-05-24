@@ -17,5 +17,6 @@ namespace Caliburn.Micro
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A task that represents the asynchronous coroutine.</returns>
         Task HandleAsync(TMessage message, CancellationToken cancellationToken);
+
     }
 }

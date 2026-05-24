@@ -1,15 +1,19 @@
-﻿using System;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
+
+#if XAMARINFORMS
+using Caliburn.Micro.Xamarin.Forms;
+#endif
+
 
 namespace Features.CrossPlatform.ViewModels
 {
     public class MenuViewModel : Screen
     {
-        private readonly INavigationService navigationService;
-
-        public MenuViewModel(INavigationService navigationService)
+        private readonly INavigationService _navigationService;
+        private readonly IEventAggregator _eventAggregator;
+        public MenuViewModel(INavigationService navigationService, IEventAggregator eventAggregator)
         {
-            this.navigationService = navigationService;
+            _navigationService = navigationService;
 
             Features = new BindableCollection<FeatureViewModel>
             {
@@ -28,13 +32,21 @@ namespace Features.CrossPlatform.ViewModels
                 // Navigation
                 // Window Manager
             };
+            _eventAggregator = eventAggregator;
         }
 
         public BindableCollection<FeatureViewModel> Features { get; }
-
+#if AVALONIA
+                public async void ShowFeature(FeatureViewModel feature)
+                {
+                    await _navigationService.NavigateToViewModelAsync(feature.ViewModel);
+                }
+#else
         public void ShowFeature(FeatureViewModel feature)
         {
-            navigationService.NavigateToViewModel(feature.ViewModel);
+            _navigationService.NavigateToViewModel(feature.ViewModel);
         }
+#endif
+
     }
 }

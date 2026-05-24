@@ -1,4 +1,5 @@
-namespace Caliburn.Micro {
+namespace Caliburn.Micro.Xamarin.Forms
+{
 
     using System;
     using System.Threading.Tasks;

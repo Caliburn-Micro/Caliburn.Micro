@@ -68,9 +68,9 @@ namespace Caliburn.Micro
                 public IObservableCollection<T> Items => _items;
 
                 /// <summary>
-                /// Called when activating.
+                /// Called when view has been activated.
                 /// </summary>
-                protected override Task OnActivateAsync(CancellationToken cancellationToken)
+                protected override Task OnActivatedAsync(CancellationToken cancellationToken)
                 {
                     return Task.WhenAll(_items.OfType<IActivate>().Select(x => x.ActivateAsync(cancellationToken)));
                 }
@@ -97,7 +97,7 @@ namespace Caliburn.Micro
                 /// </summary>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken)
+                public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken = default)
                 {
                     var closeResult = await CloseStrategy.ExecuteAsync(_items.ToList(), cancellationToken);
 
@@ -115,9 +115,9 @@ namespace Caliburn.Micro
                 }
 
                 /// <summary>
-                /// Called when initializing.
+                /// Called when view has been initialized
                 /// </summary>
-                protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
+                protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
                 {
                     if (_openPublicItems)
                         await Task.WhenAll(GetType().GetRuntimeProperties()
@@ -133,7 +133,7 @@ namespace Caliburn.Micro
                 /// <param name="item">The item to activate.</param>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                public override async Task ActivateItemAsync(T item, CancellationToken cancellationToken)
+                public override async Task ActivateItemAsync(T item, CancellationToken cancellationToken = default)
                 {
                     if (item == null)
                         return;
@@ -153,7 +153,7 @@ namespace Caliburn.Micro
                 /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                public override async Task DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken)
+                public override async Task DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken = default)
                 {
                     if (item == null)
                         return;
@@ -178,7 +178,7 @@ namespace Caliburn.Micro
                     return _items;
                 }
 
-                private async Task CloseItemCoreAsync(T item, CancellationToken cancellationToken)
+                private async Task CloseItemCoreAsync(T item, CancellationToken cancellationToken = default)
                 {
                     await ScreenExtensions.TryDeactivateAsync(item, true, cancellationToken);
                     _items.Remove(item);

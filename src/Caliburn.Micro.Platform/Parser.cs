@@ -1,4 +1,10 @@
-﻿namespace Caliburn.Micro
+﻿#if XFORMS
+namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
+#else
+namespace Caliburn.Micro
+#endif
 {
     using System;
     using System.Collections.Generic;
@@ -13,12 +19,37 @@
     using System.Text;
     using System.Text.RegularExpressions;
     using Windows.UI.Xaml.Data;
+#elif WinUI3
+    using System.Reflection;
+    using Microsoft.UI.Xaml;
+    using Microsoft.Xaml.Interactivity;
+    using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
+    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    using TriggerAction = Microsoft.Xaml.Interactivity.IAction;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using Microsoft.UI.Xaml.Data;
 #elif XFORMS
     using System.Reflection;
     using System.Text.RegularExpressions;
     using global::Xamarin.Forms;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Data;
+    using Avalonia.Controls;
+    using System.Text.RegularExpressions;
+    using DependencyObject = Avalonia.AvaloniaObject;
+    using TriggerBase = Avalonia.Xaml.Interactivity.Trigger;
+    using FrameworkElement = Avalonia.Controls.Control;
+    using EventTrigger = Avalonia.Xaml.Interactions.Core.EventTriggerBehavior;
+#elif MAUI
+    using System.Reflection;
+    using System.Text.RegularExpressions;
+    using global::Microsoft.Maui.Controls;
+    using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
+    using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
 #else
     using System.Reflection;
     using System.Text.RegularExpressions;
@@ -35,7 +66,7 @@
     /// </summary>
     public static class Parser
     {
-        static readonly Regex LongFormatRegularExpression = new Regex(@"^[\s]*\[[^\]]*\][\s]*=[\s]*\[[^\]]*\][\s]*$");
+        static readonly Regex LongFormatRegularExpression = new Regex(@"^[\s]*\[[^\]]*\][\s]*=[\s]*\[[^\]]*\][\s]*$", RegexOptions.Compiled);
         static readonly ILog Log = LogManager.GetLog(typeof(Parser));
 
         /// <summary>
@@ -44,14 +75,26 @@
         /// <param name="target">The target.</param>
         /// <param name="text">The message text.</param>
         /// <returns>The triggers parsed from the text.</returns>
+#if AVALONIA
+        public static IEnumerable<EventTrigger> Parse(DependencyObject target, string text) 
+#else
         public static IEnumerable<TriggerBase> Parse(DependencyObject target, string text)
+#endif
         {
+
+#if AVALONIA
+            if (string.IsNullOrEmpty(text))
+            {
+                return new EventTrigger[0];
+            }
+            var triggers = new List<EventTrigger>();
+#else
             if (string.IsNullOrEmpty(text))
             {
                 return new TriggerBase[0];
             }
-
             var triggers = new List<TriggerBase>();
+#endif
             var messageTexts = StringSplitter.Split(text, ';');
 
             foreach (var messageText in messageTexts)
@@ -68,7 +111,7 @@
                 var trigger = CreateTrigger(target, triggerPlusMessage.Length == 1 ? null : triggerPlusMessage[0]);
                 var message = CreateMessage(target, messageDetail);
 
-#if WINDOWS_UWP || XFORMS
+#if WINDOWS_UWP || XFORMS || MAUI || WinUI3
                 AddActionToTrigger(target, message, trigger);
 #else
                 trigger.Actions.Add(message);
@@ -80,11 +123,13 @@
             return triggers;
         }
 
-#if XFORMS
-        private static void AddActionToTrigger(DependencyObject target, TriggerAction message, TriggerBase trigger) {
+#if XFORMS || MAUI
+        private static void AddActionToTrigger(DependencyObject target, TriggerAction message, TriggerBase trigger)
+        {
 
-            if (trigger is EventTrigger) {
-                var eventTrigger = (EventTrigger) trigger;
+            if (trigger is EventTrigger)
+            {
+                var eventTrigger = (EventTrigger)trigger;
 
                 eventTrigger.Actions.Add(message);
             }
@@ -106,7 +151,7 @@
         }
 #endif
 
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
 
         private static void AddActionToTrigger(DependencyObject target, TriggerAction message, TriggerBase trigger)
         {
@@ -181,11 +226,20 @@
 
 #endif
 
+#if AVALONIA
+        /// <summary>
+        /// The function used to generate a trigger.
+        /// </summary>
+        /// <remarks>The parameters passed to the method are the the target of the trigger and string representing the trigger.</remarks>
+        public static Func<DependencyObject, string, EventTrigger> CreateTrigger = (target, triggerText) =>
+ 
+#else
         /// <summary>
         /// The function used to generate a trigger.
         /// </summary>
         /// <remarks>The parameters passed to the method are the the target of the trigger and string representing the trigger.</remarks>
         public static Func<DependencyObject, string, TriggerBase> CreateTrigger = (target, triggerText) =>
+#endif
         {
             if (triggerText == null)
             {
@@ -198,7 +252,7 @@
                 .Replace("]", string.Empty)
                 .Replace("Event", string.Empty)
                 .Trim();
-#if XFORMS
+#if XFORMS || MAUI
             return new EventTrigger { Event = triggerDetail };
 #else
             return new EventTrigger { EventName = triggerDetail };
@@ -228,16 +282,13 @@
             var core = messageText.Substring(0, openingParenthesisIndex).Trim();
             var message = InterpretMessageText(target, core);
             var withParameters = message as IHaveParameters;
-            if (withParameters != null)
+            if (withParameters != null && closingParenthesisIndex - openingParenthesisIndex > 1)
             {
-                if (closingParenthesisIndex - openingParenthesisIndex > 1)
-                {
-                    var paramString = messageText.Substring(openingParenthesisIndex + 1, closingParenthesisIndex - openingParenthesisIndex - 1);
-                    var parameters = StringSplitter.SplitParameters(paramString);
+                var paramString = messageText.Substring(openingParenthesisIndex + 1, closingParenthesisIndex - openingParenthesisIndex - 1);
+                var parameters = StringSplitter.SplitParameters(paramString);
 
-                    foreach (var parameter in parameters)
-                        withParameters.Parameters.Add(CreateParameter(target, parameter.Trim()));
-                }
+                foreach (var parameter in parameters)
+                    withParameters.Parameters.Add(CreateParameter(target, parameter.Trim()));
             }
 
             return message;
@@ -262,7 +313,7 @@
             {
                 actualParameter.Value = parameterText.Substring(1, parameterText.Length - 2);
             }
-            else if (MessageBinder.SpecialValues.ContainsKey(parameterText.ToLower()) || char.IsNumber(parameterText[0]))
+            else if (MessageBinder.SpecialValues.ContainsKey(parameterText.ToLower()) || decimal.TryParse(parameterText, out _))
             {
                 actualParameter.Value = parameterText;
             }
@@ -298,7 +349,7 @@
         /// <param name="bindingMode">The binding mode to use.</param>
         public static void BindParameter(FrameworkElement target, Parameter parameter, string elementName, string path, BindingMode bindingMode)
         {
-#if XFORMS
+#if XFORMS || MAUI
             var element = elementName == "$this" ? target : null;
 
             if (element == null)
@@ -311,7 +362,8 @@
                 path = ConventionManager.GetElementConvention(element.GetType()).ParameterProperty;
             }
 
-            var binding = new Binding(path) {
+            var binding = new Binding(path)
+            {
                 Source = element,
                 Mode = bindingMode
             };
@@ -330,7 +382,7 @@
             {
                 path = ConventionManager.GetElementConvention(element.GetType()).ParameterProperty;
             }
-#if WINDOWS_UWP
+#if WINDOWS_UWP || WinUI3
             var binding = new Binding
             {
                 Path = new PropertyPath(path),
@@ -338,17 +390,22 @@
                 Mode = bindingMode
             };
 #else
-            var binding = new Binding(path) {
+            var binding = new Binding(path)
+            {
                 Source = element,
                 Mode = bindingMode
             };
 #endif
 
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !AVALONIA
             binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 #endif
 
+#if AVALONIA
+            parameter.Bind(Parameter.ValueProperty, binding);
+#else
             BindingOperations.SetBinding(parameter, Parameter.ValueProperty, binding);
+#endif
 #endif
         }
     }

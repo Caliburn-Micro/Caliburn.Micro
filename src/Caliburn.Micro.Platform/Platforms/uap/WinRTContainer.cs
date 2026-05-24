@@ -1,6 +1,10 @@
 ﻿namespace Caliburn.Micro {
     using System;
+#if WinUI3
+    using Microsoft.UI.Xaml.Controls;
+#else
     using Windows.UI.Xaml.Controls;
+#endif
 
     /// <summary>
     /// A custom IoC container which integrates with WinRT and properly registers all Caliburn.Micro services.
@@ -57,7 +61,7 @@
             return sharingService;
         }
 
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !WinUI3
         /// <summary>
         /// Registers the Caliburn.Micro settings service with the container.
         /// </summary>

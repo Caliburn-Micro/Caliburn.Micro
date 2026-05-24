@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Caliburn.Micro
 {
@@ -59,7 +60,7 @@ namespace Caliburn.Micro
         private static void AttachViewReadyOnActivated(IActivate activatable, object nonGeneratedView)
         {
             var viewReference = new WeakReference(nonGeneratedView);
-            EventHandler<ActivationEventArgs> handler = null;
+            AsyncEventHandler<ActivationEventArgs> handler = null;
             handler = (s, e) =>
             {
                 ((IActivate)s).Activated -= handler;
@@ -68,6 +69,8 @@ namespace Caliburn.Micro
                 {
                     PlatformProvider.Current.ExecuteOnLayoutUpdated(view, ((ViewAware)s).OnViewReady);
                 }
+
+                return Task.CompletedTask;
             };
             activatable.Activated += handler;
         }

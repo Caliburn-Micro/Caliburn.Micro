@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:Features.CrossPlatform.ViewModels.Activity"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Features.CrossPlatform.Views.BindingsView">
+    <UserControl.DataTemplates>
+        <DataTemplate DataType="{x:Type local:PhotoActivityViewModel}">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Height="60" Width="100" Fill="Blue" Margin="0,0,20,0" />
+                    <Rectangle Height="60" Width="100" Fill="Blue" Margin="0,0,20,0" />
+                    <Rectangle Height="60" Width="100" Fill="Blue" Margin="0,0,20,0"  />
+                </StackPanel>
+
+                <TextBlock Text="{Binding Caption}"/>
+
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:MessageActivityViewModel}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Ellipse Grid.Column="0" Width="48" Height="48" Fill="Blue" Margin="0,0,12,0" VerticalAlignment="Top" />
+
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="{Binding Path=Title}" FontSize="16" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding Path=Message}"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </UserControl.DataTemplates>
+
+    <Grid Name="ContentPanel" Margin="20,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ListBox ItemsSource="{Binding Activities}"  SelectedItem="{Binding SelectedActivity}">
+        </ListBox>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,12">
+            <TextBlock Text="Selected:"  Margin="0,0,6,0"/>
+            <TextBlock Name="SelectedActivity_Title"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

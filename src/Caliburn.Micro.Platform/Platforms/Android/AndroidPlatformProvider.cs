@@ -11,14 +11,14 @@ namespace Caliburn.Micro
     /// </summary>
     public class AndroidPlatformProvider : IPlatformProvider
     {
-        private readonly ActivityLifecycleCallbackHandler lifecycleHandler = new ActivityLifecycleCallbackHandler();
+        private readonly ActivityLifecycleCallbackHandler _lifecycleHandler = new ActivityLifecycleCallbackHandler();
 
         /// <summary>
         /// Creates an instance of <see cref="AndroidPlatformProvider"/>.
         /// </summary>
         /// <param name="application">The Android Application</param>
         public AndroidPlatformProvider(Application application) {
-            application.RegisterActivityLifecycleCallbacks(lifecycleHandler);
+            application.RegisterActivityLifecycleCallbacks(_lifecycleHandler);
         }
 
         /// <summary>
@@ -122,12 +122,12 @@ namespace Caliburn.Micro
                     if (e.Activity != activity)
                         return;
 
-                    lifecycleHandler.ActivityCreated -= created;
+                    _lifecycleHandler.ActivityCreated -= created;
 
                     handler(view);
                 };
 
-                lifecycleHandler.ActivityCreated += created;
+                _lifecycleHandler.ActivityCreated += created;
             }
 
         }
@@ -149,12 +149,12 @@ namespace Caliburn.Micro
                     if (e.Activity != activity)
                         return;
 
-                    lifecycleHandler.ActivityResumed -= resumed;
+                    _lifecycleHandler.ActivityResumed -= resumed;
 
                     handler(view);
                 };
 
-                lifecycleHandler.ActivityResumed += resumed;
+                _lifecycleHandler.ActivityResumed += resumed;
             }
         }
 

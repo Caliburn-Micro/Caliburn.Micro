@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using Caliburn.Micro;
 using Foundation;
-using Setup.iOS.ViewModels;
+using Setup.iOS.ViewModel;
 using UIKit;
 
 namespace Setup.iOS
 {
-    [Register("AppDelegate")]
+    // The UIApplicationDelegate for the application. This class is responsible for launching the
+    // User Interface of the application, as well as listening (and optionally responding) to application events from iOS.
+    [Register ("AppDelegate")]
     public class AppDelegate : CaliburnApplicationDelegate
     {
         private SimpleContainer container;
@@ -48,5 +50,4 @@ namespace Setup.iOS
         }
     }
 }
-
 

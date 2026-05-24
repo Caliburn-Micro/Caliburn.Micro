@@ -1,27 +1,41 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.1;net45;uap10.0.16299;Xamarin.iOS10;MonoAndroid80</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;</TargetFrameworks>
     <PackageId>Caliburn.Micro.Core</PackageId>
     <Product>Caliburn.Micro Core</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
     <AssemblyOriginatorKeyFile>.\..\Caliburn.Micro.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
+    <LangVersion>latest</LangVersion>
+    <Title>Caliburn Micro Core</Title>
+    <PackageIcon>CaliburnIcon.png</PackageIcon>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
-    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
+  <ItemGroup>
+    <None Include="..\..\CaliburnIcon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\Caliburn.Micro.Platform.Core\Readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
-
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid'))">
-    <Reference Include="System.Runtime.Serialization" />
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationMarkdown>$(MSBuildProjectDirectory)\Readme.md</DocumentationMarkdown>
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Update="Readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
-
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
-    <Reference Include="System.Runtime.Serialization" />
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.7.112" />
   </ItemGroup>
 
 </Project>

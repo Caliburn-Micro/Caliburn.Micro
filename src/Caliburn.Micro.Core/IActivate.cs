@@ -19,11 +19,11 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task ActivateAsync(CancellationToken cancellationToken);
+        Task ActivateAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Raised after activation occurs.
         /// </summary>
-        event EventHandler<ActivationEventArgs> Activated;
+        event AsyncEventHandler<ActivationEventArgs> Activated;
     }
 }

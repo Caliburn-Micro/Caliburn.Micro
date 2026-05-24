@@ -2,7 +2,7 @@
 using DependencyObject = Xamarin.Forms.BindableObject;
 using DependencyProperty = Xamarin.Forms.BindableProperty;
 
-namespace Caliburn.Micro
+namespace Caliburn.Micro.Xamarin.Forms
 {
     /// <summary>
     /// Provides data for a PropertyChangedCallback implementation that is invoked when a dependency property changes its value. Also provides event data for the Control.IsEnabledChanged event and any other event that uses the DependencyPropertyChangedEventHandler delegate.

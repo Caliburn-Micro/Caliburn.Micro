@@ -9,7 +9,6 @@
     <Import_RootNamespace>Features.CrossPlatform</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)FormsApp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NavigationServiceExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\ActionsView.xaml.cs">
       <DependentUpon>ActionsView.xaml</DependentUpon>

@@ -67,7 +67,7 @@ namespace Caliburn.Micro
                 /// <param name="item">The item to activate.</param>
                 /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                public override async Task ActivateItemAsync(T item, CancellationToken cancellationToken)
+                public override async Task ActivateItemAsync(T item, CancellationToken cancellationToken = default)
                 {
                     if (item != null && item.Equals(ActiveItem))
                     {
@@ -90,7 +90,7 @@ namespace Caliburn.Micro
                 /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                public override async Task DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken)
+                public override async Task DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken = default)
                 {
                     if (item == null)
                         return;
@@ -106,14 +106,14 @@ namespace Caliburn.Micro
                     }
                 }
 
-                private async Task CloseItemCoreAsync(T item, CancellationToken cancellationToken)
+                private async Task CloseItemCoreAsync(T item, CancellationToken cancellationToken = default)
                 {
                     if (item.Equals(ActiveItem))
                     {
                         var index = _items.IndexOf(item);
                         var next = DetermineNextItemToActivate(_items, index);
 
-                        await ChangeActiveItemAsync(next, true);
+                        await ChangeActiveItemAsync(next, true, cancellationToken);
                     }
                     else
                     {
@@ -148,7 +148,7 @@ namespace Caliburn.Micro
                 /// </summary>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken)
+                public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken = default)
                 {
                     var closeResult = await CloseStrategy.ExecuteAsync(_items.ToList(), cancellationToken);
 
@@ -168,7 +168,7 @@ namespace Caliburn.Micro
                             } while (closable.Contains(next));
 
                             var previousActive = ActiveItem;
-                            await ChangeActiveItemAsync(next, true);
+                            await ChangeActiveItemAsync(next, true, cancellationToken);
                             _items.Remove(previousActive);
 
                             var stillToClose = closable.ToList();
@@ -188,11 +188,11 @@ namespace Caliburn.Micro
                 }
 
                 /// <summary>
-                /// Called when activating.
+                /// Called when view has been activated.
                 /// </summary>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                protected override Task OnActivateAsync(CancellationToken cancellationToken)
+                protected override Task OnActivatedAsync(CancellationToken cancellationToken)
                 {
                     return ScreenExtensions.TryActivateAsync(ActiveItem, cancellationToken);
                 }

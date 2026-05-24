@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 
 namespace Scenario.Autofac.ViewModels
@@ -10,9 +12,10 @@ namespace Scenario.Autofac.ViewModels
             Child = child;
         }
 
-        protected override void OnInitialize()
+        protected override Task OnInitializedAsync(CancellationToken cancellationToken)
         {
             DisplayName = "Shell";
+            return base.OnInitializedAsync(cancellationToken);
         }
 
         public ChildViewModel Child { get; }

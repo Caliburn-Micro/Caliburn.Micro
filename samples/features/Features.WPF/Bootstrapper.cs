@@ -9,7 +9,7 @@ namespace Features.CrossPlatform
 {
     public class Bootstrapper : BootstrapperBase
     {
-        private SimpleContainer container;
+        private SimpleContainer _container;
 
         public Bootstrapper()
         {
@@ -18,15 +18,15 @@ namespace Features.CrossPlatform
 
         protected override void Configure()
         {
-            container = new SimpleContainer();
+            _container = new SimpleContainer();
 
-            container.Instance(container);
+            _container.Instance(_container);
 
-            container
+            _container
                 .Singleton<IWindowManager, WindowManager>()
                 .Singleton<IEventAggregator, EventAggregator>();
 
-            container
+            _container
                .PerRequest<ShellViewModel>()
                .PerRequest<MenuViewModel>()
                .PerRequest<BindingsViewModel>()
@@ -41,24 +41,24 @@ namespace Features.CrossPlatform
                .PerRequest<NavigationTargetViewModel>();
         }
 
-        protected override void OnStartup(object sender, StartupEventArgs e)
+        protected override async void OnStartup(object sender, StartupEventArgs e)
         {
-            DisplayRootViewFor<ShellViewModel>();
+           await DisplayRootViewForAsync<ShellViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)
         {
-            return container.GetInstance(service, key);
+            return _container.GetInstance(service, key);
         }
 
         protected override IEnumerable<object> GetAllInstances(Type service)
         {
-            return container.GetAllInstances(service);
+            return _container.GetAllInstances(service);
         }
 
         protected override void BuildUp(object instance)
         {
-            container.BuildUp(instance);
+            _container.BuildUp(instance);
         }
 
         protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

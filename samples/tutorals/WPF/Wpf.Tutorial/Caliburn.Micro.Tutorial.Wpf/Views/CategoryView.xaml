@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="Caliburn.Micro.Tutorial.Wpf.Views.CategoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="auto"/>
+      <ColumnDefinition Width="auto"/>
+      <ColumnDefinition Width="auto"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+    <StackPanel Grid.Column="0">
+      <TextBlock HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Margin="10">Categories</TextBlock>
+      <DataGrid ItemsSource="{Binding CategoryList}" 
+								SelectedItem="{Binding SelectedCategory}"
+								AutoGenerateColumns="False" Height="200" Margin="10">
+        <DataGrid.Columns>
+          <DataGridTextColumn Header="Name" Binding="{Binding CategoryName}" Width="80"/>
+          <DataGridTextColumn Header="Description" Binding="{Binding CategoryDescription}" Width="200"/>
+        </DataGrid.Columns>
+      </DataGrid>
+      <WrapPanel>
+        <Button x:Name="Edit" Width="80" Margin="5">Edit</Button>
+        <Button x:Name="Delete" Width="80" Margin="5">Delete</Button>
+      </WrapPanel>
+    </StackPanel>
+    <StackPanel Grid.Column="1">
+      <TextBlock HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Margin="10">Edit Category</TextBlock>
+      <WrapPanel Margin="5">
+        <TextBlock Width="120">Category Name</TextBlock>
+        <TextBox x:Name="CategoryName" Text="{Binding CategoryName, Mode=TwoWay}" Width="80"/>
+      </WrapPanel>
+      <WrapPanel Margin="5">
+        <TextBlock Width="120">Category Description</TextBlock>
+        <TextBox x:Name="CategoryDescription" Text="{Binding CategoryDescription, Mode=TwoWay}" Width="160"/>
+      </WrapPanel>
+      <WrapPanel>
+        <Button x:Name="Save" Width="80" Margin="5">Save</Button>
+        <Button x:Name="Clear" Width="80" Margin="5">Clear</Button>
+      </WrapPanel>
+    </StackPanel>
+  </Grid>
+</UserControl>

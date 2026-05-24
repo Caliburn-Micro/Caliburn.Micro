@@ -3,7 +3,13 @@
         <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
     </PropertyGroup>
 	  <PropertyGroup Condition="$(TargetFramework.StartsWith('netcore'))">
-        <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
+        <DefineConstants>$(DefineConstants);CAL_NETCORE</DefineConstants>
+    </PropertyGroup>
+	  <PropertyGroup Condition="$(TargetFramework.StartsWith('net5.0'))">
+        <DefineConstants>$(DefineConstants);CAL_NETCORE</DefineConstants>
+    </PropertyGroup>
+	  <PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0'))">
+        <DefineConstants>$(DefineConstants);CAL_NETCORE</DefineConstants>
     </PropertyGroup>
     <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
         <DefineConstants>$(DefineConstants);NET</DefineConstants>

@@ -26,7 +26,7 @@ namespace Scenario.Autofac
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            DisplayRootViewFor<ShellViewModel>();
+            DisplayRootViewForAsync<ShellViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)

@@ -1,4 +1,10 @@
-﻿namespace Caliburn.Micro
+﻿#if XFORMS
+namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
+#else
+namespace Caliburn.Micro
+#endif
 {
     using System;
     using System.Linq;
@@ -10,8 +16,22 @@
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
     using DependencyProperty = global::Xamarin.Forms.BindableProperty;
     using DependencyObject = global::Xamarin.Forms.BindableObject;
+#elif MAUI
+    using UIElement = global::Microsoft.Maui.Controls.Element;
+    using FrameworkElement = global::Microsoft.Maui.Controls.VisualElement;
+    using DependencyProperty = global::Microsoft.Maui.Controls.BindableProperty;
+    using DependencyObject = global::Microsoft.Maui.Controls.BindableObject;
 #elif WINDOWS_UWP
     using Windows.UI.Xaml;
+    using Microsoft.Xaml.Interactivity;
+#elif AVALONIA
+    using Avalonia;
+    using Avalonia.Controls;
+    using FrameworkElement = Avalonia.Controls.Control;
+    using DependencyObject = Avalonia.AvaloniaObject;
+    using DependencyProperty = Avalonia.AvaloniaProperty;
+#elif WinUI3
+    using Microsoft.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
 #else
     using System.Windows;
@@ -38,12 +58,16 @@
         /// Indicates whether or not the conventions have already been applied to the view.
         /// </summary>
         public static readonly DependencyProperty ConventionsAppliedProperty =
+#if AVALONIA
+            AvaloniaProperty.RegisterAttached<AvaloniaObject, bool>("ConventionsApplied", typeof(ViewModelBinder));
+#else
             DependencyPropertyHelper.RegisterAttached(
                 "ConventionsApplied",
                 typeof(bool),
                 typeof(ViewModelBinder),
                 false
                 );
+#endif
 
 
         /// <summary>
@@ -63,7 +87,7 @@
         public static Func<IEnumerable<FrameworkElement>, Type, IEnumerable<FrameworkElement>> BindProperties = (namedElements, viewModelType) => {
 
             var unmatchedElements = new List<FrameworkElement>();
-#if !XFORMS
+#if !XFORMS && !MAUI
             foreach (var element in namedElements) {
                 var cleanName = element.Name.Trim('_');
                 var parts = cleanName.Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
@@ -116,8 +140,8 @@
         /// <remarks>Parameters include the named elements to search through and the type of view model to determine conventions for. Returns unmatched elements.</remarks>
         public static Func<IEnumerable<FrameworkElement>, Type, IEnumerable<FrameworkElement>> BindActions = (namedElements, viewModelType) => {
             var unmatchedElements = namedElements.ToList();
-#if !XFORMS
-#if WINDOWS_UWP || XFORMS
+#if !XFORMS && !MAUI
+#if WINDOWS_UWP || XFORMS || MAUI
             var methods = viewModelType.GetRuntimeMethods();
 #else
             var methods = viewModelType.GetMethods();
@@ -125,6 +149,7 @@
             
 
             foreach (var method in methods) {
+            Log.Info($"Searching for methods control {method.Name} unmatchedElements count {unmatchedElements.Count}");
                 var foundControl = unmatchedElements.FindName(method.Name);
                 if (foundControl == null && IsAsyncMethod(method)) {
                     var methodNameWithoutAsyncSuffix = method.Name.Substring(0, method.Name.Length - AsyncSuffix.Length);
@@ -132,7 +157,11 @@
                 }
 
                 if(foundControl == null) {
-                    Log.Info("Action Convention Not Applied: No actionable element for {0}.", method.Name);
+                    Log.Info("Action Convention Not Applied: No actionable element for {0}. {1}", method.Name, unmatchedElements.Count);
+                    foreach(var element in unmatchedElements)
+                    {
+                    Log.Info($"Unnamed element {element.Name}");
+                    }
                     continue;
                 }
 
@@ -189,7 +218,7 @@
         /// </summary>
         ///<remarks>Passes the the view model, view and creation context (or null for default) to use in applying binding.</remarks>
         public static Action<object, DependencyObject, object> Bind = (viewModel, view, context) => {
-#if !WINDOWS_UWP && !XFORMS
+#if !WINDOWS_UWP && !XFORMS && !MAUI
             // when using d:DesignInstance, Blend tries to assign the DesignInstanceExtension class as the DataContext,
             // so here we get the actual ViewModel which is in the Instance property of DesignInstanceExtension
             if (View.InDesignMode) {
@@ -203,7 +232,13 @@
 
             Log.Info("Binding {0} and {1}.", view, viewModel);
 
+#if XFORMS
+            var noContext = Caliburn.Micro.Xamarin.Forms.Bind.NoContextProperty;
+#elif MAUI
+            var noContext = Caliburn.Micro.Maui.Bind.NoContextProperty;
+#else
             var noContext = Caliburn.Micro.Bind.NoContextProperty;
+#endif
 
             if ((bool)view.GetValue(noContext)) {
                 Action.SetTargetWithoutContext(view, viewModel);
@@ -239,7 +274,7 @@
                 viewModelType = viewModelTypeProvider.GetCustomType();
             }
 #endif
-#if XFORMS
+#if XFORMS || MAUI
             IEnumerable<FrameworkElement> namedElements = new List<FrameworkElement>();
 #else
             var namedElements = BindingScope.GetNamedElements(element);

@@ -1,4 +1,10 @@
-﻿namespace Caliburn.Micro
+﻿#if XFORMS
+namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
+#else
+namespace Caliburn.Micro
+#endif
 {
     /// <summary>
     /// Indicates that a message is parameterized.

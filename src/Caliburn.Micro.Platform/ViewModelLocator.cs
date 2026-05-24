@@ -1,4 +1,10 @@
-﻿namespace Caliburn.Micro
+﻿#if XFORMS
+namespace Caliburn.Micro.Xamarin.Forms
+#elif MAUI
+namespace Caliburn.Micro.Maui
+#else
+namespace Caliburn.Micro
+#endif
 {
     using System;
     using System.Linq;
@@ -8,10 +14,22 @@
 
 #if WINDOWS_UWP
     using Windows.UI.Xaml;
+#elif WinUI3 
+    using Microsoft.UI.Xaml;
 #endif
 
 #if XFORMS
     using UIElement = global::Xamarin.Forms.Element;
+#endif
+
+
+#if AVALONIA
+    using FrameworkElement = Avalonia.Controls.Control;
+#endif
+
+
+#if MAUI
+    using UIElement = global::Microsoft.Maui.Controls.Element;
 #endif
 
     /// <summary>
@@ -47,7 +65,8 @@
         /// </summary>
         public static string InterfaceCaptureGroupName = "isinterface";
 
-        static ViewModelLocator() {
+        static ViewModelLocator()
+        {
             var configuration = new TypeMappingConfiguration();
 
 #if ANDROID
@@ -86,6 +105,10 @@
                 throw new ArgumentException("NameFormat field cannot be blank.");
             }
 
+            if (!IsNameFormatValidFormat(config.NameFormat))
+            {
+                throw new ArgumentException("NameFormat field must contain {0} and {1} placeholders.");
+            }
             NameTransformer.Clear();
             ViewSuffixList.Clear();
 
@@ -98,6 +121,12 @@
             includeViewSuffixInVmNames = config.IncludeViewSuffixInViewModelNames;
 
             SetAllDefaults();
+        }
+
+
+        internal static bool IsNameFormatValidFormat(string formatToValidate)
+        {
+            return formatToValidate.Contains("{0}") && formatToValidate.Contains("{1}");
         }
 
         private static void SetAllDefaults()
@@ -403,6 +432,14 @@
 #if ANDROID || IOS
              return LocateForViewType(view.GetType());
 #elif XFORMS
+            var frameworkElement = view as UIElement;
+            if (frameworkElement != null && frameworkElement.BindingContext != null)
+            {
+                return frameworkElement.BindingContext;
+            }
+
+            return LocateForViewType(view.GetType());
+#elif MAUI
             var frameworkElement = view as UIElement;
             if (frameworkElement != null && frameworkElement.BindingContext != null)
             {

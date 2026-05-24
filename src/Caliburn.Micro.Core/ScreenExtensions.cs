@@ -34,6 +34,17 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="potentialDeactivatable">The potential deactivatable.</param>
         /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public static Task TryDeactivateAsync(object potentialDeactivatable, bool close)
+        {
+            return potentialDeactivatable is IDeactivate deactivator ? deactivator.DeactivateAsync(close, CancellationToken.None) : Task.FromResult(true);
+        }
+
+        /// <summary>
+        /// Deactivates the item if it implements <see cref="IDeactivate"/>, otherwise does nothing.
+        /// </summary>
+        /// <param name="potentialDeactivatable">The potential deactivatable.</param>
+        /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         public static Task TryDeactivateAsync(object potentialDeactivatable, bool close, CancellationToken cancellationToken)
@@ -46,11 +57,33 @@ namespace Caliburn.Micro
         /// </summary>
         /// <param name="conductor">The conductor.</param>
         /// <param name="item">The item to close.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public static Task CloseItemAsync(this IConductor conductor, object item)
+        {
+            return conductor.DeactivateItemAsync(item, true, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// Closes the specified item.
+        /// </summary>
+        /// <param name="conductor">The conductor.</param>
+        /// <param name="item">The item to close.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         public static Task CloseItemAsync(this IConductor conductor, object item, CancellationToken cancellationToken)
         {
             return conductor.DeactivateItemAsync(item, true, cancellationToken);
+        }
+
+        /// <summary>
+        /// Closes the specified item.
+        /// </summary>
+        /// <param name="conductor">The conductor.</param>
+        /// <param name="item">The item to close.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public static Task CloseItemAsync<T>(this ConductorBase<T> conductor, T item) where T : class
+        {
+            return conductor.DeactivateItemAsync(item, true, CancellationToken.None);
         }
 
         /// <summary>
@@ -74,13 +107,13 @@ namespace Caliburn.Micro
         {
             var childReference = new WeakReference(child);
 
-            void OnParentActivated(object s, ActivationEventArgs e)
+            async Task OnParentActivated(object s, ActivationEventArgs e)
             {
                 var activatable = (IActivate)childReference.Target;
                 if (activatable == null)
                     ((IActivate)s).Activated -= OnParentActivated;
                 else
-                    activatable.ActivateAsync(CancellationToken.None);
+                    await activatable.ActivateAsync(CancellationToken.None);
             }
 
             parent.Activated += OnParentActivated;
@@ -94,16 +127,17 @@ namespace Caliburn.Micro
         public static void DeactivateWith(this IDeactivate child, IDeactivate parent)
         {
             var childReference = new WeakReference(child);
-            EventHandler<DeactivationEventArgs> handler = null;
-            handler = (s, e) =>
+
+            async Task OnParentDeactivated(object s, DeactivationEventArgs e)
             {
                 var deactivatable = (IDeactivate)childReference.Target;
                 if (deactivatable == null)
-                    ((IDeactivate)s).Deactivated -= handler;
+                    ((IDeactivate)s).Deactivated -= OnParentDeactivated;
                 else
-                    deactivatable.DeactivateAsync(e.WasClosed, CancellationToken.None);
-            };
-            parent.Deactivated += handler;
+                    await deactivatable.DeactivateAsync(e.WasClosed, CancellationToken.None);
+            }
+
+            parent.Deactivated += OnParentDeactivated;
         }
 
         ///<summary>
