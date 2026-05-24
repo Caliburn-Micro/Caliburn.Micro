@@ -13,7 +13,19 @@ namespace Caliburn.Micro.Core.Tests
 
             conductor.Items.Clear();
 
-            Assert.All(conducted, screen => Assert.NotEqual(conductor, screen.Parent));
+            Assert.All(conducted, screen => Assert.Null(screen.Parent));
+        }
+
+        [Fact]
+        public void ParentItemIsUnsetOnRemoveRange()
+        {
+            var conductor = new Conductor<IScreen>.Collection.AllActive();
+            var conducted = new[] { new Screen(), new Screen() };
+            conductor.Items.AddRange(conducted);
+
+            conductor.Items.RemoveRange(conducted);
+
+            Assert.All(conducted, screen => Assert.Null(screen.Parent));
         }
     }
 }

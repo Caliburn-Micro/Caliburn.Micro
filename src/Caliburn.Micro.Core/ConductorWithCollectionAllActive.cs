@@ -37,9 +37,9 @@ namespace Caliburn.Micro
                 /// </summary>
                 public AllActive()
                 {
-                    _items.CollectionCleared += (s, e) =>
+                    _items.CollectionItemsRemoved += (s, e) =>
                     {
-                        e.ClearedItems.OfType<IChild>().Apply(x => x.Parent = null);
+                        e.RemovedItems.OfType<IChild>().Apply(x => x.Parent = null);
                     };
                     _items.CollectionChanged += (s, e) =>
                     {
