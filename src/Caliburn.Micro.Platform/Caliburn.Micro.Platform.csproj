@@ -1,7 +1,7 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;uap10.0.19041;net9.0-android;net9.0-ios;net8.0-windows;net9.0-windows</TargetFrameworks>
+    <TargetFrameworks>net462;net9.0-android;net9.0-ios;net8.0-windows;net9.0-windows;</TargetFrameworks>
     <PackageId>Caliburn.Micro</PackageId>
     <Product>Caliburn.Micro</Product>
     <RootNamespace>Caliburn.Micro</RootNamespace>
@@ -60,14 +60,13 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="Platforms\uap\Caliburn.Micro.Platform.rd.xml" PackagePath="lib\uap10.0.19041\Caliburn.Micro.Platform\Properties\Caliburn.Micro.Platform.rd.xml" Pack="true" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.19041'">
+  <!--<ItemGroup Condition="'$(TargetFramework)' == 'uap10.0'">
     <Compile Include="Platforms\uap\**\*.cs" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
     <PackageReference Include="StrongNamer" Version="0.2.5" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
     <Compile Remove="*.cs" />
@@ -82,8 +81,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <PackageReference Update="Nerdbank.GitVersioning" Version="3.7.112" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.300" />
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.9.50" />
   </ItemGroup>
 
   <ItemGroup>

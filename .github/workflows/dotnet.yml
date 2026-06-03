@@ -21,18 +21,18 @@ env:
 jobs:
   build:
 
-    runs-on:  windows-2022
+    runs-on:  windows-2025-vs2026
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0 # avoid shallow clone so nbgv can do its work
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         global-json-file: src/global.json
     - name: Setup Java SDK
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         distribution: 'microsoft' 
         java-version: 17
@@ -41,10 +41,12 @@ jobs:
     - name: Setup NuGet.exe for use with actions
         # You may pin to the exact commit or the version.
         # uses: NuGet/setup-nuget@fd9fffd6ca4541cf4152a9565835ca1a88a6eb37
-      uses: NuGet/setup-nuget@v2
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v2
-      
+      uses: NuGet/setup-nuget@v4
+    # Setup MSBuild with VS2026
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v3
+      with:
+        vs-version: '17.6' # VS2026 internal version
     - name: search workloads
       run: dotnet workload search
     - name: restore workloads
