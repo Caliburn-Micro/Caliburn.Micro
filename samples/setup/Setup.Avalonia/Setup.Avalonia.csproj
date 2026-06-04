@@ -7,19 +7,22 @@
     <AvaloniaNameGeneratorIsEnabled>false</AvaloniaNameGeneratorIsEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.2.3" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.2.3" />
-    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.2.3" />
+    <PackageReference Include="Avalonia" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="12.0.4" />
 
-    <PackageReference Include="Avalonia.Themes.FLuent" Version="11.2.3" />
-    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.2.0.7" />
-    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.2.0.7" />
+    <PackageReference Include="Avalonia.Themes.FLuent" Version="12.0.4" />
+    <PackageReference Include="Xaml.Behaviors.Avalonia" Version="12.0.0.1" />
+    <PackageReference Include="Xaml.Behaviors.Interactivity" Version="12.0.0.1" />
     <PackageReference Include="Caliburn.Micro.Avalonia" Version="5.0.183-beta" />
-    <PackageReference Include="System.Reactive" Version="6.0.1" />
+    <PackageReference Include="System.Reactive" Version="6.1.0" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.3" />
-    <PackageReference Include="MessageBox.Avalonia" Version="2.0.0" />
+    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.2">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="MessageBox.Avalonia" Version="12.0.0" />
    </ItemGroup>
 
 </Project>
