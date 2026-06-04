@@ -10,9 +10,6 @@ namespace Features.CrossPlatform.Views
         public ShellView()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
 
