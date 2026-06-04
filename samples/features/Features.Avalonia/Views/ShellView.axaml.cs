@@ -15,12 +15,6 @@ namespace Features.CrossPlatform.Views
 #endif
         }
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-
-        }
-
 
     }
 }
