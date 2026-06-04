@@ -33,19 +33,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0|AnyCPU'" />
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.3.5" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.3.5" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.5" />
-    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.3.5" />
-    <PackageReference Include="System.Reactive" Version="6.0.1" />
-    <PackageReference Include="Xaml.Behaviors.Avalonia" Version="11.3.2" />
-    <PackageReference Include="Xaml.Behaviors.Interactivity" Version="11.3.2" />
+    <PackageReference Include="Avalonia" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.4" />
+    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.2">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="12.0.4" />
+    <PackageReference Include="System.Reactive" Version="6.1.0" />
+    <PackageReference Include="Xaml.Behaviors.Avalonia" Version="12.0.0.1" />
+    <PackageReference Include="Xaml.Behaviors.Interactivity" Version="12.0.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" PrivateAssets="all">
     </ProjectReference>
-    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" >
+    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj">
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -62,7 +65,7 @@
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\TriggerAction.cs" Link="Platforms\netcore-avalonia\TriggerAction.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\WindowConductor.cs" Link="Platforms\netcore-avalonia\WindowConductor.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\netcore-avalonia\WindowManager.cs" Link="Platforms\netcore-avalonia\WindowManager.cs" />
- </ItemGroup>
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\..\CaliburnIcon.png">
@@ -76,26 +79,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <PackageReference Update="Nerdbank.GitVersioning" Version="3.7.112" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.300" />
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.9.50" />
   </ItemGroup>
 
-  <Target Name="IncludeProjectReferencesWithPrivateAssetsAttributeInPackage"
-        Condition="'@(ProjectReference)' != '' and @(ProjectReference->AnyHaveMetadataValue('PrivateAssets', 'all'))"
-        DependsOnTargets="BuildOnlySettings;ResolveReferences">
+  <Target Name="IncludeProjectReferencesWithPrivateAssetsAttributeInPackage" Condition="'@(ProjectReference)' != '' and @(ProjectReference-&gt;AnyHaveMetadataValue('PrivateAssets', 'all'))" DependsOnTargets="BuildOnlySettings;ResolveReferences">
     <ItemGroup>
-      <_projectReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'all'))" />
+      <_projectReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'all'))" />
 
-      <BuildOutputInPackage Include="@(_projectReferenceCopyLocalPaths)"
-                            TargetPath="%(_projectReferenceCopyLocalPaths.DestinationSubDirectory)" />
-      <TfmSpecificDebugSymbolsFile Include="@(_projectReferenceCopyLocalPaths->WithMetadataValue('Extension', '.pdb'))"
-                                   TargetPath="%(_projectReferenceCopyLocalPaths.DestinationSubDirectory)"
-                                   TargetFramework="$(TargetFramework)"
-                                   Condition="'$(IncludeSymbols)' == 'true'" />
+      <BuildOutputInPackage Include="@(_projectReferenceCopyLocalPaths)" TargetPath="%(_projectReferenceCopyLocalPaths.DestinationSubDirectory)" />
+      <TfmSpecificDebugSymbolsFile Include="@(_projectReferenceCopyLocalPaths-&gt;WithMetadataValue('Extension', '.pdb'))" TargetPath="%(_projectReferenceCopyLocalPaths.DestinationSubDirectory)" TargetFramework="$(TargetFramework)" Condition="'$(IncludeSymbols)' == 'true'" />
 
       <!-- Remove symbol from the non symbol package. -->
-      <BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths->WithMetadataValue('Extension', '.pdb'))" />
-      <BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths->WithMetadataValue('Extension', '.xml'))" />
+      <BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths-&gt;WithMetadataValue('Extension', '.pdb'))" />
+      <BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths-&gt;WithMetadataValue('Extension', '.xml'))" />
     </ItemGroup>
   </Target>
 
