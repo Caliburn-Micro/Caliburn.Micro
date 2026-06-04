@@ -17,10 +17,5 @@ namespace Setup.Avalonia.Views
 #endif
         }
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
-
     }
 }
