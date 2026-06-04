@@ -4,7 +4,6 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
-    <AvaloniaNameGeneratorIsEnabled>false</AvaloniaNameGeneratorIsEnabled>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="12.0.4" />
@@ -16,7 +15,6 @@
     <PackageReference Include="Xaml.Behaviors.Interactivity" Version="12.0.0.1" />
     <PackageReference Include="Caliburn.Micro.Avalonia" Version="5.0.183-beta" />
     <PackageReference Include="System.Reactive" Version="6.1.0" />
-    <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.2">
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
