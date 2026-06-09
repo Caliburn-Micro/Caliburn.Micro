@@ -604,21 +604,15 @@
 
                 var pElement = BindingScope.GetVisualParent(currentElement);
 #if AVALONIA
-                if (currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase))
+                if (currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase) && currentElement is PopupRoot popupRoot && popupRoot.Parent is Popup popup)
                 {
-                    if (currentElement is PopupRoot popupRoot && popupRoot.Parent is Popup popup)
-                    {
-                        pElement = popup.PlacementTarget;
-                    }
+                    pElement = popup.PlacementTarget;
                 }
 #elif !WINDOWS_UWP
                 if (pElement == null
-                    && currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase))
+                    && currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase) && currentElement is FrameworkElement popupRoot && popupRoot.Parent is Popup popup)
                 {
-                    if (currentElement is FrameworkElement popupRoot && popupRoot.Parent is Popup popup)
-                    {
-                        pElement = popup.PlacementTarget;
-                    }
+                    pElement = popup.PlacementTarget;
                 }
 #endif
                 currentElement = pElement;
