@@ -600,25 +600,27 @@
                 //currentElement = BindingScope.GetVisualParent(currentElement);
 
                 //Modified parts Begin
-                var pElement = BindingScope.GetVisualParent(currentElement);
-                if (pElement == null
-                    && currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase))
-                {
 
+
+                var pElement = BindingScope.GetVisualParent(currentElement);
 #if AVALONIA
+                if (currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase))
+                {
                     if (currentElement is PopupRoot popupRoot && popupRoot.Parent is Popup popup)
                     {
                         pElement = popup.PlacementTarget;
                     }
-
+                }
 #elif !WINDOWS_UWP
+                if (pElement == null
+                    && currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase))
+                {
                     if (currentElement is FrameworkElement popupRoot && popupRoot.Parent is Popup popup)
                     {
                         pElement = popup.PlacementTarget;
                     }
-#endif
                 }
-
+#endif
                 currentElement = pElement;
                 //End
             }
