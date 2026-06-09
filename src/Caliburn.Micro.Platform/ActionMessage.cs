@@ -602,8 +602,8 @@
                 //Modified parts Begin
 
 
-#if AVALONIA
                 var pElement = BindingScope.GetVisualParent(currentElement);
+#if AVALONIA
                 if (currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase))
                 {
                     if (currentElement is PopupRoot popupRoot && popupRoot.Parent is Popup popup)
@@ -612,7 +612,6 @@
                     }
                 }
 #elif !WINDOWS_UWP
-                var pElement = BindingScope.GetVisualParent(currentElement);
                 if (pElement == null
                     && currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase))
                 {
@@ -621,7 +620,6 @@
                         pElement = popup.PlacementTarget;
                     }
                 }
-            
 #endif
                 currentElement = pElement;
                 //End
