@@ -607,6 +607,7 @@
                     && currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase))
                 {
 
+
 #if AVALONIA
                     if (currentElement is PopupRoot popupRoot && popupRoot.Parent is Popup popup)
                     {
