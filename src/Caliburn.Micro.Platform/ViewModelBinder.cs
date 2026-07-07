@@ -223,7 +223,9 @@ namespace Caliburn.Micro
             // so here we get the actual ViewModel which is in the Instance property of DesignInstanceExtension
             if (View.InDesignMode) {
                 var vmType = viewModel.GetType();
-                if (vmType.FullName == "Microsoft.Expression.DesignModel.InstanceBuilders.DesignInstanceExtension") {
+                var designInstanceExtensionType = Type.GetType("Microsoft.Expression.DesignModel.InstanceBuilders.DesignInstanceExtension, Microsoft.Expression.Interactions", false);
+
+                if (designInstanceExtensionType != null && vmType == designInstanceExtensionType) {
                     var propInfo = vmType.GetProperty("Instance", BindingFlags.Instance | BindingFlags.NonPublic);
                     viewModel = propInfo.GetValue(viewModel, null);
                 }
