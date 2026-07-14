@@ -7,8 +7,44 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <IsAotCompatible>true</IsAotCompatible>
     <DisableRuntimeMarshalling>true</DisableRuntimeMarshalling>
-    <LangVersion>10</LangVersion>
+    <LangVersion>10.0</LangVersion>
+    <DefineConstants>WINDOWS_UWP</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup Label="Package">
+    <None Include="..\..\CaliburnIcon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="Platforms\uap\Caliburn.Micro.Platform.rd.xml" PackagePath="lib\uap10.0.19041\Caliburn.Micro.Platform\Properties\Caliburn.Micro.Platform.rd.xml" Pack="true" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Caliburn.Micro.Platform\Action.cs" Link="Action.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ActionExecutionContext.cs" Link="ActionExecutionContext.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ActionMessage.cs" Link="ActionMessage.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Bind.cs" Link="Bind.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\BindingScope.cs" Link="BindingScope.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\BooleanToVisibilityConverter.cs" Link="BooleanToVisibilityConverter.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ChildResolver.cs" Link="ChildResolver.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ConventionManager.cs" Link="ConventionManager.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\DependencyPropertyHelper.cs" Link="DependencyPropertyHelper.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ElementConvention.cs" Link="ElementConvention.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\IHaveParameters.cs" Link="IHaveParameters.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Message.cs" Link="Message.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\MessageBinder.cs" Link="MessageBinder.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Parser.cs" Link="Parser.cs" />
+
+    <Compile Include="..\Caliburn.Micro.Platform\View.cs" Link="View.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ViewLocator.cs" Link="ViewLocator.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ViewModelBinder.cs" Link="ViewModelBinder.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\ViewModelLocator.cs" Link="ViewModelLocator.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\XamlPlatformProvider.cs" Link="XamlPlatformProvider.cs" />
+
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Caliburn.Micro.Core\Caliburn.Micro.Core.csproj" />
+    <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Nerdbank.GitVersioning" Version="3.9.50" />
   </ItemGroup>
