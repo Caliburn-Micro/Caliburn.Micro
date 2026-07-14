@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net9.0-windows10.0.19041</TargetFrameworks>
+    <TargetFrameworks>net10.0;net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net10.0-windows10.0.19041</TargetFrameworks>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
 
     <UseMaui>true</UseMaui>
@@ -10,9 +10,9 @@
 
     <DefineConstants>MAUI</DefineConstants>
 
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net9.0-ios'">14.2</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net9.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net9.0-android'">21.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-ios'">14.2</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-android'">21.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
 
@@ -86,17 +86,17 @@
     <Compile Include="..\Caliburn.Micro.Platform\ViewModelLocator.cs" Link="ViewModelLocator.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
     <Compile Remove="*.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\Android\**\*.cs" Link="Platforms\Maui\Android\**\*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-ios'">
     <Compile Remove="*.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\ios\**\*.cs" Link="Platforms\Maui\ios\**\*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-maccatalyst'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-maccatalyst'">
     <Compile Remove="*.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\Platforms\Maui\ios\**\*.cs" Link="Platforms\Maui\ios\**\*.cs" />
   </ItemGroup>
@@ -118,7 +118,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.60" />
   </ItemGroup>
 
   <ItemGroup>
@@ -129,29 +129,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.300" />
     <PackageReference Update="Nerdbank.GitVersioning" Version="3.9.50" />
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="$(AssemblyName).Tests" />
   </ItemGroup>
   <!-- Add ProjectReferences output which are flagged as PrivateAssets="all" into the package. -->
-  <Target Name="IncludeProjectReferencesWithPrivateAssetsAttributeInPackage"
-          Condition="'@(ProjectReference)' != '' and @(ProjectReference->AnyHaveMetadataValue('PrivateAssets', 'all'))"
-          DependsOnTargets="BuildOnlySettings;ResolveReferences">
+  <Target Name="IncludeProjectReferencesWithPrivateAssetsAttributeInPackage" Condition="'@(ProjectReference)' != '' and @(ProjectReference-&gt;AnyHaveMetadataValue('PrivateAssets', 'all'))" DependsOnTargets="BuildOnlySettings;ResolveReferences">
     <ItemGroup>
-      <_projectReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'all'))" />
+      <_projectReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'all'))" />
 
-      <BuildOutputInPackage Include="@(_projectReferenceCopyLocalPaths)"
-                            TargetPath="%(_projectReferenceCopyLocalPaths.DestinationSubDirectory)" />
-      <TfmSpecificDebugSymbolsFile Include="@(_projectReferenceCopyLocalPaths->WithMetadataValue('Extension', '.pdb'))"
-                                   TargetPath="%(_projectReferenceCopyLocalPaths.DestinationSubDirectory)"
-                                   TargetFramework="$(TargetFramework)"
-                                   Condition="'$(IncludeSymbols)' == 'true'" />
+      <BuildOutputInPackage Include="@(_projectReferenceCopyLocalPaths)" TargetPath="%(_projectReferenceCopyLocalPaths.DestinationSubDirectory)" />
+      <TfmSpecificDebugSymbolsFile Include="@(_projectReferenceCopyLocalPaths-&gt;WithMetadataValue('Extension', '.pdb'))" TargetPath="%(_projectReferenceCopyLocalPaths.DestinationSubDirectory)" TargetFramework="$(TargetFramework)" Condition="'$(IncludeSymbols)' == 'true'" />
 
       <!-- Remove symbol from the non symbol package. -->
-      <BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths->WithMetadataValue('Extension', '.pdb'))" />
-      <BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths->WithMetadataValue('Extension', '.xml'))" />
+      <BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths-&gt;WithMetadataValue('Extension', '.pdb'))" />
+      <BuildOutputInPackage Remove="@(_projectReferenceCopyLocalPaths-&gt;WithMetadataValue('Extension', '.xml'))" />
     </ItemGroup>
   </Target>
   
