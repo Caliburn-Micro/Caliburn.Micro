@@ -13,7 +13,6 @@
     using Windows.UI.Xaml.Controls;
     using Microsoft.Xaml.Interactivity;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
-    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
 #elif AVALONIA
     using Avalonia;
     using Avalonia.Data;

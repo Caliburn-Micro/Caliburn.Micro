@@ -178,6 +178,19 @@
 
                    return true;
                };
+            AddElementConvention<CollectionView>(CollectionView.ItemsSourceProperty, "SelectedItem", "ItemSelected")
+                .ApplyBinding = (viewModelType, path, property, element, convention) =>
+                {
+                    if (!SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, ItemsView<Cell>.ItemsSourceProperty))
+                    {
+                        return false;
+                    }
+
+                    ConfigureSelectedItem(element, CollectionView.SelectedItemProperty, viewModelType, path);
+                    ApplyItemTemplate((ItemsView<Cell>)element, property);
+
+                    return true;
+                };
             AddElementConvention<Label>(Label.TextProperty, "Text", "Focused");
             AddElementConvention<Image>(Image.SourceProperty, "Source", "Focused");
             AddElementConvention<Entry>(Entry.TextProperty, "Text", "TextChanged");

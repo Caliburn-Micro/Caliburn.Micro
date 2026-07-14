@@ -39,7 +39,7 @@
     <Compile Include="..\Caliburn.Micro.Platform\ViewModelBinder.cs" Link="ViewModelBinder.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\ViewModelLocator.cs" Link="ViewModelLocator.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\XamlPlatformProvider.cs" Link="XamlPlatformProvider.cs" />
-
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.1" />
