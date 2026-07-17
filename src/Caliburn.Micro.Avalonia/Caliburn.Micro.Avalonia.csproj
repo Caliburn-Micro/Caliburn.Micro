@@ -33,16 +33,16 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0|AnyCPU'" />
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="12.0.4" />
-    <PackageReference Include="Avalonia.Desktop" Version="12.0.4" />
-    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.2">
+    <PackageReference Include="Avalonia" Version="12.1.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.0" />
+    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3">
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="12.1.0" />
     <PackageReference Include="System.Reactive" Version="6.1.0" />
-    <PackageReference Include="Xaml.Behaviors.Avalonia" Version="12.0.0.1" />
-    <PackageReference Include="Xaml.Behaviors.Interactivity" Version="12.0.0.1" />
+    <PackageReference Include="Xaml.Behaviors.Avalonia" Version="12.0.5" />
+    <PackageReference Include="Xaml.Behaviors.Interactivity" Version="12.0.5" />
   </ItemGroup>
 
   <ItemGroup>
@@ -79,8 +79,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.300" />
-    <PackageReference Update="Nerdbank.GitVersioning" Version="3.9.50" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.301" />
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.10.91" />
   </ItemGroup>
 
   <Target Name="IncludeProjectReferencesWithPrivateAssetsAttributeInPackage" Condition="'@(ProjectReference)' != '' and @(ProjectReference-&gt;AnyHaveMetadataValue('PrivateAssets', 'all'))" DependsOnTargets="BuildOnlySettings;ResolveReferences">
