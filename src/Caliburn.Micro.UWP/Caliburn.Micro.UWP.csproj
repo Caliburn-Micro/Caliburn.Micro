@@ -16,7 +16,6 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="Platforms\uap\Caliburn.Micro.Platform.rd.xml" PackagePath="lib\uap10.0.19041\Caliburn.Micro.Platform\Properties\Caliburn.Micro.Platform.rd.xml" Pack="true" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Caliburn.Micro.Platform\Action.cs" Link="Action.cs" />
@@ -39,7 +38,10 @@
     <Compile Include="..\Caliburn.Micro.Platform\ViewModelBinder.cs" Link="ViewModelBinder.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\ViewModelLocator.cs" Link="ViewModelLocator.cs" />
     <Compile Include="..\Caliburn.Micro.Platform\XamlPlatformProvider.cs" Link="XamlPlatformProvider.cs" />
-    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="*.cs" />
+    <Compile Include="..\Caliburn.Micro.Platform\Platforms\uap\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.1" />
@@ -50,6 +52,7 @@
     <ProjectReference Include="..\Caliburn.Micro.Platform.Core\Caliburn.Micro.Platform.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Nerdbank.GitVersioning" Version="3.9.50" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.301" />
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.10.91" />
   </ItemGroup>
 </Project>
