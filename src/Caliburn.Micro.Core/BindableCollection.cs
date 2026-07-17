@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-
+using System.Linq;
 namespace Caliburn.Micro
 {
     /// <summary>
@@ -277,9 +277,8 @@ namespace Caliburn.Micro
                     : null;
 
                 IsNotifying = false;
-                foreach (var item in items)
+                foreach (var index in items.Select(item => IndexOf(item)))
                 {
-                    var index = IndexOf(item);
                     if (index >= 0)
                     {
                         removedItems?.Add(item);
