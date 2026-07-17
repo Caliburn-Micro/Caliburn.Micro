@@ -12,8 +12,8 @@ namespace Caliburn.Micro
     using System.Reflection;
 #elif WinUI3
     using System.Linq;
-    using Microsoft.UI.Xaml;
     using System.Reflection;
+    using Microsoft.UI.Xaml;
 #elif XFORMS
     using UIElement = global::Xamarin.Forms.Element;
     using FrameworkElement = global::Xamarin.Forms.VisualElement;
@@ -174,7 +174,8 @@ namespace Caliburn.Micro
                 Message = message,
                 View = view,
                 Source = source,
-                EventArgs = eventArgs
+                EventArgs = eventArgs,
+                SkipAvailabilityResolution = Message.GetSkipAvailabilityResolution(view)
             };
 
             if (parameters != null)
