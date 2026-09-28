@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.1.32421.90
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.11925.98 stable
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Core", "Caliburn.Micro.Core\Caliburn.Micro.Core.csproj", "{F36828EE-446C-42F2-A0EC-D4FB112BD183}"
 EndProject
@@ -24,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Maui.Tests", "Caliburn.Micro.Maui.Tests\Caliburn.Micro.Maui.Tests.csproj", "{55521CEA-F8EB-44DD-8D9D-F28F46407F59}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.WinUI3", "Caliburn.Micro.WinUI3\Caliburn.Micro.WinUI3.csproj", "{E60034B8-5473-4BB0-91C7-A3E08822334A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.UWP", "Caliburn.Micro.UWP\Caliburn.Micro.UWP.csproj", "{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -213,6 +215,22 @@ Global
 		{E60034B8-5473-4BB0-91C7-A3E08822334A}.Release|x64.Build.0 = Release|Any CPU
 		{E60034B8-5473-4BB0-91C7-A3E08822334A}.Release|x86.ActiveCfg = Release|Any CPU
 		{E60034B8-5473-4BB0-91C7-A3E08822334A}.Release|x86.Build.0 = Release|Any CPU
+		{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}.Debug|ARM.Build.0 = Debug|Any CPU
+		{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}.Debug|x64.Build.0 = Debug|Any CPU
+		{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}.Debug|x86.Build.0 = Debug|Any CPU
+		{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}.Release|ARM.ActiveCfg = Release|Any CPU
+		{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}.Release|ARM.Build.0 = Release|Any CPU
+		{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}.Release|x64.ActiveCfg = Release|Any CPU
+		{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}.Release|x64.Build.0 = Release|Any CPU
+		{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}.Release|x86.ActiveCfg = Release|Any CPU
+		{4CE3B536-CCD0-4A14-82B1-3FE7D31884A3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

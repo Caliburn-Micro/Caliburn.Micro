@@ -14,7 +14,7 @@ namespace Caliburn.Micro
     using Windows.UI.Xaml;
     using Microsoft.Xaml.Interactivity;
     using TriggerBase = Microsoft.Xaml.Interactivity.IBehavior;
-    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    using EventTrigger = Microsoft.Xaml.Interactivity.EventTriggerBehavior;
     using TriggerAction = Microsoft.Xaml.Interactivity.IAction;
     using System.Text;
     using System.Text.RegularExpressions;

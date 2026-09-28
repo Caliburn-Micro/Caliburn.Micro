@@ -10,7 +10,7 @@
     using Windows.UI.Xaml.Controls.Primitives;
     using Windows.UI.Xaml.Data;
     using Windows.UI.Xaml.Markup;
-    using EventTrigger = Microsoft.Xaml.Interactions.Core.EventTriggerBehavior;
+    using EventTrigger = Microsoft.Xaml.Interactivity.EventTriggerBehavior;
     using Windows.UI.Xaml.Shapes;
 #elif AVALONIA
     using System.Collections.Specialized;
@@ -472,7 +472,7 @@
             bool hasBinding = element.IsSet(property);
             //TODO: (Avalonia) Need to find a way to detect existing bindings on an AvaloniaProperty
             return hasBinding;
-#elif (NET || CAL_NETCORE) && !WinUI3
+#elif (NET || CAL_NETCORE) && !WinUI3 && !WINDOWS_UWP
             return BindingOperations.GetBindingBase(element, property) != null;
 #else
             return element.GetBindingExpression(property) != null;
