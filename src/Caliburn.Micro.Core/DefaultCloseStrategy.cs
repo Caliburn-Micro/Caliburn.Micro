@@ -15,7 +15,7 @@ namespace Caliburn.Micro
         /// <summary>
         /// Creates an instance of the class.
         /// </summary>
-        /// <param name="closeConductedItemsWhenConductorCannotClose">Indicates that even if all conducted items are not closable, those that are should be closed. The default is FALSE.</param>
+        /// <param name="closeConductedItemsWhenConductorCannotClose">Indicates that even if not all conducted items are closable, those that are should be closed. The default is FALSE.</param>
         public DefaultCloseStrategy(bool closeConductedItemsWhenConductorCannotClose = false)
         {
             this.closeConductedItemsWhenConductorCannotClose = closeConductedItemsWhenConductorCannotClose;
