@@ -6,11 +6,11 @@
     <LangVersion>10</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="12.0.4" />
-    <PackageReference Include="Avalonia.Desktop" Version="12.0.4" />
-    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="12.0.4" />
+    <PackageReference Include="Avalonia" Version="12.0.5" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.5" />
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="12.0.5" />
 
-    <PackageReference Include="Avalonia.Themes.FLuent" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Themes.FLuent" Version="12.0.5" />
     <PackageReference Include="Xaml.Behaviors.Avalonia" Version="12.0.0.1" />
     <PackageReference Include="Xaml.Behaviors.Interactivity" Version="12.0.0.1" />
     <PackageReference Include="Caliburn.Micro.Avalonia" Version="5.0.183-beta" />
