@@ -67,7 +67,11 @@
     [DefaultTrigger(typeof(ButtonBase), typeof(EventTrigger), "Click")]
     [TypeConstraint(typeof(FrameworkElement))]
 #endif
+#if UNO
+    public class ActionMessage : UnoTriggerAction, IHaveParameters
+#else
     public class ActionMessage : TriggerAction<FrameworkElement>, IHaveParameters
+#endif
     {
         static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
         ActionExecutionContext _context;

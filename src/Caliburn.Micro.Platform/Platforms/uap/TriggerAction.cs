@@ -12,12 +12,20 @@
     /// Represents an attachable object that encapsulates a unit of functionality.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class TriggerAction<T> : DependencyObject, IAction {
+#if UNO
+    public abstract partial class UnoTriggerAction : DependencyObject, IAction {
+#else
+    public abstract partial class TriggerAction<T> : DependencyObject, IAction {
+#endif
         /// <summary>
         /// The associated object property.
         /// </summary>
         public static readonly DependencyProperty AssociatedObjectProperty =
-            DependencyProperty.Register("AssociatedObject", typeof (FrameworkElement), typeof (TriggerAction<T>),
+#if UNO
+            DependencyProperty.Register("AssociatedObject", typeof(FrameworkElement), typeof(UnoTriggerAction),
+#else
+            DependencyProperty.Register("AssociatedObject", typeof(FrameworkElement), typeof(TriggerAction<T>),
+#endif
                 new PropertyMetadata(null, OnAssociatedObjectChanged));
 
         /// <summary>
@@ -70,7 +78,11 @@
         }
 
         private static void OnAssociatedObjectChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+#if UNO
+            var triggerAction = (UnoTriggerAction) d;
+#else
             var triggerAction = (TriggerAction<T>) d;
+#endif
 
             if (triggerAction == null)
                 return;
