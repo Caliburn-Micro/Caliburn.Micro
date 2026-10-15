@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.Maui.Tests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Micro.WinUI3", "Caliburn.Micro.WinUI3\Caliburn.Micro.WinUI3.csproj", "{E60034B8-5473-4BB0-91C7-A3E08822334A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Micro.Uno.Tests", "Caliburn.Micro.Uno.Tests\Caliburn.Micro.Uno.Tests.csproj", "{84AFB76C-467B-48AD-9CF1-47E1FD0F7B4E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -213,6 +215,10 @@ Global
 		{E60034B8-5473-4BB0-91C7-A3E08822334A}.Release|x64.Build.0 = Release|Any CPU
 		{E60034B8-5473-4BB0-91C7-A3E08822334A}.Release|x86.ActiveCfg = Release|Any CPU
 		{E60034B8-5473-4BB0-91C7-A3E08822334A}.Release|x86.Build.0 = Release|Any CPU
+		{84AFB76C-467B-48AD-9CF1-47E1FD0F7B4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84AFB76C-467B-48AD-9CF1-47E1FD0F7B4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84AFB76C-467B-48AD-9CF1-47E1FD0F7B4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84AFB76C-467B-48AD-9CF1-47E1FD0F7B4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
