@@ -11,11 +11,11 @@
     /// Represents a parameter of an <see cref="ActionMessage"/>.
     /// </summary>
 #if WINDOWS_UWP || WinUI3
-    public class Parameter : DependencyObject, IAttachedObject
+    public partial class Parameter : DependencyObject, IAttachedObject
     {
         DependencyObject _associatedObject;
 #else
-    public class Parameter : FrameworkElement, IAttachedObject {
+    public partial class Parameter : FrameworkElement, IAttachedObject {
         FrameworkElement associatedObject;
 #endif
         WeakReference _owner;
